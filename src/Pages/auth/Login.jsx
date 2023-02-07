@@ -1,76 +1,63 @@
-import React from "react";
-import { Table } from "react-bootstrap";
-
+import React, { useState } from "react";
+import Boton from "../../Components/Boton";
+//icons
+import {
+  RiMailFill,
+  RiLockFill,
+  RiEyeFill,
+  RiEyeOffFill,
+} from "react-icons/ri";
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <div>
-      <div className="register flex flex-col min-h-screen rounded-lg md:p-8">
-        <div className="p-8 mb-14">
-          <h1 className="text-gray-100 text-3xl font-medium tracking-widest">
-            JT Dev
-          </h1>
-        </div>
-        <div className="p-8">
-          <h3 className="text-gray-500 uppercase text-sm font-bold mb-2">
-            Empieza gratis
-          </h3>
-          <h1 className="text-6xl text-white font-medium mb-2">
-            Crea una cuenta<span className="text-cyan-500">.</span>
-          </h1>
-          <span className="text-gray-500 font-medium">
-            ¿Ya eres usuario?{" "}
-            <a href="#" className="text-cyan-500 hover:underline">
-              Ingresa
-            </a>
-          </span>
-          <form className="mt-8">
-            <div className="max-w-lg mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
-              <input
-                type="text"
-                autoComplete="off"
-                className="w-full py-3 px-4 rounded-xl outline-none bg-[#343434] text-gray-100 group"
-                placeholder="Nombre(s)"
+    <>
+      <div className="bg-secondary-100 p-8 rounded-xl">
+        <h1 className="text-center text-1xl uppercase font-bold tracking-[5px] text-white">
+          Pintureria
+        </h1>
+        <h1 className="text-center text-2xl uppercase font-bold tracking-[5px] text-white mb-8">
+          Cikron
+        </h1>
+        <h1 className="text-3xl uppercase font-bold tracking-[5px] text-white mb-8">
+          Iniciar Sesion
+        </h1>
+        <form action="">
+          <div className="relative mb-4">
+            <RiMailFill className="absolute top-1/2 -translate-y-1/2 left-2" />
+            <input
+              type="email"
+              className="py-2 pl-8 pr-4 bg-secondary-900 w-full outline-none
+            rounded-lg  "
+              placeholder="Correo Electronico"
+            />
+          </div>
+          <div className="relative mb-4">
+            <RiLockFill className="absolute top-1/2 -translate-y-1/2 left-2" />
+            <input
+              type={showPassword ? "text" : "password"}
+              className="py-2 pl-8 bg-secondary-900 w-full outline-none
+            rounded-lg  "
+              placeholder="Contraseña"
+            />
+            {showPassword ? (
+              <RiEyeFill
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-1/2 -translate-y-1/2 right-2 hover:cursor-pointer"
               />
-              <input
-                type="text"
-                autoComplete="off"
-                className="w-full py-3 px-4 rounded-xl outline-none bg-[#343434] text-gray-100 group"
-                placeholder="Apellidos"
+            ) : (
+              <RiEyeOffFill
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-1/2 -translate-y-1/2 right-2 hover:cursor-pointer"
               />
-            </div>
-            <div className="max-w-lg mb-4">
-              <input
-                type="email"
-                autoComplete="off"
-                className="w-full py-3 px-4 rounded-xl outline-none bg-[#343434] text-gray-100 group"
-                placeholder="Correo electrónico"
-              />
-            </div>
-            <div className="max-w-lg mb-4">
-              <input
-                type="password"
-                autoComplete="off"
-                className="w-full py-3 px-4 rounded-xl outline-none bg-[#343434] text-gray-100 group"
-                placeholder="Contraseña"
-              />
-            </div>
-            <div className="max-w-lg flex justify-center md:justify-end mb-6">
-              <a
-                href="#"
-                className="text-gray-500 font-medium hover:text-gray-300 transition-colors"
-              >
-                ¿Olvidaste tu contraseña?
-              </a>
-            </div>
-            <div className="max-w-lg">
-              <button className="bg-cyan-600 text-white w-full py-3 px-4 rounded-full hover:bg-cyan-700 transition-colors">
-                Crear cuenta
-              </button>
-            </div>
-          </form>
-        </div>
+            )}
+          </div>
+          <div>
+            <Boton />
+          </div>
+        </form>
       </div>
-    </div>
+    </>
   );
 };
 
