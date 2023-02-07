@@ -1,13 +1,13 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
-const LayoutAdmin = () => {
+const LayoutAuth = () => {
   return (
     <div>
-      LayoutAdmin
+      LayoutAuth
       <Outlet />
     </div>
   );
 };
 
-export default LayoutAdmin;
+export default LayoutAuth;
