@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 const AdminLayout = () => {
   return (
     <div>
+      <h1 className="text-black">AdminLayout</h1>
       <Outlet />
     </div>
   );
