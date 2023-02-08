@@ -17,7 +17,7 @@ const Login = () => {
         <h1 className="text-center text-1xl uppercase font-bold tracking-[5px] text-white">
           Pintureria
         </h1>
-        <h1 className="text-center text-2xl uppercase font-bold tracking-[5px] text-white mb-8">
+        <h1 className="text-center text-2xl uppercase font-bold tracking-[5px] text-yellow-300 mb-8">
           Cikron
         </h1>
         <h1 className="text-3xl uppercase font-bold tracking-[5px] text-white mb-8">
@@ -25,7 +25,7 @@ const Login = () => {
         </h1>
         <form action="">
           <div className="relative mb-4">
-            <RiMailFill className="absolute top-1/2 -translate-y-1/2 left-2" />
+            <RiMailFill className="absolute top-1/2 -translate-y-1/2 left-2 text-yellow-300" />
             <input
               type="email"
               className="py-2 pl-8 pr-4 bg-secondary-900 w-full outline-none
@@ -34,7 +34,7 @@ const Login = () => {
             />
           </div>
           <div className="relative mb-4">
-            <RiLockFill className="absolute top-1/2 -translate-y-1/2 left-2" />
+            <RiLockFill className="absolute top-1/2 -translate-y-1/2 left-2 text-yellow-300" />
             <input
               type={showPassword ? "text" : "password"}
               className="py-2 pl-8 bg-secondary-900 w-full outline-none
@@ -44,12 +44,12 @@ const Login = () => {
             {showPassword ? (
               <RiEyeFill
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-1/2 -translate-y-1/2 right-2 hover:cursor-pointer"
+                className="absolute top-1/2 -translate-y-1/2 right-2 hover:cursor-pointer text-yellow-300"
               />
             ) : (
               <RiEyeOffFill
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-1/2 -translate-y-1/2 right-2 hover:cursor-pointer"
+                className="absolute top-1/2 -translate-y-1/2 right-2 hover:cursor-pointer text-yellow-300"
               />
             )}
           </div>
