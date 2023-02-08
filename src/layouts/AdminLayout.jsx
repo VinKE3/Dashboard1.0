@@ -9,7 +9,7 @@ const AdminLayout = () => {
       <Sidebar />
       <div className="xl:col-span-5">
         <Header />
-        <div className="h-[90vh] overflow-y-scroll">
+        <div className="h-[90vh] overflow-y-scroll p-8">
           <Outlet />
         </div>
       </div>
