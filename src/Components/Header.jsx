@@ -24,18 +24,27 @@ const Header = () => {
           }
           transition
         >
-          <MenuItem className="rounded-lg hover:bg-secondary-900">
-            <Link to="/configuracion" className="flex items-center text-white">
+          <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primario">
+            <Link
+              to="/configuracion"
+              className="flex items-center hover:text-primario"
+            >
               Configuración
             </Link>
           </MenuItem>
-          <MenuItem className="rounded-lg hover:bg-secondary-900">
-            <Link to="/usuarios" className="flex items-center text-white">
+          <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primario">
+            <Link
+              to="/usuarios"
+              className="flex items-center  hover:text-primario"
+            >
               Usuarios
             </Link>
           </MenuItem>
-          <MenuItem className="rounded-lg hover:bg-secondary-900">
-            <Link to="/correlativos" className="flex items-center text-white">
+          <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primario">
+            <Link
+              to="/correlativos"
+              className="flex items-center hover:text-primario"
+            >
               Correlativos
             </Link>
           </MenuItem>
