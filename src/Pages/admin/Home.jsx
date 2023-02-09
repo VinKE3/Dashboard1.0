@@ -16,7 +16,7 @@ const Home = () => {
         </div>
       </div>
       <div>
-        <h1 className="text-2xl text-white my-10">Tabla Ejemplo2</h1>
+        <h1 className="text-2xl text-white my-10">Tabla Ejemplo</h1>
       </div>
       <div className="bg-secondary-100 p-8 rounded-xl">
         <div className="hidden md:grid grid-cols-1 md:grid-cols-5 gap-4 mb-10 p-4">
