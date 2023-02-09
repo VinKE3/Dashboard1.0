@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import CardTicket from "../../components/CardTicket";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
@@ -15,30 +14,8 @@ const Home = () => {
           <RiArrowRightSLine className="hover:cursor-pointer hover:text-white transition-colors" />
         </div>
       </div>
-      {/*<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">     
-        <CardTicket
-          ticket="total"
-          totalTickets="145,000"
-          text="Tickets totales"
-        />
-        <CardTicket
-          ticket="pending"
-          totalTickets="5,000"
-          text="Tickets pendientes"
-        />
-        <CardTicket
-          ticket="inProcess"
-          totalTickets="130,000"
-          text="Tickets en proceso"
-        />
-        <CardTicket
-          ticket="close"
-          totalTickets="10,000"
-          text="Tickets cerrados"
-        />
-      </div> */}
       <div>
-        <h1 className="text-2xl text-white my-10">Tabla Ejemplo</h1>
+        <h1 className="text-2xl text-white my-10">Tabla Ejemplo2</h1>
       </div>
       <div className="bg-secondary-100 p-8 rounded-xl">
         <div className="hidden md:grid grid-cols-1 md:grid-cols-5 gap-4 mb-10 p-4">
