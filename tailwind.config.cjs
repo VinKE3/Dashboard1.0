@@ -1,11 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./index.html", "./src/**/*.vue", "./src/**/*.jsx"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      //aca añadi colores primarios y secundarios
       colors: {
-        primario: "#FDE047",
+        primary: "#FDE047",
         secondary: {
           100: "#1E1F25",
           900: "#131517",
@@ -13,5 +12,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("@headlessui/tailwindcss")],
 };

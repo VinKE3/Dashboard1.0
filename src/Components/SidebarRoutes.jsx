@@ -21,9 +21,7 @@ const SidebarRoutes = () => {
               Ventas
               <RiArrowDownSLine className="text-primario" />
             </Link>
-            <ul>
-              <li>hola </li>
-            </ul>
+            <ul></ul>
           </li>
         </ul>
       </div>
