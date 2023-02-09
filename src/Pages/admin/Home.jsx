@@ -15,28 +15,6 @@ const Home = () => {
           <RiArrowRightSLine className="hover:cursor-pointer hover:text-white transition-colors" />
         </div>
       </div>
-      {/*<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">     
-        <CardTicket
-          ticket="total"
-          totalTickets="145,000"
-          text="Tickets totales"
-        />
-        <CardTicket
-          ticket="pending"
-          totalTickets="5,000"
-          text="Tickets pendientes"
-        />
-        <CardTicket
-          ticket="inProcess"
-          totalTickets="130,000"
-          text="Tickets en proceso"
-        />
-        <CardTicket
-          ticket="close"
-          totalTickets="10,000"
-          text="Tickets cerrados"
-        />
-      </div> */}
       <div>
         <h1 className="text-2xl text-white my-10">Tabla Ejemplo2</h1>
       </div>
