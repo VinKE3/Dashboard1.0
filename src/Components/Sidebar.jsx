@@ -15,7 +15,8 @@ const Sidebar = () => {
         onclickButtonSubmenu={() => setShowSubmenu(!showSubmenu)}
         showSubmenu={showSubmenu}
         showMenu={showMenu}
-        secciones={secciones}
+        //uso .map para poder iterar en SidebarSecciones.jsx
+        secciones={secciones.map((seccion) => seccion)}
       />
       <BotonCerrarMenu
         onClickButton={() => setShowMenu(!showMenu)}

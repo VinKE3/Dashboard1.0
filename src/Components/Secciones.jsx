@@ -1,5 +1,6 @@
+//iconos de las secciones
 import { GiAutoRepair } from "react-icons/gi";
-//creo lista de secciones
+//lista de secciones
 const secciones = [
   {
     title: "Ventas",
@@ -40,7 +41,7 @@ const secciones = [
   {
     title: "Compras",
     id: "compras",
-    icon: "fas fa-home",
+    icon: <GiAutoRepair className="text-primary" />,
     items: [
       {
         path: "/compras/provedores",
@@ -67,7 +68,7 @@ const secciones = [
   {
     title: "Mantenimiento",
     id: "mantenimiento",
-    icon: "fas fa-home",
+    icon: <GiAutoRepair className="text-primary" />,
     items: [
       {
         path: "/mantenimiento/tipos-de-cambio",
@@ -128,19 +129,9 @@ const secciones = [
     ],
   },
   {
-    title: "Almacén",
-    id: "almacen",
-    icon: "fas fa-home",
-  },
-  {
-    title: "Personal",
-    id: "personal",
-    icon: "fas fa-home",
-  },
-  {
     title: "Tesoreria",
     id: "tesoreria",
-    icon: "fas fa-home",
+    icon: <GiAutoRepair className="text-primary" />,
     items: [
       {
         path: "/tesoreria/cuentas-por-cobrar",
@@ -191,7 +182,7 @@ const secciones = [
   {
     title: "Informes",
     id: "informes",
-    icon: "fas fa-home",
+    icon: <GiAutoRepair className="text-primary" />,
     items: [
       {
         path: "/informes/articulos",
@@ -214,7 +205,7 @@ const secciones = [
   {
     title: "Herramientas",
     id: "herramientas",
-    icon: "fas fa-home",
+    icon: <GiAutoRepair className="text-primary" />,
     items: [
       {
         path: "/herramientas/movimientos-de-articulos",
