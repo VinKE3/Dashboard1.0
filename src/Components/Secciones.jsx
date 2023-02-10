@@ -1,3 +1,5 @@
+//icono despliegue
+import { RiArrowRightSLine } from "react-icons/ri";
 //iconos de las secciones
 import { GiAutoRepair } from "react-icons/gi";
 //lista de secciones
@@ -125,6 +127,28 @@ const secciones = [
       {
         path: "/mantenimiento/caja-chica-configuracion",
         title: "Caja Chica - Configuracion",
+      },
+    ],
+  },
+  {
+    title: "Almacen",
+    id: "almacen",
+    icon: <GiAutoRepair className="text-primary" />,
+    items: [
+      {
+        path: "/herramientas/almacen",
+        title: "Ver Almacen",
+      },
+    ],
+  },
+  {
+    title: "Personal",
+    id: "personal",
+    icon: <GiAutoRepair className="text-primary" />,
+    items: [
+      {
+        path: "/herramientas/personal",
+        title: "Ver Personal",
       },
     ],
   },

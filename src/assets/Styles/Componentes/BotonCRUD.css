@@ -1,0 +1,73 @@
+.boton-crud {
+  margin-left: 5px;
+  padding: 5px 12px 5px 10px;
+  font-weight: 500;
+  font-size: 0.9em;
+  background: rgb(80, 81, 83);
+  color: white;
+  border-radius: 4px;
+  transition: 0.5s;
+}
+.boton-crud i {
+  font-size: 17px;
+}
+.boton-crud-registrar {
+  margin: 0;
+  background-color: #075985;
+}
+
+.boton-crud-registrar:hover {
+  background-color: #0c76af;
+}
+
+.boton-crud-modificar {
+  background-color: #398145;
+}
+
+.boton-crud-modificar:hover {
+  background-color: #4ba120;
+}
+
+.boton-crud-eliminar {
+  background-color: #c41e1e;
+}
+
+.boton-crud-eliminar:hover {
+  background-color: #dc2626;
+}
+
+.boton-crud-consultar {
+  background-color: #d97706;
+}
+
+.boton-crud-consultar:hover {
+  background-color: #fbbf24;
+  color: #000;
+}
+
+.boton-crud-refrescar {
+  background-color: #2bada3;
+}
+
+.boton-crud-refrescar:hover {
+  background-color: #54d4ca;
+  color: #000;
+}
+
+.boton-crud-icon{
+  margin-right: 4px;
+  font-size: 15px;
+}
+
+
+@media (max-width: 576px) {
+  .boton-crud{
+    padding: 5px 10px;
+  }
+  .boton-crud span {
+    display: none;
+  }
+  .boton-crud-icon{
+    margin: 0;
+  }
+}

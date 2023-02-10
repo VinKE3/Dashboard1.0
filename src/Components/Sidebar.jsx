@@ -8,6 +8,8 @@ import SidebarRoutes from "./SidebarRoutes";
 const Sidebar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
+  //necesito leer el id de secciones para poder mostrar el submenu de cada sección que se clickea
+  const [idSeccion, setIdSeccion] = useState("");
 
   return (
     <>
@@ -15,8 +17,9 @@ const Sidebar = () => {
         onclickButtonSubmenu={() => setShowSubmenu(!showSubmenu)}
         showSubmenu={showSubmenu}
         showMenu={showMenu}
-        //uso .map para poder iterar en SidebarSecciones.jsx
         secciones={secciones}
+        //agrego idSeccion para poder leer el id de la sección que se clickea
+        idSeccion={idSeccion}
       />
       <BotonCerrarMenu
         onClickButton={() => setShowMenu(!showMenu)}
