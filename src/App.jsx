@@ -11,7 +11,6 @@ import Profile from "./pages/admin/Profile";
 import Chat from "./pages/admin/Chat";
 import Error404 from "./pages/Error404";
 import Tickets from "./pages/admin/Tickets";
-import Linea from "./pages/admin/Linea";
 
 function App() {
   return (
@@ -20,7 +19,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/olvide-password" element={<ForgetPassword />} />
         <Route path="/" element={<LayoutAdmin />}>
-          <Route index element={<Linea />} />
+          <Route index element={<Home />} />
           <Route path="perfil" element={<Profile />} />
           <Route path="chat" element={<Chat />} />
           <Route path="tickets" element={<Tickets />} />

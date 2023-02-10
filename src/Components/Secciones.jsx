@@ -241,6 +241,21 @@ const secciones = [
       },
     ],
   },
+  {
+    title: "Herramientas",
+    id: "herramientas",
+    icon: <GiAutoRepair className="text-primary" />,
+    items: [
+      {
+        path: "/herramientas/movimientos-de-articulos",
+        title: "Movimientos de Articulos",
+      },
+      {
+        path: "/herramientas/cambiar-contraseña",
+        title: "Cambiar Contraseña",
+      },
+    ],
+  },
 ];
 
 export default secciones;
