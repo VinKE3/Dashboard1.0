@@ -59,14 +59,6 @@ const Login = () => {
             </button>
           </div>
         </form>
-        <div className="flex flex-col items-center gap-4">
-          <Link
-            to="/olvide-password"
-            className="hover:text-primary transition-colors"
-          >
-            ¿Olvidaste tu contraseña?
-          </Link>
-        </div>
       </div>
     </div>
   );
