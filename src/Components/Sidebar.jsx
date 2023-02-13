@@ -9,7 +9,10 @@ const Sidebar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   //necesito leer el id de secciones para poder mostrar el submenu de cada sección que se clickea
-  const [idSeccion, setIdSeccion] = useState("");
+  const [activeSection, setActiveSection] = useState("");
+  const handleActiveSection = (seccion) => {
+    setActiveSection(seccion);
+  };
 
   return (
     <>
@@ -18,8 +21,8 @@ const Sidebar = () => {
         showSubmenu={showSubmenu}
         showMenu={showMenu}
         secciones={secciones}
-        //agrego idSeccion para poder leer el id de la sección que se clickea
-        idSeccion={idSeccion}
+        activeSection={activeSection}
+        handleActiveSection={handleActiveSection}
       />
       <BotonCerrarMenu
         onClickButton={() => setShowMenu(!showMenu)}

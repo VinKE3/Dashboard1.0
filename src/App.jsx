@@ -6,6 +6,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 // Layouts
 import LayoutAdmin from "./layouts/LayoutAdmin";
+import LayourtPrueba from "./layouts/LayourtPrueba";
 // Pages auth
 import Login from "./pages/auth/Login";
 // Pages admin
@@ -19,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<LayoutAdmin />}>
+        <Route path="/" element={<LayourtPrueba />}>
           <Route index element={<Home />} />
           <Route path="tabla" element={<Tabla />} />
           <Route path="perfil" element={<Profile />} />

@@ -12,7 +12,17 @@ const SidebarRoutes = ({
   secciones,
   //recibo idSeccion para poder leer el id de la sección que se clickea
   idSeccion,
+  handleActiveSection,
+  activeSection,
 }) => {
+  const onClickSubMenu = (e) => {
+    console.log(e.target.id);
+    e.preventDefault();
+    handleActiveSection(e.target.id);
+    //  if(e.target.id === activeSection){
+    //    handleActiveSection("");
+    //  }
+  };
   return (
     <>
       {/**container Sidebar*/}
@@ -27,16 +37,15 @@ const SidebarRoutes = ({
         </h1>
         {/**SECCIONES*/}
         {secciones.map((seccion) => (
-          <div className="lg:h-[80vh] mt-1">
+          <div key={seccion.id} className="lg:h-[80vh] mt-1">
             <ul>
               {/**LISTAADO DE SECCIONES*/}
               <li>
                 {/**Boton para desplegar los items de las secciones*/}
                 <button
-                  //agrego idSeccion para poder leer el id de la sección que se clickea
                   id={seccion.id}
-                  onClick={onclickButtonSubmenu} //onclickButtonSubmenu es la función que recibo de Sidebar.jsx para poder mostrar el submenu
-                  className="w-full flex items-center justify-between py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
+                  onClick={onClickSubMenu} //onclickButtonSubmenu es la función que recibo de Sidebar.jsx para poder mostrar el submenu
+                  className="bg-red-500 w-full flex items-center justify-between py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
                 >
                   {/**  Id de las secciones */}
                   {/**  Iconos de las secciones */}
@@ -47,26 +56,26 @@ const SidebarRoutes = ({
                   {/**  Icono de la flecha cuando se despliega el menu */}
                   <RiArrowRightSLine
                     className={`mt-1 ${
-                      showSubmenu && "rotate-90"
+                      seccion.id === activeSection && "rotate-90"
                     } transition-all`}
                   />
                 </button>
                 {/** Listado de Items de las secciones */}
                 <ul
                   className={` ${
-                    showSubmenu ? "h-full" : "h-0"
+                    seccion.id === activeSection ? "h-full" : "h-0"
                   } overflow-y-hidden transition-all`}
                 >
                   {/** Items de las secciones */}
-                  {seccion.items.map((seccion) => (
-                    <li>
+                  {seccion.items.map((item) => (
+                    <li key={item.title}>
                       {/**  Path a donde te redirigen los items */}
                       <Link
-                        to={seccion.path}
+                        to={item.path}
                         className="py-2 px-4 border-l border-gray-500 ml-6 block relative before:w-3 before:h-3 before:absolute before:bg-primary before:rounded-full before:-left-[6.5px] before:top-1/2 before:-translate-y-1/2 before:border-4 before:border-secondary-100 hover:text-white transition-colors"
                       >
                         {/**  Titulo de los items de las secciones */}
-                        {seccion.title}
+                        {item.title}
                       </Link>
                     </li>
                   ))}
