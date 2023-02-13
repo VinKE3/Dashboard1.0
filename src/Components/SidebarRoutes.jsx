@@ -45,7 +45,7 @@ const SidebarRoutes = ({
                 <button
                   id={seccion.id}
                   onClick={onClickSubMenu} //onclickButtonSubmenu es la función que recibo de Sidebar.jsx para poder mostrar el submenu
-                  className="bg-red-500 w-full flex items-center justify-between py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
+                  className="w-full flex items-center justify-between py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
                 >
                   {/**  Id de las secciones */}
                   {/**  Iconos de las secciones */}

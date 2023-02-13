@@ -20,7 +20,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<LayourtPrueba />}>
+        <Route path="/" element={<LayoutAdmin />}>
           <Route index element={<Home />} />
           <Route path="tabla" element={<Tabla />} />
           <Route path="perfil" element={<Profile />} />
