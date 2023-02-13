@@ -136,7 +136,7 @@ const secciones = [
     icon: <GiAutoRepair className="text-primary" />,
     items: [
       {
-        path: "/herramientas/almacen",
+        path: "/almacen",
         title: "Ver Almacen",
       },
     ],
@@ -147,7 +147,7 @@ const secciones = [
     icon: <GiAutoRepair className="text-primary" />,
     items: [
       {
-        path: "/herramientas/personal",
+        path: "personal",
         title: "Ver Personal",
       },
     ],
@@ -162,7 +162,7 @@ const secciones = [
         title: "Cuentas por Cobrar",
       },
       {
-        path: "/tesoreria/cobras-cuentas-bancarias",
+        path: "/tesoreria/cobros-cuentas-bancarias",
         title: "Cobros - Cuentas Bancarias",
       },
       {
@@ -223,21 +223,6 @@ const secciones = [
       {
         path: "/informes/tesoreria",
         title: "Tesoreria",
-      },
-    ],
-  },
-  {
-    title: "Herramientas",
-    id: "herramientas",
-    icon: <GiAutoRepair className="text-primary" />,
-    items: [
-      {
-        path: "/herramientas/movimientos-de-articulos",
-        title: "Movimientos de Articulos",
-      },
-      {
-        path: "/herramientas/cambiar-contraseña",
-        title: "Cambiar Contraseña",
       },
     ],
   },

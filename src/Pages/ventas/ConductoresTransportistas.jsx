@@ -1,7 +1,7 @@
 import React from "react";
 
 const ConductoresTransportistas = () => {
-  return <div>ConductoresTransportistas</div>;
+  return <h1>ConductoresTransportistas</h1>;
 };
 
 export default ConductoresTransportistas;

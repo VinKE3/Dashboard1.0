@@ -27,7 +27,7 @@ export const SidebarData = [
   },
   {
     title: "Reports",
-    path: "/reports",
+    path: "/",
     icon: <IoIcons.IoIosPaper />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -54,7 +54,7 @@ export const SidebarData = [
   },
   {
     title: "Products",
-    path: "/products",
+    path: "/",
     icon: <FaIcons.FaCartPlus />,
   },
   {
@@ -64,7 +64,7 @@ export const SidebarData = [
   },
   {
     title: "Messages",
-    path: "/messages",
+    path: "/",
     icon: <FaIcons.FaEnvelopeOpenText />,
 
     iconClosed: <RiIcons.RiArrowDownSFill />,
@@ -73,7 +73,7 @@ export const SidebarData = [
     subNav: [
       {
         title: "Message 1",
-        path: "/messages/message1",
+        path: "/",
         icon: <IoIcons.IoIosPaper />,
       },
       {

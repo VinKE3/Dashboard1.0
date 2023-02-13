@@ -19,25 +19,29 @@ const SidebarRoutes = ({
     console.log(e.target.id);
     e.preventDefault();
     handleActiveSection(e.target.id);
-    //  if(e.target.id === activeSection){
-    //    handleActiveSection("");
-    //  }
+    if (e.target.id === activeSection) {
+      handleActiveSection("");
+    }
+    //al darle click a las secciones no se muestra el submenu
+    if (showSubmenu) {
+      onclickButtonSubmenu();
+    }
   };
   return (
     <>
       {/**container Sidebar*/}
       <div
-        className={`xl:h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto h-full top-0 bg-secondary-100 p-4 flex flex-col z-50 ${
+        className={`xl:h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto h-full top-0 bg-secondary-100 p-4 flex flex-col justify-between z-50 ${
           showMenu ? "left-0" : "-left-full"
         } transition-all`}
       >
         {/**Titulo de la Empresa*/}
-        <h1 className="text-center text-2xl font-bold text-white mb-10 xl:h-[10vh] bg-secondary-900 rounded-lg pb-3">
+        <h1 className="text-center text-2xl font-bold text-white xl:h-[7vh] h-[7vh] bg-secondary-900 rounded-lg">
           AKRON<span className="text-primary text-4xl">.</span>
         </h1>
         {/**SECCIONES*/}
         {secciones.map((seccion) => (
-          <div key={seccion.id} className="lg:h-[80vh] mt-1">
+          <div key={seccion.id} className="mt-1">
             <ul>
               {/**LISTAADO DE SECCIONES*/}
               <li>
@@ -85,7 +89,7 @@ const SidebarRoutes = ({
           </div>
         ))}
         {/**SBoton cerrar Sesion*/}
-        <nav className="lg:h-[10vh]">
+        <nav className="">
           <Link
             to="/"
             className="flex items-center gap-4 py-2 px-4 rounded-lg bg-secondary-900 hover:text-primary transition-colors"

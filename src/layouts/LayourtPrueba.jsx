@@ -19,7 +19,7 @@ const LayourtPrueba = () => {
           }`}
           onClick={() => setOpen(!open)}
         />
-        <div className="inline-flex">
+        <div className="inline-flex justify-between">
           <MdBusinessCenter
             className={`text-primary text-4xl rounded cursor-pointer block float-left mr-2 duration-500 ${
               open && "transform rotate-[360deg]"

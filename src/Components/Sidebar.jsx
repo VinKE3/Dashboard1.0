@@ -13,7 +13,6 @@ const Sidebar = () => {
   const handleActiveSection = (seccion) => {
     setActiveSection(seccion);
   };
-
   return (
     <>
       <SidebarRoutes
