@@ -5,7 +5,7 @@ const seccionesPrueba = [
   {
     title: "dashboard",
     id: "dashboard",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <GiAutoRepair id={seccion.id} className="text-primary" />,
   },
   {
     title: "dashboard",

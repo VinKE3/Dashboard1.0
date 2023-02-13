@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Sidebar2 from "../components/Sidebar2";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const LayoutAdmin = () => {
   return (
@@ -10,8 +10,11 @@ const LayoutAdmin = () => {
       <Sidebar />
       <div className="xl:col-span-5">
         <Header />
-        <div className="h-[90vh] overflow-y-scroll p-8">
+        <div className="h-[80vh] overflow-y-scroll p-8">
           <Outlet />
+        </div>
+        <div className="h-[10vh]">
+          <Footer />
         </div>
       </div>
     </div>
