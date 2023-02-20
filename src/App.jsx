@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/themes/md-dark-indigo/theme.css";
 
 import "primereact/resources/primereact.min.css";
 
