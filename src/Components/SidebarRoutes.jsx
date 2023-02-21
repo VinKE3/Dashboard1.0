@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 // Icons
 import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
 const SidebarRoutes = ({
@@ -9,6 +10,7 @@ const SidebarRoutes = ({
   handleActiveSection,
   activeSection,
 }) => {
+  const navigate = useNavigate();
   const onClickSubMenu = (e) => {
     console.log(e.target.id);
     e.preventDefault();
@@ -20,6 +22,12 @@ const SidebarRoutes = ({
     //   onclickButtonSubmenu();
     // }
   };
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  }, [navigate]);
   return (
     <>
       <div
@@ -72,14 +80,14 @@ const SidebarRoutes = ({
             </ul>
           </div>
         ))}
-        <nav className="xl:h-[10vh]">
-          <Link
-            to="/"
-            className="flex items-center gap-4 py-2 px-4 rounded-lg bg-secondary-900 hover:text-primary transition-colors"
-          >
-            <RiLogoutCircleRLine className="text-primary" /> Cerrar sesión
-          </Link>
-        </nav>
+        <button
+          onClick={() => {
+            localStorage.removeItem("token");
+          }}
+          className=" xl:h-[10vh] flex items-center gap-4 py-2 px-4 rounded-lg bg-secondary-900 hover:text-primary transition-colors"
+        >
+          <RiLogoutCircleRLine className="text-primary" /> Cerrar sesión
+        </button>
       </div>
     </>
   );
