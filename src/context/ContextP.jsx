@@ -15,6 +15,7 @@ export const useAuth = () => {
 
 export const useAuthProvider = () => {
   const [token, setToken] = useState("");
+  const [error, setError] = useState(null);
 
   const login = async (params) => {
     try {
@@ -24,13 +25,16 @@ export const useAuthProvider = () => {
         setToken(token);
         authHelper.login(result.data);
       }
-    } catch {
-      console.log("algo salio mal amigo");
+    } catch (error) {
+      console.log({ error });
+      setError(error);
+      setIsLoading(false);
     }
   };
 
   return {
     token,
     login,
+    error,
   };
 };

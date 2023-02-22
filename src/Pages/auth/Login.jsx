@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import AuthContext from "../../context/AuthProvider";
 import ApiMasy from "../../api/ApiMasy";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../context/ContextP";
+import { authHelper } from "../../helpers/AuthHelper";
 // Icons
 import {
   RiMailLine,
@@ -12,7 +14,7 @@ import {
 
 const LOGIN_URL = "api/Sesion/Iniciar";
 const Login = () => {
-  const navigate = useNavigate();
+  const { login, error } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const { setAuth } = useContext(AuthContext);
   const userRef = useRef(null);
@@ -22,6 +24,12 @@ const Login = () => {
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
+
+  ApiMasy.post("api/Sesion/Iniciar", user)
+    .then((res) => {
+      authHelper.login(res.data);
+    })
+    .catch(() => console.log("algo salio mal"));
 
   useEffect(() => {
     userRef.current.focus();
