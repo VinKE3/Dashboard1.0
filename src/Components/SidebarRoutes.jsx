@@ -10,7 +10,6 @@ const SidebarRoutes = ({
   handleActiveSection,
   activeSection,
 }) => {
-  const navigate = useNavigate();
   const onClickSubMenu = (e) => {
     console.log(e.target.id);
     e.preventDefault();
@@ -23,11 +22,11 @@ const SidebarRoutes = ({
     // }
   };
 
-  useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/login");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (!localStorage.getItem("token")) {
+  //     navigate("/login");
+  //   }
+  // }, [navigate]);
   return (
     <>
       <div

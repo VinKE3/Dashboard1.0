@@ -1,0 +1,64 @@
+import store from "store2";
+
+const getStorage = () =>
+  store.session("access_token") ? store.session : store.local;
+
+const getToken = () => {
+  const storage = getStorage();
+
+  return storage("access_token");
+};
+
+const isAuthenticated = () => {
+  const token = getToken();
+
+  if (!token) {
+    return false;
+  }
+
+  //   return Math.round(new Date().getTime() / 1000) <= decode.exp;
+};
+
+const isTokenExpired = () => {
+  const token = getToken();
+
+  if (token) {
+    return console.log(Math.round(new Date().getTime() / 1000));
+  }
+  return true;
+};
+
+function getAccessToken() {
+  if (isAuthenticated()) {
+    return getToken();
+  }
+
+  if (isTokenExpired()) {
+    borrarTokens();
+  } else {
+    return false;
+  }
+}
+
+const borrarTokens = () => {
+  store.session.remove("access_token");
+  store.local.remove("access_token");
+};
+
+function borrarTodosLosTokens() {
+  borrarTokens();
+}
+
+function login(data) {
+  const { token } = data;
+  store.session("access_token", null);
+  store.local("access_token", token);
+  store.session("access_token", token);
+  store.local("access_token", null);
+}
+
+export const authHelper = {
+  getAccessToken,
+  borrarTodosLosTokens,
+  login,
+};
