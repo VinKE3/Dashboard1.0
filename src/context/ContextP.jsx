@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
 import { authHelper } from "../helpers/AuthHelper";
-import axios from "../api/axios";
 import ApiMasy from "../api/ApiMasy";
 
 const authContext = createContext();
@@ -24,7 +23,7 @@ export const useAuthProvider = () => {
     setError(null);
     setToken(null);
     try {
-      const result = await axios.post(`/api/Sesion/Iniciar`, params);
+      const result = await ApiMasy.post(`/api/Sesion/Iniciar`, params);
       if (result.status === 200) {
         const { token } = result.data.data;
         setToken(token);

@@ -12,11 +12,7 @@ const getToken = () => {
 const isAuthenticated = () => {
   const token = getToken();
 
-  if (!token) {
-    return false;
-  }
-
-  //   return Math.round(new Date().getTime() / 1000) <= decode.exp;
+  return token !== null;
 };
 
 const isTokenExpired = () => {
@@ -51,10 +47,8 @@ function borrarTodosLosTokens() {
 
 function login(data) {
   const { token } = data;
-  store.session("access_token", null);
   store.local("access_token", token);
   store.session("access_token", token);
-  store.local("access_token", null);
 }
 
 export const authHelper = {

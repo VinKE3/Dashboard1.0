@@ -1,9 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import AuthContext from "../../context/AuthProvider";
-import ApiMasy from "../../api/ApiMasy";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/ContextP";
-import { authHelper } from "../../helpers/AuthHelper";
 // Icons
 import {
   RiMailLine,
@@ -12,7 +9,6 @@ import {
   RiEyeOffLine,
 } from "react-icons/ri";
 
-const LOGIN_URL = "api/Sesion/Iniciar";
 const Login = () => {
   const { token, login, error, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
@@ -39,24 +35,24 @@ const Login = () => {
     setSuccess(true);
   };
 
-  useEffect(()=>{
-      // Si ya realizo la peticion
-      if (success && !isLoading) {
-        console.log({token})
-        if (token) {
-          navigate("/");
-        } else if (!error) {
-          setErrMsg("Error de conexión");
-        } else if (error?.status === 400) {
-          setErrMsg("Usuario o contraseña incorrectos");
-        } else if (error?.status === 401) {
-          setErrMsg("Usuario no autorizado");
-        } else {
-          setErrMsg("Error desconocido");
-        }
+  useEffect(() => {
+    // Si ya realizo la peticion
+    if (success && !isLoading) {
+      console.log({ token });
+      if (token) {
+        navigate("/");
+      } else if (!error) {
+        setErrMsg("Error de conexión");
+      } else if (error?.status === 400) {
+        setErrMsg("Usuario o contraseña incorrectos");
+      } else if (error?.status === 401) {
+        setErrMsg("Usuario no autorizado");
+      } else {
+        setErrMsg("Error desconocido");
       }
-      errRef.current.focus();
-  }, [success, isLoading, error, token])
+    }
+    errRef.current.focus();
+  }, [success, isLoading, error, token]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
