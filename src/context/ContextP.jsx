@@ -16,25 +16,29 @@ export const useAuth = () => {
 export const useAuthProvider = () => {
   const [token, setToken] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const login = async (params) => {
+    setIsLoading(true);
+    setError(null);
+    setToken(null);
     try {
       const result = await axios.post(`/api/Sesion/Iniciar`, params);
       if (result.status === 200) {
-        const { token } = result.data;
+        const { token } = result.data.data;
         setToken(token);
-        authHelper.login(result.data);
+        authHelper.login(result.data.data);
       }
     } catch (error) {
-      console.log({ error });
-      setError(error);
-      setIsLoading(false);
+      setError(error?.response);
     }
+    setIsLoading(false);
   };
 
   return {
     token,
     login,
     error,
+    isLoading,
   };
 };
