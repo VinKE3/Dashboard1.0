@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import secciones from "./Secciones";
-import BotonCerrarMenu from "./BotonCerrarMenu";
+import BotonCerrarMenu from "../BotonesComponent/BotonCerrarMenu";
 import SidebarRoutes from "./SidebarRoutes";
 
 const Sidebar = () => {
