@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import ApiMasy from "../../api/ApiMasy";
+import ApiMasy from "../../../api/ApiMasy";
 
 const Lineas = () => {
   const getLista = async () => {

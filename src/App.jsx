@@ -1,10 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "primereact/resources/themes/md-dark-indigo/theme.css";
-
 import "primereact/resources/primereact.min.css";
-
 import "primeicons/primeicons.css";
-// Layouts
+// Layout
 import LayoutAdmin from "./layouts/LayoutAdmin";
 // Pages auth
 import Login from "./pages/auth/Login";
@@ -14,50 +12,50 @@ import Profile from "./pages/admin/Profile";
 import Error404 from "./pages/Error404";
 import Tabla from "./components/Tabla";
 // Pages ventas
-import Clientes from "./pages/ventas/Clientes";
-import ConductoresTransportistas from "./pages/ventas/ConductoresTransportistas";
-import DocumentosDeVenta from "./pages/ventas/DocumentosVenta";
-import GuiasDeRemision from "./pages/ventas/GuiasRemision";
-import Cotizaciones from "./pages/ventas/Cotizaciones";
-import SalidasDeArticulos from "./pages/ventas/SalidaDeArticulos";
-import RegistroVentaArticulo from "./pages/ventas/RegistroVentaArticulo";
+import Clientes from "./pages/ventas/clientes/Clientes";
+import ConductoresTransportistas from "./pages/ventas/conductoresTransportistas/ConductoresTransportistas";
+import DocumentosDeVenta from "./pages/ventas/documentosVenta/DocumentosVenta";
+import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
+import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
+import SalidasDeArticulos from "./pages/ventas/salidaDeArticulos/SalidaDeArticulos";
+import RegistroVentaArticulo from "./pages/ventas/registroVentaArituculo/RegistroVentaArticulo";
 //Pages compras
-import Proveedores from "./pages/compras/Proveedores";
-import DocumentosDeCompra from "./pages/compras/DocumentosDeCompra";
-import OrdenesDeCompra from "./pages/compras/OrdenesDeCompra";
-import EntradaDeArticulos from "./pages/compras/EntradaDeArticulos";
-import RegistroCompraArticulo from "./pages/compras/RegistroCompraArticulo";
+import Proveedores from "./pages/compras/proveedores/Proveedores";
+import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
+import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
+import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
+import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
 //Pages mantenimiento
-import TiposDeCambio from "./pages/mantenimiento/TiposDeCambio";
-import Lineas from "./pages/mantenimiento/Lineas";
-import Sublineas from "./pages/mantenimiento/Sublineas";
-import Marcas from "./pages/mantenimiento/Marcas";
-import UnidadesDeMedida from "./pages/mantenimiento/UnidadesDeMedida";
-import TipoDePago from "./pages/mantenimiento/TipoDePago";
-import Cargos from "./pages/mantenimiento/Cargos";
-import EntidadesBancarias from "./pages/mantenimiento/EntidadesBancarias";
-import CuentasCorrientes from "./pages/mantenimiento/CuentasCorrientes";
-import Departamentos from "./pages/mantenimiento/Departamentos";
-import Provincias from "./pages/mantenimiento/Provincias";
-import Distrito from "./pages/mantenimiento/Distrito";
-import Almacenes from "./pages/mantenimiento/Almacenes";
-import CajaChicaConfiguracon from "./pages/mantenimiento/CajaChicaConfiguracon";
+import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
+import Lineas from "./pages/mantenimiento/lineas/Lineas";
+import Sublineas from "./pages/mantenimiento/sublineas/Sublineas";
+import Marcas from "./pages/mantenimiento/marcas/Marcas";
+import UnidadesDeMedida from "./pages/mantenimiento/unidadesDeMedida/UnidadesDeMedida";
+import TipoDePago from "./pages/mantenimiento/tipoDePago/TipoDePago";
+import Cargos from "./pages/mantenimiento/cargos/Cargos";
+import EntidadesBancarias from "./pages/mantenimiento/entidadesBancarias/EntidadesBancarias";
+import CuentasCorrientes from "./pages/mantenimiento/cuentasCorrientes/CuentasCorrientes";
+import Departamentos from "./pages/mantenimiento/departamentos/Departamentos";
+import Provincias from "./pages/mantenimiento/provincias/Provincias";
+import Distrito from "./pages/mantenimiento/distritos/Distrito";
+import Almacenes from "./pages/mantenimiento/almacenes/Almacenes";
+import CajaChicaConfiguracion from "./pages/mantenimiento/cajaChicaConfiguracion/CajaChicaConfiguracion";
 //Pages almacen
 import Almacen from "./pages/almacen/Almacen";
 //Pages personal
 import Personal from "./pages/personal/Personal";
 //pages tesoreria
-import CajaChica from "./pages/tesoreria/CajaChica";
-import CobrosCuentaBancaria from "./pages/tesoreria/CobrosCuentaBancaria";
-import CuentasPorCobrar from "./pages/tesoreria/CuentasPorCobrar";
-import CuentasPorPagar from "./pages/tesoreria/CuentasPorPagar";
-import LetrasCambioCobro from "./pages/tesoreria/LetrasCambioCobro";
-import LetrasCambioPago from "./pages/tesoreria/LetrasCambioPago";
-import PagosCuentaBnacaria from "./pages/tesoreria/PagosCuentaBnacaria";
-import PagosEnEfectivo from "./pages/tesoreria/PagosEnEfectivo";
-import ReciboDeEgreso from "./pages/tesoreria/ReciboDeEgreso";
-import ReciboDeIngreso from "./pages/tesoreria/ReciboDeIngreso";
-import Retenciones from "./pages/tesoreria/Retenciones";
+import CajaChica from "./pages/tesoreria/cajaChica/CajaChica";
+import CobrosCuentaBancaria from "./pages/tesoreria/cobrosCuentasBancaria/CobrosCuentaBancaria";
+import CuentasPorCobrar from "./pages/tesoreria/cuentasPorCobrar/CuentasPorCobrar";
+import CuentasPorPagar from "./pages/tesoreria/cuentasPorPagar/CuentasPorPagar";
+import LetrasCambioCobro from "./pages/tesoreria/letrasCambioCobro/LetrasCambioCobro";
+import LetrasCambioPago from "./pages/tesoreria/letrasCambioPago/LetrasCambioPago";
+import PagosCuentaBnacaria from "./pages/tesoreria/pagosCuentasBancaria/PagosCuentaBnacaria";
+import PagosEnEfectivo from "./pages/tesoreria/pagosEnEfectivo/PagosEnEfectivo";
+import ReciboDeEgreso from "./pages/tesoreria/reciboDeEgreso/ReciboDeEgreso";
+import ReciboDeIngreso from "./pages/tesoreria/reciboDeIngreso/ReciboDeIngreso";
+import Retenciones from "./pages/tesoreria/retenciones/Retenciones";
 
 //page demo tabla
 import Demo from "./components/Demo";
@@ -140,7 +138,7 @@ function App() {
           <Route path="/mantenimiento/almacenes" element={<Almacenes />} />
           <Route
             path="/mantenimiento/caja-chica-configuracion"
-            element={<CajaChicaConfiguracon />}
+            element={<CajaChicaConfiguracion />}
           />
           {/** ALMACEN */}
           <Route path="almacen" element={<Almacen />} />
