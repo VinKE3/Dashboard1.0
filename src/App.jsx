@@ -6,7 +6,6 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 // Layouts
 import LayoutAdmin from "./layouts/LayoutAdmin";
-import LayourtPrueba from "./layouts/LayourtPrueba";
 // Pages auth
 import Login from "./pages/auth/Login";
 // Pages admin

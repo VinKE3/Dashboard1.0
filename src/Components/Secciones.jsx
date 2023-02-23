@@ -1,5 +1,3 @@
-//icono despliegue
-import { RiArrowRightSLine } from "react-icons/ri";
 //iconos de las secciones
 import { GiAutoRepair } from "react-icons/gi";
 //lista de secciones
