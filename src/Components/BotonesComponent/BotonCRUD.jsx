@@ -1,5 +1,10 @@
 import React from "react";
 import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
+import ApiMasy from "../../api/ApiMasy";
+
+const handleDelete = (id) => {
+  console.log("Eliminar: " + id);
+};
 
 const BotonCRUD = ({ row }) => {
   return (
@@ -27,7 +32,7 @@ const BotonCRUD = ({ row }) => {
       <div className="w-4 mr-2 transform hover:text-red-500 hover:scale-125">
         <button
           id="boton-eliminar"
-          onClick={() => console.log("Eliminar: " + row)}
+          onClick={() => handleDelete(row)}
           className="p-0 px-1"
         >
           <FaTrashAlt></FaTrashAlt>

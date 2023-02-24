@@ -6,6 +6,7 @@ import Table from "../../../components/tablas/Table";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import FiltroBasico from "../../../components/filtros/FiltroBasico";
+import ModalLineas from "./ModalLineas";
 
 //?Estilos
 const TablaStyle = styled.div`
@@ -16,6 +17,7 @@ const TablaStyle = styled.div`
 `;
 
 const Lineas = () => {
+  const [showModallineas, setShowModallineas] = useState(false);
   const [lineas, setLineas] = useState([]);
   const [filtro, setFiltro] = useState("");
   const getLista = async () => {
@@ -40,9 +42,9 @@ const Lineas = () => {
     ); //& .title hace referencia a la propiedad en base a la cuál se va a filtrar
   }
 
-  //*Función para Boton Registrar
+  // //*Función para Boton Registrar
   const AbrirModal = () => {
-    // document.getElementById("modal-tipo-cambio").showModal();
+    setShowModallineas(true);
   };
 
   //*Configuración de columnas
@@ -75,38 +77,41 @@ const Lineas = () => {
   };
 
   return (
-    <div className="px-2">
-      <h2 className="mb-4 py-2 text-lg">Líneas</h2>
+    <>
+      {showModallineas && <ModalLineas setShowModallineas={true} />}
+      <div className="px-2">
+        <h2 className="mb-4 py-2 text-lg">Líneas</h2>
 
-      {/* Filtro*/}
-      <FiltroBasico
-        textLabel={propsFiltro.textLabel}
-        inputPlaceHolder={propsFiltro.inputPlaceHolder}
-        inputId={propsFiltro.inputId}
-        inputName={propsFiltro.inputName}
-        inputMax={propsFiltro.inputMax}
-        botonId={propsFiltro.botonId}
-        // botonClick={Buscar}
-        filter={filtro}
-        setFilter={Mostrar}
-      />
-      {/* Filtro*/}
+        {/* Filtro*/}
+        <FiltroBasico
+          textLabel={propsFiltro.textLabel}
+          inputPlaceHolder={propsFiltro.inputPlaceHolder}
+          inputId={propsFiltro.inputId}
+          inputName={propsFiltro.inputName}
+          inputMax={propsFiltro.inputMax}
+          botonId={propsFiltro.botonId}
+          // botonClick={Buscar}
+          filter={filtro}
+          setFilter={Mostrar}
+        />
+        {/* Filtro*/}
 
-      {/* Boton */}
-      <BotonBasico
-        botonText="Registrar"
-        botonClass="boton-crud-registrar"
-        botonIcon={faPlus}
-        click={AbrirModal}
-      />
-      {/* Boton */}
+        {/* Boton */}
+        <BotonBasico
+          botonText="Registrar"
+          botonClass="boton-crud-registrar"
+          botonIcon={faPlus}
+          click={AbrirModal}
+        />
+        {/* Boton */}
 
-      {/* Tabla */}
-      <TablaStyle>
-        <Table columnas={columnas} datos={resultados} />
-      </TablaStyle>
-      {/* Tabla */}
-    </div>
+        {/* Tabla */}
+        <TablaStyle>
+          <Table columnas={columnas} datos={resultados} />
+        </TablaStyle>
+        {/* Tabla */}
+      </div>
+    </>
   );
 };
 
