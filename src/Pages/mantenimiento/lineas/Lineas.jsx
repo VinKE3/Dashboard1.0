@@ -44,7 +44,8 @@ const Lineas = () => {
 
   // //*Función para Boton Registrar
   const AbrirModal = () => {
-    setShowModallineas(true);
+    setShowModallineas(!showModallineas);
+    console.log(showModallineas);
   };
 
   //*Configuración de columnas

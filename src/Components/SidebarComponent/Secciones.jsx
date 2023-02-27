@@ -1,11 +1,20 @@
 //iconos de las secciones
-import { GiAutoRepair } from "react-icons/gi";
+import {
+  FaBalanceScale,
+  FaClipboardCheck,
+  FaTools,
+  FaIndustry,
+  FaUsers,
+  FaMoneyCheck,
+  FaFileAlt,
+  FaToolbox,
+} from "react-icons/fa";
 //lista de secciones
 const secciones = [
   {
     title: "Ventas",
     id: "ventas",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaBalanceScale className="text-primary" />,
     items: [
       {
         path: "/ventas/clientes",
@@ -41,7 +50,7 @@ const secciones = [
   {
     title: "Compras",
     id: "compras",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaClipboardCheck className="text-primary" />,
     items: [
       {
         path: "/compras/provedores",
@@ -68,7 +77,7 @@ const secciones = [
   {
     title: "Mantenimiento",
     id: "mantenimiento",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaTools className="text-primary" />,
     items: [
       {
         path: "/mantenimiento/tipos-de-cambio",
@@ -131,7 +140,7 @@ const secciones = [
   {
     title: "Almacen",
     id: "almacen",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaIndustry className="text-primary" />,
     items: [
       {
         path: "/almacen",
@@ -142,7 +151,7 @@ const secciones = [
   {
     title: "Personal",
     id: "personal",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaUsers className="text-primary" />,
     items: [
       {
         path: "personal",
@@ -153,7 +162,7 @@ const secciones = [
   {
     title: "Tesoreria",
     id: "tesoreria",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaMoneyCheck className="text-primary" />,
     items: [
       {
         path: "/tesoreria/cuentas-por-cobrar",
@@ -204,7 +213,7 @@ const secciones = [
   {
     title: "Informes",
     id: "informes",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaFileAlt className="text-primary" />,
     items: [
       {
         path: "/informes/articulos",
@@ -227,7 +236,7 @@ const secciones = [
   {
     title: "Herramientas",
     id: "herramientas",
-    icon: <GiAutoRepair className="text-primary" />,
+    icon: <FaToolbox className="text-primary" />,
     items: [
       {
         path: "/herramientas/movimientos-de-articulos",

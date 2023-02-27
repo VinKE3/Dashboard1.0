@@ -84,7 +84,7 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
           <select
             value={pageSize}
             onChange={(e) => setPageSize(Number(e.target.value))}
-            className="py-1 pr-5 text-black"
+            className="bg-white py-1 pr-5 text-black"
           >
             {[10, 25, 50, 100].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
@@ -110,7 +110,7 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
 
       {/* Tabla */}
       <table {...getTableProps()} className=" bg-white">
-        <thead className="bg-gray-700">
+        <thead className="bg-black">
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className="text-white">
               {headerGroup.headers.map((column) => (
@@ -126,13 +126,13 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
           ))}
         </thead>
 
-        <tbody {...getTableBodyProps()} className="text-gray-600 ">
+        <tbody {...getTableBodyProps()} className="text-white bg-secondary-100">
           {page.map((row) => {
             prepareRow(row); //Prepara la fila para pintarla en el DOM
             return (
               <tr
                 {...row.getRowProps()}
-                className="border-b border-gray-200 hover:bg-gray-300"
+                className="border-b border-secondary-900 hover:bg-gray-700"
               >
                 {row.cells.map((cell) => {
                   return (
@@ -151,7 +151,7 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
       </table>
 
       {/* Footer */}
-      <div className="py-2 px-4 flex flex-col sm:flex-row align-items-center justify-center bg-white text-gray-700">
+      <div className="py-2 px-4 flex flex-col sm:flex-row align-items-center justify-center bg-black text-white">
         {/* Total de registros */}
         <div className="flex flex-1">
           <span className="text-base sm:text-sm">
@@ -170,21 +170,28 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
           <BotonPaginacion
             onClick={() => gotoPage(0)}
             disabled={!canPreviousPage}
+            className="text-black"
           >
             <FaAngleDoubleLeft></FaAngleDoubleLeft>
           </BotonPaginacion>
           <BotonPaginacion
             onClick={() => previousPage()}
             disabled={!canPreviousPage}
+            className="text-black"
           >
             Anterior
           </BotonPaginacion>
-          <BotonPaginacion onClick={() => nextPage()} disabled={!canNextPage}>
+          <BotonPaginacion
+            className="text-black"
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+          >
             Siguiente
           </BotonPaginacion>
           <BotonPaginacion
             onClick={() => gotoPage(pageCount - 1)}
             disabled={!canNextPage}
+            className="text-black"
           >
             <FaAngleDoubleRight></FaAngleDoubleRight>
           </BotonPaginacion>
