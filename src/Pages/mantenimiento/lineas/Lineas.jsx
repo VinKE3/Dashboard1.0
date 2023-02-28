@@ -63,6 +63,7 @@ const Lineas = () => {
   // //*Función para abrir el modal Boton Registrar
   const AbrirModalRegistrar = () => {
     setShowModallineas(!showModallineas);
+    console.log(showModallineas);
   };
 
   //*Configuración de columnas
@@ -83,7 +84,12 @@ const Lineas = () => {
 
   return (
     <>
-      {showModallineas && <ModalLineas />}
+      {showModallineas && (
+        <ModalLineas
+          show={showModallineas}
+          close={() => setShowModallineas(false)}
+        />
+      )}
       <div className="px-2">
         <h2 className="mb-4 py-2 text-lg">Líneas</h2>
 
