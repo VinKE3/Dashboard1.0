@@ -1,7 +1,9 @@
 import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
+import ApiMasy from "../../api/ApiMasy";
 
-const handleDelete = (id) => {
-  console.log("Eliminar: " + id);
+const handleDelete = async (id) => {
+  const response = await ApiMasy.delete(`api/Mantenimiento/Linea/id=${id}`);
+  console.log(response);
 };
 
 const BotonCRUD = ({ id, mostrar }) => {

@@ -1,40 +1,36 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import ApiMasy from "../../../api/ApiMasy";
 
 const ModalLineas = (props) => {
   const [data, setData] = useState({ descripcion: "" });
 
-  // const handleChange = (e) => {
-  //   console.log(e.target.value);
-  //   setData({ ...data, [e.target.name]: e.target.value });
-  //   console.log(data);
-  // };
-
   const handleChange = ({ target }) => {
-    setData({
-      ...data,
-      [target.name]: target.value,
-    });
+    console.log(target.value);
+    setData({ ...data, [target.name]: target.value });
     console.log(data);
   };
 
   const handleSubmit = async (e) => {
     console.log("submit");
     e.preventDefault();
-    console.log(data.descripcion);
-    try {
-      const result = await ApiMasy.post(`api/Mantenimiento/Linea`, {
-        descripcion: data.descripcion,
-      });
-      console.log(result);
-    } catch (error) {
-      console.log(error);
+    const result = await ApiMasy.post(`api/Mantenimiento/Linea`, data);
+    if (result.status === 201) {
+      Swal.fire(
+        "Registro!",
+        `Linea ${result.data.descripcion} registrada correctamente`,
+        "success"
+      );
+    } else {
+      Swal.fire("Error!", "Error al Registrar Linea!", "error");
     }
   };
+
   useEffect(() => {
     data && console.log(data);
   }, [data]);
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -57,6 +53,7 @@ const ModalLineas = (props) => {
                         Código
                       </label>
                       <input
+                        placeholder="00"
                         id="codigo"
                         readOnly={true}
                         type="text"
@@ -68,12 +65,11 @@ const ModalLineas = (props) => {
                         Descripción
                       </label>
                       <input
+                        placeholder="descripcion"
                         defaultValue={data.descripcion}
-                        id="descripcion"
                         type="text"
                         name="descripcion"
                         onChange={handleChange}
-                        required
                         className="block w-full px-4 py-2 mt-2 text-white bg-white border border-gray-200 rounded-md dark:bg-gray-500 dark:text-white dark:border-gray-600 focus:border-secondary-900 focus:ring-secondary-900 focus:ring-opacity-40 dark:focus:border-secondary-900 focus:outline-none focus:ring"
                       />
                     </div>
@@ -92,9 +88,11 @@ const ModalLineas = (props) => {
               </button>
               <button
                 className="bg-secondary-900 hover:text-primary text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={props.close}
-                onSubmit={handleSubmit}
+                type="submit"
+                onClick={() => {
+                  this.handleSubmit();
+                  this.props.close();
+                }}
               >
                 Registrar
               </button>

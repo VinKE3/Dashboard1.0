@@ -99,7 +99,7 @@ function Table({ columnas, datos, total }) {
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="py-2 px-6"
+                  className="py-2 px-6 text-left"
                 >
                   {column.render("Header")}
                 </th>
