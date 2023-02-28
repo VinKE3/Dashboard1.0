@@ -6,9 +6,7 @@ import {
   useGlobalFilter,
   usePagination,
   useSortBy,
-  useFilters,
 } from "react-table";
-import FiltroColumna from "../filtros/FiltroColumna";
 
 const BotonPaginacion = styled.button`
   padding: 4px 5px;
@@ -36,18 +34,16 @@ const BotonPaginacion = styled.button`
   &:hover {
     background-color: #d6d6d6;
   }
+  &:disabled {
+    color: #010;
+    opacity: 0.5;
+  }
 `;
 ///
 
-function Table({ columnas, datos /*, propsFiltro*/ }) {
+function Table({ columnas, datos, total }) {
   const columns = columnas;
   const data = datos;
-  const defaultColumn = React.useMemo(
-    () => ({
-      Filter: FiltroColumna,
-    }),
-    []
-  );
   const {
     getTableProps,
     getTableBodyProps,
@@ -64,15 +60,13 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
     setPageSize,
     state,
     setGlobalFilter,
-    preGlobalFilteredRows,
   } = useTable(
-    { columns, data, defaultColumn },
+    { columns, data, initialState: { pageSize: 25 } },
     useGlobalFilter,
-    useFilters,
     useSortBy,
     usePagination
   );
-  const { globalFilter, pageIndex, pageSize } = state;
+  const { pageIndex, pageSize } = state;
 
   return (
     <div className="flex flex-col mt-2 overflow-x-auto shadow-md rounded text-sm ">
@@ -95,17 +89,6 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
             ))}
           </select>
         </div>
-
-        {/* <FiltroBasico
-          textLabel={propsFiltro.textLabel}
-          inputPlaceHolder={propsFiltro.inputPlaceHolder}
-          inputId={propsFiltro.inputId}
-          inputName={propsFiltro.inputName}
-          inputMax={propsFiltro.inputMax}
-          botonId={propsFiltro.botonId}
-          filter={globalFilter}
-          setFilter={setGlobalFilter}
-        /> */}
       </div>
 
       {/* Tabla */}
@@ -119,7 +102,6 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
                   className="py-2 px-6"
                 >
                   {column.render("Header")}
-                  <div>{column.canFilter ? column.render("Filter") : null}</div>
                 </th>
               ))}
             </tr>
@@ -155,7 +137,15 @@ function Table({ columnas, datos /*, propsFiltro*/ }) {
         {/* Total de registros */}
         <div className="flex flex-1">
           <span className="text-base sm:text-sm">
-            Total de registros: <strong>{preGlobalFilteredRows.length} </strong>
+            {pageSize > total ? (
+              <strong>
+                Mostrando los primeros {total} resultados de {total} en total
+              </strong>
+            ) : (
+              <strong>
+                Mostrando los primeros {pageSize} resultados de {total} en total
+              </strong>
+            )}
           </span>
         </div>
 

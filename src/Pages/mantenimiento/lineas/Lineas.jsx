@@ -18,34 +18,51 @@ const TablaStyle = styled.div`
 
 const Lineas = () => {
   const [showModallineas, setShowModallineas] = useState(false);
-  const [lineas, setLineas] = useState([]);
-  const [filtro, setFiltro] = useState("");
-  const getLista = async () => {
-    const lista = await ApiMasy.get(`api/Mantenimiento/Linea/Listar`);
-    setLineas(lista.data.data.data);
+  const [datos, setDatos] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [botones, setBotones] = useState([true, true, true]);
+  const [timer, setTimer] = useState(null);
+
+  const Listar = async (filtroApi = "") => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/Linea/Listar?Cantidad=1000${filtroApi}`
+    );
+    setDatos(result.data.data.data);
+    console.log(result.data.data.data.map((item) => item.descripcion));
+    setTotal(result.data.data.total);
   };
 
   useEffect(() => {
-    getLista();
+    Listar();
   }, []);
 
-  //*Función para Filtrado de Tabla local sin consultar a la API
-  const Mostrar = (e) => {
-    setFiltro(e.target.value);
+  const FiltradoKeyPress = (e) => {
+    let filtro = e.target.value;
+    clearTimeout(timer);
+    const newTimer = setTimeout(() => {
+      if (filtro == "") {
+        console.log(filtro);
+        Listar();
+      } else {
+        Listar(`&descripcion=${filtro}`);
+      }
+    }, 500);
+    setTimer(newTimer);
   };
-  let resultados = [];
-  if (!filtro) {
-    resultados = lineas;
-  } else {
-    resultados = lineas.filter((dato) =>
-      dato.descripcion.toLowerCase().includes(filtro.toLowerCase())
-    ); //& .title hace referencia a la propiedad en base a la cuál se va a filtrar
-  }
 
-  // //*Función para Boton Registrar
-  const AbrirModal = () => {
+  const FiltradoButton = () => {
+    let filtro = document.getElementById("descripcion").value;
+    console.log(filtro);
+    if (filtro == "") {
+      Listar();
+    } else {
+      Listar(`&descripcion=${filtro}`);
+    }
+  };
+
+  // //*Función para abrir el modal Boton Registrar
+  const AbrirModalRegistrar = () => {
     setShowModallineas(!showModallineas);
-    console.log(showModallineas);
   };
 
   //*Configuración de columnas
@@ -53,47 +70,33 @@ const Lineas = () => {
     {
       Header: "Codigo",
       accessor: "id",
-      disableFilters: true,
     },
     {
       Header: "Descripcion",
       accessor: "descripcion",
-      disableFilters: true,
     },
     {
       Header: "Acciones",
-      Cell: ({ row }) => <BotonCRUD row={row.values.id} />, //&Aquí va el nombre de la propiedad Id
-      disableFilters: true,
+      Cell: ({ row }) => <BotonCRUD id={row.values.id} mostrar={botones} />, //&Aquí va el nombre de la propiedad Id
     },
   ];
 
-  //* Props para filtro básico
-  const propsFiltro = {
-    textLabel: "Descripción",
-    inputPlaceHolder: "Descripción",
-    inputId: "descripcion",
-    inputName: "descripcion",
-    inputMax: "200",
-    botonId: "buscar-sub-lineas",
-  };
-
   return (
     <>
-      {showModallineas && <ModalLineas setShowModallineas={true} />}
+      {showModallineas && <ModalLineas />}
       <div className="px-2">
         <h2 className="mb-4 py-2 text-lg">Líneas</h2>
 
         {/* Filtro*/}
         <FiltroBasico
-          textLabel={propsFiltro.textLabel}
-          inputPlaceHolder={propsFiltro.inputPlaceHolder}
-          inputId={propsFiltro.inputId}
-          inputName={propsFiltro.inputName}
-          inputMax={propsFiltro.inputMax}
-          botonId={propsFiltro.botonId}
-          // botonClick={Buscar}
-          filter={filtro}
-          setFilter={Mostrar}
+          textLabel={"Descripción"}
+          inputPlaceHolder={"Descripción"}
+          inputId={"descripcion"}
+          inputName={"descripcion"}
+          inputMax={"200"}
+          botonId={"buscar-lineas"}
+          FiltradoButton={FiltradoButton}
+          FiltradoKeyPress={FiltradoKeyPress}
         />
         {/* Filtro*/}
 
@@ -102,13 +105,13 @@ const Lineas = () => {
           botonText="Registrar"
           botonClass="boton-crud-registrar"
           botonIcon={faPlus}
-          click={AbrirModal}
+          click={AbrirModalRegistrar}
         />
         {/* Boton */}
 
         {/* Tabla */}
         <TablaStyle>
-          <Table columnas={columnas} datos={resultados} />
+          <Table columnas={columnas} datos={datos} total={total} />
         </TablaStyle>
         {/* Tabla */}
       </div>
