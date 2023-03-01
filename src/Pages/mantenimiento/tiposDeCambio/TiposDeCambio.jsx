@@ -6,7 +6,7 @@ import Table from "../../../components/tablas/Table";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
-import { format } from "date-fns";
+import moment from "moment/moment";
 import Modal from "./Modal";
 //#region Estilos
 const TablaStyle = styled.div`
@@ -19,6 +19,7 @@ const TablaStyle = styled.div`
   }
 `;
 //#endregion
+
 const TipodeCambio = () => {
   //#region UseState
   const [datos, setDatos] = useState([]);
@@ -26,14 +27,31 @@ const TipodeCambio = () => {
   const [timer, setTimer] = useState(null);
   const [botones, setBotones] = useState([true, true, true]);
   const [objeto, setObjeto] = useState([]);
-  const [modalOn, setModalOn] = useState(false);
-  const [choice, setChoice] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [modo, setModo] = useState("Registrar");
+  const [respuestaModal, setRespuestaModal] = useState(false);
   //#endregion
 
   //#region UseEffect
   useEffect(() => {
     Listar();
+    console.log("listando 2");
   }, []);
+  // useEffect(() => {
+  //   console.log("Objeto Padre");
+  //   objeto && console.log(objeto);
+  //   console.log("Cierra Objeto Padre");
+  // }, [objeto]);
+
+  useEffect(() => {
+    modo;
+  }, [modo]);
+  useEffect(() => {
+    if (!modal) {
+      Listar();
+      console.log("listando");
+    }
+  }, [modal]);
   //#endregion
 
   //#region Funciones API
@@ -46,9 +64,7 @@ const TipodeCambio = () => {
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    let objeto = result.data.data;
     setObjeto(result.data.data);
-    console.log(result.data.data);
   };
   //#endregion
 
@@ -87,11 +103,19 @@ const TipodeCambio = () => {
   //#endregion
 
   //#region Funciones Modal
-  const LlenarObjeto = (id) => {
-    GetPorId(id);
-  };
-  const AbrirModal = () => {
-    setModalOn(true);
+  const AbrirModal = async (id, modo = "Registrar") => {
+    setModo(modo);
+    if (modo == "Registrar") {
+      let tipoCambio = {
+        id: moment().format("YYYY-MM-DD"),
+        precioCompra: "0",
+        precioVenta: "0",
+      };
+      setObjeto(tipoCambio);
+    } else {
+      await GetPorId(id);
+    }
+    setModal(true);
   };
   //#endregion
 
@@ -101,7 +125,7 @@ const TipodeCambio = () => {
       Header: "Fecha",
       accessor: "id",
       Cell: ({ value }) => {
-        return format(new Date(value), "dd/MM/yyyy");
+        return moment(value).format("DD/MM/YYYY");
       },
     },
     {
@@ -118,7 +142,9 @@ const TipodeCambio = () => {
         <BotonCRUD
           mostrar={botones}
           id={row.values.id}
-          Click1={() => LlenarObjeto(row.values.id)}
+          menu={"TipoCambio"}
+          Click1={() => AbrirModal(row.values.id, "Consultar")}
+          Click2={() => AbrirModal(row.values.id, "Modificar")}
         />
       ),
     },
@@ -183,19 +209,22 @@ const TipodeCambio = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-lg">Tipo de Cambio</h2>
+        <h2 className="mb-4 py-2 text-xl font-bold">Tipo de Cambio</h2>
 
         {/* Filtro*/}
         <div className="flex flex-col sm:flex-row sm:justify-between mt-2 mb-2 py-1 sm:py-0 rounded-1 border-gray-200 overflow-hidden text-sm">
           <div className="w:1 sm:w-1/3 flex flex-1 my-1 sm:my-0 sm:mr-3 rounded-1 overflow-hidden">
-            <label htmlFor="anio" className="px-3 py-1 bg-gray-600 text-white">
+            <label
+              htmlFor="anio"
+              className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
+            >
               Año:
             </label>
             <input
               type="number"
               name="anio"
               id="anio"
-              className="flex-1 pl-3 py-1"
+              className="rounded-none bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               defaultValue={new Date().getFullYear()}
               onChange={FiltradoNumber}
               autoFocus
@@ -203,13 +232,16 @@ const TipodeCambio = () => {
           </div>
 
           <div className="w:1 sm:w-1/3 flex flex-1 my-1 sm:my-0 rounded-1 overflow-hidden">
-            <label id="mes-form" className="px-3 py-1 bg-gray-600 text-white">
+            <label
+              id="mes-form"
+              className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
+            >
               Mes:
             </label>
             <select
               id="mes"
               name="mes"
-              className="py-1 flex-1"
+              className="rounded-none bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={FiltradoSelect}
             >
               {Meses.map((meses) => (
@@ -221,7 +253,7 @@ const TipodeCambio = () => {
             </select>
             <button
               id="buscar-tipos-cambio"
-              className="px-2 rounded-none bg-green-700 text-white hover:bg-green-500"
+              className="px-3 rounded-none rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-600"
               onClick={FiltradoButton}
             >
               <FaSearch />
@@ -235,7 +267,7 @@ const TipodeCambio = () => {
           botonText="Registrar"
           botonClass="boton-crud-registrar"
           botonIcon={faPlus}
-          click={AbrirModal}
+          click={() => AbrirModal()}
         />
         {/* Boton */}
 
@@ -246,7 +278,21 @@ const TipodeCambio = () => {
         {/* Tabla */}
       </div>
 
-      {modalOn && <Modal setModalOn={setModalOn} setChoice={setChoice} />}
+      {respuestaModal && (
+        <div className="flex justify-center">
+          <div className="flex justify-center w-1/3 bg-red-400 m-4 p-6 text-lg">
+            <p className="text-black">Hola aqui</p>
+          </div>
+        </div>
+      )}
+      {modal && (
+        <Modal
+          setModal={setModal}
+          modo={modo}
+          setRespuestaModal={setRespuestaModal}
+          objeto={objeto}
+        />
+      )}
     </>
   );
   //#endregion

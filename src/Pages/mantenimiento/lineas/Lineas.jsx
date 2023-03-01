@@ -27,13 +27,14 @@ const Lineas = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Linea/Listar?Cantidad=1000${filtroApi}`
     );
-    setDatos(result.data.data.data);
-    console.log(result.data.data.data.map((item) => item.descripcion));
-    setTotal(result.data.data.total);
+    return result;
   };
 
   useEffect(() => {
-    Listar();
+    Listar().then((result) => {
+      setDatos(result.data.data.data);
+      setTotal(result.data.data.total);
+    });
   }, []);
 
   const FiltradoKeyPress = (e) => {

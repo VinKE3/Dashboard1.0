@@ -12,24 +12,33 @@ const ModalLineas = (props) => {
     console.log(data);
   };
 
+  const close = () => {
+    props.close();
+  };
+
   const handleSubmit = async (e) => {
-    console.log("submit");
     e.preventDefault();
     const result = await ApiMasy.post(`api/Mantenimiento/Linea`, data);
     if (result.status === 201) {
-      Swal.fire(
-        "Registro!",
-        `Linea ${result.data.descripcion} registrada correctamente`,
-        "success"
-      );
+      Swal.fire("Registro!", result.data.mensajes[0].texto, "success");
+    } else if (result.status === 400) {
+      Swal.fire("Error!", result.data.mensajes[1].texto, "error");
+    } else if (result.status === 409) {
+      Swal.fire("Error!", result.data.mensajes[1].texto, "error");
     } else {
-      Swal.fire("Error!", "Error al Registrar Linea!", "error");
+      Swal.fire("Error!", result.data.mensajes[1].texto, "error");
     }
+    close();
   };
 
   useEffect(() => {
     data && console.log(data);
   }, [data]);
+
+  //quiero actualizar el estado de la tabla de lineas cuando se registre una nueva linea y se cierre el modal
+  // useEffect(() => {
+  //   props.Listar();
+  // }, [data]);
 
   return (
     <>
@@ -89,10 +98,7 @@ const ModalLineas = (props) => {
               <button
                 className="bg-secondary-900 hover:text-primary text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
-                onClick={() => {
-                  this.handleSubmit();
-                  this.props.close();
-                }}
+                onClick={handleSubmit}
               >
                 Registrar
               </button>
