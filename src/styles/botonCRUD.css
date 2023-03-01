@@ -1,0 +1,60 @@
+.boton-crud-registrar {
+  background-color: #075985 !important;
+}
+
+.boton-crud-registrar:hover {
+  background-color: #0c76af !important;
+  color: white !important;
+}
+
+.boton-crud-modificar {
+  background-color: #398145 !important;
+}
+
+.boton-crud-modificar:hover {
+  background-color: #4ba120 !important;
+}
+
+.boton-crud-eliminar {
+  background-color: #c41e1e !important;
+}
+
+.boton-crud-eliminar:hover {
+  background-color: #dc2626 !important;
+}
+
+.boton-crud-consultar {
+  background-color: #d97706 !important;
+}
+
+.boton-crud-consultar:hover {
+  background-color: #fbbf24 !important;
+  color: #000;
+}
+
+.boton-crud-refrescar {
+  background-color: #2bada3 !important;
+}
+
+.boton-crud-refrescar:hover {
+  background-color: #54d4ca !important;
+  color: #000;
+}
+
+.boton-crud-icon {
+  padding-right: 5px;
+  font-size: 14px;
+}
+
+@media (max-width: 576px) {
+  .boton-crud {
+    padding: 5px 10px;
+  }
+  .boton-crud span {
+    display: none;
+  }
+  .boton-crud-icon {
+    margin: 0;
+    font-size: 16px;
+  }
+}

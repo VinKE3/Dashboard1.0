@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import { FaSearch } from "react-icons/fa";
 import moment from "moment";
+import Swal from "sweetalert2";
+import "alertifyjs/build/css/alertify.css";
+import alertify from "alertifyjs";
 
 const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
@@ -66,6 +69,8 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const handleSubmit = async () => {
     const result = await ApiMasy.post(`api/Mantenimiento/TipoCambio`, data);
     if (result.status === 201) {
+      alertify.success(result.data.messages[0].textos);
+      console.log(result.data.mensajes[0].texto);
       setRespuestaModal(true);
     } else {
       setRespuestaModal(false);

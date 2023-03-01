@@ -8,6 +8,7 @@ import styled from "styled-components";
 import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import ModalLineas from "./ModalLineas";
 
+//#region Estilos
 //?Estilos
 const TablaStyle = styled.div`
   & th:last-child {
@@ -15,28 +16,58 @@ const TablaStyle = styled.div`
     text-align: center;
   }
 `;
+//#endregion
 
 const Lineas = () => {
-  const [showModallineas, setShowModallineas] = useState(false);
+  //#region UseState
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
-  const [botones, setBotones] = useState([true, true, true]);
   const [timer, setTimer] = useState(null);
+  const [botones, setBotones] = useState([true, true, true]);
+  const [objeto, setObjeto] = useState([]);
+  const [modal, setModal] = useState(false);
+  const [modo, setModo] = useState("Registrar");
+  const [respuestaModal, setRespuestaModal] = useState(false);
+  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  //#endregion
 
+  //#region UseEffect
+  useEffect(() => {
+    Listar();
+  }, []);
+
+  useEffect(() => {
+    modo;
+  }, [modo]);
+  useEffect(() => {
+    if (!modal) {
+      Listar();
+      console.log("listando");
+    }
+  }, [modal]);
+  useEffect(() => {
+    if (respuestaAlert) {
+      Listar();
+    }
+  }, [respuestaAlert]);
+
+  //#endregion
+
+  //#region Funciones API
   const Listar = async (filtroApi = "") => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Linea/Listar?Cantidad=1000${filtroApi}`
     );
-    return result;
+    setDatos(result.data.data.data);
+    setTotal(result.data.data.total);
   };
+  const GetPorId = async (id) => {
+    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
+    setObjeto(result.data.data);
+  };
+  //#endregion
 
-  useEffect(() => {
-    Listar().then((result) => {
-      setDatos(result.data.data.data);
-      setTotal(result.data.data.total);
-    });
-  }, []);
-
+  //#region Funciones Filtrado
   const FiltradoKeyPress = (e) => {
     let filtro = e.target.value;
     clearTimeout(timer);
@@ -60,12 +91,23 @@ const Lineas = () => {
       Listar(`&descripcion=${filtro}`);
     }
   };
+  //#endregion
 
-  // //*Función para abrir el modal Boton Registrar
-  const AbrirModalRegistrar = () => {
-    setShowModallineas(!showModallineas);
-    console.log(showModallineas);
+  //#region Funciones Modal
+  const AbrirModal = async (id, modo = "Registrar") => {
+    setModo(modo);
+    if (modo == "Registrar") {
+      let linea = {
+        id: "00",
+        descripcion: "",
+      };
+      setObjeto(linea);
+    } else {
+      await GetPorId(id);
+    }
+    setModal(true);
   };
+  //#endregion
 
   //*Configuración de columnas
   const columnas = [
@@ -79,18 +121,21 @@ const Lineas = () => {
     },
     {
       Header: "Acciones",
-      Cell: ({ row }) => <BotonCRUD id={row.values.id} mostrar={botones} />, //&Aquí va el nombre de la propiedad Id
+      Cell: ({ row }) => (
+        <BotonCRUD
+          id={row.values.id}
+          mostrar={botones}
+          Click1={() => AbrirModal(row.values.id, "Consultar")}
+          Click2={() => AbrirModal(row.values.id, "Modificar")}
+          menu={"Linea"}
+          setRespuestaAlert={setRespuestaAlert}
+        />
+      ), //&Aquí va el nombre de la propiedad Id
     },
   ];
 
   return (
     <>
-      {showModallineas && (
-        <ModalLineas
-          show={showModallineas}
-          close={() => setShowModallineas(false)}
-        />
-      )}
       <div className="px-2">
         <h2 className="mb-4 py-2 text-lg">Líneas</h2>
 
@@ -112,7 +157,7 @@ const Lineas = () => {
           botonText="Registrar"
           botonClass="boton-crud-registrar"
           botonIcon={faPlus}
-          click={AbrirModalRegistrar}
+          click={() => AbrirModal()}
         />
         {/* Boton */}
 
@@ -122,6 +167,14 @@ const Lineas = () => {
         </TablaStyle>
         {/* Tabla */}
       </div>
+      {modal && (
+        <ModalLineas
+          setModal={setModal}
+          modo={modo}
+          setRespuestaModal={setRespuestaModal}
+          objeto={objeto}
+        />
+      )}
     </>
   );
 };

@@ -30,28 +30,28 @@ const TipodeCambio = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaModal, setRespuestaModal] = useState(false);
+  const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
   //#region UseEffect
-  useEffect(() => {
-    Listar();
-    console.log("listando 2");
-  }, []);
   // useEffect(() => {
   //   console.log("Objeto Padre");
   //   objeto && console.log(objeto);
   //   console.log("Cierra Objeto Padre");
   // }, [objeto]);
-
   useEffect(() => {
     modo;
   }, [modo]);
   useEffect(() => {
     if (!modal) {
       Listar();
-      console.log("listando");
     }
   }, [modal]);
+  useEffect(() => {
+    if (respuestaAlert) {
+      Listar();
+    }
+  }, [respuestaAlert]);
   //#endregion
 
   //#region Funciones API
@@ -140,11 +140,12 @@ const TipodeCambio = () => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
-          mostrar={botones}
           id={row.values.id}
-          menu={"TipoCambio"}
+          mostrar={botones}
           Click1={() => AbrirModal(row.values.id, "Consultar")}
           Click2={() => AbrirModal(row.values.id, "Modificar")}
+          menu={"TipoCambio"}
+          setRespuestaAlert={setRespuestaAlert}
         />
       ),
     },
@@ -277,14 +278,6 @@ const TipodeCambio = () => {
         </TablaStyle>
         {/* Tabla */}
       </div>
-
-      {respuestaModal && (
-        <div className="flex justify-center">
-          <div className="flex justify-center w-1/3 bg-red-400 m-4 p-6 text-lg">
-            <p className="text-black">Hola aqui</p>
-          </div>
-        </div>
-      )}
       {modal && (
         <Modal
           setModal={setModal}

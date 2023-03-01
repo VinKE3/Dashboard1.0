@@ -1,13 +1,24 @@
-import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
+import React, { useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import Swal from "sweetalert2";
+import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
 
-const BotonCRUD = ({ id, mostrar, menu, Click1, Click2 }) => {
+const BotonCRUD = ({
+  mostrar,
+  id,
+  Click1,
+  Click2,
+  menu,
+  setRespuestaAlert,
+}) => {
+  useEffect(() => {
+    setRespuestaAlert(false);
+  }, [setRespuestaAlert]);
+  //#region Función Eliminar
   const handleDelete = async (id) => {
-    // const response = await ApiMasy.delete(`api/Mantenimiento/Linea/${id}`);
     Swal.fire({
-      title: "Esta seguro?",
-      text: "Los cambios no se podran revertir!",
+      title: "¿Está seguro?",
+      text: "¡Los cambios no se podrán revertir!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -18,26 +29,39 @@ const BotonCRUD = ({ id, mostrar, menu, Click1, Click2 }) => {
       if (result.isConfirmed) {
         ApiMasy.delete(`api/Mantenimiento/${menu}/${id}`).then((response) => {
           if (response.status === 200) {
-            Swal.fire("Eliminado!", "Se elimino correctamente.", "success");
+            setRespuestaAlert(true);
+            Swal.fire("", String(response.data.messages[0].textos), "success");
           } else if (response.status === 404) {
-            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            Swal.fire(
+              "ERROR",
+              String(response.data.messages[0].textos),
+              "error"
+            );
+            setRespuestaAlert(false);
           } else {
-            Swal.fire("Error!", "No se pudo eliminar.", "error");
+            Swal.fire(
+              "ERROR",
+              String(response.data.messages[0].textos),
+              "error"
+            );
+            setRespuestaAlert(false);
           }
         });
       }
     });
   };
+  //#endregion
 
+  //#region  Render
   return (
     <div className="flex item-center justify-center">
       {mostrar[0] ? (
         <div className="w-4 mr-2 scale-110 transform hover:text-blue-500 hover:scale-125">
           <button
             id="boton-consultar"
+            onClick={Click1}
             className="p-0 px-1"
             title="Click para consultar registro"
-            onClick={Click1}
           >
             <FaEye></FaEye>
           </button>
@@ -75,6 +99,7 @@ const BotonCRUD = ({ id, mostrar, menu, Click1, Click2 }) => {
       )}
     </div>
   );
+  //#endregion
 };
 
 export default BotonCRUD;
