@@ -28,14 +28,14 @@ const SidebarRoutes = ({
         showMenu ? "left-0" : "-left-full"
       } transition-all`}
     >
-      <div className="h-[8vh]">
+      <div className="h-[8vh]  ">
         <h1 className="text-center text-2xl font-bold text-white h-[6vh] bg-secondary-900 rounded-lg">
           <Link to={"/"}>
             AKRON<span className="text-primary text-4xl">.</span>
           </Link>
         </h1>
       </div>
-      <div className="h-[82vh]">
+      <div className="h-[82vh] overflow-y-scroll">
         {secciones.map((seccion) => (
           <div key={seccion.id}>
             <ul>
