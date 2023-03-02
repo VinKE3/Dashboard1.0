@@ -42,7 +42,6 @@ const Lineas = () => {
   useEffect(() => {
     if (!modal) {
       Listar();
-      console.log("listando");
     }
   }, [modal]);
   useEffect(() => {
@@ -73,7 +72,6 @@ const Lineas = () => {
     clearTimeout(timer);
     const newTimer = setTimeout(() => {
       if (filtro == "") {
-        console.log(filtro);
         Listar();
       } else {
         Listar(`&descripcion=${filtro}`);
@@ -84,7 +82,6 @@ const Lineas = () => {
 
   const FiltradoButton = () => {
     let filtro = document.getElementById("descripcion").value;
-    console.log(filtro);
     if (filtro == "") {
       Listar();
     } else {

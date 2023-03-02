@@ -39,7 +39,6 @@ const Login = () => {
   useEffect(() => {
     // Si ya realizo la peticion
     if (success && !isLoading) {
-      console.log({ token });
       if (token) {
         navigate("/");
       } else if (!error) {

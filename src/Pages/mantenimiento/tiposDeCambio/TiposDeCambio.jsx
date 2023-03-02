@@ -8,6 +8,8 @@ import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import moment from "moment/moment";
 import Modal from "./Modal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 //#region Estilos
 const TablaStyle = styled.div`
   & th {
@@ -52,12 +54,17 @@ const TipodeCambio = () => {
       Listar();
     }
   }, [respuestaAlert]);
+  useEffect(() => {
+    console.log("inicia total");
+    total && console.log(total);
+    console.log("termina total");
+  }, [total]);
   //#endregion
 
   //#region Funciones API
   const Listar = async (filtroApi = "") => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/TipoCambio/Listar?Cantidad=1000${filtroApi}`
+      `api/Mantenimiento/TipoCambio/Listar${filtroApi}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
@@ -75,7 +82,7 @@ const TipodeCambio = () => {
     if (anio == new Date().getFullYear() && mes == 0) {
       Listar();
     } else {
-      Listar(`&anio=${anio}&mes=${mes}`);
+      Listar(`?anio=${anio}&mes=${mes}`);
     }
   };
   const FiltradoNumber = (e) => {
@@ -86,7 +93,7 @@ const TipodeCambio = () => {
       if (anio == new Date().getFullYear() && mes == 0) {
         Listar();
       } else {
-        Listar(`&anio=${anio}&mes=${mes}`);
+        Listar(`?anio=${anio}&mes=${mes}`);
       }
     }, 1000);
     setTimer(newTimer);
@@ -97,7 +104,7 @@ const TipodeCambio = () => {
     if (anio == new Date().getFullYear() && mes == 0) {
       Listar();
     } else {
-      Listar(`&anio=${anio}&mes=${mes}`);
+      Listar(`?anio=${anio}&mes=${mes}`);
     }
   };
   //#endregion
@@ -152,7 +159,7 @@ const TipodeCambio = () => {
   ];
   const Meses = [
     {
-      Numero: 0,
+      Numero: "",
       Nombre: "TODOS",
     },
     {
@@ -286,6 +293,7 @@ const TipodeCambio = () => {
           objeto={objeto}
         />
       )}
+      <ToastContainer />
     </>
   );
   //#endregion

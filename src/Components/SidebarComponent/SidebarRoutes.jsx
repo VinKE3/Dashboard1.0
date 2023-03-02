@@ -52,7 +52,10 @@ const SidebarRoutes = ({
                   onClick={onClickSubMenu}
                   className="w-full flex items-center py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
                 >
-                  <h1 id={seccion.id} className="flex items-center gap-4">
+                  <h1
+                    id={seccion.id}
+                    className="flex flex-1 items-center gap-4"
+                  >
                     {seccion.icon} {seccion.title}
                   </h1>
                   <RiArrowRightSLine

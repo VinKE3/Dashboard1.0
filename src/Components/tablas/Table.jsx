@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import {
@@ -11,8 +11,9 @@ import {
 const BotonPaginacion = styled.button`
   padding: 4px 5px;
   font-weight: 500;
-  background-color: #eee;
-  border: 1px solid #919191;
+  color: #000;
+  background-color: #fde047;
+  border: 1px solid #161616;
   transition: 0.5s;
 
   &:first-child,
@@ -32,18 +33,51 @@ const BotonPaginacion = styled.button`
   }
 
   &:hover {
-    background-color: #d6d6d6;
+    background-color: #d0bb04;
   }
   &:disabled {
-    color: #010;
-    opacity: 0.5;
+    color: #fff;
+    background-color: #ee8100;
+    opacity: 0.7;
   }
 `;
-///
 
 function Table({ columnas, datos, total }) {
+  //#region Columnas y Datos
   const columns = columnas;
   const data = datos;
+  //#endregion
+
+  //#region useState
+  const [pagina, setPagina] = useState(0);
+  //#endregion
+
+  //#region useEffect
+
+  useEffect(() => {
+    console.log("Inicia pagina");
+    pagina && console.log(pagina);
+    console.log("termina pagina");
+  }, [pagina]);
+  useEffect(() => {
+    Paginas();
+  }, []);
+  //#endregion
+
+  //#region Funcion Paginado
+  const Paginas = async () => {
+    console.log("hola");
+    console.log(pagina);
+    console.log("fin hola");
+
+    if (total > 50) {
+      console.log("fin hola 2 ");
+      setPagina(total / 50);
+    }
+  };
+  //#endregion
+
+  //#region Obtiene props React Table
   const {
     getTableProps,
     getTableBodyProps,
@@ -66,21 +100,28 @@ function Table({ columnas, datos, total }) {
     useSortBy,
     usePagination
   );
-  const { pageIndex, pageSize } = state;
+  //#endregion
 
+  //#region Paginacion
+  const { pageIndex, pageSize } = state;
+  //#endregion
+
+  //#region Render
   return (
-    <div className="flex flex-col mt-2 overflow-x-auto shadow-md rounded text-sm ">
+    <div className="flex flex-col mt-2 overflow-x-auto shadow-md rounded md:text-sm ">
       {/* Div Mostrar filas y Filtro global */}
-      <div className="flex align-items-center justify-between ">
+      <div className="flex align-items-center justify-between">
         {/* Div Mostrar Filas */}
-        <div className="flex overflow-hidden">
-          <label className="px-3 py-1 bg-gray-700">Mostrar:</label>
+        <div className="flex overflow-hidden rounded-t-lg">
+          <label className="inline-flex items-center px-3 text-gray-900 bg-gray-200 dark:bg-gray-800 dark:text-gray-300 font-bold">
+            Mostrar:
+          </label>
           <select
             value={pageSize}
             onChange={(e) => setPageSize(Number(e.target.value))}
-            className="bg-white py-1 pr-5 text-black"
+            className="rounded-none bg-gray-50 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
-            {[10, 25, 50, 100].map((pageSize) => (
+            {[10, 25, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 {" "}
                 {pageSize}
@@ -93,13 +134,13 @@ function Table({ columnas, datos, total }) {
 
       {/* Tabla */}
       <table {...getTableProps()} className=" bg-white">
-        <thead className="bg-black">
+        <thead className="text-left bg-gray-800">
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} className="text-white">
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="py-2 px-6 text-left"
+                  className="py-2 px-6"
                 >
                   {column.render("Header")}
                 </th>
@@ -135,7 +176,7 @@ function Table({ columnas, datos, total }) {
       {/* Footer */}
       <div className="py-2 px-4 flex flex-col sm:flex-row align-items-center justify-center bg-black text-white">
         {/* Total de registros */}
-        <div className="flex flex-1">
+        <div className="py-1 flex flex-1 align-items-center justify-center">
           <span className="text-base sm:text-sm">
             {pageSize > total ? (
               <strong>
@@ -149,7 +190,7 @@ function Table({ columnas, datos, total }) {
           </span>
         </div>
 
-        <div className="py-1 px-3">
+        <div className="py-1 px-3 flex align-items-center justify-center">
           <span className="text-base sm:text-sm">
             Página <strong>{pageIndex + 1} </strong>
             de <strong>{pageOptions.length} </strong>
@@ -160,52 +201,29 @@ function Table({ columnas, datos, total }) {
           <BotonPaginacion
             onClick={() => gotoPage(0)}
             disabled={!canPreviousPage}
-            className="text-black"
           >
             <FaAngleDoubleLeft></FaAngleDoubleLeft>
           </BotonPaginacion>
           <BotonPaginacion
             onClick={() => previousPage()}
             disabled={!canPreviousPage}
-            className="text-black"
           >
             Anterior
           </BotonPaginacion>
-          <BotonPaginacion
-            className="text-black"
-            onClick={() => nextPage()}
-            disabled={!canNextPage}
-          >
+          <BotonPaginacion onClick={() => nextPage()} disabled={!canNextPage}>
             Siguiente
           </BotonPaginacion>
           <BotonPaginacion
             onClick={() => gotoPage(pageCount - 1)}
             disabled={!canNextPage}
-            className="text-black"
           >
             <FaAngleDoubleRight></FaAngleDoubleRight>
           </BotonPaginacion>
         </div>
-
-        {/* <div>
-          <span>
-            Ir a la página:{" "}
-            <input
-              type="number"
-              defaultValue={pageIndex + 1}
-              onChange={(e) => {
-                const pageNumber = e.target.value
-                  ? Number(e.target.value) - 1
-                  : 0;
-                gotoPage(pageNumber);
-              }}
-              className="text-black w-10 mr-5"
-            />
-          </span>
-        </div> */}
       </div>
     </div>
   );
+  //#endregion
 }
 
 export default Table;

@@ -1,9 +1,9 @@
 import axios from "axios";
 import { authHelper } from "../helpers/AuthHelper";
 
-const BASE_URL = "https://mcwebapi.masydase.com/";
 const ApiMasy = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "https://mcwebapi.masydase.com/",
+  timeout: 10000,
   headers: {
     "Content-type": "application/json",
   },

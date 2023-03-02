@@ -24,7 +24,9 @@ export const useAuthProvider = () => {
     setError(null);
     setToken(null);
     try {
+      console.log("tratando");
       const result = await Api.post(`/api/Sesion/Iniciar`, params);
+      console.log(result);
       if (result.status === 200) {
         const { token } = result.data.data;
         setToken(token);

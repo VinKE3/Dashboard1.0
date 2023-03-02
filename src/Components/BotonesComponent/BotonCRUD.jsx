@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import Swal from "sweetalert2";
 import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BotonCRUD = ({
   mostrar,
@@ -17,33 +19,55 @@ const BotonCRUD = ({
   //#region Función Eliminar
   const handleDelete = async (id) => {
     Swal.fire({
-      title: "¿Está seguro?",
+      title: "Eliminar registro",
       text: "¡Los cambios no se podrán revertir!",
       icon: "warning",
+      iconColor: "#F7BF3A",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
+      color: "#fff",
+      background: "#1E1F25",
+      confirmButtonColor: "#EE8100",
+      confirmButtonText: "Aceptar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
-      confirmButtonText: "Si, Eliminar!",
     }).then((result) => {
       if (result.isConfirmed) {
         ApiMasy.delete(`api/Mantenimiento/${menu}/${id}`).then((response) => {
           if (response.status === 200) {
             setRespuestaAlert(true);
-            Swal.fire("", String(response.data.messages[0].textos), "success");
+            toast.success(String(response.data.messages[0].textos), {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
           } else if (response.status === 404) {
-            Swal.fire(
-              "ERROR",
-              String(response.data.messages[0].textos),
-              "error"
-            );
+            toast.error(String(response.data.messages[0].textos), {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
             setRespuestaAlert(false);
           } else {
-            Swal.fire(
-              "ERROR",
-              String(response.data.messages[0].textos),
-              "error"
-            );
+            toast.alert(String(response.data.messages[0].textos), {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
             setRespuestaAlert(false);
           }
         });

@@ -3,9 +3,11 @@ import { authHelper } from "../helpers/AuthHelper";
 
 export default axios.create({
   baseURL: "https://mcwebapi.masydase.com/",
+  timeout: 10000,
   headers: {
     "Content-type": "application/json",
   },
+
   interceptors: {
     request: {
       use:

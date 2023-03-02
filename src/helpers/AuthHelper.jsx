@@ -46,7 +46,6 @@ function login(data) {
   const { token } = data;
   store.local("access_token", token);
   store.session("access_token", token);
-  console.log("login");
 }
 
 export const authHelper = {
