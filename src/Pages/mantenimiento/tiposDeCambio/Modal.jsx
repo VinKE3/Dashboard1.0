@@ -5,6 +5,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import "alertifyjs/build/css/alertify.css";
 import alertify from "alertifyjs";
+import Api from "../../../api/Api";
 
 const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
@@ -67,7 +68,8 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
 
   //#region Envío y Validación
   const handleSubmit = async () => {
-    const result = await ApiMasy.post(`api/Mantenimiento/TipoCambio`, data);
+    const result = await Api.post(`api/Mantenimiento/TipoCambio`, data);
+    console.log(result);
     if (result.status === 201) {
       alertify.success(result.data.messages[0].textos);
       console.log(result.data.mensajes[0].texto);

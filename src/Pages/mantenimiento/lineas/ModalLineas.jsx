@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import ApiMasy from "../../../api/ApiMasy";
+import Api from "../../../api/Api";
 
 const ModalLineas = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
@@ -58,14 +59,15 @@ const ModalLineas = ({ setModal, modo, setRespuestaModal, objeto }) => {
     e.preventDefault();
     const result = await ApiMasy.post(`api/Mantenimiento/Linea`, data);
     if (result.status === 201 || result.status === 200) {
-      Swal.fire("Registro!", result.data.mensajes[0].texto, "success");
-      console.log("registrando");
-    } else if (result.status === 400) {
-      Swal.fire("Error!", result.data.mensajes[1].texto, "error");
+      Swal.fire("Registro!", String(result.data.messages[0].textos), "success");
+      console.log(result.status);
+    } else if (result.data.messages[0].tipo == 1) {
+      Swal.fire("Error!", String(result.data.messages[1].textos), "error");
+      console.log(result.data.messages[0].tipo);
     } else if (result.status === 409) {
-      Swal.fire("Error!", result.data.mensajes[1].texto, "error");
+      Swal.fire("Error!", String(result.data.messages[1].textos), "error");
     } else {
-      Swal.fire("Error!", result.data.mensajes[1].texto, "error");
+      Swal.fire("Error!", String(result.data.messages[1].textos), "error");
     }
     setModal(false);
   };

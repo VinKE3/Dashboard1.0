@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/ContextP";
+
 // Icons
 import {
   RiMailLine,

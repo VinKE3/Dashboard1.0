@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 // Icons
 import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
+import store from "store2";
 
 const SidebarRoutes = ({
   onclickButtonSubmenu,
@@ -11,7 +12,6 @@ const SidebarRoutes = ({
   activeSection,
 }) => {
   const onClickSubMenu = (e) => {
-    console.log(e.target.id);
     e.preventDefault();
     handleActiveSection(e.target.id);
     if (e.target.id === activeSection) {
@@ -20,6 +20,13 @@ const SidebarRoutes = ({
     if (showSubmenu) {
       onclickButtonSubmenu();
     }
+  };
+
+  //borrar tokens
+  const handleLogout = () => {
+    store.session.remove("access_token");
+    store.local.remove("access_token");
+    window.location.href = "/login";
   };
 
   return (
@@ -35,7 +42,7 @@ const SidebarRoutes = ({
           </Link>
         </h1>
       </div>
-      <div className="h-[82vh] overflow-y-scroll">
+      <div className="h-[90vh] overflow-y-scroll">
         {secciones.map((seccion) => (
           <div key={seccion.id}>
             <ul>
@@ -77,7 +84,10 @@ const SidebarRoutes = ({
         ))}
       </div>
       <div className="">
-        <button className="flex items-center gap-4 py-2 px-4 rounded-lg bg-secondary-900 hover:text-primary transition-colors w-full">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-4 py-2 px-4 rounded-lg bg-secondary-900 hover:text-primary transition-colors w-full"
+        >
           <RiLogoutCircleRLine className="text-primary" /> Cerrar sesión
         </button>
       </div>
