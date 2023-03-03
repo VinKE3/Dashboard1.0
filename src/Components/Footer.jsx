@@ -4,7 +4,7 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 
 const Footer = () => {
   return (
-    <footer className="h-[7vh] md:h-[10vh] border-t border-b-primario p-8 items-center pb-8 lg:pb-0">
+    <footer className="h-[7vh] md:h-[10vh] border-t border-b-primario p-11 items-center lg:pb-0">
       <nav className="flex items-center justify-between">
         <h1 className="font-bold just">
           © 2023 -{" "}

@@ -36,11 +36,6 @@ const TipodeCambio = () => {
   //#endregion
 
   //#region UseEffect
-  // useEffect(() => {
-  //   console.log("Objeto Padre");
-  //   objeto && console.log(objeto);
-  //   console.log("Cierra Objeto Padre");
-  // }, [objeto]);
   useEffect(() => {
     modo;
   }, [modo]);

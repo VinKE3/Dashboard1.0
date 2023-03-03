@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
+import FiltroBasico from "../../../Components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
-import ModalLineas from "./ModalLineas";
+import Modal from "./Modal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //#region Estilos
-//?Estilos
 const TablaStyle = styled.div`
   & th:last-child {
     width: 130px;
@@ -19,7 +20,7 @@ const TablaStyle = styled.div`
 //#endregion
 
 const Lineas = () => {
-  //#region UseState
+  //#region useState
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [timer, setTimer] = useState(null);
@@ -31,13 +32,9 @@ const Lineas = () => {
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
-  //#region UseEffect
+  //#region useEffect
   useEffect(() => {
-    Listar();
-  }, []);
-
-  useEffect(() => {
-    modo;
+    modo && console.log(modo);
   }, [modo]);
   useEffect(() => {
     if (!modal) {
@@ -49,19 +46,21 @@ const Lineas = () => {
       Listar();
     }
   }, [respuestaAlert]);
-
+  useEffect(() => {
+    total && console.log(total);
+  }, [total]);
   //#endregion
 
   //#region Funciones API
   const Listar = async (filtroApi = "") => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Linea/Listar?Cantidad=1000${filtroApi}`
+      `api/Mantenimiento/Linea/Listar${filtroApi}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
+    const result = await ApiMasy.get(`api/Mantenimiento/Linea/${id}`);
     setObjeto(result.data.data);
   };
   //#endregion
@@ -74,18 +73,17 @@ const Lineas = () => {
       if (filtro == "") {
         Listar();
       } else {
-        Listar(`&descripcion=${filtro}`);
+        Listar(`?descripcion=${filtro}`);
       }
-    }, 500);
+    }, 1000);
     setTimer(newTimer);
   };
-
   const FiltradoButton = () => {
     let filtro = document.getElementById("descripcion").value;
     if (filtro == "") {
       Listar();
     } else {
-      Listar(`&descripcion=${filtro}`);
+      Listar(`?descripcion=${filtro}`);
     }
   };
   //#endregion
@@ -106,14 +104,14 @@ const Lineas = () => {
   };
   //#endregion
 
-  //*Configuración de columnas
+  //#region Columnas
   const columnas = [
     {
-      Header: "Codigo",
+      Header: "Código",
       accessor: "id",
     },
     {
-      Header: "Descripcion",
+      Header: "Descripción",
       accessor: "descripcion",
     },
     {
@@ -127,14 +125,16 @@ const Lineas = () => {
           menu={"Linea"}
           setRespuestaAlert={setRespuestaAlert}
         />
-      ), //&Aquí va el nombre de la propiedad Id
+      ),
     },
   ];
+  //#endregion
 
+  //#region Render
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-lg">Líneas</h2>
+        <h2 className="mb-4 py-2 text-xl font-bold">Líneas</h2>
 
         {/* Filtro*/}
         <FiltroBasico
@@ -164,16 +164,19 @@ const Lineas = () => {
         </TablaStyle>
         {/* Tabla */}
       </div>
+
       {modal && (
-        <ModalLineas
+        <Modal
           setModal={setModal}
           modo={modo}
           setRespuestaModal={setRespuestaModal}
           objeto={objeto}
         />
       )}
+      <ToastContainer />
     </>
   );
+  //#endregion
 };
 
 export default Lineas;

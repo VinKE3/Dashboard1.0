@@ -1,11 +1,15 @@
 import axios from "axios";
 import { authHelper } from "../helpers/AuthHelper";
 
+const token = authHelper.getAccessToken();
+console.log(token);
+
 export default axios.create({
   baseURL: "https://mcwebapi.masydase.com/",
   timeout: 10000,
   headers: {
     "Content-type": "application/json",
+    Authorization: `Bearer ${token}`,
   },
 
   interceptors: {

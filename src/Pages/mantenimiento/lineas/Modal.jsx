@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import Mensajes from "../../../Components/Mensajes";
-import moment from "moment";
 import { toast } from "react-toastify";
-import { FaSearch } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,7 +36,11 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
     console.log("Cierra data modal");
   }, [data]);
   useEffect(() => {
-    modo == "Consultar" ? ModoConsultar() : ModoModificar();
+    modo == "Modificar"
+      ? ModoModificar()
+      : modo == "Consultar"
+      ? ModoConsultar()
+      : console.log(modo);
   }, []);
   //#endregion
 
@@ -48,26 +50,15 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   };
   const ModoConsultar = () => {
     console.log("consultar");
-    document.getElementById("id").readOnly = true;
-    document.getElementById("precioCompra").readOnly = true;
-    document.getElementById("precioVenta").readOnly = true;
-    document.getElementById("consultarTipoCambio").hidden = true;
+    document.getElementById("descripcion").readOnly = true;
   };
   const ModoModificar = () => {
     console.log("modificar");
-    document.getElementById("id").readOnly = false;
-    document.getElementById("precioCompra").readOnly = false;
-    document.getElementById("precioVenta").readOnly = false;
-    document.getElementById("consultarTipoCambio").hidden = false;
+    document.getElementById("descripcion").readOnly = false;
   };
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(0);
-  };
-  const ValidarConsulta = (e) => {
-    e.preventDefault();
-    let fecha = document.getElementById("id").value;
-    ConsultarTipoCambio("?fecha=" + fecha);
   };
   //#endregion
 
@@ -75,7 +66,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const Registrar = async (e) => {
     e.preventDefault();
     try {
-      const result = await ApiMasy.post(`api/Mantenimiento/TipoCambio`, data);
+      const result = await ApiMasy.post(`api/Mantenimiento/Linea`, data);
       let tipo = result.data.messages[0].tipo;
       let msj = result.data.messages[0].textos[0];
       console.log(tipo);
@@ -91,7 +82,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "colored",
+          theme: "dark",
         });
         setRespuestaModal(true);
       }
@@ -111,56 +102,25 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   };
   const Modificar = async (e) => {
     e.preventDefault();
-    const result = await ApiMasy.put(`api/Mantenimiento/TipoCambio`, data);
+    const result = await ApiMasy.put(`api/Mantenimiento/Linea`, data);
+    let tipo = result.data.messages[0].tipo;
+    let msj = result.data.messages[0].textos[0];
     setTipoMensaje(result.data.messages[0].tipo);
     setMensaje(result.data.messages[0].textos);
-    console.log(result.data.messages[0].textos);
-    if (tipoMensaje == 0) {
-      toast.success(
-        { mensaje },
-        {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
-      setRespuestaModal(true);
-    }
-    setModal(false);
-  };
-  const ConsultarTipoCambio = async (filtroApi = "") => {
-    const res = await ApiMasy.get(
-      `api/Servicio/ConsultarTipoCambio${filtroApi}`
-    );
-
-    let model = {
-      id: res.data.data.fecha,
-      precioCompra: res.data.data.precioCompra,
-      precioVenta: res.data.data.precioVenta,
-    };
-    console.log(res);
-    console.log(model);
-    setData(model);
-    if (res.status == 200) {
-      toast.success("Tipo de Cambio extraído exitosamente", {
+    if (tipo == 0) {
+      toast.success(msj, {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: 4000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "colored",
+        theme: "dark",
       });
-    } else {
-      setTipoMensaje(res.data.messages[0].tipo);
-      setMensaje(res.data.messages[0].mensajes);
+      setRespuestaModal(true);
     }
+    setModal(false);
   };
   const CerrarModal = () => {
     setRespuestaModal(false);
@@ -168,11 +128,10 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   };
   //#endregion
 
-  //#region Render
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative h-full w-full md:h-auto md:w-auto my-0 md:my-6 mx-auto max-w-3xl">
+        <div className="relative h-full w-full md:h-auto my-0 md:my-5 mx-auto max-w-3xl">
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none">
             {/*header*/}
@@ -194,66 +153,43 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                   Click={() => OcultarMensajes()}
                 />
               )}
-              <section className="max-w-4xl p-6 mx-auto rounded-md shadow-md">
+              <section className="min-w-fit max-w-4xl p-6 mx-auto rounded-md shadow-md">
                 <form>
-                  <div className="grid grid-cols-1 gap-2 md:gap-4 mt-1">
-                    <div className="flex">
+                  <div className="flex flex-col md:flex-row gap-3">
+                    <div className="flex md:w-48">
                       <label
                         htmlFor="id"
                         className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
                       >
-                        Tipo
+                        Código
                       </label>
                       <input
-                        type="date"
+                        type="text"
                         id="id"
                         name="id"
-                        value={moment(data.id).format("yyyy-MM-DD")}
+                        defaultValue={data.id}
+                        readOnly
                         onChange={handleChange}
-                        className="rounded-none bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
-                      <button
-                        id="consultarTipoCambio"
-                        className="px-3 rounded-none rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-600"
-                        onClick={(e) => ValidarConsulta(e)}
-                      >
-                        <FaSearch></FaSearch>
-                      </button>
                     </div>
-
-                    <div className="flex flex-col md:flex-row gap-y-2 md:gap-x-2">
-                      <div className="flex">
-                        <label
-                          htmlFor="precioCompra"
-                          className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-                        >
-                          P. Compra
-                        </label>
-                        <input
-                          type="number"
-                          id="precioCompra"
-                          name="precioCompra"
-                          defaultValue={data.precioCompra}
-                          onChange={handleChange}
-                          className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
-                      </div>
-                      <div className="flex">
-                        <label
-                          htmlFor="tipo-cambio-precio-venta"
-                          className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-                        >
-                          P.Venta
-                        </label>
-                        <input
-                          type="number"
-                          id="precioVenta"
-                          name="precioVenta"
-                          defaultValue={data.precioVenta}
-                          onChange={handleChange}
-                          className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
-                      </div>
+                    <div className="flex min-w-min md:w-full">
+                      <label
+                        htmlFor="descripcion"
+                        className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
+                      >
+                        Descripción
+                      </label>
+                      <input
+                        type="text"
+                        id="descripcion"
+                        name="descripcion"
+                        placeholder="Descripción"
+                        defaultValue={data.descripcion}
+                        autoComplete="off"
+                        onChange={handleChange}
+                        className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      />
                     </div>
                   </div>
                 </form>
@@ -290,7 +226,6 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
   );
-  //#endregion
 };
 
 export default Modal;
