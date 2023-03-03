@@ -98,8 +98,7 @@ const SubLineas = () => {
     setModo(modo);
     if (modo == "Registrar") {
       let subLinea = {
-        id: "0000",
-        lineaId: "",
+        lineaId: "00",
         subLineaId: "00",
         descripcion: "",
       };

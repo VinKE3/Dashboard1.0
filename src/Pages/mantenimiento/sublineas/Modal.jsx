@@ -36,9 +36,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   useEffect(() => {
     console.log("dataLinea modal");
     dataLinea && console.log(dataLinea);
-    if (data.lineaId != "") {
-      document.getElementById("lineaId").value = data.lineaId;
-    }
+    document.getElementById("lineaId").value = data.lineaId;
     console.log("Cierra dataLinea modal");
   }, [dataLinea]);
   useEffect(() => {
@@ -86,7 +84,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "colored",
+          theme: "dark",
         });
         setRespuestaModal(true);
       }

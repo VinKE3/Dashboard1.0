@@ -92,11 +92,11 @@ const Marcas = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let Marca = {
+      let marca = {
         id: "00",
         nombre: "",
       };
-      setObjeto(Marca);
+      setObjeto(marca);
     } else {
       await GetPorId(id);
     }

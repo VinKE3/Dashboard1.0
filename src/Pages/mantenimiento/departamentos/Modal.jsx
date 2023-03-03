@@ -15,25 +15,34 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
+    console.log("tipoMensaje modal");
     tipoMensaje && console.log(tipoMensaje);
+    console.log("Cierra tipoMensaje modal");
   }, [tipoMensaje]);
   useEffect(() => {
+    console.log("Mensaje modal");
     mensaje && console.log(mensaje);
+    console.log("Cierra Mensaje modal");
   }, [mensaje]);
   useEffect(() => {
+    console.log("Objeto modal");
     objeto && console.log(objeto);
     setData(objeto);
+    console.log("Cierra objeto modal");
   }, [objeto]);
   useEffect(() => {
+    console.log("Data modal");
     data && console.log(data);
+    console.log("Cierra data modal");
   }, [data]);
-  useEffect(() => {}, []);
+
   //#endregion
 
   //#region Funcion onChange y validación de campos
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
   };
+
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(0);
@@ -44,7 +53,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const Registrar = async (e) => {
     e.preventDefault();
     try {
-      const result = await ApiMasy.post(`api/Mantenimiento/UnidadMedida`, data);
+      const result = await ApiMasy.post(`api/Mantenimiento/Departamento`, data);
       let tipo = result.data.messages[0].tipo;
       let msj = result.data.messages[0].textos[0];
       console.log(tipo);
@@ -80,7 +89,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   };
   const Modificar = async (e) => {
     e.preventDefault();
-    const result = await ApiMasy.put(`api/Mantenimiento/UnidadMedida`, data);
+    const result = await ApiMasy.put(`api/Mantenimiento/Departamento`, data);
     let tipo = result.data.messages[0].tipo;
     let msj = result.data.messages[0].textos[0];
     setTipoMensaje(result.data.messages[0].tipo);
@@ -134,22 +143,20 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
               <section className="min-w-fit max-w-4xl p-6 mx-auto rounded-md shadow-md">
                 <form>
                   <div className="flex flex-col md:flex-row gap-3">
-                    <div className="flex min-w-min md:w-full">
+                    <div className="flex md:w-48">
                       <label
-                        htmlFor="codigoSunat"
+                        htmlFor="id"
                         className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
                       >
-                        Cod.Sunat.
+                        Código
                       </label>
                       <input
                         type="text"
-                        id="codigoSunat"
-                        name="codigoSunat"
-                        placeholder="Codigo Sunat"
-                        defaultValue={data.codigoSunat}
-                        autoComplete="off"
+                        id="id"
+                        name="id"
+                        defaultValue={data.id}
+                        readOnly={modo == "Registrar" ? false : true}
                         onChange={handleChange}
-                        readOnly={modo == "Consultar" ? true : false}
                         className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>
@@ -158,17 +165,17 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                         htmlFor="descripcion"
                         className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
                       >
-                        Descripción
+                        Nombre
                       </label>
                       <input
                         type="text"
-                        id="descripcion"
-                        name="descripcion"
-                        placeholder="Descripción"
-                        defaultValue={data.descripcion}
+                        id="nombre"
+                        name="nombre"
+                        placeholder="Nombre"
+                        defaultValue={data.nombre}
+                        readOnly={modo == "Consultar" ? true : false}
                         autoComplete="off"
                         onChange={handleChange}
-                        readOnly={modo == "Consultar" ? true : false}
                         className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>
