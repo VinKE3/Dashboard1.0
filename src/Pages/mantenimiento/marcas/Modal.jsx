@@ -50,11 +50,11 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   };
   const ModoConsultar = () => {
     console.log("consultar");
-    document.getElementById("descripcion").readOnly = true;
+    document.getElementById("nombre").readOnly = true;
   };
   const ModoModificar = () => {
     console.log("modificar");
-    document.getElementById("descripcion").readOnly = false;
+    document.getElementById("nombre").readOnly = false;
   };
   const OcultarMensajes = () => {
     setMensaje([]);
