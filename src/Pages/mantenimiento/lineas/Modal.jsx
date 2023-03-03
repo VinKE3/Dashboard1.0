@@ -15,46 +15,24 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    console.log("tipoMensaje modal");
     tipoMensaje && console.log(tipoMensaje);
-    console.log("Cierra tipoMensaje modal");
   }, [tipoMensaje]);
   useEffect(() => {
-    console.log("Mensaje modal");
     mensaje && console.log(mensaje);
-    console.log("Cierra Mensaje modal");
   }, [mensaje]);
   useEffect(() => {
-    console.log("Objeto modal");
     objeto && console.log(objeto);
     setData(objeto);
-    console.log("Cierra objeto modal");
   }, [objeto]);
   useEffect(() => {
-    console.log("Data modal");
     data && console.log(data);
-    console.log("Cierra data modal");
   }, [data]);
-  useEffect(() => {
-    modo == "Modificar"
-      ? ModoModificar()
-      : modo == "Consultar"
-      ? ModoConsultar()
-      : console.log(modo);
-  }, []);
+  useEffect(() => {}, []);
   //#endregion
 
   //#region Funcion onChange y validación de campos
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
-  };
-  const ModoConsultar = () => {
-    console.log("consultar");
-    document.getElementById("descripcion").readOnly = true;
-  };
-  const ModoModificar = () => {
-    console.log("modificar");
-    document.getElementById("descripcion").readOnly = false;
   };
   const OcultarMensajes = () => {
     setMensaje([]);
@@ -188,6 +166,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                         defaultValue={data.descripcion}
                         autoComplete="off"
                         onChange={handleChange}
+                        readOnly={modo == "Consultar" ? true : false}
                         className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>

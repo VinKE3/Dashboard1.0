@@ -4,7 +4,6 @@ const getStorage = () =>
   store.session("access_token") ? store.session : store.local;
 
 const getToken = () => {
-  console.log("getToken");
   const storage = getStorage();
   return storage("access_token");
 };

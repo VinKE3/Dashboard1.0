@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
+  const [dataLinea, setDataLinea] = useState([]);
   const [tipoMensaje, setTipoMensaje] = useState(0);
   const [mensaje, setMensaje] = useState([]);
   //#endregion
@@ -33,11 +34,21 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
     console.log("Cierra objeto modal");
   }, [objeto]);
   useEffect(() => {
+    console.log("dataLinea modal");
+    dataLinea && console.log(dataLinea);
+    if (data.lineaId != "") {
+      document.getElementById("lineaId").value = data.lineaId;
+    }
+    console.log("Cierra dataLinea modal");
+  }, [dataLinea]);
+  useEffect(() => {
     console.log("Data modal");
     data && console.log(data);
     console.log("Cierra data modal");
   }, [data]);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    ConsultarLinea();
+  }, []);
   //#endregion
 
   //#region Funcion onChange y validación de campos
@@ -59,7 +70,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const Registrar = async (e) => {
     e.preventDefault();
     try {
-      const result = await ApiMasy.post(`api/Mantenimiento/TipoCambio`, data);
+      const result = await ApiMasy.post(`api/Mantenimiento/SubLinea`, data);
       let tipo = result.data.messages[0].tipo;
       let msj = result.data.messages[0].textos[0];
       console.log(tipo);
@@ -95,7 +106,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   };
   const Modificar = async (e) => {
     e.preventDefault();
-    const result = await ApiMasy.put(`api/Mantenimiento/TipoCambio`, data);
+    const result = await ApiMasy.put(`api/Mantenimiento/SubLinea`, data);
     setTipoMensaje(result.data.messages[0].tipo);
     setMensaje(result.data.messages[0].textos);
     console.log(result.data.messages[0].textos);
@@ -117,34 +128,9 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
     }
     setModal(false);
   };
-  const ConsultarTipoCambio = async (filtroApi = "") => {
-    const res = await ApiMasy.get(
-      `api/Servicio/ConsultarTipoCambio${filtroApi}`
-    );
-
-    let model = {
-      id: res.data.data.fecha,
-      precioCompra: res.data.data.precioCompra,
-      precioVenta: res.data.data.precioVenta,
-    };
-    console.log(res);
-    console.log(model);
-    setData(model);
-    if (res.status == 200) {
-      toast.success("Tipo de Cambio extraído exitosamente", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } else {
-      setTipoMensaje(res.data.messages[0].tipo);
-      setMensaje(res.data.messages[0].mensajes);
-    }
+  const ConsultarLinea = async () => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Linea/Listar`);
+    setDataLinea(result.data.data.data);
   };
   const CerrarModal = () => {
     setRespuestaModal(false);
@@ -156,7 +142,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative h-full w-full md:h-auto md:w-auto my-0 md:my-6 mx-auto max-w-3xl">
+        <div className="relative h-full w-full md:h-auto my-0 md:my-5 mx-auto max-w-3xl">
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none">
             {/*header*/}
@@ -178,70 +164,72 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                   Click={() => OcultarMensajes()}
                 />
               )}
-              <section className="max-w-4xl p-6 mx-auto rounded-md shadow-md">
+              <section className="min-w-fit max-w-4xl p-6 mx-auto rounded-md shadow-md">
                 <form>
                   <div className="grid grid-cols-1 gap-2 md:gap-4 mt-1">
-                    <div className="flex">
-                      <label
-                        htmlFor="id"
-                        className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-                      >
-                        Tipo
-                      </label>
-                      <input
-                        type="date"
-                        id="id"
-                        name="id"
-                        value={moment(data.id).format("yyyy-MM-DD")}
-                        onChange={handleChange}
-                        readOnly={modo == "Consultar" ? true : false}
-                        className="rounded-none bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      />
-                      <button
-                        id="consultarTipoCambio"
-                        className="px-3 rounded-none rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-600"
-                        onClick={(e) => ValidarConsulta(e)}
-                        hidden={modo == "Consultar" ? true : false}
-                      >
-                        <FaSearch></FaSearch>
-                      </button>
+                    <div className="flex flex-col md:flex-row gap-y-2 md:gap-x-2">
+                      <div className="flex md:w-48">
+                        <label
+                          htmlFor="subLineaId"
+                          className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
+                        >
+                          Código
+                        </label>
+                        <input
+                          type="text"
+                          id="subLineaId"
+                          name="subLineaId"
+                          defaultValue={data.subLineaId}
+                          onChange={handleChange}
+                          readOnly
+                          className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        />
+                      </div>
+                      <div className="flex min-w-min md:w-full">
+                        <label
+                          htmlFor="lineaId"
+                          className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
+                        >
+                          Línea
+                        </label>
+                        <select
+                          id="lineaId"
+                          name="lineaId"
+                          onChange={handleChange}
+                          disabled={
+                            modo == "Consultar" || modo == "Modificar"
+                              ? true
+                              : false
+                          }
+                          className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                          {dataLinea.map((linea) => (
+                            <option key={linea.id} value={linea.id}>
+                              {linea.descripcion}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-y-2 md:gap-x-2">
-                      <div className="flex">
-                        <label
-                          htmlFor="precioCompra"
-                          className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-                        >
-                          P. Compra
-                        </label>
-                        <input
-                          type="number"
-                          id="precioCompra"
-                          name="precioCompra"
-                          defaultValue={data.precioCompra}
-                          onChange={handleChange}
-                          readOnly={modo == "Consultar" ? true : false}
-                          className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
-                      </div>
-                      <div className="flex">
-                        <label
-                          htmlFor="tipo-cambio-precio-venta"
-                          className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-                        >
-                          P.Venta
-                        </label>
-                        <input
-                          type="number"
-                          id="precioVenta"
-                          name="precioVenta"
-                          defaultValue={data.precioVenta}
-                          onChange={handleChange}
-                          readOnly={modo == "Consultar" ? true : false}
-                          className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
-                      </div>
+                    <div className="flex">
+                      <label
+                        htmlFor="subLineaDescripcion"
+                        className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
+                      >
+                        Descripción
+                      </label>
+                      <input
+                        type="text"
+                        id="descripcion"
+                        name="descripcion"
+                        defaultValue={data.descripcion}
+                        placeholder="Descripción"
+                        onChange={handleChange}
+                        autoComplete="off"
+                        readOnly={modo == "Consultar" ? true : false}
+                        className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      />
                     </div>
                   </div>
                 </form>

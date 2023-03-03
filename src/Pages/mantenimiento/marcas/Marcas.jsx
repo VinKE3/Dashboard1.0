@@ -116,6 +116,7 @@ const Marcas = () => {
     },
     {
       Header: "Acciones",
+
       Cell: ({ row }) => (
         <BotonCRUD
           id={row.values.id}

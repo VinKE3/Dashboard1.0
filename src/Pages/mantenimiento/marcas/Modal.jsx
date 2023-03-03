@@ -35,27 +35,14 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
     data && console.log(data);
     console.log("Cierra data modal");
   }, [data]);
-  useEffect(() => {
-    modo == "Modificar"
-      ? ModoModificar()
-      : modo == "Consultar"
-      ? ModoConsultar()
-      : console.log(modo);
-  }, []);
+
   //#endregion
 
   //#region Funcion onChange y validación de campos
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
   };
-  const ModoConsultar = () => {
-    console.log("consultar");
-    document.getElementById("nombre").readOnly = true;
-  };
-  const ModoModificar = () => {
-    console.log("modificar");
-    document.getElementById("nombre").readOnly = false;
-  };
+
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(0);
@@ -186,6 +173,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                         name="nombre"
                         placeholder="Nombre"
                         defaultValue={data.nombre}
+                        readOnly={modo == "Consultar" ? true : false}
                         autoComplete="off"
                         onChange={handleChange}
                         className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

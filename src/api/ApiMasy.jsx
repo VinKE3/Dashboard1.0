@@ -11,7 +11,6 @@ const ApiMasy = axios.create({
 
 ApiMasy.interceptors.request.use(
   (config) => {
-    console.log("interceptor");
     const token = authHelper.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
