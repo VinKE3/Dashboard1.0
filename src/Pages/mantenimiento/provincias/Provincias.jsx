@@ -100,7 +100,7 @@ const Provincias = () => {
     if (modo == "Registrar") {
       let provincia = {
         departamentoId: "00",
-        provinciaId: "00",
+        provinciaId: "0000",
         nombre: "",
       };
       setObjeto(provincia);
