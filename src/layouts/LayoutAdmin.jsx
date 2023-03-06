@@ -6,15 +6,18 @@ import Footer from "../components/Footer";
 import store from "store2";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { authHelper } from "../helpers/AuthHelper";
 
 const LayoutAdmin = () => {
   const navigate = useNavigate();
+  const { borrarTodosLosTokens } = authHelper;
 
   useEffect(() => {
     if (
       !store.session.get("access_token") &&
       !store.local.get("access_token")
     ) {
+      borrarTodosLosTokens();
       navigate("/login");
     }
   }, []);
