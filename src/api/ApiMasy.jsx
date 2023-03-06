@@ -38,7 +38,7 @@ ApiMasy.interceptors.response.use(
       // });
 
       <Mensajes
-        tipoMensaje={error.response.data.messages[0].tipo}
+        tipoMensaje={error.response.data.messages[0]}
         mensaje={error.response.data.messages[0].textos}
       />;
     } else if (error.response.status === 409) {
