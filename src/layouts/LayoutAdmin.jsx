@@ -14,7 +14,7 @@ const LayoutAdmin = () => {
 
   useEffect(() => {
     if (
-      !store.session.get("access_token") &&
+      !store.session.get("access_token") ||
       !store.local.get("access_token")
     ) {
       borrarTodosLosTokens();

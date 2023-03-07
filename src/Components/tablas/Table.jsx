@@ -55,9 +55,7 @@ function Table({ columnas, datos, total }) {
   //#region useEffect
 
   useEffect(() => {
-    console.log("Inicia pagina");
     pagina && console.log(pagina);
-    console.log("termina pagina");
   }, [pagina]);
   useEffect(() => {
     Paginas();
@@ -66,12 +64,7 @@ function Table({ columnas, datos, total }) {
 
   //#region Funcion Paginado
   const Paginas = async () => {
-    console.log("hola");
-    console.log(pagina);
-    console.log("fin hola");
-
     if (total > 50) {
-      console.log("fin hola 2 ");
       setPagina(total / 50);
     }
   };

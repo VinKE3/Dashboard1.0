@@ -1,8 +1,6 @@
 import axios from "axios";
-import { useState } from "react";
 import { authHelper } from "../helpers/AuthHelper";
 import Swal from "sweetalert2";
-import Mensajes from "../Components/Mensajes";
 
 const ApiMasy = axios.create({
   baseURL: "https://mcwebapi.masydase.com/",
@@ -27,20 +25,24 @@ ApiMasy.interceptors.request.use(
 
 ApiMasy.interceptors.response.use(
   (response) => {
+    if (response.status === 201) {
+      Swal.fire({
+        icon: "success",
+        title: "Exito",
+        text: "Operación realizada con éxito",
+      });
+    }
     return response;
   },
   (error) => {
     if (error.response.status === 400) {
-      // Swal.fire({
-      //   icon: "error",
-      //   title: "Oops...",
-      //   text: error.response.data.messages[0].textos,
-      // });
-
-      <Mensajes
-        tipoMensaje={error.response.data.messages[0]}
-        mensaje={error.response.data.messages[0].textos}
-      />;
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response.data.messages[0].textos,
+      });
+    } else if (error.response.status === 401) {
+      window.location.href = "/login";
     } else if (error.response.status === 409) {
       Swal.fire({
         icon: "error",
