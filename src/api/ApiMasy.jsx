@@ -3,7 +3,6 @@ import { authHelper } from "../helpers/AuthHelper";
 import Swal from "sweetalert2";
 import { useContext } from "react";
 import { APIErrorContext } from "../context/ContextError";
-import useApiError from "../context/UseApiError";
 
 const ApiMasy = axios.create({
   baseURL: "https://mcwebapi.masydase.com/",

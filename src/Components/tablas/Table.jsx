@@ -1,73 +1,21 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
+import React from "react";
 import {
   useTable,
   useGlobalFilter,
   usePagination,
   useSortBy,
 } from "react-table";
+import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
+import ReactPaginate from "react-paginate";
 
-const BotonPaginacion = styled.button`
-  padding: 4px 5px;
-  font-weight: 500;
-  color: #000;
-  background-color: #fde047;
-  border: 1px solid #161616;
-  transition: 0.5s;
-
-  &:first-child,
-  &:last-child {
-    padding: 7px;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-
-  &:nth-child(2) {
-    border-left: none;
-    border-right: none;
-  }
-
-  &:last-child {
-    border-left: none;
-  }
-
-  &:hover {
-    background-color: #d0bb04;
-  }
-  &:disabled {
-    color: #fff;
-    background-color: #ee8100;
-    opacity: 0.7;
-  }
-`;
-
-function Table({ columnas, datos, total }) {
+const Table = ({ columnas, datos, total, index, Click }) => {
   //#region Columnas y Datos
   const columns = columnas;
   const data = datos;
-  //#endregion
-
-  //#region useState
-  const [pagina, setPagina] = useState(0);
-  //#endregion
-
-  //#region useEffect
-
-  useEffect(() => {
-    pagina && console.log(pagina);
-  }, [pagina]);
-  useEffect(() => {
-    Paginas();
-  }, []);
-  //#endregion
-
-  //#region Funcion Paginado
-  const Paginas = async () => {
-    if (total > 50) {
-      setPagina(total / 50);
-    }
-  };
+  const totalPaginas = total;
+  const indexPaginas = index;
+  const itemsPerPage = 50;
+  const paginado = parseInt(Math.ceil(totalPaginas / itemsPerPage));
   //#endregion
 
   //#region Obtiene props React Table
@@ -76,19 +24,10 @@ function Table({ columnas, datos, total }) {
     getTableBodyProps,
     headerGroups,
     page,
-    nextPage,
-    previousPage,
-    canNextPage,
-    canPreviousPage,
-    pageOptions,
-    gotoPage,
-    pageCount,
     prepareRow,
-    setPageSize,
     state,
-    setGlobalFilter,
   } = useTable(
-    { columns, data, initialState: { pageSize: 25 } },
+    { columns, data, initialState: { pageSize: 50 } },
     useGlobalFilter,
     useSortBy,
     usePagination
@@ -101,11 +40,11 @@ function Table({ columnas, datos, total }) {
 
   //#region Render
   return (
-    <div className="flex flex-col mt-2 overflow-x-auto shadow-md rounded md:text-sm ">
-      {/* Div Mostrar filas y Filtro global */}
-      <div className="flex align-items-center justify-between">
-        {/* Div Mostrar Filas */}
-        <div className="flex overflow-hidden rounded-t-lg">
+    <div className="flex flex-col mt-2 overflow-x-auto shadow-md rounded md:text-sm">
+      {/* Div Mostrar filas */}
+      {/* <div className="flex align-items-center justify-between"> */}
+      {/* Div Mostrar Filas */}
+      {/* <div className="flex overflow-hidden rounded-t-lg">
           <label className="inline-flex items-center px-3 text-gray-900 bg-gray-200 dark:bg-gray-800 dark:text-gray-300 font-bold">
             Mostrar:
           </label>
@@ -123,17 +62,17 @@ function Table({ columnas, datos, total }) {
             ))}
           </select>
         </div>
-      </div>
+      </div> */}
 
       {/* Tabla */}
-      <table {...getTableProps()} className=" bg-white">
-        <thead className="text-left bg-gray-800">
+      <table {...getTableProps()} id="tabla" className="text-light">
+        <thead className="text-left bg-gris-800">
           {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} className="text-white">
+            <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="py-2 px-6"
+                  className="py-2 px-2"
                 >
                   {column.render("Header")}
                 </th>
@@ -142,19 +81,19 @@ function Table({ columnas, datos, total }) {
           ))}
         </thead>
 
-        <tbody {...getTableBodyProps()} className="text-white bg-secondary-100">
+        <tbody {...getTableBodyProps()} className="bg-secondary-100">
           {page.map((row) => {
-            prepareRow(row); //Prepara la fila para pintarla en el DOM
+            prepareRow(row);
             return (
               <tr
                 {...row.getRowProps()}
-                className="border-b border-secondary-900 hover:bg-gray-700"
+                className="border-b border-secondary-900 hover:bg-gray-500"
               >
                 {row.cells.map((cell) => {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      className="py-2 px-6 text-left whitespace-nowrap"
+                      className="py-2 px-2 text-left whitespace-nowrap"
                     >
                       {cell.render("Cell")}
                     </td>
@@ -167,56 +106,48 @@ function Table({ columnas, datos, total }) {
       </table>
 
       {/* Footer */}
-      <div className="py-2 px-4 flex flex-col sm:flex-row align-items-center justify-center bg-black text-white">
+      <div className="py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-base sm:text-sm">
         {/* Total de registros */}
-        <div className="py-1 flex flex-1 align-items-center justify-center">
-          <span className="text-base sm:text-sm">
-            {pageSize > total ? (
-              <strong>
-                Mostrando los primeros {total} resultados de {total} en total
-              </strong>
-            ) : (
-              <strong>
-                Mostrando los primeros {pageSize} resultados de {total} en total
-              </strong>
-            )}
+        <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start">
+          <span className="text-center align-text-bottom">
+            {"Total de registros: "}
+            <span className="font-bold text-primary">{totalPaginas}</span>
           </span>
         </div>
-
-        <div className="py-1 px-3 flex align-items-center justify-center">
-          <span className="text-base sm:text-sm">
-            Página <strong>{pageIndex + 1} </strong>
-            de <strong>{pageOptions.length} </strong>
+        {/* Pagina 1 de total */}
+        <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex align-items-center justify-center">
+          <span className="text-center align-text-bottom">
+            {"Página "}
+            <span className="font-bold text-primary">{indexPaginas}</span>
+            {" de "}
+            <span className="font-bold text-primary">{paginado} </span>
           </span>
         </div>
-        {/* Paginación */}
-        <div className="flex align-items-center justify-center">
-          <BotonPaginacion
-            onClick={() => gotoPage(0)}
-            disabled={!canPreviousPage}
-          >
-            <FaAngleDoubleLeft></FaAngleDoubleLeft>
-          </BotonPaginacion>
-          <BotonPaginacion
-            onClick={() => previousPage()}
-            disabled={!canPreviousPage}
-          >
-            Anterior
-          </BotonPaginacion>
-          <BotonPaginacion onClick={() => nextPage()} disabled={!canNextPage}>
-            Siguiente
-          </BotonPaginacion>
-          <BotonPaginacion
-            onClick={() => gotoPage(pageCount - 1)}
-            disabled={!canNextPage}
-          >
-            <FaAngleDoubleRight></FaAngleDoubleRight>
-          </BotonPaginacion>
-        </div>
+        {/* Paginado */}
+        <ReactPaginate
+          pageRangeDisplayed={2}
+          onPageChange={Click}
+          pageCount={parseInt(Math.ceil(totalPaginas / itemsPerPage))}
+          forcePage={index - 1}
+          nextLabel={<FaAngleDoubleRight className="text-lg" />}
+          previousLabel={<FaAngleDoubleLeft className="text-lg" />}
+          breakLabel="..."
+          renderOnZeroPageCount={null}
+          containerClassName="flex align-items-center justify-center flex-wrap font-bold text-black"
+          pageClassName="flex"
+          breakClassName="flex align-items-center justify-center"
+          previousClassName="flex"
+          nextClassName="flex"
+          pageLinkClassName="px-3 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
+          breakLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
+          nextLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
+          previousLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 rounded-md"
+          activeLinkClassName="bg-gray-400 text-white"
+        />
       </div>
     </div>
   );
   //#endregion
-}
+};
 
 export default Table;

@@ -12,127 +12,80 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
   const [dataLinea, setDataLinea] = useState([]);
-  const [tipoMensaje, setTipoMensaje] = useState(0);
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    console.log("tipoMensaje modal");
-    tipoMensaje && console.log(tipoMensaje);
-    console.log("Cierra tipoMensaje modal");
-  }, [tipoMensaje]);
-  useEffect(() => {
-    console.log("Mensaje modal");
-    mensaje && console.log(mensaje);
-    console.log("Cierra Mensaje modal");
+    mensaje;
   }, [mensaje]);
   useEffect(() => {
-    console.log("Objeto modal");
-    objeto && console.log(objeto);
+    tipoMensaje;
+    RetornarMensaje();
+  }, [tipoMensaje]);
+  useEffect(() => {
+    objeto;
     setData(objeto);
-    console.log("Cierra objeto modal");
   }, [objeto]);
   useEffect(() => {
-    console.log("dataLinea modal");
-    dataLinea && console.log(dataLinea);
+    dataLinea;
     document.getElementById("lineaId").value = data.lineaId;
-    console.log("Cierra dataLinea modal");
   }, [dataLinea]);
   useEffect(() => {
-    console.log("Data modal");
-    data && console.log(data);
-    console.log("Cierra data modal");
+    data;
   }, [data]);
   useEffect(() => {
     ConsultarLinea();
   }, []);
   //#endregion
 
-  //#region Funcion onChange y validación de campos
-  const handleChange = ({ target }) => {
+  //#region Funciones
+  const handleChange = async ({ target }) => {
     setData({ ...data, [target.name]: target.value });
+  };
+  const RetornarMensaje = async () => {
+    if (tipoMensaje == 0) {
+      toast.success(mensaje, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setRespuestaModal(true);
+      setModal(false);
+    }
   };
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(0);
   };
-  const ValidarConsulta = (e) => {
-    e.preventDefault();
-    let fecha = document.getElementById("id").value;
-    ConsultarTipoCambio("?fecha=" + fecha);
+  const CerrarModal = () => {
+    setRespuestaModal(false);
+    setModal(false);
   };
   //#endregion
 
-  //#region Funciones API
+  //#region API
   const Registrar = async (e) => {
     e.preventDefault();
-    try {
-      const result = await ApiMasy.post(`api/Mantenimiento/SubLinea`, data);
-      let tipo = result.data.messages[0].tipo;
-      let msj = result.data.messages[0].textos[0];
-      console.log(tipo);
-      console.log(msj);
-      setTipoMensaje(result.data.messages[0].tipo);
-      setMensaje(result.data.messages[0].textos[0]);
-      if (tipo == 0) {
-        toast.success(msj, {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        setRespuestaModal(true);
-      }
-      setModal(false);
-    } catch (error) {
-      if (error.response) {
-        console.log(1);
-        console.log(error);
-      } else if (error.request) {
-        console.log(2);
-        console.log(error);
-      } else if (error.message) {
-        console.log(3);
-        console.log(error);
-      }
-    }
+    const result = await ApiMasy.post(`api/Mantenimiento/SubLinea`, data);
+    setTipoMensaje(result.data.messages[0].tipo);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   const Modificar = async (e) => {
     e.preventDefault();
     const result = await ApiMasy.put(`api/Mantenimiento/SubLinea`, data);
     setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos);
-    console.log(result.data.messages[0].textos);
-    if (tipoMensaje == 0) {
-      toast.success(
-        { mensaje },
-        {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
-      setRespuestaModal(true);
-    }
-    setModal(false);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   const ConsultarLinea = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Linea/Listar`);
     setDataLinea(result.data.data.data);
-  };
-  const CerrarModal = () => {
-    setRespuestaModal(false);
-    setModal(false);
   };
   //#endregion
 

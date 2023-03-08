@@ -23,7 +23,9 @@ const Distrito = () => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
+  const [index, setIndex] = useState(1);
   const [timer, setTimer] = useState(null);
+  const [filtro, setFiltro] = useState("");
   const [botones, setBotones] = useState([true, true, true]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
@@ -34,38 +36,43 @@ const Distrito = () => {
 
   //#region useEffect
   useEffect(() => {
-    modo && console.log(modo);
+    filtro;
+  }, [filtro]);
+  useEffect(() => {
+    total;
+  }, [total]);
+  useEffect(() => {
+    index;
+  }, [index]);
+
+  useEffect(() => {
+    modo;
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar();
+      Listar(filtro, index);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar();
+      Listar(filtro, index);
     }
   }, [respuestaAlert]);
-  useEffect(() => {
-    total && console.log(total);
-  }, [total]);
   //#endregion
 
   //#region Funciones API
-  const Listar = async (filtroApi = "") => {
+  const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Distrito/Listar${filtroApi}`
+      `api/Mantenimiento/Distrito/Listar?pagina=${pagina}${filtro}`
     );
-    let distrito = result.data.data.data.map((resultado) => ({
-      Id:
-        resultado.distritoId + resultado.departamentoId + resultado.provinciaId,
-      nombre: resultado.nombre,
-      departamentoNombre: resultado.departamentoNombre,
-      provinciaNombre: resultado.provinciaNombre,
+    let distrito = result.data.data.data.map((res) => ({
+      Id: res.departamentoId + res.provinciaId + res.distritoId,
+      departamentoNombre: res.departamentoNombre,
+      provinciaNombre: res.provinciaNombre,
+      nombre: res.nombre,
     }));
     setDatos(distrito);
     setTotal(result.data.data.total);
-    console.log(result.data.data.data);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Distrito/${id}`);
@@ -74,24 +81,36 @@ const Distrito = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoKeyPress = (e) => {
-    let filtro = e.target.value;
+  const FiltradoPaginado = (e) => {
+    let filtro = document.getElementById("nombre").value;
+    let boton = e.selected + 1;
+    setIndex(e.selected + 1);
+    if (filtro == "") {
+      Listar("", boton);
+    } else {
+      Listar(`&nombre=${filtro}`, boton);
+    }
+  };
+  const FiltradoKeyPress = async (e) => {
     clearTimeout(timer);
+    let f = e.target.value;
+    setFiltro(`&nombre=${f}`);
+    if (f != "") setIndex(1);
     const newTimer = setTimeout(() => {
-      if (filtro == "") {
-        Listar();
+      if (f == "") {
+        Listar("", index);
       } else {
-        Listar(`?nombre=${filtro}`);
+        Listar(`&nombre=${f}`, index);
       }
-    }, 1000);
+    }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    let filtro = document.getElementById("nombre").value;
+    setIndex(1);
     if (filtro == "") {
-      Listar();
+      Listar("", 1);
     } else {
-      Listar(`?nombre=${filtro}`);
+      Listar(filtro, 1);
     }
   };
   //#endregion
@@ -101,9 +120,9 @@ const Distrito = () => {
     setModo(modo);
     if (modo == "Registrar") {
       let distrito = {
-        departamentoId: "00",
-        provinciaId: "0000",
-        distritoId: "000000",
+        departamentoId: "01",
+        provinciaId: "01",
+        distritoId: "00",
         nombre: "",
       };
       setObjeto(distrito);
@@ -157,12 +176,12 @@ const Distrito = () => {
 
         {/* Filtro*/}
         <FiltroBasico
-          textLabel={"Nombre"}
-          inputPlaceHolder={"Nombre"}
+          textLabel={"Distrito"}
+          inputPlaceHolder={"Distrito"}
           inputId={"nombre"}
           inputName={"nombre"}
           inputMax={"200"}
-          botonId={"buscar-distritos"}
+          botonId={"buscar"}
           FiltradoButton={FiltradoButton}
           FiltradoKeyPress={FiltradoKeyPress}
         />
@@ -179,7 +198,13 @@ const Distrito = () => {
 
         {/* Tabla */}
         <TablaStyle>
-          <Table columnas={columnas} datos={datos} total={total} />
+          <Table
+            columnas={columnas}
+            datos={datos}
+            total={total}
+            index={index}
+            Click={(e) => FiltradoPaginado(e)}
+          />
         </TablaStyle>
         {/* Tabla */}
       </div>

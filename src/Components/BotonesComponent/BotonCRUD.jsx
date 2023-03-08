@@ -13,9 +13,12 @@ const BotonCRUD = ({
   menu,
   setRespuestaAlert,
 }) => {
+  //#region useEffect
   useEffect(() => {
     setRespuestaAlert(false);
   }, [setRespuestaAlert]);
+  //#endregion
+
   //#region Función Eliminar
   const handleDelete = async (id) => {
     Swal.fire({
@@ -33,7 +36,7 @@ const BotonCRUD = ({
     }).then((result) => {
       if (result.isConfirmed) {
         ApiMasy.delete(`api/Mantenimiento/${menu}/${id}`).then((response) => {
-          if (response.status === 200) {
+          if (response.data.messages[0].tipo == 0) {
             setRespuestaAlert(true);
             toast.success(String(response.data.messages[0].textos), {
               position: "bottom-right",
@@ -45,20 +48,8 @@ const BotonCRUD = ({
               progress: undefined,
               theme: "colored",
             });
-          } else if (response.status === 404) {
-            toast.error(String(response.data.messages[0].textos), {
-              position: "bottom-right",
-              autoClose: 5000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-            setRespuestaAlert(false);
           } else {
-            toast.alert(String(response.data.messages[0].textos), {
+            toast.error(String(response.data.messages[0].textos), {
               position: "bottom-right",
               autoClose: 5000,
               hideProgressBar: true,
@@ -80,7 +71,7 @@ const BotonCRUD = ({
   return (
     <div className="flex item-center justify-center">
       {mostrar[0] ? (
-        <div className="w-4 mr-2 scale-110 transform hover:text-blue-500 hover:scale-125">
+        <div className="w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125">
           <button
             id="boton-consultar"
             onClick={Click1}

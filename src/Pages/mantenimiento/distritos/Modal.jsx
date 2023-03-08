@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import Mensajes from "../../../Components/Mensajes";
-import moment from "moment";
 import { toast } from "react-toastify";
-import { FaSearch } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,143 +11,104 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const [data, setData] = useState([]);
   const [dataDepartamento, setDataDepartamento] = useState([]);
   const [dataProvincia, setDataProvincia] = useState([]);
-  const [tipoMensaje, setTipoMensaje] = useState(0);
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    console.log("tipoMensaje modal");
-    tipoMensaje && console.log(tipoMensaje);
-    console.log("Cierra tipoMensaje modal");
-  }, [tipoMensaje]);
-  useEffect(() => {
-    console.log("Mensaje modal");
-    mensaje && console.log(mensaje);
-    console.log("Cierra Mensaje modal");
+    mensaje;
   }, [mensaje]);
   useEffect(() => {
-    console.log("Objeto modal");
-    objeto && console.log(objeto);
+    tipoMensaje;
+    RetornarMensaje();
+  }, [tipoMensaje]);
+  useEffect(() => {
+    objeto;
     setData(objeto);
-    console.log("Cierra objeto modal");
   }, [objeto]);
   useEffect(() => {
-    console.log("dataDepartamento modal");
-    dataDepartamento && console.log(dataDepartamento);
+    dataDepartamento;
     document.getElementById("departamentoId").value = data.departamentoId;
-    console.log("Cierra dataDepartamento modal");
+    ConsultarProvincia();
   }, [dataDepartamento]);
   useEffect(() => {
-    console.log("dataProvincia modal");
-    dataProvincia && console.log(dataProvincia);
+    dataProvincia;
     document.getElementById("provinciaId").value = data.provinciaId;
-    console.log("Cierra dataProvincia modal");
   }, [dataProvincia]);
   useEffect(() => {
-    console.log("Data modal");
-    data && console.log(data);
-    console.log("Cierra data modal");
+    data;
   }, [data]);
   useEffect(() => {
     ConsultarDepartamento();
-  }, []);
-  useEffect(() => {
-    ConsultarProvincia();
   }, []);
 
   //#endregion
 
   //#region Funcion onChange y validación de campos
-  const handleChange = ({ target }) => {
+  const handleChange = async ({ target }) => {
+    ConsultarProvincia();
     setData({ ...data, [target.name]: target.value });
+  };
+  const RetornarMensaje = async () => {
+    if (tipoMensaje == 0) {
+      toast.success(mensaje, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setRespuestaModal(true);
+      setModal(false);
+    }
   };
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(0);
   };
-  const ValidarConsulta = (e) => {
-    e.preventDefault();
-    let fecha = document.getElementById("id").value;
-    ConsultarTipoCambio("?fecha=" + fecha);
+  const CerrarModal = () => {
+    setRespuestaModal(false);
+    setModal(false);
   };
   //#endregion
 
   //#region Funciones API
   const Registrar = async (e) => {
     e.preventDefault();
-    try {
-      const result = await ApiMasy.post(`api/Mantenimiento/Distrito`, data);
-      let tipo = result.data.messages[0].tipo;
-      let msj = result.data.messages[0].textos[0];
-      console.log(tipo);
-      console.log(msj);
-      setTipoMensaje(result.data.messages[0].tipo);
-      setMensaje(result.data.messages[0].textos[0]);
-      if (tipo == 0) {
-        toast.success(msj, {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        setRespuestaModal(true);
-      }
-      setModal(false);
-    } catch (error) {
-      if (error.response) {
-        console.log(1);
-        console.log(error);
-      } else if (error.request) {
-        console.log(2);
-        console.log(error);
-      } else if (error.message) {
-        console.log(3);
-        console.log(error);
-      }
-    }
+    const result = await ApiMasy.post(`api/Mantenimiento/Distrito`, data);
+    setTipoMensaje(result.data.messages[0].tipo);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   const Modificar = async (e) => {
     e.preventDefault();
     const result = await ApiMasy.put(`api/Mantenimiento/Distrito`, data);
     setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos);
-    console.log(result.data.messages[0].textos);
-    if (tipoMensaje == 0) {
-      toast.success(
-        { mensaje },
-        {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
-      setRespuestaModal(true);
-    }
-    setModal(false);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   const ConsultarDepartamento = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Departamento/Listar`);
-    setDataDepartamento(result.data.data.data);
-    console.log(result.data.data.data);
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/Distrito/FormularioTablas`
+    );
+    let depa = result.data.data.departamentos.map((res) => ({
+      id: res.id,
+      nombre: res.nombre,
+      provincias: res.provincias,
+    }));
+    setDataDepartamento(depa);
   };
   const ConsultarProvincia = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Provincia/Listar`);
-    setDataProvincia(result.data.data.data);
-    console.log(result.data.data.data);
-  };
-  const CerrarModal = () => {
-    setRespuestaModal(false);
-    setModal(false);
+    if (dataDepartamento.length > 0) {
+      let index = document.getElementById("departamentoId").selectedIndex;
+      let prov = dataDepartamento[index].provincias.map((res) => ({
+        id: res.id,
+        nombre: res.nombre,
+      }));
+      setDataProvincia(prov);
+    }
   };
   //#endregion
 
@@ -183,7 +142,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                 <form>
                   <div className="grid grid-cols-1 gap-2 md:gap-4 mt-1">
                     <div className="flex flex-col md:flex-row gap-y-2 md:gap-x-2">
-                      <div className="flex min-w-min md:w-full">
+                      <div className="flex min-w-min md:w-48">
                         <label
                           htmlFor="distritoId"
                           className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
@@ -195,8 +154,9 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                           id="distritoId"
                           name="distritoId"
                           defaultValue={data.distritoId}
+                          readOnly={modo == "Registrar" ? false : true}
+                          maxLength="2"
                           onChange={handleChange}
-                          readOnly
                           className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
                       </div>
@@ -211,11 +171,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                           id="departamentoId"
                           name="departamentoId"
                           onChange={handleChange}
-                          disabled={
-                            modo == "Consultar" || modo == "Modificar"
-                              ? true
-                              : false
-                          }
+                          disabled={modo == "Registrar" ? false : true}
                           className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           {dataDepartamento.map((departamento) => (
@@ -228,46 +184,41 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                           ))}
                         </select>
                       </div>
-                      <div className="flex min-w-min md:w-full">
-                        <label
-                          htmlFor="provinciaId"
-                          className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-                        >
-                          Provincia
-                        </label>
-                        <select
-                          id="provinciaId"
-                          name="provinciaId"
-                          onChange={handleChange}
-                          disabled={
-                            modo == "Consultar" || modo == "Modificar"
-                              ? true
-                              : false
-                          }
-                          className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                          {dataProvincia.map((provincia) => (
-                            <option key={provincia.id} value={provincia.id}>
-                              {provincia.nombre}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
                     </div>
-
-                    <div className="flex">
+                    <div className="flex min-w-min md:w-full">
                       <label
-                        htmlFor="distritoNombre"
+                        htmlFor="provinciaId"
                         className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
                       >
-                        Nombre
+                        Provincia
+                      </label>
+                      <select
+                        id="provinciaId"
+                        name="provinciaId"
+                        onChange={handleChange}
+                        disabled={modo == "Registrar" ? false : true}
+                        className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                        {dataProvincia.map((provincia) => (
+                          <option key={provincia.id} value={provincia.id}>
+                            {provincia.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex min-w-min md:w-full">
+                      <label
+                        htmlFor="nombre"
+                        className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
+                      >
+                        Distrito
                       </label>
                       <input
                         type="text"
                         id="nombre"
                         name="nombre"
                         defaultValue={data.nombre}
-                        placeholder="Nombre"
+                        placeholder="Distrito"
                         onChange={handleChange}
                         autoComplete="off"
                         readOnly={modo == "Consultar" ? true : false}

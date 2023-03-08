@@ -23,7 +23,9 @@ const Departamentos = () => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
+  const [index, setIndex] = useState(1);
   const [timer, setTimer] = useState(null);
+  const [filtro, setFiltro] = useState("");
   const [botones, setBotones] = useState([true, true, true]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
@@ -34,27 +36,34 @@ const Departamentos = () => {
 
   //#region useEffect
   useEffect(() => {
-    modo && console.log(modo);
+    filtro;
+  }, [filtro]);
+  useEffect(() => {
+    total;
+  }, [total]);
+  useEffect(() => {
+    index;
+  }, [index]);
+
+  useEffect(() => {
+    modo;
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar();
+      Listar(filtro, index);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar();
+      Listar(filtro, index);
     }
   }, [respuestaAlert]);
-  useEffect(() => {
-    total && console.log(total);
-  }, [total]);
   //#endregion
 
   //#region Funciones API
-  const Listar = async (filtroApi = "") => {
+  const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Departamento/Listar${filtroApi}`
+      `api/Mantenimiento/Departamento/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
@@ -66,24 +75,36 @@ const Departamentos = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoKeyPress = (e) => {
-    let filtro = e.target.value;
+  const FiltradoPaginado = (e) => {
+    let filtro = document.getElementById("nombre").value;
+    let boton = e.selected + 1;
+    setIndex(e.selected + 1);
+    if (filtro == "") {
+      Listar("", boton);
+    } else {
+      Listar(`&nombre=${filtro}`, boton);
+    }
+  };
+  const FiltradoKeyPress = async (e) => {
     clearTimeout(timer);
+    let f = e.target.value;
+    setFiltro(`&nombre=${f}`);
+    if (f != "") setIndex(1);
     const newTimer = setTimeout(() => {
-      if (filtro == "") {
-        Listar();
+      if (f == "") {
+        Listar("", index);
       } else {
-        Listar(`?nombre=${filtro}`);
+        Listar(`&nombre=${f}`, index);
       }
-    }, 500);
+    }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    let filtro = document.getElementById("nombre").value;
+    setIndex(1);
     if (filtro == "") {
-      Listar();
+      Listar("", 1);
     } else {
-      Listar(`?nombre=${filtro}`);
+      Listar(filtro, 1);
     }
   };
   //#endregion
@@ -138,12 +159,12 @@ const Departamentos = () => {
 
         {/* Filtro*/}
         <FiltroBasico
-          textLabel={"Nombre"}
-          inputPlaceHolder={"Nombre"}
+          textLabel={"Departamento"}
+          inputPlaceHolder={"Departamento"}
           inputId={"nombre"}
           inputName={"nombre"}
           inputMax={"200"}
-          botonId={"buscar-departamento"}
+          botonId={"buscar"}
           FiltradoButton={FiltradoButton}
           FiltradoKeyPress={FiltradoKeyPress}
         />
@@ -160,7 +181,13 @@ const Departamentos = () => {
 
         {/* Tabla */}
         <TablaStyle>
-          <Table columnas={columnas} datos={datos} total={total} />
+          <Table
+            columnas={columnas}
+            datos={datos}
+            total={total}
+            index={index}
+            Click={(e) => FiltradoPaginado(e)}
+          />
         </TablaStyle>
         {/* Tabla */}
       </div>

@@ -9,84 +9,34 @@ import "react-toastify/dist/ReactToastify.css";
 const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [tipoMensaje, setTipoMensaje] = useState(0);
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    tipoMensaje && console.log(tipoMensaje);
-  }, [tipoMensaje]);
-  useEffect(() => {
-    mensaje && console.log(mensaje);
+    mensaje;
   }, [mensaje]);
   useEffect(() => {
-    objeto && console.log(objeto);
+    tipoMensaje;
+    RetornarMensaje();
+  }, [tipoMensaje]);
+  useEffect(() => {
+    objeto;
     setData(objeto);
   }, [objeto]);
   useEffect(() => {
-    data && console.log(data);
+    data;
   }, [data]);
-  useEffect(() => {}, []);
   //#endregion
 
-  //#region Funcion onChange y validación de campos
+  //#region Funcions
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(0);
-  };
-  //#endregion
-
-  //#region Funciones API
-  const Registrar = async (e) => {
-    e.preventDefault();
-    try {
-      const result = await ApiMasy.post(`api/Mantenimiento/UnidadMedida`, data);
-      let tipo = result.data.messages[0].tipo;
-      let msj = result.data.messages[0].textos[0];
-      console.log(tipo);
-      console.log(msj);
-      setTipoMensaje(result.data.messages[0].tipo);
-      setMensaje(result.data.messages[0].textos[0]);
-      if (tipo == 0) {
-        toast.success(msj, {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        setRespuestaModal(true);
-      }
-      setModal(false);
-    } catch (error) {
-      if (error.response) {
-        console.log(1);
-        console.log(error);
-      } else if (error.request) {
-        console.log(2);
-        console.log(error);
-      } else if (error.message) {
-        console.log(3);
-        console.log(error);
-      }
-    }
-  };
-  const Modificar = async (e) => {
-    e.preventDefault();
-    const result = await ApiMasy.put(`api/Mantenimiento/UnidadMedida`, data);
-    let tipo = result.data.messages[0].tipo;
-    let msj = result.data.messages[0].textos[0];
-    setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos);
-    if (tipo == 0) {
-      toast.success(msj, {
+  const RetornarMensaje = async () => {
+    if (tipoMensaje == 0) {
+      toast.success(mensaje, {
         position: "bottom-right",
         autoClose: 4000,
         hideProgressBar: true,
@@ -97,12 +47,31 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
         theme: "dark",
       });
       setRespuestaModal(true);
+      setModal(false);
     }
-    setModal(false);
+  };
+  const OcultarMensajes = () => {
+    setMensaje([]);
+    setTipoMensaje(0);
   };
   const CerrarModal = () => {
     setRespuestaModal(false);
     setModal(false);
+  };
+  //#endregion
+
+  //#region Funciones API
+  const Registrar = async (e) => {
+    e.preventDefault();
+    const result = await ApiMasy.post(`api/Mantenimiento/UnidadMedida`, data);
+    setTipoMensaje(result.data.messages[0].tipo);
+    setMensaje(result.data.messages[0].textos[0]);
+  };
+  const Modificar = async (e) => {
+    e.preventDefault();
+    const result = await ApiMasy.put(`api/Mantenimiento/UnidadMedida`, data);
+    setTipoMensaje(result.data.messages[0].tipo);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   //#endregion
 
@@ -146,7 +115,9 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                         id="codigoSunat"
                         name="codigoSunat"
                         placeholder="Codigo Sunat"
-                        defaultValue={data.codigoSunat}
+                        defaultValue={
+                          data.codigoSunat == null ? "" : data.codigoSunat
+                        }
                         autoComplete="off"
                         onChange={handleChange}
                         readOnly={modo == "Consultar" ? true : false}

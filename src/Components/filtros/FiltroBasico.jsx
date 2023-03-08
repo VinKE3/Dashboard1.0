@@ -1,6 +1,7 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
-function FiltroBasico({
+
+const FiltroBasico = ({
   textLabel,
   inputPlaceHolder,
   inputId,
@@ -10,25 +11,28 @@ function FiltroBasico({
   FiltradoButton,
   /*filter,*/
   FiltradoKeyPress,
-}) {
+}) => {
   return (
-    <div className="flex mt-2 mb-2 rounded-1 border-gray-200 overflow-hidden text-sm">
-      <label className="px-3 py-1 bg-gray-600">{textLabel}</label>
+    <div className="flex mt-2 mb-2 rounded-1 border-gray-200 overflow-hidden md:text-sm">
+      <label className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold">
+        {textLabel}
+      </label>
 
       <input
         type="text"
-        className="flex-1 px-3 py-1 text-black"
+        className="rounded-none bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full  border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-light dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        autoComplete="off"
+        spellCheck="false"
         placeholder={inputPlaceHolder}
         id={inputId}
         name={inputName}
         maxLength={inputMax}
-        //Para filtrar la tabla
-        // value={filter}
+        // defaultValue={filter} //Filtro local
         onChange={FiltradoKeyPress}
       />
 
       <button
-        className="px-2 rounded-none bg-green-700 text-white hover:bg-green-500"
+        className="px-3 rounded-none rounded-r-lg bg-yellow-500 text-light hover:bg-yellow-600"
         id={botonId}
         onClick={FiltradoButton}
       >
@@ -36,6 +40,6 @@ function FiltroBasico({
       </button>
     </div>
   );
-}
+};
 
 export default FiltroBasico;

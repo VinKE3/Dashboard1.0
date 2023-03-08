@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import Mensajes from "../../../Components/Mensajes";
-import moment from "moment";
 import { toast } from "react-toastify";
-import { FaSearch } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,128 +10,81 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
   const [dataDepartamento, setDataDepartamento] = useState([]);
-  const [tipoMensaje, setTipoMensaje] = useState(0);
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    console.log("tipoMensaje modal");
-    tipoMensaje && console.log(tipoMensaje);
-    console.log("Cierra tipoMensaje modal");
-  }, [tipoMensaje]);
-  useEffect(() => {
-    console.log("Mensaje modal");
-    mensaje && console.log(mensaje);
-    console.log("Cierra Mensaje modal");
+    mensaje;
   }, [mensaje]);
   useEffect(() => {
-    console.log("Objeto modal");
-    objeto && console.log(objeto);
-    setData(objeto);
-    console.log("Cierra objeto modal");
-  }, [objeto]);
+    tipoMensaje;
+    RetornarMensaje();
+  }, [tipoMensaje]);
   useEffect(() => {
-    console.log("dataDepartamento modal");
-    dataDepartamento && console.log(dataDepartamento);
+    objeto;
+    setData(objeto);
+  }, [objeto]);
+
+  useEffect(() => {
+    dataDepartamento;
     document.getElementById("departamentoId").value = data.departamentoId;
-    console.log("Cierra dataDepartamento modal");
   }, [dataDepartamento]);
   useEffect(() => {
-    console.log("Data modal");
-    data && console.log(data);
-    console.log("Cierra data modal");
+    data;
   }, [data]);
   useEffect(() => {
     ConsultarDepartamento();
   }, []);
   //#endregion
 
-  //#region Funcion onChange y validación de campos
+  //#region Funciones
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
+  };
+  const RetornarMensaje = async () => {
+    if (tipoMensaje == 0) {
+      toast.success(mensaje, {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setRespuestaModal(true);
+      setModal(false);
+    }
   };
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(0);
   };
-  const ValidarConsulta = (e) => {
-    e.preventDefault();
-    let fecha = document.getElementById("id").value;
-    ConsultarTipoCambio("?fecha=" + fecha);
+  const CerrarModal = () => {
+    setRespuestaModal(false);
+    setModal(false);
   };
   //#endregion
 
   //#region Funciones API
   const Registrar = async (e) => {
     e.preventDefault();
-    try {
-      const result = await ApiMasy.post(`api/Mantenimiento/Provincia`, data);
-      let tipo = result.data.messages[0].tipo;
-      let msj = result.data.messages[0].textos[0];
-      console.log(tipo);
-      console.log(msj);
-      setTipoMensaje(result.data.messages[0].tipo);
-      setMensaje(result.data.messages[0].textos[0]);
-      if (tipo == 0) {
-        toast.success(msj, {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        setRespuestaModal(true);
-      }
-      setModal(false);
-    } catch (error) {
-      if (error.response) {
-        console.log(1);
-        console.log(error);
-      } else if (error.request) {
-        console.log(2);
-        console.log(error);
-      } else if (error.message) {
-        console.log(3);
-        console.log(error);
-      }
-    }
+    const result = await ApiMasy.post(`api/Mantenimiento/Provincia`, data);
+    setTipoMensaje(result.data.messages[0].tipo);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   const Modificar = async (e) => {
     e.preventDefault();
     const result = await ApiMasy.put(`api/Mantenimiento/Provincia`, data);
     setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos);
-    console.log(result.data.messages[0].textos);
-    if (tipoMensaje == 0) {
-      toast.success(
-        { mensaje },
-        {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        }
-      );
-      setRespuestaModal(true);
-    }
-    setModal(false);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   const ConsultarDepartamento = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Departamento/Listar`);
     setDataDepartamento(result.data.data.data);
-    console.log(result.data.data.data);
-  };
-  const CerrarModal = () => {
-    setRespuestaModal(false);
-    setModal(false);
   };
   //#endregion
 
@@ -179,8 +130,9 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                           id="provinciaId"
                           name="provinciaId"
                           defaultValue={data.provinciaId}
+                          readOnly={modo == "Registrar" ? false : true}
+                          maxLength="2"
                           onChange={handleChange}
-                          readOnly
                           className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
                       </div>
@@ -195,11 +147,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                           id="departamentoId"
                           name="departamentoId"
                           onChange={handleChange}
-                          disabled={
-                            modo == "Consultar" || modo == "Modificar"
-                              ? true
-                              : false
-                          }
+                          disabled={modo == "Registrar" ? false : true}
                           className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
                           {dataDepartamento.map((departamento) => (
@@ -216,17 +164,17 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
 
                     <div className="flex">
                       <label
-                        htmlFor="provinciaNombre"
+                        htmlFor="nombre"
                         className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
                       >
-                        Nombre
+                        Provincia
                       </label>
                       <input
                         type="text"
                         id="nombre"
                         name="nombre"
                         defaultValue={data.nombre}
-                        placeholder="Nombre"
+                        placeholder="Provincia"
                         onChange={handleChange}
                         autoComplete="off"
                         readOnly={modo == "Consultar" ? true : false}

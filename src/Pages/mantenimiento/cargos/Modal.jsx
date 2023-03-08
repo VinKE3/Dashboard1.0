@@ -9,106 +9,34 @@ import "react-toastify/dist/ReactToastify.css";
 const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [tipoMensaje, setTipoMensaje] = useState(0);
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    console.log("tipoMensaje modal");
-    tipoMensaje && console.log(tipoMensaje);
-    console.log("Cierra tipoMensaje modal");
-  }, [tipoMensaje]);
-  useEffect(() => {
-    console.log("Mensaje modal");
-    mensaje && console.log(mensaje);
-    console.log("Cierra Mensaje modal");
+    mensaje;
   }, [mensaje]);
   useEffect(() => {
-    console.log("Objeto modal");
-    objeto && console.log(objeto);
+    tipoMensaje;
+    RetornarMensaje();
+  }, [tipoMensaje]);
+  useEffect(() => {
+    objeto;
     setData(objeto);
-    console.log("Cierra objeto modal");
   }, [objeto]);
   useEffect(() => {
-    console.log("Data modal");
-    data && console.log(data);
-    console.log("Cierra data modal");
+    data;
   }, [data]);
-  useEffect(() => {
-    modo == "Modificar"
-      ? ModoModificar()
-      : modo == "Consultar"
-      ? ModoConsultar()
-      : console.log(modo);
-  }, []);
   //#endregion
 
-  //#region Funcion onChange y validación de campos
+  //#region Funciones
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
   };
-  const ModoConsultar = () => {
-    console.log("consultar");
-    document.getElementById("descripcion").enabled = false;
-  };
-  const ModoModificar = () => {
-    console.log("modificar");
-    document.getElementById("descripcion").readOnly = false;
-  };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(0);
-  };
-  //#endregion
-
-  //#region Funciones API
-  const Registrar = async (e) => {
-    e.preventDefault();
-    try {
-      const result = await ApiMasy.post(`api/Mantenimiento/Cargo`, data);
-      let tipo = result.data.messages[0].tipo;
-      let msj = result.data.messages[0].textos[0];
-      console.log(tipo);
-      console.log(msj);
-      setTipoMensaje(result.data.messages[0].tipo);
-      setMensaje(result.data.messages[0].textos[0]);
-      if (tipo == 0) {
-        toast.success(msj, {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        setRespuestaModal(true);
-      }
-      setModal(false);
-    } catch (error) {
-      if (error.response) {
-        console.log(1);
-        console.log(error);
-      } else if (error.request) {
-        console.log(2);
-        console.log(error);
-      } else if (error.message) {
-        console.log(3);
-        console.log(error);
-      }
-    }
-  };
-  const Modificar = async (e) => {
-    e.preventDefault();
-    const result = await ApiMasy.put(`api/Mantenimiento/Cargo`, data);
-    let tipo = result.data.messages[0].tipo;
-    let msj = result.data.messages[0].textos[0];
-    setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos);
-    if (tipo == 0) {
-      toast.success(msj, {
+  const RetornarMensaje = async () => {
+    if (tipoMensaje == 0) {
+      toast.success(mensaje, {
         position: "bottom-right",
         autoClose: 4000,
         hideProgressBar: true,
@@ -119,12 +47,31 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
         theme: "dark",
       });
       setRespuestaModal(true);
+      setModal(false);
     }
-    setModal(false);
+  };
+  const OcultarMensajes = () => {
+    setMensaje([]);
+    setTipoMensaje(0);
   };
   const CerrarModal = () => {
     setRespuestaModal(false);
     setModal(false);
+  };
+  //#endregion
+
+  //#region Funciones API
+  const Registrar = async (e) => {
+    e.preventDefault();
+    const result = await ApiMasy.post(`api/Mantenimiento/Cargo`, data);
+    setTipoMensaje(result.data.messages[0].tipo);
+    setMensaje(result.data.messages[0].textos[0]);
+  };
+  const Modificar = async (e) => {
+    e.preventDefault();
+    const result = await ApiMasy.put(`api/Mantenimiento/Cargo`, data);
+    setTipoMensaje(result.data.messages[0].tipo);
+    setMensaje(result.data.messages[0].textos[0]);
   };
   //#endregion
 
@@ -170,11 +117,12 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                         placeholder="Descripción"
                         defaultValue={data.descripcion}
                         autoComplete="off"
+                        readOnly={modo == "Consultar" ? true : false}
                         onChange={handleChange}
                         className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>
-                    <div className="flex min-w-min md:w-full">
+                    <div className="flex md:w-48">
                       <label
                         htmlFor="sueldo"
                         className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
@@ -189,6 +137,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                         defaultValue={data.sueldo}
                         autoComplete="off"
                         onChange={handleChange}
+                        readOnly={modo == "Consultar" ? true : false}
                         className="rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>

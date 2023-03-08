@@ -26,7 +26,9 @@ const TipodeCambio = () => {
   //#region UseState
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
+  const [index, setIndex] = useState(1);
   const [timer, setTimer] = useState(null);
+  const [filtro, setFiltro] = useState("");
   const [botones, setBotones] = useState([true, true, true]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
@@ -35,31 +37,36 @@ const TipodeCambio = () => {
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
-  //#region UseEffect
+  //#region useEffect
+  useEffect(() => {
+    filtro;
+  }, [filtro]);
+  useEffect(() => {
+    total;
+  }, [total]);
+  useEffect(() => {
+    index;
+  }, [index]);
+
   useEffect(() => {
     modo;
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar();
+      Listar(filtro, index);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar();
+      Listar(filtro, index);
     }
   }, [respuestaAlert]);
-  useEffect(() => {
-    console.log("inicia total");
-    total && console.log(total);
-    console.log("termina total");
-  }, [total]);
   //#endregion
 
   //#region Funciones API
-  const Listar = async (filtroApi = "") => {
+  const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/TipoCambio/Listar${filtroApi}`
+      `api/Mantenimiento/TipoCambio/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
@@ -71,35 +78,49 @@ const TipodeCambio = () => {
   //#endregion
 
   //#region Funciones Filtrado
+  const FiltradoPaginado = (e) => {
+    let anio = document.getElementById("anio").value;
+    let mes = document.getElementById("mes").value;
+    let boton = e.selected + 1;
+    setIndex(e.selected + 1);
+    if (anio == new Date().getFullYear() && mes == 0) {
+      Listar("", boton);
+    } else {
+      Listar(`&anio=${anio}&mes=${mes}`, boton);
+    }
+  };
   const FiltradoSelect = (e) => {
     let anio = document.getElementById("anio").value;
     let mes = e.target.value;
+    setFiltro(`&anio=${anio}&mes=${mes}`, index);
+    if (mes != 0) setIndex(1);
     if (anio == new Date().getFullYear() && mes == 0) {
-      Listar();
+      Listar("", index);
     } else {
-      Listar(`?anio=${anio}&mes=${mes}`);
+      Listar(`&anio=${anio}&mes=${mes}`, index);
     }
   };
   const FiltradoNumber = (e) => {
+    clearTimeout(timer);
     let anio = e.target.value;
     let mes = document.getElementById("mes").value;
-    clearTimeout(timer);
+    setFiltro(`&anio=${anio}&mes=${mes}`, index);
+    if (anio != String(new Date().getFullYear())) setIndex(1);
     const newTimer = setTimeout(() => {
       if (anio == new Date().getFullYear() && mes == 0) {
-        Listar();
+        Listar("", index);
       } else {
-        Listar(`?anio=${anio}&mes=${mes}`);
+        Listar(`&anio=${anio}&mes=${mes}`, index);
       }
     }, 1000);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    let anio = document.getElementById("anio").value;
-    let mes = document.getElementById("mes").value;
-    if (anio == new Date().getFullYear() && mes == 0) {
-      Listar();
+    setIndex(1);
+    if (filtro == "") {
+      Listar("", 1);
     } else {
-      Listar(`?anio=${anio}&mes=${mes}`);
+      Listar(filtro, 1);
     }
   };
   //#endregion
@@ -255,7 +276,7 @@ const TipodeCambio = () => {
               ))}
             </select>
             <button
-              id="buscar-tipos-cambio"
+              id="buscar"
               className="px-3 rounded-none rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-600"
               onClick={FiltradoButton}
             >
@@ -276,7 +297,13 @@ const TipodeCambio = () => {
 
         {/* Tabla */}
         <TablaStyle>
-          <Table columnas={columnas} datos={datos} total={total} />
+          <Table
+            columnas={columnas}
+            datos={datos}
+            total={total}
+            index={index}
+            Click={(e) => FiltradoPaginado(e)}
+          />
         </TablaStyle>
         {/* Tabla */}
       </div>
