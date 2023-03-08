@@ -28,7 +28,6 @@ export const useAuthProvider = () => {
         const { token } = result.data.data;
         setToken(token);
         authHelper.login(result.data.data);
-        console.log(result.data.data);
       }
     } catch (error) {
       setError(error?.response);

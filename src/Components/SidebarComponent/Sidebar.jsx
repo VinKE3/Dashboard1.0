@@ -17,6 +17,7 @@ const Sidebar = () => {
         onclickButtonSubmenu={() => setShowSubmenu(!showSubmenu)}
         showSubmenu={showSubmenu}
         showMenu={showMenu}
+        onClickShowMenu={() => setShowMenu(!showMenu)}
         secciones={secciones}
         activeSection={activeSection}
         handleActiveSection={handleActiveSection}

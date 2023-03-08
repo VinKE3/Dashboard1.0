@@ -1,6 +1,9 @@
 import axios from "axios";
 import { authHelper } from "../helpers/AuthHelper";
 import Swal from "sweetalert2";
+import { useContext } from "react";
+import { APIErrorContext } from "../context/ContextError";
+import useApiError from "../context/UseApiError";
 
 const ApiMasy = axios.create({
   baseURL: "https://mcwebapi.masydase.com/",
@@ -18,10 +21,17 @@ ApiMasy.interceptors.request.use(
     config.headers["Content-Type"] = "application/json";
     return config;
   },
+
   (error) => {
     Promise.reject(error);
   }
 );
+
+function useAPIError() {
+  const { error, addError, removeError } = useContext(APIErrorContext);
+
+  return { error, addError, removeError };
+}
 
 ApiMasy.interceptors.response.use(
   (response) => {
@@ -34,22 +44,24 @@ ApiMasy.interceptors.response.use(
     }
     return response;
   },
+
   (error) => {
+    const { addError } = useAPIError();
+
     if (error.response.status === 400) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response.data.messages[0].textos,
-      });
-    } else if (error.response.status === 401) {
-      window.location.href = "/login";
-    } else if (error.response.status === 409) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response.data.messages[0].textos,
-      });
+      addError(error.response.data.message, error.response.status);
+      console.log(error.response.data.message);
     }
+
+    if (error.response.status === 404) {
+      addError(error.response.data.message, error.response.status);
+    }
+
+    if (error.response.status === 500) {
+      addError(error.response.data.message, error.response.status);
+    }
+
+    return Promise.reject(error);
   }
 );
 

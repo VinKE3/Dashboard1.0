@@ -9,6 +9,7 @@ const SidebarRoutes = ({
   showMenu,
   secciones,
   handleActiveSection,
+  onClickShowMenu,
   activeSection,
 }) => {
   const onClickSubMenu = (e) => {
@@ -21,7 +22,10 @@ const SidebarRoutes = ({
       onclickButtonSubmenu();
     }
   };
-
+  const onClickShowMenuHandle = (e) => {
+    e.preventDefault();
+    onClickShowMenu();
+  };
   //borrar tokens
   const handleLogout = () => {
     store.session.remove("access_token");
@@ -69,6 +73,7 @@ const SidebarRoutes = ({
                   className={` ${
                     seccion.id === activeSection ? "h-full" : "h-0"
                   } overflow-y-hidden `}
+                  onClick={onClickShowMenuHandle}
                 >
                   {seccion.items.map((item) => (
                     <li key={item.title}>

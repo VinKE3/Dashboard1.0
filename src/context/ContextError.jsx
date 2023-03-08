@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { createContext, useState, useCallback } from "react";
 
-export const APIErrorContext = React.createContext({
+export const APIErrorContext = createContext({
   error: null,
   addError: () => {},
   removeError: () => {},
@@ -25,3 +25,37 @@ export default function APIErrorProvider({ children }) {
     </APIErrorContext.Provider>
   );
 }
+
+//context for errors
+
+// import React, { createContext, useState } from "react";
+
+// const APIErrorContext = createContext();
+
+// export function APIErrorProvider({ children }) {
+//   const values = useAPIErrorProvider();
+//   return (
+//     <APIErrorContext.Provider value={values}>
+//       {children}
+//     </APIErrorContext.Provider>
+//   );
+// }
+
+// export const useAPIError = () => {
+//   return useContext(APIErrorContext);
+// };
+
+// export const useAPIErrorProvider = () => {
+//   const [error, setError] = useState(null);
+
+//   const addError = (error) => {
+//     setError(error);
+//   };
+
+//   return {
+//     error,
+//     addError,
+//   };
+// };
+
+// export default APIErrorContext;
