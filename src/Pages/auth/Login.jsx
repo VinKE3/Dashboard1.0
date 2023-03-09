@@ -11,7 +11,7 @@ import {
 } from "react-icons/ri";
 
 const Login = () => {
-  const { token, login, error, isLoading } = useAuth();
+  const { token, login, error, isLoading, user2 } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const userRef = useRef(null);
@@ -53,7 +53,7 @@ const Login = () => {
       }
     }
     errRef.current.focus();
-  }, [success, isLoading, error, token]);
+  }, [success, isLoading, error, token, user2]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">

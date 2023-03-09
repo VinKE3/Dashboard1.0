@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useAuth } from "../../../context/ContextP";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:last-child {
@@ -21,6 +21,7 @@ const TablaStyle = styled.div`
 
 const Lineas = () => {
   //#region useState
+  const { user2 } = useAuth();
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(1);
@@ -58,6 +59,13 @@ const Lineas = () => {
       Listar(filtro, index);
     }
   }, [respuestaAlert]);
+  useEffect(() => {
+    if (user2 == "AD") {
+      Listar(filtro, index);
+    } else {
+      setBotones([true, true, true]);
+    }
+  }, [user2]);
   //#endregion
 
   //#region Funciones API
