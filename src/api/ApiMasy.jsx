@@ -1,8 +1,5 @@
 import axios from "axios";
 import { authHelper } from "../helpers/AuthHelper";
-import Swal from "sweetalert2";
-import { useContext } from "react";
-import { APIErrorContext } from "../context/ContextError";
 
 const ApiMasy = axios.create({
   baseURL: "https://mcwebapi.masydase.com/",
@@ -22,45 +19,20 @@ ApiMasy.interceptors.request.use(
   },
 
   (error) => {
-    Promise.reject(error);
+    return error;
   }
 );
 
-function useAPIError() {
-  const { error, addError, removeError } = useContext(APIErrorContext);
-
-  return { error, addError, removeError };
-}
-
 ApiMasy.interceptors.response.use(
   (response) => {
-    if (response.status === 201) {
-      Swal.fire({
-        icon: "success",
-        title: "Exito",
-        text: "Operación realizada con éxito",
-      });
-    }
     return response;
   },
-
   (error) => {
-    const { addError } = useAPIError();
-
-    if (error.response.status === 400) {
-      addError(error.response.data.message, error.response.status);
-      console.log(error.response.data.message);
+    let response = error;
+    if (error.response.status === 401) {
+      window.location.href = "/login";
     }
-
-    if (error.response.status === 404) {
-      addError(error.response.data.message, error.response.status);
-    }
-
-    if (error.response.status === 500) {
-      addError(error.response.data.message, error.response.status);
-    }
-
-    return Promise.reject(error);
+    return response;
   }
 );
 

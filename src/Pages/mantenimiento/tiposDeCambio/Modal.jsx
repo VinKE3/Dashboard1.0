@@ -54,7 +54,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   };
   const OcultarMensajes = () => {
     setMensaje([]);
-    setTipoMensaje(0);
+    setTipoMensaje(-1);
   };
   const CerrarModal = () => {
     setRespuestaModal(false);
@@ -71,14 +71,26 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const Registrar = async (e) => {
     e.preventDefault();
     const result = await ApiMasy.post(`api/Mantenimiento/TipoCambio`, data);
-    setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos[0]);
+    if (result.name == "AxiosError") {
+      setTipoMensaje(result.response.data.messages[0].tipo);
+      setMensaje(result.response.data.messages[0].textos);
+    } else {
+      console.log(result);
+      setTipoMensaje(result.data.messages[0].tipo);
+      setMensaje(result.data.messages[0].textos[0]);
+    }
   };
   const Modificar = async (e) => {
     e.preventDefault();
     const result = await ApiMasy.put(`api/Mantenimiento/TipoCambio`, data);
-    setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos[0]);
+    if (result.name == "AxiosError") {
+      setTipoMensaje(result.response.data.messages[0].tipo);
+      setMensaje(result.response.data.messages[0].textos);
+    } else {
+      console.log(result);
+      setTipoMensaje(result.data.messages[0].tipo);
+      setMensaje(result.data.messages[0].textos[0]);
+    }
   };
   const ConsultarTipoCambio = async (filtroApi = "") => {
     const res = await ApiMasy.get(
