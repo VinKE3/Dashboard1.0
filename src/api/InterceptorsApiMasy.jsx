@@ -3,8 +3,7 @@ import APIErrorContext from "../context/ContextError";
 import Swal from "sweetalert2";
 import ApiMasy from "./ApiMasy";
 
-function Interceptor({ children }) {
-  const { addError } = useContext(APIErrorContext);
+function Interceptor() {
   useEffect(() => {
     ApiMasy.interceptors.response.use(
       (response) => {
@@ -32,7 +31,7 @@ function Interceptor({ children }) {
     );
   }, []);
 
-  return <>{children}</>;
+  return <></>;
 }
 
 export default Interceptor;
