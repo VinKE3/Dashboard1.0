@@ -118,7 +118,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
         <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex align-items-center justify-center">
           <span className="text-center align-text-bottom">
             {"Página "}
-            <span className="font-bold text-primary">{indexPaginas}</span>
+            <span className="font-bold text-primary">{indexPaginas + 1}</span>
             {" de "}
             <span className="font-bold text-primary">{paginado} </span>
           </span>
@@ -127,8 +127,12 @@ const Table = ({ columnas, datos, total, index, Click }) => {
         <ReactPaginate
           pageRangeDisplayed={2}
           onPageChange={Click}
-          pageCount={parseInt(Math.ceil(totalPaginas / itemsPerPage))}
-          forcePage={index - 1}
+          pageCount={
+            totalPaginas == 0
+              ? 1
+              : parseInt(Math.ceil(totalPaginas / itemsPerPage))
+          }
+          forcePage={index}
           nextLabel={<FaAngleDoubleRight className="text-lg" />}
           previousLabel={<FaAngleDoubleLeft className="text-lg" />}
           breakLabel="..."

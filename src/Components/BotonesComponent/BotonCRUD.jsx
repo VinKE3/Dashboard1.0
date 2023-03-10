@@ -6,12 +6,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const BotonCRUD = ({
-  mostrar,
-  id,
-  Click1,
-  Click2,
-  menu,
   setRespuestaAlert,
+  permisos,
+  menu,
+  id,
+  ClickConsultar,
+  ClickModificar,
 }) => {
   //#region useEffect
   useEffect(() => {
@@ -20,10 +20,9 @@ const BotonCRUD = ({
   //#endregion
 
   //#region Función Eliminar
-  const handleDelete = async (id) => {
+  const Eliminar = async (id) => {
     Swal.fire({
       title: "Eliminar registro",
-      text: "¡Los cambios no se podrán revertir!",
       icon: "warning",
       iconColor: "#F7BF3A",
       showCancelButton: true,
@@ -35,8 +34,26 @@ const BotonCRUD = ({
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        ApiMasy.delete(`api/Mantenimiento/${menu}/${id}`).then((response) => {
-          if (response.data.messages[0].tipo == 0) {
+        ApiMasy.delete(`api/${menu[0]}/${menu[1]}/${id}`).then((response) => {
+          if (response.name == "AxiosError") {
+            let err = "";
+            if (response.response.data == "") {
+              err = response.message;
+            } else {
+              err = String(response.response.data.messages[0].textos);
+            }
+            toast.error(err, {
+              position: "bottom-right",
+              autoClose: 7000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+            setRespuestaAlert(false);
+          } else {
             setRespuestaAlert(true);
             toast.success(String(response.data.messages[0].textos), {
               position: "bottom-right",
@@ -48,18 +65,6 @@ const BotonCRUD = ({
               progress: undefined,
               theme: "colored",
             });
-          } else {
-            toast.error(String(response.data.messages[0].textos), {
-              position: "bottom-right",
-              autoClose: 5000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-            setRespuestaAlert(false);
           }
         });
       }
@@ -67,14 +72,14 @@ const BotonCRUD = ({
   };
   //#endregion
 
-  //#region  Render
+  //#region Render
   return (
     <div className="flex item-center justify-center">
-      {mostrar[0] ? (
+      {permisos[1] ? (
         <div className="w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125">
           <button
             id="boton-consultar"
-            onClick={Click1}
+            onClick={ClickConsultar}
             className="p-0 px-1"
             title="Click para consultar registro"
           >
@@ -84,11 +89,11 @@ const BotonCRUD = ({
       ) : (
         ""
       )}
-      {mostrar[1] ? (
+      {permisos[2] ? (
         <div className="w-4 mr-2 transform hover:text-orange-500 hover:scale-125">
           <button
             id="boton-modificar"
-            onClick={Click2}
+            onClick={ClickModificar}
             className="p-0 px-1"
             title="Click para modificar registro"
           >
@@ -98,11 +103,11 @@ const BotonCRUD = ({
       ) : (
         ""
       )}
-      {mostrar[2] ? (
+      {permisos[3] ? (
         <div className="w-4 mr-2 transform hover:text-red-500 hover:scale-125">
           <button
             id="boton-eliminar"
-            onClick={() => handleDelete(id)}
+            onClick={() => Eliminar(id)}
             className="p-0 px-1"
             title="Click para eliminar registro"
           >

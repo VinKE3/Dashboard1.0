@@ -9,9 +9,14 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "../../../context/ContextP";
+// import { useAuth } from "../../../context/ContextP";
+import * as Global from "../../../Components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
+  & th:nth-child(2) {
+    width: 75px;
+  }
   & th:last-child {
     width: 130px;
     text-align: center;
@@ -21,14 +26,14 @@ const TablaStyle = styled.div`
 
 const Lineas = () => {
   //#region useState
-  const { user2 } = useAuth();
+  // const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
+  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [botones, setBotones] = useState([true, true, true]);
-  const [objeto, setObjeto] = useState([]);
+  const [permisos, setPermisos] = useState([true, true, true, true]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaModal, setRespuestaModal] = useState(false);
@@ -36,6 +41,14 @@ const Lineas = () => {
   //#endregion
 
   //#region useEffect
+  // useEffect(() => {
+  //   if (usuario == "AD") {
+  //     setBotones([true, true, true, false]);
+  //     Listar(filtro, 1);
+  //   } else {
+  //     //Consulta a la Api para traer los permisos
+  //   }
+  // }, [usuario]);
   useEffect(() => {
     filtro;
   }, [filtro]);
@@ -51,21 +64,14 @@ const Lineas = () => {
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
-  useEffect(() => {
-    if (user2 == "AD") {
-      Listar(filtro, index);
-    } else {
-      setBotones([true, true, true]);
-    }
-  }, [user2]);
   //#endregion
 
   //#region Funciones API
@@ -86,7 +92,7 @@ const Lineas = () => {
   const FiltradoPaginado = (e) => {
     let filtro = document.getElementById("descripcion").value;
     let boton = e.selected + 1;
-    setIndex(e.selected + 1);
+    setIndex(e.selected);
     if (filtro == "") {
       Listar("", boton);
     } else {
@@ -97,18 +103,18 @@ const Lineas = () => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&descripcion=${f}`);
-    if (f != "") setIndex(1);
+    if (f != "") setIndex(0);
     const newTimer = setTimeout(() => {
       if (f == "") {
-        Listar("", index);
+        Listar("", index + 1);
       } else {
-        Listar(`&descripcion=${f}`, index);
+        Listar(`&descripcion=${f}`, index + 1);
       }
     }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    setIndex(1);
+    setIndex(0);
     if (filtro == "") {
       Listar("", 1);
     } else {
@@ -136,23 +142,24 @@ const Lineas = () => {
   //#region Columnas
   const columnas = [
     {
-      Header: "Código",
-      accessor: "id",
-    },
-    {
       Header: "Descripción",
       accessor: "descripcion",
+    },
+    {
+      Header: "Código",
+      accessor: "id",
+      Cell: ({ value }) => <span className="w-2/12">{value}</span>,
     },
     {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
-          id={row.values.id}
-          mostrar={botones}
-          Click1={() => AbrirModal(row.values.id, "Consultar")}
-          Click2={() => AbrirModal(row.values.id, "Modificar")}
-          menu={"Linea"}
           setRespuestaAlert={setRespuestaAlert}
+          permisos={permisos}
+          menu={["Mantenimiento", "Linea"]}
+          id={row.values.id}
+          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
         />
       ),
     },
@@ -163,7 +170,7 @@ const Lineas = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Líneas</h2>
+        <h2 className={Global.TituloH2}>Líneas</h2>
 
         {/* Filtro*/}
         <FiltroBasico
@@ -179,12 +186,14 @@ const Lineas = () => {
         {/* Filtro*/}
 
         {/* Boton */}
-        <BotonBasico
-          botonText="Registrar"
-          botonClass="boton-crud-registrar"
-          botonIcon={faPlus}
-          click={() => AbrirModal()}
-        />
+        {permisos[0] && (
+          <BotonBasico
+            botonText="Registrar"
+            botonClass="boton-crud-registrar"
+            botonIcon={faPlus}
+            click={() => AbrirModal()}
+          />
+        )}
         {/* Boton */}
 
         {/* Tabla */}
@@ -203,8 +212,8 @@ const Lineas = () => {
       {modal && (
         <Modal
           setModal={setModal}
-          modo={modo}
           setRespuestaModal={setRespuestaModal}
+          modo={modo}
           objeto={objeto}
         />
       )}

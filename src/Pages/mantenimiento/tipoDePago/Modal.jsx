@@ -174,7 +174,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
                       >
                         <option value="0">--SELECCIONE--</option>
                         <option value="CO">CONTADO</option>
-                        <option value="CR">CONTADO</option>
+                        <option value="CR">CREDITO</option>
                       </select>
                     </div>
                     <div className="flex md:w-48">
