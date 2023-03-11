@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "../../../context/ContextP";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -25,9 +25,9 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const TipoDePago = () => {
+const Conductor = () => {
   //#region useState
-  const { usuario } = useAuth();
+
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(1);
@@ -78,13 +78,13 @@ const TipoDePago = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/TipoCobroPago/Listar?pagina=${pagina}${filtro}`
+      `api/Mantenimiento/Conductor/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCobroPago/${id}`);
+    const result = await ApiMasy.get(`api/Mantenimiento/Conductor/${id}`);
     setObjeto(result.data.data);
   };
   //#endregion
@@ -150,20 +150,20 @@ const TipoDePago = () => {
       accessor: "id",
     },
     {
-      Header: "Descripción",
-      accessor: "descripcion",
+      Header: "Nombre",
+      accessor: "nombre",
     },
     {
-      Header: "Abreviatura",
-      accessor: "abreviatura",
+      Header: "DNI",
+      accessor: "numeroDocumentoIdentidad",
     },
     {
-      Header: "Plazo",
-      accessor: "plazo",
+      Header: "Licensia de Conducir",
+      accessor: "licenciaConducir",
     },
     {
-      Header: "Tipo Venta",
-      accessor: "tipoVentaCompraId",
+      Header: "Empresa de Transporte",
+      accessor: "empresaTransporteId",
     },
     {
       Header: "Acciones",
@@ -171,7 +171,7 @@ const TipoDePago = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Mantenimiento", "TipoCobroPago"]}
+          menu={["Mantenimiento", "Conductor"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
@@ -185,7 +185,7 @@ const TipoDePago = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Tipos De Pago</h2>
+        <h2 className="mb-4 py-2 text-xl font-bold">Conductor</h2>
 
         {/* Filtro*/}
         <FiltroBasico
@@ -238,4 +238,4 @@ const TipoDePago = () => {
   //#endregion
 };
 
-export default TipoDePago;
+export default Conductor;

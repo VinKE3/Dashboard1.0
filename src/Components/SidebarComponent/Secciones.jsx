@@ -116,6 +116,10 @@ const secciones = [
         title: "Cuentas Corrientes",
       },
       {
+        path: "/mantenimiento/conductor",
+        title: "Conductor",
+      },
+      {
         path: "/mantenimiento/departamentos",
         title: "Departamentos",
       },

@@ -35,6 +35,7 @@ import TipoDePago from "./pages/mantenimiento/tipoDePago/TipoDePago";
 import Cargos from "./pages/mantenimiento/cargos/Cargos";
 import EntidadesBancarias from "./pages/mantenimiento/entidadesBancarias/EntidadesBancarias";
 import CuentasCorrientes from "./pages/mantenimiento/cuentasCorrientes/CuentasCorrientes";
+import Conductor from "./pages/mantenimiento/conductor/Conductor";
 import Departamentos from "./pages/mantenimiento/departamentos/Departamentos";
 import Provincias from "./pages/mantenimiento/provincias/Provincias";
 import Distrito from "./pages/mantenimiento/distritos/Distrito";
@@ -129,6 +130,7 @@ function App() {
             path="/mantenimiento/cuentas-corrientes"
             element={<CuentasCorrientes />}
           />
+          <Route path="/mantenimiento/conductor" element={<Conductor />} />
           <Route
             path="/mantenimiento/departamentos"
             element={<Departamentos />}

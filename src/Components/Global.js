@@ -2,6 +2,7 @@
 export var ContenedorVarios = "flex flex-col md:flex-row gap-y-3 md:gap-x-2";
 export var ContenedorInput48 = "flex min-w-min md:w-48";
 export var ContenedorInput56 = "flex min-w-min md:w-56";
+export var ContenedorInput86 = "flex min-w-min md:w-86";
 export var ContenedorInputFull = "flex min-w-min md:w-full";
 export var LabelStyle =
   "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-800 text-light border-gray-600 font-semibold";

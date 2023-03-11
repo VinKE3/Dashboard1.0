@@ -32,7 +32,7 @@ const UnidadesDeMedida = () => {
   const [index, setIndex] = useState(1);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [botones, setBotones] = useState([true, true, true]);
+  const [permisos, setPermisos] = useState([true, true, true, true]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
@@ -149,12 +149,12 @@ const UnidadesDeMedida = () => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
-          id={row.values.id}
-          mostrar={botones}
-          Click1={() => AbrirModal(row.values.id, "Consultar")}
-          Click2={() => AbrirModal(row.values.id, "Modificar")}
-          menu={"UnidadMedida"}
           setRespuestaAlert={setRespuestaAlert}
+          permisos={permisos}
+          menu={["Mantenimiento", "UnidadMedida"]}
+          id={row.values.id}
+          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
         />
       ),
     },
@@ -181,12 +181,14 @@ const UnidadesDeMedida = () => {
         {/* Filtro*/}
 
         {/* Boton */}
-        <BotonBasico
-          botonText="Registrar"
-          botonClass="boton-crud-registrar"
-          botonIcon={faPlus}
-          click={() => AbrirModal()}
-        />
+        {permisos[0] && (
+          <BotonBasico
+            botonText="Registrar"
+            botonClass="boton-crud-registrar"
+            botonIcon={faPlus}
+            click={() => AbrirModal()}
+          />
+        )}
         {/* Boton */}
 
         {/* Tabla */}
