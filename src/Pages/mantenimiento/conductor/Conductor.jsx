@@ -27,10 +27,9 @@ const TablaStyle = styled.div`
 
 const Conductor = () => {
   //#region useState
-
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
   const [permisos, setPermisos] = useState([true, true, true, true]);
@@ -128,14 +127,14 @@ const Conductor = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let tipo = {
+      let conductor = {
         id: "00",
-        tipoVentaCompraId: "",
-        descripcion: "",
-        abreviatura: "",
-        plazo: "",
+        nombre: "",
+        numeroDocumentoIdentidad: "",
+        licenciaConducir: "",
+        empresaTransporteNombre: "",
       };
-      setObjeto(tipo);
+      setObjeto(conductor);
     } else {
       await GetPorId(id);
     }
@@ -163,7 +162,7 @@ const Conductor = () => {
     },
     {
       Header: "Empresa de Transporte",
-      accessor: "empresaTransporteId",
+      accessor: "empresaTransporteNombre",
     },
     {
       Header: "Acciones",
@@ -189,10 +188,10 @@ const Conductor = () => {
 
         {/* Filtro*/}
         <FiltroBasico
-          textLabel={"Descripción"}
-          inputPlaceHolder={"Descripción"}
-          inputId={"descripcion"}
-          inputName={"descripcion"}
+          textLabel={"Nombre"}
+          inputPlaceHolder={"Nombre"}
+          inputId={"nombre"}
+          inputName={"nombre"}
           inputMax={"200"}
           botonId={"buscar"}
           FiltradoButton={FiltradoButton}

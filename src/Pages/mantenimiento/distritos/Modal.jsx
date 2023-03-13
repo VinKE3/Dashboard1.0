@@ -49,6 +49,7 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Distrito/FormularioTablas`
     );
+    console.log(result.data.data.departamentos);
     let depa = result.data.data.departamentos.map((res) => ({
       id: res.id,
       nombre: res.nombre,
@@ -63,6 +64,7 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
         id: res.id,
         nombre: res.nombre,
       }));
+      console.log(prov);
       setDataProvincia(prov);
     }
   };

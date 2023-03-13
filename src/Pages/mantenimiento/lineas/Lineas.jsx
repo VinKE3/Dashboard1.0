@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { useAuth } from "../../../context/ContextP";
+import { useAuth } from "../../../context/ContextP";
 import * as Global from "../../../Components/Global";
 
 //#region Estilos
@@ -26,7 +26,7 @@ const TablaStyle = styled.div`
 
 const Lineas = () => {
   //#region useState
-  // const { usuario } = useAuth();
+  const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
@@ -41,14 +41,14 @@ const Lineas = () => {
   //#endregion
 
   //#region useEffect
-  // useEffect(() => {
-  //   if (usuario == "AD") {
-  //     setBotones([true, true, true, false]);
-  //     Listar(filtro, 1);
-  //   } else {
-  //     //Consulta a la Api para traer los permisos
-  //   }
-  // }, [usuario]);
+  useEffect(() => {
+    if (usuario == "AD") {
+      setPermisos([true, true, true, false]);
+      Listar(filtro, 1);
+    } else {
+      //Consulta a la Api para traer los permisos
+    }
+  }, [usuario]);
   useEffect(() => {
     filtro;
   }, [filtro]);

@@ -29,7 +29,7 @@ const UnidadesDeMedida = () => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
   const [permisos, setPermisos] = useState([true, true, true, true]);

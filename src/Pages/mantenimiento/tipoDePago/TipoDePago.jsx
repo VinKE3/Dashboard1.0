@@ -30,7 +30,7 @@ const TipoDePago = () => {
   const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
   const [permisos, setPermisos] = useState([true, true, true, true]);
@@ -66,13 +66,15 @@ const TipoDePago = () => {
     }
   }, [respuestaAlert]);
 
-  // useEffect(() => {
-  //   if (usuario == "AD") {
-  //     Listar(filtro, index);
-  //   } else {
-  //     setPermisos([true, true, true, true]);
-  //   }
-  // }, [usuario]);
+  useEffect(() => {
+    console.log("usuario", usuario);
+    if (usuario == "AD") {
+      Listar(filtro, index);
+      setPermisos([true, true, true, true]);
+    } else {
+      console.log("usuario", usuario);
+    }
+  }, [usuario]);
   //#endregion
 
   //#region Funciones API
