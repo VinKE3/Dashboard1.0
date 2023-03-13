@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import.meta.hot;
 import ApiMasy from "../../../api/ApiMasy";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
@@ -10,6 +11,8 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/ContextP";
+import * as Global from "../../../Components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -30,10 +33,10 @@ const TipoDePago = () => {
   const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
+  const [permisos, setPermisos] = useState([false, false, false, false]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
@@ -42,6 +45,14 @@ const TipoDePago = () => {
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    if (usuario == "AD") {
+      setPermisos([true, true, true, true]);
+      Listar(filtro, 1);
+    } else {
+      //Consulta a la Api para traer los permisos
+    }
+  }, [usuario]);
   useEffect(() => {
     filtro;
   }, [filtro]);
@@ -57,22 +68,14 @@ const TipoDePago = () => {
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
-
-  // useEffect(() => {
-  //   if (usuario == "AD") {
-  //     Listar(filtro, index);
-  //   } else {
-  //     setPermisos([true, true, true, true]);
-  //   }
-  // }, [usuario]);
   //#endregion
 
   //#region Funciones API
@@ -93,7 +96,7 @@ const TipoDePago = () => {
   const FiltradoPaginado = (e) => {
     let filtro = document.getElementById("descripcion").value;
     let boton = e.selected + 1;
-    setIndex(e.selected + 1);
+    setIndex(e.selected);
     if (filtro == "") {
       Listar("", boton);
     } else {
@@ -104,18 +107,18 @@ const TipoDePago = () => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&descripcion=${f}`);
-    if (f != "") setIndex(1);
+    if (f != "") setIndex(0);
     const newTimer = setTimeout(() => {
       if (f == "") {
-        Listar("", index);
+        Listar("", index + 1);
       } else {
-        Listar(`&descripcion=${f}`, index);
+        Listar(`&descripcion=${f}`, index + 1);
       }
     }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    setIndex(1);
+    setIndex(0);
     if (filtro == "") {
       Listar("", 1);
     } else {
@@ -128,14 +131,14 @@ const TipoDePago = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let tipo = {
+      let model = {
         id: "00",
-        tipoVentaCompraId: "",
-        descripcion: "",
         abreviatura: "",
-        plazo: "",
+        descripcion: "",
+        plazo: "0",
+        tipoVentaCompraId: "CO",
       };
-      setObjeto(tipo);
+      setObjeto(model);
     } else {
       await GetPorId(id);
     }
@@ -185,7 +188,7 @@ const TipoDePago = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Tipos De Pago</h2>
+        <h2 className={Global.TituloH2}>Tipo de Pago</h2>
 
         {/* Filtro*/}
         <FiltroBasico
@@ -204,7 +207,7 @@ const TipoDePago = () => {
         {permisos[0] && (
           <BotonBasico
             botonText="Registrar"
-            botonClass="boton-crud-registrar"
+            botonClass={Global.BotonRegistrar}
             botonIcon={faPlus}
             click={() => AbrirModal()}
           />

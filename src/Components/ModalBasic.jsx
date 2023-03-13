@@ -91,7 +91,7 @@ const ModalBasic = ({
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative h-full w-full md:h-auto my-0 md:my-5 mx-auto max-w-3xl">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none">
+          <div className="border-none rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none shadow-light/50">
             {/*header*/}
             <div className="flex py-3 px-5 border-b rounded-t border-light">
               <h3 className="text-3xl md:text-2xl font-semibold text-light">
@@ -108,14 +108,14 @@ const ModalBasic = ({
 
             {/*body*/}
             <div className="relative flex-auto">
-              {tipoMensaje > 0 && (
-                <Mensajes
-                  tipoMensaje={tipoMensaje}
-                  mensaje={mensaje}
-                  Click={() => OcultarMensajes()}
-                />
-              )}
               <form className="min-w-fit py-6 px-8">
+                {tipoMensaje > 0 && (
+                  <Mensajes
+                    tipoMensaje={tipoMensaje}
+                    mensaje={mensaje}
+                    Click={() => OcultarMensajes()}
+                  />
+                )}
                 <div className="flex flex-col gap-3">{children}</div>
               </form>
             </div>
@@ -150,7 +150,7 @@ const ModalBasic = ({
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="opacity-40 fixed inset-0 z-40 bg-black"></div>
     </>
   );
   //#endregion
