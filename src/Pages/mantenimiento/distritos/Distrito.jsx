@@ -39,7 +39,6 @@ const Distrito = () => {
 
   //#region useEffect
   useEffect(() => {
-    console.log(usuario);
     if (usuario == "AD") {
       setPermisos([true, true, true, true]);
       Listar(filtro, 1);

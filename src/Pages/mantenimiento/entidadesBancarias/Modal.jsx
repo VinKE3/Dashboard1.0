@@ -30,9 +30,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   //#region API
