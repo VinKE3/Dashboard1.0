@@ -34,8 +34,10 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
 
   //#region Funciones
   const handleChange = async ({ target }) => {
+    console.log(target.name);
     if (target.name == "departamentoId") {
-      ConsultarProvincia();
+      await ConsultarProvincia();
+      document.getElementById("provinciaId").selectedIndex = 0;
     }
     setData({ ...data, [target.name]: target.value });
   };
