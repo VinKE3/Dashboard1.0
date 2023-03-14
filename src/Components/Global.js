@@ -1,8 +1,14 @@
 //#region Modal
+export var ModalMediano = "relative h-full w-full md:h-auto my-0 md:my-5 mx-auto max-w-3xl";
+export var ModalFull = "relative h-full w-full my-0 md:my-5 mx-auto";
+export var FormSimple = "min-w-fit py-6 px-8";
+export var FormTabs = "min-w-fit py-0 px-4";
 export var ContenedorVarios = "flex flex-col md:flex-row gap-y-3 md:gap-x-2";
 export var ContenedorInput48 = "flex min-w-min md:w-48";
 export var ContenedorInput56 = "flex min-w-min md:w-56";
 export var ContenedorInput72 = "flex min-w-min md:w-72";
+export var ContenedorInput96 = "flex min-w-min md:w-96";
+export var ContenedorInputMitad = "flex min-w-min md:w-1/2";
 export var ContenedorInputFull = "flex min-w-min md:w-full";
 export var LabelStyle =
   "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-800 text-light border-gray-600 font-semibold";

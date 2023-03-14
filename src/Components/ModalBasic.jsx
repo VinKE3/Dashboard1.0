@@ -14,6 +14,7 @@ const ModalBasic = ({
   objeto,
   modo,
   menu,
+  tamañoModal = [Global.ModalMediano, Global.FormSimple],
 }) => {
   //#region useState
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -89,7 +90,7 @@ const ModalBasic = ({
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative h-full w-full md:h-auto my-0 md:my-5 mx-auto max-w-3xl">
+        <div className={tamañoModal[0]}>
           {/*content*/}
           <div className="border-none rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none shadow-light/50">
             {/*header*/}
@@ -108,7 +109,7 @@ const ModalBasic = ({
 
             {/*body*/}
             <div className="relative flex-auto">
-              <form className="min-w-fit py-6 px-8">
+              <form className={tamañoModal[1]}>
                 {tipoMensaje > 0 && (
                   <Mensajes
                     tipoMensaje={tipoMensaje}

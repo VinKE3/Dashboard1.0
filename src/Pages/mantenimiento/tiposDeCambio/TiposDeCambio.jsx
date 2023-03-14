@@ -265,7 +265,7 @@ const TipodeCambio = () => {
           </div>
 
           <div className={Global.ContenedorInputsFiltro}>
-            <label id="mes-form" className={Global.LabelStyle}>
+            <label id="mes" className={Global.LabelStyle}>
               Mes:
             </label>
             <select

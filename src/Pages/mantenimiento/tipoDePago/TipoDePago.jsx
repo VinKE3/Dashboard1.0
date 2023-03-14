@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import.meta.hot;
 import ApiMasy from "../../../api/ApiMasy";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
@@ -36,7 +35,7 @@ const TipoDePago = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false]);
+  const [permisos, setPermisos] = useState([false, false,false, false]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
@@ -133,10 +132,10 @@ const TipoDePago = () => {
     if (modo == "Registrar") {
       let model = {
         id: "00",
-        abreviatura: "",
-        descripcion: "",
-        plazo: "0",
         tipoVentaCompraId: "CO",
+        descripcion: "",
+        abreviatura: "",
+        plazo: "0",
       };
       setObjeto(model);
     } else {

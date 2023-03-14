@@ -22,7 +22,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     data;
   }, [data]);
   useEffect(() => {
-    ConsultarDepartamento();
+    Tablas();
   }, []);
   //#endregion
 
@@ -36,7 +36,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones API
-  const ConsultarDepartamento = async () => {
+  const Tablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Departamento/Listar`);
     setDataDepartamento(result.data.data.data);
   };

@@ -34,7 +34,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     data;
   }, [data]);
   useEffect(() => {
-    ConsultarTipo();
+    Tablas();
   }, []);
   //#endregion
 
@@ -48,7 +48,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const ConsultarTipo = async () => {
+  const Tablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/CuentaCorriente/FormularioTablas`
     );
