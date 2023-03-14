@@ -127,14 +127,24 @@ const Conductor = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let conductor = {
-        id: "00",
+      let model = {
+        id: "",
+        empresaId: "01",
+        empresaTransporteId: "",
         nombre: "",
         numeroDocumentoIdentidad: "",
         licenciaConducir: "",
-        empresaTransporteNombre: "",
+        telefono: "",
+        celular: "",
+        correoElectronico: "",
+        direccion: "",
+        departamentoId: "15",
+        provinciaId: "01",
+        distritoId: "01",
+        observacion: "",
+        isActivo: true,
       };
-      setObjeto(conductor);
+      setObjeto(model);
     } else {
       await GetPorId(id);
     }
@@ -157,7 +167,7 @@ const Conductor = () => {
       accessor: "numeroDocumentoIdentidad",
     },
     {
-      Header: "Licensia de Conducir",
+      Header: "Licencia de Conducir",
       accessor: "licenciaConducir",
     },
     {

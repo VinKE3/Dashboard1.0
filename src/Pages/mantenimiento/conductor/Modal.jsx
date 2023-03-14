@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../Components/Global";
 import ApiMasy from "../../../api/ApiMasy";
+// import { Checkbox } from "primereact/checkbox";
+import { Checkbox } from "nila";
 
 const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
@@ -9,6 +11,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const [dataDepartamento, setDataDepartamento] = useState([]);
   const [dataProvincia, setDataProvincia] = useState([]);
   const [dataDistrito, setDataDistrito] = useState([]);
+  // const [checked, setChecked] = useState(true);
   //#endregion
 
   //#region useEffect
@@ -27,7 +30,13 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
     dataProvincia;
     document.getElementById("provinciaId").value = data.provinciaId;
     ConsultarDistrito();
+    // Consultar();
   }, [dataProvincia]);
+
+  useEffect(() => {
+    dataDistrito;
+    document.getElementById("distritoId").value = data.distritoId;
+  }, [dataDistrito]);
 
   useEffect(() => {
     data;
@@ -43,9 +52,16 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   function uppercase(e) {
     e.target.value = e.target.value.toUpperCase();
   }
+
   const handleChange = async ({ target }) => {
     if (target.name == "departamentoId") {
-      ConsultarProvincia();
+      await ConsultarProvincia();
+      document.getElementById("provinciaId").selectedIndex = 0;
+      document.getElementById("distritoId").selectedIndex = 0;
+    }
+    if (target.name == "provinciaId") {
+      await ConsultarDistrito();
+      document.getElementById("distritoId").selectedIndex = 0;
     }
     setData({ ...data, [target.name]: target.value });
   };
@@ -73,7 +89,6 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
         nombre: res.nombre,
         distritos: res.distritos,
       }));
-      console.log(provi);
       setDataProvincia(provi);
     }
   };
@@ -81,14 +96,12 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const ConsultarDistrito = async () => {
     if (dataProvincia.length > 0) {
       let dist = dataProvincia.map((res) => res.distritos);
-      console.log(dist[0].nombre);
       let index = document.getElementById("provinciaId").selectedIndex;
       let distri = dist[index].map((res) => ({
         id: res.id,
         nombre: res.nombre,
       }));
       setDataDistrito(distri);
-      console.log(distri);
     }
   };
 
@@ -120,8 +133,19 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
             className={Global.InputStyle}
           />
         </div>
-        <div className="flex">
-          <input
+        <div className="flex items-center gap-2">
+          <Checkbox color="text-red-600" label="Activo" />
+          {/* <Checkbox
+            className="background-color: #00FF00!important;"
+            id="isActivo"
+            name="isActivo"
+            readOnly={modo == "Consultar" ? true : false}
+            defaultValue={data.isActivo}
+            onChange={(e) => setChecked(e.checked)}
+            checked={checked}
+          ></Checkbox> */}
+        </div>
+        {/* <input
             type={"checkbox"}
             id="isActivo"
             name="isActivo"
@@ -129,8 +153,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
             value="isActivo"
             label="Activo"
           />
-          <label className="flex" /> Activo <label />
-        </div>
+          <label /> Activo <label /> */}
       </div>
       <div className={Global.ContenedorInputFull}>
         <label htmlFor="empresaTransporteId" className={Global.LabelStyle}>
@@ -317,13 +340,13 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
           Distrito
         </label>
         <select
-          id=" distritoId"
-          name=" distritoId"
+          id="distritoId"
+          name="distritoId"
           onChange={handleChange}
           disabled={modo == "Registrar" ? false : true}
           className={Global.SelectStyle}
         >
-          {dataDistrito.map(() => (
+          {dataDistrito.map((distrito) => (
             <option key={distrito.id} value={distrito.id}>
               {distrito.nombre}
             </option>
