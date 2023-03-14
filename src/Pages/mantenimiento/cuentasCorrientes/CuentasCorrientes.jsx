@@ -20,7 +20,7 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(5) {
+  & th:nth-child(6) {
     text-align: right;
     width: 90px;
   }
@@ -86,12 +86,22 @@ const CuentasCorrientes = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/CuentaCorriente/Listar?pagina=${pagina}${filtro}`
     );
-    setDatos(result.data.data.data);
+    let model = result.data.data.data.map((res) => ({
+      id: res.empresaId + res.cuentaCorrienteId,
+      empresaId: res.empresaId,
+      cuentaCorrienteId: res.cuentaCorrienteId,
+      entidadBancariaNombre: res.entidadBancariaNombre,
+      entidadBancariaTipo: res.entidadBancariaTipo,
+      monedaId: res.monedaId,
+      numero: res.numero,
+      saldoFinal: res.saldoFinal,
+      tipoCuentaDescripcion: res.tipoCuentaDescripcion,
+    }));
+    setDatos(model);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/CuentaCorriente/${id}`);
-    console.log(result)
     setObjeto(result.data.data);
   };
   //#endregion
@@ -136,14 +146,16 @@ const CuentasCorrientes = () => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
+        id: "0100",
+        cuentaCorrienteId: "0000",
         empresaId: "01",
-        cuentaCorrienteId: "",
-        numero: "",
-        entidadBancariaNombre: "1",
-        entidadBancariaTipo: "CORRIENTE",
+        entidadBancaria: "",
+        entidadBancariaId: 1,
+        moneda: "",
         monedaId: "S",
-        tipoCuentaDescripcion: "",
-        saldoFinal: "0",
+        numero: "",
+        observacion: "",
+        tipoCuentaDescripcion: "CORRIENTE",
       };
       setObjeto(model);
     } else {
@@ -157,7 +169,7 @@ const CuentasCorrientes = () => {
   const columnas = [
     {
       Header: "Código",
-      accessor: "cuentaCorrienteId",
+      accessor: "id",
     },
     {
       Header: "Número Cuenta",
@@ -187,9 +199,9 @@ const CuentasCorrientes = () => {
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
           menu={["Mantenimiento", "CuentaCorriente"]}
-          id={row.values.cuentaCorrienteId}
-          ClickConsultar={() => AbrirModal(row.values.cuentaCorrienteId, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.cuentaCorrienteId, "Modificar")}
+          id={row.values.id}
+          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
         />
       ),
     },

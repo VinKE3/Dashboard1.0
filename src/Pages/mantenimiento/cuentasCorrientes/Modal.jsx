@@ -18,8 +18,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [objeto]);
   useEffect(() => {
     dataTCuenta;
-    document.getElementById("entidadBancariaTipo").value =
-      data.entidadBancariaTipo;
+    document.getElementById("tipoCuentaDescripcion").value =
+      data.tipoCuentaDescripcion;
   }, [dataTCuenta]);
   useEffect(() => {
     dataMoneda;
@@ -27,11 +27,11 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [dataMoneda]);
   useEffect(() => {
     dataEntidad;
-    document.getElementById("entidadBancariaNombre").value =
-      data.entidadBancariaNombre;
+    document.getElementById("entidadBancariaId").value =
+      data.entidadBancariaId;
   }, [dataEntidad]);
   useEffect(() => {
-    data && console.log(data); 
+    data;
   }, [data]);
   useEffect(() => {
     ConsultarTipo();
@@ -85,12 +85,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
         <div className={Global.ContenedorInput72}>
-          <label htmlFor="entidadBancariaTipo" className={Global.LabelStyle}>
+          <label htmlFor="tipoCuentaDescripcion" className={Global.LabelStyle}>
             T.Cuenta
           </label>
           <select
-            id="entidadBancariaTipo"
-            name="entidadBancariaTipo"
+            id="tipoCuentaDescripcion"
+            name="tipoCuentaDescripcion"
             onChange={handleChange}
             disabled={modo == "Consultar" ? true : false}
             className={Global.SelectStyle}
@@ -123,12 +123,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       </div>
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInputFull}>
-          <label htmlFor="entidadBancariaNombre" className={Global.LabelStyle}>
+          <label htmlFor="entidadBancariaId" className={Global.LabelStyle}>
             E.Bancaria
           </label>
           <select
-            id="entidadBancariaNombre"
-            name="entidadBancariaNombre"
+            id="entidadBancariaId"
+            name="entidadBancariaId"
             onChange={handleChange}
             disabled={modo == "Consultar" ? true : false}
             className={Global.SelectStyle}
@@ -159,17 +159,17 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         </div>
       </div>
       <div className="flex">
-        <label htmlFor="tipoCuentaDescripcion" className={Global.LabelStyle}>
+        <label htmlFor="observacion" className={Global.LabelStyle}>
           Observación
         </label>
         <input
           type="text"
-          id="tipoCuentaDescripcion"
-          name="tipoCuentaDescripcion"
+          id="observacion"
+          name="observacion"
           autoComplete="off"
           placeholder="Observación"
           readOnly={modo == "Registrar" ? false : true}
-          defaultValue={data.tipoCuentaDescripcion}
+          defaultValue={data.observacion}
           onChange={handleChange}
           onKeyUp={uppercase}
           className={Global.InputStyle}

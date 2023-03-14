@@ -76,13 +76,13 @@ const Distrito = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Distrito/Listar?pagina=${pagina}${filtro}`
     );
-    let distrito = result.data.data.data.map((res) => ({
+    let model = result.data.data.data.map((res) => ({
       Id: res.departamentoId + res.provinciaId + res.distritoId,
       departamentoNombre: res.departamentoNombre,
       provinciaNombre: res.provinciaNombre,
       nombre: res.nombre,
     }));
-    setDatos(distrito);
+    setDatos(model);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
