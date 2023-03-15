@@ -4,11 +4,14 @@ import App from "./App";
 import "./index.css";
 import { AuthProvider } from "./context/ContextAuth";
 import { UserProvider } from "./context/ContextUser";
+import { ApiProvider } from "./context/ContextApiError";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <AuthProvider>
-    <UserProvider>
-      <App />
-    </UserProvider>
-  </AuthProvider>
+  <ApiProvider>
+    <AuthProvider>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </AuthProvider>
+  </ApiProvider>
 );

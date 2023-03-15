@@ -52,7 +52,6 @@ const Login = () => {
       }
     }
     errRef.current.focus();
-    console.log(usuario);
   }, [success, isLoading, error, token, usuario]);
 
   return (

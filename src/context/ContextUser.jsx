@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { useEffect } from "react";
 import ApiMasy from "../api/ApiMasy";
 
 const userContext = createContext();
@@ -13,12 +14,25 @@ export const useUser = () => {
 };
 
 export const useUserProvider = () => {
+  const [data, setData] = useState([]);
   const [id, setId] = useState(0);
   const [nick, setNick] = useState("");
   const [tipoUsuario, setTipoUsuario] = useState(false);
   const [isActivo, setIsActivo] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    data;
+    if (Object.entries(data).length > 0) {
+      setId(data.id);
+      setNick(data[0].nick);
+      setTipoUsuario(data.tipoUsuarioDescripcion);
+      setIsActivo(data.isActivo);
+      setIsLoading(false);
+      console.log(data[0].nick);
+    }
+  }, [data]);
 
   const getUser = async (params) => {
     try {
@@ -27,17 +41,17 @@ export const useUserProvider = () => {
         `/api/Mantenimiento/Usuario/Listar`,
         params
       );
-      console.log(result.data.data.data);
       if (result.status === 200) {
-        const { nick, tipoUsuarioDescripcion, isActivo, id } =
-          result.data.data.data.map(item);
-        setId(id);
-        setNick(nick);
-        setTipoUsuario(tipoUsuarioDescripcion);
-        setIsActivo(isActivo);
-        setIsLoading(false);
+        let datos = result.data.data.data.map((item) => {
+          return {
+            nick: item.nick,
+            tipoUsuarioDescripcion: item.tipoUsuarioDescripcion,
+            isActivo: item.isActivo,
+            id: item.id,
+          };
+        });
+        setData(datos);
       }
-      console.log(nick);
     } catch (error) {
       setError(error);
       setIsLoading(false);

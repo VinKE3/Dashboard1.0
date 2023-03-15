@@ -33,10 +33,8 @@ export const useAuthProvider = () => {
         var decoded = jwt_decode(token);
         const jwtDecoded =
           decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-        //quiero guardar jwtDecoded en el localstorage
         localStorage.setItem("usuario", jwtDecoded);
         setUsuario(jwtDecoded);
-
         authHelper.login(result.data.data);
       }
     } catch (error) {

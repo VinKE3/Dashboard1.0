@@ -45,6 +45,7 @@ const Lineas = () => {
     if (usuario == "AD") {
       setPermisos([true, true, true, false]);
       Listar(filtro, 1);
+      console.log(usuario);
     } else {
       //Consulta a la Api para traer los permisos
     }

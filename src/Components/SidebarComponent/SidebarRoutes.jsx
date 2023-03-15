@@ -1,9 +1,20 @@
 import { Link } from "react-router-dom";
 // Icons
 import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
+import {
+  FaBalanceScale,
+  FaClipboardCheck,
+  FaTools,
+  FaIndustry,
+  FaUsers,
+  FaMoneyCheck,
+  FaFileAlt,
+  FaToolbox,
+} from "react-icons/fa";
 import store from "store2";
 import { useUser } from "../../context/ContextUser";
 import { useEffect } from "react";
+import { useAuth } from "../../context/ContextAuth";
 
 const SidebarRoutes = ({
   onclickButtonSubmenu,
@@ -15,11 +26,16 @@ const SidebarRoutes = ({
   onClickShowMenu,
   activeSection,
 }) => {
+  const { usuario } = useAuth();
+
   const { id, nick, tipoUsuario, isActivo, isLoading, error, getUser } =
     useUser();
 
   useEffect(() => {
-    getUser();
+    if (usuario) {
+      getUser();
+      console.log(nick);
+    }
   }, []);
 
   const onClickSubMenu = (e) => {
@@ -42,6 +58,8 @@ const SidebarRoutes = ({
     store.local.remove("access_token");
     window.location.href = "/login";
   };
+
+  useEffect(() => {}, [usuario]);
 
   return (
     <div
