@@ -9,7 +9,9 @@ import {
   FaFileAlt,
   FaToolbox,
 } from "react-icons/fa";
+import { useUser } from "../../context/ContextUser";
 //lista de secciones
+
 const secciones = [
   {
     title: "Ventas",
@@ -241,6 +243,7 @@ const secciones = [
     title: "Herramientas",
     id: "herramientas",
     icon: <FaToolbox className="text-primary" />,
+
     items: [
       {
         path: "/herramientas/movimientos-de-articulos",
@@ -253,5 +256,34 @@ const secciones = [
     ],
   },
 ];
+if (localStorage.getItem("rol") === "1") {
+  secciones.push({
+    title: "Administracion",
+    id: "administracion",
+    icon: <FaUserCog className="text-primary" />,
+    items: [
+      {
+        path: "/administracion/usuarios",
+        title: "Usuarios",
+      },
+      {
+        path: "/administracion/roles",
+        title: "Roles",
+      },
+      {
+        path: "/administracion/permisos",
+        title: "Permisos",
+      },
+      {
+        path: "/administracion/roles-permisos",
+        title: "Roles - Permisos",
+      },
+      {
+        path: "/administracion/usuarios-roles",
+        title: "Usuarios - Roles",
+      },
+    ],
+  });
+}
 
 export default secciones;

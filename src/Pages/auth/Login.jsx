@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useAuth } from "../../context/ContextP";
+import { useAuth } from "../../context/ContextAuth";
 
 // Icons
 import {
@@ -31,7 +31,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     login({ usuario: user, clave: pwd });
     setSuccess(true);
   };

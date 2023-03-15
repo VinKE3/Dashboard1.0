@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "../../../context/ContextP";
+import { useAuth } from "../../../context/ContextAuth";
 import * as Global from "../../../Components/Global";
 
 //#region Estilos

@@ -2,16 +2,26 @@ import { Link } from "react-router-dom";
 // Icons
 import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
 import store from "store2";
+import { useUser } from "../../context/ContextUser";
+import { useEffect } from "react";
 
 const SidebarRoutes = ({
   onclickButtonSubmenu,
   showSubmenu,
   showMenu,
   secciones,
+  showSecciones,
   handleActiveSection,
   onClickShowMenu,
   activeSection,
 }) => {
+  const { id, nick, tipoUsuario, isActivo, isLoading, error, getUser } =
+    useUser();
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   const onClickSubMenu = (e) => {
     e.preventDefault();
     handleActiveSection(e.target.id);
@@ -48,7 +58,7 @@ const SidebarRoutes = ({
       </div>
       <div className="h-[90vh] overflow-y-scroll">
         {secciones.map((seccion) => (
-          <div key={seccion.id}>
+          <div key={seccion.id} enabled={seccion.enabled}>
             <ul>
               <li>
                 <button
