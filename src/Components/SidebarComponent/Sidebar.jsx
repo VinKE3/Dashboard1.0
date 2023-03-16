@@ -4,7 +4,6 @@ import BotonCerrarMenu from "../BotonesComponent/BotonCerrarMenu";
 import SidebarRoutes from "./SidebarRoutes";
 
 const Sidebar = () => {
-  const [showSecciones, setShowSecciones] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -21,8 +20,6 @@ const Sidebar = () => {
         showMenu={showMenu}
         onClickShowMenu={() => setShowMenu(!showMenu)}
         secciones={secciones}
-        showSecciones={showSecciones}
-        setShowSecciones={setShowSecciones}
         activeSection={activeSection}
         handleActiveSection={handleActiveSection}
       />

@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
-import { useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import ApiMasy from "../api/ApiMasy";
 
 const userContext = createContext();
@@ -14,25 +13,12 @@ export const useUser = () => {
 };
 
 export const useUserProvider = () => {
-  const [data, setData] = useState([]);
-  const [id, setId] = useState(0);
-  const [nick, setNick] = useState("");
-  const [tipoUsuario, setTipoUsuario] = useState(false);
-  const [isActivo, setIsActivo] = useState(false);
+  const [id, setId] = useState([]);
+  const [nick, setNick] = useState([]);
+  const [tipoUsuario, setTipoUsuario] = useState([]);
+  const [isActivo, setIsActivo] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    data;
-    if (Object.entries(data).length > 0) {
-      setId(data.id);
-      setNick(data[0].nick);
-      setTipoUsuario(data.tipoUsuarioDescripcion);
-      setIsActivo(data.isActivo);
-      setIsLoading(false);
-      console.log(data[0].nick);
-    }
-  }, [data]);
 
   const getUser = async (params) => {
     try {
@@ -42,20 +28,20 @@ export const useUserProvider = () => {
         params
       );
       if (result.status === 200) {
-        let datos = result.data.data.data.map((item) => {
-          return {
-            nick: item.nick,
-            tipoUsuarioDescripcion: item.tipoUsuarioDescripcion,
-            isActivo: item.isActivo,
-            id: item.id,
-          };
-        });
-        setData(datos);
+        const data = result.data.data.data;
+        const id = data.map((item) => item.id);
+        const nick = data.map((item) => item.nick);
+        const tipoUsuario = data.map((item) => item.tipoUsuario);
+        const isActivo = data.map((item) => item.isActivo);
+        setId(id);
+        setNick(nick);
+        setTipoUsuario(tipoUsuario);
+        setIsActivo(isActivo);
       }
     } catch (error) {
       setError(error);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return {

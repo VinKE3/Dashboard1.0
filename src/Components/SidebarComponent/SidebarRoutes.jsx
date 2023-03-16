@@ -1,43 +1,17 @@
 import { Link } from "react-router-dom";
 // Icons
 import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
-import {
-  FaBalanceScale,
-  FaClipboardCheck,
-  FaTools,
-  FaIndustry,
-  FaUsers,
-  FaMoneyCheck,
-  FaFileAlt,
-  FaToolbox,
-} from "react-icons/fa";
 import store from "store2";
-import { useUser } from "../../context/ContextUser";
-import { useEffect } from "react";
-import { useAuth } from "../../context/ContextAuth";
 
 const SidebarRoutes = ({
   onclickButtonSubmenu,
   showSubmenu,
   showMenu,
   secciones,
-  showSecciones,
   handleActiveSection,
   onClickShowMenu,
   activeSection,
 }) => {
-  const { usuario } = useAuth();
-
-  const { id, nick, tipoUsuario, isActivo, isLoading, error, getUser } =
-    useUser();
-
-  useEffect(() => {
-    if (usuario) {
-      getUser();
-      console.log(nick);
-    }
-  }, []);
-
   const onClickSubMenu = (e) => {
     e.preventDefault();
     handleActiveSection(e.target.id);
@@ -52,14 +26,12 @@ const SidebarRoutes = ({
     e.preventDefault();
     onClickShowMenu();
   };
-  //borrar tokens
+
   const handleLogout = () => {
     store.session.remove("access_token");
     store.local.remove("access_token");
     window.location.href = "/login";
   };
-
-  useEffect(() => {}, [usuario]);
 
   return (
     <div
@@ -98,7 +70,7 @@ const SidebarRoutes = ({
                   />
                 </button>
                 <ul
-                  className={` ${
+                  className={`${
                     seccion.id === activeSection ? "h-full" : "h-0"
                   } overflow-y-hidden `}
                   onClick={onClickShowMenuHandle}
