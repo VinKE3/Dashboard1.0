@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "../../../context/ContextAuth";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -25,7 +25,9 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const TipoDePago = () => {
+import React from "react";
+
+const Usuarios = () => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
@@ -65,43 +67,41 @@ const TipoDePago = () => {
     }
   }, [respuestaAlert]);
 
-  //#endregion
-
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/TipoCobroPago/Listar?pagina=${pagina}${filtro}`
+      `api/Mantenimiento/Usuario/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCobroPago/${id}`);
+    const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
     setObjeto(result.data.data);
   };
   //#endregion
 
   //#region Funciones Filtrado
   const FiltradoPaginado = (e) => {
-    let filtro = document.getElementById("descripcion").value;
+    let filtro = document.getElementById("nick").value;
     let boton = e.selected + 1;
     setIndex(e.selected + 1);
     if (filtro == "") {
       Listar("", boton);
     } else {
-      Listar(`&descripcion=${filtro}`, boton);
+      Listar(`&nick=${filtro}`, boton);
     }
   };
   const FiltradoKeyPress = async (e) => {
     clearTimeout(timer);
     let f = e.target.value;
-    setFiltro(`&descripcion=${f}`);
+    setFiltro(`&nick=${f}`);
     if (f != "") setIndex(1);
     const newTimer = setTimeout(() => {
       if (f == "") {
         Listar("", index);
       } else {
-        Listar(`&descripcion=${f}`, index);
+        Listar(`&nick=${f}`, index);
       }
     }, 200);
     setTimer(newTimer);
@@ -120,14 +120,17 @@ const TipoDePago = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let tipo = {
+      let model = {
         id: "00",
-        tipoVentaCompraId: "",
-        descripcion: "",
-        abreviatura: "",
-        plazo: "",
+        nick: "",
+        observacion: "",
+        isActivo: true,
+        habilitarAfectarStock: true,
+        personalId: "",
+        clave: "",
+        claveConfirmacion: "",
       };
-      setObjeto(tipo);
+      setObjeto(model);
     } else {
       await GetPorId(id);
     }
@@ -138,24 +141,28 @@ const TipoDePago = () => {
   //#region Columnas
   const columnas = [
     {
-      Header: "id",
+      Header: "ID",
       accessor: "id",
     },
     {
-      Header: "Descripción",
-      accessor: "descripcion",
+      Header: "Nick",
+      accessor: "nick",
     },
     {
-      Header: "Abreviatura",
-      accessor: "abreviatura",
+      Header: "Tipo Usuario",
+      accessor: "tipoUsuarioDescripcion",
     },
     {
-      Header: "Plazo",
-      accessor: "plazo",
+      Header: "Fecha Inicio",
+      accessor: "fechaInicio",
     },
     {
-      Header: "Tipo Venta",
-      accessor: "tipoVentaCompraId",
+      Header: "Fecha Modificacion",
+      accessor: "fechaModificacion",
+    },
+    {
+      Header: "Activo",
+      accessor: "isActivo",
     },
     {
       Header: "Acciones",
@@ -163,7 +170,7 @@ const TipoDePago = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Mantenimiento", "TipoCobroPago"]}
+          menu={["Mantenimiento", "Usuario"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
@@ -177,14 +184,14 @@ const TipoDePago = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Tipos De Pago</h2>
+        <h2 className="mb-4 py-2 text-xl font-bold">Usuarios</h2>
 
         {/* Filtro*/}
         <FiltroBasico
-          textLabel={"Descripción"}
-          inputPlaceHolder={"Descripción"}
-          inputId={"descripcion"}
-          inputName={"descripcion"}
+          textLabel={"Nick"}
+          inputPlaceHolder={"Nick"}
+          inputId={"nick"}
+          inputName={"nick"}
           inputMax={"200"}
           botonId={"buscar"}
           FiltradoButton={FiltradoButton}
@@ -230,4 +237,4 @@ const TipoDePago = () => {
   //#endregion
 };
 
-export default TipoDePago;
+export default Usuarios;

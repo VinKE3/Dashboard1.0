@@ -26,6 +26,7 @@ import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
 import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
 //Pages mantenimiento
+import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
 import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
 import Lineas from "./pages/mantenimiento/lineas/Lineas";
 import Sublineas from "./pages/mantenimiento/sublineas/Sublineas";
@@ -109,6 +110,7 @@ function App() {
             element={<RegistroCompraArticulo />}
           />
           {/** MANTENIMIENTO */}
+          <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
           <Route
             path="/mantenimiento/tipos-de-cambio"
             element={<TiposDeCambio />}

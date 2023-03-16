@@ -13,6 +13,7 @@ export const useMenu = () => {
 };
 
 export const useMenuProvider = () => {
+  const [menu, setMenu] = useState([]);
   const [id, setId] = useState([]);
   const [nombre, setNombre] = useState([]);
   const [isActivo, setIsActivo] = useState([]);
@@ -32,11 +33,10 @@ export const useMenuProvider = () => {
         const isActivo = data.map((item) => item.isActivo);
         const sistemaAreaId = data.map((item) => item.sistemaAreaId);
         const sistemaAreaNombre = data.map((item) => item.sistemaAreaNombre);
+        setMenu(data);
         setId(id);
-        console.log(id);
         setNombre(nombre);
         setIsActivo(isActivo);
-        console.log(isActivo);
         setSistemaAreaId(sistemaAreaId);
         setSistemaAreaNombre(sistemaAreaNombre);
       }
@@ -47,6 +47,7 @@ export const useMenuProvider = () => {
   };
 
   return {
+    menu,
     id,
     nombre,
     isActivo,

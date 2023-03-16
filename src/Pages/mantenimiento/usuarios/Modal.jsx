@@ -1,0 +1,180 @@
+import React, { useState, useEffect } from "react";
+import ModalBasic from "../../../components/ModalBasic";
+import * as Global from "../../../Components/Global";
+import { Checkbox } from "primereact/checkbox";
+
+const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+  //#region useState
+  const [data, setData] = useState([]);
+  const [checked, setChecked] = useState(true);
+  const [checked2, setChecked2] = useState(true);
+  //#endregion
+
+  //#region useEffect
+  useEffect(() => {
+    objeto;
+    setData(objeto);
+  }, [objeto]);
+  useEffect(() => {
+    data;
+  }, [data]);
+  //#endregion
+
+  //#region Funciones
+  const handleChange = ({ target }) => {
+    setData({ ...data, [target.name]: target.value });
+  };
+  function uppercase(e) {
+    e.target.value = e.target.value.toUpperCase();
+  }
+  //#endregion
+
+  //#region Render
+  return (
+    <ModalBasic
+      setModal={setModal}
+      setRespuestaModal={setRespuestaModal}
+      objeto={data}
+      modo={modo}
+      menu={["Mantenimiento", "Usuario"]}
+    >
+      <div className={Global.ContenedorVarios}>
+        <div className={Global.ContenedorInputFull}>
+          <label htmlFor="id" className={Global.LabelStyle}>
+            Código
+          </label>
+          <input
+            type="text"
+            id="id"
+            name="id"
+            placeholder="id"
+            defaultValue={data.id}
+            autoComplete="off"
+            onKeyUp={uppercase}
+            onChange={handleChange}
+            readOnly={true}
+            className={Global.InputStyle}
+          />
+        </div>
+        <div className={Global.ContenedorInputFull}>
+          <div className=" flex gap-2 justify-center mt-3">
+            <Checkbox
+              id="isActivo"
+              name="isActivo"
+              readOnly={modo == "Consultar" ? true : false}
+              defaultValue={data.isActivo}
+              onChange={(e) => setChecked(e.checked)}
+              checked={checked}
+            ></Checkbox>
+            <label />
+            Activo <label />
+          </div>
+          <div className=" flex gap-2 justify-center mt-3">
+            <Checkbox
+              id="habilitarAfectarStock"
+              name="habilitarAfectarStock"
+              readOnly={modo == "Consultar" ? true : false}
+              defaultValue={data.habilitarAfectarStock}
+              onChange={(e) => setChecked2(e.checked)}
+              checked={checked2}
+            ></Checkbox>
+            <label />
+            Afectar Stock <label />
+          </div>
+        </div>
+      </div>
+      <div className={Global.ContenedorVarios}>
+        <div className={Global.ContenedorInputFull}>
+          <label htmlFor="nick" className={Global.LabelStyle}>
+            Nick
+          </label>
+          <input
+            type="text"
+            id="nick"
+            name="nick"
+            placeholder="nick"
+            defaultValue={data.nick}
+            autoComplete="off"
+            onKeyUp={uppercase}
+            onChange={handleChange}
+            readOnly={modo == "Consultar" ? true : false}
+            className={Global.InputStyle}
+          />
+        </div>
+        <div className={Global.ContenedorInputFull}>
+          <label htmlFor="personalId" className={Global.LabelStyle}>
+            Personal
+          </label>
+          <input
+            type="text"
+            id="personalId"
+            name="personalId"
+            placeholder="Personal"
+            defaultValue={data.personalId}
+            autoComplete="off"
+            onKeyUp={uppercase}
+            onChange={handleChange}
+            readOnly={modo == "Consultar" ? true : false}
+            className={Global.InputStyle}
+          />
+        </div>
+      </div>
+      <div className={Global.ContenedorVarios}>
+        <div className={Global.ContenedorInputFull}>
+          <label htmlFor="clave" className={Global.LabelStyle}>
+            Clave
+          </label>
+          <input
+            type="password"
+            id="clave"
+            name="clave"
+            placeholder="Clave"
+            defaultValue={data.clave}
+            autoComplete="off"
+            onKeyUp={uppercase}
+            onChange={handleChange}
+            readOnly={modo == "Consultar" ? true : false}
+            className={Global.InputStyle}
+          />
+        </div>
+        <div className={Global.ContenedorInputFull}>
+          <label htmlFor="claveConfirmacion" className={Global.LabelStyle}>
+            Repetir Clave
+          </label>
+          <input
+            type="password"
+            id="claveConfirmacion"
+            name="claveConfirmacion"
+            placeholder="Confirmar Clave"
+            defaultValue={data.claveConfirmacion}
+            autoComplete="off"
+            onKeyUp={uppercase}
+            onChange={handleChange}
+            readOnly={modo == "Consultar" ? true : false}
+            className={Global.InputStyle}
+          />
+        </div>
+      </div>
+      <div className={Global.ContenedorInputFull}>
+        <label htmlFor="observacion" className={Global.LabelStyle}>
+          Observacion
+        </label>
+        <input
+          type="observacion"
+          id="observacion"
+          name="observacion"
+          placeholder="Observacion"
+          defaultValue={data.observacion}
+          autoComplete="off"
+          onKeyUp={uppercase}
+          onChange={handleChange}
+          readOnly={modo == "Consultar" ? true : false}
+          className={Global.InputStyle}
+        />
+      </div>
+    </ModalBasic>
+  );
+  //#endregion
+};
+
+export default Modal;

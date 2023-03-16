@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../Components/Global";
 import ApiMasy from "../../../api/ApiMasy";
-// import { Checkbox } from "primereact/checkbox";
-import { Checkbox } from "nila";
+import { Checkbox } from "primereact/checkbox";
 
 const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   //#region useState
@@ -11,7 +10,7 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
   const [dataDepartamento, setDataDepartamento] = useState([]);
   const [dataProvincia, setDataProvincia] = useState([]);
   const [dataDistrito, setDataDistrito] = useState([]);
-  // const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(true);
   //#endregion
 
   //#region useEffect
@@ -129,31 +128,24 @@ const Modal = ({ setModal, modo, setRespuestaModal, objeto }) => {
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={handleChange}
-            readOnly={modo == "Consultar" ? true : false}
+            readOnly={true}
             className={Global.InputStyle}
           />
         </div>
-        <div className="flex items-center gap-2">
-          <Checkbox color="text-red-600" label="Activo" />
-          {/* <Checkbox
-            className="background-color: #00FF00!important;"
-            id="isActivo"
-            name="isActivo"
-            readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.isActivo}
-            onChange={(e) => setChecked(e.checked)}
-            checked={checked}
-          ></Checkbox> */}
+        <div className={Global.ContenedorInputFull}>
+          <div className=" flex gap-2 justify-center mt-3">
+            <Checkbox
+              id="isActivo"
+              name="isActivo"
+              readOnly={modo == "Consultar" ? true : false}
+              defaultValue={data.isActivo}
+              onChange={(e) => setChecked(e.checked)}
+              checked={checked}
+            ></Checkbox>
+            <label />
+            Activo <label />
+          </div>
         </div>
-        {/* <input
-            type={"checkbox"}
-            id="isActivo"
-            name="isActivo"
-            checked={data.activo}
-            value="isActivo"
-            label="Activo"
-          />
-          <label /> Activo <label /> */}
       </div>
       <div className={Global.ContenedorInputFull}>
         <label htmlFor="empresaTransporteId" className={Global.LabelStyle}>

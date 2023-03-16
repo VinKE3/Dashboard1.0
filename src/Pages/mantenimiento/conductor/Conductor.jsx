@@ -65,15 +65,6 @@ const Conductor = () => {
     }
   }, [respuestaAlert]);
 
-  // useEffect(() => {
-  //   if (usuario == "AD") {
-  //     Listar(filtro, index);
-  //   } else {
-  //     setPermisos([true, true, true, true]);
-  //   }
-  // }, [usuario]);
-  //#endregion
-
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
@@ -128,7 +119,7 @@ const Conductor = () => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
-        id: "",
+        id: "00",
         empresaId: "01",
         empresaTransporteId: "",
         nombre: "",

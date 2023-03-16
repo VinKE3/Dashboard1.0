@@ -13,6 +13,7 @@ export const useUser = () => {
 };
 
 export const useUserProvider = () => {
+  const [usuarios, setUsuarios] = useState([]);
   const [id, setId] = useState([]);
   const [nick, setNick] = useState([]);
   const [tipoUsuario, setTipoUsuario] = useState([]);
@@ -33,6 +34,7 @@ export const useUserProvider = () => {
         const nick = data.map((item) => item.nick);
         const tipoUsuario = data.map((item) => item.tipoUsuario);
         const isActivo = data.map((item) => item.isActivo);
+        setUsuarios(data);
         setId(id);
         setNick(nick);
         setTipoUsuario(tipoUsuario);
@@ -52,5 +54,6 @@ export const useUserProvider = () => {
     isLoading,
     error,
     getUser,
+    usuarios,
   };
 };
