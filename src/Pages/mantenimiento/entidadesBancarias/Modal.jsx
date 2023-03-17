@@ -6,7 +6,7 @@ import * as Global from "../../../Components/Global";
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [dataDepartamento, setDataDepartamento] = useState([]);
+  const [dataModal, setdataModal] = useState([]);
   //#endregion
 
   //#region useEffect
@@ -15,9 +15,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     setData(objeto);
   }, [objeto]);
   useEffect(() => {
-    dataDepartamento;
-    document.getElementById("departamentoId").value = data.departamentoId;
-  }, [dataDepartamento]);
+    dataModal;
+    document.getElementById("tipo").value = data.tipo;
+  }, [dataModal]);
   useEffect(() => {
     data;
   }, [data]);
@@ -26,64 +26,80 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, []);
   //#endregion
 
-  //#region Funciones
+  //#region Funcions
   const handleChange = ({ target }) => {
     setData({ ...data, [target.name]: target.value });
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
-  //#region Funciones API
+  //#region API
   const Tablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Departamento/Listar`);
-    setDataDepartamento(result.data.data.data);
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/EntidadBancaria/FormularioTablas`
+    );
+    setdataModal(result.data.data.tiposEntidadesBancarias);
   };
   //#endregion
 
-  //#region Render
   return (
     <ModalBasic
       setModal={setModal}
       setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
-      menu={["Mantenimiento", "Provincia"]}
+      menu={["Mantenimiento", "EntidadBancaria"]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInput48}>
-          <label htmlFor="provinciaId" className={Global.LabelStyle}>
+          <label htmlFor="id" className={Global.LabelStyle}>
             Código
           </label>
           <input
             type="text"
-            id="provinciaId"
-            name="provinciaId"
+            id="id"
+            name="id"
             autoComplete="off"
-            maxLength="2"
             placeholder="00"
-            readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.provinciaId}
+            readOnly
+            defaultValue={data.id}
             onChange={handleChange}
-            onKeyUp={uppercase}
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInputFull}>
-          <label htmlFor="departamentoId" className={Global.LabelStyle}>
-            Departamento
+        <div className={Global.ContenedorInput72}>
+          <label
+            htmlFor="numeroDocumentoIdentidad"
+            className={Global.LabelStyle}
+          >
+            RUC
+          </label>
+          <input
+            type="text"
+            id="numeroDocumentoIdentidad"
+            name="numeroDocumentoIdentidad"
+            autoComplete="off"
+            maxLength="11"
+            placeholder="00000000000"
+            readOnly={modo == "Consultar" ? true : false}
+            defaultValue={data.numeroDocumentoIdentidad}
+            onChange={handleChange}
+            className={Global.InputStyle}
+          />
+        </div>
+        <div className={Global.ContenedorInput56}>
+          <label htmlFor="tipo" className={Global.LabelStyle}>
+            Tipo
           </label>
           <select
-            id="departamentoId"
-            name="departamentoId"
+            id="tipo"
+            name="tipo"
             onChange={handleChange}
-            disabled={modo == "Registrar" ? false : true}
+            disabled={modo == "Consultar" ? true : false}
             className={Global.SelectStyle}
           >
-            {dataDepartamento.map((departamento) => (
-              <option key={departamento.id} value={departamento.id}>
-                {departamento.nombre}
+            {dataModal.map((tipo) => (
+              <option key={tipo.id} value={tipo.id}>
+                {tipo.descripcion}
               </option>
             ))}
           </select>
@@ -91,24 +107,22 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       </div>
       <div className="flex">
         <label htmlFor="nombre" className={Global.LabelStyle}>
-          Provincia
+          Nombre
         </label>
         <input
           type="text"
           id="nombre"
           name="nombre"
           autoComplete="off"
-          placeholder="Provincia"
-          readOnly={modo == "Consultar" ? true : false}
+          placeholder="Nombre"
+          readOnly={modo == "Registrar" ? false : true}
           defaultValue={data.nombre}
           onChange={handleChange}
-          onKeyUp={uppercase}
           className={Global.InputStyle}
         />
       </div>
     </ModalBasic>
   );
-  //#endregion
 };
 
 export default Modal;

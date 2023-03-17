@@ -93,7 +93,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
                   return (
                     <td
                       {...cell.getCellProps()}
-                      className="py-2 px-2 text-left whitespace-nowrap"
+                      className="py-2 px-2 text-left "
                     >
                       {cell.render("Cell")}
                     </td>

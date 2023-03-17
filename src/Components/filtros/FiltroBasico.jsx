@@ -17,7 +17,7 @@ const FiltroBasico = ({
 
       <input
         type="text"
-        className={Global.InputBotonStyle}
+        className={Global.InputBoton}
         autoComplete="off"
         spellCheck="false"
         placeholder={inputPlaceHolder}
@@ -28,7 +28,7 @@ const FiltroBasico = ({
       />
 
       <button
-        className="px-3 rounded-none rounded-r-lg bg-yellow-500 text-light hover:bg-yellow-600"
+        className={Global.BotonBuscar}
         id={botonId}
         onClick={FiltradoButton}
       >

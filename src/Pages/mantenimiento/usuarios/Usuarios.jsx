@@ -30,6 +30,8 @@ import React from "react";
 const Usuarios = () => {
   //#region useState
   const [datos, setDatos] = useState([]);
+  const [fechaInicio, setFechaInicio] = useState([]);
+  const [fechaModificacion, setFechaModificacion] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
@@ -72,13 +74,19 @@ const Usuarios = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Usuario/Listar?pagina=${pagina}${filtro}`
     );
+    const todo = result.data.data.data;
+    const fechaInicio = todo.map((item) => item.fechaInicio);
+    const fechaModificacion = todo.map((item) => item.fechaModificacion);
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
+    setFechaInicio(fechaInicio);
+    setFechaModificacion(fechaModificacion);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
     setObjeto(result.data.data);
   };
+
   //#endregion
 
   //#region Funciones Filtrado

@@ -12,7 +12,7 @@ import Profile from "./pages/admin/Profile";
 import Error404 from "./pages/Error404";
 import Tabla from "./components/Tabla";
 // Pages ventas
-import Clientes from "./pages/ventas/clientes/Clientes";
+// import Clientes from "./pages/ventas/clientes/Clientes";
 import ConductoresTransportistas from "./pages/ventas/conductoresTransportistas/ConductoresTransportistas";
 import DocumentosDeVenta from "./pages/ventas/documentosVenta/DocumentosVenta";
 import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
@@ -27,6 +27,7 @@ import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArti
 import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
 //Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
+import Clientes from "./pages/mantenimiento/cliente/Cliente";
 import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
 import Lineas from "./pages/mantenimiento/lineas/Lineas";
 import Sublineas from "./pages/mantenimiento/sublineas/Sublineas";
@@ -111,6 +112,7 @@ function App() {
           />
           {/** MANTENIMIENTO */}
           <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
+          <Route path="/mantenimiento/clientes" element={<Clientes />} />
           <Route
             path="/mantenimiento/tipos-de-cambio"
             element={<TiposDeCambio />}

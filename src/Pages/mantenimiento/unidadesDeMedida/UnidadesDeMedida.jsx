@@ -9,6 +9,8 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../context/ContextAuth";
+import * as Global from "../../../Components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -27,13 +29,14 @@ const TablaStyle = styled.div`
 
 const UnidadesDeMedida = () => {
   //#region useState
+  const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
+  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
-  const [objeto, setObjeto] = useState([]);
+  const [permisos, setPermisos] = useState([false, false, false, false]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaModal, setRespuestaModal] = useState(false);
@@ -41,6 +44,14 @@ const UnidadesDeMedida = () => {
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    if (usuario == "AD") {
+      setPermisos([true, true, true, true]);
+      Listar(filtro, 1);
+    } else {
+      //Consulta a la Api para traer los permisos
+    }
+  }, [usuario]);
   useEffect(() => {
     filtro;
   }, [filtro]);
@@ -56,12 +67,12 @@ const UnidadesDeMedida = () => {
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
   //#endregion
@@ -84,7 +95,7 @@ const UnidadesDeMedida = () => {
   const FiltradoPaginado = (e) => {
     let filtro = document.getElementById("descripcion").value;
     let boton = e.selected + 1;
-    setIndex(e.selected + 1);
+    setIndex(e.selected);
     if (filtro == "") {
       Listar("", boton);
     } else {
@@ -95,18 +106,18 @@ const UnidadesDeMedida = () => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&descripcion=${f}`);
-    if (f != "") setIndex(1);
+    if (f != "") setIndex(0);
     const newTimer = setTimeout(() => {
       if (f == "") {
-        Listar("", index);
+        Listar("", index + 1);
       } else {
-        Listar(`&descripcion=${f}`, index);
+        Listar(`&descripcion=${f}`, index + 1);
       }
     }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    setIndex(1);
+    setIndex(0);
     if (filtro == "") {
       Listar("", 1);
     } else {
@@ -119,11 +130,11 @@ const UnidadesDeMedida = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let unidadMedida = {
+      let model = {
         id: "00",
         descripcion: "",
       };
-      setObjeto(unidadMedida);
+      setObjeto(model);
     } else {
       await GetPorId(id);
     }
@@ -142,16 +153,12 @@ const UnidadesDeMedida = () => {
       accessor: "descripcion",
     },
     {
-      Header: "Código Sunat",
-      accessor: "codigoSunat",
-    },
-    {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Mantenimiento", "UnidadMedida"]}
+          menu={["Mantenimiento", "Departamento"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
@@ -165,7 +172,7 @@ const UnidadesDeMedida = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Unidad De Medida</h2>
+        <h2 className={Global.TituloH2}>Unidad De Medida</h2>
 
         {/* Filtro*/}
         <FiltroBasico
@@ -184,7 +191,7 @@ const UnidadesDeMedida = () => {
         {permisos[0] && (
           <BotonBasico
             botonText="Registrar"
-            botonClass="boton-crud-registrar"
+            botonClass={Global.BotonRegistrar}
             botonIcon={faPlus}
             click={() => AbrirModal()}
           />

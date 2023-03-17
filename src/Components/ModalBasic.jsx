@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import ApiMasy from "../api/ApiMasy";
 import Mensajes from "./Mensajes";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "./Global";
+import Insert from "./CRUD/Insert";
+import Update from "./CRUD/Update";
 
 const ModalBasic = ({
   children,
@@ -14,6 +15,7 @@ const ModalBasic = ({
   objeto,
   modo,
   menu,
+  tamañoModal = [Global.ModalMediano, Global.FormSimple],
 }) => {
   //#region useState
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -63,25 +65,11 @@ const ModalBasic = ({
   //#region Funciones API
   const Registrar = async (e) => {
     e.preventDefault();
-    const result = await ApiMasy.post(`api/${menu[0]}/${menu[1]}`, objeto);
-    if (result.name == "AxiosError") {
-      setTipoMensaje(result.response.data.messages[0].tipo);
-      setMensaje(result.response.data.messages[0].textos);
-    } else {
-      setTipoMensaje(result.data.messages[0].tipo);
-      setMensaje(result.data.messages[0].textos[0]);
-    }
+    await Insert(menu, objeto, setTipoMensaje, setMensaje);
   };
   const Modificar = async (e) => {
     e.preventDefault();
-    const result = await ApiMasy.put(`api/${menu[0]}/${menu[1]}`, objeto);
-    if (result.name == "AxiosError") {
-      setTipoMensaje(result.response.data.messages[0].tipo);
-      setMensaje(result.response.data.messages[0].textos);
-    } else {
-      setTipoMensaje(result.data.messages[0].tipo);
-      setMensaje(result.data.messages[0].textos[0]);
-    }
+    await Update(menu, objeto, setTipoMensaje, setMensaje);
   };
   //#endregion
 
@@ -89,13 +77,13 @@ const ModalBasic = ({
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative h-full w-full md:h-auto my-0 md:my-5 mx-auto max-w-3xl">
+        <div className={tamañoModal[0]}>
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none">
+          <div className="border-none rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none shadow-light/50">
             {/*header*/}
-            <div className="flex py-3 px-5 border-b rounded-t border-light">
+            <div className="flex py-2 px-5 border-b rounded-t border-light">
               <h3 className="text-3xl md:text-2xl font-semibold text-light">
-                {modo}
+                {modo + " " + menu[1]}
               </h3>
               <button
                 className="p-1 ml-auto bg-transparent border-0 hover:text-red-500 text-light float-right text-3xl md:text-2xl leading-none font-semibold outline-none focus:outline-none"
@@ -107,15 +95,15 @@ const ModalBasic = ({
             {/*header*/}
 
             {/*body*/}
-            <div className="relative flex-auto">
-              {tipoMensaje > 0 && (
-                <Mensajes
-                  tipoMensaje={tipoMensaje}
-                  mensaje={mensaje}
-                  Click={() => OcultarMensajes()}
-                />
-              )}
-              <form className="min-w-fit py-6 px-8">
+            <div className="overflow-y-auto relative flex-auto">
+              <form className={tamañoModal[1]}>
+                {tipoMensaje > 0 && (
+                  <Mensajes
+                    tipoMensaje={tipoMensaje}
+                    mensaje={mensaje}
+                    Click={() => OcultarMensajes()}
+                  />
+                )}
                 <div className="flex flex-col gap-3">{children}</div>
               </form>
             </div>
@@ -150,7 +138,7 @@ const ModalBasic = ({
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="opacity-40 fixed inset-0 z-40 bg-black"></div>
     </>
   );
   //#endregion

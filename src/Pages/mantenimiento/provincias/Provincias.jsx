@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { useAuth } from "../../../context/ContextP";
+import { useAuth } from "../../../context/ContextAuth";
 import * as Global from "../../../Components/Global";
 
 //#region Estilos
@@ -23,14 +23,14 @@ const TablaStyle = styled.div`
 
 const Provincias = () => {
   //#region useState
-  // const { usuario } = useAuth();
+  const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
+  const [permisos, setPermisos] = useState([false, false, false, false]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaModal, setRespuestaModal] = useState(false);
@@ -38,14 +38,14 @@ const Provincias = () => {
   //#endregion
 
   //#region useEffect
-  // useEffect(() => {
-  //   if (usuario == "AD") {
-  //     setBotones([true, true, true, false]);
-  //     Listar(filtro, 1);
-  //   } else {
-  //     //Consulta a la Api para traer los permisos
-  //   }
-  // }, [usuario]);
+  useEffect(() => {
+    if (usuario == "AD") {
+      setPermisos([true, true, true, false]);
+      Listar(filtro, 1);
+    } else {
+      //Consulta a la Api para traer los permisos
+    }
+  }, [usuario]);
   useEffect(() => {
     filtro;
   }, [filtro]);
@@ -76,12 +76,12 @@ const Provincias = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Provincia/Listar?pagina=${pagina}${filtro}`
     );
-    let provincia = result.data.data.data.map((resultado) => ({
+    let model = result.data.data.data.map((resultado) => ({
       Id: resultado.departamentoId + resultado.provinciaId,
       nombre: resultado.nombre,
       departamentoNombre: resultado.departamentoNombre,
     }));
-    setDatos(provincia);
+    setDatos(model);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
@@ -195,7 +195,7 @@ const Provincias = () => {
         {permisos[0] && (
           <BotonBasico
             botonText="Registrar"
-            botonClass="boton-crud-registrar"
+            botonClass={Global.BotonRegistrar}
             botonIcon={faPlus}
             click={() => AbrirModal()}
           />

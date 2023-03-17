@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Table from "../../../components/tablas/Table";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaSearch } from "react-icons/fa";
-import styled from "styled-components";
-import moment from "moment/moment";
 import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
+import moment from "moment";
+import { FaSearch } from "react-icons/fa";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { useAuth } from "../../../context/ContextAuth";
+import * as Global from "../../../Components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th {
@@ -24,13 +27,14 @@ const TablaStyle = styled.div`
 
 const TipodeCambio = () => {
   //#region UseState
+  const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
+  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
-  const [index, setIndex] = useState(1);
+  const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [botones, setBotones] = useState([true, true, true]);
-  const [objeto, setObjeto] = useState([]);
+  const [permisos, setPermisos] = useState([false, false, false, false]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaModal, setRespuestaModal] = useState(false);
@@ -38,6 +42,14 @@ const TipodeCambio = () => {
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    if (usuario == "AD") {
+      setPermisos([true, true, true, true]);
+      Listar(filtro, 1);
+    } else {
+      //Consulta a la Api para traer los permisos
+    }
+  }, [usuario]);
   useEffect(() => {
     filtro;
   }, [filtro]);
@@ -53,12 +65,12 @@ const TipodeCambio = () => {
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index);
+      Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
   //#endregion
@@ -82,7 +94,7 @@ const TipodeCambio = () => {
     let anio = document.getElementById("anio").value;
     let mes = document.getElementById("mes").value;
     let boton = e.selected + 1;
-    setIndex(e.selected + 1);
+    setIndex(e.selected);
     if (anio == new Date().getFullYear() && mes == 0) {
       Listar("", boton);
     } else {
@@ -92,31 +104,31 @@ const TipodeCambio = () => {
   const FiltradoSelect = (e) => {
     let anio = document.getElementById("anio").value;
     let mes = e.target.value;
-    setFiltro(`&anio=${anio}&mes=${mes}`, index);
-    if (mes != 0) setIndex(1);
+    setFiltro(`&anio=${anio}&mes=${mes}`, index + 1);
+    if (mes != 0) setIndex(0);
     if (anio == new Date().getFullYear() && mes == 0) {
       Listar("", index);
     } else {
-      Listar(`&anio=${anio}&mes=${mes}`, index);
+      Listar(`&anio=${anio}&mes=${mes}`, index + 1);
     }
   };
   const FiltradoNumber = (e) => {
     clearTimeout(timer);
     let anio = e.target.value;
     let mes = document.getElementById("mes").value;
-    setFiltro(`&anio=${anio}&mes=${mes}`, index);
-    if (anio != String(new Date().getFullYear())) setIndex(1);
+    setFiltro(`&anio=${anio}&mes=${mes}`, index + 1);
+    if (anio != String(new Date().getFullYear())) setIndex(0);
     const newTimer = setTimeout(() => {
       if (anio == new Date().getFullYear() && mes == 0) {
         Listar("", index);
       } else {
-        Listar(`&anio=${anio}&mes=${mes}`, index);
+        Listar(`&anio=${anio}&mes=${mes}`, index + 1);
       }
     }, 1000);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    setIndex(1);
+    setIndex(0);
     if (filtro == "") {
       Listar("", 1);
     } else {
@@ -129,12 +141,12 @@ const TipodeCambio = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let tipoCambio = {
+      let model = {
         id: moment().format("YYYY-MM-DD"),
         precioCompra: "0",
         precioVenta: "0",
       };
-      setObjeto(tipoCambio);
+      setObjeto(model);
     } else {
       await GetPorId(id);
     }
@@ -163,12 +175,12 @@ const TipodeCambio = () => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
-          id={row.values.id}
-          mostrar={botones}
-          Click1={() => AbrirModal(row.values.id, "Consultar")}
-          Click2={() => AbrirModal(row.values.id, "Modificar")}
-          menu={"TipoCambio"}
           setRespuestaAlert={setRespuestaAlert}
+          permisos={permisos}
+          menu={["Mantenimiento", "Linea"]}
+          id={row.values.id}
+          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
         />
       ),
     },
@@ -233,40 +245,34 @@ const TipodeCambio = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Tipo de Cambio</h2>
+        <h2 className={Global.TituloH2}>Tipo de Cambio</h2>
 
         {/* Filtro*/}
-        <div className="flex flex-col sm:flex-row sm:justify-between mt-2 mb-2 py-1 sm:py-0 rounded-1 border-gray-200 overflow-hidden text-sm">
-          <div className="w:1 sm:w-1/3 flex flex-1 my-1 sm:my-0 sm:mr-3 rounded-1 overflow-hidden">
-            <label
-              htmlFor="anio"
-              className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-            >
+        <div className={Global.ContenedorFiltro}>
+          <div className={Global.ContenedorInputsFiltro}>
+            <label htmlFor="anio" className={Global.LabelStyle}>
               Año:
             </label>
             <input
               type="number"
               name="anio"
               id="anio"
-              className="rounded-none bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autoFocus
               defaultValue={new Date().getFullYear()}
               onChange={FiltradoNumber}
-              autoFocus
+              className={Global.InputStyle}
             />
           </div>
 
-          <div className="w:1 sm:w-1/3 flex flex-1 my-1 sm:my-0 rounded-1 overflow-hidden">
-            <label
-              id="mes-form"
-              className="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 font-bold"
-            >
+          <div className={Global.ContenedorInputsFiltro}>
+            <label id="mes" className={Global.LabelStyle}>
               Mes:
             </label>
             <select
               id="mes"
               name="mes"
-              className="rounded-none bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               onChange={FiltradoSelect}
+              className={Global.InputBoton}
             >
               {Meses.map((meses) => (
                 <option key={meses.Numero} value={meses.Numero}>
@@ -277,7 +283,7 @@ const TipodeCambio = () => {
             </select>
             <button
               id="buscar"
-              className="px-3 rounded-none rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-600"
+              className={Global.BotonBuscar}
               onClick={FiltradoButton}
             >
               <FaSearch />
@@ -287,12 +293,14 @@ const TipodeCambio = () => {
         {/* Filtro*/}
 
         {/* Boton */}
-        <BotonBasico
-          botonText="Registrar"
-          botonClass="boton-crud-registrar"
-          botonIcon={faPlus}
-          click={() => AbrirModal()}
-        />
+        {permisos[0] && (
+          <BotonBasico
+            botonText="Registrar"
+            botonClass={Global.BotonRegistrar}
+            botonIcon={faPlus}
+            click={() => AbrirModal()}
+          />
+        )}
         {/* Boton */}
 
         {/* Tabla */}
@@ -310,8 +318,8 @@ const TipodeCambio = () => {
       {modal && (
         <Modal
           setModal={setModal}
-          modo={modo}
           setRespuestaModal={setRespuestaModal}
+          modo={modo}
           objeto={objeto}
         />
       )}

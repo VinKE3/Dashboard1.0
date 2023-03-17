@@ -87,6 +87,10 @@ function seccionesList() {
           title: "Usuarios",
         },
         {
+          path: "/mantenimiento/clientes",
+          title: "Clientes",
+        },
+        {
           path: "/mantenimiento/tipos-de-cambio",
           title: "Tipos de Cambio",
         },

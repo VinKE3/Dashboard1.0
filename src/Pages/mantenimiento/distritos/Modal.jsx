@@ -35,7 +35,8 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
   //#region Funciones
   const handleChange = async ({ target }) => {
     if (target.name == "departamentoId") {
-      ConsultarProvincia();
+      await ConsultarProvincia();
+      document.getElementById("provinciaId").selectedIndex = 0;
     }
     setData({ ...data, [target.name]: target.value });
   };
@@ -49,7 +50,6 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Distrito/FormularioTablas`
     );
-    console.log(result.data.data.departamentos);
     let depa = result.data.data.departamentos.map((res) => ({
       id: res.id,
       nombre: res.nombre,
@@ -64,7 +64,6 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
         id: res.id,
         nombre: res.nombre,
       }));
-      console.log(prov);
       setDataProvincia(prov);
     }
   };
