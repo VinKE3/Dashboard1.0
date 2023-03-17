@@ -18,12 +18,14 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
-  };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
+  function uppercase(value) {
+    return value.toUpperCase();
   }
+
+  const handleChange = ({ target }) => {
+    const value = uppercase(target.value);
+    setData({ ...data, [target.name]: value });
+  };
   //#endregion
   return (
     <ModalBasic
