@@ -5,6 +5,7 @@ import * as Global from "../../../Components/Global";
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
+
   //#endregion
 
   //#region useEffect
@@ -19,13 +20,17 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Funciones
   function uppercase(value) {
-    return value.toUpperCase();
+    if (value && typeof value === "string") {
+      return value.toUpperCase();
+    }
+    return value;
   }
 
   const handleChange = ({ target }) => {
     const value = uppercase(target.value);
     setData({ ...data, [target.name]: value });
   };
+
   //#endregion
   return (
     <ModalBasic
@@ -49,7 +54,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             readOnly={modo == "Consultar" ? true : false}
             defaultValue={data.descripcion}
             onChange={handleChange}
-            onKeyUp={uppercase}
             className={Global.InputStyle}
           />
         </div>

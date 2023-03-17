@@ -7,6 +7,14 @@ import {
 } from "react-table";
 import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
+import styled from "styled-components";
+
+const Tabla = styled.div`
+  & .selected-row {
+    background-color: #f8bc0a;
+    color: #000;
+  }
+`;
 
 const Table = ({ columnas, datos, total, index, Click }) => {
   //#region Columnas y Datos
@@ -16,6 +24,16 @@ const Table = ({ columnas, datos, total, index, Click }) => {
   const indexPaginas = index;
   const itemsPerPage = 50;
   const paginado = parseInt(Math.ceil(totalPaginas / itemsPerPage));
+  //#endregion
+
+  //#region Fila Seleccionable
+  const Seleccionar = (e) => {
+    let filas = document.querySelectorAll("tr");
+    filas.forEach((f) => {
+      f.classList.remove("selected-row");
+    });
+    e.target.parentNode.classList.add("selected-row");
+  };
   //#endregion
 
   //#region Obtiene props React Table
@@ -65,46 +83,48 @@ const Table = ({ columnas, datos, total, index, Click }) => {
       </div> */}
 
       {/* Tabla */}
-      <table {...getTableProps()} id="tabla" className="text-light">
-        <thead className="text-left bg-gris-800">
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className="py-2 px-2"
-                >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-
-        <tbody {...getTableBodyProps()} className="bg-secondary-100">
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr
-                {...row.getRowProps()}
-                className="border-b border-secondary-900 hover:bg-gray-500"
-              >
-                {row.cells.map((cell) => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      className="py-2 px-2 text-left "
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
+      <Tabla>
+        <table {...getTableProps()} id="tabla" className="w-full text-light">
+          <thead className="text-left bg-gris-800">
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    className="py-2 px-2"
+                  >
+                    {column.render("Header")}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
 
+          <tbody {...getTableBodyProps()} className="bg-secondary-100">
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  className="border-b border-secondary-900 hover:bg-gray-500"
+                  onClick={(e) => Seleccionar(e)}
+                >
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        className="py-2 px-2 text-left "
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </Tabla>
       {/* Footer */}
       <div className="py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-base sm:text-sm">
         {/* Total de registros */}

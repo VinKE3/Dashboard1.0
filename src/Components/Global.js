@@ -40,4 +40,7 @@ export var BotonBasic =
 export var BotonBuscar =
   "px-3 rounded-none rounded-r-lg bg-yellow-500 text-light hover:bg-yellow-600";
 export var BotonRegistrar = "bg-blue-600 hover:bg-blue-500 hover:text-light";
+export var BotonConfigurar = "bg-gray-700 hover:bg-gray-800 hover:text-light";
+export var BotonCambiarContraseña =
+  "bg-green-500 hover:bg-green-600 hover:text-light";
 //#endregion

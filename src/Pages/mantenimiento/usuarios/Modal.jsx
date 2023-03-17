@@ -17,12 +17,22 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [objeto]);
   useEffect(() => {
     data;
+    console.log(data);
   }, [data]);
+  useEffect(() => {
+    checked;
+    console.log(checked);
+  }, [checked]);
+
   //#endregion
 
   //#region Funciones
   const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+    if (target.name == "isActivo" || target.name == "habilitarAfectarStock") {
+      setData({ ...data, [target.name]: target.checked });
+    } else {
+      setData({ ...data, [target.name]: target.value });
+    }
   };
   function uppercase(e) {
     e.target.value = e.target.value.toUpperCase();
@@ -59,12 +69,17 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <div className={Global.ContenedorInputFull}>
           <div className=" flex gap-2 justify-center mt-3">
             <Checkbox
+              className="hover: text-red-500"
               id="isActivo"
               name="isActivo"
-              readOnly={modo == "Consultar" ? true : false}
-              defaultValue={data.isActivo}
-              onChange={(e) => setChecked(e.checked)}
-              checked={checked}
+              readOnly={modo == "Registrar" ? true : false}
+              disabled={modo == "Registrar" ? true : false}
+              defaultValue={data.isActivo ? true : false}
+              onChange={(e) => {
+                setChecked(e.checked);
+                handleChange(e);
+              }}
+              checked={data.isActivo ? checked : ""}
             ></Checkbox>
             <label />
             Activo <label />
@@ -75,8 +90,11 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               name="habilitarAfectarStock"
               readOnly={modo == "Consultar" ? true : false}
               defaultValue={data.habilitarAfectarStock}
-              onChange={(e) => setChecked2(e.checked)}
-              checked={checked2}
+              onChange={(e) => {
+                setChecked2(e.checked);
+                handleChange(e);
+              }}
+              checked={data.habilitarAfectarStock ? checked2 : ""}
             ></Checkbox>
             <label />
             Afectar Stock <label />

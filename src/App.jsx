@@ -8,7 +8,6 @@ import LayoutAdmin from "./layouts/LayoutAdmin";
 import Login from "./pages/auth/Login";
 // Pages admin
 import Home from "./pages/admin/Home";
-import Profile from "./pages/admin/Profile";
 import Error404 from "./pages/Error404";
 import Tabla from "./components/Tabla";
 // Pages ventas
@@ -192,7 +191,6 @@ function App() {
           {/** OTROS */}
           <Route path="tabla" element={<Tabla />} />
           <Route path="demo" element={<Demo />} />
-          <Route path="perfil" element={<Profile />} />
         </Route>
         {/** ERROR */}
         <Route path="*" element={<Error404 />} />

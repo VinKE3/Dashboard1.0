@@ -7,8 +7,12 @@ import Table from "../../../components/tablas/Table";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
+import ModalConfiguracion from "./ModalConfiguracion";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import moment from "moment";
+import * as Global from "../../../Components/Global";
+import { Checkbox } from "primereact/checkbox";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -17,6 +21,15 @@ const TablaStyle = styled.div`
   }
   & tbody td:first-child {
     display: none;
+  }
+  & th:nth-child(2) {
+    width: 100px;
+  }
+  & th:nth-child(3) {
+    width: 250px;
+  }
+  & th:nth-child(4) {
+    width: 250px;
   }
   & th:last-child {
     width: 130px;
@@ -30,8 +43,6 @@ import React from "react";
 const Usuarios = () => {
   //#region useState
   const [datos, setDatos] = useState([]);
-  const [fechaInicio, setFechaInicio] = useState([]);
-  const [fechaModificacion, setFechaModificacion] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
@@ -42,6 +53,7 @@ const Usuarios = () => {
   const [modo, setModo] = useState("Registrar");
   const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [showModalConfiguracion, setShowModalConfiguracion] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -63,6 +75,13 @@ const Usuarios = () => {
       Listar(filtro, index);
     }
   }, [modal]);
+
+  useEffect(() => {
+    if (!showModalConfiguracion) {
+      Listar(filtro, index);
+    }
+  }, [showModalConfiguracion]);
+
   useEffect(() => {
     if (respuestaAlert) {
       Listar(filtro, index);
@@ -74,13 +93,8 @@ const Usuarios = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Usuario/Listar?pagina=${pagina}${filtro}`
     );
-    const todo = result.data.data.data;
-    const fechaInicio = todo.map((item) => item.fechaInicio);
-    const fechaModificacion = todo.map((item) => item.fechaModificacion);
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
-    setFechaInicio(fechaInicio);
-    setFechaModificacion(fechaModificacion);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
@@ -144,6 +158,22 @@ const Usuarios = () => {
     }
     setModal(true);
   };
+
+  const AbrirModalConfigurar = async (modo = "Configurar") => {
+    let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
+    console.log(a);
+    setModo(modo);
+    if (modo == "Configurar") {
+      let model = {
+        id: "00",
+      };
+      setObjeto(model);
+    } else {
+      await GetPorId(a);
+    }
+    setShowModalConfiguracion(true);
+  };
+
   //#endregion
 
   //#region Columnas
@@ -163,14 +193,28 @@ const Usuarios = () => {
     {
       Header: "Fecha Inicio",
       accessor: "fechaInicio",
+      Cell: ({ value }) => {
+        return moment(value).format("DD/MM/YYYY");
+      },
     },
     {
       Header: "Fecha Modificacion",
       accessor: "fechaModificacion",
+      Cell: ({ value }) => {
+        return moment(value).format("DD/MM/YYYY");
+      },
     },
+
     {
       Header: "Activo",
       accessor: "isActivo",
+      Cell: ({ value }) => {
+        return value ? (
+          <Checkbox checked={true} />
+        ) : (
+          <Checkbox checked={false} />
+        );
+      },
     },
     {
       Header: "Acciones",
@@ -192,7 +236,7 @@ const Usuarios = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Usuarios</h2>
+        <h2 className={Global.TituloH2}>Usuarios</h2>
 
         {/* Filtro*/}
         <FiltroBasico
@@ -208,14 +252,32 @@ const Usuarios = () => {
         {/* Filtro*/}
 
         {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass="boton-crud-registrar"
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )}
+        <div className="flex gap-1">
+          {permisos[0] && (
+            <BotonBasico
+              botonText="Registrar"
+              botonClass={Global.BotonRegistrar}
+              botonIcon={faPlus}
+              click={() => AbrirModal()}
+            />
+          )}
+          {permisos[0] && (
+            <BotonBasico
+              botonText="Configuracion"
+              botonClass={Global.BotonConfigurar}
+              botonIcon={faPlus}
+              click={() => AbrirModalConfigurar()}
+            />
+          )}
+          {permisos[0] && (
+            <BotonBasico
+              botonText="Cambiar Contraseña"
+              botonClass={Global.BotonCambiarContraseña}
+              botonIcon={faPlus}
+              click={() => AbrirModal()}
+            />
+          )}
+        </div>
         {/* Boton */}
 
         {/* Tabla */}
@@ -234,6 +296,14 @@ const Usuarios = () => {
       {modal && (
         <Modal
           setModal={setModal}
+          modo={modo}
+          setRespuestaModal={setRespuestaModal}
+          objeto={objeto}
+        />
+      )}
+      {showModalConfiguracion && (
+        <ModalConfiguracion
+          setModal={setShowModalConfiguracion}
           modo={modo}
           setRespuestaModal={setRespuestaModal}
           objeto={objeto}
