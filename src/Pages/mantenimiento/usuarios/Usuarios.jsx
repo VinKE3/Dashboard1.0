@@ -161,7 +161,6 @@ const Usuarios = () => {
 
   const AbrirModalConfigurar = async (modo = "Configurar") => {
     let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
-    console.log(a);
     setModo(modo);
     if (modo == "Configurar") {
       let model = {
@@ -242,7 +241,7 @@ const Usuarios = () => {
         <FiltroBasico
           textLabel={"Nick"}
           inputPlaceHolder={"Nick"}
-          inputId={"nick"}
+          inputId={"nick2"}
           inputName={"nick"}
           inputMax={"200"}
           botonId={"buscar"}

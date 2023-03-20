@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Error404 = () => {
   return (
@@ -269,12 +270,14 @@ const Error404 = () => {
             <p class="text-sm md:text-base text-gray-300 p-2 mb-4">
               La pagina solicitada no existe
             </p>
-            <a
-              href="/"
-              class="bg-transparent hover:bg-yellow-300 text-yellow-300 hover:text-white rounded shadow hover:shadow-lg py-2 px-4 border border-yellow-300 hover:border-transparent"
+            <Link
+              to="/"
+              className="bg-transparent hover:bg-yellow-300 text-yellow-300
+              hover:text-white rounded shadow hover:shadow-lg py-2 px-4 border
+              border-yellow-300 hover:border-transparent"
             >
               Volver al inicio
-            </a>
+            </Link>
           </div>
         </div>
       </div>

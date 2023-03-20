@@ -23,7 +23,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     checked;
     console.log(checked);
   }, [checked]);
-
   //#endregion
 
   //#region Funciones
@@ -69,7 +68,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <div className={Global.ContenedorInputFull}>
           <div className=" flex gap-2 justify-center mt-3">
             <Checkbox
-              className="hover: text-red-500"
               id="isActivo"
               name="isActivo"
               readOnly={modo == "Registrar" ? true : false}
