@@ -6,6 +6,7 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 import { SelectButton } from "primereact/selectbutton";
 import { useMenu } from "../../../context/ContextMenu";
 import { Checkbox } from "primereact/checkbox";
+import Mensajes from "../../../components/Mensajes";
 
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
@@ -22,6 +23,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     { name: "Anular", value: "Anular" },
   ];
   const [checked, setChecked] = useState(false);
+  const [checkedMenus, setCheckedMenus] = useState(
+    Array(menu.length).fill(false)
+  );
   //#endregion
 
   //#region useEffect
@@ -69,9 +73,25 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       setValue(null);
     }
   };
-  const handleClick = (event) => {
-    const { innerText } = event.target;
-    setSelectedMenu(innerText);
+  // const handleClick = (event) => {
+  //   const { innerText } = event.target;
+  //   setSelectedMenu(innerText);
+  // };
+
+  const handleMenuClick = (event) => {
+    const index = menu.findIndex(
+      (item) => item.nombre === event.target.innerText
+    );
+    setCheckedMenus((prev) => {
+      const newArr = [...prev];
+      newArr[index] = !newArr[index];
+      return newArr;
+    });
+    setSelectedMenu(event.target.innerText);
+    handleSelectAllActions();
+  };
+  const handleSelectAllActions = () => {
+    setValue(items.map((item) => item.value));
   };
   //#endregion
   //#region API
@@ -81,6 +101,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     );
     setdataModal(result.data.data.tiposUsuario);
   };
+
   //#endregion
 
   return (
@@ -92,85 +113,100 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       menu={["Mantenimiento", "Usuario"]}
       tamañoModal={[Global.ModalFull]}
     >
-      <div className={Global.ContenedorInputFull}>
-        <label htmlFor="tiposUsuarioId" className={Global.LabelStyle}>
-          Tipo de Usuario
-        </label>
-        <select
-          id="tiposUsuarioId"
-          name="tiposUsuarioId"
-          onChange={handleChange}
-          className={Global.SelectStyle}
-        >
-          {dataModal.map((forma) => (
-            <option key={forma.id} value={forma.id}>
-              {forma.descripcion}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className={Global.ContenedorInputFull}>
-        <label htmlFor="menus" className={Global.LabelStyle}>
-          Menú:
-        </label>
-        <input
-          type="text"
-          id="menus"
-          name="menus"
-          value={selectedMenu}
-          onChange={handleChange}
-          className={Global.InputStyle}
+      <div className={Global.FormTabs}>
+        <Mensajes
+          tipoMensaje={2}
+          mensaje={[
+            "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
+          ]}
+          cerrar={false}
         />
-      </div>
-
-      <div className="card flex justify-content-center gap-3">
-        <div>
-          <SelectButton
-            value={value}
-            onChange={(e) => setValue(e.value)}
-            optionLabel="name"
-            options={items}
-            multiple
+        <div className="flex">
+          <label htmlFor="tiposUsuarioId" className={Global.LabelStyle}>
+            Tipo de Usuario
+          </label>
+          <select
+            id="tiposUsuarioId"
+            name="tiposUsuarioId"
+            onChange={handleChange}
+            className={Global.SelectStyle}
+          >
+            {dataModal.map((forma) => (
+              <option key={forma.id} value={forma.id}>
+                {forma.descripcion}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className={Global.ContenedorInputFull}>
+          <label htmlFor="menus" className={Global.LabelStyle}>
+            Menú:
+          </label>
+          <input
+            type="text"
+            id="menus"
+            name="menus"
+            value={selectedMenu}
+            onChange={handleChange}
+            className={Global.InputStyle}
           />
         </div>
-        <div className="mt-2 ml-2 flex gap-2">
+
+        <div className="card flex justify-content-center gap-3">
           <div>
-            <Checkbox
+            <SelectButton
+              value={value}
               onChange={(e) => {
-                setChecked(e.checked);
-                handleSelectAll(e.checked);
+                setValue(e.value);
+                setChecked(e.value.length === items.length);
               }}
-              checked={checked}
-            ></Checkbox>
+              optionLabel="name"
+              options={items}
+              multiple
+            />
           </div>
-          <div>
-            <label>Todos</label>
+          <div className="mt-2 ml-2 flex gap-2">
+            <div>
+              <Checkbox
+                onChange={(e) => {
+                  setChecked(e.checked);
+                  handleSelectAll(e.checked);
+                }}
+                checked={checked}
+              ></Checkbox>
+            </div>
+            <div>
+              <label>Todos</label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <div className="card mt-4">
-          <Accordion>
-            <AccordionTab
-              header={
-                <div className="flex align-items-center">
-                  <span className=" vertical-align-middle">Menus</span>
-                  <i className="pi pi-cog ml-2"></i>
-                </div>
-              }
-            >
-              <ul>
-                {menu.map((item) => (
-                  <li className="hover:text-primary p-1 border-b" key={item.id}>
-                    <button type="button" onClick={handleClick}>
-                      {item.nombre}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </AccordionTab>
-          </Accordion>
+        <div>
+          <div className="card mt-4">
+            <Accordion>
+              <AccordionTab
+                header={
+                  <div className="flex align-items-center">
+                    <span className=" vertical-align-middle">Menus</span>
+                    <i className="pi pi-cog ml-2"></i>
+                  </div>
+                }
+              >
+                <ul>
+                  {menu.map((item) => (
+                    <li
+                      className="hover:text-primary p-1 border-b"
+                      key={item.id}
+                    >
+                      <button type="button" onClick={handleMenuClick}>
+                        {item.nombre}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionTab>
+            </Accordion>
+          </div>
         </div>
       </div>
     </ModalBasic>
