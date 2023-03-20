@@ -26,6 +26,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [checkedMenus, setCheckedMenus] = useState(
     Array(menu.length).fill(false)
   );
+  const [selectedActions, setSelectedActions] = useState({});
   //#endregion
 
   //#region useEffect
@@ -73,11 +74,48 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       setValue(null);
     }
   };
-  // const handleClick = (event) => {
-  //   const { innerText } = event.target;
-  //   setSelectedMenu(innerText);
+
+  // const handleMenuClick = (event) => {
+  //   const index = menu.findIndex(
+  //     (item) => item.nombre === event.target.innerText
+  //   );
+  //   setCheckedMenus((prev) => {
+  //     const newArr = [...prev];
+  //     newArr[index] = !newArr[index];
+  //     return newArr;
+  //   });
+  //   setSelectedMenu(event.target.innerText);
+  //   handleSelectAllActions();
+  // };
+  // const handleSelectAllActions = () => {
+  //   setValue(items.map((item) => item.value));
+  // };
+  // const handleMenuClick = (event) => {
+  //   const index = menu.findIndex(
+  //     (item) => item.nombre === event.target.innerText
+  //   );
+  //   setCheckedMenus((prev) => {
+  //     const newArr = [...prev];
+  //     newArr[index] = !newArr[index];
+  //     return newArr;
+  //   });
+  //   setSelectedMenu(event.target.innerText);
+  //   const selected = value || [];
+  //   setSelectedActions((prev) => ({
+  //     ...prev,
+  //     [event.target.innerText]: selected,
+  //   }));
+  //   handleSelectAllActions();
   // };
 
+  // const handleSelectAllActions = () => {
+  //   const selected = items.map((item) => item.value);
+  //   setSelectedActions((prev) => ({
+  //     ...prev,
+  //     [selectedMenu]: selected,
+  //   }));
+  //   setValue(selected);
+  // };
   const handleMenuClick = (event) => {
     const index = menu.findIndex(
       (item) => item.nombre === event.target.innerText
@@ -90,6 +128,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     setSelectedMenu(event.target.innerText);
     handleSelectAllActions();
   };
+
   const handleSelectAllActions = () => {
     setValue(items.map((item) => item.value));
   };
@@ -158,9 +197,23 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
         <div className="card flex justify-content-center gap-3">
           <div>
-            <SelectButton
+            {/* <SelectButton
               value={value}
               onChange={(e) => {
+                setValue(e.value);
+                setChecked(e.value.length === items.length);
+              }}
+              optionLabel="name"
+              options={items}
+              multiple
+            /> */}
+            <SelectButton
+              value={selectedActions[selectedMenu] || []}
+              onChange={(e) => {
+                setSelectedActions((prev) => ({
+                  ...prev,
+                  [selectedMenu]: e.value,
+                }));
                 setValue(e.value);
                 setChecked(e.value.length === items.length);
               }}
