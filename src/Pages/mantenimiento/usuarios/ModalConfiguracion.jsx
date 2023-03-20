@@ -117,7 +117,11 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <Mensajes
           tipoMensaje={2}
           mensaje={[
-            "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
+            "NO CONFIGURADO: No contiene ningún permiso (no configurable).",
+            "ADMINISTRADOR: Se le concede todos los permisos (no configurable).",
+            "MANTENIMIENTO: Se le concede todos los permisos, excepto el Anular (no configurable).",
+            "CONSULTA: Se le concede los permisos de Consultar y Refrescar (no configurable).",
+            "PERSONALIZADO: Se le concede los permisos asignados de la parte inferior (configurable).",
           ]}
           cerrar={false}
         />
