@@ -61,7 +61,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     }
     return value;
   }
-
   const handleChange = ({ target }) => {
     const value = uppercase(target.value);
     setData({ ...data, [target.name]: value });
@@ -71,51 +70,15 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     if (checked) {
       setValue(items.map((item) => item.value));
     } else {
-      setValue(null);
+      setValue([]);
     }
+    setChecked(checked);
+    setSelectedActions((prev) => ({
+      ...prev,
+      [selectedMenu]: checked ? items.map((item) => item.value) : [],
+    }));
   };
 
-  // const handleMenuClick = (event) => {
-  //   const index = menu.findIndex(
-  //     (item) => item.nombre === event.target.innerText
-  //   );
-  //   setCheckedMenus((prev) => {
-  //     const newArr = [...prev];
-  //     newArr[index] = !newArr[index];
-  //     return newArr;
-  //   });
-  //   setSelectedMenu(event.target.innerText);
-  //   handleSelectAllActions();
-  // };
-  // const handleSelectAllActions = () => {
-  //   setValue(items.map((item) => item.value));
-  // };
-  // const handleMenuClick = (event) => {
-  //   const index = menu.findIndex(
-  //     (item) => item.nombre === event.target.innerText
-  //   );
-  //   setCheckedMenus((prev) => {
-  //     const newArr = [...prev];
-  //     newArr[index] = !newArr[index];
-  //     return newArr;
-  //   });
-  //   setSelectedMenu(event.target.innerText);
-  //   const selected = value || [];
-  //   setSelectedActions((prev) => ({
-  //     ...prev,
-  //     [event.target.innerText]: selected,
-  //   }));
-  //   handleSelectAllActions();
-  // };
-
-  // const handleSelectAllActions = () => {
-  //   const selected = items.map((item) => item.value);
-  //   setSelectedActions((prev) => ({
-  //     ...prev,
-  //     [selectedMenu]: selected,
-  //   }));
-  //   setValue(selected);
-  // };
   const handleMenuClick = (event) => {
     const index = menu.findIndex(
       (item) => item.nombre === event.target.innerText
@@ -128,11 +91,11 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     setSelectedMenu(event.target.innerText);
     handleSelectAllActions();
   };
-
   const handleSelectAllActions = () => {
     setValue(items.map((item) => item.value));
   };
   //#endregion
+
   //#region API
   const Tablas = async () => {
     const result = await ApiMasy.get(
@@ -197,16 +160,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
         <div className="card flex justify-content-center gap-3">
           <div>
-            {/* <SelectButton
-              value={value}
-              onChange={(e) => {
-                setValue(e.value);
-                setChecked(e.value.length === items.length);
-              }}
-              optionLabel="name"
-              options={items}
-              multiple
-            /> */}
             <SelectButton
               value={selectedActions[selectedMenu] || []}
               onChange={(e) => {
@@ -237,7 +190,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             </div>
           </div>
         </div>
-
         <div>
           <div className="card mt-4">
             <Accordion>
