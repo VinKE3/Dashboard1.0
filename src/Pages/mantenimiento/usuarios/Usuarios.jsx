@@ -60,6 +60,7 @@ const Usuarios = () => {
   useEffect(() => {
     filtro;
   }, [filtro]);
+
   useEffect(() => {
     total;
   }, [total]);
@@ -70,6 +71,7 @@ const Usuarios = () => {
   useEffect(() => {
     modo;
   }, [modo]);
+
   useEffect(() => {
     if (!modal) {
       Listar(filtro, index);
@@ -164,7 +166,19 @@ const Usuarios = () => {
     setModo(modo);
     if (modo == "Configurar") {
       let model = {
-        id: "00",
+        usuarioId: "",
+        tipoUsuarioId: "",
+        permisos: [
+          {
+            usuarioId: "",
+            menuId: "",
+            registrar: true,
+            modificar: true,
+            eliminar: true,
+            consultar: true,
+            anular: true,
+          },
+        ],
       };
       setObjeto(model);
     } else {

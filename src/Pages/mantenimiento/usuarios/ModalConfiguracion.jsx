@@ -12,15 +12,15 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
   const [dataModal, setdataModal] = useState([]);
-  const { getMenu, menu, nombre } = useMenu();
+  const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState(null);
   const items = [
-    { name: "Registrar", value: "Registrar" },
-    { name: "Modificar", value: "Modificar" },
-    { name: "Eliminar", value: "Eliminar" },
-    { name: "Consultar", value: "Consultar" },
-    { name: "Anular", value: "Anular" },
+    { name: "registrar", value: "registrar", id: "registrar" },
+    { name: "modificar", value: "modificar", id: "modificar" },
+    { name: "eliminar", value: "eliminar", id: "eliminar" },
+    { name: "consultar", value: "consultar", id: "consultar" },
+    { name: "anular", value: "anular", id: "anular" },
   ];
   const [checked, setChecked] = useState(false);
   const [checkedMenus, setCheckedMenus] = useState(
@@ -52,6 +52,17 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     Tablas();
   }, []);
 
+  useEffect(() => {
+    setChecked(false);
+  }, [selectedMenu]);
+
+  useEffect(() => {
+    if (selectedMenu) {
+      setValue(selectedActions[selectedMenu] || []);
+      setChecked(selectedActions[selectedMenu]?.length === items.length);
+    }
+  }, [selectedActions, selectedMenu]);
+
   //#endregion
 
   //#region Funciones
@@ -61,11 +72,14 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     }
     return value;
   }
-  const handleChange = ({ target }) => {
+  const handleInputChange = ({ target }) => {
     const value = uppercase(target.value);
-    setData({ ...data, [target.name]: value });
+    setData({
+      ...data,
+      [target.name]: value,
+    });
+    console.log(data);
   };
-
   const handleSelectAll = (checked) => {
     if (checked) {
       setValue(items.map((item) => item.value));
@@ -77,8 +91,12 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...prev,
       [selectedMenu]: checked ? items.map((item) => item.value) : [],
     }));
+    setData({
+      ...data,
+      [selectedMenu]: checked ? items.map((item) => item.value) : [],
+    });
+    console.log(data);
   };
-
   const handleMenuClick = (event) => {
     const index = menu.findIndex(
       (item) => item.nombre === event.target.innerText
@@ -90,10 +108,21 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     });
     setSelectedMenu(event.target.innerText);
     handleSelectAllActions();
+    setData({
+      ...data,
+      [event.target.innerText]: items.map((item) => item.value),
+    });
+    console.log(data);
   };
   const handleSelectAllActions = () => {
     setValue(items.map((item) => item.value));
+    setData({
+      ...data,
+      [selectedMenu]: items.map((item) => item.value),
+    });
+    console.log(data);
   };
+
   //#endregion
 
   //#region API
@@ -134,7 +163,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <select
             id="tiposUsuarioId"
             name="tiposUsuarioId"
-            onChange={handleChange}
+            onChange={handleInputChange}
             className={Global.SelectStyle}
           >
             {dataModal.map((forma) => (
@@ -145,15 +174,16 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           </select>
         </div>
         <div className={Global.ContenedorInputFull}>
-          <label htmlFor="menus" className={Global.LabelStyle}>
+          <label htmlFor="menuId" className={Global.LabelStyle}>
             Menú:
           </label>
           <input
             type="text"
-            id="menus"
-            name="menus"
+            readOnly={true}
+            id="menuId"
+            name="menuId"
             value={selectedMenu}
-            onChange={handleChange}
+            onChange={handleMenuClick}
             className={Global.InputStyle}
           />
         </div>
@@ -206,6 +236,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     <li
                       className="hover:text-primary p-1 border-b"
                       key={item.id}
+                      onChange={handleMenuClick}
                     >
                       <button type="button" onClick={handleMenuClick}>
                         {item.nombre}

@@ -17,7 +17,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [objeto]);
   useEffect(() => {
     data;
-    console.log(data);
   }, [data]);
   useEffect(() => {
     checked;
