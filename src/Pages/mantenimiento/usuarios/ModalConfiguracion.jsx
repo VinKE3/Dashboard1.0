@@ -133,13 +133,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     setdataModal(result.data.data.tiposUsuario);
   };
 
-  const ObtenerUsuarios = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/UsuarioPermiso/ObtenerUsuarios`
-    );
-    setdataModal(result.data.data);
-  };
-
   //#endregion
 
   return (
