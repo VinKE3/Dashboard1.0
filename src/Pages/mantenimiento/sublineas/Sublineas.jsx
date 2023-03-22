@@ -129,12 +129,12 @@ const SubLineas = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let subLinea = {
-        lineaId: "00",
-        subLineaId: "00",
-        descripcion: "",
-      };
-      setObjeto(subLinea);
+      // let subLinea = {
+      //   lineaId: "00",
+      //   subLineaId: "00",
+      //   descripcion: "",
+      // };
+      setObjeto([]);
     } else {
       await GetPorId(id);
     }

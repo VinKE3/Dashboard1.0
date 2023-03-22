@@ -8,6 +8,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import ModalConfiguracion from "./ModalConfiguracion";
+import ModalClave from "./ModalClave";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
@@ -54,6 +55,7 @@ const Usuarios = () => {
   const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   const [showModalConfiguracion, setShowModalConfiguracion] = useState(false);
+  const [showModalClave, setShowModalClave] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -85,6 +87,12 @@ const Usuarios = () => {
   }, [showModalConfiguracion]);
 
   useEffect(() => {
+    if (!showModalClave) {
+      Listar(filtro, index);
+    }
+  }, [showModalClave]);
+
+  useEffect(() => {
     if (respuestaAlert) {
       Listar(filtro, index);
     }
@@ -101,6 +109,21 @@ const Usuarios = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
     setObjeto(result.data.data);
+  };
+  const ObtenerUsuarios = async () => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/UsuarioPermiso/ObtenerUsuarios`
+    );
+    setObjeto(result.data.data);
+    ObtenerUsuarios();
+    console.log(result.data.data);
+  };
+
+  const ObtenerClaves = async () => {
+    const result = await ApiMasy.put(`api/Mantenimiento/Usuario/CambiarClave`);
+    setObjeto(result.data.data);
+    ObtenerClaves();
+    console.log(result.data.data);
   };
 
   //#endregion
@@ -185,6 +208,23 @@ const Usuarios = () => {
       await GetPorId(a);
     }
     setShowModalConfiguracion(true);
+  };
+
+  const AbrirModalClave = async (modo = "Clave") => {
+    let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
+    setModo(modo);
+    if (modo == "Clave") {
+      let model = {
+        claveAnterior: "",
+        claveNueva: "",
+        claveNuevaConfirmacion: "",
+      };
+      setObjeto(model);
+    } else {
+      await GetPorId(a);
+      ObtenerClaves(a);
+    }
+    setShowModalClave(true);
   };
 
   //#endregion
@@ -287,7 +327,7 @@ const Usuarios = () => {
               botonText="Cambiar Contraseña"
               botonClass={Global.BotonCambiarContraseña}
               botonIcon={faPlus}
-              click={() => AbrirModal()}
+              click={() => AbrirModalClave()}
             />
           )}
         </div>
@@ -317,6 +357,14 @@ const Usuarios = () => {
       {showModalConfiguracion && (
         <ModalConfiguracion
           setModal={setShowModalConfiguracion}
+          modo={modo}
+          setRespuestaModal={setRespuestaModal}
+          objeto={objeto}
+        />
+      )}
+      {showModalClave && (
+        <ModalClave
+          setModal={setShowModalClave}
           modo={modo}
           setRespuestaModal={setRespuestaModal}
           objeto={objeto}

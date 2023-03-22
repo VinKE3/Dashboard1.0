@@ -16,6 +16,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   useEffect(() => {
     data;
   }, [data]);
+
   //#endregion
 
   //#region Funciones

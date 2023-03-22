@@ -15,7 +15,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState(null);
-  const items = [
+  const botones = [
     { name: "registrar", value: "registrar", id: "registrar" },
     { name: "modificar", value: "modificar", id: "modificar" },
     { name: "eliminar", value: "eliminar", id: "eliminar" },
@@ -59,7 +59,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   useEffect(() => {
     if (selectedMenu) {
       setValue(selectedActions[selectedMenu] || []);
-      setChecked(selectedActions[selectedMenu]?.length === items.length);
+      setChecked(selectedActions[selectedMenu]?.length === botones.length);
     }
   }, [selectedActions, selectedMenu]);
 
@@ -82,24 +82,24 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   };
   const handleSelectAll = (checked) => {
     if (checked) {
-      setValue(items.map((item) => item.value));
+      setValue(botones.map((item) => item.value));
     } else {
       setValue([]);
     }
     setChecked(checked);
     setSelectedActions((prev) => ({
       ...prev,
-      [selectedMenu]: checked ? items.map((item) => item.value) : [],
+      [selectedMenu]: checked ? botones.map((item) => item.value) : [],
     }));
     setData({
       ...data,
-      [selectedMenu]: checked ? items.map((item) => item.value) : [],
+      [selectedMenu]: checked ? botones.map((item) => item.value) : [],
     });
     console.log(data);
   };
   const handleMenuClick = (event) => {
     const index = menu.findIndex(
-      (item) => item.nombre === event.target.innerText
+      (menu) => menu.nombre === event.target.innerText
     );
     setCheckedMenus((prev) => {
       const newArr = [...prev];
@@ -110,15 +110,15 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     handleSelectAllActions();
     setData({
       ...data,
-      [event.target.innerText]: items.map((item) => item.value),
+      [event.target.innerText]: botones.map((item) => item.value),
     });
     console.log(data);
   };
   const handleSelectAllActions = () => {
-    setValue(items.map((item) => item.value));
+    setValue(botones.map((item) => item.value));
     setData({
       ...data,
-      [selectedMenu]: items.map((item) => item.value),
+      [selectedMenu]: botones.map((item) => item.value),
     });
     console.log(data);
   };
@@ -131,6 +131,13 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       `api/Mantenimiento/UsuarioPermiso/FormularioTablas`
     );
     setdataModal(result.data.data.tiposUsuario);
+  };
+
+  const ObtenerUsuarios = async () => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/UsuarioPermiso/ObtenerUsuarios`
+    );
+    setdataModal(result.data.data);
   };
 
   //#endregion
@@ -166,9 +173,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             onChange={handleInputChange}
             className={Global.SelectStyle}
           >
-            {dataModal.map((forma) => (
-              <option key={forma.id} value={forma.id}>
-                {forma.descripcion}
+            {dataModal.map((usuario) => (
+              <option key={usuario.id} value={usuario.id}>
+                {usuario.descripcion}
               </option>
             ))}
           </select>
@@ -198,10 +205,10 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   [selectedMenu]: e.value,
                 }));
                 setValue(e.value);
-                setChecked(e.value.length === items.length);
+                setChecked(e.value.length === botones.length);
               }}
               optionLabel="name"
-              options={items}
+              options={botones}
               multiple
             />
           </div>
@@ -236,6 +243,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     <li
                       className="hover:text-primary p-1 border-b"
                       key={item.id}
+                      id="menuId"
                       onChange={handleMenuClick}
                     >
                       <button type="button" onClick={handleMenuClick}>

@@ -4,23 +4,35 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    id: "",
+    descripcion: "",
+  });
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     objeto;
-    setData(objeto);
+    console.log(modo != "Registrar");
+    if (modo != "Registrar") {
+      setData(objeto);
+    }
   }, [objeto]);
+
   useEffect(() => {
     data;
+    console.log(data);
   }, [data]);
   //#endregion
 
   //#region Funcion onChange y validación de campos
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
-  };
+  function handleChange({ target }) {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+  }
+
   function uppercase(e) {
     e.target.value = e.target.value.toUpperCase();
   }
@@ -64,7 +76,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Descripción"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.descripcion}
+            value={data.descripcion}
             onChange={handleChange}
             onKeyUp={uppercase}
             className={Global.InputStyle}

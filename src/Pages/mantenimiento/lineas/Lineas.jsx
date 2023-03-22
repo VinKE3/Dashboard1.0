@@ -128,10 +128,10 @@ const Lineas = () => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
-        id: "00",
-        descripcion: "",
+        // id: "",
+        // descripcion: "",
       };
-      setObjeto(model);
+      setObjeto([]);
     } else {
       await GetPorId(id);
     }

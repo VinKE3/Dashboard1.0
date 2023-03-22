@@ -5,14 +5,21 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    lineaId: "00",
+    subLineaId: "00",
+    descripcion: "",
+  });
   const [dataLinea, setDataLinea] = useState([]);
   //#endregion
 
   //#region useEffect.
   useEffect(() => {
     objeto;
-    setData(objeto);
+    console.log(modo != "Registrar");
+    if (modo != "Registrar") {
+      setData(objeto);
+    }
   }, [objeto]);
   useEffect(() => {
     dataLinea;
@@ -27,9 +34,13 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
-  };
+  function handleChange({ target }) {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+  }
+
   function uppercase(e) {
     e.target.value = e.target.value.toUpperCase();
   }
@@ -64,7 +75,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             maxLength="2"
             placeholder="00"
             readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.subLineaId}
+            value={data.subLineaId}
             onChange={handleChange}
             onKeyUp={uppercase}
             className={Global.InputStyle}
@@ -100,7 +111,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           autoComplete="off"
           placeholder="Descripción"
           readOnly={modo == "Consultar" ? true : false}
-          defaultValue={data.descripcion}
+          value={data.descripcion}
           onChange={handleChange}
           onKeyUp={uppercase}
           className={Global.InputStyle}
