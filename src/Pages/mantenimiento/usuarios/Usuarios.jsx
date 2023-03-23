@@ -110,21 +110,7 @@ const Usuarios = () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
     setObjeto(result.data.data);
   };
-  const ObtenerUsuarios = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/UsuarioPermiso/ObtenerUsuarios`
-    );
-    setObjeto(result.data.data);
-    ObtenerUsuarios();
-    console.log(result.data.data);
-  };
 
-  const ObtenerClaves = async () => {
-    const result = await ApiMasy.put(`api/Mantenimiento/Usuario/CambiarClave`);
-    setObjeto(result.data.data);
-    ObtenerClaves();
-    console.log(result.data.data);
-  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -166,17 +152,7 @@ const Usuarios = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
-        id: "00",
-        nick: "",
-        observacion: "",
-        isActivo: true,
-        habilitarAfectarStock: true,
-        personalId: "",
-        clave: "",
-        claveConfirmacion: "",
-      };
-      setObjeto(model);
+      setObjeto([]);
     } else {
       await GetPorId(id);
     }
@@ -186,26 +162,33 @@ const Usuarios = () => {
   const AbrirModalConfigurar = async (modo = "Configurar") => {
     let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
     setModo(modo);
-    if (modo == "Configurar") {
-      let model = {
-        usuarioId: "",
-        tipoUsuarioId: "",
-        permisos: [
-          {
-            usuarioId: "",
-            menuId: "",
-            registrar: true,
-            modificar: true,
-            eliminar: true,
-            consultar: true,
-            anular: true,
-          },
-        ],
-      };
-      setObjeto(model);
-    } else {
-      await GetPorId(a);
-    }
+
+    // await GetPorId(a);
+    setObjeto({
+      usuarioId: "001",
+      tipoUsuarioId: "AD",
+      permisos: [
+        {
+          usuarioId: "001",
+          menuId: "Linea",
+          registrar: true,
+          modificar: true,
+          eliminar: true,
+          consultar: true,
+          anular: false,
+        },
+        {
+          usuarioId: "001",
+          menuId: "Sublinea",
+          registrar: true,
+          modificar: true,
+          eliminar: false,
+          consultar: true,
+          anular: true,
+        },
+      ],
+    });
+
     setShowModalConfiguracion(true);
   };
 
@@ -213,12 +196,7 @@ const Usuarios = () => {
     let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
     setModo(modo);
     if (modo == "Clave") {
-      let model = {
-        claveAnterior: "",
-        claveNueva: "",
-        claveNuevaConfirmacion: "",
-      };
-      setObjeto(model);
+      setObjeto([]);
     } else {
       await GetPorId(a);
       ObtenerClaves(a);

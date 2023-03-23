@@ -127,10 +127,6 @@ const Lineas = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
-        // id: "",
-        // descripcion: "",
-      };
       setObjeto([]);
     } else {
       await GetPorId(id);

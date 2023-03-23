@@ -10,53 +10,52 @@ import Mensajes from "../../../components/Mensajes";
 
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
-  const [dataModal, setdataModal] = useState([]);
+  const [data, setData] = useState(objeto);
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState(null);
   const botones = [
-    { name: "registrar", value: "registrar", id: "registrar" },
-    { name: "modificar", value: "modificar", id: "modificar" },
-    { name: "eliminar", value: "eliminar", id: "eliminar" },
-    { name: "consultar", value: "consultar", id: "consultar" },
-    { name: "anular", value: "anular", id: "anular" },
+    { name: "Registrar", value: "registrar", id: "registrar", active: true },
+    { name: "Modificar", value: "modificar", id: "modificar", active: true },
+    { name: "Eliminar", value: "eliminar", id: "eliminar", active: true },
+    { name: "Consultar", value: "consultar", id: "consultar", active: true },
+    { name: "Anular", value: "anular", id: "anular", active: true },
   ];
   const [checked, setChecked] = useState(false);
   const [checkedMenus, setCheckedMenus] = useState(
     Array(menu.length).fill(false)
   );
   const [selectedActions, setSelectedActions] = useState({});
+  const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
 
   useEffect(() => {
     data;
+    console.log(data);
+    if (document.getElementById("tipoUsuarioId")) {
+      document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
+    }
+    console.log(data.tipoUsuarioId);
   }, [data]);
 
   useEffect(() => {
-    dataModal;
-    document.getElementById("tiposUsuarioId").value = data.tiposUsuarioId;
-  }, [dataModal]);
-
-  useEffect(() => {
     getMenu();
-  }, []);
-
-  useEffect(() => {
     Tablas();
+    data;
+    console.log(data);
+    TipoUsuario(data.id);
+    console.log(data.id);
   }, []);
 
   useEffect(() => {
     setChecked(false);
+    setCheckedMenus(Array(menu.length).fill(false));
   }, [selectedMenu]);
 
   useEffect(() => {
+    console.log(selectedActions);
     if (selectedMenu) {
       setValue(selectedActions[selectedMenu] || []);
       setChecked(selectedActions[selectedMenu]?.length === botones.length);
@@ -78,8 +77,8 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       [target.name]: value,
     });
-    console.log(data);
   };
+
   const handleSelectAll = (checked) => {
     if (checked) {
       setValue(botones.map((item) => item.value));
@@ -112,17 +111,15 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       [event.target.innerText]: botones.map((item) => item.value),
     });
-    console.log(data);
   };
+
   const handleSelectAllActions = () => {
     setValue(botones.map((item) => item.value));
     setData({
       ...data,
       [selectedMenu]: botones.map((item) => item.value),
     });
-    console.log(data);
   };
-
   //#endregion
 
   //#region API
@@ -130,7 +127,15 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/UsuarioPermiso/FormularioTablas`
     );
-    setdataModal(result.data.data.tiposUsuario);
+    setDataTipoUsuario(result.data.data.tiposUsuario);
+  };
+
+  const TipoUsuario = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/UsuarioPermiso/Listar?usuarioId=${id}`
+    );
+    console.log(result);
+    setData(result.data.data);
   };
 
   //#endregion
@@ -157,16 +162,16 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           cerrar={false}
         />
         <div className="flex">
-          <label htmlFor="tiposUsuarioId" className={Global.LabelStyle}>
+          <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
             Tipo de Usuario
           </label>
           <select
-            id="tiposUsuarioId"
-            name="tiposUsuarioId"
+            id="tipoUsuarioId"
+            name="tipoUsuarioId"
             onChange={handleInputChange}
             className={Global.SelectStyle}
           >
-            {dataModal.map((usuario) => (
+            {dataTipoUsuario.map((usuario) => (
               <option key={usuario.id} value={usuario.id}>
                 {usuario.descripcion}
               </option>
@@ -191,6 +196,8 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <div className="card flex justify-content-center gap-3">
           <div>
             <SelectButton
+              id="botones"
+              name="botones"
               value={selectedActions[selectedMenu] || []}
               onChange={(e) => {
                 setSelectedActions((prev) => ({
@@ -226,7 +233,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
               <AccordionTab
                 header={
                   <div className="flex align-items-center">
-                    <span className=" vertical-align-middle">Menus</span>
+                    <span className=" vertical-align-middle">
+                      Mantenimiento
+                    </span>
                     <i className="pi pi-cog ml-2"></i>
                   </div>
                 }
@@ -236,7 +245,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     <li
                       className="hover:text-primary p-1 border-b"
                       key={item.id}
-                      id="menuId"
+                      name="menuId"
                       onChange={handleMenuClick}
                     >
                       <button type="button" onClick={handleMenuClick}>

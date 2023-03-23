@@ -6,29 +6,35 @@ import Mensajes from "../../../components/Mensajes";
 
 const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    claveAnterior: "",
+    claveNueva: "",
+    claveNuevaConfirmacion: "",
+  });
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     objeto;
-    setData(objeto);
+    if (modo != "Clave") {
+      setData(objeto);
+    }
   }, [objeto]);
 
   useEffect(() => {
     data;
+    console.log(data);
   }, [data]);
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    if (target.name == "isActivo" || target.name == "habilitarAfectarStock") {
-      setData({ ...data, [target.name]: target.checked });
-    } else {
-      setData({ ...data, [target.name]: target.value });
-    }
-    console.log(data);
-  };
+  function handleChange({ target }) {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+  }
+
   function uppercase(e) {
     e.target.value = e.target.value.toUpperCase();
   }
@@ -50,12 +56,11 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           type="text"
           id="claveAnterior"
           name="claveAnterior"
-          placeholder="claveAnterior"
+          placeholder="Clave Anterior"
           defaultValue={data.id}
           autoComplete="off"
           onKeyUp={uppercase}
           onChange={handleChange}
-          readOnly={true}
           className={Global.InputStyle}
         />
       </div>
@@ -67,7 +72,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           type="text"
           id="claveNueva"
           name="claveNueva"
-          placeholder="claveNueva"
+          placeholder="Clave Nueva"
           defaultValue={data.id}
           autoComplete="off"
           onKeyUp={uppercase}
@@ -83,7 +88,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           type="text"
           id="claveNuevaConfirmacion"
           name="claveNuevaConfirmacion"
-          placeholder="claveNuevaConfirmacion"
+          placeholder="Confirmar Clave Nueva"
           defaultValue={data.id}
           autoComplete="off"
           onKeyUp={uppercase}

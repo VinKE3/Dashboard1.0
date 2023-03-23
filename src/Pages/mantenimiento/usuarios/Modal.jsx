@@ -5,7 +5,16 @@ import { Checkbox } from "primereact/checkbox";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    id: "00",
+    nick: "",
+    observacion: "",
+    isActivo: true,
+    habilitarAfectarStock: true,
+    personalId: "",
+    clave: "",
+    claveConfirmacion: "",
+  });
   const [checked, setChecked] = useState(true);
   const [checked2, setChecked2] = useState(true);
   //#endregion
@@ -13,10 +22,14 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     objeto;
-    setData(objeto);
+    if (modo != "Registrar") {
+      setData(objeto);
+    }
   }, [objeto]);
+
   useEffect(() => {
     data;
+    console.log(data);
   }, [data]);
   useEffect(() => {
     checked;
@@ -29,9 +42,13 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     if (target.name == "isActivo" || target.name == "habilitarAfectarStock") {
       setData({ ...data, [target.name]: target.checked });
     } else {
-      setData({ ...data, [target.name]: target.value });
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
     }
   };
+
   function uppercase(e) {
     e.target.value = e.target.value.toUpperCase();
   }
@@ -56,7 +73,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="id"
             name="id"
             placeholder="id"
-            defaultValue={data.id}
+            value={data.id}
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={handleChange}
@@ -71,7 +88,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               name="isActivo"
               readOnly={modo == "Registrar" ? true : false}
               disabled={modo == "Registrar" ? true : false}
-              defaultValue={data.isActivo ? true : false}
+              value={data.isActivo ? true : false}
               onChange={(e) => {
                 setChecked(e.checked);
                 handleChange(e);
@@ -86,7 +103,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               id="habilitarAfectarStock"
               name="habilitarAfectarStock"
               readOnly={modo == "Consultar" ? true : false}
-              defaultValue={data.habilitarAfectarStock}
+              value={data.habilitarAfectarStock}
               onChange={(e) => {
                 setChecked2(e.checked);
                 handleChange(e);
@@ -108,7 +125,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="nick"
             name="nick"
             placeholder="nick"
-            defaultValue={data.nick}
+            value={data.nick}
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={handleChange}
@@ -125,7 +142,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="personalId"
             name="personalId"
             placeholder="Personal"
-            defaultValue={data.personalId}
+            value={data.personalId}
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={handleChange}
@@ -144,7 +161,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="clave"
             name="clave"
             placeholder="Clave"
-            defaultValue={data.clave}
+            value={data.clave}
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={handleChange}
@@ -161,7 +178,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="claveConfirmacion"
             name="claveConfirmacion"
             placeholder="Confirmar Clave"
-            defaultValue={data.claveConfirmacion}
+            value={data.claveConfirmacion}
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={handleChange}
@@ -179,7 +196,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="observacion"
           name="observacion"
           placeholder="Observacion"
-          defaultValue={data.observacion}
+          value={data.observacion}
           autoComplete="off"
           onKeyUp={uppercase}
           onChange={handleChange}
