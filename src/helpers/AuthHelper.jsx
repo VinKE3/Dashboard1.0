@@ -3,10 +3,8 @@ import store from "store2";
 const getStorage = () =>
   store.session("access_token") ? store.session : store.local;
 
-// const getUsuarioStorage = () =>
-//   store.session("usuario") ? store.session : store.local;
 const getUsuarioStorage = () =>
-  getStorage()("usuario") ? getStorage() : store.local;
+  store.session("usuario") ? store.session : store.local;
 
 const getToken = () => {
   const storage = getStorage();
@@ -73,10 +71,15 @@ function login(data) {
 //   store.session("usuario", usuario);
 // }
 
+// function loginUsuario(data) {
+//   const { usuario } = data;
+//   store.local("usuario", usuario.jwtDecoded);
+//   store.session("usuario", usuario.jwtDecoded);
+// }
 function loginUsuario(data) {
   const { usuario } = data;
-  store.local("usuario", usuario.jwtDecoded);
-  store.session("usuario", usuario.jwtDecoded);
+  store.local("usuario", usuario);
+  store.session("usuario", usuario);
 }
 export const authHelper = {
   getAccessToken,
