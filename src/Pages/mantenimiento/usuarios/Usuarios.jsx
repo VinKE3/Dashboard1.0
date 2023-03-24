@@ -164,30 +164,7 @@ const Usuarios = () => {
     setModo(modo);
 
     // await GetPorId(a);
-    setObjeto({
-      usuarioId: "001",
-      tipoUsuarioId: "AD",
-      permisos: [
-        {
-          usuarioId: "001",
-          menuId: "Linea",
-          registrar: true,
-          modificar: true,
-          eliminar: true,
-          consultar: true,
-          anular: false,
-        },
-        {
-          usuarioId: "001",
-          menuId: "Sublinea",
-          registrar: true,
-          modificar: true,
-          eliminar: false,
-          consultar: true,
-          anular: true,
-        },
-      ],
-    });
+    setObjeto([]);
 
     setShowModalConfiguracion(true);
   };

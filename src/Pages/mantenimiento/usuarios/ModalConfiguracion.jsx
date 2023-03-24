@@ -10,7 +10,30 @@ import Mensajes from "../../../components/Mensajes";
 
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState(objeto);
+  const [data, setData] = useState({
+    usuarioId: "001",
+    tipoUsuarioId: "AD",
+    permisos: [
+      {
+        usuarioId: "001",
+        menuId: "Linea",
+        registrar: true,
+        modificar: true,
+        eliminar: true,
+        consultar: true,
+        anular: false,
+      },
+      {
+        usuarioId: "001",
+        menuId: "Sublinea",
+        registrar: true,
+        modificar: true,
+        eliminar: false,
+        consultar: true,
+        anular: true,
+      },
+    ],
+  });
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState(null);
@@ -27,26 +50,35 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   );
   const [selectedActions, setSelectedActions] = useState({});
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
+  const [dataPermisos, setDataPermisos] = useState([]);
+  // const activeButtons = {};
+  // data.permisos.forEach((permiso) => {
+  //   if (permiso.menuId === selectedMenu) {
+  //     activeButtons.registrar = permiso.registrar;
+  //     activeButtons.modificar = permiso.modificar;
+  //     activeButtons.eliminar = permiso.eliminar;
+  //     activeButtons.consultar = permiso.consultar;
+  //     activeButtons.anular = permiso.anular;
+  //   }
+  // });
   //#endregion
 
   //#region useEffect
 
   useEffect(() => {
     data;
-    console.log(data);
     if (document.getElementById("tipoUsuarioId")) {
       document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
     }
-    console.log(data.tipoUsuarioId);
+    setDataPermisos(data.permisos);
+    console.log(data.permisos);
   }, [data]);
 
   useEffect(() => {
     getMenu();
     Tablas();
     data;
-    console.log(data);
     TipoUsuario(data.id);
-    console.log(data.id);
   }, []);
 
   useEffect(() => {
@@ -55,7 +87,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [selectedMenu]);
 
   useEffect(() => {
-    console.log(selectedActions);
     if (selectedMenu) {
       setValue(selectedActions[selectedMenu] || []);
       setChecked(selectedActions[selectedMenu]?.length === botones.length);
@@ -111,6 +142,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       [event.target.innerText]: botones.map((item) => item.value),
     });
+    console.log(data);
   };
 
   const handleSelectAllActions = () => {
@@ -119,6 +151,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       [selectedMenu]: botones.map((item) => item.value),
     });
+    console.log(data);
   };
   //#endregion
 
@@ -134,7 +167,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/UsuarioPermiso/Listar?usuarioId=${id}`
     );
-    console.log(result);
     setData(result.data.data);
   };
 
@@ -206,7 +238,28 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 }));
                 setValue(e.value);
                 setChecked(e.value.length === botones.length);
+                const activeButtons = {};
+                data.permisos.map((permiso) => {
+                  // if (permiso.menuId === selectedMenu) {
+                  //   activeButtons.registrar = permiso.registrar;
+                  //   activeButtons.modificar = permiso.modificar;
+                  //   activeButtons.eliminar = permiso.eliminar;
+                  //   activeButtons.consultar = permiso.consultar;
+                  //   activeButtons.anular = permiso.anular;
+                  // }
+                  console.log(permiso);
+                });
+                setSelectedActions((prev) => ({
+                  ...prev,
+                  [selectedMenu]: activeButtons,
+                }));
               }}
+              active={
+                typeof selectedActions[selectedMenu] === "object" &&
+                selectedActions[selectedMenu] !== null
+                  ? { ...selectedActions[selectedMenu] }
+                  : {}
+              }
               optionLabel="name"
               options={botones}
               multiple

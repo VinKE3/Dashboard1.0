@@ -40,15 +40,14 @@ const Login = () => {
     if (success && !isLoading) {
       if (token) {
         navigate("/");
-        // } else if (!error) {
-        //   setErrMsg("Error de conexión");
-        // } else if (error?.status === 400) {
-        //   setErrMsg("Usuario o contraseña incorrectos");
-        // } else if (error?.status === 401) {
-        //   setErrMsg("Usuario no autorizado");
-        // } else {
-        //   setErrMsg("Error desconocido");
-        // }
+      } else if (!error) {
+        setErrMsg("Usuario o contraseña incorrectos");
+      } else if (error?.status === 400) {
+        setErrMsg("Usuario o contraseña incorrectos");
+      } else if (error?.status === 401) {
+        setErrMsg("Usuario no autorizado");
+      } else {
+        setErrMsg("Error desconocido");
       }
     }
     errRef.current.focus();

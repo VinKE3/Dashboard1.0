@@ -28,16 +28,20 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  function handleChange({ target }) {
-    setData((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
+  function uppercase(value) {
+    if (value && typeof value === "string") {
+      return value.toUpperCase();
+    }
+    return value;
   }
+  const handleInputChange = ({ target }) => {
+    const value = uppercase(target.value);
+    setData({
+      ...data,
+      [target.name]: value,
+    });
+  };
 
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   return (
@@ -57,10 +61,9 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="claveAnterior"
           name="claveAnterior"
           placeholder="Clave Anterior"
-          defaultValue={data.id}
+          value={data.claveAnterior}
           autoComplete="off"
-          onKeyUp={uppercase}
-          onChange={handleChange}
+          onChange={handleInputChange}
           className={Global.InputStyle}
         />
       </div>
@@ -73,10 +76,9 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="claveNueva"
           name="claveNueva"
           placeholder="Clave Nueva"
-          defaultValue={data.id}
+          value={data.claveNueva}
           autoComplete="off"
-          onKeyUp={uppercase}
-          onChange={handleChange}
+          onChange={handleInputChange}
           className={Global.InputStyle}
         />
       </div>
@@ -89,9 +91,9 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="claveNuevaConfirmacion"
           name="claveNuevaConfirmacion"
           placeholder="Confirmar Clave Nueva"
-          defaultValue={data.id}
+          value={data.claveNuevaConfirmacion}
           autoComplete="off"
-          onKeyUp={uppercase}
+          onChange={handleInputChange}
           className={Global.InputStyle}
         />
       </div>
