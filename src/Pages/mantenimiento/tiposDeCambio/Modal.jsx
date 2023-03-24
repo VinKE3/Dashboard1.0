@@ -8,22 +8,21 @@ import { FaSearch } from "react-icons/fa";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
   useEffect(() => {
     data;
   }, [data]);
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
   const ValidarConsulta = (e) => {
     e.preventDefault();
@@ -37,12 +36,11 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     const res = await ApiMasy.get(
       `api/Servicio/ConsultarTipoCambio${filtroApi}`
     );
-    let model = {
+    setData({
       id: res.data.data.fecha,
       precioCompra: res.data.data.precioCompra,
       precioVenta: res.data.data.precioVenta,
-    };
-    setData(model);
+    });
     if (res.status == 200) {
       toast.success("Tipo de Cambio extraído exitosamente", {
         position: "bottom-right",
@@ -77,6 +75,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "TipoCambio"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className="flex">
         <label htmlFor="id" className={Global.LabelStyle}>
@@ -88,7 +87,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           name="id"
           readOnly={modo == "Consultar" ? true : false}
           value={moment(data.id).format("yyyy-MM-DD")}
-          onChange={handleChange}
+          onChange={ValidarData}
           className={Global.InputBoton}
         />
         <button
@@ -110,9 +109,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="precioCompra"
             name="precioCompra"
             autoComplete="off"
-            readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.precioCompra}
-            onChange={handleChange}
+            readOnly={modo == "Consultar" ? true : false}
+            value={data.precioCompra}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -125,9 +124,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="precioVenta"
             name="precioVenta"
             autoComplete="off"
-            readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.precioVenta}
-            onChange={handleChange}
+            readOnly={modo == "Consultar" ? true : false}
+            value={data.precioVenta}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>

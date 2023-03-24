@@ -5,22 +5,11 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState({
-    lineaId: "00",
-    subLineaId: "00",
-    descripcion: "",
-  });
+  const [data, setData] = useState(objeto);
   const [dataLinea, setDataLinea] = useState([]);
   //#endregion
 
   //#region useEffect.
-  useEffect(() => {
-    objeto;
-    console.log(modo != "Registrar");
-    if (modo != "Registrar") {
-      setData(objeto);
-    }
-  }, [objeto]);
   useEffect(() => {
     dataLinea;
     document.getElementById("lineaId").value = data.lineaId;
@@ -34,16 +23,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  function handleChange({ target }) {
+  const ValidarData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
-  }
-
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
+  };
   //#endregion
 
   //#region API
@@ -61,6 +46,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "SubLinea"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInput48}>
@@ -75,9 +61,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             maxLength="2"
             placeholder="00"
             readOnly={modo == "Registrar" ? false : true}
-            value={data.subLineaId}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            defaultValue={data.subLineaId}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -88,7 +73,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <select
             id="lineaId"
             name="lineaId"
-            onChange={handleChange}
+            onChange={ValidarData}
             disabled={modo == "Registrar" ? false : true}
             className={Global.SelectStyle}
           >
@@ -112,8 +97,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           placeholder="Descripción"
           readOnly={modo == "Consultar" ? true : false}
           value={data.descripcion}
-          onChange={handleChange}
-          onKeyUp={uppercase}
+          onChange={ValidarData}
           className={Global.InputStyle}
         />
       </div>

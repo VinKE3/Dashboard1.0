@@ -4,38 +4,22 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState({
-    id: "",
-    descripcion: "",
-  });
+  const [data, setData] = useState(objeto);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    objeto;
-    console.log(modo != "Registrar");
-    if (modo != "Registrar") {
-      setData(objeto);
-    }
-  }, [objeto]);
-
-  useEffect(() => {
     data;
-    console.log(data);
   }, [data]);
   //#endregion
 
-  //#region Funcion onChange y validación de campos
-  function handleChange({ target }) {
+  //#region Funciones
+  const ValidarData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
-  }
-
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
+  };
   //#endregion
 
   //#region  Render
@@ -46,6 +30,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Linea"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInput56}>
@@ -60,8 +45,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="00"
             readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.id}
-            onChange={handleChange}
+            value={data.id}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -77,8 +62,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             placeholder="Descripción"
             readOnly={modo == "Consultar" ? true : false}
             value={data.descripcion}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>

@@ -42,20 +42,16 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [men, setMen] = useState([]);
   const [respuesta, setRespuesta] = useState(false);
 
-  const [dataDireccion, setDataDireccion] = useState([]);
-  const [objetoDireccion, setObjetoDireccion] = useState([]);
-  const [dataUbiDirec, setDataUbiDirec] = useState([]);
-  const [estadoDireccion, setEstadoDireccion] = useState(false);
+  const [dataCcorriente, setDataCcorriente] = useState([]);
+  const [dataCcorrienteMoneda, setDataCcorrienteMoneda] = useState([]);
+  const [dataCcorrienteEntidad, setDataCcorrienteEntidad] = useState([]);
+  const [objetoCcorriente, setObjetoCcorriente] = useState([]);
+  const [estadoCcorriente, setEstadoCcorriente] = useState(false);
 
   const [dataContacto, setDataContacto] = useState([]);
   const [dataContactoCargo, setDataContactoCargo] = useState([]);
   const [objetoContacto, setObjetoContacto] = useState([]);
   const [estadoContacto, setEstadoContacto] = useState(false);
-
-  const [dataPersonal, setDataPersonal] = useState([]);
-  const [dataPersonalCombo, setDataPersonalCombo] = useState([]);
-  const [objetoPersonal, setObjetoPersonal] = useState([]);
-  const [estadoPersonal, setEstadoPersonal] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -99,25 +95,30 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataGeneral]);
 
   useEffect(() => {
-    dataDireccion;
-  }, [dataDireccion]);
+    dataCcorriente;
+  }, [dataCcorriente]);
   useEffect(() => {
-    dataUbiDirec;
-    if (Object.keys(dataUbiDirec).length > 0) {
-      setObjetoDireccion({
-        ...objetoDireccion,
-        departamentoId: dataUbiDirec.departamentoId,
-        provinciaId: dataUbiDirec.provinciaId,
-        distritoId: dataUbiDirec.distritoId,
-      });
+    objetoCcorriente;
+    if (Object.entries(objetoCcorriente).length > 0) {
+      if (document.getElementById("monedaId")) {
+        document.getElementById("monedaId").value = objetoCcorriente.monedaId;
+      }
+      if (document.getElementById("entidadBancariaId")) {
+        document.getElementById("entidadBancariaId").value =
+          objetoCcorriente.entidadBancariaId;
+      }
     }
-  }, [dataUbiDirec]);
+  }, [objetoCcorriente]);
   useEffect(() => {
-    objetoDireccion;
-  }, [objetoDireccion]);
+    dataCcorrienteMoneda;
+  }, [dataCcorrienteMoneda]);
   useEffect(() => {
-    estadoDireccion;
-  }, [estadoDireccion]);
+    dataCcorrienteEntidad;
+  }, [dataCcorrienteEntidad]);
+  useEffect(() => {
+    estadoCcorriente;
+  }, [estadoCcorriente]);
+
   useEffect(() => {
     dataContacto;
   }, [dataContacto]);
@@ -137,32 +138,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [estadoContacto]);
 
   useEffect(() => {
-    dataPersonal;
-  }, [dataPersonal]);
-  useEffect(() => {
-    objetoPersonal;
-    if (Object.entries(objetoPersonal).length > 0) {
-      if (document.getElementById("personalId")) {
-        document.getElementById("personalId").value = objetoPersonal.personalId;
-      }
-    }
-  }, [objetoPersonal]);
-  useEffect(() => {
-    dataPersonalCombo;
-  }, [dataPersonalCombo]);
-  useEffect(() => {
-    estadoPersonal;
-  }, [estadoPersonal]);
-
-  useEffect(() => {
     dataGeneral;
     Tablas();
     if (modo != "Registrar") {
-      ListarDireccion();
+      ListarCcorriente();
       ListarContacto();
-      ListarPersonal();
       TablasCargo();
-      TablasPersonal();
+      TablasCcorriente();
     }
   }, []);
   //#endregion
@@ -181,20 +163,14 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
-  const ValidarDataDireccion = async ({ target }) => {
-    setObjetoDireccion((prevState) => ({
+  const ValidarDataCcorriente = async ({ target }) => {
+    setObjetoCcorriente((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
   const ValidarDataContacto = async ({ target }) => {
     setObjetoContacto((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
-  };
-  const ValidarDataPersonal = async ({ target }) => {
-    setObjetoPersonal((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
@@ -212,14 +188,14 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     ConsultarDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
   };
-  const AgregarDireccion = async (e, id = 0) => {
+  const AgregarCcorriente = async (e, id = 0) => {
     await Limpiar(e);
     if (e.target.innerText == "AGREGAR") {
-      await LimpiarDireccion();
+      await LimpiarCcorriente();
     } else {
-      await GetDireccion(id);
+      await GetCcorriente(id);
     }
-    setEstadoDireccion(true);
+    setEstadoCcorriente(true);
   };
   const AgregarContacto = async (e, id = 0) => {
     await Limpiar(e);
@@ -230,15 +206,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     setEstadoContacto(true);
   };
-  const AgregarPersonal = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarPersonal();
-    } else {
-      await GetPersonal(id);
-    }
-    setEstadoPersonal(true);
-  };
   const Limpiar = async (e) => {
     if (e != null) {
       e.preventDefault();
@@ -247,22 +214,20 @@ const Modal = ({ setModal, modo, objeto }) => {
     setTipoMen(-1);
     setRespuesta(false);
   };
-  const LimpiarDireccion = async () => {
-    setObjetoDireccion({
-      id: 0,
-      clienteId: dataGeneral.id,
-      direccion: "",
-      departamentoId: "15",
-      provinciaId: "01",
-      distritoId: "01",
-      comentario: "",
-      isActivo: true,
+  const LimpiarCcorriente = async () => {
+    setObjetoCcorriente({
+      id: "",
+      proveedorId: dataGeneral.id,
+      cuentaCorrienteId: 0,
+      monedaId: "S",
+      numero: "",
+      entidadBancariaId: 11,
     });
   };
   const LimpiarContacto = async () => {
     setObjetoContacto({
       id: "",
-      clienteId: dataGeneral.id,
+      proveedorId: dataGeneral.id,
       contactoId: 0,
       nombres: "",
       numeroDocumentoIdentidad: "",
@@ -271,14 +236,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       cargoId: 2,
       correoElectronico: "",
       direccion: "",
-    });
-  };
-  const LimpiarPersonal = async () => {
-    setObjetoPersonal({
-      id: "",
-      clienteId: dataGeneral.id,
-      personalId: "<<NI>>01",
-      default: true,
     });
   };
   const RetornarMensaje = async () => {
@@ -293,13 +250,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         progress: undefined,
         theme: "dark",
       });
-      await ListarDireccion();
       await ListarContacto();
-      await ListarPersonal();
+      await ListarCcorriente();
       await Limpiar();
-      setEstadoDireccion(false);
       setEstadoContacto(false);
-      setEstadoPersonal(false);
+      setEstadoCcorriente(false);
     }
   };
   //#endregion
@@ -307,7 +262,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region API
   const Tablas = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Cliente/FormularioTablas`
+      `api/Mantenimiento/Proveedor/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
   };
@@ -319,23 +274,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         numeroDocumentoIdentidad: res.data.data.numeroDocumentoIdentidad,
         nombre: res.data.data.nombre,
         direccionPrincipal: res.data.data.direccion,
-        departamentoId: res.data.data.ubigeo[0],
-        provinciaId: res.data.data.ubigeo[1],
-        distritoId: res.data.data.ubigeo[2],
       };
-      setData({
+      setDataGeneral({
         ...dataGeneral,
         numeroDocumentoIdentidad: model.numeroDocumentoIdentidad,
         nombre: model.nombre,
         direccionPrincipal: model.direccionPrincipal,
-        departamentoId:
-          model.departamentoId == ""
-            ? dataGeneral.departamentoId
-            : model.departamentoId,
-        provinciaId:
-          model.provinciaId == "" ? dataGeneral.provinciaId : model.provinciaId,
-        distritoId:
-          model.distritoId == "" ? dataGeneral.distritoId : model.distritoId,
       });
       toast.success("Datos extraídos exitosamente", {
         position: "bottom-right",
@@ -363,30 +307,37 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
 
-  const ListarDireccion = async () => {
+  const TablasCcorriente = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${dataGeneral.id}`
+      `api/Mantenimiento/ProveedorCuentaCorriente/FormularioTablas`
     );
-    setDataDireccion(result.data.data);
+    setDataCcorrienteMoneda(result.data.data.monedas);
+    setDataCcorrienteEntidad(result.data.data.entidadesBancarias);
   };
-  const GetDireccion = async (id) => {
+  const ListarCcorriente = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteDireccion/${id}`
+      `api/Mantenimiento/ProveedorCuentaCorriente/ListarPorProveedor?proveedorId=${dataGeneral.id}`
     );
-    setObjetoDireccion(result.data.data);
+    setDataCcorriente(result.data.data);
   };
-  const EnviarClienteDireccion = async () => {
-    if (objetoDireccion.id == 0) {
+  const GetCcorriente = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/ProveedorCuentaCorriente/${id}`
+    );
+    setObjetoCcorriente(result.data.data);
+  };
+  const EnviarCcorriente = async () => {
+    if (objetoCcorriente.id == 0) {
       await Insert(
-        ["Mantenimiento", "ClienteDireccion"],
-        objetoDireccion,
+        ["Mantenimiento", "ProveedorCuentaCorriente"],
+        objetoCcorriente,
         setTipoMen,
         setMen
       );
     } else {
       await Update(
-        ["Mantenimiento", "ClienteDireccion"],
-        objetoDireccion,
+        ["Mantenimiento", "ProveedorCuentaCorriente"],
+        objetoCcorriente,
         setTipoMen,
         setMen
       );
@@ -395,74 +346,34 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   const TablasCargo = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteContacto/FormularioTablas`
+      `api/Mantenimiento/ProveedorContacto/FormularioTablas`
     );
     setDataContactoCargo(result.data.data.cargos);
   };
   const ListarContacto = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteContacto/ListarPorCliente?clienteId=${dataGeneral.id}`
+      `api/Mantenimiento/ProveedorContacto/ListarPorProveedor?proveedorId=${dataGeneral.id}`
     );
     setDataContacto(result.data.data);
   };
   const GetContacto = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/ClienteContacto/${id}`);
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/ProveedorContacto/${id}`
+    );
     setObjetoContacto(result.data.data);
   };
-  const EnviarClienteContacto = async () => {
+  const EnviarContacto = async () => {
     if (objetoContacto.id == 0) {
       await Insert(
-        ["Mantenimiento", "ClienteContacto"],
+        ["Mantenimiento", "ProveedorContacto"],
         objetoContacto,
         setTipoMen,
         setMen
       );
     } else {
       await Update(
-        ["Mantenimiento", "ClienteContacto"],
+        ["Mantenimiento", "ProveedorContacto"],
         objetoContacto,
-        setTipoMen,
-        setMen
-      );
-    }
-  };
-
-  const TablasPersonal = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/ClientePersonal/FormularioTablas`
-    );
-    let model = result.data.data.personal.map((res) => ({
-      id: res.id,
-      personal:
-        res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-    }));
-    setDataPersonalCombo(model);
-  };
-  const ListarPersonal = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/ClientePersonal/ListarPorCliente?clienteId=${dataGeneral.id}`
-    );
-    let model = result.data.data.map((res) => ({
-      id: res.id,
-      personal:
-        res.personal.apellidoPaterno +
-        " " +
-        res.personal.apellidoMaterno +
-        " " +
-        res.personal.nombres,
-      numeroDocumentoIdentidad: res.personal.numeroDocumentoIdentidad,
-    }));
-    setDataPersonal(model);
-  };
-  const GetPersonal = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/ClientePersonal/${id}`);
-    setObjetoPersonal(result.data.data);
-  };
-  const EnviarClientePersonal = async () => {
-    if (objetoPersonal.id == "") {
-      await Insert(
-        ["Mantenimiento", "ClientePersonal"],
-        objetoPersonal,
         setTipoMen,
         setMen
       );
@@ -471,14 +382,14 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Columnas
-  const colDireccion = [
+  const colCcorriente = [
     {
       Header: "id",
       accessor: "id",
     },
     {
-      Header: "Direcciones Secundarias",
-      accessor: "direccion",
+      Header: "Cuenta Corriente",
+      accessor: "numero",
     },
     {
       Header: "Acciones",
@@ -491,7 +402,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={(e) => AgregarDireccion(e, row.values.id)}
+                  onClick={(e) => AgregarCcorriente(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -505,7 +416,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onClick={(e) => {
                     e.preventDefault();
                     Delete(
-                      ["Mantenimiento", "ClienteDireccion"],
+                      ["Mantenimiento", "ProveedorCuentaCorriente"],
                       row.values.id,
                       setRespuesta
                     );
@@ -560,51 +471,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onClick={(e) => {
                     e.preventDefault();
                     Delete(
-                      ["Mantenimiento", "ClienteContacto"],
-                      row.values.id,
-                      setRespuesta
-                    );
-                  }}
-                  className="p-0 px-1"
-                  title="Click para eliminar registro"
-                >
-                  <FaTrashAlt></FaTrashAlt>
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      ),
-    },
-  ];
-  const colPersonal = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Nombres",
-      accessor: "personal",
-    },
-    {
-      Header: "Documento",
-      accessor: "numeroDocumentoIdentidad",
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <div className="flex item-center justify-center">
-          {modo == "Consultar" ? (
-            ""
-          ) : (
-            <>
-              <div className={Global.TablaBotonEliminar}>
-                <button
-                  id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    Delete(
-                      ["Mantenimiento", "ClientePersonal"],
+                      ["Mantenimiento", "ProveedorContacto"],
                       row.values.id,
                       setRespuesta
                     );
@@ -629,7 +496,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setModal={setModal}
       objeto={dataGeneral}
       modo={modo}
-      menu={["Mantenimiento", "Cliente"]}
+      menu={["Mantenimiento", "Proveedor"]}
       tamañoModal={[Global.ModalGrande, Global.FormTabs]}
     >
       <TabView>
@@ -675,7 +542,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   placeholder="Número Documento Identidad"
                   readOnly={modo == "Consultar" ? true : false}
-                  value={dataGeneral.numeroDocumentoIdentidad}
+                  value={
+                    dataGeneral.numeroDocumentoIdentidad == null
+                      ? ""
+                      : dataGeneral.numeroDocumentoIdentidad
+                  }
                   onChange={ValidarData}
                   className={Global.InputBoton}
                 />
@@ -700,7 +571,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 placeholder="Nombre"
                 readOnly={modo == "Consultar" ? true : false}
-                value={dataGeneral.nombre}
+                value={dataGeneral.nombre == null ? "" : dataGeneral.nombre}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
@@ -717,7 +588,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   placeholder="Teléfono"
                   readOnly={modo == "Consultar" ? true : false}
-                  value={dataGeneral.telefono}
+                  value={
+                    dataGeneral.telefono == null ? "" : dataGeneral.telefono
+                  }
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -736,7 +609,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   placeholder="Correo"
                   readOnly={modo == "Consultar" ? true : false}
-                  value={dataGeneral.correoElectronico}
+                  value={
+                    dataGeneral.correoElectronico == null
+                      ? ""
+                      : dataGeneral.correoElectronico
+                  }
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -753,7 +630,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 placeholder="Dirección Principal"
                 readOnly={modo == "Consultar" ? true : false}
-                value={dataGeneral.direccionPrincipal}
+                value={
+                  dataGeneral.direccionPrincipal == null
+                    ? ""
+                    : dataGeneral.direccionPrincipal
+                }
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
@@ -772,9 +653,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         </TabPanel>
         {modo != "Registrar" ? (
           <TabPanel
-            header="Direcciones"
-            leftIcon="pi pi-home mr-2"
-            className="text-yellow-500"
+            header="Cuentas Corrientes"
+            leftIcon="pi pi-money-bill mr-2"
           >
             {/* Boton */}
             {modo == "Consultar" ? (
@@ -783,9 +663,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <>
                 <Mensajes
                   tipoMensaje={2}
-                  mensaje={[
-                    "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
-                  ]}
+                  mensaje={[Global.MensajeInformacion]}
                   cerrar={false}
                 />
                 <BotonBasico
@@ -793,15 +671,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                   botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
                   botonIcon={faPlus}
                   click={(e) => {
-                    AgregarDireccion(e);
+                    AgregarCcorriente(e);
                   }}
                 />
               </>
             )}
             {/* Boton */}
 
-            {/* Form Direcciones */}
-            {estadoDireccion && (
+            {/* Form Cuenta Corriente */}
+            {estadoCcorriente && (
               <div className={Global.FormSecundario}>
                 {tipoMen > 0 && (
                   <Mensajes
@@ -814,32 +692,65 @@ const Modal = ({ setModal, modo, objeto }) => {
                     }}
                   />
                 )}
-                <div className="flex">
-                  <label htmlFor="direccion" className={Global.LabelStyle}>
-                    Dirección
-                  </label>
-                  <input
-                    type="text"
-                    id="direccion"
-                    name="direccion"
-                    autoComplete="off"
-                    placeholder="Dirección secundaria"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={objetoDireccion.direccion}
-                    onChange={ValidarDataDireccion}
-                    className={Global.InputStyle}
-                  />
+
+                <div className={Global.ContenedorVarios}>
+                  <div className={Global.ContenedorInput40pct}>
+                    <label htmlFor="monedaId" className={Global.LabelStyle}>
+                      Moneda
+                    </label>
+                    <select
+                      id="monedaId"
+                      name="monedaId"
+                      onChange={ValidarDataCcorriente}
+                      disabled={modo == "Consultar" ? true : false}
+                      className={Global.SelectStyle}
+                    >
+                      {dataCcorrienteMoneda.map((map) => (
+                        <option key={map.id} value={map.id}>
+                          {map.abreviatura}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={Global.ContenedorInputFull}>
+                    <label htmlFor="numero" className={Global.LabelStyle}>
+                      Número
+                    </label>
+                    <input
+                      type="text"
+                      id="numero"
+                      name="numero"
+                      autoComplete="off"
+                      maxLength="60"
+                      placeholder="Número"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={objetoCcorriente.numero}
+                      onChange={ValidarDataCcorriente}
+                      className={Global.InputStyle}
+                    />
+                  </div>
                 </div>
-                <Ubigeo
-                  modo={modo}
-                  setDataUbigeo={setDataUbiDirec}
-                  id={["depaId", "provId", "disId"]}
-                  dato={{
-                    departamentoId: objetoDireccion.departamentoId,
-                    provinciaId: objetoDireccion.provinciaId,
-                    distritoId: objetoDireccion.distritoId,
-                  }}
-                ></Ubigeo>
+                <div className="flex">
+                  <label
+                    htmlFor="entidadBancariaId"
+                    className={Global.LabelStyle}
+                  >
+                    E.B.
+                  </label>
+                  <select
+                    id="entidadBancariaId"
+                    name="entidadBancariaId"
+                    onChange={ValidarDataCcorriente}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.SelectStyle}
+                  >
+                    {dataCcorrienteEntidad.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 {/*footer*/}
                 <div className="flex items-center justify-start">
                   {modo == "Consultar" ? (
@@ -847,7 +758,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ) : (
                     <button
                       type="button"
-                      onClick={EnviarClienteDireccion}
+                      onClick={EnviarCcorriente}
                       className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
                     >
                       Guardar
@@ -855,7 +766,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   )}
                   <button
                     type="button"
-                    onClick={() => setEstadoDireccion(false)}
+                    onClick={() => setEstadoCcorriente(false)}
                     className={
                       Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
                     }
@@ -866,10 +777,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/*footer*/}
               </div>
             )}
-            {/* Form Direcciones */}
+            {/* Form Cuenta Corriente */}
             {/* Tabla */}
             <TablaStyle>
-              <TableBasic columnas={colDireccion} datos={dataDireccion} />
+              <TableBasic columnas={colCcorriente} datos={dataCcorriente} />
             </TablaStyle>
             {/* Tabla */}
           </TabPanel>
@@ -885,9 +796,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <>
                 <Mensajes
                   tipoMensaje={2}
-                  mensaje={[
-                    "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
-                  ]}
+                  mensaje={[Global.MensajeInformacion]}
                   cerrar={false}
                 />
                 <BotonBasico
@@ -1053,7 +962,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ) : (
                     <button
                       type="button"
-                      onClick={EnviarClienteContacto}
+                      onClick={EnviarContacto}
                       className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
                     >
                       Guardar
@@ -1076,103 +985,6 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Tabla */}
             <TablaStyle>
               <TableBasic columnas={colContacto} datos={dataContacto} />
-            </TablaStyle>
-            {/* Tabla */}
-          </TabPanel>
-        ) : (
-          ""
-        )}
-        {modo != "Registrar" ? (
-          <TabPanel header="Personal" leftIcon="pi pi-user mr-2">
-            {/* Boton */}
-            {modo == "Consultar" ? (
-              ""
-            ) : (
-              <>
-                <Mensajes
-                  tipoMensaje={2}
-                  mensaje={[
-                    "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
-                  ]}
-                  cerrar={false}
-                />
-                <BotonBasico
-                  botonText="Agregar"
-                  botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
-                  botonIcon={faPlus}
-                  click={(e) => {
-                    AgregarPersonal(e);
-                  }}
-                />
-              </>
-            )}
-            {/* Boton */}
-
-            {/* Form Personal */}
-            {estadoPersonal && (
-              <div className={Global.FormSecundario}>
-                {tipoMen > 0 && (
-                  <Mensajes
-                    tipoMensaje={tipoMen}
-                    mensaje={men}
-                    Click={(e) => {
-                      e.preventDefault();
-                      setMen([]);
-                      setTipoMen(-1);
-                    }}
-                  />
-                )}
-
-                <div className={Global.ContenedorVarios}>
-                  <div className={Global.ContenedorInputFull}>
-                    <label htmlFor="personalId" className={Global.LabelStyle}>
-                      Personal
-                    </label>
-                    <select
-                      id="personalId"
-                      name="personalId"
-                      onChange={ValidarDataPersonal}
-                      disabled={modo == "Consultar" ? true : false}
-                      className={Global.SelectStyle}
-                    >
-                      {dataPersonalCombo.map((personal) => (
-                        <option key={personal.id} value={personal.id}>
-                          {personal.personal}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-start">
-                  {modo == "Consultar" ? (
-                    ""
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={EnviarClientePersonal}
-                      className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                    >
-                      Guardar
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setEstadoPersonal(false)}
-                    className={
-                      Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                    }
-                  >
-                    CERRAR
-                  </button>
-                </div>
-                {/*footer*/}
-              </div>
-            )}
-            {/* Form Personal */}
-            {/* Tabla */}
-            <TablaStyle>
-              <TableBasic columnas={colPersonal} datos={dataPersonal} />
             </TablaStyle>
             {/* Tabla */}
           </TabPanel>

@@ -8,8 +8,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/ContextAuth";
+import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../Components/Global";
 
 //#region Estilos
@@ -36,17 +36,16 @@ const Marcas = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false]);
+  const [permisos, setPermisos] = useState([true, true, true, true]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
-  const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     if (usuario == "AD") {
-      setPermisos([true, true, true, false]);
+      setPermisos([true, true, true, true]);
       Listar(filtro, 1);
     } else {
       //Consulta a la Api para traer los permisos
@@ -215,7 +214,6 @@ const Marcas = () => {
       {modal && (
         <Modal
           setModal={setModal}
-          setRespuestaModal={setRespuestaModal}
           modo={modo}
           objeto={objeto}
         />

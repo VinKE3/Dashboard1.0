@@ -28,11 +28,39 @@ const Table = ({ columnas, datos, total, index, Click }) => {
 
   //#region Fila Seleccionable
   const Seleccionar = (e) => {
-    let filas = document.querySelectorAll("tr");
-    filas.forEach((f) => {
-      f.classList.remove("selected-row");
-    });
-    e.target.parentNode.classList.add("selected-row");
+    if (e.target.tagName == "DIV") {
+      let padre = e.target.parentNode.parentNode;
+      if (padre.tagName == "TD") {
+        let hijo = padre.parentNode;
+        if (hijo.classList.contains("selected-row")) {
+          hijo.classList.remove("selected-row");
+        } else {
+          document.querySelectorAll("*").forEach((f) => {
+            f.classList.remove("selected-row");
+          });
+          hijo.classList.add("selected-row");
+        }
+      } else {
+        if (padre.classList.contains("selected-row")) {
+          padre.classList.remove("selected-row");
+        } else {
+          document.querySelectorAll("*").forEach((f) => {
+            f.classList.remove("selected-row");
+          });
+          padre.classList.add("selected-row");
+        }
+      }
+    }
+    if (e.target.tagName == "TD") {
+      if (e.target.parentNode.classList.contains("selected-row")) {
+        e.target.parentNode.classList.remove("selected-row");
+      } else {
+        document.querySelectorAll("*").forEach((f) => {
+          f.classList.remove("selected-row");
+        });
+        e.target.parentNode.classList.add("selected-row");
+      }
+    }
   };
   //#endregion
 
@@ -106,7 +134,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
               return (
                 <tr
                   {...row.getRowProps()}
-                  className="border-b border-secondary-900 hover:bg-gray-500"
+                  className="border-b border-secondary-900"
                   onClick={(e) => Seleccionar(e)}
                 >
                   {row.cells.map((cell) => {
@@ -166,7 +194,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
           breakLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
           nextLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
           previousLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 rounded-md"
-          activeLinkClassName="bg-gray-400 text-white"
+          activeLinkClassName="bg-gray-400 text-light"
         />
       </div>
     </div>

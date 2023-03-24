@@ -8,7 +8,9 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
+import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../Components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -27,6 +29,7 @@ const TablaStyle = styled.div`
 
 const Conductor = () => {
   //#region useState
+  const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
@@ -36,11 +39,18 @@ const Conductor = () => {
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
-  const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    if (usuario == "AD") {
+      setPermisos([true, true, true, true]);
+      Listar(filtro, 1);
+    } else {
+      //Consulta a la Api para traer los permisos
+    }
+  }, [usuario]);
   useEffect(() => {
     filtro;
   }, [filtro]);
@@ -185,7 +195,7 @@ const Conductor = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className="mb-4 py-2 text-xl font-bold">Conductor</h2>
+        <h2 className={Global.TituloH2}>Conductor</h2>
 
         {/* Filtro*/}
         <FiltroBasico
@@ -204,7 +214,7 @@ const Conductor = () => {
         {permisos[0] && (
           <BotonBasico
             botonText="Registrar"
-            botonClass="boton-crud-registrar"
+            botonClass={Global.BotonRegistrar}
             botonIcon={faPlus}
             click={() => AbrirModal()}
           />
@@ -224,14 +234,7 @@ const Conductor = () => {
         {/* Tabla */}
       </div>
 
-      {modal && (
-        <Modal
-          setModal={setModal}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
-      )}
+      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
       <ToastContainer />
     </>
   );

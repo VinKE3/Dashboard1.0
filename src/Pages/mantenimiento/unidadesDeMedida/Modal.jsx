@@ -4,26 +4,22 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
   useEffect(() => {
     data;
   }, [data]);
   //#endregion
 
   //#region Funcions
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   return (
@@ -33,9 +29,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "UnidadMedida"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInput56}>
+        <div className={Global.ContenedorInputMitad}>
           <label htmlFor="id" className={Global.LabelStyle}>
             Código
           </label>
@@ -46,12 +43,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="00"
             readOnly
-            defaultValue={data.id}
-            onChange={handleChange}
+            value={data.id}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInputFull}>
+        <div className={Global.ContenedorInputMitad}>
           <label htmlFor="codigoSunat" className={Global.LabelStyle}>
             Código SUNAT
           </label>
@@ -62,9 +59,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Código SUNAT"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.codigoSunat}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            value={data.codigoSunat == null ? "" : data.codigoSunat}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -80,9 +76,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Descripción"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.descripcion}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            value={data.descripcion == null ? "" : data.descripcion}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>

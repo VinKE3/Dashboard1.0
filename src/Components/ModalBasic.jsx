@@ -11,11 +11,10 @@ import Update from "./CRUD/Update";
 const ModalBasic = ({
   children,
   setModal,
-  setRespuestaModal,
   objeto,
   modo,
   menu,
-  tamañoModal = [Global.ModalMediano, Global.FormSimple],
+  tamañoModal = [Global.ModalPequeño, Global.FormSimple],
 }) => {
   //#region useState
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -48,7 +47,6 @@ const ModalBasic = ({
         progress: undefined,
         theme: "dark",
       });
-      setRespuestaModal(true);
       setModal(false);
     }
   };
@@ -57,7 +55,6 @@ const ModalBasic = ({
     setTipoMensaje(-1);
   };
   const CerrarModal = () => {
-    setRespuestaModal(false);
     setModal(false);
   };
   //#endregion
@@ -79,9 +76,9 @@ const ModalBasic = ({
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div className="border-none rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none shadow-light/50">
+          <div className="border-none rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex py-2 px-5 border-b rounded-t border-light">
+            <div className="flex pt-4 pb-0 px-4 rounded-tt">
               <h3 className="text-3xl md:text-2xl font-semibold text-light">
                 {modo + " " + menu[1]}
               </h3>

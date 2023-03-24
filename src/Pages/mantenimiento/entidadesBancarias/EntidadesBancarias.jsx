@@ -8,8 +8,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/ContextAuth";
+import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../Components/Global";
 
 //#region Estilos
@@ -36,10 +36,9 @@ const EntidadesBancarias = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false]);
+  const [permisos, setPermisos] = useState([true, true, true, true]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
-  const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
@@ -91,7 +90,7 @@ const EntidadesBancarias = () => {
   };
   //#endregion
 
-  //#region Funciones Filtrado
+  //#region Funciones
   const FiltradoPaginado = (e) => {
     let filtro = document.getElementById("nombre").value;
     let boton = e.selected + 1;
@@ -220,7 +219,6 @@ const EntidadesBancarias = () => {
       {modal && (
         <Modal
           setModal={setModal}
-          setRespuestaModal={setRespuestaModal}
           modo={modo}
           objeto={objeto}
         />

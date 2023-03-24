@@ -5,15 +5,11 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   const [dataModal, setdataModal] = useState([]);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
   useEffect(() => {
     dataModal;
     document.getElementById("tipo").value = data.tipo;
@@ -27,8 +23,11 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funcions
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
   //#endregion
 
@@ -48,9 +47,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "EntidadBancaria"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInput48}>
+        <div className={Global.ContenedorInput40pct}>
           <label htmlFor="id" className={Global.LabelStyle}>
             Código
           </label>
@@ -61,12 +61,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="00"
             readOnly
-            defaultValue={data.id}
-            onChange={handleChange}
+            value={data.id}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInput72}>
+        <div className={Global.ContenedorInputFull}>
           <label
             htmlFor="numeroDocumentoIdentidad"
             className={Global.LabelStyle}
@@ -81,19 +81,19 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             maxLength="11"
             placeholder="00000000000"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.numeroDocumentoIdentidad}
-            onChange={handleChange}
+            value={data.numeroDocumentoIdentidad}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInput56}>
+        <div className={Global.ContenedorInput42pct}>
           <label htmlFor="tipo" className={Global.LabelStyle}>
             Tipo
           </label>
           <select
             id="tipo"
             name="tipo"
-            onChange={handleChange}
+            onChange={ValidarData}
             disabled={modo == "Consultar" ? true : false}
             className={Global.SelectStyle}
           >
@@ -116,8 +116,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           autoComplete="off"
           placeholder="Nombre"
           readOnly={modo == "Registrar" ? false : true}
-          defaultValue={data.nombre}
-          onChange={handleChange}
+          value={data.nombre}
+          onChange={ValidarData}
           className={Global.InputStyle}
         />
       </div>

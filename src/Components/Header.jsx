@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { FaBuilding } from "react-icons/fa";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
@@ -9,7 +9,6 @@ import { useAuth } from "../context/ContextAuth";
 
 const Header = () => {
   const { usuario } = useAuth();
-
   return (
     <header className="h-[10vh] border-b border-b-primario p-8 items-center pb-8 lg:pb-0">
       <nav className="flex items-center justify-between">

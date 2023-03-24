@@ -8,8 +8,8 @@ import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../../context/ContextAuth";
+import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../Components/Global";
 
 //#region Estilos
@@ -48,7 +48,6 @@ const Clientes = () => {
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
-  const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
@@ -168,7 +167,7 @@ const Clientes = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         id: "000000",
         tipoDocumentoIdentidadId: "1",
         numeroDocumentoIdentidad: "",
@@ -187,8 +186,7 @@ const Clientes = () => {
         maximoCreditoPEN: 0,
         observacion: "",
         direccionPrincipalId: 0,
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(id);
     }
@@ -246,7 +244,7 @@ const Clientes = () => {
               type="text"
               name="documento"
               id="documento"
-              autoFocus
+              autoComplete="off"
               placeholder="Número Documento Identidad"
               onChange={FiltradoDocumento}
               className={Global.InputStyle}
@@ -262,6 +260,7 @@ const Clientes = () => {
               name="nombre"
               id="nombre"
               autoFocus
+              autoComplete="off"
               placeholder="Nombre"
               onChange={FiltradoNombre}
               className={Global.InputBoton}
@@ -301,14 +300,7 @@ const Clientes = () => {
         {/* Tabla */}
       </div>
 
-      {modal && (
-        <Modal
-          setModal={setModal}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
-      )}
+      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
       <ToastContainer />
     </>
   );

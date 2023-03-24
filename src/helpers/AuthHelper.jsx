@@ -3,14 +3,25 @@ import store from "store2";
 const getStorage = () =>
   store.session("access_token") ? store.session : store.local;
 
+// const getUsuarioStorage = () =>
+//   store.session("usuario") ? store.session : store.local;
+const getUsuarioStorage = () =>
+  getStorage()("usuario") ? getStorage() : store.local;
+
 const getToken = () => {
   const storage = getStorage();
   return storage("access_token");
 };
 
+const getUsuario = () => {
+  const storage = getUsuarioStorage();
+  return storage("usuario");
+};
+
 const isAuthenticated = () => {
   const token = getToken();
-  return token !== null;
+  const jwtDecoded = getUsuario();
+  return token !== null && jwtDecoded !== null;
 };
 
 const isTokenExpired = () => {
@@ -23,7 +34,10 @@ const isTokenExpired = () => {
 
 function getAccessToken() {
   if (isAuthenticated()) {
-    return getToken();
+    return {
+      token: getToken(),
+      usuario: getUsuario(),
+    };
   }
   if (isTokenExpired()) {
     borrarTokens();
@@ -37,8 +51,14 @@ const borrarTokens = () => {
   store.local.remove("access_token");
 };
 
+const borrarUsuario = () => {
+  store.session.remove("usuario");
+  store.local.remove("usuario");
+};
+
 function borrarTodosLosTokens() {
   borrarTokens();
+  borrarUsuario();
 }
 
 function login(data) {
@@ -47,8 +67,20 @@ function login(data) {
   store.session("access_token", token);
 }
 
+// function loginUsuario(data) {
+//   const { usuario } = data;
+//   store.local("usuario", usuario);
+//   store.session("usuario", usuario);
+// }
+
+function loginUsuario(data) {
+  const { usuario } = data;
+  store.local("usuario", usuario.jwtDecoded);
+  store.session("usuario", usuario.jwtDecoded);
+}
 export const authHelper = {
   getAccessToken,
   borrarTodosLosTokens,
   login,
+  loginUsuario,
 };

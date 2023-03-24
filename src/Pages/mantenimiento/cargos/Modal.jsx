@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../Components/Global";
 
-const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState([]);
-
   //#endregion
 
   //#region useEffect
@@ -16,30 +15,24 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   useEffect(() => {
     data;
   }, [data]);
-
   //#endregion
 
   //#region Funciones
   function uppercase(value) {
-    if (value && typeof value === "string") {
-      return value.toUpperCase();
-    }
-    return value;
+    return value.toUpperCase();
   }
-
   const handleChange = ({ target }) => {
     const value = uppercase(target.value);
     setData({ ...data, [target.name]: value });
   };
-
   //#endregion
   return (
     <ModalBasic
       setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Cargo"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInputFull}>
@@ -55,6 +48,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             readOnly={modo == "Consultar" ? true : false}
             defaultValue={data.descripcion}
             onChange={handleChange}
+            onKeyUp={uppercase}
             className={Global.InputStyle}
           />
         </div>

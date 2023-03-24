@@ -4,26 +4,22 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
   useEffect(() => {
     data;
   }, [data]);
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   //#region Render
@@ -34,6 +30,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Departamento"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInput56}>
@@ -48,8 +45,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="00"
             readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.id}
-            onChange={handleChange}
+            value={data.id}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -64,9 +61,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Departamento"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.nombre}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            value={data.nombre}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>

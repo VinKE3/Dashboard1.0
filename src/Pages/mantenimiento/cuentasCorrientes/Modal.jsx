@@ -5,17 +5,13 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   const [dataTCuenta, setdataTCuenta] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataEntidad, setDataEntidad] = useState([]);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
   useEffect(() => {
     dataTCuenta;
     document.getElementById("tipoCuentaDescripcion").value =
@@ -27,8 +23,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [dataMoneda]);
   useEffect(() => {
     dataEntidad;
-    document.getElementById("entidadBancariaId").value =
-      data.entidadBancariaId;
+    document.getElementById("entidadBancariaId").value = data.entidadBancariaId;
   }, [dataEntidad]);
   useEffect(() => {
     data;
@@ -39,12 +34,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   //#region API
@@ -66,9 +61,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "CuentaCorriente"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInput48}>
+        <div className={Global.ContenedorInput40pct}>
           <label htmlFor="cuentaCorrienteId" className={Global.LabelStyle}>
             Código
           </label>
@@ -79,19 +75,19 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="00"
             readOnly
-            defaultValue={data.cuentaCorrienteId}
-            onChange={handleChange}
+            value={data.cuentaCorrienteId}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInput72}>
+        <div className={Global.ContenedorInputFull}>
           <label htmlFor="tipoCuentaDescripcion" className={Global.LabelStyle}>
             T.Cuenta
           </label>
           <select
             id="tipoCuentaDescripcion"
             name="tipoCuentaDescripcion"
-            onChange={handleChange}
+            onChange={ValidarData}
             disabled={modo == "Consultar" ? true : false}
             className={Global.SelectStyle}
           >
@@ -102,14 +98,14 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             ))}
           </select>
         </div>
-        <div className={Global.ContenedorInput56}>
+        <div className={Global.ContenedorInput40pct}>
           <label htmlFor="monedaId" className={Global.LabelStyle}>
             Moneda
           </label>
           <select
             id="monedaId"
             name="monedaId"
-            onChange={handleChange}
+            onChange={ValidarData}
             disabled={modo == "Consultar" ? true : false}
             className={Global.SelectStyle}
           >
@@ -129,7 +125,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <select
             id="entidadBancariaId"
             name="entidadBancariaId"
-            onChange={handleChange}
+            onChange={ValidarData}
             disabled={modo == "Consultar" ? true : false}
             className={Global.SelectStyle}
           >
@@ -151,9 +147,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             maxLength="25"
             placeholder="Número de cuenta"
-            readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.numero}
-            onChange={handleChange}
+            readOnly={modo == "Consulta" ? true : false}
+            value={data.numero}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -168,10 +164,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           name="observacion"
           autoComplete="off"
           placeholder="Observación"
-          readOnly={modo == "Registrar" ? false : true}
-          defaultValue={data.observacion}
-          onChange={handleChange}
-          onKeyUp={uppercase}
+          readOnly={modo == "Consulta" ? true : false}
+          value={data.observacion == null ? "" : data.observacion}
+          onChange={ValidarData}
           className={Global.InputStyle}
         />
       </div>

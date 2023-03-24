@@ -34,10 +34,9 @@ const TipodeCambio = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false]);
+  const [permisos, setPermisos] = useState([true, true, true, true]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
-  const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
@@ -318,7 +317,6 @@ const TipodeCambio = () => {
       {modal && (
         <Modal
           setModal={setModal}
-          setRespuestaModal={setRespuestaModal}
           modo={modo}
           objeto={objeto}
         />

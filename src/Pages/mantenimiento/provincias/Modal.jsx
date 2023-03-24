@@ -5,15 +5,11 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   const [dataDepartamento, setDataDepartamento] = useState([]);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
   useEffect(() => {
     dataDepartamento;
     document.getElementById("departamentoId").value = data.departamentoId;
@@ -27,12 +23,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   //#region Funciones API
@@ -50,6 +46,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Provincia"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInput48}>
@@ -64,9 +61,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             maxLength="2"
             placeholder="00"
             readOnly={modo == "Registrar" ? false : true}
-            defaultValue={data.provinciaId}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            value={data.provinciaId}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -77,7 +73,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <select
             id="departamentoId"
             name="departamentoId"
-            onChange={handleChange}
+            onChange={ValidarData}
             disabled={modo == "Registrar" ? false : true}
             className={Global.SelectStyle}
           >
@@ -100,9 +96,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           autoComplete="off"
           placeholder="Provincia"
           readOnly={modo == "Consultar" ? true : false}
-          defaultValue={data.nombre}
-          onChange={handleChange}
-          onKeyUp={uppercase}
+          value={data.nombre}
+          onChange={ValidarData}
           className={Global.InputStyle}
         />
       </div>

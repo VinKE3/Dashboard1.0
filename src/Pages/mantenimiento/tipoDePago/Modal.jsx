@@ -5,15 +5,11 @@ import * as Global from "../../../Components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   const [dataModal, setdataModal] = useState([]);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
   useEffect(() => {
     dataModal;
     document.getElementById("tipoVentaCompraId").value = data.tipoVentaCompraId;
@@ -27,12 +23,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
-    setData({ ...data, [target.name]: target.value });
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   //#region API
@@ -52,6 +48,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "TipoCobroPago"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInputFull}>
@@ -65,13 +62,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Descripción"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.descripcion}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            value={data.descripcion}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInput72}>
+        <div className={Global.ContenedorInput42pct}>
           <label htmlFor="abreviatura" className={Global.LabelStyle}>
             Abreviatura
           </label>
@@ -79,11 +75,11 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             type="text"
             id="abreviatura"
             name="abreviatura"
+            autoComplete="off"
             placeholder="Abreviatura"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.abreviatura}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            value={data.abreviatura}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -97,7 +93,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="tipoVentaCompraId"
             name="tipoVentaCompraId"
             disabled={modo == "Registrar" ? false : true}
-            onChange={handleChange}
+            onChange={ValidarData}
             className={Global.SelectStyle}
           >
             {dataModal.map((forma) => (
@@ -107,7 +103,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             ))}
           </select>
         </div>
-        <div className={Global.ContenedorInput72}>
+        <div className={Global.ContenedorInput42pct}>
           <label htmlFor="plazo" className={Global.LabelStyle}>
             Plazo
           </label>
@@ -115,9 +111,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             type="number"
             id="plazo"
             name="plazo"
-            defaultValue={data.plazo}
+            value={data.plazo}
             readOnly={modo == "Consultar" ? true : false}
-            onChange={handleChange}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
