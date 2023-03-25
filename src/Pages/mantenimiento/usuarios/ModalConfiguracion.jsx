@@ -51,16 +51,16 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [selectedActions, setSelectedActions] = useState({});
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
   const [dataPermisos, setDataPermisos] = useState([]);
-  // const activeButtons = {};
-  // data.permisos.forEach((permiso) => {
-  //   if (permiso.menuId === selectedMenu) {
-  //     activeButtons.registrar = permiso.registrar;
-  //     activeButtons.modificar = permiso.modificar;
-  //     activeButtons.eliminar = permiso.eliminar;
-  //     activeButtons.consultar = permiso.consultar;
-  //     activeButtons.anular = permiso.anular;
-  //   }
-  // });
+  const activeButtons = {};
+  data.permisos.forEach((permiso) => {
+    if (permiso.menuId === selectedMenu) {
+      activeButtons.registrar = permiso.registrar;
+      activeButtons.modificar = permiso.modificar;
+      activeButtons.eliminar = permiso.eliminar;
+      activeButtons.consultar = permiso.consultar;
+      activeButtons.anular = permiso.anular;
+    }
+  });
   //#endregion
 
   //#region useEffect
@@ -71,7 +71,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
     }
     setDataPermisos(data.permisos);
-    console.log(data.permisos);
   }, [data]);
 
   useEffect(() => {
@@ -138,11 +137,10 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     });
     setSelectedMenu(event.target.innerText);
     handleSelectAllActions();
-    setData({
-      ...data,
-      [event.target.innerText]: botones.map((item) => item.value),
-    });
-    console.log(data);
+    setSelectedActions((prev) => ({
+      ...prev,
+      [event.target.innerText]: getBotonesActivos(event.target.innerText),
+    }));
   };
 
   const handleSelectAllActions = () => {
@@ -152,6 +150,32 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       [selectedMenu]: botones.map((item) => item.value),
     });
     console.log(data);
+  };
+
+  const handleSelectActions = (event) => {
+    setValue(event.value);
+    setChecked(event.value.length === botones.length);
+    setSelectedActions((prev) => ({
+      ...prev,
+      [selectedMenu]: event.value,
+    }));
+    setData({
+      ...data,
+      [selectedMenu]: event.value,
+    });
+    console.log(data);
+  };
+
+  const getBotonesActivos = (menuId) => {
+    const permiso = data.permisos.find((permiso) => permiso.menuId === menuId);
+    if (permiso) {
+      return botones.map((boton) => ({
+        ...boton,
+        active: permiso[boton.value],
+      }));
+    } else {
+      return botones;
+    }
   };
   //#endregion
 
@@ -238,31 +262,11 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 }));
                 setValue(e.value);
                 setChecked(e.value.length === botones.length);
-                const activeButtons = {};
-                data.permisos.map((permiso) => {
-                  // if (permiso.menuId === selectedMenu) {
-                  //   activeButtons.registrar = permiso.registrar;
-                  //   activeButtons.modificar = permiso.modificar;
-                  //   activeButtons.eliminar = permiso.eliminar;
-                  //   activeButtons.consultar = permiso.consultar;
-                  //   activeButtons.anular = permiso.anular;
-                  // }
-                  console.log(permiso);
-                });
-                setSelectedActions((prev) => ({
-                  ...prev,
-                  [selectedMenu]: activeButtons,
-                }));
               }}
-              active={
-                typeof selectedActions[selectedMenu] === "object" &&
-                selectedActions[selectedMenu] !== null
-                  ? { ...selectedActions[selectedMenu] }
-                  : {}
-              }
               optionLabel="name"
-              options={botones}
+              options={getBotonesActivos(selectedMenu)}
               multiple
+              active={selectedActions[selectedMenu] || []}
             />
           </div>
           <div className="mt-2 ml-2 flex gap-2">

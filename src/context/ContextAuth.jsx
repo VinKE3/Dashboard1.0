@@ -16,7 +16,7 @@ export const useAuth = () => {
 
 export const useAuthProvider = () => {
   const [token, setToken] = useState("");
-  const [usuario, setUsuario] = useState("");
+  const [usuario, setUsuario] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,19 +26,16 @@ export const useAuthProvider = () => {
     setToken(null);
     setUsuario(null);
     try {
-      const result = await ApiMasy.post(`/api/Sesion/Iniciar`, {
-        usuario: params.usuario,
-        clave: params.clave,
-      });
+      const result = await ApiMasy.post(`/api/Sesion/Iniciar`, params);
       if (result.status === 200) {
         const { token } = result.data.data;
-        var decoded = jwt_decode(token);
-        const usuario =
-          decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-        authHelper.login({ token, usuario }); // pasando ambos valores en un objeto data
         setToken(token);
-        setUsuario(usuario);
-        console.log("usuario", usuario);
+        var decoded = jwt_decode(token);
+        const jwtDecoded =
+          decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+        localStorage.setItem("usuario", jwtDecoded);
+        setUsuario(jwtDecoded);
+        authHelper.login(result.data.data);
       }
     } catch (error) {
       setError(error?.response);
