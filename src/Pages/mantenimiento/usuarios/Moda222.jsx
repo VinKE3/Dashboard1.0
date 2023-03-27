@@ -34,7 +34,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       },
     ],
   });
-  const [dataModal, setdataModal] = useState([]);
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState(null);
@@ -52,9 +51,34 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [selectedActions, setSelectedActions] = useState({});
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
   const [dataPermisos, setDataPermisos] = useState([]);
+
+  // const activeButtons = {};
+  // data.permisos.forEach((permiso) => {
+  //   if (permiso.menuId === selectedMenu) {
+  //     activeButtons.registrar = permiso.registrar;
+  //     activeButtons.modificar = permiso.modificar;
+  //     activeButtons.eliminar = permiso.eliminar;
+  //     activeButtons.consultar = permiso.consultar;
+  //     activeButtons.anular = permiso.anular;
+  //   }
+  // });
+
+  const botonesPermisos = data.permisos.map((permiso) => {
+    const botonesPermiso = botones.map((boton) => {
+      if (permiso[boton.value]) {
+        return {
+          ...boton,
+          active: permiso[boton.value],
+        };
+      }
+      return null;
+    });
+    return botonesPermiso;
+  });
   //#endregion
 
   //#region useEffect
+
   useEffect(() => {
     data;
     if (document.getElementById("tipoUsuarioId")) {
@@ -69,6 +93,18 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     data;
     TipoUsuario(data.id);
   }, []);
+
+  useEffect(() => {
+    setChecked(false);
+    setCheckedMenus(Array(menu.length).fill(false));
+  }, [selectedMenu]);
+
+  useEffect(() => {
+    if (selectedMenu) {
+      setValue(selectedActions[selectedMenu] || []);
+      setChecked(selectedActions[selectedMenu]?.length === botones.length);
+    }
+  }, [selectedActions, selectedMenu]);
 
   //#endregion
 
@@ -102,20 +138,36 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       [selectedMenu]: checked ? botones.map((item) => item.value) : [],
     });
+    console.log(data);
   };
 
-  const handleMenuClick = (event) => {
-    const index = menu.findIndex(
-      (item) => item.nombre === event.target.innerText
-    );
-    setCheckedMenus((prev) => {
-      const newArr = [...prev];
-      newArr[index] = !newArr[index];
-      return newArr;
-    });
-    setSelectedMenu(event.target.innerText);
-    handleSelectAllActions();
-  };
+  // const handleMenuClick = (event) => {
+  //   const index = menu.findIndex(
+  //     (menu) => menu.nombre === event.target.innerText
+  //   );
+  //   setCheckedMenus((prev) => {
+  //     const newArr = [...prev];
+  //     newArr[index] = !newArr[index];
+  //     return newArr;
+  //   });
+  //   setSelectedMenu(event.target.innerText);
+  //   handleSelectAllActions();
+
+  //   //?Obtenego los botones activos basados en la información de data
+  //   const botonesActivos = getBotonesActivos(event.target.innerText);
+
+  //   //?Actualizo el estado de selectedActions con los botones activos
+  //   setSelectedActions((prev) => ({
+  //     ...prev,
+  //     [event.target.innerText]: botonesActivos.map((boton) => boton.value),
+  //   }));
+
+  //   //?Actualizo el estado de value con los valores de los botones activos
+  //   setValue(botonesActivos.map((boton) => boton.value));
+
+  //   //?Verifico si todos los botones están activos y actualizar el estado de checked
+  //   setChecked(botonesActivos.every((boton) => boton.active));
+  // };
 
   const handleSelectAllActions = () => {
     setValue(botones.map((item) => item.value));
@@ -124,6 +176,45 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       [selectedMenu]: botones.map((item) => item.value),
     });
   };
+
+  const handleMenuClick = (event) => {
+    const index = menu.findIndex(
+      (menu) => menu.nombre === event.target.innerText
+    );
+    setCheckedMenus((prev) => {
+      const newArr = [...prev];
+      newArr[index] = !newArr[index];
+      return newArr;
+    });
+    setSelectedMenu(event.target.innerText);
+    handleSelectAllActions();
+    setSelectedActions((prev) => ({
+      ...prev,
+      [event.target.innerText]: getBotonesActivos(event.target.innerText),
+    }));
+  };
+
+  // const getBotonesActivos = (menuId) => {
+  //   const permiso = data.permisos.find((permiso) => permiso.menuId === menuId);
+  //   if (permiso) {
+  //     return botones.map((boton) => ({
+  //       ...boton,
+  //       active: permiso[boton.value],
+  //     }));
+  //   } else {
+  //     return botones;
+  //   }
+  // };
+  // const getBotonesActivos = (menuId) => {
+  //   const permiso = data.permisos.find((permiso) => permiso.menuId === menuId);
+  //   if (permiso) {
+  //     return botonesPermisos(botones, permiso);
+  //   } else {
+  //     return botones;
+  //   }
+  // };
+
+  //?nuevo
   const getBotonesActivos = (menuId) => {
     const permiso = data.permisos.find((permiso) => permiso.menuId === menuId);
     if (permiso) {
@@ -135,7 +226,13 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       return botones;
     }
   };
-  //#endregion
+
+  // const botonesPermisos = (botones, permiso) => {
+  //   return botones.map((boton) => ({
+  //     ...boton,
+  //     active: permiso[boton.value],
+  //   }));
+  // };
 
   //#region API
   const Tablas = async () => {
@@ -193,15 +290,14 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           </select>
         </div>
         <div className={Global.ContenedorInputFull}>
-          <label htmlFor="menus" className={Global.LabelStyle}>
+          <label htmlFor="menuId" className={Global.LabelStyle}>
             Menú:
           </label>
           <input
             type="text"
-            id="menus"
-            name="menus"
+            readOnly={true}
             value={selectedMenu}
-            onChange={handleInputChange}
+            onChange={handleMenuClick}
             className={Global.InputStyle}
           />
         </div>
@@ -209,6 +305,8 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <div className="card flex justify-content-center gap-3">
           <div>
             <SelectButton
+              id="botones"
+              name="botones"
               value={selectedActions[selectedMenu] || []}
               onChange={(e) => {
                 setSelectedActions((prev) => ({
@@ -221,6 +319,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
               optionLabel="name"
               options={getBotonesActivos(selectedMenu)}
               multiple
+              active={selectedActions[selectedMenu] || []}
             />
           </div>
           <div className="mt-2 ml-2 flex gap-2">
@@ -244,7 +343,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
               <AccordionTab
                 header={
                   <div className="flex align-items-center">
-                    <span className=" vertical-align-middle">Menus</span>
+                    <span className=" vertical-align-middle">
+                      Mantenimiento
+                    </span>
                     <i className="pi pi-cog ml-2"></i>
                   </div>
                 }
@@ -254,10 +355,10 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     <li
                       className="hover:text-primary p-1 border-b"
                       key={item.id}
+                      name="menuId"
+                      onClick={handleMenuClick}
                     >
-                      <button type="button" onClick={handleMenuClick}>
-                        {item.nombre}
-                      </button>
+                      <button type="button">{item.nombre}</button>
                     </li>
                   ))}
                 </ul>
