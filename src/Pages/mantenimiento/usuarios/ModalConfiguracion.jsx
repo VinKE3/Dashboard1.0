@@ -7,6 +7,7 @@ import { SelectButton } from "primereact/selectbutton";
 import { useMenu } from "../../../context/ContextMenu";
 import { Checkbox } from "primereact/checkbox";
 import Mensajes from "../../../components/Mensajes";
+import { useCallback } from "react";
 
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
@@ -25,7 +26,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       },
       {
         usuarioId: "001",
-        menuId: "Sublinea",
+        menuId: "SubLinea",
         registrar: true,
         modificar: true,
         eliminar: false,
@@ -34,7 +35,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       },
     ],
   });
-  const [dataModal, setdataModal] = useState([]);
+
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState(null);
@@ -54,6 +55,33 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [dataPermisos, setDataPermisos] = useState([]);
   //#endregion
 
+  const convertirASelectActions = useCallback(() => {
+    const permisosValidos = [
+      "registrar",
+      "modificar",
+      "eliminar",
+      "consultar",
+      "anular",
+    ];
+
+    setSelectedActions((prev) => {
+      const newSelectedActions = {};
+
+      data.permisos.forEach((permiso) => {
+        const per = Object.keys(permiso)
+          .filter((p) => permisosValidos.includes(p) && permiso[p])
+          .map((p) => p);
+
+        newSelectedActions[permiso.menuId] = per;
+      });
+
+      return {
+        ...prev,
+        ...newSelectedActions,
+      };
+    });
+  }, [data, setSelectedActions]);
+
   //#region useEffect
   useEffect(() => {
     data;
@@ -67,6 +95,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     getMenu();
     Tablas();
     data;
+    if (Object.entries(data).length > 0) {
+      convertirASelectActions();
+    }
     TipoUsuario(data.id);
   }, []);
 

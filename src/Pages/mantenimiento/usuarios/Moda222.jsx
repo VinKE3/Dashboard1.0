@@ -138,7 +138,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       [selectedMenu]: checked ? botones.map((item) => item.value) : [],
     });
-    console.log(data);
   };
 
   // const handleMenuClick = (event) => {
