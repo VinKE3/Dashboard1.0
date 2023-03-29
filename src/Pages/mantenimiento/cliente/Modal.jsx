@@ -630,7 +630,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       objeto={dataGeneral}
       modo={modo}
       menu={["Mantenimiento", "Cliente"]}
-      tamañoModal={[Global.ModalGrande, Global.FormTabs]}
+      tamañoModal={[Global.ModalMediano, Global.FormTabs]}
     >
       <TabView>
         <TabPanel
@@ -790,7 +790,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 />
                 <BotonBasico
                   botonText="Agregar"
-                  botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
+                  botonClass={Global.BotonAgregar}
                   botonIcon={faPlus}
                   click={(e) => {
                     AgregarDireccion(e);
@@ -892,7 +892,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 />
                 <BotonBasico
                   botonText="Agregar"
-                  botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
+                  botonClass={Global.BotonAgregar}
                   botonIcon={faPlus}
                   click={(e) => {
                     AgregarContacto(e);
@@ -1098,7 +1098,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 />
                 <BotonBasico
                   botonText="Agregar"
-                  botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
+                  botonClass={Global.BotonAgregar}
                   botonIcon={faPlus}
                   click={(e) => {
                     AgregarPersonal(e);

@@ -2,12 +2,12 @@
 export var ModalPequeño =
   "relative h-full md:h-fit w-full md:w-11/12 lg:w-3/4 my-0 mx-auto lg:max-w-3xl";
 export var ModalMediano =
-  "relative h-full w-full md:h-fit md:w-5/6 lg:w-5/6 xl:w-1/2 my-0 mx-auto lg:max-w-3xl";
-export var ModalGrande =
   "relative h-full w-full md:h-5/6 md:w-5/6 xl:w-3/4 2xl:w-2/4 my-0 mx-auto";
+export var ModalGrande =
+  "relative h-full max-h-full lg:h-fit w-full lg:w-4/5 xl:w-4/5 2xl:w-2/3 my-0 mx-auto";
 export var ModalFull = "relative h-full w-full my-0 mx-auto";
 export var FormSimple = "min-w-fit py-6 px-8";
-export var FormGrande = "min-w-fit py-6 px-8 sm:py-8 sm:px-10";
+export var FormGrande = "min-w-fit py-6 px-8 sm:px-10 md:py-4";
 export var FormTabs = "min-w-fit h-full py-0 pt-2 px-4";
 export var FormSecundario =
   "min-w-fit min-h-fit py-2 px-0 grid gap-y-3 md:gap-x-2";
@@ -39,9 +39,9 @@ export var SelectStyle =
 export var InputBoton =
   "rounded-none border block flex-1 min-w-0 w-full text-sm p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light";
 export var BotonOkModal =
-  "bg-gray-700 hover:bg-primary hover:text-black text-light font-semibold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 uppercase";
+  "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-gray-900 text-light font-semibold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 uppercase";
 export var BotonCancelarModal =
-  "background-transparent hover:bg-red-500 text-red-500 hover:text-light border-2 border-red-500 font-semibold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150";
+  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-2 border-red-600 font-semibold text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150";
 //#endregion
 
 //#region Index
@@ -52,17 +52,29 @@ export var ContenedorInputsFiltro = "flex flex-1 overflow-hidden";
 export var BotonBasic =
   "flex px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 sm:text-sm font-semibold text-gray-100 uppercase ";
 export var BotonBuscar =
-  "px-3 rounded-none rounded-r-lg bg-yellow-500 text-light hover:bg-yellow-600";
-export var BotonRegistrar = "bg-blue-600 hover:bg-blue-500 hover:text-light";
+  "px-3 rounded-none rounded-r-lg bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-yellow-600";
+export var BotonRegistrar =
+  "bg-gradient-to-b from-blue-600 to-blue-700 hover:bg-blue-500 hover:text-light";
 export var BotonConfigurar = "bg-gray-600 hover:bg-gray-500 hover:text-light";
 export var BotonCambiarContraseña =
   "bg-green-600 hover:bg-green-500 hover:text-light";
+export var BotonAgregar =
+  "bg-gradient-to-b from-green-700 to-green-800 hover:bg-gradient-to-b hover:from-green-600 hover:to-green-700";
+export var TablaCabecera =
+  "text-left bg-gradient-to-b from-slate-800 to-slate-900";
+export var TablaBody = "bg-gradient-to-b from-secondary-100 to-slate-800";
 export var TablaBotonConsultar =
   "w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125";
 export var TablaBotonModificar =
   "w-4 mr-2 transform hover:text-orange-500 hover:scale-125";
 export var TablaBotonEliminar =
   "w-4 mr-2 transform hover:text-red-500 hover:scale-125";
+export var BotonPaginacion =
+  "px-3 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md";
+export var BotonPaginacionFlechas =
+  "px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md";
+export var BotonPaginacionActivo =
+  "bg-gradient-to-b from-gray-700 to-gray-600 text-light";
 //#endregion
 
 //#region Mensajes

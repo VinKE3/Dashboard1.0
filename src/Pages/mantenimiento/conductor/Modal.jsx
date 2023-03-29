@@ -45,6 +45,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   //#endregion
+
+  //#region  Render
   return (
     <ModalBasic
       setModal={setModal}
@@ -72,18 +74,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         </div>
         <div className={Global.ContenedorInputMitad}>
           <div className={Global.LabelStyle}>
-            {/* <input
-              type="checkbox"
-              id="isActivo"
-              name="isActivo"
-              readOnly={modo == "Consultar" ? true : false}
-              value={data.isActivo ?? ""}
-              onChange={(e) => {
-                setChecked(e.checked);
-                ValidarData(e);
-              }}
-              checked={data.isActivo ? checked : false}
-            /> */}
             <Checkbox
               inputId="isActivo"
               name="isActivo"
@@ -265,6 +255,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       </div>
     </ModalBasic>
   );
+  //#endregion
 };
 
 export default Modal;

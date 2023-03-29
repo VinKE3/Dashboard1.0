@@ -93,7 +93,7 @@ const ConductoresTransportistas = () => {
   const FiltradoPaginado = (e) => {
     let filtro = document.getElementById("descripcion").value;
     let boton = e.selected + 1;
-    setIndex(e.selected + 1);
+    setIndex(e.selected);
     if (filtro == "") {
       Listar("", boton);
     } else {
@@ -104,18 +104,18 @@ const ConductoresTransportistas = () => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&descripcion=${f}`);
-    if (f != "") setIndex(1);
+    if (f != "") setIndex(0);
     const newTimer = setTimeout(() => {
       if (f == "") {
-        Listar("", index);
+        Listar("", index + 1);
       } else {
-        Listar(`&descripcion=${f}`, index);
+        Listar(`&descripcion=${f}`, index + 1);
       }
     }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    setIndex(1);
+    setIndex(0);
     if (filtro == "") {
       Listar("", 1);
     } else {

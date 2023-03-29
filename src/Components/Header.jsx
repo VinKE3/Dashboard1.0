@@ -6,6 +6,7 @@ import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/ContextAuth";
+import Usuarios from "../pages/mantenimiento/usuarios/Usuarios";
 
 const Header = () => {
   const { usuario } = useAuth();
@@ -29,7 +30,7 @@ const Header = () => {
           >
             <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primary">
               <Link
-                to="/configuracion"
+                to="/mantenimiento/empresa"
                 className="flex items-center hover:text-primary"
               >
                 Configuración
@@ -37,7 +38,7 @@ const Header = () => {
             </MenuItem>
             <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primary">
               <Link
-                to="/usuarios"
+                to="/mantenimiento/usuarios"
                 className="flex items-center  hover:text-primary"
               >
                 Usuarios
@@ -45,7 +46,7 @@ const Header = () => {
             </MenuItem>
             <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primary">
               <Link
-                to="/correlativos"
+                to="/mantenimiento/correlativos"
                 className="flex items-center hover:text-primary"
               >
                 Correlativos

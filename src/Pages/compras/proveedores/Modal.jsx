@@ -521,9 +521,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.SelectStyle}
                 >
-                  {dataTipoDoc.map((tipo) => (
-                    <option key={tipo.id} value={tipo.id}>
-                      {tipo.abreviatura}
+                  {dataTipoDoc.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.abreviatura}
                     </option>
                   ))}
                 </select>

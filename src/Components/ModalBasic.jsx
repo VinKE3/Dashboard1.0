@@ -73,10 +73,10 @@ const ModalBasic = ({
   //#region Render
   return (
     <>
-      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-900/50">
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div className="border-none rounded-lg shadow-lg relative flex flex-col w-full h-full bg-secondary-100 outline-none focus:outline-none">
+          <div className="border-none rounded-lg shadow-lg relative flex flex-col w-full h-full outline-none focus:outline-none bg-gradient-to-b from-gray-900 to-gray-800">
             {/*header*/}
             <div className="flex pt-4 pb-0 px-4 rounded-tt">
               <h3 className="text-3xl md:text-2xl font-semibold text-light">

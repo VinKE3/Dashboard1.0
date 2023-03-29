@@ -83,14 +83,6 @@ function seccionesList() {
       icon: <FaTools className="text-primary" />,
       items: [
         {
-          path: "/mantenimiento/usuarios",
-          title: "Usuarios",
-        },
-        {
-          path: "/mantenimiento/clientes",
-          title: "Clientes",
-        },
-        {
           path: "/mantenimiento/tipos-de-cambio",
           title: "Tipos de Cambio",
         },
@@ -127,8 +119,8 @@ function seccionesList() {
           title: "Cuentas Corrientes",
         },
         {
-          path: "/mantenimiento/conductor",
-          title: "Conductor",
+          path: "/mantenimiento/empresa-de-transporte",
+          title: "Empresa de Transporte",
         },
         {
           path: "/mantenimiento/departamentos",

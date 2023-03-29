@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import * as Global from "../Global"
 import {
   useTable,
   useGlobalFilter,
@@ -9,7 +10,7 @@ import {
 
 const Tabla = styled.div`
   & .selected-row {
-    background-color: #f8bc0a;
+    background: linear-gradient(90deg, #d2ae11 0%, #d9ad22 100%);
     color: #000;
   }
 `;
@@ -74,7 +75,7 @@ const TableBasic = ({ columnas, datos }) => {
       {/* Tabla */}
       <Tabla>
         <table {...getTableProps()} id="tabla" className="w-full text-light">
-          <thead className="text-left bg-gris-800">
+          <thead className={Global.TablaCabecera}>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
@@ -89,7 +90,7 @@ const TableBasic = ({ columnas, datos }) => {
             ))}
           </thead>
 
-          <tbody {...getTableBodyProps()} className="bg-secondary-100">
+          <tbody {...getTableBodyProps()} className={Global.TablaBody}>
             {page.map((row) => {
               prepareRow(row);
               return (

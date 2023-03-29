@@ -8,10 +8,11 @@ import {
 import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import styled from "styled-components";
+import * as Global from "../Global"
 
 const Tabla = styled.div`
   & .selected-row {
-    background-color: #f8bc0a;
+    background: linear-gradient(90deg, #d2ae11 0%, #d9ad22 100%);
     color: #000;
   }
 `;
@@ -113,7 +114,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
       {/* Tabla */}
       <Tabla>
         <table {...getTableProps()} id="tabla" className="w-full text-light">
-          <thead className="text-left bg-gris-800">
+          <thead className={Global.TablaCabecera}>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
@@ -128,7 +129,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
             ))}
           </thead>
 
-          <tbody {...getTableBodyProps()} className="bg-secondary-100">
+          <tbody {...getTableBodyProps()} className={Global.TablaBody}>
             {page.map((row) => {
               prepareRow(row);
               return (
@@ -190,11 +191,11 @@ const Table = ({ columnas, datos, total, index, Click }) => {
           breakClassName="flex align-items-center justify-center"
           previousClassName="flex"
           nextClassName="flex"
-          pageLinkClassName="px-3 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
-          breakLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
-          nextLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md"
-          previousLinkClassName="px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 rounded-md"
-          activeLinkClassName="bg-gray-400 text-light"
+          pageLinkClassName={Global.BotonPaginacion}
+          breakLinkClassName={Global.BotonPaginacion}
+          nextLinkClassName={Global.BotonPaginacionFlechas}
+          previousLinkClassName={Global.BotonPaginacionFlechas}
+          activeLinkClassName= {Global.BotonPaginacionActivo}
         />
       </div>
     </div>

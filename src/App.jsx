@@ -43,6 +43,9 @@ import Provincias from "./pages/mantenimiento/provincias/Provincias";
 import Distrito from "./pages/mantenimiento/distritos/Distrito";
 import Almacenes from "./pages/mantenimiento/almacenes/Almacenes";
 import CajaChicaConfiguracion from "./pages/mantenimiento/cajaChicaConfiguracion/CajaChicaConfiguracion";
+import Empresa from "./pages/mantenimiento/empresa/Empresa";
+import Correlativos from "./pages/mantenimiento/correlativos/Correlativos";
+import EmpresaDeTransporte from "./pages/mantenimiento/empresaDeTransporte/EmpresaDeTransporte";
 //Pages almacen
 import Almacen from "./pages/almacen/Almacen";
 //Pages personal
@@ -112,6 +115,11 @@ function App() {
           />
           {/** MANTENIMIENTO */}
           <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
+          <Route
+            path="/mantenimiento/correlativos"
+            element={<Correlativos />}
+          />
+          <Route path="/mantenimiento/empresa" element={<Empresa />} />
           <Route path="/mantenimiento/clientes" element={<Clientes />} />
           <Route
             path="/mantenimiento/tipos-de-cambio"
@@ -145,6 +153,10 @@ function App() {
           <Route
             path="/mantenimiento/caja-chica-configuracion"
             element={<CajaChicaConfiguracion />}
+          />
+          <Route
+            path="/mantenimiento/empresa-de-transporte"
+            element={<EmpresaDeTransporte />}
           />
           {/** ALMACEN */}
           <Route path="almacen" element={<Almacen />} />
