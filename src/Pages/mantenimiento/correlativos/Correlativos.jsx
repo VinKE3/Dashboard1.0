@@ -133,7 +133,7 @@ const Correlativos = () => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
-        tipoDocumentoId: "",
+        tipoDocumentoId: "01",
         tipoDocumentoDescripcion: "",
         serie: "",
         numero: 0,
@@ -176,8 +176,20 @@ const Correlativos = () => {
           permisos={permisos}
           menu={["Mantenimiento", "Correlativos"]}
           id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+          ClickConsultar={() =>
+            AbrirModal(
+              row.values.tipoDocumentoId,
+              row.values.serie,
+              "Consultar"
+            )
+          }
+          ClickModificar={() =>
+            AbrirModal(
+              row.values.tipoDocumentoId,
+              row.values.serie,
+              "Modificar"
+            )
+          }
         />
       ),
     },

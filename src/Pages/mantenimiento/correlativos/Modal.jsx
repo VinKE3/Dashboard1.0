@@ -12,12 +12,19 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     dataModal;
-    document.getElementById("tiposDocumentoId").value = data.tiposDocumentoId;
+    console.log(data.serie);
+    if (document.getElementById("tipoDocumentoId")) {
+      console.log(data.tiposDocumentoId);
+      document.getElementById("tipoDocumentoId").value = data.tipoDocumentoId;
+    }
   }, [dataModal]);
+
   useEffect(() => {
     data;
+    console.log(data);
   }, [data]);
   useEffect(() => {
+    data;
     Tablas();
   }, []);
   //#endregion
@@ -38,6 +45,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     );
     setdataModal(result.data.data.tiposDocumento);
   };
+
   //#endregion
 
   //#region Render
@@ -47,18 +55,18 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
-      menu={["Mantenimiento", "Correlativos"]}
+      menu={["Mantenimiento", "Correlativo"]}
       tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInputFull}>
-          <label htmlFor="tiposDocumentoId" className={Global.LabelStyle}>
+          <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
             Tipo de Documento
           </label>
           <select
-            id="tiposDocumentoId"
-            name="tiposDocumentoId"
-            disabled={modo == "Registrar" ? false : true}
+            id="tipoDocumentoId"
+            name="tipoDocumentoId"
+            disabled={modo == "Consultar" ? true : false}
             onChange={ValidarData}
             className={Global.SelectStyle}
           >
@@ -69,27 +77,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             ))}
           </select>
         </div>
-        <div className={Global.ContenedorInputFull}>
-          <label
-            htmlFor="tipoDocumentoDescripcion"
-            className={Global.LabelStyle}
-          >
-            Serie
-          </label>
-          <input
-            type="text"
-            id="tipoDocumentoDescripcion"
-            name="tipoDocumentoDescripcion"
-            autoComplete="off"
-            placeholder="Descripción"
-            readOnly={modo == "Consultar" ? true : false}
-            value={data.tipoDocumentoDescripcion}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
-        </div>
-      </div>
-      <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInputFull}>
           <label htmlFor="serie" className={Global.LabelStyle}>
             Serie
@@ -106,6 +93,28 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             className={Global.InputStyle}
           />
         </div>
+      </div>
+      <div className={Global.ContenedorVarios}>
+        <div className={Global.ContenedorInputFull}>
+          <label
+            htmlFor="tipoDocumentoDescripcion"
+            className={Global.LabelStyle}
+          >
+            Descripción
+          </label>
+          <input
+            type="text"
+            id="tipoDocumentoDescripcion"
+            name="tipoDocumentoDescripcion"
+            autoComplete="off"
+            placeholder="Descripción"
+            readOnly={modo == "Consultar" ? true : false}
+            value={data.tipoDocumentoDescripcion}
+            onChange={ValidarData}
+            className={Global.InputStyle}
+          />
+        </div>
+
         <div className={Global.ContenedorInput42pct}>
           <label htmlFor="numero" className={Global.LabelStyle}>
             Número

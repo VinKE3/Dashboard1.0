@@ -4,7 +4,7 @@ import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import FiltroBasico from "../../../Components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faKey, faGear } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import ModalConfiguracion from "./ModalConfiguracion";
@@ -272,7 +272,7 @@ const Usuarios = () => {
             <BotonBasico
               botonText="Configuracion"
               botonClass={Global.BotonConfigurar}
-              botonIcon={faPlus}
+              botonIcon={faGear}
               click={() => AbrirModalConfigurar()}
             />
           )}
@@ -280,7 +280,7 @@ const Usuarios = () => {
             <BotonBasico
               botonText="Cambiar Contraseña"
               botonClass={Global.BotonCambiarContraseña}
-              botonIcon={faPlus}
+              botonIcon={faKey}
               click={() => AbrirModalClave()}
             />
           )}

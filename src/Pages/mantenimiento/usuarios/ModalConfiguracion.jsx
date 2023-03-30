@@ -12,11 +12,11 @@ import { useCallback } from "react";
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState({
-    usuarioId: "001",
+    usuarioId: "042",
     tipoUsuarioId: "AD",
     permisos: [
       {
-        usuarioId: "001",
+        usuarioId: "042",
         menuId: "Linea",
         registrar: true,
         modificar: true,
@@ -25,13 +25,13 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
         anular: false,
       },
       {
-        usuarioId: "001",
+        usuarioId: "042",
         menuId: "SubLinea",
         registrar: true,
         modificar: true,
         eliminar: false,
         consultar: true,
-        anular: true,
+        anular: false,
       },
     ],
   });
@@ -191,7 +191,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
-      menu={["Mantenimiento", "Usuario"]}
+      menu={["Mantenimiento", "UsuarioPermiso"]}
       tamañoModal={[Global.ModalFull]}
     >
       <div className={Global.FormTabs}>

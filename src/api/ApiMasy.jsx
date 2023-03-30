@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 import { authHelper } from "../helpers/AuthHelper";
 
 const ApiMasy = axios.create({
@@ -32,6 +33,7 @@ ApiMasy.interceptors.response.use(
     if (error.response.status === 401) {
       window.location.href = "/login";
     }
+
     return response;
   }
 );
