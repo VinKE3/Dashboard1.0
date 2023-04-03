@@ -2,15 +2,22 @@ import store from "store2";
 
 const getStorage = () =>
   store.session("access_token") ? store.session : store.local;
+store.session("usuario") ? store.session : store.local;
 
 const getToken = () => {
   const storage = getStorage();
   return storage("access_token");
 };
 
+const getUsuario = () => {
+  const storage = getStorage();
+  return storage("usuario");
+};
+
 const isAuthenticated = () => {
   const token = getToken();
-  return token !== null;
+  const usuario = getUsuario();
+  return token !== null && usuario !== null;
 };
 
 const isTokenExpired = () => {
@@ -23,7 +30,7 @@ const isTokenExpired = () => {
 
 function getAccessToken() {
   if (isAuthenticated()) {
-    return getToken();
+    return getUsuario() && getToken();
   }
   if (isTokenExpired()) {
     borrarTokens();
@@ -35,6 +42,8 @@ function getAccessToken() {
 const borrarTokens = () => {
   store.session.remove("access_token");
   store.local.remove("access_token");
+  store.session.remove("usuario");
+  store.local.remove("usuario");
 };
 
 function borrarTodosLosTokens() {
@@ -47,8 +56,16 @@ function login(data) {
   store.session("access_token", token);
 }
 
+function usuarioGuardar(data) {
+  const { usuario } = data;
+  store.local("usuario", usuario);
+  store.session("usuario", usuario);
+  console.log("usuario", usuario);
+}
+
 export const authHelper = {
   getAccessToken,
   borrarTodosLosTokens,
   login,
+  usuarioGuardar,
 };

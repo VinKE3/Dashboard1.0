@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalBasic from "../../../components/ModalBasic";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState

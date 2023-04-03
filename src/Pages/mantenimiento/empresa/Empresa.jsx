@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 import Ubigeo from "../../../Components/filtros/Ubigeo";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
@@ -8,24 +8,25 @@ import { toast } from "react-toastify";
 import ApiMasy from "../../../api/ApiMasy";
 
 const Empresa = () => {
+  const [data, setData] = useState([]);
   const [dataGeneral, setDataGeneral] = useState({
-    id: "string",
-    numeroDocumentoIdentidad: "string",
-    nombre: "string",
-    direccion: "string",
-    departamentoId: "string",
-    provinciaId: "string",
-    distritoId: "string",
-    telefono: "string",
-    celular: "string",
-    correoElectronico: "string",
-    observacion: "string",
-    concarEmpresaId: "string",
-    concarEmpresaNombre: "string",
-    concarUsuarioVenta: "string",
-    concarUsuarioCompra: "string",
-    concarUsuarioPago: "string",
-    concarUsuarioCobro: "string",
+    id: "001",
+    numeroDocumentoIdentidad: "123456",
+    nombre: "AKRON",
+    direccion: "MIL VIVIENDAS",
+    departamentoId: "15",
+    provinciaId: "01",
+    distritoId: "01",
+    telefono: "123456789",
+    celular: "987654321",
+    correoElectronico: "falso@gmail.com",
+    observacion: "todo caro",
+    concarEmpresaId: "01",
+    concarEmpresaNombre: "AKRON SRL",
+    concarUsuarioVenta: "AK",
+    concarUsuarioCompra: "RON",
+    concarUsuarioPago: "AKR",
+    concarUsuarioCobro: "ON",
     filtroFechaInicio: "2023-03-30T15:29:23.945Z",
     filtroFechaFin: "2023-03-30T15:29:23.945Z",
     anioHabilitado1: 2022,
@@ -87,6 +88,16 @@ const Empresa = () => {
     noviembre: true,
     diciembre: true,
   });
+
+  const Configuracion = async () => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Empresa`);
+    setData(result.data);
+    console.log(result.data);
+  };
+
+  useEffect(() => {
+    Configuracion();
+  }, []);
 
   useEffect(() => {
     dataUbigeo;
@@ -198,6 +209,7 @@ const Empresa = () => {
                   autoComplete="off"
                   placeholder="Nombre"
                   value={dataGeneral.nombre}
+                  typeof="text"
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -323,7 +335,7 @@ const Empresa = () => {
                   name="concarEmpresaNombre"
                   autoComplete="off"
                   placeholder="Empresa Concar"
-                  value={dataGeneral.nombre}
+                  value={dataGeneral.concarEmpresaNombre}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -381,7 +393,7 @@ const Empresa = () => {
                   name="concarUsuarioPago"
                   autoComplete="off"
                   placeholder="Usuario Pago"
-                  value={dataGeneral.concarUsuarioVenta}
+                  value={dataGeneral.concarUsuarioPago}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -399,7 +411,7 @@ const Empresa = () => {
                   name="concarUsuarioCobro"
                   autoComplete="off"
                   placeholder="Usuario Cobro"
-                  value={dataGeneral.concarUsuarioCompra}
+                  value={dataGeneral.concarUsuarioCobro}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />

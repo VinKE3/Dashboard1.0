@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";

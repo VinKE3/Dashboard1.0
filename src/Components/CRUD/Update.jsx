@@ -6,7 +6,7 @@ const Update = async (menu, objeto, setTipoMensaje, setMensaje) => {
     if (Object.entries(result.response.data).length > 0) {
       setTipoMensaje(result.response.data.messages[0].tipo);
       setMensaje(result.response.data.messages[0].textos);
-    }else{
+    } else {
       setTipoMensaje(1);
       setMensaje([result.message]);
     }

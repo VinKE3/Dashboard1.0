@@ -12,7 +12,7 @@ import ModalClave from "./ModalClave";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 
 //#region Estilos

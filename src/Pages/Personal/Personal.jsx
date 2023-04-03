@@ -11,7 +11,7 @@ import moment from "moment";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../Components/Global";
+import * as Global from "../../components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`

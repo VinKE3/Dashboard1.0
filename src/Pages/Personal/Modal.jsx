@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import moment from "moment/moment";
 import ModalBasic from "../../components/ModalBasic";
-import * as Global from "../../Components/Global";
+import * as Global from "../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 import Ubigeo from "../../Components/filtros/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
@@ -48,11 +48,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataEntidad]);
   useEffect(() => {
     dataTipoCuenta;
-    document.getElementById("tipoCuentaBancariaId").value = data.tipoCuentaBancariaId;
+    document.getElementById("tipoCuentaBancariaId").value =
+      data.tipoCuentaBancariaId;
   }, [dataTipoCuenta]);
   useEffect(() => {
     dataMoneda;
-    document.getElementById("monedaId").value = data.monedaId == null? "" : data.monedaId;
+    document.getElementById("monedaId").value =
+      data.monedaId == null ? "" : data.monedaId;
   }, [dataMoneda]);
   useEffect(() => {
     data;
@@ -288,7 +290,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             name="fechaNacimiento"
             autoComplete="off"
             readOnly={modo == "Consultar" ? true : false}
-            value={moment(data.fechaNacimiento == null ? "" : data.fechaNacimiento).format("yyyy-MM-DD")}
+            value={moment(
+              data.fechaNacimiento == null ? "" : data.fechaNacimiento
+            ).format("yyyy-MM-DD")}
             onChange={ValidarData}
             className={Global.InputStyle}
           />

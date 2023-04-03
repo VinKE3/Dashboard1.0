@@ -11,7 +11,7 @@ import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "../../../context/ContextAuth";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -314,13 +314,7 @@ const TipodeCambio = () => {
         </TablaStyle>
         {/* Tabla */}
       </div>
-      {modal && (
-        <Modal
-          setModal={setModal}
-          modo={modo}
-          objeto={objeto}
-        />
-      )}
+      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
       <ToastContainer />
     </>
   );

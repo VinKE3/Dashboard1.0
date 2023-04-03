@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 import ApiMasy from "../../../api/ApiMasy";
 import Mensajes from "../../../components/Mensajes";
 

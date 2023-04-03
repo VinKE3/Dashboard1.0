@@ -10,7 +10,8 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
+import store from "store2";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -33,7 +34,7 @@ const Lineas = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
+  const [permisos, setPermisos] = useState([false, false, false, false]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
@@ -41,7 +42,7 @@ const Lineas = () => {
 
   //#region useEffect
   useEffect(() => {
-    if (usuario == "AD") {
+    if (store.session.get("usuario") == "AD") {
       setPermisos([true, true, true, true]);
       Listar(filtro, 1);
     } else {
@@ -159,7 +160,7 @@ const Lineas = () => {
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
-        />
+        /> //?Se envia el id de la fila
       ),
     },
   ];
@@ -208,13 +209,7 @@ const Lineas = () => {
         {/* Tabla */}
       </div>
 
-      {modal && (
-        <Modal
-          setModal={setModal}
-          modo={modo}
-          objeto={objeto}
-        />
-      )}
+      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
       <ToastContainer />
     </>
   );

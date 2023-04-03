@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
@@ -66,21 +66,21 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         </div>
       </div>
       <div className={Global.ContenedorInputFull}>
-          <label htmlFor="descripcion" className={Global.LabelStyle}>
-            Descripción
-          </label>
-          <input
-            type="text"
-            id="descripcion"
-            name="descripcion"
-            autoComplete="off"
-            placeholder="Descripción"
-            readOnly={modo == "Consultar" ? true : false}
-            value={data.descripcion == null ? "" : data.descripcion}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
-        </div>
+        <label htmlFor="descripcion" className={Global.LabelStyle}>
+          Descripción
+        </label>
+        <input
+          type="text"
+          id="descripcion"
+          name="descripcion"
+          autoComplete="off"
+          placeholder="Descripción"
+          readOnly={modo == "Consultar" ? true : false}
+          value={data.descripcion == null ? "" : data.descripcion}
+          onChange={ValidarData}
+          className={Global.InputStyle}
+        />
+      </div>
     </ModalBasic>
   );
 };

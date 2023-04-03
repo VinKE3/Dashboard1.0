@@ -16,7 +16,7 @@ export const useAuth = () => {
 
 export const useAuthProvider = () => {
   const [token, setToken] = useState("");
-  const [usuario, setUsuario] = useState(null);
+  const [usuario, setUsuario] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,9 +33,9 @@ export const useAuthProvider = () => {
         var decoded = jwt_decode(token);
         const jwtDecoded =
           decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-        localStorage.setItem("usuario", jwtDecoded);
         setUsuario(jwtDecoded);
         authHelper.login(result.data.data);
+        authHelper.usuarioGuardar({ usuario: jwtDecoded });
       }
     } catch (error) {
       setError(error?.response);

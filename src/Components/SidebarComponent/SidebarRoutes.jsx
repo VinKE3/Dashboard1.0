@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 // Icons
 import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
-import store from "store2";
+import { authHelper } from "../../helpers/AuthHelper";
 
 const SidebarRoutes = ({
   onclickButtonSubmenu,
@@ -12,6 +12,7 @@ const SidebarRoutes = ({
   onClickShowMenu,
   activeSection,
 }) => {
+  const { borrarTodosLosTokens } = authHelper;
   const onClickSubMenu = (e) => {
     e.preventDefault();
     handleActiveSection(e.target.id);
@@ -28,9 +29,12 @@ const SidebarRoutes = ({
   };
 
   const handleLogout = () => {
-    store.session.remove("access_token");
-    store.local.remove("access_token");
+    // store.session.remove("access_token");
+    // store.local.remove("access_token");
+    // window.location.href = "/login";
+    borrarTodosLosTokens();
     window.location.href = "/login";
+    console.log("logout");
   };
 
   return (

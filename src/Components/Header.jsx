@@ -5,16 +5,15 @@ import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/ContextAuth";
-import Usuarios from "../pages/mantenimiento/usuarios/Usuarios";
+import store from "store2";
 
 const Header = () => {
-  const { usuario } = useAuth();
   return (
     <header className="h-[10vh] border-b border-b-primario p-8 items-center pb-8 lg:pb-0">
       <nav className="flex items-center justify-between">
         <h1 className="font-bold just">
-          Bienvenido <span className="text-primary">{usuario}</span>
+          Bienvenido{" "}
+          <span className="text-primary">{store.session.get("usuario")}</span>
         </h1>
         <div>
           <Menu

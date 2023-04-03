@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 import ApiMasy from "../../../api/ApiMasy";
 import moment from "moment";
 import { toast } from "react-toastify";

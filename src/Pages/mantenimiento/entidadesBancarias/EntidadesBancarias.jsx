@@ -10,7 +10,7 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -216,13 +216,7 @@ const EntidadesBancarias = () => {
         {/* Tabla */}
       </div>
 
-      {modal && (
-        <Modal
-          setModal={setModal}
-          modo={modo}
-          objeto={objeto}
-        />
-      )}
+      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
       <ToastContainer />
     </>
   );

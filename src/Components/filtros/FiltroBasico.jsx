@@ -1,6 +1,6 @@
 import React from "react";
 import { FaSearch } from "react-icons/fa";
-import * as Global from "../Global";
+import * as Global from "../../components/Global";
 const FiltroBasico = ({
   textLabel,
   inputPlaceHolder,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
