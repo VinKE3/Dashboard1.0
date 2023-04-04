@@ -46,7 +46,7 @@ const Lineas = () => {
       setPermisos([true, true, true, true]);
       Listar(filtro, 1);
     } else {
-      //Consulta a la Api para traer los permisos
+      //?Consulta a la Api para traer los permisos
     }
   }, [usuario]);
   useEffect(() => {

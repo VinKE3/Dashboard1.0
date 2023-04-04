@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
   FaBalanceScale,
   FaClipboardCheck,
@@ -11,8 +10,6 @@ import {
 } from "react-icons/fa";
 
 function seccionesList() {
-  // const usuariosActivos = usuarios.filter((item) => item.isActivo === true);
-
   const secciones = [
     {
       title: "Ventas",
@@ -161,7 +158,7 @@ function seccionesList() {
       icon: <FaUsers className="text-primary" />,
       items: [
         {
-          path: "personal",
+          path: "/personal",
           title: "Ver Personal",
         },
       ],

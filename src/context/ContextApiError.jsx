@@ -34,30 +34,3 @@ export const useApiProvider = () => {
     handleApiError,
   };
 };
-
-// import React, { createContext, useState } from "react";
-
-// export const ApiContext = createContext();
-
-// const ApiContextProvider = (props) => {
-//   const [apiStatus, setApiStatus] = useState("");
-//   const [apiError, setApiError] = useState("");
-
-//   const handleApiStatus = (status) => {
-//     setApiStatus(status);
-//   };
-
-//   const handleApiError = (error) => {
-//     setApiError(error);
-//   };
-
-//   return (
-//     <ApiContext.Provider
-//       value={{ apiStatus, apiError, handleApiStatus, handleApiError }}
-//     >
-//       {props.children}
-//     </ApiContext.Provider>
-//   );
-// };
-
-// export default ApiContextProvider;

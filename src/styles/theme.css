@@ -5968,7 +5968,7 @@
   color: #e6e6e6;
 }
 .p-menu .p-menuitem-link .p-menuitem-icon {
-  color: #b3b3b3;
+  color: #fde047;
   margin-right: 0.5rem;
 }
 .p-menu .p-menuitem-link .p-submenu-icon {
@@ -5978,10 +5978,10 @@
   background: #0f0f0f;
 }
 .p-menu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
-  color: #e6e6e6;
+  color: #fde047;
 }
 .p-menu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
-  color: #e6e6e6;
+  color: #fde047;
 }
 .p-menu .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
   color: #e6e6e6;
@@ -5999,7 +5999,7 @@
 }
 .p-menu .p-submenu-header {
   margin: 0;
-  padding: 0.75rem 1rem;
+  padding: 0;
   color: #e6e6e6;
   background: #161d21;
   font-weight: 600;
@@ -6349,18 +6349,19 @@
 }
 .p-panelmenu .p-panelmenu-header > a {
   padding: 1rem;
-  border: 2px solid #263238;
+  border: 2px solid #131517;
   color: #e6e6e6;
-  background: #161d21;
+  /* background: #161d21; */
   font-weight: 600;
   border-radius: 6px;
   transition: box-shadow 0.3s;
 }
 .p-panelmenu .p-panelmenu-header > a .p-panelmenu-icon {
-  margin-right: 0.5rem;
+  margin-right: 0rem;
 }
 .p-panelmenu .p-panelmenu-header > a .p-menuitem-icon {
   margin-right: 0.5rem;
+  color: var(--primary-color);
 }
 .p-panelmenu .p-panelmenu-header > a:focus {
   outline: 0 none;
@@ -6376,7 +6377,7 @@
   margin-bottom: 0;
 }
 .p-panelmenu .p-panelmenu-header.p-highlight > a {
-  background: #161d21;
+  /* background: #161d21; */
   border-color: #263238;
   color: #e6e6e6;
   border-bottom-right-radius: 0;
@@ -6390,7 +6391,7 @@
 .p-panelmenu .p-panelmenu-content {
   padding: 0.5rem 0.5rem;
   border: 2px solid #263238;
-  background: #161d21;
+  /* background: #161d21; */
   color: #e6e6e6;
   border-top: 0;
   border-top-right-radius: 0;
@@ -6417,7 +6418,7 @@
   .p-menuitem
   .p-menuitem-link
   .p-menuitem-icon {
-  color: #b3b3b3;
+  color: #fffaf4;
   margin-right: 0.5rem;
 }
 .p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link .p-submenu-icon {
@@ -6441,7 +6442,7 @@
   .p-menuitem
   .p-menuitem-link:not(.p-disabled):hover
   .p-menuitem-icon {
-  color: #e6e6e6;
+  color: #f3ed4f;
 }
 .p-panelmenu
   .p-panelmenu-content
@@ -6490,8 +6491,8 @@
   border-top: 0 none;
 }
 .p-panelmenu .p-panelmenu-panel:first-child .p-panelmenu-header > a {
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
+  /* border-top-right-radius: 6px;
+  border-top-left-radius: 6px; */
 }
 .p-panelmenu
   .p-panelmenu-panel:last-child

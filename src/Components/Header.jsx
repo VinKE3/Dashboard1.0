@@ -1,13 +1,49 @@
-import React from "react";
-import { FaBuilding } from "react-icons/fa";
-import { RiArrowDownSLine } from "react-icons/ri";
-import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
+import { useRef } from "react";
+import { Button } from "primereact/button";
+import { Menu } from "primereact/menu";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import store from "store2";
+import { authHelper } from "../helpers/AuthHelper";
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 const Header = () => {
+  const menu = useRef(null);
+  const navigate = useNavigate();
+  const { borrarTodosLosTokens } = authHelper;
+  const items = [
+    {
+      items: [
+        {
+          label: "Configuración",
+          icon: "pi pi-cog",
+          command: () => {
+            navigate("/mantenimiento/empresa");
+          },
+        },
+        {
+          label: "Usuarios",
+          icon: "pi pi-users",
+          command: () => {
+            navigate("/mantenimiento/usuarios");
+          },
+        },
+        {
+          label: "Correlativos",
+          icon: "pi pi-list",
+          command: () => {
+            navigate("/mantenimiento/correlativos");
+          },
+        },
+      ],
+    },
+  ];
+  const handleLogout = () => {
+    borrarTodosLosTokens();
+    window.location.href = "/login";
+    console.log("logout");
+  };
   return (
     <header className="h-[10vh] border-b border-b-primario p-8 items-center pb-8 lg:pb-0">
       <nav className="flex items-center justify-between">
@@ -15,43 +51,21 @@ const Header = () => {
           Bienvenido{" "}
           <span className="text-primary">{store.session.get("usuario")}</span>
         </h1>
-        <div>
-          <Menu
-            menuClassName={"bg-secondary-100 text-white"}
-            menuButton={
-              <MenuButton className="flex gap-1 hover:bg-secondary-100 py-2 px-4 rounded-lg">
-                <FaBuilding className="text-primary text-2xl" />
-                <span>Empresa</span>
-                <RiArrowDownSLine className="text-primary text-2xl" />
-              </MenuButton>
-            }
-            transition
-          >
-            <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primary">
-              <Link
-                to="/mantenimiento/empresa"
-                className="flex items-center hover:text-primary"
-              >
-                Configuración
-              </Link>
-            </MenuItem>
-            <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primary">
-              <Link
-                to="/mantenimiento/usuarios"
-                className="flex items-center  hover:text-primary"
-              >
-                Usuarios
-              </Link>
-            </MenuItem>
-            <MenuItem className="rounded-lg hover:bg-secondary-900 hover:text-primary">
-              <Link
-                to="/mantenimiento/correlativos"
-                className="flex items-center hover:text-primary"
-              >
-                Correlativos
-              </Link>
-            </MenuItem>
-          </Menu>
+        <div className="card flex justify-content-center gap-2">
+          <Menu model={items} popup ref={menu} />
+          <Button
+            label="Empresa"
+            icon="pi pi-building"
+            onClick={(e) => menu.current.toggle(e)}
+          />
+          <div>
+            <Button
+              onClick={handleLogout}
+              className="flex items-center font-bold gap-4 py-2 px-4 rounded-lg bg-primary transition-colors w-full text-black"
+            >
+              <RiLogoutCircleRLine className="text-black" /> Cerrar sesión
+            </Button>
+          </div>
         </div>
       </nav>
     </header>
