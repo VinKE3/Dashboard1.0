@@ -1,31 +1,28 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import "primereact/resources/themes/lara-dark-indigo/theme.css";
 import "./styles/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-// Layout
+//?Layout
 import LayoutAdmin from "./layouts/LayoutAdmin";
-// Pages auth
+//?Pages auth
 import Login from "./pages/auth/Login";
-// Pages admin
+//?Pages admin
 import Home from "./pages/admin/Home";
 import Error404 from "./pages/Error404";
-import Tabla from "./components/Tabla";
-// Pages ventas
-// import Clientes from "./pages/ventas/clientes/Clientes";
+//*Pages ventas
 import ConductoresTransportistas from "./pages/ventas/conductoresTransportistas/ConductoresTransportistas";
 import DocumentosDeVenta from "./pages/ventas/documentosVenta/DocumentosVenta";
 import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
 import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
 import SalidasDeArticulos from "./pages/ventas/salidaDeArticulos/SalidaDeArticulos";
 import RegistroVentaArticulo from "./pages/ventas/registroVentaArituculo/RegistroVentaArticulo";
-//Pages compras
+//*Pages compras
 import Proveedores from "./pages/compras/proveedores/Proveedores";
 import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
 import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
 import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
-//Pages mantenimiento
+//*Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
 import Clientes from "./pages/mantenimiento/cliente/Cliente";
 import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
@@ -46,11 +43,11 @@ import CajaChicaConfiguracion from "./pages/mantenimiento/cajaChicaConfiguracion
 import Empresa from "./pages/mantenimiento/empresa/Empresa";
 import Correlativos from "./pages/mantenimiento/correlativos/Correlativos";
 import EmpresaDeTransporte from "./pages/mantenimiento/empresaDeTransporte/EmpresaDeTransporte";
-//Pages almacen
+//*Pages almacen
 import Almacen from "./pages/almacen/Almacen";
-//Pages personal
+//*Pages personal
 import Personal from "./pages/personal/Personal";
-//pages tesoreria
+//*pages tesoreria
 import CajaChica from "./pages/tesoreria/cajaChica/CajaChica";
 import CobrosCuentaBancaria from "./pages/tesoreria/cobrosCuentasBancaria/CobrosCuentaBancaria";
 import CuentasPorCobrar from "./pages/tesoreria/cuentasPorCobrar/CuentasPorCobrar";
@@ -63,8 +60,6 @@ import ReciboDeEgreso from "./pages/tesoreria/reciboDeEgreso/ReciboDeEgreso";
 import ReciboDeIngreso from "./pages/tesoreria/reciboDeIngreso/ReciboDeIngreso";
 import Retenciones from "./pages/tesoreria/retenciones/Retenciones";
 
-//page demo tabla
-import Demo from "./components/Demo";
 function App() {
   return (
     <BrowserRouter>
@@ -72,7 +67,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<LayoutAdmin />}>
           <Route index element={<Home />} />
-          {/** VENTAS */}
+          {/** //!VENTAS */}
           <Route path="/ventas/clientes" element={<Clientes />} />
           <Route
             path="/ventas/conductores-transportistas"
@@ -95,7 +90,7 @@ function App() {
             path="/ventas/registro-de-venta-articulo"
             element={<RegistroVentaArticulo />}
           />
-          {/** COMPRAS */}
+          {/** //!COMPRAS */}
           <Route path="/compras/provedores" element={<Proveedores />} />
           <Route
             path="/compras/documentos-de-compra"
@@ -113,7 +108,7 @@ function App() {
             path="/compras/registro-de-compra-articulo"
             element={<RegistroCompraArticulo />}
           />
-          {/** MANTENIMIENTO */}
+          {/** //!MANTENIMIENTO */}
           <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
           <Route
             path="/mantenimiento/correlativos"
@@ -158,11 +153,11 @@ function App() {
             path="/mantenimiento/empresa-de-transporte"
             element={<EmpresaDeTransporte />}
           />
-          {/** ALMACEN */}
+          {/** //!ALMACEN */}
           <Route path="almacen" element={<Almacen />} />
-          {/** PERSONAL */}
+          {/** //!PERSONAL */}
           <Route path="personal" element={<Personal />} />
-          {/** TESORERIA */}
+          {/** //!TESORERIA */}
           <Route
             path="/tesoreria/cuentas-por-cobrar"
             element={<CuentasPorCobrar />}
@@ -201,11 +196,8 @@ function App() {
             path="/tesoreria/recibo-de-egreso"
             element={<ReciboDeEgreso />}
           />
-          {/** OTROS */}
-          <Route path="tabla" element={<Tabla />} />
-          <Route path="demo" element={<Demo />} />
         </Route>
-        {/** ERROR */}
+        {/** //!ERROR */}
         <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>

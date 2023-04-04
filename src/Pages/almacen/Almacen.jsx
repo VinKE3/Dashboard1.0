@@ -2,27 +2,13 @@ import React from "react";
 
 const Almacen = () => {
   return (
-    <div>
-      <form>
-        <div className="form-group">
-          <label htmlFor="nombre">Nombre</label>
-          <input
-            type="text"
-            className="form-control"
-            id="nombre"
-            name="nombre"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="direccion">Dirección</label>
-          <input
-            type="text"
-            className="form-control"
-            id="direccion"
-            name="direccion"
-          />
-        </div>
-      </form>
+    <div className="container grid grid-cols-2 gap-2">
+      <div className="bg-red-100">
+        <h1>buenas</h1>
+      </div>
+      <div className="bg-red-500">
+        <h1>que tal</h1>
+      </div>
     </div>
   );
 };
