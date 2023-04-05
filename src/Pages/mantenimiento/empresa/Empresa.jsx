@@ -4,33 +4,54 @@ import * as Global from "../../../components/Global";
 import Ubigeo from "../../../Components/filtros/Ubigeo";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
-import { toast } from "react-toastify";
 import ApiMasy from "../../../api/ApiMasy";
+import styled from "styled-components";
+import TableBasic from "../../../components/tablas/TableBasic";
+import { FaPen, FaTrashAlt } from "react-icons/fa";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
+import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 
-const Empresa = () => {
-  const [data, setData] = useState([]);
+//#region Estilos
+const TablaStyle = styled.div`
+  & th:first-child {
+    /* display: none; */
+  }
+  & tbody td:first-child {
+    /* display: none; */
+  }
+  & th:nth-child(3) {
+    width: 90px;
+  }
+  & th:last-child {
+    width: 130px;
+    text-align: center;
+  }
+`;
+
+const Empresa = ({ modo }) => {
   const [dataGeneral, setDataGeneral] = useState({
-    id: "001",
-    numeroDocumentoIdentidad: "123456",
-    nombre: "AKRON",
-    direccion: "MIL VIVIENDAS",
-    departamentoId: "15",
-    provinciaId: "01",
-    distritoId: "01",
-    telefono: "123456789",
-    celular: "987654321",
-    correoElectronico: "falso@gmail.com",
-    observacion: "todo caro",
-    concarEmpresaId: "01",
-    concarEmpresaNombre: "AKRON SRL",
-    concarUsuarioVenta: "AK",
-    concarUsuarioCompra: "RON",
-    concarUsuarioPago: "AKR",
-    concarUsuarioCobro: "ON",
-    filtroFechaInicio: "2023-03-30T15:29:23.945Z",
-    filtroFechaFin: "2023-03-30T15:29:23.945Z",
-    anioHabilitado1: 2022,
-    anioHabilitado2: 2023,
+    id: "",
+    numeroDocumentoIdentidad: "",
+    nombre: "",
+    direccion: " ",
+    departamentoId: "",
+    provinciaId: "",
+    distritoId: "",
+    telefono: "",
+    celular: "",
+    correoElectronico: "",
+    observacion: "",
+    concarEmpresaId: "",
+    concarEmpresaNombre: "",
+    concarUsuarioVenta: "",
+    concarUsuarioCompra: "",
+    concarUsuarioPago: "",
+    concarUsuarioCobro: "",
+    filtroFechaInicio: "",
+    filtroFechaFin: "",
+    anioHabilitado1: "",
+    anioHabilitado2: "",
     mesesHabilitados: "string",
     porcentajesIGV: [
       {
@@ -88,16 +109,31 @@ const Empresa = () => {
     noviembre: true,
     diciembre: true,
   });
+  const [porcentajesIGV, setPorcentajesIGV] = useState([]);
+  const [porcentajesRetencion, setPorcentajesRetencion] = useState([]);
+  const [porcentajesDetraccion, setPorcentajesDetraccion] = useState([]);
+  const [porcentajesPercepcion, setPorcentajesPercepcion] = useState([]);
 
-  const Configuracion = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Empresa`);
-    setData(result.data);
-    console.log(result.data);
-  };
+  // const [contador = 0, setContador] = useState(0);
+  const [estadoIgv, setEstadoIgv] = useState(false);
+  const [estadoRetencion, setEstadoRetencion] = useState(false);
+  const [estadoDetraccion, setEstadoDetraccion] = useState(false);
+  const [estadoPercepcion, setEstadoPercepcion] = useState(false);
+  const [objetoIgv, setObjetoIgv] = useState([]);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     Configuracion();
   }, []);
+
+  useEffect(() => {
+    objetoIgv;
+  }, [objetoIgv]);
+
+  useEffect(() => {
+    dataGeneral;
+    console.log(dataGeneral.porcentajesIGV);
+  }, [dataGeneral]);
 
   useEffect(() => {
     dataUbigeo;
@@ -110,6 +146,34 @@ const Empresa = () => {
       });
     }
   }, [dataUbigeo]);
+
+  const Configuracion = async () => {
+    const result = await ApiMasy.get(`api/Empresa/Configuracion`);
+    let contador = 0;
+    const igv = result.data.data.porcentajesIGV.map((item) => ({
+      id: contador++,
+      porcentaje: item.porcentaje,
+      default: item.default,
+    }));
+    const retencion = result.data.data.porcentajesRetencion.map((item) => ({
+      porcentaje: item.porcentaje,
+      default: item.default,
+    }));
+    const detraccion = result.data.data.porcentajesDetraccion.map((item) => ({
+      porcentaje: item.porcentaje,
+      default: item.default,
+    }));
+    const percepcion = result.data.data.porcentajesPercepcion.map((item) => ({
+      porcentaje: item.porcentaje,
+      default: item.default,
+    }));
+    setDataGeneral(result.data.data);
+    setPorcentajesIGV(igv);
+    setPorcentajesRetencion(retencion);
+    setPorcentajesDetraccion(detraccion);
+    setPorcentajesPercepcion(percepcion);
+    console.log(retencion);
+  };
 
   const ValidarData = async ({ target }) => {
     if (target.name == "correoElectronico") {
@@ -168,6 +232,120 @@ const Empresa = () => {
 
   const handleCheck2 = (name, value) => {
     setCheckboxes2((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const colIgv = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Porcentaje",
+      accessor: "porcentaje",
+    },
+    {
+      Header: "Default",
+      accessor: "default",
+      Cell: ({ value }) => {
+        return value ? (
+          <Checkbox checked={true} />
+        ) : (
+          <Checkbox checked={false} />
+        );
+      },
+    },
+    {
+      Header: "Acciones",
+      Cell: ({ row }) => (
+        <div className="flex item-center justify-center">
+          {modo == "Consultar" ? (
+            ""
+          ) : (
+            <>
+              <div className={Global.TablaBotonModificar}>
+                <button
+                  id="boton-modificar"
+                  onClick={(e) => AgregarIgv(e, row.values.id)}
+                  className="p-0 px-1"
+                  title="Click para modificar registro"
+                >
+                  <FaPen></FaPen>
+                </button>
+              </div>
+
+              <div className={Global.TablaBotonEliminar}>
+                <button
+                  id="boton-eliminar"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    Delete(
+                      ["Mantenimiento", "Configuracion"],
+                      row.values.id,
+                      setRespuesta
+                    );
+                  }}
+                  className="p-0 px-1"
+                  title="Click para eliminar registro"
+                >
+                  <FaTrashAlt></FaTrashAlt>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const AgregarIgv = async (e, id = 0) => {
+    e.preventDefault();
+    if (e.target.innerText == "AGREGAR") {
+      setObjetoIgv({
+        id: "",
+        porcentaje: 0,
+        default: false,
+      });
+    } else {
+      setObjetoIgv({
+        id: id,
+        porcentaje: dataGeneral.porcentajesIGV[id].porcentaje,
+        default: dataGeneral.porcentajesIGV[id].default,
+      });
+    }
+    setEstadoIgv(true);
+  };
+
+  const ValidarDataIgv = async ({ target }) => {
+    if (target.name == "default") {
+      setObjetoIgv({ ...objetoIgv, [target.name]: target.checked });
+    } else {
+      setObjetoIgv((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
+  };
+
+  const EnviarIgv = async () => {
+    if (objetoIgv.id == "") {
+      porcentajesIGV.push({
+        porcentaje: objetoIgv.porcentaje,
+        default: objetoIgv.default,
+      });
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesIGV,
+      });
+    } else {
+      porcentajesIGV[objetoIgv.id] = {
+        porcentaje: objetoIgv.porcentaje,
+        default: objetoIgv.default,
+      };
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesIGV,
+      });
+    }
   };
 
   return (
@@ -393,7 +571,7 @@ const Empresa = () => {
                   name="concarUsuarioPago"
                   autoComplete="off"
                   placeholder="Usuario Pago"
-                  value={dataGeneral.concarUsuarioPago}
+                  value={dataGeneral.concarUsuarioPago ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -691,6 +869,93 @@ const Empresa = () => {
                 <label>Diciembre</label>
               </div>
             </div>
+          </div>
+        </TabPanel>
+        <TabPanel
+          header="Configuracion"
+          leftIcon="pi pi-calendar mr-2"
+          style={{ color: "white" }}
+        >
+          <div className="grid grid-cols-2 gap-4">
+            <div className="card">
+              <h1 className="text-center mb-2">IGV</h1>
+              <BotonBasico
+                botonText="Agregar"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPlus}
+                click={(e) => {
+                  AgregarIgv(e);
+                }}
+              />
+              {/* Form Direcciones */}
+              {estadoIgv && (
+                <div className={Global.FormSecundario}>
+                  <div className="flex">
+                    <label htmlFor="porcentaje" className={Global.LabelStyle}>
+                      Porcentaje
+                    </label>
+                    <input
+                      type="number"
+                      id="porcentaje"
+                      name="porcentaje"
+                      autoComplete="off"
+                      placeholder="Porcentaje"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={objetoIgv.porcentaje}
+                      onChange={ValidarDataIgv}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className="flex">
+                    <label htmlFor="default" className={Global.LabelStyle}>
+                      Default
+                    </label>
+                    <Checkbox
+                      id="default"
+                      name="default"
+                      onChange={(e) => {
+                        setChecked(e.checked);
+                        ValidarDataIgv(e);
+                      }}
+                      checked={objetoIgv.default ? checked : ""}
+                      value={objetoIgv.default ? true : false}
+                    ></Checkbox>
+                  </div>
+
+                  {/*footer*/}
+                  <div className="flex items-center justify-start">
+                    {modo == "Consultar" ? (
+                      ""
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={EnviarIgv}
+                        className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                      >
+                        Guardar
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setEstadoIgv(false)}
+                      className={
+                        Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                      }
+                    >
+                      CERRAR
+                    </button>
+                  </div>
+                  {/*footer*/}
+                </div>
+              )}
+              {/* Form Direcciones */}
+              <TablaStyle>
+                <TableBasic columnas={colIgv} datos={porcentajesIGV} />
+              </TablaStyle>
+            </div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
           </div>
         </TabPanel>
       </TabView>

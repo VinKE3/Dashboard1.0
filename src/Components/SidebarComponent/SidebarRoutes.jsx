@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 // Icons
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { authHelper } from "../../helpers/AuthHelper";
@@ -13,7 +12,6 @@ const SidebarRoutes = ({}) => {
   const handleLogout = () => {
     borrarTodosLosTokens();
     window.location.href = "/login";
-    console.log("logout");
   };
 
   const items = [
@@ -389,7 +387,7 @@ const SidebarRoutes = ({}) => {
       className={`h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto top-0 bg-secondary-100 p-4 flex flex-col z-50 -left-full"
       transition-all`}
     >
-      <div className="h-[8vh]  ">
+      <div className="h-[8vh]">
         <h1 className="text-center text-2xl font-bold text-white h-[6vh] bg-secondary-900 rounded-lg">
           <Link to={"/"}>
             AKRON<span className="text-primary text-4xl">.</span>

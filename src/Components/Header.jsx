@@ -47,7 +47,7 @@ const Header = () => {
   return (
     <header className="h-[10vh] border-b border-b-primario p-8 items-center pb-8 lg:pb-0">
       <nav className="flex items-center justify-between">
-        <h1 className="font-bold just">
+        <h1 className="font-bold just text-xl">
           Bienvenido{" "}
           <span className="text-primary">{store.session.get("usuario")}</span>
         </h1>
