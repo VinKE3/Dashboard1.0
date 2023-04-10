@@ -11,6 +11,8 @@ import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
+import Update from "../../../components/CRUD/Update";
+import { id } from "date-fns/locale";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -52,7 +54,7 @@ const Empresa = ({ modo }) => {
     filtroFechaFin: "",
     anioHabilitado1: "",
     anioHabilitado2: "",
-    mesesHabilitados: "string",
+    mesesHabilitados: "",
     porcentajesIGV: [
       {
         porcentaje: 0,
@@ -93,22 +95,35 @@ const Empresa = ({ modo }) => {
     octubre: true,
     noviembre: true,
     diciembre: true,
+    enero2: true,
+    febrero2: true,
+    marzo2: true,
+    abril2: true,
+    mayo2: true,
+    junio2: true,
+    julio2: true,
+    agosto2: true,
+    septiembre2: true,
+    octubre2: true,
+    noviembre2: true,
+    diciembre2: true,
   });
-  const [checkboxes2, setCheckboxes2] = useState({
-    checked: true,
-    enero: true,
-    febrero: true,
-    marzo: true,
-    abril: true,
-    mayo: true,
-    junio: true,
-    julio: true,
-    agosto: true,
-    septiembre: true,
-    octubre: true,
-    noviembre: true,
-    diciembre: true,
-  });
+  // const [checkboxes2, setCheckboxes2] = useState({
+  //   checked2: true,
+  //   enero2: true,
+  //   febrero2: true,
+  //   marzo2: true,
+  //   abril2: true,
+  //   mayo2: true,
+  //   junio2: true,
+  //   julio2: true,
+  //   agosto2: true,
+  //   septiembre2: true,
+  //   octubre2: true,
+  //   noviembre2: true,
+  //   diciembre2: true,
+  // });
+  const [mesesHabilitados, setMesesHabilitados] = useState([]);
   const [porcentajesIGV, setPorcentajesIGV] = useState([]);
   const [porcentajesRetencion, setPorcentajesRetencion] = useState([]);
   const [porcentajesDetraccion, setPorcentajesDetraccion] = useState([]);
@@ -132,7 +147,6 @@ const Empresa = ({ modo }) => {
 
   useEffect(() => {
     dataGeneral;
-    console.log(dataGeneral.porcentajesIGV);
   }, [dataGeneral]);
 
   useEffect(() => {
@@ -147,32 +161,51 @@ const Empresa = ({ modo }) => {
     }
   }, [dataUbigeo]);
 
+  //quiero un useffect que se ejecute cuando el estado de los checkbox cambie
+  useEffect(() => {
+    console.log("checkboxes", checkboxes);
+  }, [checkboxes]);
+
   const Configuracion = async () => {
     const result = await ApiMasy.get(`api/Empresa/Configuracion`);
-    let contador = 0;
-    const igv = result.data.data.porcentajesIGV.map((item) => ({
-      id: contador++,
-      porcentaje: item.porcentaje,
-      default: item.default,
-    }));
-    const retencion = result.data.data.porcentajesRetencion.map((item) => ({
-      porcentaje: item.porcentaje,
-      default: item.default,
-    }));
-    const detraccion = result.data.data.porcentajesDetraccion.map((item) => ({
-      porcentaje: item.porcentaje,
-      default: item.default,
-    }));
-    const percepcion = result.data.data.porcentajesPercepcion.map((item) => ({
-      porcentaje: item.porcentaje,
-      default: item.default,
-    }));
+    let contadorIGV = 0;
+    let contadorRetencion = 0;
+    let contadorDetraccion = 0;
+    let contadorPercepcion = 0;
+    const igv = result.data.data.porcentajesIGV
+      .map((item) => ({
+        id: contadorIGV,
+        porcentaje: item.porcentaje,
+        default: item.default,
+      }))
+      .map((item) => ({ ...item, id: contadorIGV++ }));
+    const retencion = result.data.data.porcentajesRetencion
+      .map((item) => ({
+        id: contadorRetencion,
+        porcentaje: item.porcentaje,
+        default: item.default,
+      }))
+      .map((item) => ({ ...item, id: contadorRetencion++ }));
+    const detraccion = result.data.data.porcentajesDetraccion
+      .map((item) => ({
+        id: contadorDetraccion,
+        porcentaje: item.porcentaje,
+        default: item.default,
+      }))
+      .map((item) => ({ ...item, id: contadorDetraccion++ }));
+    const percepcion = result.data.data.porcentajesPercepcion
+      .map((item) => ({
+        id: contadorPercepcion,
+        porcentaje: item.porcentaje,
+        default: item.default,
+      }))
+      .map((item) => ({ ...item, id: contadorPercepcion++ }));
+    setMesesHabilitados(result.data.data.mesesHabilitados.split(","));
     setDataGeneral(result.data.data);
     setPorcentajesIGV(igv);
     setPorcentajesRetencion(retencion);
     setPorcentajesDetraccion(detraccion);
     setPorcentajesPercepcion(percepcion);
-    console.log(retencion);
   };
 
   const ValidarData = async ({ target }) => {
@@ -189,50 +222,169 @@ const Empresa = ({ modo }) => {
     }
   };
 
-  const handleCheckAll = (e) => {
-    const newChecked = e.target.checked;
-    setCheckboxes({
-      checked: newChecked,
-      enero: newChecked,
-      febrero: newChecked,
-      marzo: newChecked,
-      abril: newChecked,
-      mayo: newChecked,
-      junio: newChecked,
-      julio: newChecked,
-      agosto: newChecked,
-      septiembre: newChecked,
-      octubre: newChecked,
-      noviembre: newChecked,
-      diciembre: newChecked,
-    });
-  };
-  const handleCheck = (name, value) => {
-    setCheckboxes((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const handleCheckAll2 = (e) => {
-    const newChecked = e.target.checked;
-    setCheckboxes2({
-      checked: newChecked,
-      enero: newChecked,
-      febrero: newChecked,
-      marzo: newChecked,
-      abril: newChecked,
-      mayo: newChecked,
-      junio: newChecked,
-      julio: newChecked,
-      agosto: newChecked,
-      septiembre: newChecked,
-      octubre: newChecked,
-      noviembre: newChecked,
-      diciembre: newChecked,
+  const handleCheckAll = (event) => {
+    const { checked } = event.target;
+    setCheckboxes((prevState) => ({
+      ...prevState,
+      checked,
+      enero: checked,
+      febrero: checked,
+      marzo: checked,
+      abril: checked,
+      mayo: checked,
+      junio: checked,
+      julio: checked,
+      agosto: checked,
+      septiembre: checked,
+      octubre: checked,
+      noviembre: checked,
+      diciembre: checked,
+    }));
+    setDataGeneral({
+      ...dataGeneral,
+      mesesHabilitados: checked
+        ? [
+            "202201",
+            "202202",
+            "202203",
+            "202204",
+            "202205",
+            "202206",
+            "202207",
+            "202208",
+            "202209",
+            "202210",
+            "202211",
+            "202212",
+          ]
+        : [],
     });
   };
 
-  const handleCheck2 = (name, value) => {
-    setCheckboxes2((prevState) => ({ ...prevState, [name]: value }));
+  //?handleCheck1
+  const meses = {
+    enero: 0,
+    febrero: 1,
+    marzo: 2,
+    abril: 3,
+    mayo: 4,
+    junio: 5,
+    julio: 6,
+    agosto: 7,
+    septiembre: 8,
+    octubre: 9,
+    noviembre: 10,
+    diciembre: 11,
+    enero2: 12,
+    febrero2: 13,
+    marzo2: 14,
+    abril2: 15,
+    mayo2: 16,
+    junio2: 17,
+    julio2: 18,
+    agosto2: 19,
+    septiembre2: 20,
+    octubre2: 21,
+    noviembre2: 22,
+    diciembre2: 23,
   };
+
+  const handleCheck = (mes, checked) => {
+    setCheckboxes({ ...checkboxes, [mes]: checked });
+    const index = meses[mes];
+    if (index !== undefined) {
+      mesesHabilitados[index] = checked
+        ? dataGeneral.anioHabilitado1 + ("0" + (index + 1)).slice(-2)
+        : "";
+      if (mesesHabilitados[index] === "") {
+        mesesHabilitados[index] = "";
+      }
+    }
+    const filteredMesesHabilitados = mesesHabilitados.filter(
+      (mes) => mes !== null && mes !== undefined && mes !== ""
+    );
+    setDataGeneral({
+      ...dataGeneral,
+      mesesHabilitados: filteredMesesHabilitados.join(","),
+    });
+    console.log(filteredMesesHabilitados.join(","));
+  };
+
+  const handleCheckAll2 = (event) => {
+    const { checked } = event.target.checked;
+    setCheckboxes((prevState) => ({
+      ...prevState,
+      checked,
+      enero2: checked,
+      febrero2: checked,
+      marzo2: checked,
+      abril2: checked,
+      mayo2: checked,
+      junio2: checked,
+      julio2: checked,
+      agosto2: checked,
+      septiembre2: checked,
+      octubre2: checked,
+      noviembre2: checked,
+      diciembre2: checked,
+    }));
+    setDataGeneral({
+      ...dataGeneral,
+      mesesHabilitados: checked
+        ? [
+            "202301",
+            "202302",
+            "202303",
+            "202304",
+            "202305",
+            "202306",
+            "202307",
+            "202308",
+            "202309",
+            "202310",
+            "202311",
+            "202312",
+          ]
+        : [],
+    });
+  };
+
+  //?handleCheck2
+  // const meses2 = {
+  //   enero2: 0,
+  //   febrero2: 1,
+  //   marzo2: 2,
+  //   abril2: 3,
+  //   mayo2: 4,
+  //   junio2: 5,
+  //   julio2: 6,
+  //   agosto2: 7,
+  //   septiembre2: 8,
+  //   octubre2: 9,
+  //   noviembre2: 10,
+  //   diciembre2: 11,
+  // };
+  // const handleCheck2 = (mes2, checked2) => {
+  //   setCheckboxes2({ ...checkboxes2, [mes2]: checked2 });
+  //   const index = meses2[mes2];
+  //   if (index !== undefined) {
+  //     mesesHabilitados[index] = checked2
+  //       ? dataGeneral.anioHabilitado2 + ("0" + (index + 1)).slice(-2)
+  //       : "";
+  //     if (mesesHabilitados[index] === "") {
+  //       mesesHabilitados[index] = "";
+  //     }
+  //     const filteredMesesHabilitados = mesesHabilitados.filter(
+  //       (mes2) => mes2 !== null && mes2 !== undefined && mes2 !== ""
+  //     );
+  //     setDataGeneral({
+  //       ...dataGeneral,
+  //       mesesHabilitados: filteredMesesHabilitados.join(","),
+  //     });
+  //     console.log(filteredMesesHabilitados.join(","));
+  //     console.log("meses 2");
+  //   }
+  // };
 
   const colIgv = [
     {
@@ -279,7 +431,7 @@ const Empresa = ({ modo }) => {
                   onClick={(e) => {
                     e.preventDefault();
                     Delete(
-                      ["Mantenimiento", "Configuracion"],
+                      ["Empresa", "Configuracion"],
                       row.values.id,
                       setRespuesta
                     );
@@ -297,7 +449,20 @@ const Empresa = ({ modo }) => {
     },
   ];
 
-  const AgregarIgv = async (e, id = 0) => {
+  const ValidarDataIgv = async ({ target }) => {
+    if (target.name == "default") {
+      setObjetoIgv({ ...objetoIgv, [target.name]: target.checked });
+    } else {
+      setObjetoIgv((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
+  };
+
+  const [contador, setContador] = useState(0);
+
+  const AgregarIgv = async (e, id = "") => {
     e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
       setObjetoIgv({
@@ -315,27 +480,18 @@ const Empresa = ({ modo }) => {
     setEstadoIgv(true);
   };
 
-  const ValidarDataIgv = async ({ target }) => {
-    if (target.name == "default") {
-      setObjetoIgv({ ...objetoIgv, [target.name]: target.checked });
-    } else {
-      setObjetoIgv((prevState) => ({
-        ...prevState,
-        [target.name]: target.value.toUpperCase(),
-      }));
-    }
-  };
-
   const EnviarIgv = async () => {
-    if (objetoIgv.id == "") {
-      porcentajesIGV.push({
+    if (objetoIgv.id === "") {
+      const nuevoIgv = porcentajesIGV.push({
         porcentaje: objetoIgv.porcentaje,
         default: objetoIgv.default,
       });
+      const nuevosPorcentajesIGV = [...porcentajesIGV, nuevoIgv];
       setDataGeneral({
         ...dataGeneral,
-        porcentajesIGV,
+        porcentajesIGV: nuevosPorcentajesIGV,
       });
+      setContador(contador + 1);
     } else {
       porcentajesIGV[objetoIgv.id] = {
         porcentaje: objetoIgv.porcentaje,
@@ -346,6 +502,13 @@ const Empresa = ({ modo }) => {
         porcentajesIGV,
       });
     }
+    document.getElementById("guardarTodo").click();
+  };
+
+  const GuardarTodo = async (e) => {
+    e.preventDefault();
+    const result = await ApiMasy.put(`api/Empresa/Configuracion`, dataGeneral);
+    console.log(result);
   };
 
   return (
@@ -661,6 +824,9 @@ const Empresa = ({ modo }) => {
             <div className="flex mt-2 gap-2 ml-2">
               <label>Todos</label>
               <Checkbox
+                id="todos"
+                name="todos"
+                value={checkboxes.checked}
                 onChange={handleCheckAll}
                 checked={checkboxes.checked}
               />
@@ -669,29 +835,47 @@ const Empresa = ({ modo }) => {
           <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
             <div className="flex gap-3">
               <Checkbox
-                onChange={(e) => handleCheck("enero", e.target.checked)}
-                checked={checkboxes.enero}
+                id="enero"
+                name="enero"
+                value={mesesHabilitados[0]}
+                onChange={(e) => {
+                  handleCheck("enero", e.target.checked);
+                  setCheckboxes({
+                    ...checkboxes,
+                    enero: e.target.checked,
+                  });
+                }}
+                checked={checkboxes.enero ? true : false}
               />
               <label>Enero</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="febrero"
+                name="febrero"
+                value={mesesHabilitados[1]}
                 onChange={(e) => handleCheck("febrero", e.target.checked)}
-                checked={checkboxes.febrero}
+                checked={checkboxes.febrero ? true : false}
               />
               <label>Febrero</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="marzo"
+                name="marzo"
+                value={mesesHabilitados[2]}
                 onChange={(e) => handleCheck("marzo", e.target.checked)}
-                checked={checkboxes.marzo}
+                checked={checkboxes.marzo ? true : false}
               />
               <label>Marzo</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="abril"
+                name="abril"
+                value={mesesHabilitados[3]}
                 onChange={(e) => handleCheck("abril", e.target.checked)}
-                checked={checkboxes.abril}
+                checked={checkboxes.abril ? true : false}
               />
               <label>Abril</label>
             </div>
@@ -699,29 +883,41 @@ const Empresa = ({ modo }) => {
           <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
             <div className="flex gap-3">
               <Checkbox
+                id="mayo"
+                name="mayo"
+                value={mesesHabilitados[4]}
                 onChange={(e) => handleCheck("mayo", e.target.checked)}
-                checked={checkboxes.mayo}
+                checked={checkboxes.mayo ? true : false}
               />
               <label>Mayo</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="junio"
+                name="junio"
+                value={mesesHabilitados[5]}
                 onChange={(e) => handleCheck("junio", e.target.checked)}
-                checked={checkboxes.junio}
+                checked={checkboxes.junio ? true : false}
               />
               <label>Junio</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="julio"
+                name="julio"
+                value={mesesHabilitados[6]}
                 onChange={(e) => handleCheck("julio", e.target.checked)}
-                checked={checkboxes.julio}
+                checked={checkboxes.julio ? true : false}
               />
               <label>Julio</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="agosto"
+                name="agosto"
+                value={mesesHabilitados[7]}
                 onChange={(e) => handleCheck("agosto", e.target.checked)}
-                checked={checkboxes.agosto}
+                checked={checkboxes.agosto ? true : false}
               />
               <label>Agosto</label>
             </div>
@@ -729,29 +925,41 @@ const Empresa = ({ modo }) => {
           <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
             <div className="flex gap-3">
               <Checkbox
+                id="septiembre"
+                name="septiembre"
+                value={mesesHabilitados[8]}
                 onChange={(e) => handleCheck("septiembre", e.target.checked)}
-                checked={checkboxes.septiembre}
+                checked={checkboxes.septiembre ? true : false}
               />
               <label>Septiembre</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="octubre"
+                name="octubre"
+                value={mesesHabilitados[9]}
                 onChange={(e) => handleCheck("octubre", e.target.checked)}
-                checked={checkboxes.octubre}
+                checked={checkboxes.octubre ? true : false}
               />
               <label>Octubre</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="noviembre"
+                name="noviembre"
+                value={mesesHabilitados[10]}
                 onChange={(e) => handleCheck("noviembre", e.target.checked)}
-                checked={checkboxes.noviembre}
+                checked={checkboxes.noviembre ? true : false}
               />
               <label>Noviembre</label>
             </div>
             <div className="flex gap-3">
               <Checkbox
+                id="diciembre"
+                name="diciembre"
+                value={mesesHabilitados[11]}
                 onChange={(e) => handleCheck("diciembre", e.target.checked)}
-                checked={checkboxes.diciembre}
+                checked={checkboxes.diciembre ? true : false}
               />
               <label>Diciembre</label>
             </div>
@@ -774,37 +982,58 @@ const Empresa = ({ modo }) => {
               <div className="flex mt-2 gap-2 ml-2">
                 <label>Todos</label>
                 <Checkbox
+                  id="todos2"
+                  name="todos2"
+                  value={checkboxes.checked}
                   onChange={handleCheckAll2}
-                  checked={checkboxes2.checked}
+                  checked={checkboxes.checked}
                 />
               </div>
             </div>
             <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("enero", e.target.checked)}
-                  checked={checkboxes2.enero}
+                  id="enero2"
+                  name="enero2"
+                  value={checkboxes.enero2}
+                  onChange={(e) => {
+                    handleCheck("enero2", e.target.checked);
+                    setCheckboxes({
+                      ...checkboxes,
+                      enero2: e.target.checked,
+                    });
+                  }}
+                  checked={checkboxes.enero2 ? true : false}
                 />
                 <label>Enero</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("febrero", e.target.checked)}
-                  checked={checkboxes2.febrero}
+                  id="febrero2"
+                  name="febrero2"
+                  value={checkboxes.febrero}
+                  onChange={(e) => {
+                    handleCheck("febrero", e.target.checked);
+                    setCheckboxes({
+                      ...checkboxes,
+                      febrero2: e.target.checked,
+                    });
+                  }}
+                  checked={checkboxes.febrero2 ? true : false}
                 />
                 <label>Febrero</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("marzo", e.target.checked)}
-                  checked={checkboxes2.marzo}
+                // onChange={(e) => handleCheck2("marzo", e.target.checked)}
+                // checked={checkboxes2.marzo}
                 />
                 <label>Marzo</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("abril", e.target.checked)}
-                  checked={checkboxes2.abril}
+                // onChange={(e) => handleCheck2("abril", e.target.checked)}
+                // checked={checkboxes2.abril}
                 />
                 <label>Abril</label>
               </div>
@@ -812,29 +1041,29 @@ const Empresa = ({ modo }) => {
             <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("mayo", e.target.checked)}
-                  checked={checkboxes2.mayo}
+                // onChange={(e) => handleCheck2("mayo", e.target.checked)}
+                // checked={checkboxes2.mayo}
                 />
                 <label>Mayo</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("junio", e.target.checked)}
-                  checked={checkboxes2.junio}
+                // onChange={(e) => handleCheck2("junio", e.target.checked)}
+                // checked={checkboxes2.junio}
                 />
                 <label>Junio</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("julio", e.target.checked)}
-                  checked={checkboxes2.julio}
+                // onChange={(e) => handleCheck2("julio", e.target.checked)}
+                // checked={checkboxes2.julio}
                 />
                 <label>Julio</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("agosto", e.target.checked)}
-                  checked={checkboxes2.agosto}
+                // onChange={(e) => handleCheck2("agosto", e.target.checked)}
+                // checked={checkboxes2.agosto}
                 />
                 <label>Agosto</label>
               </div>
@@ -842,29 +1071,29 @@ const Empresa = ({ modo }) => {
             <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("septiembre", e.target.checked)}
-                  checked={checkboxes2.septiembre}
+                // onChange={(e) => handleCheck2("septiembre", e.target.checked)}
+                // checked={checkboxes2.septiembre}
                 />
                 <label>Septiembre</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("octubre", e.target.checked)}
-                  checked={checkboxes2.octubre}
+                // onChange={(e) => handleCheck2("octubre", e.target.checked)}
+                // checked={checkboxes2.octubre}
                 />
                 <label>Octubre</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("noviembre", e.target.checked)}
-                  checked={checkboxes2.noviembre}
+                // onChange={(e) => handleCheck2("noviembre", e.target.checked)}
+                // checked={checkboxes2.noviembre}
                 />
                 <label>Noviembre</label>
               </div>
               <div className="flex gap-3">
                 <Checkbox
-                  onChange={(e) => handleCheck2("diciembre", e.target.checked)}
-                  checked={checkboxes2.diciembre}
+                // onChange={(e) => handleCheck2("diciembre", e.target.checked)}
+                // checked={checkboxes2.diciembre}
                 />
                 <label>Diciembre</label>
               </div>
@@ -878,7 +1107,7 @@ const Empresa = ({ modo }) => {
         >
           <div className="grid grid-cols-2 gap-4">
             <div className="card">
-              <h1 className="text-center mb-2">IGV</h1>
+              <h1 className="text-center mb-2 text-primary font-bold">IGV</h1>
               <BotonBasico
                 botonText="Agregar"
                 botonClass={Global.BotonAgregar}
@@ -960,7 +1189,12 @@ const Empresa = ({ modo }) => {
         </TabPanel>
       </TabView>
       <div className="mt-2">
-        <button className={Global.BotonOkModal} type="button">
+        <button
+          id="guardarTodo"
+          className={Global.BotonOkModal}
+          type="button"
+          onClick={GuardarTodo}
+        >
           Guardar Cambios
         </button>
       </div>

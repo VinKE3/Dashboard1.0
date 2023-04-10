@@ -7,7 +7,10 @@ const Sidebar = () => {
 
   return (
     <>
-      <SidebarRoutes />
+      <SidebarRoutes
+        showMenu={showMenu}
+        onClickShowMenu={() => setShowMenu(!showMenu)}
+      />
       <BotonCerrarMenu
         onClickButton={() => setShowMenu(!showMenu)}
         showMenu={showMenu}

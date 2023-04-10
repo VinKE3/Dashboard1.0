@@ -5,13 +5,18 @@ import { authHelper } from "../../helpers/AuthHelper";
 import { PanelMenu } from "primereact/panelmenu";
 import { useNavigate } from "react-router-dom";
 
-const SidebarRoutes = ({}) => {
+const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
   const navigate = useNavigate();
   const { borrarTodosLosTokens } = authHelper;
 
   const handleLogout = () => {
     borrarTodosLosTokens();
     window.location.href = "/login";
+  };
+
+  const onClickShowMenuHandle = (e) => {
+    e.preventDefault();
+    onClickShowMenu();
   };
 
   const items = [
@@ -384,8 +389,9 @@ const SidebarRoutes = ({}) => {
 
   return (
     <div
-      className={`h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto top-0 bg-secondary-100 p-4 flex flex-col z-50 -left-full"
-      transition-all`}
+      className={`h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto top-0 bg-secondary-100 p-4 flex flex-col z-50 ${
+        showMenu ? "left-0" : "-left-full"
+      } transition-all`}
     >
       <div className="h-[8vh]">
         <h1 className="text-center text-2xl font-bold text-white h-[6vh] bg-secondary-900 rounded-lg">
