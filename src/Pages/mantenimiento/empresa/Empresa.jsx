@@ -11,7 +11,6 @@ import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
-import Delete from "../../../components/CRUD/Delete";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -1647,19 +1646,24 @@ const Empresa = ({ modo }) => {
                     />
                   </div>
                   <div className="flex">
-                    <label htmlFor="default" className={Global.LabelStyle}>
+                    <label
+                      htmlFor="default"
+                      className="inline-flex items-center px-3 border  bg-gray-800 text-light border-gray-600 font-semibold "
+                    >
                       Default
                     </label>
-                    <Checkbox
-                      id="default"
-                      name="default"
-                      onChange={(e) => {
-                        setCheckedIgv(e.checked);
-                        ValidarDataIgv(e);
-                      }}
-                      checked={objetoIgv.default ? checkedIgv : ""}
-                      value={objetoIgv.default ? true : false}
-                    ></Checkbox>
+                    <div className="mx-2">
+                      <Checkbox
+                        id="default"
+                        name="default"
+                        onChange={(e) => {
+                          setCheckedIgv(e.checked);
+                          ValidarDataIgv(e);
+                        }}
+                        checked={objetoIgv.default ? checkedIgv : ""}
+                        value={objetoIgv.default ? true : false}
+                      ></Checkbox>
+                    </div>
                   </div>
 
                   {/*footer*/}
@@ -1725,19 +1729,26 @@ const Empresa = ({ modo }) => {
                     />
                   </div>
                   <div className="flex">
-                    <label htmlFor="default" className={Global.LabelStyle}>
+                    <label
+                      htmlFor="default"
+                      className="inline-flex items-center px-3 border  bg-gray-800 text-light border-gray-600 font-semibold "
+                    >
                       Default
                     </label>
-                    <Checkbox
-                      id="default"
-                      name="default"
-                      onChange={(e) => {
-                        setCheckedRetencion(e.checked);
-                        ValidarDataRetencion(e);
-                      }}
-                      checked={objetoRetencion.default ? checkedRetencion : ""}
-                      value={objetoRetencion.default ? true : false}
-                    ></Checkbox>
+                    <div className="mx-2">
+                      <Checkbox
+                        id="default"
+                        name="default"
+                        onChange={(e) => {
+                          setCheckedRetencion(e.checked);
+                          ValidarDataRetencion(e);
+                        }}
+                        checked={
+                          objetoRetencion.default ? checkedRetencion : ""
+                        }
+                        value={objetoRetencion.default ? true : false}
+                      ></Checkbox>
+                    </div>
                   </div>
 
                   {/*footer*/}
@@ -1806,21 +1817,26 @@ const Empresa = ({ modo }) => {
                     />
                   </div>
                   <div className="flex">
-                    <label htmlFor="default" className={Global.LabelStyle}>
+                    <label
+                      htmlFor="default"
+                      className="inline-flex items-center px-3 border  bg-gray-800 text-light border-gray-600 font-semibold "
+                    >
                       Default
                     </label>
-                    <Checkbox
-                      id="default"
-                      name="default"
-                      onChange={(e) => {
-                        setCheckedDetraccion(e.checked);
-                        ValidarDataDetraccion(e);
-                      }}
-                      checked={
-                        objetoDetraccion.default ? checkedDetraccion : ""
-                      }
-                      value={objetoDetraccion.default ? true : false}
-                    ></Checkbox>
+                    <div className="mx-2">
+                      <Checkbox
+                        id="default"
+                        name="default"
+                        onChange={(e) => {
+                          setCheckedDetraccion(e.checked);
+                          ValidarDataDetraccion(e);
+                        }}
+                        checked={
+                          objetoDetraccion.default ? checkedDetraccion : ""
+                        }
+                        value={objetoDetraccion.default ? true : false}
+                      ></Checkbox>
+                    </div>
                   </div>
 
                   {/*footer*/}
@@ -1889,21 +1905,26 @@ const Empresa = ({ modo }) => {
                     />
                   </div>
                   <div className="flex">
-                    <label htmlFor="default" className={Global.LabelStyle}>
+                    <label
+                      htmlFor="default"
+                      className="inline-flex items-center px-3 border  bg-gray-800 text-light border-gray-600 font-semibold "
+                    >
                       Default
                     </label>
-                    <Checkbox
-                      id="default"
-                      name="default"
-                      onChange={(e) => {
-                        setCheckedPercepcion(e.checked);
-                        ValidarDataPercepcion(e);
-                      }}
-                      checked={
-                        objetoPercepcion.default ? checkedPercepcion : ""
-                      }
-                      value={objetoPercepcion.default ? true : false}
-                    ></Checkbox>
+                    <div className="mx-2">
+                      <Checkbox
+                        id="default"
+                        name="default"
+                        onChange={(e) => {
+                          setCheckedPercepcion(e.checked);
+                          ValidarDataPercepcion(e);
+                        }}
+                        checked={
+                          objetoPercepcion.default ? checkedPercepcion : ""
+                        }
+                        value={objetoPercepcion.default ? true : false}
+                      ></Checkbox>
+                    </div>
                   </div>
 
                   {/*footer*/}
