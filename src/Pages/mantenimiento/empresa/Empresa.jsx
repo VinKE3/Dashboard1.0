@@ -11,8 +11,7 @@ import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
-import Update from "../../../components/CRUD/Update";
-import { id } from "date-fns/locale";
+import Delete from "../../../components/CRUD/Delete";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -123,7 +122,13 @@ const Empresa = ({ modo }) => {
   const [estadoDetraccion, setEstadoDetraccion] = useState(false);
   const [estadoPercepcion, setEstadoPercepcion] = useState(false);
   const [objetoIgv, setObjetoIgv] = useState([]);
-  const [checked, setChecked] = useState(false);
+  const [objetoRetencion, setObjetoRetencion] = useState([]);
+  const [objetoDetraccion, setObjetoDetraccion] = useState([]);
+  const [objetoPercepcion, setObjetoPercepcion] = useState([]);
+  const [checkedIgv, setCheckedIgv] = useState(false);
+  const [checkedRetencion, setCheckedRetencion] = useState(false);
+  const [checkedDetraccion, setCheckedDetraccion] = useState(false);
+  const [checkedPercepcion, setCheckedPercepcion] = useState(false);
 
   useEffect(() => {
     Configuracion();
@@ -131,7 +136,8 @@ const Empresa = ({ modo }) => {
 
   useEffect(() => {
     objetoIgv;
-  }, [objetoIgv]);
+    objetoRetencion;
+  }, [objetoIgv, objetoRetencion]);
 
   useEffect(() => {
     dataGeneral;
@@ -349,6 +355,8 @@ const Empresa = ({ modo }) => {
     });
   };
 
+  //*IGV
+  //#region
   const colIgv = [
     {
       Header: "id",
@@ -393,11 +401,7 @@ const Empresa = ({ modo }) => {
                   id="boton-eliminar"
                   onClick={(e) => {
                     e.preventDefault();
-                    Delete(
-                      ["Empresa", "Configuracion"],
-                      row.values.id,
-                      setRespuesta
-                    );
+                    EliminarIgv(row.values.id);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -424,7 +428,6 @@ const Empresa = ({ modo }) => {
   };
 
   const AgregarIgv = async (e, id = "") => {
-    console.log("id", id);
     e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
       setObjetoIgv({
@@ -440,6 +443,15 @@ const Empresa = ({ modo }) => {
       });
     }
     setEstadoIgv(true);
+  };
+
+  const EliminarIgv = async (id) => {
+    const nuevoPorcentajesIGV = porcentajesIGV.filter((igv) => igv.id !== id);
+    setDataGeneral({
+      ...dataGeneral,
+      porcentajesIGV: nuevoPorcentajesIGV,
+    });
+    document.getElementById("guardarTodo").click();
   };
 
   const EnviarIgv = async () => {
@@ -464,6 +476,389 @@ const Empresa = ({ modo }) => {
     }
     document.getElementById("guardarTodo").click();
   };
+  //#endregion
+
+  //*RETENCION
+  //#region
+  const colRetencion = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Porcentaje",
+      accessor: "porcentaje",
+    },
+    {
+      Header: "Default",
+      accessor: "default",
+      Cell: ({ value }) => {
+        return value ? (
+          <Checkbox checked={true} />
+        ) : (
+          <Checkbox checked={false} />
+        );
+      },
+    },
+    {
+      Header: "Acciones",
+      Cell: ({ row }) => (
+        <div className="flex item-center justify-center">
+          {modo == "Consultar" ? (
+            ""
+          ) : (
+            <>
+              <div className={Global.TablaBotonModificar}>
+                <button
+                  id="boton-modificar"
+                  onClick={(e) => AgregarRetencion(e, row.values.id)}
+                  className="p-0 px-1"
+                  title="Click para modificar registro"
+                >
+                  <FaPen></FaPen>
+                </button>
+              </div>
+
+              <div className={Global.TablaBotonEliminar}>
+                <button
+                  id="boton-eliminar"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    EliminarRetencion(row.values.id);
+                  }}
+                  className="p-0 px-1"
+                  title="Click para eliminar registro"
+                >
+                  <FaTrashAlt></FaTrashAlt>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const ValidarDataRetencion = async ({ target }) => {
+    if (target.name == "default") {
+      setObjetoRetencion({ ...objetoRetencion, [target.name]: target.checked });
+    } else {
+      setObjetoRetencion((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
+  };
+
+  const EliminarRetencion = async (id) => {
+    const nuevoPorcentajesRetencion = porcentajesRetencion.filter(
+      (retencion) => retencion.id !== id
+    );
+    setDataGeneral({
+      ...dataGeneral,
+      porcentajesRetencion: nuevoPorcentajesRetencion,
+    });
+    document.getElementById("guardarTodo").click();
+  };
+
+  const AgregarRetencion = async (e, id = "") => {
+    e.preventDefault();
+    if (e.target.innerText == "AGREGAR") {
+      setObjetoRetencion({
+        id: "",
+        porcentaje: 0,
+        default: false,
+      });
+    } else {
+      setObjetoRetencion({
+        id: id,
+        porcentaje: dataGeneral.porcentajesRetencion[id].porcentaje,
+        default: dataGeneral.porcentajesRetencion[id].default,
+      });
+    }
+    setEstadoRetencion(true);
+  };
+
+  const EnviarRetencion = async () => {
+    if (objetoRetencion.id == "") {
+      porcentajesRetencion.push({
+        porcentaje: objetoRetencion.porcentaje,
+        default: objetoRetencion.default,
+      });
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesRetencion,
+      });
+    } else {
+      porcentajesRetencion[objetoRetencion.id] = {
+        porcentaje: objetoRetencion.porcentaje,
+        default: objetoRetencion.default,
+      };
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesRetencion,
+      });
+    }
+    document.getElementById("guardarTodo").click();
+  };
+
+  //#endregion
+
+  //*DETRACCION
+  //#region
+  const colDetraccion = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Porcentaje",
+      accessor: "porcentaje",
+    },
+    {
+      Header: "Default",
+      accessor: "default",
+      Cell: ({ value }) => {
+        return value ? (
+          <Checkbox checked={true} />
+        ) : (
+          <Checkbox checked={false} />
+        );
+      },
+    },
+    {
+      Header: "Acciones",
+      Cell: ({ row }) => (
+        <div className="flex item-center justify-center">
+          {modo == "Consultar" ? (
+            ""
+          ) : (
+            <>
+              <div className={Global.TablaBotonModificar}>
+                <button
+                  id="boton-modificar"
+                  onClick={(e) => AgregarDetraccion(e, row.values.id)}
+                  className="p-0 px-1"
+                  title="Click para modificar registro"
+                >
+                  <FaPen></FaPen>
+                </button>
+              </div>
+
+              <div className={Global.TablaBotonEliminar}>
+                <button
+                  id="boton-eliminar"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    EliminarDetraccion(row.values.id);
+                  }}
+                  className="p-0 px-1"
+                  title="Click para eliminar registro"
+                >
+                  <FaTrashAlt></FaTrashAlt>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const ValidarDataDetraccion = async ({ target }) => {
+    if (target.name == "default") {
+      setObjetoDetraccion({
+        ...objetoDetraccion,
+        [target.name]: target.checked,
+      });
+    } else {
+      setObjetoDetraccion((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
+  };
+
+  const AgregarDetraccion = async (e, id = "") => {
+    e.preventDefault();
+    if (e.target.innerText == "AGREGAR") {
+      setObjetoDetraccion({
+        id: "",
+        porcentaje: 0,
+        default: false,
+      });
+    } else {
+      setObjetoDetraccion({
+        id: id,
+        porcentaje: dataGeneral.porcentajesDetraccion[id].porcentaje,
+        default: dataGeneral.porcentajesDetraccion[id].default,
+      });
+    }
+    setEstadoDetraccion(true);
+  };
+
+  const EliminarDetraccion = async (id) => {
+    const nuevoPorcentajesDetraccion = porcentajesDetraccion.filter(
+      (detraccion) => detraccion.id !== id
+    );
+    setDataGeneral({
+      ...dataGeneral,
+      porcentajesDetraccion: nuevoPorcentajesDetraccion,
+    });
+    document.getElementById("guardarTodo").click();
+  };
+
+  const EnviarIDetraccion = async () => {
+    if (objetoDetraccion.id == "") {
+      porcentajesDetraccion.push({
+        porcentaje: objetoDetraccion.porcentaje,
+        default: objetoDetraccion.default,
+      });
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesDetraccion,
+      });
+    } else {
+      porcentajesDetraccion[objetoDetraccion.id] = {
+        porcentaje: objetoDetraccion.porcentaje,
+        default: objetoDetraccion.default,
+      };
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesDetraccion,
+      });
+    }
+    document.getElementById("guardarTodo").click();
+  };
+  //#endregion
+
+  //*PERCEPCION
+  //#region
+  const colPercepcion = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Porcentaje",
+      accessor: "porcentaje",
+    },
+    {
+      Header: "Default",
+      accessor: "default",
+      Cell: ({ value }) => {
+        return value ? (
+          <Checkbox checked={true} />
+        ) : (
+          <Checkbox checked={false} />
+        );
+      },
+    },
+    {
+      Header: "Acciones",
+      Cell: ({ row }) => (
+        <div className="flex item-center justify-center">
+          {modo == "Consultar" ? (
+            ""
+          ) : (
+            <>
+              <div className={Global.TablaBotonModificar}>
+                <button
+                  id="boton-modificar"
+                  onClick={(e) => AgregarPercepcion(e, row.values.id)}
+                  className="p-0 px-1"
+                  title="Click para modificar registro"
+                >
+                  <FaPen></FaPen>
+                </button>
+              </div>
+
+              <div className={Global.TablaBotonEliminar}>
+                <button
+                  id="boton-eliminar"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    EliminarPercepcion(row.values.id);
+                  }}
+                  className="p-0 px-1"
+                  title="Click para eliminar registro"
+                >
+                  <FaTrashAlt></FaTrashAlt>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const ValidarDataPercepcion = async ({ target }) => {
+    if (target.name == "default") {
+      setObjetoPercepcion({
+        ...objetoPercepcion,
+        [target.name]: target.checked,
+      });
+    } else {
+      setObjetoPercepcion((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
+  };
+
+  const AgregarPercepcion = async (e, id = "") => {
+    e.preventDefault();
+    if (e.target.innerText == "AGREGAR") {
+      setObjetoPercepcion({
+        id: "",
+        porcentaje: 0,
+        default: false,
+      });
+    } else {
+      setObjetoPercepcion({
+        id: id,
+        porcentaje: dataGeneral.porcentajesPercepcion[id].porcentaje,
+        default: dataGeneral.porcentajesPercepcion[id].default,
+      });
+    }
+    setEstadoPercepcion(true);
+  };
+
+  const EliminarPercepcion = async (id) => {
+    const nuevoPorcentajesPercepcion = porcentajesPercepcion.filter(
+      (percepcion) => percepcion.id !== id
+    );
+    setDataGeneral({
+      ...dataGeneral,
+      porcentajesPercepcion: nuevoPorcentajesPercepcion,
+    });
+    document.getElementById("guardarTodo").click();
+  };
+
+  const EnviarPercepcion = async () => {
+    if (objetoPercepcion.id == "") {
+      porcentajesPercepcion.push({
+        porcentaje: objetoPercepcion.porcentaje,
+        default: objetoPercepcion.default,
+      });
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesPercepcion,
+      });
+    } else {
+      porcentajesPercepcion[objetoPercepcion.id] = {
+        porcentaje: objetoPercepcion.porcentaje,
+        default: objetoPercepcion.default,
+      };
+      setDataGeneral({
+        ...dataGeneral,
+        porcentajesPercepcion,
+      });
+    }
+    document.getElementById("guardarTodo").click();
+  };
+  //#endregion
 
   const GuardarTodo = async (e) => {
     e.preventDefault();
@@ -1259,10 +1654,10 @@ const Empresa = ({ modo }) => {
                       id="default"
                       name="default"
                       onChange={(e) => {
-                        setChecked(e.checked);
+                        setCheckedIgv(e.checked);
                         ValidarDataIgv(e);
                       }}
-                      checked={objetoIgv.default ? checked : ""}
+                      checked={objetoIgv.default ? checkedIgv : ""}
                       value={objetoIgv.default ? true : false}
                     ></Checkbox>
                   </div>
@@ -1298,9 +1693,253 @@ const Empresa = ({ modo }) => {
                 <TableBasic columnas={colIgv} datos={porcentajesIGV} />
               </TablaStyle>
             </div>
-            <div>2</div>
-            <div>3</div>
-            <div>4</div>
+            <div className="card">
+              <h1 className="text-center mb-2 text-primary font-bold uppercase">
+                Retenciones
+              </h1>
+              <BotonBasico
+                botonText="Agregar"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPlus}
+                click={(e) => {
+                  AgregarRetencion(e);
+                }}
+              />
+              {/* Form Direcciones */}
+              {estadoRetencion && (
+                <div className={Global.FormSecundario}>
+                  <div className="flex">
+                    <label htmlFor="porcentaje" className={Global.LabelStyle}>
+                      Porcentaje
+                    </label>
+                    <input
+                      type="number"
+                      id="porcentaje"
+                      name="porcentaje"
+                      autoComplete="off"
+                      placeholder="Porcentaje"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={objetoRetencion.porcentaje}
+                      onChange={ValidarDataRetencion}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className="flex">
+                    <label htmlFor="default" className={Global.LabelStyle}>
+                      Default
+                    </label>
+                    <Checkbox
+                      id="default"
+                      name="default"
+                      onChange={(e) => {
+                        setCheckedRetencion(e.checked);
+                        ValidarDataRetencion(e);
+                      }}
+                      checked={objetoRetencion.default ? checkedRetencion : ""}
+                      value={objetoRetencion.default ? true : false}
+                    ></Checkbox>
+                  </div>
+
+                  {/*footer*/}
+                  <div className="flex items-center justify-start">
+                    {modo == "Consultar" ? (
+                      ""
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={EnviarRetencion}
+                        className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                      >
+                        Guardar
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setEstadoRetencion(false)}
+                      className={
+                        Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                      }
+                    >
+                      CERRAR
+                    </button>
+                  </div>
+                  {/*footer*/}
+                </div>
+              )}
+              {/* Form Direcciones */}
+              <TablaStyle>
+                <TableBasic
+                  columnas={colRetencion}
+                  datos={porcentajesRetencion}
+                />
+              </TablaStyle>
+            </div>
+            <div className="card">
+              <h1 className="text-center mb-2 text-primary font-bold uppercase">
+                Detracción
+              </h1>
+              <BotonBasico
+                botonText="Agregar"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPlus}
+                click={(e) => {
+                  AgregarDetraccion(e);
+                }}
+              />
+              {/* Form Direcciones */}
+              {estadoDetraccion && (
+                <div className={Global.FormSecundario}>
+                  <div className="flex">
+                    <label htmlFor="porcentaje" className={Global.LabelStyle}>
+                      Porcentaje
+                    </label>
+                    <input
+                      type="number"
+                      id="porcentaje"
+                      name="porcentaje"
+                      autoComplete="off"
+                      placeholder="Porcentaje"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={objetoDetraccion.porcentaje}
+                      onChange={ValidarDataDetraccion}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className="flex">
+                    <label htmlFor="default" className={Global.LabelStyle}>
+                      Default
+                    </label>
+                    <Checkbox
+                      id="default"
+                      name="default"
+                      onChange={(e) => {
+                        setCheckedDetraccion(e.checked);
+                        ValidarDataDetraccion(e);
+                      }}
+                      checked={
+                        objetoDetraccion.default ? checkedDetraccion : ""
+                      }
+                      value={objetoDetraccion.default ? true : false}
+                    ></Checkbox>
+                  </div>
+
+                  {/*footer*/}
+                  <div className="flex items-center justify-start">
+                    {modo == "Consultar" ? (
+                      ""
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={EnviarIDetraccion}
+                        className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                      >
+                        Guardar
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setEstadoDetraccion(false)}
+                      className={
+                        Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                      }
+                    >
+                      CERRAR
+                    </button>
+                  </div>
+                  {/*footer*/}
+                </div>
+              )}
+              {/* Form Direcciones */}
+              <TablaStyle>
+                <TableBasic
+                  columnas={colDetraccion}
+                  datos={porcentajesDetraccion}
+                />
+              </TablaStyle>
+            </div>
+            <div className="card">
+              <h1 className="text-center mb-2 text-primary font-bold uppercase">
+                Percepción
+              </h1>
+              <BotonBasico
+                botonText="Agregar"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPlus}
+                click={(e) => {
+                  AgregarPercepcion(e);
+                }}
+              />
+              {/* Form Direcciones */}
+              {estadoPercepcion && (
+                <div className={Global.FormSecundario}>
+                  <div className="flex">
+                    <label htmlFor="porcentaje" className={Global.LabelStyle}>
+                      Porcentaje
+                    </label>
+                    <input
+                      type="number"
+                      id="porcentaje"
+                      name="porcentaje"
+                      autoComplete="off"
+                      placeholder="Porcentaje"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={objetoPercepcion.porcentaje}
+                      onChange={ValidarDataPercepcion}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className="flex">
+                    <label htmlFor="default" className={Global.LabelStyle}>
+                      Default
+                    </label>
+                    <Checkbox
+                      id="default"
+                      name="default"
+                      onChange={(e) => {
+                        setCheckedPercepcion(e.checked);
+                        ValidarDataPercepcion(e);
+                      }}
+                      checked={
+                        objetoPercepcion.default ? checkedPercepcion : ""
+                      }
+                      value={objetoPercepcion.default ? true : false}
+                    ></Checkbox>
+                  </div>
+
+                  {/*footer*/}
+                  <div className="flex items-center justify-start">
+                    {modo == "Consultar" ? (
+                      ""
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={EnviarPercepcion}
+                        className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                      >
+                        Guardar
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setEstadoPercepcion(false)}
+                      className={
+                        Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                      }
+                    >
+                      CERRAR
+                    </button>
+                  </div>
+                  {/*footer*/}
+                </div>
+              )}
+              {/* Form Direcciones */}
+              <TablaStyle>
+                <TableBasic
+                  columnas={colPercepcion}
+                  datos={porcentajesPercepcion}
+                />
+              </TablaStyle>
+            </div>
           </div>
         </TabPanel>
       </TabView>

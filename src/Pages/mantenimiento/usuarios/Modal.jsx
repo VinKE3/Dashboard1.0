@@ -33,7 +33,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [data]);
   useEffect(() => {
     checked;
-    console.log(checked);
   }, [checked]);
   //#endregion
 
