@@ -1,22 +1,3 @@
-//? exportar en Sidebar.jsx
-// const [showSubmenu, setShowSubmenu] = useState(false);
-// const [activeSection, setActiveSection] = useState("");
-// const handleActiveSection = (seccion) => {
-//   setActiveSection(seccion);
-// };
-// const secciones = seccionesList();
-
-//? exportar en Sidebar.jsx
-//<SidebarRoutes
-// onclickButtonSubmenu={() => setShowSubmenu(!showSubmenu)}
-// showSubmenu={showSubmenu}
-// showMenu={showMenu}
-// onClickShowMenu={() => setShowMenu(!showMenu)}
-// secciones={secciones}
-// activeSection={activeSection}
-// handleActiveSection={handleActiveSection}
-///>
-
 import { Link } from "react-router-dom";
 import { useState } from "react";
 //?Icons
