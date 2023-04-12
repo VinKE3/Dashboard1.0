@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
-import * as Global from "../Global";
-
+import * as Global from "../../../src/components/Global";
 const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#region useState
   const [ubigeo, setUbigeo] = useState([]);

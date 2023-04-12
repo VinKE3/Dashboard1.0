@@ -14,7 +14,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import * as Global from "../../../Components/Global";
+import * as Global from "../../../components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`
