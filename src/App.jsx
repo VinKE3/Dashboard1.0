@@ -5,7 +5,7 @@ import "primeicons/primeicons.css";
 //?Layout
 import LayoutAdmin from "./layouts/LayoutAdmin";
 //?Pages auth
-import Login from "./Pages/auth/Login";
+import Login from "./pages/auth/Login";
 //?Pages admin
 import Home from "./pages/admin/Home";
 import Error404 from "./pages/Error404";
