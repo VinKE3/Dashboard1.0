@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import BotonBasico from "../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../Components/filtros/FiltroBasico";
+import FiltroBasico from "../../components/filtros/FiltroBasico";
 import Table from "../../components/tablas/Table";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";

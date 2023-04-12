@@ -3,7 +3,7 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalBasic from "../../../components/ModalBasic";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import Mensajes from "../../../components/Mensajes";
-import TableBasic from "../../../Components/tablas/TableBasic";
+import TableBasic from "../../../components/tablas/TableBasic";
 import { Tabs } from "flowbite-react";
 import { toast } from "react-toastify";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";

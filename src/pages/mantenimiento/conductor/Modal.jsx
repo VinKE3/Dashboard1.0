@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
-import Ubigeo from "../../../Components/filtros/Ubigeo";
+import Ubigeo from "../../../components/filtros/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);

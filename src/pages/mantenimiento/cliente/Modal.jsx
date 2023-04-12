@@ -4,7 +4,7 @@ import ModalBasic from "../../../components/ModalBasic";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import TableBasic from "../../../components/tablas/TableBasic";
 import { TabView, TabPanel } from "primereact/tabview";
-import Ubigeo from "../../../Components/filtros/Ubigeo";
+import Ubigeo from "../../../components/filtros/Ubigeo";
 import Insert from "../../../components/CRUD/Insert";
 import Update from "../../../components/CRUD/Update";
 import Delete from "../../../components/CRUD/Delete";

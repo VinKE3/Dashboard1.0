@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import * as Global from "../../../components/Global";
-import Ubigeo from "../../../Components/filtros/Ubigeo";
+import Ubigeo from "../../../components/filtros/Ubigeo";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import ApiMasy from "../../../api/ApiMasy";
