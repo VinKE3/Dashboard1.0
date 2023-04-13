@@ -11,30 +11,7 @@ import { useCallback } from "react";
 
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState({
-    usuarioId: "042",
-    tipoUsuarioId: "AD",
-    permisos: [
-      {
-        usuarioId: "042",
-        menuId: "Linea",
-        registrar: true,
-        modificar: true,
-        eliminar: true,
-        consultar: true,
-        anular: false,
-      },
-      {
-        usuarioId: "042",
-        menuId: "SubLinea",
-        registrar: true,
-        modificar: true,
-        eliminar: false,
-        consultar: true,
-        anular: false,
-      },
-    ],
-  });
+  const [data, setData] = useState(objeto);
 
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
@@ -53,6 +30,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [selectedActions, setSelectedActions] = useState({});
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
   const [dataPermisos, setDataPermisos] = useState([]);
+
   //#endregion
 
   const convertirASelectActions = useCallback(() => {
@@ -63,18 +41,14 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       "consultar",
       "anular",
     ];
-
     setSelectedActions((prev) => {
       const newSelectedActions = {};
-
       data.permisos.forEach((permiso) => {
         const per = Object.keys(permiso)
           .filter((p) => permisosValidos.includes(p) && permiso[p])
           .map((p) => p);
-
         newSelectedActions[permiso.menuId] = per;
       });
-
       return {
         ...prev,
         ...newSelectedActions,
@@ -85,8 +59,10 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     data;
-    if (document.getElementById("tipoUsuarioId")) {
-      document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
+    if (Object.entries(data).length > 0) {
+      if (document.getElementById("tipoUsuarioId")) {
+        document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
+      }
     }
     setDataPermisos(data.permisos);
   }, [data]);
@@ -98,7 +74,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     if (Object.entries(data).length > 0) {
       convertirASelectActions();
     }
-    TipoUsuario(data.id);
   }, []);
 
   //#endregion
@@ -145,26 +120,45 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       return newArr;
     });
     setSelectedMenu(event.target.innerText);
-    handleSelectAllActions();
   };
 
   const handleSelectAllActions = () => {
-    setValue(botones.map((item) => item.value));
-    setData({
-      ...data,
-      [selectedMenu]: botones.map((item) => item.value),
-    });
-  };
-  const getBotonesActivos = (menuId) => {
-    const permiso = data.permisos.find((permiso) => permiso.menuId === menuId);
-    if (permiso) {
-      return botones.map((boton) => ({
-        ...boton,
-        active: permiso[boton.value],
-      }));
+    let index = dataPermisos.findIndex((x) => x.menuId === selectedMenu);
+
+    if (index !== -1) {
+      let selectedAction = selectedActions[selectedMenu];
+
+      dataPermisos[index].registrar = selectedAction.includes("registrar");
+      dataPermisos[index].modificar = selectedAction.includes("modificar");
+      dataPermisos[index].eliminar = selectedAction.includes("eliminar");
+      dataPermisos[index].consultar = selectedAction.includes("consultar");
+      dataPermisos[index].anular = selectedAction.includes("anular");
     } else {
-      return botones;
+      dataPermisos.push({
+        registrar: false,
+        modificar: false,
+        eliminar: false,
+        consultar: false,
+        anular: false,
+        menuId: selectedMenu,
+        usuarioId: data.usuarioId,
+      });
     }
+  };
+
+  const getBotonesActivos = (menuId) => {
+    if (Array.isArray(data.permisos)) {
+      const permiso = data.permisos.find(
+        (permiso) => permiso.menuId === menuId
+      );
+      if (permiso) {
+        return botones.map((boton) => ({
+          ...boton,
+          active: permiso[boton.value],
+        }));
+      }
+    }
+    return botones;
   };
   //#endregion
 
@@ -175,14 +169,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     );
     setDataTipoUsuario(result.data.data.tiposUsuario);
   };
-
-  const TipoUsuario = async (id) => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/UsuarioPermiso/Listar?usuarioId=${id}`
-    );
-    setData(result.data.data);
-  };
-
   //#endregion
 
   return (
@@ -248,6 +234,11 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 }));
                 setValue(e.value);
                 setChecked(e.value.length === botones.length);
+                handleSelectAllActions();
+                setData({
+                  ...data,
+                  permisos: dataPermisos,
+                });
               }}
               optionLabel="name"
               options={getBotonesActivos(selectedMenu)}

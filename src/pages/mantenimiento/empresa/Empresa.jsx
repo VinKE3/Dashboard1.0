@@ -11,6 +11,7 @@ import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
+import { useFetcher } from "react-router-dom";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -78,6 +79,7 @@ const Empresa = ({ modo }) => {
       },
     ],
   });
+  const [refrescar, setRefrescar] = useState(false);
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [checkboxes, setCheckboxes] = useState({
     checked: true,
@@ -132,16 +134,20 @@ const Empresa = ({ modo }) => {
   useEffect(() => {
     Configuracion();
   }, []);
+  useEffect(() => {
+    dataGeneral;
+    if (refrescar) {
+      GuardarTodo(new Event("click"));
+
+      setRefrescar(false);
+    }
+    mesesHabilitados;
+  }, [dataGeneral, mesesHabilitados]);
 
   useEffect(() => {
     objetoIgv;
     objetoRetencion;
   }, [objetoIgv, objetoRetencion]);
-
-  useEffect(() => {
-    dataGeneral;
-    mesesHabilitados;
-  }, [dataGeneral, mesesHabilitados]);
 
   useEffect(() => {
     dataUbigeo;
@@ -445,15 +451,16 @@ const Empresa = ({ modo }) => {
   };
 
   const EliminarIgv = async (id) => {
+    setRefrescar(true);
     const nuevoPorcentajesIGV = porcentajesIGV.filter((igv) => igv.id !== id);
     setDataGeneral({
       ...dataGeneral,
       porcentajesIGV: nuevoPorcentajesIGV,
     });
-    document.getElementById("guardarTodo").click();
   };
 
   const EnviarIgv = async () => {
+    setRefrescar(true);
     if (objetoIgv.id == "") {
       porcentajesIGV.push({
         porcentaje: objetoIgv.porcentaje,
@@ -473,7 +480,7 @@ const Empresa = ({ modo }) => {
         porcentajesIGV,
       });
     }
-    document.getElementById("guardarTodo").click();
+    setEstadoIgv(false);
   };
   //#endregion
 
@@ -861,8 +868,11 @@ const Empresa = ({ modo }) => {
 
   const GuardarTodo = async (e) => {
     e.preventDefault();
+    console.log(dataGeneral);
     const result = await ApiMasy.put(`api/Empresa/Configuracion`, dataGeneral);
     console.log(result);
+    console.log("heree");
+    await Configuracion();
   };
 
   return (
@@ -1153,6 +1163,16 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
+            </div>
+            <div className="mt-2">
+              <button
+                id="guardarTodo"
+                className={Global.BotonOkModal}
+                type="button"
+                onClick={GuardarTodo}
+              >
+                Guardar Cambios
+              </button>
             </div>
           </div>
         </TabPanel>
@@ -1608,6 +1628,16 @@ const Empresa = ({ modo }) => {
                 <label>Diciembre</label>
               </div>
             </div>
+            <div className="mt-2">
+              <button
+                id="guardarTodo"
+                className={Global.BotonOkModal}
+                type="button"
+                onClick={GuardarTodo}
+              >
+                Guardar Cambios
+              </button>
+            </div>
           </div>
         </TabPanel>
         <TabPanel
@@ -1964,16 +1994,6 @@ const Empresa = ({ modo }) => {
           </div>
         </TabPanel>
       </TabView>
-      <div className="mt-2">
-        <button
-          id="guardarTodo"
-          className={Global.BotonOkModal}
-          type="button"
-          onClick={GuardarTodo}
-        >
-          Guardar Cambios
-        </button>
-      </div>
     </div>
   );
 };

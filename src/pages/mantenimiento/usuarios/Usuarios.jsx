@@ -110,6 +110,12 @@ const Usuarios = () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
     setObjeto(result.data.data);
   };
+  const GetPorUsuarioId = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/UsuarioPermiso/Listar?usuarioId=${id}`
+    );
+    setObjeto(result.data.data);
+  };
 
   //#endregion
 
@@ -159,13 +165,10 @@ const Usuarios = () => {
     setModal(true);
   };
 
-  const AbrirModalConfigurar = async (modo = "Configurar") => {
+  const AbrirModalConfigurar = async (modo = "Modificar") => {
     let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
     setModo(modo);
-
-    // await GetPorId(a);
-    setObjeto([]);
-
+    await GetPorUsuarioId(a);
     setShowModalConfiguracion(true);
   };
 
