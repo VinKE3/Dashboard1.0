@@ -12,7 +12,6 @@ import { useCallback } from "react";
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState(null);
@@ -32,7 +31,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [dataPermisos, setDataPermisos] = useState([]);
 
   //#endregion
-
   const convertirASelectActions = useCallback(() => {
     const permisosValidos = [
       "registrar",
@@ -57,6 +55,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [data, setSelectedActions]);
 
   //#region useEffect
+
   useEffect(() => {
     data;
     if (Object.entries(data).length > 0) {
@@ -66,6 +65,10 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     }
     setDataPermisos(data.permisos);
   }, [data]);
+
+  useEffect(() => {
+    dataPermisos;
+  }, [dataPermisos]);
 
   useEffect(() => {
     getMenu();
@@ -124,10 +127,8 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   const handleSelectAllActions = () => {
     let index = dataPermisos.findIndex((x) => x.menuId === selectedMenu);
-
     if (index !== -1) {
       let selectedAction = selectedActions[selectedMenu];
-
       dataPermisos[index].registrar = selectedAction.includes("registrar");
       dataPermisos[index].modificar = selectedAction.includes("modificar");
       dataPermisos[index].eliminar = selectedAction.includes("eliminar");
@@ -144,6 +145,10 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
         usuarioId: data.usuarioId,
       });
     }
+  };
+
+  const Asignar = async () => {
+    setData({ ...data, permisos: dataPermisos });
   };
 
   const getBotonesActivos = (menuId) => {
