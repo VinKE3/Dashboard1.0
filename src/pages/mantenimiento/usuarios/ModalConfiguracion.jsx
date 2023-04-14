@@ -14,21 +14,28 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [data, setData] = useState(objeto);
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState([]);
+  console.log(value);
   const botones = [
-    { name: "Registrar", value: "registrar", id: "registrar", active: true },
-    { name: "Modificar", value: "modificar", id: "modificar", active: true },
-    { name: "Eliminar", value: "eliminar", id: "eliminar", active: true },
-    { name: "Consultar", value: "consultar", id: "consultar", active: true },
-    { name: "Anular", value: "anular", id: "anular", active: true },
+    { name: "Registrar", value: "registrar", id: "registrar" },
+    { name: "Modificar", value: "modificar", id: "modificar" },
+    { name: "Eliminar", value: "eliminar", id: "eliminar" },
+    { name: "Consultar", value: "consultar", id: "consultar" },
+    { name: "Anular", value: "anular", id: "anular" },
   ];
   const [checked, setChecked] = useState(false);
-  const [checkedMenus, setCheckedMenus] = useState(
-    Array(menu.length).fill(false)
-  );
   const [selectedActions, setSelectedActions] = useState({});
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
-  const [dataPermisos, setDataPermisos] = useState([]);
+  const [tipoUsuarioId, setTipoUsuarioId] = useState("");
+  const [dataPermisos, setDataPermisos] = useState({
+    registrar: false,
+    modificar: false,
+    eliminar: false,
+    consultar: false,
+    anular: false,
+    menuId: "",
+    usuarioId: "",
+  });
 
   //#endregion
   const convertirASelectActions = useCallback(() => {
@@ -47,6 +54,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           .map((p) => p);
         newSelectedActions[permiso.menuId] = per;
       });
+      console.log(newSelectedActions);
       return {
         ...prev,
         ...newSelectedActions,
@@ -55,6 +63,103 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [data, setSelectedActions]);
 
   //#region useEffect
+  useEffect(() => {
+    if (Object.entries(value).length > 0) {
+      setData((prevData) => {
+        const existingPermiso = prevData.permisos.find(
+          (permiso) => permiso.menuId === selectedMenu
+        );
+        if (existingPermiso) {
+          return {
+            ...prevData,
+            permisos: prevData.permisos.map((permiso) =>
+              permiso.menuId === selectedMenu
+                ? {
+                    ...permiso,
+                    registrar: value.includes("registrar"),
+                    modificar: value.includes("modificar"),
+                    eliminar: value.includes("eliminar"),
+                    consultar: value.includes("consultar"),
+                    anular: value.includes("anular"),
+                  }
+                : permiso
+            ),
+          };
+        } else {
+          const newPermiso = {
+            menuId: selectedMenu,
+            usuarioId: data.usuarioId,
+            registrar: value.includes("registrar"),
+            modificar: value.includes("modificar"),
+            eliminar: value.includes("eliminar"),
+            consultar: value.includes("consultar"),
+            anular: value.includes("anular"),
+          };
+
+          return {
+            ...prevData,
+            permisos: [...prevData.permisos, newPermiso],
+          };
+        }
+      });
+    }
+  }, [value]);
+
+  // useEffect(() => {
+  //   if (Object.entries(value).length > 0) {
+  //     setData((prevData) => {
+  //       // Check if the user already has permissions for the selected menu
+  //       const permissionsExist = prevData.permisos.some(
+  //         (permiso) => permiso.menuId === selectedMenu
+  //       );
+
+  //       // If the user doesn't have permissions for the selected menu, add a new permission object to the array
+  //       if (!permissionsExist) {
+  //         const newPermiso = {
+  //           menuId: selectedMenu,
+  //           usuarioId: data.usuarioId,
+  //           registrar: value.includes("registrar"),
+  //           modificar: value.includes("modificar"),
+  //           eliminar: value.includes("eliminar"),
+  //           consultar: value.includes("consultar"),
+  //           anular: value.includes("anular"),
+  //         };
+
+  //         return {
+  //           ...prevData,
+  //           permisos: [...prevData.permisos, newPermiso],
+  //         };
+  //       }
+
+  //       // If the user already has permissions for the selected menu, update the existing permission object
+  //       return {
+  //         ...prevData,
+  //         permisos: prevData.permisos.map((permiso) =>
+  //           permiso.menuId === selectedMenu
+  //             ? {
+  //                 ...permiso,
+  //                 registrar: value.includes("registrar"),
+  //                 modificar: value.includes("modificar"),
+  //                 eliminar: value.includes("eliminar"),
+  //                 consultar: value.includes("consultar"),
+  //                 anular: value.includes("anular"),
+  //               }
+  //             : permiso
+  //         ),
+  //       };
+  //     });
+  //   }
+  // }, [value]);
+
+  useEffect(() => {
+    selectedMenu;
+    setDataPermisos(data.permisos.find((x) => x.menuId === selectedMenu));
+  }, [selectedMenu]);
+
+  useEffect(() => {
+    dataPermisos;
+    console.log(dataPermisos);
+  }, [dataPermisos]);
 
   useEffect(() => {
     data;
@@ -63,12 +168,12 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
         document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
       }
     }
-    setDataPermisos(data.permisos);
+    console.log(data);
   }, [data]);
 
   useEffect(() => {
-    dataPermisos;
-  }, [dataPermisos]);
+    setTipoUsuarioId(data.tipoUsuarioId);
+  }, [data.tipoUsuarioId]);
 
   useEffect(() => {
     getMenu();
@@ -107,64 +212,12 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...prev,
       [selectedMenu]: checked ? botones.map((item) => item.value) : [],
     }));
-    setData({
-      ...data,
-      [selectedMenu]: checked ? botones.map((item) => item.value) : [],
-    });
   };
 
   const handleMenuClick = (event) => {
-    const index = menu.findIndex(
-      (item) => item.nombre === event.target.innerText
-    );
-    setCheckedMenus((prev) => {
-      const newArr = [...prev];
-      newArr[index] = !newArr[index];
-      return newArr;
-    });
     setSelectedMenu(event.target.innerText);
   };
 
-  const handleSelectAllActions = () => {
-    let index = dataPermisos.findIndex((x) => x.menuId === selectedMenu);
-    if (index !== -1) {
-      let selectedAction = selectedActions[selectedMenu];
-      dataPermisos[index].registrar = selectedAction.includes("registrar");
-      dataPermisos[index].modificar = selectedAction.includes("modificar");
-      dataPermisos[index].eliminar = selectedAction.includes("eliminar");
-      dataPermisos[index].consultar = selectedAction.includes("consultar");
-      dataPermisos[index].anular = selectedAction.includes("anular");
-    } else {
-      dataPermisos.push({
-        registrar: false,
-        modificar: false,
-        eliminar: false,
-        consultar: false,
-        anular: false,
-        menuId: selectedMenu,
-        usuarioId: data.usuarioId,
-      });
-    }
-  };
-
-  const Asignar = async () => {
-    setData({ ...data, permisos: dataPermisos });
-  };
-
-  const getBotonesActivos = (menuId) => {
-    if (Array.isArray(data.permisos)) {
-      const permiso = data.permisos.find(
-        (permiso) => permiso.menuId === menuId
-      );
-      if (permiso) {
-        return botones.map((boton) => ({
-          ...boton,
-          active: permiso[boton.value],
-        }));
-      }
-    }
-    return botones;
-  };
   //#endregion
 
   //#region API
@@ -206,6 +259,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             name="tipoUsuarioId"
             onChange={handleInputChange}
             className={Global.SelectStyle}
+            value={tipoUsuarioId}
           >
             {dataTipoUsuario.map((usuario) => (
               <option key={usuario.id} value={usuario.id}>
@@ -239,14 +293,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 }));
                 setValue(e.value);
                 setChecked(e.value.length === botones.length);
-                handleSelectAllActions();
-                setData({
-                  ...data,
-                  permisos: dataPermisos,
-                });
               }}
               optionLabel="name"
-              options={getBotonesActivos(selectedMenu)}
+              options={botones}
               multiple
             />
           </div>
