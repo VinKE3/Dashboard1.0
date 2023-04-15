@@ -15,7 +15,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const { getMenu, menu } = useMenu();
   const [selectedMenu, setSelectedMenu] = useState("");
   const [value, setValue] = useState([]);
-  console.log(value);
   const botones = [
     { name: "Registrar", value: "registrar", id: "registrar" },
     { name: "Modificar", value: "modificar", id: "modificar" },
@@ -54,7 +53,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           .map((p) => p);
         newSelectedActions[permiso.menuId] = per;
       });
-      console.log(newSelectedActions);
       return {
         ...prev,
         ...newSelectedActions,
@@ -158,7 +156,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   useEffect(() => {
     dataPermisos;
-    console.log(dataPermisos);
   }, [dataPermisos]);
 
   useEffect(() => {
@@ -212,6 +209,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...prev,
       [selectedMenu]: checked ? botones.map((item) => item.value) : [],
     }));
+    console.log(checked, "checked");
+    console.log(value, "value");
+    console.log(selectedActions, "selectedActions");
   };
 
   const handleMenuClick = (event) => {
