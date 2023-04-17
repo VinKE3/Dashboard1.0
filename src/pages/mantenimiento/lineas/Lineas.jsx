@@ -28,7 +28,7 @@ const TablaStyle = styled.div`
 
 const Lineas = () => {
   //#region useState
-  const { usuario } = useAuth();
+  const { usuario, usuarioId } = useAuth();
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
@@ -93,7 +93,8 @@ const Lineas = () => {
     setObjeto(result.data.data);
   };
   const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(store.session.get("usuario"), "Linea");
+    const permiso = await GetUsuarioId(usuarioId, "Linea");
+
     setPermisos([
       permiso.registrar,
       permiso.modificar,

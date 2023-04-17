@@ -44,6 +44,8 @@ const borrarTokens = () => {
   store.local.remove("access_token");
   store.session.remove("usuario");
   store.local.remove("usuario");
+  store.session.remove("usuarioId");
+  store.local.remove("usuarioId");
 };
 
 function borrarTodosLosTokens() {
@@ -63,9 +65,17 @@ function usuarioGuardar(data) {
   console.log("usuario", usuario);
 }
 
+function usuarioIdGuardar(data) {
+  const { usuarioId } = data;
+  store.local("usuarioId", usuarioId);
+  store.session("usuarioId", usuarioId);
+  console.log("usuarioId", usuarioId);
+}
+
 export const authHelper = {
   getAccessToken,
   borrarTodosLosTokens,
   login,
   usuarioGuardar,
+  usuarioIdGuardar,
 };

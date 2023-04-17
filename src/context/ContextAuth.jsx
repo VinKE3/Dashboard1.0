@@ -19,12 +19,14 @@ export const useAuthProvider = () => {
   const [usuario, setUsuario] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [usuarioId, setUsuarioId] = useState("");
 
   const login = async (params) => {
     setIsLoading(true);
     setError(null);
     setToken(null);
     setUsuario(null);
+    setUsuarioId(null);
     try {
       const result = await ApiMasy.post(`/api/Sesion/Iniciar`, params);
       if (result.status === 200) {
@@ -34,8 +36,14 @@ export const useAuthProvider = () => {
         const jwtDecoded =
           decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
         setUsuario(jwtDecoded);
+        const jwtDecodedId =
+          decoded[
+            "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+          ];
+        setUsuarioId(jwtDecodedId);
         authHelper.login(result.data.data);
         authHelper.usuarioGuardar({ usuario: jwtDecoded });
+        authHelper.usuarioIdGuardar({ usuarioId: jwtDecodedId });
       }
     } catch (error) {
       setError(error?.response);
@@ -49,5 +57,6 @@ export const useAuthProvider = () => {
     login,
     error,
     isLoading,
+    usuarioId,
   };
 };
