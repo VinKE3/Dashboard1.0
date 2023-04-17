@@ -12,6 +12,7 @@ import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 import store from "store2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -34,10 +35,11 @@ const Lineas = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false]);
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
+
   //#endregion
 
   //#region useEffect
@@ -47,8 +49,11 @@ const Lineas = () => {
       Listar(filtro, 1);
     } else {
       //?Consulta a la Api para traer los permisos
+      GetPermisos();
+      Listar(filtro, 1);
     }
   }, [usuario]);
+
   useEffect(() => {
     filtro;
   }, [filtro]);
@@ -72,6 +77,7 @@ const Lineas = () => {
       Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
+
   //#endregion
 
   //#region Funciones API
@@ -85,6 +91,16 @@ const Lineas = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Linea/${id}`);
     setObjeto(result.data.data);
+  };
+  const GetPermisos = async () => {
+    const permiso = await GetUsuarioId(store.session.get("usuario"), "Linea");
+    setPermisos([
+      permiso.registrar,
+      permiso.modificar,
+      permiso.eliminar,
+      permiso.consultar,
+      permiso.anular,
+    ]);
   };
   //#endregion
 

@@ -175,9 +175,12 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   useEffect(() => {
     getMenu();
     Tablas();
+
     data;
     if (Object.entries(data).length > 0) {
       convertirASelectActions();
+    } else {
+      setSelectedActions({});
     }
   }, []);
 
