@@ -3,7 +3,6 @@ import ApiMasy from "../../../api/ApiMasy";
 import Table from "../../../components/tablas/Table";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import moment from "moment";
-// import Modal from "./Modal";
 import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,8 +11,8 @@ import { useAuth } from "../../../context/ContextAuth";
 import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 import store from "store2";
-import Update from "../../../components/CRUD/Update";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -87,14 +86,6 @@ const BloquearCompra = () => {
     index;
   }, [index]);
 
-  // useEffect(() => {
-  //   modo;
-  // }, [modo]);
-  // useEffect(() => {
-  //   if (!modal) {
-  //     Listar(filtro, index + 1);
-  //   }
-  // }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
       Listar(filtro, index + 1);
@@ -114,20 +105,45 @@ const BloquearCompra = () => {
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
-    console.log(objeto, "objeto");
+  };
+
+  const TipoDeDocumentos = async () => {
+    const result = await ApiMasy.get(
+      `api/Compra/BloquearCompra/FormularioTablas`
+    );
+    const tiposDocumento = result.data.data.tiposDocumento.map((tipo) => ({
+      id: tipo.id,
+      descripcion: tipo.descripcion,
+      abreviatura: tipo.abreviatura,
+    }));
+    tiposDocumento.unshift({ id: "-1", descripcion: "TODOS" });
+    setTipoDeDocumento(tiposDocumento);
   };
   //#endregion
 
   //#region Funciones Filtrado
   const FiltradoPaginado = (e) => {
-    let anio = document.getElementById("anio").value;
-    let mes = document.getElementById("mes").value;
+    let fechaInicio = document.getElementById("fechaInicio").value;
+    let fechaFin = document.getElementById("fechaFin").value;
+    let tipoDocumento = document.getElementById("tipoDocumentoId").value;
     let boton = e.selected + 1;
     setIndex(e.selected);
-    if (anio == new Date().getFullYear() && mes == 0) {
+    if (
+      fechaInicio ==
+        moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
+      fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
+      tipoDocumento == -1
+    ) {
       Listar("", boton);
     } else {
-      Listar(`&anio=${anio}&mes=${mes}`, boton);
+      if (tipoDocumento == -1) {
+        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
+      } else {
+        Listar(
+          `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+          boton
+        );
+      }
     }
   };
   const FiltradoSelect = (e) => {
@@ -274,6 +290,77 @@ const BloquearCompra = () => {
       });
     }
   };
+
+  const ModificarCheckAll = async (ids, isBloqueado) => {
+    let model = {
+      ids: ids,
+      isBloqueado: isBloqueado,
+    };
+    const title = isBloqueado
+      ? "Bloquear 50 registros de compras"
+      : "Desbloquear 50 registros de compras";
+    const result = Swal.fire({
+      title: title,
+      icon: "warning",
+      iconColor: "#F7BF3A",
+      showCancelButton: true,
+      color: "#fff",
+      background: "#1E1F25",
+      confirmButtonColor: "#EE8100",
+      confirmButtonText: "Aceptar",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        ApiMasy.put(`api/Compra/BloquearCompra`, model).then((response) => {
+          if (response.name == "AxiosError") {
+            let err = "";
+            if (response.response.data == "") {
+              err = response.message;
+            } else {
+              err = String(response.response.data.messages[0].textos);
+            }
+            toast.error(err, {
+              position: "bottom-right",
+              autoClose: 7000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+            setRespuestaAlert(false);
+          } else {
+            setRespuestaAlert(true);
+            toast.success(String(response.data.messages[0].textos), {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+        });
+      }
+    });
+    console.log(result);
+
+    setRespuestaAlert(true);
+  };
+
+  const handleChange = (e, ids) => {
+    setChecked(e.checked);
+    if (e.checked) {
+      ModificarCheckAll(ids, true);
+    } else {
+      ModificarCheckAll(ids, false);
+    }
+  };
+
   //#endregion
 
   //#region Columnas y Selects
@@ -341,34 +428,36 @@ const BloquearCompra = () => {
       ),
     },
   ];
-
-  const TipoDeDocumentos = async () => {
-    const result = await ApiMasy.get(
-      `api/Compra/BloquearCompra/FormularioTablas`
-    );
-    const tiposDocumento = result.data.data.tiposDocumento.map((tipo) => ({
-      id: tipo.id,
-      descripcion: tipo.descripcion,
-      abreviatura: tipo.abreviatura,
-    }));
-    tiposDocumento.unshift({ id: "-1", descripcion: "TODOS" });
-    setTipoDeDocumento(tiposDocumento);
-  };
-
   //#endregion
 
   //#region Render
   return (
     <>
       <div className="px-2">
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <h2 className={Global.TituloH2}>Bloquear Compra</h2>
-          <div>
-            <label htmlFor="todos" className={Global.LabelStyle}>
-              {" "}
-              Bloquear Todos{" "}
-            </label>{" "}
-            <Checkbox checked={checked} />
+          <div className="flex  h-10">
+            <div className={Global.LabelStyle}>
+              <Checkbox
+                id="isBloqueado"
+                name="isBloqueado"
+                onChange={(e) => {
+                  handleChange(
+                    e,
+                    datos.map((d) => d.id)
+                  );
+                }}
+                checked={checked}
+              ></Checkbox>
+            </div>
+            <label
+              htmlFor="todos"
+              className={
+                Global.InputStyle + " font-semibold !text-lg !p-1 !px-3"
+              }
+            >
+              Bloquear Todos
+            </label>
           </div>
         </div>
 
@@ -431,17 +520,6 @@ const BloquearCompra = () => {
         </div>
         {/* Filtro*/}
 
-        {/* Boton */}
-        {/* {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )} */}
-        {/* Boton */}
-
         {/* Tabla */}
         <TablaStyle>
           <Table
@@ -454,7 +532,6 @@ const BloquearCompra = () => {
         </TablaStyle>
         {/* Tabla */}
       </div>
-      {/* {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />} */}
       <ToastContainer />
     </>
   );
