@@ -45,7 +45,7 @@ const Lineas = () => {
   //#region useEffect
   useEffect(() => {
     if (store.session.get("usuario") == "AD") {
-      setPermisos([true, true, true, true]);
+      setPermisos([true, true, true, true, true]);
       Listar(filtro, 1);
     } else {
       //?Consulta a la Api para traer los permisos
@@ -94,7 +94,6 @@ const Lineas = () => {
   };
   const GetPermisos = async () => {
     const permiso = await GetUsuarioId(usuarioId, "Linea");
-
     setPermisos([
       permiso.registrar,
       permiso.modificar,

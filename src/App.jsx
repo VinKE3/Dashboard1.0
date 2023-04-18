@@ -16,12 +16,14 @@ import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
 import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
 import SalidasDeArticulos from "./pages/ventas/salidaDeArticulos/SalidaDeArticulos";
 import RegistroVentaArticulo from "./pages/ventas/registroVentaArituculo/RegistroVentaArticulo";
+
 //*Pages compras
 import Proveedores from "./pages/compras/proveedores/Proveedores";
 import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
 import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
 import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
+import BloquearCompra from "./pages/compras/bloquearCompra/BloquearCompra";
 //*Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
 import Clientes from "./pages/mantenimiento/cliente/Cliente";
@@ -108,6 +110,7 @@ function App() {
             path="/compras/registro-de-compra-articulo"
             element={<RegistroCompraArticulo />}
           />
+          <Route path="/compras/bloquear-compra" element={<BloquearCompra />} />
           {/** //!MANTENIMIENTO */}
           <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
           <Route

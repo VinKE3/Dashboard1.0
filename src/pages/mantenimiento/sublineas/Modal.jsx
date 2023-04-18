@@ -19,6 +19,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [data]);
   useEffect(() => {
     Tablas();
+    console.log(dataLinea);
   }, []);
   //#endregion
 
@@ -35,6 +36,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const Tablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Linea/Listar`);
     setDataLinea(result.data.data.data);
+    console.log(result.data.data.data);
   };
   //#endregion
 

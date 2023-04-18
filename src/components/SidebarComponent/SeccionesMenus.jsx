@@ -72,6 +72,10 @@ function seccionesList() {
           path: "/compras/registro-de-compra-articulo",
           title: "Registro de Compra - Articulo",
         },
+        {
+          path: "/compras/bloquear-compra",
+          title: "Bloquear Compra",
+        },
       ],
     },
     {
