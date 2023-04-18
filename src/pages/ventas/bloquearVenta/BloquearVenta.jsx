@@ -40,7 +40,7 @@ const TablaStyle = styled.div`
   }
 `;
 
-const BloquearCompra = () => {
+const BloquearVenta = () => {
   //#region UseState
   const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
@@ -56,7 +56,6 @@ const BloquearCompra = () => {
 
   //#region useEffect
   useEffect(() => {
-    console.log(usuario == "AD");
     if (store.session.get("usuario") == "AD") {
       setPermisos([false, false, true, false]);
       Listar(filtro, 1);
@@ -100,7 +99,7 @@ const BloquearCompra = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Compra/BloquearCompra/Listar?pagina=${pagina}${filtro}`
+      `api/Venta/BloquearVenta/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
@@ -108,7 +107,7 @@ const BloquearCompra = () => {
 
   const TipoDeDocumentos = async () => {
     const result = await ApiMasy.get(
-      `api/Compra/BloquearCompra/FormularioTablas`
+      `api/Venta/BloquearVenta/FormularioTablas`
     );
     const tiposDocumento = result.data.data.tiposDocumento.map((tipo) => ({
       id: tipo.id,
@@ -256,7 +255,7 @@ const BloquearCompra = () => {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
     };
-    const result = await ApiMasy.put(`api/Compra/BloquearCompra`, model);
+    const result = await ApiMasy.put(`api/Venta/BloquearVenta`, model);
     if (result.name == "AxiosError") {
       let err = "";
       if (result.response.data == "") {
@@ -296,8 +295,8 @@ const BloquearCompra = () => {
       isBloqueado: isBloqueado,
     };
     const title = isBloqueado
-      ? "Bloquear 50 registros de compras"
-      : "Desbloquear 50 registros de compras";
+      ? "Bloquear 50 registros de ventas"
+      : "Desbloquear 50 registros de ventas";
     const result = Swal.fire({
       title: title,
       icon: "warning",
@@ -311,7 +310,7 @@ const BloquearCompra = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        ApiMasy.put(`api/Compra/BloquearCompra`, model).then((response) => {
+        ApiMasy.put(`api/Venta/BloquearVenta`, model).then((response) => {
           if (response.name == "AxiosError") {
             let err = "";
             if (response.response.data == "") {
@@ -373,19 +372,19 @@ const BloquearCompra = () => {
       accessor: "numeroDocumento",
     },
     {
-      Header: "Fecha Contable",
-      accessor: "fechaContable",
+      Header: "Fecha Emision",
+      accessor: "fechaEmision",
       Cell: ({ value }) => {
         return moment(value).format("DD/MM/YYYY");
       },
     },
     {
-      Header: "Proveedor",
-      accessor: "proveedorNombre",
+      Header: "Cliente",
+      accessor: "clienteNombre",
     },
     {
-      Header: "Proveedor Numero",
-      accessor: "proveedorNumero",
+      Header: "Cliente Numero",
+      accessor: "clienteNumero",
     },
     {
       Header: "Moneda",
@@ -418,7 +417,7 @@ const BloquearCompra = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Compra", "BloquearCompra"]}
+          menu={["Venta", "BloquearVenta"]}
           id={row.values.id}
           ClickModificar={() =>
             ModificarCheck(row.values.id, row.values.isBloqueado)
@@ -434,7 +433,7 @@ const BloquearCompra = () => {
     <>
       <div className="px-2">
         <div className="flex items-center justify-between">
-          <h2 className={Global.TituloH2}>Bloquear Compra</h2>
+          <h2 className={Global.TituloH2}>Bloquear Venta</h2>
           <div className="flex  h-10">
             <div className={Global.LabelStyle}>
               <Checkbox
@@ -459,7 +458,6 @@ const BloquearCompra = () => {
             </label>
           </div>
         </div>
-
         {/* Filtro*/}
         <div className={Global.ContenedorFiltro}>
           <div className={Global.ContenedorInputFull}>
@@ -537,4 +535,4 @@ const BloquearCompra = () => {
   //#endregion
 };
 
-export default BloquearCompra;
+export default BloquearVenta;

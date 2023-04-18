@@ -31,8 +31,15 @@ const TablaStyle = styled.div`
   & th:nth-child(4) {
     width: 250px;
   }
-  & th:nth-child(8) {
-    width: 25px;
+  & th:nth-child(5) {
+    width: 50px;
+  }
+  & th:nth-child(6) {
+    width: 50px;
+  }
+  & th:nth-child(7) {
+    width: 50px;
+    text-align: center;
   }
   & th:last-child {
     width: 130px;
@@ -40,7 +47,7 @@ const TablaStyle = styled.div`
   }
 `;
 
-const BloquearCompra = () => {
+const BloquearMovimientoBancario = () => {
   //#region UseState
   const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
@@ -50,13 +57,11 @@ const BloquearCompra = () => {
   const [filtro, setFiltro] = useState("");
   const [permisos, setPermisos] = useState([false, false, false, false]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
   const [checked, setChecked] = useState(false);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    console.log(usuario == "AD");
     if (store.session.get("usuario") == "AD") {
       setPermisos([false, false, true, false]);
       Listar(filtro, 1);
@@ -64,11 +69,6 @@ const BloquearCompra = () => {
       //Consulta a la Api para traer los permisos
     }
   }, [usuario]);
-
-  useEffect(() => {
-    tipoDeDocumento;
-    document.getElementById("tipoDocumentoId").value = -1;
-  }, [tipoDeDocumento]);
 
   useEffect(() => {
     datos;
@@ -92,7 +92,6 @@ const BloquearCompra = () => {
   }, [respuestaAlert]);
 
   useEffect(() => {
-    TipoDeDocumentos();
     Listar(filtro, 1);
   }, []);
   //#endregion
@@ -100,87 +99,35 @@ const BloquearCompra = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Compra/BloquearCompra/Listar?pagina=${pagina}${filtro}`
+      `api/Finanzas/BloquearMovimientoBancario/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
 
-  const TipoDeDocumentos = async () => {
-    const result = await ApiMasy.get(
-      `api/Compra/BloquearCompra/FormularioTablas`
-    );
-    const tiposDocumento = result.data.data.tiposDocumento.map((tipo) => ({
-      id: tipo.id,
-      descripcion: tipo.descripcion,
-      abreviatura: tipo.abreviatura,
-    }));
-    tiposDocumento.unshift({ id: "-1", descripcion: "TODOS" });
-    setTipoDeDocumento(tiposDocumento);
-  };
   //#endregion
 
   //#region Funciones Filtrado
   const FiltradoPaginado = (e) => {
     let fechaInicio = document.getElementById("fechaInicio").value;
     let fechaFin = document.getElementById("fechaFin").value;
-    let tipoDocumento = document.getElementById("tipoDocumentoId").value;
     let boton = e.selected + 1;
     setIndex(e.selected);
     if (
       fechaInicio ==
         moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-      fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-      tipoDocumento == -1
+      fechaFin == moment(new Date()).format("yyyy-MM-DD")
     ) {
       Listar("", boton);
     } else {
-      if (tipoDocumento == -1) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
-      } else {
-        Listar(
-          `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-          boton
-        );
-      }
-    }
-  };
-  const FiltradoSelect = (e) => {
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let tipoDocumento = e.target.value;
-    setFiltro(
-      `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-      index + 1
-    );
-    if (tipoDocumento != 0) setIndex(0);
-    if (
-      fechaInicio ==
-        moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-      fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-      tipoDocumento == -1
-    ) {
-      Listar("", index);
-    } else {
-      if (tipoDocumento == -1) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        Listar(
-          `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-          index + 1
-        );
-      }
+      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
     }
   };
   const FiltradoFechaInicio = (e) => {
     clearTimeout(timer);
     let fechaInicio = e.target.value;
     let fechaFin = document.getElementById("fechaFin").value;
-    let tipoDocumento = document.getElementById("tipoDocumentoId").value;
-    setFiltro(
-      `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-      index + 1
-    );
+    setFiltro(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
     if (
       fechaInicio !=
       moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD")
@@ -190,19 +137,11 @@ const BloquearCompra = () => {
       if (
         fechaInicio ==
           moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-        tipoDocumento == -1
+        fechaFin == moment(new Date()).format("yyyy-MM-DD")
       ) {
         Listar("", index);
       } else {
-        if (tipoDocumento == -1) {
-          Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-        } else {
-          Listar(
-            `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-            index + 1
-          );
-        }
+        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
       }
     }, 1000);
     setTimer(newTimer);
@@ -212,29 +151,17 @@ const BloquearCompra = () => {
     clearTimeout(timer);
     let fechaInicio = document.getElementById("fechaInicio").value;
     let fechaFin = e.target.value;
-    let tipoDocumento = document.getElementById("tipoDocumentoId").value;
-    setFiltro(
-      `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-      index + 1
-    );
+    setFiltro(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
     if (fechaFin != moment(new Date()).format("yyyy-MM-DD")) setIndex(0);
     const newTimer = setTimeout(() => {
       if (
         fechaInicio ==
           moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-        tipoDocumento == -1
+        fechaFin == moment(new Date()).format("yyyy-MM-DD")
       ) {
         Listar("", index);
       } else {
-        if (tipoDocumento == -1) {
-          Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-        } else {
-          Listar(
-            `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-            index + 1
-          );
-        }
+        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
       }
     }, 1000);
     setTimer(newTimer);
@@ -256,7 +183,10 @@ const BloquearCompra = () => {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
     };
-    const result = await ApiMasy.put(`api/Compra/BloquearCompra`, model);
+    const result = await ApiMasy.put(
+      `api/Finanzas/BloquearMovimientoBancario`,
+      model
+    );
     if (result.name == "AxiosError") {
       let err = "";
       if (result.response.data == "") {
@@ -296,8 +226,8 @@ const BloquearCompra = () => {
       isBloqueado: isBloqueado,
     };
     const title = isBloqueado
-      ? "Bloquear 50 registros de compras"
-      : "Desbloquear 50 registros de compras";
+      ? "Bloquear 50 registros de movimientos bancarios"
+      : "Desbloquear 50 registros de movimientos bancarios";
     const result = Swal.fire({
       title: title,
       icon: "warning",
@@ -311,39 +241,41 @@ const BloquearCompra = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        ApiMasy.put(`api/Compra/BloquearCompra`, model).then((response) => {
-          if (response.name == "AxiosError") {
-            let err = "";
-            if (response.response.data == "") {
-              err = response.message;
+        ApiMasy.put(`api/Finanzas/BloquearMovimientoBancario`, model).then(
+          (response) => {
+            if (response.name == "AxiosError") {
+              let err = "";
+              if (response.response.data == "") {
+                err = response.message;
+              } else {
+                err = String(response.response.data.messages[0].textos);
+              }
+              toast.error(err, {
+                position: "bottom-right",
+                autoClose: 7000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+              setRespuestaAlert(false);
             } else {
-              err = String(response.response.data.messages[0].textos);
+              setRespuestaAlert(true);
+              toast.success(String(response.data.messages[0].textos), {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
             }
-            toast.error(err, {
-              position: "bottom-right",
-              autoClose: 7000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-            setRespuestaAlert(false);
-          } else {
-            setRespuestaAlert(true);
-            toast.success(String(response.data.messages[0].textos), {
-              position: "bottom-right",
-              autoClose: 5000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
           }
-        });
+        );
       }
     });
     console.log(result);
@@ -369,31 +301,27 @@ const BloquearCompra = () => {
       accessor: "id",
     },
     {
-      Header: "N° Documento",
-      accessor: "numeroDocumento",
-    },
-    {
-      Header: "Fecha Contable",
-      accessor: "fechaContable",
+      Header: "Fecha Emision",
+      accessor: "fechaEmision",
       Cell: ({ value }) => {
         return moment(value).format("DD/MM/YYYY");
       },
     },
     {
-      Header: "Proveedor",
-      accessor: "proveedorNombre",
+      Header: "N° Operacion",
+      accessor: "numeroOperacion",
     },
     {
-      Header: "Proveedor Numero",
-      accessor: "proveedorNumero",
+      Header: "Concepto",
+      accessor: "concepto",
     },
     {
       Header: "Moneda",
       accessor: "monedaId",
     },
     {
-      Header: "Total",
-      accessor: "total",
+      Header: "Monto",
+      accessor: "monto",
     },
     {
       Header: "Bloqueado",
@@ -418,7 +346,7 @@ const BloquearCompra = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Compra", "BloquearCompra"]}
+          menu={["Finanzas", "BloquearMovimientoBancario"]}
           id={row.values.id}
           ClickModificar={() =>
             ModificarCheck(row.values.id, row.values.isBloqueado)
@@ -434,7 +362,7 @@ const BloquearCompra = () => {
     <>
       <div className="px-2">
         <div className="flex items-center justify-between">
-          <h2 className={Global.TituloH2}>Bloquear Compra</h2>
+          <h2 className={Global.TituloH2}>Bloquear Movimiento Bancario</h2>
           <div className="flex  h-10">
             <div className={Global.LabelStyle}>
               <Checkbox
@@ -459,28 +387,9 @@ const BloquearCompra = () => {
             </label>
           </div>
         </div>
-
         {/* Filtro*/}
         <div className={Global.ContenedorFiltro}>
           <div className={Global.ContenedorInputFull}>
-            <label name="tipoDocumentoId" className={Global.LabelStyle}>
-              Tipo de Documento:
-            </label>
-            <select
-              id="tipoDocumentoId"
-              name="tipoDocumentoId"
-              onChange={FiltradoSelect}
-              className={Global.InputStyle}
-            >
-              {tipoDeDocumento.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {" "}
-                  {tipo.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={Global.ContenedorInput42pct}>
             <label htmlFor="fechaInicio" className={Global.LabelStyle}>
               Tipo
             </label>
@@ -496,7 +405,7 @@ const BloquearCompra = () => {
               className={Global.InputStyle}
             />
           </div>
-          <div className={Global.ContenedorInput42pct}>
+          <div className={Global.ContenedorInputFull}>
             <label htmlFor="fechaFin" className={Global.LabelStyle}>
               Tipo
             </label>
@@ -537,4 +446,4 @@ const BloquearCompra = () => {
   //#endregion
 };
 
-export default BloquearCompra;
+export default BloquearMovimientoBancario;

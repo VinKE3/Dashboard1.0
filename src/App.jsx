@@ -16,7 +16,7 @@ import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
 import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
 import SalidasDeArticulos from "./pages/ventas/salidaDeArticulos/SalidaDeArticulos";
 import RegistroVentaArticulo from "./pages/ventas/registroVentaArituculo/RegistroVentaArticulo";
-
+import BloquearVenta from "./pages/ventas/bloquearVenta/BloquearVenta";
 //*Pages compras
 import Proveedores from "./pages/compras/proveedores/Proveedores";
 import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
@@ -47,6 +47,8 @@ import Correlativos from "./pages/mantenimiento/correlativos/Correlativos";
 import EmpresaDeTransporte from "./pages/mantenimiento/empresaDeTransporte/EmpresaDeTransporte";
 //*Pages almacen
 import Almacen from "./pages/almacen/Almacen";
+//*Pages Finanzas
+import BloquearMovimientoBancario from "./pages/finanzas/bloquearMovimientoBancario/BloquearMovimientoBancario";
 //*Pages personal
 import Personal from "./pages/personal/Personal";
 //*pages tesoreria
@@ -61,6 +63,7 @@ import PagosEnEfectivo from "./pages/tesoreria/pagosEnEfectivo/PagosEnEfectivo";
 import ReciboDeEgreso from "./pages/tesoreria/reciboDeEgreso/ReciboDeEgreso";
 import ReciboDeIngreso from "./pages/tesoreria/reciboDeIngreso/ReciboDeIngreso";
 import Retenciones from "./pages/tesoreria/retenciones/Retenciones";
+import BloquearReciboEgreso from "./pages/tesoreria/bloquearReciboEgreso/BloquearReciboEgreso";
 
 function App() {
   return (
@@ -92,6 +95,7 @@ function App() {
             path="/ventas/registro-de-venta-articulo"
             element={<RegistroVentaArticulo />}
           />
+          <Route path="/ventas/bloquear-venta" element={<BloquearVenta />} />
           {/** //!COMPRAS */}
           <Route path="/compras/provedores" element={<Proveedores />} />
           <Route
@@ -158,6 +162,11 @@ function App() {
           />
           {/** //!ALMACEN */}
           <Route path="almacen" element={<Almacen />} />
+          {/** //!FINANZAS */}
+          <Route
+            path="/finanzas/bloquear-movimiento-bancario"
+            element={<BloquearMovimientoBancario />}
+          />
           {/** //!PERSONAL */}
           <Route path="personal" element={<Personal />} />
           {/** //!TESORERIA */}
@@ -198,6 +207,10 @@ function App() {
           <Route
             path="/tesoreria/recibo-de-egreso"
             element={<ReciboDeEgreso />}
+          />
+          <Route
+            path="/tesoreria/bloquear-recibo-de-egreso"
+            element={<BloquearReciboEgreso />}
           />
         </Route>
         {/** //!ERROR */}
