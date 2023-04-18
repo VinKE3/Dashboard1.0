@@ -31,6 +31,7 @@ const TablaStyle = styled.div`
 `;
 
 const Empresa = ({ modo }) => {
+  //#region useState
   const [dataGeneral, setDataGeneral] = useState({
     id: "",
     numeroDocumentoIdentidad: "",
@@ -130,7 +131,9 @@ const Empresa = ({ modo }) => {
   const [checkedRetencion, setCheckedRetencion] = useState(false);
   const [checkedDetraccion, setCheckedDetraccion] = useState(false);
   const [checkedPercepcion, setCheckedPercepcion] = useState(false);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
     Configuracion();
   }, []);
@@ -165,10 +168,37 @@ const Empresa = ({ modo }) => {
     console.log("checkboxes", checkboxes);
     console.log("checkboxes2", checkboxes2);
   }, [checkboxes, checkboxes2]);
+  //#endregion
 
+  //#region Funciones
+  const meses = {
+    enero: [0, 0],
+    febrero: [1, 1],
+    marzo: [2, 2],
+    abril: [3, 3],
+    mayo: [4, 4],
+    junio: [5, 5],
+    julio: [6, 6],
+    agosto: [7, 7],
+    septiembre: [8, 8],
+    octubre: [9, 9],
+    noviembre: [10, 10],
+    diciembre: [11, 11],
+    enero2: [0, 12],
+    febrero2: [1, 13],
+    marzo2: [2, 14],
+    abril2: [3, 15],
+    mayo2: [4, 16],
+    junio2: [5, 17],
+    julio2: [6, 18],
+    agosto2: [7, 19],
+    septiembre2: [8, 20],
+    octubre2: [9, 21],
+    noviembre2: [10, 22],
+    diciembre2: [11, 23],
+  };
   const Configuracion = async () => {
     const result = await ApiMasy.get(`api/Empresa/Configuracion`);
-    console.log("result", result);
     let contadorIGV = 0;
     let contadorRetencion = 0;
     let contadorDetraccion = 0;
@@ -202,17 +232,12 @@ const Empresa = ({ modo }) => {
       }))
       .map((item) => ({ ...item, id: contadorPercepcion++ }));
     setMesesHabilitados(result.data.data.mesesHabilitados.split(","));
-    console.log(
-      "meses habilitados",
-      result.data.data.mesesHabilitados.split(",")
-    );
     setDataGeneral(result.data.data);
     setPorcentajesIGV(igv);
     setPorcentajesRetencion(retencion);
     setPorcentajesDetraccion(detraccion);
     setPorcentajesPercepcion(percepcion);
   };
-
   const ValidarData = async ({ target }) => {
     if (target.name == "correoElectronico") {
       setDataGeneral((prevState) => ({
@@ -226,7 +251,31 @@ const Empresa = ({ modo }) => {
       }));
     }
   };
-
+  const handleCheck = (mes, checked) => {
+    setCheckboxes({ ...checkboxes, [mes]: checked });
+    const index = meses[mes];
+    if (mes !== undefined) {
+      if (mes[1] > 11) {
+        mesesHabilitados[mes[1]] = checked
+          ? dataGeneral.anioHabilitado2 + ("0" + (mes[0] + 1)).slice(-2)
+          : "";
+      } else {
+        mesesHabilitados[mes[1]] = checked
+          ? dataGeneral.anioHabilitado1 + ("0" + (mes[0] + 1)).slice(-2)
+          : "";
+      }
+      // if (mesesHabilitados[index] === "") {
+      //   mesesHabilitados[index] = "";
+      // }
+    }
+    const filteredMesesHabilitados = mesesHabilitados.filter(
+      (mes) => mes !== null && mes !== undefined && mes !== ""
+    );
+    setDataGeneral({
+      ...dataGeneral,
+      mesesHabilitados: filteredMesesHabilitados.join(","),
+    });
+  };
   const handleCheckAll = (event) => {
     const { checked } = event.target;
     setCheckboxes((prevState) => ({
@@ -265,64 +314,8 @@ const Empresa = ({ modo }) => {
         : [],
     });
   };
-  //?handleCheck1
-  const meses = {
-    enero: [0, 0],
-    febrero: [1, 1],
-    marzo: [2, 2],
-    abril: [3, 3],
-    mayo: [4, 4],
-    junio: [5, 5],
-    julio: [6, 6],
-    agosto: [7, 7],
-    septiembre: [8, 8],
-    octubre: [9, 9],
-    noviembre: [10, 10],
-    diciembre: [11, 11],
-    enero2: [0, 12],
-    febrero2: [1, 13],
-    marzo2: [2, 14],
-    abril2: [3, 15],
-    mayo2: [4, 16],
-    junio2: [5, 17],
-    julio2: [6, 18],
-    agosto2: [7, 19],
-    septiembre2: [8, 20],
-    octubre2: [9, 21],
-    noviembre2: [10, 22],
-    diciembre2: [11, 23],
-  };
-  const handleCheck = (mes, checked) => {
-    setCheckboxes({ ...checkboxes, [mes]: checked });
-    const index = meses[mes];
-    if (mes !== undefined) {
-      if (mes[1] > 11) {
-        mesesHabilitados[mes[1]] = checked
-          ? dataGeneral.anioHabilitado2 + ("0" + (mes[0] + 1)).slice(-2)
-          : "";
-      } else {
-        mesesHabilitados[mes[1]] = checked
-          ? dataGeneral.anioHabilitado1 + ("0" + (mes[0] + 1)).slice(-2)
-          : "";
-      }
-      // if (mesesHabilitados[index] === "") {
-      //   mesesHabilitados[index] = "";
-      // }
-    }
-    const filteredMesesHabilitados = mesesHabilitados.filter(
-      (mes) => mes !== null && mes !== undefined && mes !== ""
-    );
-    setDataGeneral({
-      ...dataGeneral,
-      mesesHabilitados: filteredMesesHabilitados.join(","),
-    });
-    console.log(filteredMesesHabilitados.join(","));
-  };
-
-  //?handleCheck2
   const handleCheckAll2 = (event) => {
     const { checked } = event.target;
-    console.log("checked2", checked);
     setCheckboxes2((prevState) => ({
       ...prevState,
       checked,
@@ -359,9 +352,17 @@ const Empresa = ({ modo }) => {
         : [],
     });
   };
+  //#endregion
 
-  //*IGV
-  //#region
+  //#region Funciones API
+  const GuardarTodo = async (e) => {
+    e.preventDefault();
+    await ApiMasy.put(`api/Empresa/Configuracion`, dataGeneral);
+    await Configuracion();
+  };
+  //#endregion
+
+  //#region IGV
   const colIgv = [
     {
       Header: "id",
@@ -376,9 +377,13 @@ const Empresa = ({ modo }) => {
       accessor: "default",
       Cell: ({ value }) => {
         return value ? (
-          <Checkbox checked={true} />
+          <div className="flex justify-center">
+            <Checkbox checked={true} />
+          </div>
         ) : (
-          <Checkbox checked={false} />
+          <div className="flex justify-center">
+            <Checkbox checked={false} />
+          </div>
         );
       },
     },
@@ -420,7 +425,6 @@ const Empresa = ({ modo }) => {
       ),
     },
   ];
-
   const ValidarDataIgv = async ({ target }) => {
     if (target.name == "default") {
       setObjetoIgv({ ...objetoIgv, [target.name]: target.checked });
@@ -431,7 +435,6 @@ const Empresa = ({ modo }) => {
       }));
     }
   };
-
   const AgregarIgv = async (e, id = "") => {
     e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
@@ -449,7 +452,6 @@ const Empresa = ({ modo }) => {
     }
     setEstadoIgv(true);
   };
-
   const EliminarIgv = async (id) => {
     setRefrescar(true);
     const nuevoPorcentajesIGV = porcentajesIGV.filter((igv) => igv.id !== id);
@@ -458,7 +460,6 @@ const Empresa = ({ modo }) => {
       porcentajesIGV: nuevoPorcentajesIGV,
     });
   };
-
   const EnviarIgv = async () => {
     setRefrescar(true);
     if (objetoIgv.id == "") {
@@ -484,8 +485,7 @@ const Empresa = ({ modo }) => {
   };
   //#endregion
 
-  //*RETENCION
-  //#region
+  //#region Retencion
   const colRetencion = [
     {
       Header: "id",
@@ -544,7 +544,6 @@ const Empresa = ({ modo }) => {
       ),
     },
   ];
-
   const ValidarDataRetencion = async ({ target }) => {
     if (target.name == "default") {
       setObjetoRetencion({ ...objetoRetencion, [target.name]: target.checked });
@@ -555,7 +554,6 @@ const Empresa = ({ modo }) => {
       }));
     }
   };
-
   const EliminarRetencion = async (id) => {
     const nuevoPorcentajesRetencion = porcentajesRetencion.filter(
       (retencion) => retencion.id !== id
@@ -566,7 +564,6 @@ const Empresa = ({ modo }) => {
     });
     document.getElementById("guardarTodo").click();
   };
-
   const AgregarRetencion = async (e, id = "") => {
     e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
@@ -584,7 +581,6 @@ const Empresa = ({ modo }) => {
     }
     setEstadoRetencion(true);
   };
-
   const EnviarRetencion = async () => {
     if (objetoRetencion.id == "") {
       porcentajesRetencion.push({
@@ -610,8 +606,7 @@ const Empresa = ({ modo }) => {
 
   //#endregion
 
-  //*DETRACCION
-  //#region
+  //#region Detraccion
   const colDetraccion = [
     {
       Header: "id",
@@ -738,8 +733,7 @@ const Empresa = ({ modo }) => {
   };
   //#endregion
 
-  //*PERCEPCION
-  //#region
+  //#region Percepcion
   const colPercepcion = [
     {
       Header: "id",
@@ -866,17 +860,9 @@ const Empresa = ({ modo }) => {
   };
   //#endregion
 
-  const GuardarTodo = async (e) => {
-    e.preventDefault();
-    console.log(dataGeneral);
-    const result = await ApiMasy.put(`api/Empresa/Configuracion`, dataGeneral);
-    console.log(result);
-    console.log("heree");
-    await Configuracion();
-  };
-
+  //#region Render
   return (
-    <div className="card">
+    <div className={Global.FormSimple + " !py-0"}>
       <TabView>
         <TabPanel
           header="Datos Principales"
@@ -885,7 +871,7 @@ const Empresa = ({ modo }) => {
         >
           <div className="grid gap-y-3 md:gap-x-2">
             <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInput96}>
+              <div className={Global.ContenedorInput60pct}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
                   className={Global.LabelStyle}
@@ -898,7 +884,7 @@ const Empresa = ({ modo }) => {
                   name="numeroDocumentoIdentidad"
                   autoComplete="off"
                   placeholder="Número Documento Identidad"
-                  value={dataGeneral.numeroDocumentoIdentidad}
+                  value={dataGeneral.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -913,7 +899,7 @@ const Empresa = ({ modo }) => {
                   name="nombre"
                   autoComplete="off"
                   placeholder="Nombre"
-                  value={dataGeneral.nombre}
+                  value={dataGeneral.nombre ?? ""}
                   typeof="text"
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -921,7 +907,7 @@ const Empresa = ({ modo }) => {
               </div>
             </div>
             <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInput96}>
+              <div className={Global.ContenedorInput60pct}>
                 <label htmlFor="telefono" className={Global.LabelStyle}>
                   Teléfono
                 </label>
@@ -931,7 +917,7 @@ const Empresa = ({ modo }) => {
                   name="telefono"
                   autoComplete="off"
                   placeholder="Teléfono"
-                  value={dataGeneral.telefono}
+                  value={dataGeneral.telefono ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -949,14 +935,14 @@ const Empresa = ({ modo }) => {
                   name="correoElectronico"
                   autoComplete="off"
                   placeholder="Correo"
-                  value={dataGeneral.correoElectronico}
+                  value={dataGeneral.correoElectronico ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
             </div>
             <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInput96}>
+              <div className={Global.ContenedorInput60pct}>
                 <label htmlFor="celular" className={Global.LabelStyle}>
                   Celular
                 </label>
@@ -966,7 +952,7 @@ const Empresa = ({ modo }) => {
                   name="celular"
                   autoComplete="off"
                   placeholder="Celular"
-                  value={dataGeneral.celular}
+                  value={dataGeneral.celular ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -981,7 +967,7 @@ const Empresa = ({ modo }) => {
                   name="observacion"
                   autoComplete="off"
                   placeholder="Observacion"
-                  value={dataGeneral.observacion}
+                  value={dataGeneral.observacion ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -997,7 +983,7 @@ const Empresa = ({ modo }) => {
                 name="direccion"
                 autoComplete="off"
                 placeholder="Dirección"
-                value={dataGeneral.direccion}
+                value={dataGeneral.direccion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
@@ -1012,7 +998,7 @@ const Empresa = ({ modo }) => {
               }}
             ></Ubigeo>
             <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInput96}>
+              <div className={Global.ContenedorInput40pct}>
                 <label htmlFor="concarEmpresaId" className={Global.LabelStyle}>
                   Id Concar
                 </label>
@@ -1022,7 +1008,7 @@ const Empresa = ({ modo }) => {
                   name="concarEmpresaId"
                   autoComplete="off"
                   placeholder="Número Concar Id"
-                  value={dataGeneral.concarEmpresaId}
+                  value={dataGeneral.concarEmpresaId ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -1040,14 +1026,14 @@ const Empresa = ({ modo }) => {
                   name="concarEmpresaNombre"
                   autoComplete="off"
                   placeholder="Empresa Concar"
-                  value={dataGeneral.concarEmpresaNombre}
+                  value={dataGeneral.concarEmpresaNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
             </div>
             <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="concarUsuarioVenta"
                   className={Global.LabelStyle}
@@ -1060,12 +1046,12 @@ const Empresa = ({ modo }) => {
                   name="concarUsuarioVenta"
                   autoComplete="off"
                   placeholder="Usuario Venta"
-                  value={dataGeneral.concarUsuarioVenta}
+                  value={dataGeneral.concarUsuarioVenta ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="concarUsuarioCompra"
                   className={Global.LabelStyle}
@@ -1078,14 +1064,14 @@ const Empresa = ({ modo }) => {
                   name="concarUsuarioCompra"
                   autoComplete="off"
                   placeholder="Usuario Compra"
-                  value={dataGeneral.concarUsuarioCompra}
+                  value={dataGeneral.concarUsuarioCompra ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
             </div>
             <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="concarUsuarioPago"
                   className={Global.LabelStyle}
@@ -1103,7 +1089,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="concarUsuarioCobro"
                   className={Global.LabelStyle}
@@ -1116,17 +1102,14 @@ const Empresa = ({ modo }) => {
                   name="concarUsuarioCobro"
                   autoComplete="off"
                   placeholder="Usuario Cobro"
-                  value={dataGeneral.concarUsuarioCobro}
+                  value={dataGeneral.concarUsuarioCobro ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
             </div>
-            <div className={Global.ContenedorInputFull}>
-              <h1 className=" uppercase font-bold">Filtro de Fechas</h1>
-            </div>
             <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="filtroFechaInicio"
                   className={Global.LabelStyle}
@@ -1139,14 +1122,18 @@ const Empresa = ({ modo }) => {
                   name="filtroFechaInicio"
                   autoComplete="off"
                   placeholder="Fecha Inicio"
-                  value={moment(dataGeneral.filtroFechaInicio).format(
-                    "yyyy-MM-DD"
-                  )}
+                  value={
+                    dataGeneral.filtroFechaInicio == null
+                      ? ""
+                      : moment(dataGeneral.filtroFechaInicio).format(
+                          "yyyy-MM-DD"
+                        )
+                  }
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.ContenedorInputMitad}>
                 <label htmlFor="filtroFechaFin" className={Global.LabelStyle}>
                   Fecha Fin
                 </label>
@@ -1156,15 +1143,17 @@ const Empresa = ({ modo }) => {
                   name="filtroFechaFin"
                   autoComplete="off"
                   placeholder="Fecha Fin"
-                  value={moment(dataGeneral.filtroFechaFin).format(
-                    "yyyy-MM-DD"
-                  )}
+                  value={
+                    dataGeneral.filtroFechaFin == null
+                      ? ""
+                      : moment(dataGeneral.filtroFechaFin).format("yyyy-MM-DD")
+                  }
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
             </div>
-            <div className="mt-2">
+            <div className="flex justify-end border-t pt-2 border-light ">
               <button
                 id="guardarTodo"
                 className={Global.BotonOkModal}
@@ -1176,36 +1165,45 @@ const Empresa = ({ modo }) => {
             </div>
           </div>
         </TabPanel>
+
         <TabPanel
           header="Habilitar Periodo"
           leftIcon="pi pi-calendar mr-2"
           style={{ color: "white" }}
         >
-          <div className={Global.ContenedorInputFull}>
-            <label htmlFor="anioHabilitado1" className={Global.LabelStyle}>
-              Año 1
-            </label>
-            <input
-              type="number"
-              id="anioHabilitado1"
-              name="anioHabilitado1"
-              autoComplete="off"
-              placeholder="año"
-              value={dataGeneral.anioHabilitado1}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-            <div className="flex mt-2 gap-2 ml-2">
-              <label>Todos</label>
-              <Checkbox
-                id="todos"
-                name="todos"
-                value={checkboxes.checked}
-                onChange={handleCheckAll}
-                checked={checkboxes.checked}
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputFull}>
+              <label htmlFor="anioHabilitado1" className={Global.LabelStyle}>
+                Año 1
+              </label>
+              <input
+                type="number"
+                id="anioHabilitado1"
+                name="anioHabilitado1"
+                autoComplete="off"
+                placeholder="año"
+                value={dataGeneral.anioHabilitado1}
+                onChange={ValidarData}
+                className={Global.InputStyle}
               />
             </div>
+
+            <div className="flex">
+              <div className={Global.CheckStyle}>
+                <Checkbox
+                  inputId="todos"
+                  name="todos"
+                  value={checkboxes.checked}
+                  onChange={handleCheckAll}
+                  checked={checkboxes.checked}
+                />
+              </div>
+              <label htmlFor="todos" className={Global.LabelCheckStyle}>
+                Todos
+              </label>
+            </div>
           </div>
+
           <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
             <div className="flex gap-3">
               <Checkbox
@@ -1404,7 +1402,8 @@ const Empresa = ({ modo }) => {
               <label>Diciembre</label>
             </div>
           </div>
-          <div className="mt-4">
+
+          <div className={Global.ContenedorVarios + " mt-4"}>
             <div className={Global.ContenedorInputFull}>
               <label htmlFor="anioHabilitado2" className={Global.LabelStyle}>
                 Año 2
@@ -1419,227 +1418,234 @@ const Empresa = ({ modo }) => {
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
-              <div className="flex mt-2 gap-2 ml-2">
-                <label>Todos</label>
+            </div>
+            <div className="flex">
+              <div className={Global.CheckStyle}>
                 <Checkbox
-                  id="todos2"
+                  inputId="todos2"
                   name="todos2"
                   value={checkboxes2.checked}
                   onChange={handleCheckAll2}
                   checked={checkboxes2.checked}
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
-              <div className="flex gap-3">
-                <Checkbox
-                  id="enero2"
-                  name="enero2"
-                  value={mesesHabilitados[12]}
-                  onChange={(e) => {
-                    handleCheck([0, 12], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      enero2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.enero2 ? true : false}
-                />
-                <label>Enero</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="febrero2"
-                  name="febrero2"
-                  value={mesesHabilitados[13]}
-                  onChange={(e) => {
-                    handleCheck([1, 13], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      febrero2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.febrero2 ? true : false}
-                />
-                <label>Febrero</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="marzo2"
-                  name="marzo2"
-                  value={mesesHabilitados[14]}
-                  onChange={(e) => {
-                    handleCheck([2, 14], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      marzo2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.marzo2 ? true : false}
-                />
-                <label>Marzo</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="abril2"
-                  name="abril2"
-                  value={mesesHabilitados[15]}
-                  onChange={(e) => {
-                    handleCheck([3, 15], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      abril2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.abril2 ? true : false}
-                />
-                <label>Abril</label>
-              </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
-              <div className="flex gap-3">
-                <Checkbox
-                  id="mayo2"
-                  name="mayo2"
-                  value={mesesHabilitados[16]}
-                  onChange={(e) => {
-                    handleCheck([4, 16], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      mayo2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.mayo2 ? true : false}
-                />
-                <label>Mayo</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="junio2"
-                  name="junio2"
-                  value={mesesHabilitados[17]}
-                  onChange={(e) => {
-                    handleCheck([5, 17], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      junio2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.junio2 ? true : false}
-                />
-                <label>Junio</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="julio2"
-                  name="julio2"
-                  value={mesesHabilitados[18]}
-                  onChange={(e) => {
-                    handleCheck([6, 18], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      julio2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.julio2 ? true : false}
-                />
-                <label>Julio</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="agosto2"
-                  name="agosto2"
-                  value={mesesHabilitados[19]}
-                  onChange={(e) => {
-                    handleCheck([7, 19], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      agosto2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.agosto2 ? true : false}
-                />
-                <label>Agosto</label>
-              </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
-              <div className="flex gap-3">
-                <Checkbox
-                  id="septiembre2"
-                  name="septiembre2"
-                  value={mesesHabilitados[20]}
-                  onChange={(e) => {
-                    handleCheck([8, 20], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      septiembre2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.septiembre2 ? true : false}
-                />
-                <label>Septiembre</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="octubre2"
-                  name="octubre2"
-                  value={mesesHabilitados[21]}
-                  onChange={(e) => {
-                    handleCheck([9, 21], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      octubre2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.octubre2 ? true : false}
-                />
-                <label>Octubre</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="noviembre2"
-                  name="noviembre2"
-                  value={mesesHabilitados[22]}
-                  onChange={(e) => {
-                    handleCheck([10, 22], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      noviembre2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.noviembre2 ? true : false}
-                />
-                <label>Noviembre</label>
-              </div>
-              <div className="flex gap-3">
-                <Checkbox
-                  id="diciembre2"
-                  name="diciembre2"
-                  value={mesesHabilitados[23]}
-                  onChange={(e) => {
-                    handleCheck([11, 23], e.target.checked);
-                    setCheckboxes2({
-                      ...checkboxes2,
-                      diciembre2: e.target.checked,
-                    });
-                  }}
-                  checked={checkboxes2.diciembre2 ? true : false}
-                />
-                <label>Diciembre</label>
-              </div>
-            </div>
-            <div className="mt-2">
-              <button
-                id="guardarTodo"
-                className={Global.BotonOkModal}
-                type="button"
-                onClick={GuardarTodo}
-              >
-                Guardar Cambios
-              </button>
+              <label htmlFor="todos2" className={Global.LabelCheckStyle}>
+                Todos
+              </label>
             </div>
           </div>
+
+          <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
+            <div className="flex gap-3">
+              <Checkbox
+                id="enero2"
+                name="enero2"
+                value={mesesHabilitados[12]}
+                onChange={(e) => {
+                  handleCheck([0, 12], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    enero2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.enero2 ? true : false}
+              />
+              <label>Enero</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="febrero2"
+                name="febrero2"
+                value={mesesHabilitados[13]}
+                onChange={(e) => {
+                  handleCheck([1, 13], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    febrero2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.febrero2 ? true : false}
+              />
+              <label>Febrero</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="marzo2"
+                name="marzo2"
+                value={mesesHabilitados[14]}
+                onChange={(e) => {
+                  handleCheck([2, 14], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    marzo2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.marzo2 ? true : false}
+              />
+              <label>Marzo</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="abril2"
+                name="abril2"
+                value={mesesHabilitados[15]}
+                onChange={(e) => {
+                  handleCheck([3, 15], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    abril2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.abril2 ? true : false}
+              />
+              <label>Abril</label>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
+            <div className="flex gap-3">
+              <Checkbox
+                id="mayo2"
+                name="mayo2"
+                value={mesesHabilitados[16]}
+                onChange={(e) => {
+                  handleCheck([4, 16], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    mayo2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.mayo2 ? true : false}
+              />
+              <label>Mayo</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="junio2"
+                name="junio2"
+                value={mesesHabilitados[17]}
+                onChange={(e) => {
+                  handleCheck([5, 17], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    junio2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.junio2 ? true : false}
+              />
+              <label>Junio</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="julio2"
+                name="julio2"
+                value={mesesHabilitados[18]}
+                onChange={(e) => {
+                  handleCheck([6, 18], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    julio2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.julio2 ? true : false}
+              />
+              <label>Julio</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="agosto2"
+                name="agosto2"
+                value={mesesHabilitados[19]}
+                onChange={(e) => {
+                  handleCheck([7, 19], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    agosto2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.agosto2 ? true : false}
+              />
+              <label>Agosto</label>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-4 mt-4 ml-2">
+            <div className="flex gap-3">
+              <Checkbox
+                id="septiembre2"
+                name="septiembre2"
+                value={mesesHabilitados[20]}
+                onChange={(e) => {
+                  handleCheck([8, 20], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    septiembre2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.septiembre2 ? true : false}
+              />
+              <label>Septiembre</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="octubre2"
+                name="octubre2"
+                value={mesesHabilitados[21]}
+                onChange={(e) => {
+                  handleCheck([9, 21], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    octubre2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.octubre2 ? true : false}
+              />
+              <label>Octubre</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="noviembre2"
+                name="noviembre2"
+                value={mesesHabilitados[22]}
+                onChange={(e) => {
+                  handleCheck([10, 22], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    noviembre2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.noviembre2 ? true : false}
+              />
+              <label>Noviembre</label>
+            </div>
+            <div className="flex gap-3">
+              <Checkbox
+                id="diciembre2"
+                name="diciembre2"
+                value={mesesHabilitados[23]}
+                onChange={(e) => {
+                  handleCheck([11, 23], e.target.checked);
+                  setCheckboxes2({
+                    ...checkboxes2,
+                    diciembre2: e.target.checked,
+                  });
+                }}
+                checked={checkboxes2.diciembre2 ? true : false}
+              />
+              <label>Diciembre</label>
+            </div>
+          </div>
+
+          <div className="mt-10 pt-3 border-t border-light flex justify-end">
+            <button
+              id="guardarTodo"
+              className={Global.BotonOkModal}
+              type="button"
+              onClick={GuardarTodo}
+            >
+              Guardar Cambios
+            </button>
+          </div>
         </TabPanel>
+
         <TabPanel
           header="Configuracion"
           leftIcon="pi pi-calendar mr-2"
@@ -1996,6 +2002,7 @@ const Empresa = ({ modo }) => {
       </TabView>
     </div>
   );
+  //#endregion
 };
 
 export default Empresa;

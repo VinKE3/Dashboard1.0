@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -20,6 +19,12 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
+  & th:nth-child(2){
+    width: 150px;
+  }
+  & th:nth-child(4){
+    width: 150px;
+  }
   & th:last-child {
     width: 130px;
     text-align: center;
@@ -33,8 +38,6 @@ const Correlativos = () => {
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
-  const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
   const [permisos, setPermisos] = useState([true, true, true, true]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
@@ -46,14 +49,11 @@ const Correlativos = () => {
   useEffect(() => {
     if (usuario == "AD") {
       setPermisos([true, true, true, true]);
-      Listar(filtro, 1);
+      Listar("", 1);
     } else {
       //Consulta a la Api para traer los permisos
     }
   }, [usuario]);
-  useEffect(() => {
-    filtro;
-  }, [filtro]);
   useEffect(() => {
     total;
   }, [total]);
@@ -66,12 +66,12 @@ const Correlativos = () => {
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar(filtro, index + 1);
+      Listar("", index + 1);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index + 1);
+      Listar("", index + 1);
     }
   }, [respuestaAlert]);
   //#endregion
@@ -89,42 +89,14 @@ const Correlativos = () => {
       `api/Mantenimiento/Correlativo/${tipoDocumentoId}/${serie}`
     );
     setObjeto(result.data.data);
-    console.log(result.data);
   };
   //#endregion
 
   //#region Funciones Filtrado
   const FiltradoPaginado = (e) => {
-    let filtro = document.getElementById("descripcion").value;
     let boton = e.selected + 1;
     setIndex(e.selected);
-    if (filtro == "") {
-      Listar("", boton);
-    } else {
-      Listar(`&descripcion=${filtro}`, boton);
-    }
-  };
-  const FiltradoKeyPress = async (e) => {
-    clearTimeout(timer);
-    let f = e.target.value;
-    setFiltro(`&descripcion=${f}`);
-    if (f != "") setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (f == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(`&descripcion=${f}`, index + 1);
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const FiltradoButton = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+    Listar("", boton);
   };
   //#endregion
 
@@ -132,13 +104,12 @@ const Correlativos = () => {
   const AbrirModal = async (tipoDocumentoId, serie, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         tipoDocumentoId: "01",
         tipoDocumentoDescripcion: "",
         serie: "",
         numero: 0,
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(tipoDocumentoId, serie);
     }
@@ -201,19 +172,6 @@ const Correlativos = () => {
     <>
       <div className="px-2">
         <h2 className={Global.TituloH2}>Correlativos</h2>
-
-        {/* Filtro*/}
-        {/* <FiltroBasico
-          textLabel={"Descripción"}
-          inputPlaceHolder={"Descripción"}
-          inputId={"descripcion"}
-          inputName={"descripcion"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        /> */}
-        {/* Filtro*/}
 
         {/* Boton */}
         {permisos[0] && (

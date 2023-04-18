@@ -5,31 +5,14 @@ import { Checkbox } from "primereact/checkbox";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState({
-    id: "00",
-    nick: "",
-    observacion: "",
-    isActivo: true,
-    habilitarAfectarStock: true,
-    personalId: "",
-    clave: "",
-    claveConfirmacion: "",
-  });
+  const [data, setData] = useState(objeto);
   const [checked, setChecked] = useState(true);
   const [checked2, setChecked2] = useState(true);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    objeto;
-    if (modo != "Registrar") {
-      setData(objeto);
-    }
-  }, [objeto]);
-
-  useEffect(() => {
     data;
-    console.log(data);
   }, [data]);
   useEffect(() => {
     checked;
@@ -37,7 +20,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const handleChange = ({ target }) => {
+  const ValidarData = ({ target }) => {
     if (target.name == "isActivo" || target.name == "habilitarAfectarStock") {
       setData({ ...data, [target.name]: target.checked });
     } else {
@@ -75,43 +58,47 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             value={data.id}
             autoComplete="off"
             onKeyUp={uppercase}
-            onChange={handleChange}
+            onChange={ValidarData}
             readOnly={true}
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInputFull}>
-          <div className=" flex gap-2 justify-center mt-3">
+        <div className={Global.ContenedorInputMitad}>
+          <div className={Global.LabelStyle}>
             <Checkbox
-              id="isActivo"
+              inputId="isActivo"
               name="isActivo"
               readOnly={modo == "Registrar" ? true : false}
               disabled={modo == "Registrar" ? true : false}
               value={data.isActivo ? true : false}
               onChange={(e) => {
                 setChecked(e.checked);
-                handleChange(e);
+                ValidarData(e);
               }}
               checked={data.isActivo ? checked : ""}
             ></Checkbox>
-            <label />
-            Activo <label />
           </div>
-          <div className=" flex gap-2 justify-center mt-3">
+          <label htmlFor="isActivo" className={Global.InputStyle}>
+            Activo{" "}
+          </label>
+        </div>
+        <div className={Global.ContenedorInputMitad}>
+          <div className={Global.LabelStyle}>
             <Checkbox
-              id="habilitarAfectarStock"
+              inputId="habilitarAfectarStock"
               name="habilitarAfectarStock"
               readOnly={modo == "Consultar" ? true : false}
               value={data.habilitarAfectarStock}
               onChange={(e) => {
                 setChecked2(e.checked);
-                handleChange(e);
+                ValidarData(e);
               }}
               checked={data.habilitarAfectarStock ? checked2 : ""}
             ></Checkbox>
-            <label />
-            Afectar Stock <label />
           </div>
+          <label htmlFor="habilitarAfectarStock" className={Global.InputStyle}>
+            Afectar Stock
+          </label>
         </div>
       </div>
       <div className={Global.ContenedorVarios}>
@@ -124,10 +111,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="nick"
             name="nick"
             placeholder="nick"
-            value={data.nick}
+            value={data.nick ?? ""}
             autoComplete="off"
             onKeyUp={uppercase}
-            onChange={handleChange}
+            onChange={ValidarData}
             readOnly={modo == "Consultar" ? true : false}
             className={Global.InputStyle}
           />
@@ -141,10 +128,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="personalId"
             name="personalId"
             placeholder="Personal"
-            value={data.personalId}
+            value={data.personalId ?? ""}
             autoComplete="off"
             onKeyUp={uppercase}
-            onChange={handleChange}
+            onChange={ValidarData}
             readOnly={modo == "Consultar" ? true : false}
             className={Global.InputStyle}
           />
@@ -160,10 +147,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="clave"
             name="clave"
             placeholder="Clave"
-            value={data.clave}
+            value={data.clave ?? ""}
             autoComplete="off"
             onKeyUp={uppercase}
-            onChange={handleChange}
+            onChange={ValidarData}
             readOnly={modo == "Consultar" ? true : false}
             className={Global.InputStyle}
           />
@@ -177,10 +164,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="claveConfirmacion"
             name="claveConfirmacion"
             placeholder="Confirmar Clave"
-            value={data.claveConfirmacion}
+            value={data.claveConfirmacion ?? ""}
             autoComplete="off"
             onKeyUp={uppercase}
-            onChange={handleChange}
+            onChange={ValidarData}
             readOnly={modo == "Consultar" ? true : false}
             className={Global.InputStyle}
           />
@@ -195,10 +182,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="observacion"
           name="observacion"
           placeholder="Observacion"
-          value={data.observacion}
+          value={data.observacion ?? ""}
           autoComplete="off"
           onKeyUp={uppercase}
-          onChange={handleChange}
+          onChange={ValidarData}
           readOnly={modo == "Consultar" ? true : false}
           className={Global.InputStyle}
         />

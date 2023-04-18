@@ -34,6 +34,12 @@ export var LabelStyle =
   "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-800 text-light border-gray-600 font-semibold";
 export var InputStyle =
   "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full text-sm p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light";
+
+export var CheckStyle =
+  "inline-flex items-center px-2 pr-1 border border-r-0 rounded-l-md bg-transparent border-gray-600 text-light font-semibold";
+export var LabelCheckStyle =
+  "rounded-none rounded-r-lg border border-l-0 block flex-1 min-w-0 w-full text-sm pt-2.5 px-3 pl-1 bg-transparent border-gray-600 text-light leading-normal cursor-pointer	";
+
 export var SelectStyle =
   "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full text-sm p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light";
 export var InputBoton =
@@ -54,12 +60,11 @@ export var BotonBasic =
 export var BotonBuscar =
   "px-3 rounded-none rounded-r-lg bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-yellow-600";
 export var BotonRegistrar =
-  "bg-gradient-to-b from-blue-600 to-blue-700 hover:bg-blue-500 hover:text-light";
-export var BotonConfigurar = "bg-gray-600 hover:bg-gray-500 hover:text-light";
-export var BotonCambiarContraseña =
-  "bg-green-600 hover:bg-green-500 hover:text-light";
+  "bg-gradient-to-b from-blue-600 to-blue-800 hover:bg-gradient-to-b hover:from-blue-400 hover:to-blue-600";
+export var BotonConfigurar =
+  "bg-gradient-to-b from-gray-500 to-gray-800 hover:bg-gradient-to-b hover:from-gray-400 hover:to-gray-600";
 export var BotonAgregar =
-  "bg-gradient-to-b from-green-700 to-green-800 hover:bg-gradient-to-b hover:from-green-600 hover:to-green-700";
+  "bg-gradient-to-b from-green-700 to-green-800 hover:bg-gradient-to-b hover:from-green-500 hover:to-green-700";
 export var TablaCabecera =
   "text-left bg-gradient-to-b from-slate-800 to-slate-900";
 export var TablaBody = "bg-gradient-to-b from-secondary-100 to-slate-800";

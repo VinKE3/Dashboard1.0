@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
-import * as Global from "../../../components/Global";
 import ApiMasy from "../../../api/ApiMasy";
+import * as Global from "../../../components/Global";
+import { Checkbox } from "primereact/checkbox";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { SelectButton } from "primereact/selectbutton";
 import { useMenu } from "../../../context/ContextMenu";
-import { Checkbox } from "primereact/checkbox";
 import Mensajes from "../../../components/Mensajes";
 import { useCallback } from "react";
 
@@ -35,30 +35,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     menuId: "",
     usuarioId: "",
   });
-
   //#endregion
-  const convertirASelectActions = useCallback(() => {
-    const permisosValidos = [
-      "registrar",
-      "modificar",
-      "eliminar",
-      "consultar",
-      "anular",
-    ];
-    setSelectedActions((prev) => {
-      const newSelectedActions = {};
-      data.permisos.forEach((permiso) => {
-        const per = Object.keys(permiso)
-          .filter((p) => permisosValidos.includes(p) && permiso[p])
-          .map((p) => p);
-        newSelectedActions[permiso.menuId] = per;
-      });
-      return {
-        ...prev,
-        ...newSelectedActions,
-      };
-    });
-  }, [data, setSelectedActions]);
 
   //#region useEffect
   useEffect(() => {
@@ -165,7 +142,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
         document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
       }
     }
-    console.log(data);
   }, [data]);
 
   useEffect(() => {
@@ -175,24 +151,39 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   useEffect(() => {
     getMenu();
     Tablas();
-
     data;
+
     if (Object.entries(data).length > 0) {
       convertirASelectActions();
     } else {
       setSelectedActions({});
     }
   }, []);
-
   //#endregion
 
   //#region Funciones
-  function uppercase(value) {
-    if (value && typeof value === "string") {
-      return value.toUpperCase();
-    }
-    return value;
-  }
+  const convertirASelectActions = useCallback(() => {
+    const permisosValidos = [
+      "registrar",
+      "modificar",
+      "eliminar",
+      "consultar",
+      "anular",
+    ];
+    setSelectedActions((prev) => {
+      const newSelectedActions = {};
+      data.permisos.forEach((permiso) => {
+        const per = Object.keys(permiso)
+          .filter((p) => permisosValidos.includes(p) && permiso[p])
+          .map((p) => p);
+        newSelectedActions[permiso.menuId] = per;
+      });
+      return {
+        ...prev,
+        ...newSelectedActions,
+      };
+    });
+  }, [data, setSelectedActions]);
   const handleInputChange = ({ target }) => {
     const value = uppercase(target.value);
     setData({
@@ -200,7 +191,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       [target.name]: value,
     });
   };
-
   const handleSelectAll = (checked) => {
     if (checked) {
       setValue(botones.map((item) => item.value));
@@ -212,15 +202,16 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...prev,
       [selectedMenu]: checked ? botones.map((item) => item.value) : [],
     }));
-    console.log(checked, "checked");
-    console.log(value, "value");
-    console.log(selectedActions, "selectedActions");
   };
-
   const handleMenuClick = (event) => {
     setSelectedMenu(event.target.innerText);
   };
-
+  function uppercase(value) {
+    if (value && typeof value === "string") {
+      return value.toUpperCase();
+    }
+    return value;
+  }
   //#endregion
 
   //#region API
@@ -232,6 +223,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   };
   //#endregion
 
+  //#region Render
   return (
     <ModalBasic
       setModal={setModal}
@@ -239,21 +231,22 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "UsuarioPermiso"]}
-      tamañoModal={[Global.ModalFull]}
+      tamañoModal={[Global.ModalGrande, Global.FormGrande]}
     >
-      <div className={Global.FormTabs}>
-        <Mensajes
-          tipoMensaje={2}
-          mensaje={[
-            "NO CONFIGURADO: No contiene ningún permiso (no configurable).",
-            "ADMINISTRADOR: Se le concede todos los permisos (no configurable).",
-            "MANTENIMIENTO: Se le concede todos los permisos, excepto el Anular (no configurable).",
-            "CONSULTA: Se le concede los permisos de Consultar y Refrescar (no configurable).",
-            "PERSONALIZADO: Se le concede los permisos asignados de la parte inferior (configurable).",
-          ]}
-          cerrar={false}
-        />
-        <div className="flex">
+      <Mensajes
+        tipoMensaje={2}
+        mensaje={[
+          "NO CONFIGURADO: No contiene ningún permiso (no configurable).",
+          "ADMINISTRADOR: Se le concede todos los permisos (no configurable).",
+          "MANTENIMIENTO: Se le concede todos los permisos, excepto el Anular (no configurable).",
+          "CONSULTA: Se le concede los permisos de Consultar y Refrescar (no configurable).",
+          "PERSONALIZADO: Se le concede los permisos asignados de la parte inferior (configurable).",
+        ]}
+        cerrar={false}
+      />
+
+      <div className={Global.ContenedorVarios}>
+        <div className={Global.ContenedorInputMitad}>
           <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
             Tipo de Usuario
           </label>
@@ -271,7 +264,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             ))}
           </select>
         </div>
-        <div className={Global.ContenedorInputFull}>
+        <div className={Global.ContenedorInputMitad}>
           <label htmlFor="menus" className={Global.LabelStyle}>
             Menú:
           </label>
@@ -284,69 +277,72 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             className={Global.InputStyle}
           />
         </div>
+      </div>
 
-        <div className="card flex justify-content-center gap-3">
-          <div>
-            <SelectButton
-              value={selectedActions[selectedMenu] || []}
+      <div className="flex justify-between py-2">
+        <SelectButton
+          value={selectedActions[selectedMenu] || []}
+          optionLabel="name"
+          options={botones}
+          multiple
+          onChange={(e) => {
+            setSelectedActions((prev) => ({
+              ...prev,
+              [selectedMenu]: e.value,
+            }));
+            setValue(e.value);
+            setChecked(e.value.length === botones.length);
+          }}
+        />
+
+        <div className="flex max-h-11">
+          <div className={Global.CheckStyle}>
+            <Checkbox
+              inputId="all"
               onChange={(e) => {
-                setSelectedActions((prev) => ({
-                  ...prev,
-                  [selectedMenu]: e.value,
-                }));
-                setValue(e.value);
-                setChecked(e.value.length === botones.length);
+                setChecked(e.checked);
+                handleSelectAll(e.checked);
               }}
-              optionLabel="name"
-              options={botones}
-              multiple
-            />
+              checked={checked}
+            ></Checkbox>
           </div>
-          <div className="mt-2 ml-2 flex gap-2">
-            <div>
-              <Checkbox
-                onChange={(e) => {
-                  setChecked(e.checked);
-                  handleSelectAll(e.checked);
-                }}
-                checked={checked}
-              ></Checkbox>
-            </div>
-            <div>
-              <label>Todos</label>
-            </div>
-          </div>
+          <label htmlFor="all" className={Global.LabelCheckStyle}>
+            Todos
+          </label>
         </div>
-        <div>
-          <div className="card mt-4">
-            <Accordion>
-              <AccordionTab
-                header={
-                  <div className="flex align-items-center">
-                    <span className=" vertical-align-middle">Menus</span>
-                    <i className="pi pi-cog ml-2"></i>
-                  </div>
-                }
-              >
-                <ul>
-                  {menu.map((item) => (
-                    <li
-                      className="hover:text-primary p-1 border-b"
-                      key={item.id}
-                    >
-                      <button type="button" onClick={handleMenuClick}>
-                        {item.nombre}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </AccordionTab>
-            </Accordion>
-          </div>
+      </div>
+
+      <div>
+        <div className="card mt-4">
+          <Accordion>
+            <AccordionTab
+              header={
+                <div className="flex align-items-center">
+                  <span className=" vertical-align-middle">Menus</span>
+                  <i className="pi pi-cog ml-2"></i>
+                </div>
+              }
+            >
+              <ul>
+                {menu.map((item) => (
+                  <li
+                    className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                    key={item.id}
+                    onClick={handleMenuClick}
+                  >
+                    <button type="button" onClick={handleMenuClick}>
+                      {item.nombre}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </AccordionTab>
+          </Accordion>
         </div>
       </div>
     </ModalBasic>
   );
+  //#endregion
 };
 
 export default ModalConfiguracion;

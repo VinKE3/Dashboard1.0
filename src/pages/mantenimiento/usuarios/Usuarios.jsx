@@ -9,11 +9,11 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import ModalConfiguracion from "./ModalConfiguracion";
 import ModalClave from "./ModalClave";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import * as Global from "../../../components/Global";
+import { ToastContainer, toast } from "react-toastify";
 import { Checkbox } from "primereact/checkbox";
+import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -23,14 +23,18 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(2) {
-    width: 100px;
-  }
   & th:nth-child(3) {
-    width: 250px;
+    width: 120px;
   }
   & th:nth-child(4) {
-    width: 250px;
+    text-align: center;
+  }
+  & th:nth-child(5) {
+    text-align: center;
+  }
+  & th:nth-child(6) {
+    width: 70px;
+    text-align: center;
   }
   & th:last-child {
     width: 130px;
@@ -97,6 +101,7 @@ const Usuarios = () => {
       Listar(filtro, index);
     }
   }, [respuestaAlert]);
+  //#endregion
 
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
@@ -110,13 +115,21 @@ const Usuarios = () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPorUsuarioId = async (id) => {
+  const GetConfigId = async (id) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/UsuarioPermiso/Listar?usuarioId=${id}`
     );
     setObjeto(result.data.data);
   };
-
+  const GetClaveId = async (id) => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
+    let model = {
+      claveAnterior: result.data.data.clave,
+      claveNueva: "",
+      claveNuevaConfirmacion: "",
+    };
+    setObjeto(model);
+  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -134,18 +147,18 @@ const Usuarios = () => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&nick=${f}`);
-    if (f != "") setIndex(1);
+    if (f != "") setIndex(0);
     const newTimer = setTimeout(() => {
       if (f == "") {
-        Listar("", index);
+        Listar("", index + 1);
       } else {
-        Listar(`&nick=${f}`, index);
+        Listar(`&nick=${f}`, index + 1);
       }
     }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    setIndex(1);
+    setIndex(0);
     if (filtro == "") {
       Listar("", 1);
     } else {
@@ -158,32 +171,71 @@ const Usuarios = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      setObjeto([]);
+      setObjeto({
+        id: "00",
+        nick: "",
+        observacion: "",
+        isActivo: true,
+        habilitarAfectarStock: true,
+        personalId: "",
+        clave: "",
+        claveConfirmacion: "",
+      });
     } else {
       await GetPorId(id);
     }
     setModal(true);
   };
-
   const AbrirModalConfigurar = async (modo = "Modificar") => {
-    let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
-    setModo(modo);
-    await GetPorUsuarioId(a);
-    setShowModalConfiguracion(true);
-  };
-
-  const AbrirModalClave = async (modo = "Clave") => {
-    let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
-    setModo(modo);
-    if (modo == "Clave") {
-      setObjeto([]);
+    let tabla = document
+      .querySelector("table > tbody")
+      .querySelector("tr.selected-row");
+    if (tabla != null) {
+      if (tabla.classList.contains("selected-row")) {
+        setModo(modo);
+        await GetConfigId(
+          document.querySelector("tr.selected-row").firstChild.innerHTML
+        );
+        setShowModalConfiguracion(true);
+      }
     } else {
-      await GetPorId(a);
-      ObtenerClaves(a);
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
-    setShowModalClave(true);
   };
-
+  const AbrirModalClave = async (modo = "Modificar") => {
+    let tabla = document
+      .querySelector("table > tbody")
+      .querySelector("tr.selected-row");
+    if (tabla != null) {
+      if (tabla.classList.contains("selected-row")) {
+        setModo(modo);
+        await GetClaveId(
+          document.querySelector("tr.selected-row").firstChild.innerHTML
+        );
+        setShowModalClave(true);
+      }
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
   //#endregion
 
   //#region Columnas
@@ -204,14 +256,26 @@ const Usuarios = () => {
       Header: "Fecha Inicio",
       accessor: "fechaInicio",
       Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+        return value == null ? (
+          <p className="flex justify-center">--/--/----</p>
+        ) : (
+          <p className="flex justify-center">
+            {moment(value).format("DD/MM/YYYY")}
+          </p>
+        );
       },
     },
     {
       Header: "Fecha Modificacion",
       accessor: "fechaModificacion",
       Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+        return value == null ? (
+          <p className="flex justify-center">--/--/----</p>
+        ) : (
+          <p className="flex justify-center">
+            {moment(value).format("DD/MM/YYYY")}
+          </p>
+        );
       },
     },
 
@@ -220,9 +284,13 @@ const Usuarios = () => {
       accessor: "isActivo",
       Cell: ({ value }) => {
         return value ? (
-          <Checkbox checked={true} />
+          <div className="flex justify-center">
+            <Checkbox checked={true} />
+          </div>
         ) : (
-          <Checkbox checked={false} />
+          <div className="flex justify-center">
+            <Checkbox checked={false} />
+          </div>
         );
       },
     },
@@ -282,7 +350,7 @@ const Usuarios = () => {
           {permisos[0] && (
             <BotonBasico
               botonText="Cambiar Contraseña"
-              botonClass={Global.BotonCambiarContraseña}
+              botonClass={Global.BotonAgregar}
               botonIcon={faKey}
               click={() => AbrirModalClave()}
             />

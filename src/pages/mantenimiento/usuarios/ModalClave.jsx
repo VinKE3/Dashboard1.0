@@ -1,40 +1,20 @@
 import React, { useState, useEffect } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../components/Global";
-import ApiMasy from "../../../api/ApiMasy";
-import Mensajes from "../../../components/Mensajes";
 
 const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState({
-    claveAnterior: "",
-    claveNueva: "",
-    claveNuevaConfirmacion: "",
-  });
+  const [data, setData] = useState(objeto);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    objeto;
-    if (modo != "Clave") {
-      setData(objeto);
-    }
-  }, [objeto]);
-
-  useEffect(() => {
     data;
-    console.log(data);
   }, [data]);
   //#endregion
 
   //#region Funciones
-  function uppercase(value) {
-    if (value && typeof value === "string") {
-      return value.toUpperCase();
-    }
-    return value;
-  }
-  const handleInputChange = ({ target }) => {
+  const ValidarData = ({ target }) => {
     const value = uppercase(target.value);
     setData({
       ...data,
@@ -42,6 +22,12 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
     });
   };
 
+  function uppercase(value) {
+    if (value && typeof value === "string") {
+      return value.toUpperCase();
+    }
+    return value;
+  }
   //#endregion
 
   return (
@@ -50,7 +36,8 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
       setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
-      menu={["Mantenimiento", "Usuario"]}
+      menu={["Mantenimiento", "Usuario/CambiarClave"]}
+      tamañoModal={[Global.ModalPequeño, Global.FormGrande]}
     >
       <div className={Global.ContenedorInputFull}>
         <label htmlFor="claveAnterior" className={Global.LabelStyle}>
@@ -61,9 +48,9 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="claveAnterior"
           name="claveAnterior"
           placeholder="Clave Anterior"
-          value={data.claveAnterior}
+          value={data.claveAnterior ?? ""}
           autoComplete="off"
-          onChange={handleInputChange}
+          onChange={ValidarData}
           className={Global.InputStyle}
         />
       </div>
@@ -76,9 +63,9 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="claveNueva"
           name="claveNueva"
           placeholder="Clave Nueva"
-          value={data.claveNueva}
+          value={data.claveNueva ?? ""}
           autoComplete="off"
-          onChange={handleInputChange}
+          onChange={ValidarData}
           className={Global.InputStyle}
         />
       </div>
@@ -91,9 +78,9 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           id="claveNuevaConfirmacion"
           name="claveNuevaConfirmacion"
           placeholder="Confirmar Clave Nueva"
-          value={data.claveNuevaConfirmacion}
+          value={data.claveNuevaConfirmacion ?? ""}
           autoComplete="off"
-          onChange={handleInputChange}
+          onChange={ValidarData}
           className={Global.InputStyle}
         />
       </div>

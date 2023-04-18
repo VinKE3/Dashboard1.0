@@ -12,16 +12,13 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     dataModal;
-    console.log(data.serie);
     if (document.getElementById("tipoDocumentoId")) {
-      console.log(data.tiposDocumentoId);
       document.getElementById("tipoDocumentoId").value = data.tipoDocumentoId;
     }
   }, [dataModal]);
 
   useEffect(() => {
     data;
-    console.log(data);
   }, [data]);
   useEffect(() => {
     data;
@@ -77,7 +74,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             ))}
           </select>
         </div>
-        <div className={Global.ContenedorInputFull}>
+        <div className={Global.ContenedorInputMitad}>
           <label htmlFor="serie" className={Global.LabelStyle}>
             Serie
           </label>
@@ -114,8 +111,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             className={Global.InputStyle}
           />
         </div>
-
-        <div className={Global.ContenedorInput42pct}>
+        <div className={Global.ContenedorInputMitad}>
           <label htmlFor="numero" className={Global.LabelStyle}>
             Número
           </label>

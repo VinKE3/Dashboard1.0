@@ -27,7 +27,7 @@ const LayoutAdmin = () => {
       <Sidebar />
       <div className="xl:col-span-5">
         <Header />
-        <div className="h-[80vh] overflow-y-scroll p-8">
+        <div className="h-[80vh] overflow-y-scroll px-0 md:px-4">
           <Outlet />
         </div>
         <div className="h-[10vh]">
