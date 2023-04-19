@@ -158,14 +158,14 @@ const Table = ({ columnas, datos, total, index, Click }) => {
       <div className="py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-base sm:text-sm">
         {/* Total de registros */}
         <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start">
-          <span className="text-center align-text-bottom">
+          <span className="text-center align-text-bottom text-base md:text-sm">
             {"Total de registros: "}
             <span className="font-bold text-primary">{totalPaginas}</span>
           </span>
         </div>
         {/* Pagina 1 de total */}
         <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex align-items-center justify-center">
-          <span className="text-center align-text-bottom">
+          <span className="text-center align-text-bottom text-base md:text-sm">
             {"Página "}
             <span className="font-bold text-primary">{indexPaginas + 1}</span>
             {" de "}

@@ -36,9 +36,13 @@ export var InputStyle =
   "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full text-sm p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light";
 
 export var CheckStyle =
+  "inline-flex items-center px-2 pr-1 rounded-l-md bg-transparent border-gray-600 text-light font-semibold";
+export var CheckStyleBorder =
   "inline-flex items-center px-2 pr-1 border border-r-0 rounded-l-md bg-transparent border-gray-600 text-light font-semibold";
 export var LabelCheckStyle =
-  "rounded-none rounded-r-lg border border-l-0 block flex-1 min-w-0 w-full text-sm pt-2.5 px-3 pl-1 bg-transparent border-gray-600 text-light leading-normal cursor-pointer	";
+  "rounded-none rounded-r-lg block flex-1 min-w-0 w-full text-base pb-1.5 pt-2.5 px-3 pl-1 bg-transparent border-gray-600 text-light leading-normal cursor-pointer	";
+export var LabelCheckStyleBorder =
+  "rounded-none rounded-r-lg border border-l-0 block flex-1 min-w-0 w-full text-base pb-1.5 pt-2.5 px-3 pl-1 bg-transparent border-gray-600 text-light leading-normal cursor-pointer	";
 
 export var SelectStyle =
   "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full text-sm p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light";
@@ -52,19 +56,22 @@ export var BotonCancelarModal =
 
 //#region Index
 export var TituloH2 = "mb-2 py-2 text-2xl font-bold text-light";
+export var TituloH4 = "mb-1 py-2 text-xl font-bold text-light";
 export var ContenedorFiltro =
   "flex flex-col sm:flex-row sm:justify-between my-2 gap-y-3 sm:gap-x-2 md:text-sm";
 export var ContenedorInputsFiltro = "flex flex-1 overflow-hidden";
 export var BotonBasic =
   "flex px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 sm:text-sm font-semibold text-gray-100 uppercase ";
 export var BotonBuscar =
-  "px-3 rounded-none rounded-r-lg bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-yellow-600";
+  "px-3 rounded-none rounded-r-lg bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600";
 export var BotonRegistrar =
   "bg-gradient-to-b from-blue-600 to-blue-800 hover:bg-gradient-to-b hover:from-blue-400 hover:to-blue-600";
 export var BotonConfigurar =
   "bg-gradient-to-b from-gray-500 to-gray-800 hover:bg-gradient-to-b hover:from-gray-400 hover:to-gray-600";
 export var BotonAgregar =
   "bg-gradient-to-b from-green-700 to-green-800 hover:bg-gradient-to-b hover:from-green-500 hover:to-green-700";
+  export var BotonHeader =
+  "px-3 rounded border-none bg-gradient-to-b from-yellow-400 to-yellow-600 text-black hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-700 font-semibold";
 export var TablaCabecera =
   "text-left bg-gradient-to-b from-slate-800 to-slate-900";
 export var TablaBody = "bg-gradient-to-b from-secondary-100 to-slate-800";

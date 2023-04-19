@@ -28,7 +28,8 @@ const TablaStyle = styled.div`
 
 const Lineas = () => {
   //#region useState
-  const { usuario, usuarioId } = useAuth();
+  const { usuarioId } = useAuth();
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
@@ -44,30 +45,6 @@ const Lineas = () => {
 
   //#region useEffect
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setPermisos([true, true, true, true, true]);
-      Listar(filtro, 1);
-    } else {
-      //?Consulta a la Api para traer los permisos
-      GetPermisos();
-      Listar(filtro, 1);
-    }
-  }, [usuario]);
-
-  useEffect(() => {
-    filtro;
-  }, [filtro]);
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
-  useEffect(() => {
-    modo;
-  }, [modo]);
-  useEffect(() => {
     if (!modal) {
       Listar(filtro, index + 1);
     }
@@ -78,6 +55,23 @@ const Lineas = () => {
     }
   }, [respuestaAlert]);
 
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      setVisible(true);
+      setPermisos([true, true, true, true, true]);
+      Listar(filtro, 1);
+    } else {
+      //?Consulta a la Api para traer los permisos
+      GetPermisos();
+      console.log(!permisos[0]);
+      if (!permisos[0]) {
+        console.log("object");
+        setVisible(false);
+      } else {
+        Listar(filtro, 1);
+      }
+    }
+  }, []);
   //#endregion
 
   //#region Funciones API
@@ -185,48 +179,55 @@ const Lineas = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Líneas</h2>
+      (visible ?
+      <>
+        <div className="px-2">
+          <h2 className={Global.TituloH2}>Líneas</h2>
 
-        {/* Filtro*/}
-        <FiltroBasico
-          textLabel={"Descripción"}
-          inputPlaceHolder={"Descripción"}
-          inputId={"descripcion"}
-          inputName={"descripcion"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        />
-        {/* Filtro*/}
-
-        {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
+          {/* Filtro*/}
+          <FiltroBasico
+            textLabel={"Descripción"}
+            inputPlaceHolder={"Descripción"}
+            inputId={"descripcion"}
+            inputName={"descripcion"}
+            inputMax={"200"}
+            botonId={"buscar"}
+            FiltradoButton={FiltradoButton}
+            FiltradoKeyPress={FiltradoKeyPress}
           />
-        )}
-        {/* Boton */}
+          {/* Filtro*/}
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
+          {/* Boton */}
+          {permisos[0] && (
+            <BotonBasico
+              botonText="Registrar"
+              botonClass={Global.BotonRegistrar}
+              botonIcon={faPlus}
+              click={() => AbrirModal()}
+            />
+          )}
+          {/* Boton */}
+
+          {/* Tabla */}
+          <TablaStyle>
+            <Table
+              columnas={columnas}
+              datos={datos}
+              total={total}
+              index={index}
+              Click={(e) => FiltradoPaginado(e)}
+            />
+          </TablaStyle>
+          {/* Tabla */}
+        </div>
+        {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+        <ToastContainer />
+      </>
+      :
+      <div>
+        <span>{"NO TIENES ACCESO"}</span>
       </div>
-
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-      <ToastContainer />
+      )
     </>
   );
   //#endregion

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../components/Global";
 
@@ -8,9 +8,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-  }, [data]);
   //#endregion
 
   //#region Funciones
@@ -45,7 +42,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="00"
             readOnly={modo == "Registrar" ? false : true}
-            value={data.id}
+            value={data.id ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}
           />
@@ -61,7 +58,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Descripción"
             readOnly={modo == "Consultar" ? true : false}
-            value={data.descripcion}
+            value={data.descripcion ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}
           />
