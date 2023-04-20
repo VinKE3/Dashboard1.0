@@ -44,7 +44,7 @@ const SidebarMenus = ({
       <div className="h-[8vh]  ">
         <h1 className="h-[6vh] text-center text-2xl font-bold text-ligth">
           <Link to={"/"}>
-            AKRON<span className="text-primary text-4xl">.</span>
+            CYKRON<span className="text-primary text-4xl">.</span>
           </Link>
         </h1>
       </div>

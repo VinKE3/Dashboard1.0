@@ -3,7 +3,7 @@ import ApiMasy from "../../api/ApiMasy";
 import * as Global from "../../../src/components/Global";
 const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#region useState
-  const [ubigeo, setUbigeo] = useState([]);
+  const [ubigeo, setUbigeo] = useState(dato);
   const [dataDep, setDataDep] = useState([]);
   const [dataProv, setDataProv] = useState([]);
   const [dataDist, setDataDist] = useState([]);
@@ -12,11 +12,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region useEffect
   useEffect(() => {
-    dato;
-    setUbigeo(dato);
-  }, [dato]);
-  useEffect(() => {
-    dataDep;
+    dataDep && console.log(dataDep);
     document.getElementById(Id[0]).value = ubigeo.departamentoId;
     ConsultarProvincia();
   }, [dataDep]);
@@ -35,7 +31,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
     ConsultarProvincia();
   }, [ubigeo]);
   useEffect(() => {
-    Tablas();
+      Tablas();
   }, []);
   //#endregion
 

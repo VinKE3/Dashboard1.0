@@ -1,29 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(objeto);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    setData(objeto);
-  }, [objeto]);
-  useEffect(() => {
-    data;
-  }, [data]);
   //#endregion
 
   //#region Funciones
-  function uppercase(value) {
-    return value.toUpperCase();
-  }
-  const handleChange = ({ target }) => {
-    const value = uppercase(target.value);
-    setData({ ...data, [target.name]: value });
+  const ValidarData = ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
   //#endregion
   return (
@@ -32,6 +24,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Cargo"]}
+      titulo="Cargo"
       tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>
@@ -46,9 +39,8 @@ const Modal = ({ setModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Descripción"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.descripcion}
-            onChange={handleChange}
-            onKeyUp={uppercase}
+            value={data.descripcion ?? ""}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -63,8 +55,8 @@ const Modal = ({ setModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Sueldo"
             readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.sueldo}
-            onChange={handleChange}
+            defaultValue={data.sueldo ?? ""}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>

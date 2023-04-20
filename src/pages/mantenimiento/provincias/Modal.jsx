@@ -46,6 +46,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Provincia"]}
+      titulo="Provincia"
       tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className={Global.ContenedorVarios}>

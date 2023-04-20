@@ -12,17 +12,16 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
 
   //#region useEffect
   useEffect(() => {
-    dataDepartamento;
-    document.getElementById("departamentoId").value = data.departamentoId;
-    ConsultarProvincia();
+    if (Object.entries(dataDepartamento).length > 0) {
+      document.getElementById("departamentoId").value = data.departamentoId;
+      ConsultarProvincia();
+    }
   }, [dataDepartamento]);
   useEffect(() => {
-    dataProvincia;
-    document.getElementById("provinciaId").value = data.provinciaId;
+    if (Object.entries(dataProvincia).length > 0) {
+      document.getElementById("provinciaId").value = data.provinciaId;
+    }
   }, [dataProvincia]);
-  useEffect(() => {
-    data;
-  }, [data]);
   useEffect(() => {
     ConsultarDepartamento();
   }, []);
@@ -67,86 +66,91 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
 
   //#region Render
   return (
-    <ModalBasic
-      setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
-      objeto={data}
-      modo={modo}
-      menu={["Mantenimiento", "Distrito"]}
-      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
-    >
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInput48}>
-          <label htmlFor="distritoId" className={Global.LabelStyle}>
-            Código
-          </label>
-          <input
-            type="text"
-            id="distritoId"
-            name="distritoId"
-            autoComplete="off"
-            maxLength="2"
-            placeholder="00"
-            readOnly={modo == "Registrar" ? false : true}
-            value={data.distritoId}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
-        </div>
-        <div className={Global.ContenedorInputFull}>
-          <label htmlFor="departamentoId" className={Global.LabelStyle}>
-            Departamento
-          </label>
-          <select
-            id="departamentoId"
-            name="departamentoId"
-            onChange={ValidarData}
-            disabled={modo == "Registrar" ? false : true}
-            className={Global.SelectStyle}
-          >
-            {dataDepartamento.map((departamento) => (
-              <option key={departamento.id} value={departamento.id}>
-                {departamento.nombre}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="flex">
-        <label htmlFor="provinciaId" className={Global.LabelStyle}>
-          Provincia
-        </label>
-        <select
-          id="provinciaId"
-          name="provinciaId"
-          onChange={ValidarData}
-          disabled={modo == "Registrar" ? false : true}
-          className={Global.SelectStyle}
+    <>
+      {dataDepartamento.length > 0 && (
+        <ModalBasic
+          setModal={setModal}
+          setRespuestaModal={setRespuestaModal}
+          objeto={data}
+          modo={modo}
+          menu={["Mantenimiento", "Distrito"]}
+          titulo="Distrito"
+          tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
         >
-          {dataProvincia.map((provincia) => (
-            <option key={provincia.id} value={provincia.id}>
-              {provincia.nombre}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="flex">
-        <label htmlFor="nombre" className={Global.LabelStyle}>
-          Distrito
-        </label>
-        <input
-          type="text"
-          id="nombre"
-          name="nombre"
-          autoComplete="off"
-          placeholder="Distrito"
-          readOnly={modo == "Consultar" ? true : false}
-          value={data.nombre}
-          onChange={ValidarData}
-          className={Global.InputStyle}
-        />
-      </div>
-    </ModalBasic>
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInput48}>
+              <label htmlFor="distritoId" className={Global.LabelStyle}>
+                Código
+              </label>
+              <input
+                type="text"
+                id="distritoId"
+                name="distritoId"
+                autoComplete="off"
+                maxLength="2"
+                placeholder="00"
+                readOnly={modo == "Registrar" ? false : true}
+                value={data.distritoId ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputFull}>
+              <label htmlFor="departamentoId" className={Global.LabelStyle}>
+                Departamento
+              </label>
+              <select
+                id="departamentoId"
+                name="departamentoId"
+                onChange={ValidarData}
+                disabled={modo == "Registrar" ? false : true}
+                className={Global.SelectStyle}
+              >
+                {dataDepartamento.map((departamento) => (
+                  <option key={departamento.id} value={departamento.id}>
+                    {departamento.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex">
+            <label htmlFor="provinciaId" className={Global.LabelStyle}>
+              Provincia
+            </label>
+            <select
+              id="provinciaId"
+              name="provinciaId"
+              onChange={ValidarData}
+              disabled={modo == "Registrar" ? false : true}
+              className={Global.SelectStyle}
+            >
+              {dataProvincia.map((provincia) => (
+                <option key={provincia.id} value={provincia.id}>
+                  {provincia.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex">
+            <label htmlFor="nombre" className={Global.LabelStyle}>
+              Distrito
+            </label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              autoComplete="off"
+              placeholder="Distrito"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.nombre ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+        </ModalBasic>
+      )}
+    </>
   );
   //#endregion
 };

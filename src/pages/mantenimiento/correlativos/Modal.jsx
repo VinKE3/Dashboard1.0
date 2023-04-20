@@ -6,22 +6,17 @@ import * as Global from "../../../components/Global";
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setdataModal] = useState([]);
+  const [dataTipoDocumento, setDataTipoDocumento] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    dataModal;
     if (document.getElementById("tipoDocumentoId")) {
       document.getElementById("tipoDocumentoId").value = data.tipoDocumentoId;
     }
-  }, [dataModal]);
+  }, [dataTipoDocumento]);
 
   useEffect(() => {
-    data;
-  }, [data]);
-  useEffect(() => {
-    data;
     Tablas();
   }, []);
   //#endregion
@@ -40,95 +35,100 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Correlativo/FormularioTablas`
     );
-    setdataModal(result.data.data.tiposDocumento);
+    setDataTipoDocumento(result.data.data.tiposDocumento);
   };
 
   //#endregion
 
   //#region Render
   return (
-    <ModalBasic
-      setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
-      objeto={data}
-      modo={modo}
-      menu={["Mantenimiento", "Correlativo"]}
-      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
-    >
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputFull}>
-          <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
-            Tipo de Documento
-          </label>
-          <select
-            id="tipoDocumentoId"
-            name="tipoDocumentoId"
-            disabled={modo == "Consultar" ? true : false}
-            onChange={ValidarData}
-            className={Global.SelectStyle}
-          >
-            {dataModal.map((forma) => (
-              <option key={forma.id} value={forma.id}>
-                {forma.descripcion}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className={Global.ContenedorInputMitad}>
-          <label htmlFor="serie" className={Global.LabelStyle}>
-            Serie
-          </label>
-          <input
-            type="text"
-            id="serie"
-            name="serie"
-            autoComplete="off"
-            placeholder="Serie"
-            readOnly={modo == "Consultar" ? true : false}
-            value={data.serie}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
-        </div>
-      </div>
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputFull}>
-          <label
-            htmlFor="tipoDocumentoDescripcion"
-            className={Global.LabelStyle}
-          >
-            Descripción
-          </label>
-          <input
-            type="text"
-            id="tipoDocumentoDescripcion"
-            name="tipoDocumentoDescripcion"
-            autoComplete="off"
-            placeholder="Descripción"
-            readOnly={modo == "Consultar" ? true : false}
-            value={data.tipoDocumentoDescripcion}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
-        </div>
-        <div className={Global.ContenedorInputMitad}>
-          <label htmlFor="numero" className={Global.LabelStyle}>
-            Número
-          </label>
-          <input
-            type="number"
-            id="numero"
-            name="numero"
-            autoComplete="off"
-            placeholder="numero"
-            readOnly={modo == "Consultar" ? true : false}
-            value={data.numero}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
-        </div>
-      </div>
-    </ModalBasic>
+    <>
+      {Object.entries(dataTipoDocumento).length > 0 && (
+        <ModalBasic
+          setModal={setModal}
+          setRespuestaModal={setRespuestaModal}
+          objeto={data}
+          modo={modo}
+          menu={["Mantenimiento", "Correlativo"]}
+          titulo="Correlativo"
+          tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
+        >
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputFull}>
+              <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
+                Tipo de Documento
+              </label>
+              <select
+                id="tipoDocumentoId"
+                name="tipoDocumentoId"
+                disabled={modo == "Consultar" ? true : false}
+                onChange={ValidarData}
+                className={Global.SelectStyle}
+              >
+                {dataTipoDocumento.map((forma) => (
+                  <option key={forma.id} value={forma.id}>
+                    {forma.descripcion}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={Global.ContenedorInputMitad}>
+              <label htmlFor="serie" className={Global.LabelStyle}>
+                Serie
+              </label>
+              <input
+                type="text"
+                id="serie"
+                name="serie"
+                autoComplete="off"
+                placeholder="Serie"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.serie}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+          </div>
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputFull}>
+              <label
+                htmlFor="tipoDocumentoDescripcion"
+                className={Global.LabelStyle}
+              >
+                Descripción
+              </label>
+              <input
+                type="text"
+                id="tipoDocumentoDescripcion"
+                name="tipoDocumentoDescripcion"
+                autoComplete="off"
+                placeholder="Descripción"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.tipoDocumentoDescripcion}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputMitad}>
+              <label htmlFor="numero" className={Global.LabelStyle}>
+                Número
+              </label>
+              <input
+                type="number"
+                id="numero"
+                name="numero"
+                autoComplete="off"
+                placeholder="numero"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.numero}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+          </div>
+        </ModalBasic>
+      )}
+    </>
   );
   //#endregion
 };

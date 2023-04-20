@@ -137,18 +137,7 @@ const Empresa = ({ modo }) => {
   useEffect(() => {
     Configuracion();
   }, []);
-
   useEffect(() => {
-    dataGeneral;
-    if (refrescar) {
-      GuardarTodo(new Event("click"));
-      setRefrescar(false);
-    }
-    mesesHabilitados;
-  }, [dataGeneral, mesesHabilitados]);
-
-  useEffect(() => {
-    dataUbigeo;
     if (Object.keys(dataUbigeo).length > 0) {
       setDataGeneral({
         ...dataGeneral,
@@ -159,7 +148,14 @@ const Empresa = ({ modo }) => {
     }
   }, [dataUbigeo]);
 
-  useEffect(() => {}, [checkboxes, checkboxes2]);
+  useEffect(() => {
+    dataGeneral;
+    if (refrescar) {
+      GuardarTodo(new Event("click"));
+      setRefrescar(false);
+    }
+    mesesHabilitados;
+  }, [dataGeneral, mesesHabilitados]);
   //#endregion
 
   //#region Funciones

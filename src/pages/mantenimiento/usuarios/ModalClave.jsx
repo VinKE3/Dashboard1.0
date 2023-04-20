@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../components/Global";
 
@@ -8,9 +8,6 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-  }, [data]);
   //#endregion
 
   //#region Funciones
@@ -21,7 +18,6 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
       [target.name]: value,
     });
   };
-
   function uppercase(value) {
     if (value && typeof value === "string") {
       return value.toUpperCase();
@@ -37,6 +33,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Usuario/CambiarClave"]}
+      titulo="Contraseña"
       tamañoModal={[Global.ModalPequeño, Global.FormGrande]}
     >
       <div className={Global.ContenedorInputFull}>

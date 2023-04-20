@@ -8,7 +8,6 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 import store from "store2";
@@ -28,7 +27,6 @@ const TablaStyle = styled.div`
 
 const Lineas = () => {
   //#region useState
-  const { usuarioId } = useAuth();
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
@@ -45,8 +43,10 @@ const Lineas = () => {
 
   //#region useEffect
   useEffect(() => {
-    if (!modal) {
-      Listar(filtro, index + 1);
+    if (visible) {
+      if (!modal) {
+        Listar(filtro, index + 1);
+      }
     }
   }, [modal]);
   useEffect(() => {
@@ -56,20 +56,28 @@ const Lineas = () => {
   }, [respuestaAlert]);
 
   useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar(filtro, 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
     if (store.session.get("usuario") == "AD") {
       setVisible(true);
       setPermisos([true, true, true, true, true]);
       Listar(filtro, 1);
     } else {
-      //?Consulta a la Api para traer los permisos
       GetPermisos();
-      console.log(!permisos[0]);
-      if (!permisos[0]) {
-        console.log("object");
-        setVisible(false);
-      } else {
-        Listar(filtro, 1);
-      }
     }
   }, []);
   //#endregion
@@ -87,13 +95,13 @@ const Lineas = () => {
     setObjeto(result.data.data);
   };
   const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(usuarioId, "Linea");
+    const result = await GetUsuarioId(store.session.get("usuarioId"), "Linea");
     setPermisos([
-      permiso.registrar,
-      permiso.modificar,
-      permiso.eliminar,
-      permiso.consultar,
-      permiso.anular,
+      result.registrar,
+      result.modificar,
+      result.eliminar,
+      result.consultar,
+      result.anular,
     ]);
   };
   //#endregion
@@ -179,55 +187,53 @@ const Lineas = () => {
   //#region Render
   return (
     <>
-      (visible ?
-      <>
-        <div className="px-2">
-          <h2 className={Global.TituloH2}>Líneas</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Líneas</h2>
 
-          {/* Filtro*/}
-          <FiltroBasico
-            textLabel={"Descripción"}
-            inputPlaceHolder={"Descripción"}
-            inputId={"descripcion"}
-            inputName={"descripcion"}
-            inputMax={"200"}
-            botonId={"buscar"}
-            FiltradoButton={FiltradoButton}
-            FiltradoKeyPress={FiltradoKeyPress}
-          />
-          {/* Filtro*/}
-
-          {/* Boton */}
-          {permisos[0] && (
-            <BotonBasico
-              botonText="Registrar"
-              botonClass={Global.BotonRegistrar}
-              botonIcon={faPlus}
-              click={() => AbrirModal()}
+            {/* Filtro*/}
+            <FiltroBasico
+              textLabel={"Descripción"}
+              inputPlaceHolder={"Descripción"}
+              inputId={"descripcion"}
+              inputName={"descripcion"}
+              inputMax={"200"}
+              botonId={"buscar"}
+              FiltradoButton={FiltradoButton}
+              FiltradoKeyPress={FiltradoKeyPress}
             />
-          )}
-          {/* Boton */}
+            {/* Filtro*/}
 
-          {/* Tabla */}
-          <TablaStyle>
-            <Table
-              columnas={columnas}
-              datos={datos}
-              total={total}
-              index={index}
-              Click={(e) => FiltradoPaginado(e)}
-            />
-          </TablaStyle>
-          {/* Tabla */}
-        </div>
-        {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-        <ToastContainer />
-      </>
-      :
-      <div>
-        <span>{"NO TIENES ACCESO"}</span>
-      </div>
-      )
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
+
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

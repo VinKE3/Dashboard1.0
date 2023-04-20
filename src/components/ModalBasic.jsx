@@ -14,6 +14,7 @@ const ModalBasic = ({
   objeto,
   modo,
   menu,
+  titulo,
   tamañoModal = [Global.ModalPequeño, Global.FormSimple],
 }) => {
   //#region useState
@@ -80,7 +81,7 @@ const ModalBasic = ({
             {/*header*/}
             <div className="flex pt-4 pb-0 px-4 rounded-tt">
               <h3 className="text-3xl md:text-2xl font-semibold text-light">
-                {modo + " " + menu[1]}
+                {modo + " " + titulo}
               </h3>
               <button
                 className="p-1 ml-auto bg-transparent border-0 hover:text-red-500 text-light float-right text-3xl md:text-2xl leading-none font-semibold outline-none focus:outline-none"

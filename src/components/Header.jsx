@@ -45,27 +45,32 @@ const Header = () => {
     window.location.href = "/login";
   };
   return (
-    <header className="h-[13vh] md:h-[8vh]  p-3 border-b border-light">
-      <nav className=" flex flex-col md:flex-row items-center justify-between">
+    <header className="h-[13vh] md:h-[8vh] px-3 border-b border-light">
+      <nav className="h-full pb-3 md:pb-0 flex flex-col md:flex-row items-center justify-between">
         <h1 className="pb-2 md:pb-0 font-bold text-xl">
-          Bienvenido {" "}
+          Bienvenido{" "}
           <span className="text-primary">{store.session.get("usuario")}</span>
         </h1>
         <div className="card flex justify-content-center gap-2">
           <Menu model={items} popup ref={menu} />
           <Button
-            label="Empresa"
             icon="pi pi-building"
             onClick={(e) => menu.current.toggle(e)}
-            className={Global.BotonHeader + " !border-none"}
-          />
+            className={
+              Global.BotonBasic + " " + Global.BotonHeader + " !border-none"
+            }
+          >
+            <span className="hidden sm:block pl-2">EMPRESA</span>
+          </Button>
           <div>
             <Button
               onClick={handleLogout}
-              className={Global.BotonHeader}
+              className={
+                Global.BotonBasic + " " + Global.BotonHeader + " !border-none"
+              }
             >
               <RiLogoutCircleRLine className="text-black" />
-              <span className="pl-2"> Cerrar sesión</span>
+              <span className="hidden sm:block pl-2">Cerrar sesión</span>
             </Button>
           </div>
         </div>

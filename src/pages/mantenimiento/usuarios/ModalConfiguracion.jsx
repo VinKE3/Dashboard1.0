@@ -12,199 +12,122 @@ import { useCallback } from "react";
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const { getMenu, menu } = useMenu();
-  const [selectedMenu, setSelectedMenu] = useState("");
-  const [value, setValue] = useState([]);
-  const botones = [
-    { name: "Registrar", value: "registrar", id: "registrar" },
-    { name: "Modificar", value: "modificar", id: "modificar" },
-    { name: "Eliminar", value: "eliminar", id: "eliminar" },
-    { name: "Consultar", value: "consultar", id: "consultar" },
-    { name: "Anular", value: "anular", id: "anular" },
-  ];
-  const [checked, setChecked] = useState(false);
-  const [selectedActions, setSelectedActions] = useState({});
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
-  const [tipoUsuarioId, setTipoUsuarioId] = useState("");
-  const [dataPermisos, setDataPermisos] = useState({
-    registrar: false,
-    modificar: false,
-    eliminar: false,
-    consultar: false,
-    anular: false,
-    menuId: "",
-    usuarioId: "",
-  });
+  const [permisos, setPermisos] = useState({}); //Listado general de permisos
+  const [selectedMenu, setSelectedMenu] = useState(""); //Menu seleccionado
+  const [selectedButton, setSelectedButton] = useState([]); //Listado de botones seleccionados
+  const [checked, setChecked] = useState(false);
+  const { getMenu, menu } = useMenu();
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    if (Object.entries(value).length > 0) {
+    if (selectedMenu != "") {
       setData((prevData) => {
-        const existingPermiso = prevData.permisos.find(
+        const model = prevData.permisos.find(
           (permiso) => permiso.menuId === selectedMenu
         );
-        if (existingPermiso) {
+        if (model) {
           return {
             ...prevData,
             permisos: prevData.permisos.map((permiso) =>
               permiso.menuId === selectedMenu
                 ? {
                     ...permiso,
-                    registrar: value.includes("registrar"),
-                    modificar: value.includes("modificar"),
-                    eliminar: value.includes("eliminar"),
-                    consultar: value.includes("consultar"),
-                    anular: value.includes("anular"),
+                    registrar: selectedButton.includes("registrar"),
+                    modificar: selectedButton.includes("modificar"),
+                    eliminar: selectedButton.includes("eliminar"),
+                    consultar: selectedButton.includes("consultar"),
+                    anular: selectedButton.includes("anular"),
                   }
                 : permiso
             ),
           };
         } else {
-          const newPermiso = {
+          const model = {
             menuId: selectedMenu,
             usuarioId: data.usuarioId,
-            registrar: value.includes("registrar"),
-            modificar: value.includes("modificar"),
-            eliminar: value.includes("eliminar"),
-            consultar: value.includes("consultar"),
-            anular: value.includes("anular"),
+            registrar: selectedButton.includes("registrar"),
+            modificar: selectedButton.includes("modificar"),
+            eliminar: selectedButton.includes("eliminar"),
+            consultar: selectedButton.includes("consultar"),
+            anular: selectedButton.includes("anular"),
           };
-
           return {
             ...prevData,
-            permisos: [...prevData.permisos, newPermiso],
+            permisos: [...prevData.permisos, model],
           };
         }
       });
     }
-  }, [value]);
-
-  // useEffect(() => {
-  //   if (Object.entries(value).length > 0) {
-  //     setData((prevData) => {
-  //       // Check if the user already has permissions for the selected menu
-  //       const permissionsExist = prevData.permisos.some(
-  //         (permiso) => permiso.menuId === selectedMenu
-  //       );
-
-  //       // If the user doesn't have permissions for the selected menu, add a new permission object to the array
-  //       if (!permissionsExist) {
-  //         const newPermiso = {
-  //           menuId: selectedMenu,
-  //           usuarioId: data.usuarioId,
-  //           registrar: value.includes("registrar"),
-  //           modificar: value.includes("modificar"),
-  //           eliminar: value.includes("eliminar"),
-  //           consultar: value.includes("consultar"),
-  //           anular: value.includes("anular"),
-  //         };
-
-  //         return {
-  //           ...prevData,
-  //           permisos: [...prevData.permisos, newPermiso],
-  //         };
-  //       }
-
-  //       // If the user already has permissions for the selected menu, update the existing permission object
-  //       return {
-  //         ...prevData,
-  //         permisos: prevData.permisos.map((permiso) =>
-  //           permiso.menuId === selectedMenu
-  //             ? {
-  //                 ...permiso,
-  //                 registrar: value.includes("registrar"),
-  //                 modificar: value.includes("modificar"),
-  //                 eliminar: value.includes("eliminar"),
-  //                 consultar: value.includes("consultar"),
-  //                 anular: value.includes("anular"),
-  //               }
-  //             : permiso
-  //         ),
-  //       };
-  //     });
-  //   }
-  // }, [value]);
+  }, [selectedButton]);
 
   useEffect(() => {
-    selectedMenu;
-    setDataPermisos(data.permisos.find((x) => x.menuId === selectedMenu));
-  }, [selectedMenu]);
-
-  useEffect(() => {
-    dataPermisos;
-  }, [dataPermisos]);
-
-  useEffect(() => {
-    data;
     if (Object.entries(data).length > 0) {
       if (document.getElementById("tipoUsuarioId")) {
         document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
       }
     }
-  }, [data]);
-
-  useEffect(() => {
-    setTipoUsuarioId(data.tipoUsuarioId);
-  }, [data.tipoUsuarioId]);
+  }, [dataTipoUsuario]);
 
   useEffect(() => {
     getMenu();
     Tablas();
     data;
-
-    if (Object.entries(data).length > 0) {
-      convertirASelectActions();
-    } else {
-      setSelectedActions({});
-    }
+    ListadoPermisos();
   }, []);
   //#endregion
 
   //#region Funciones
-  const convertirASelectActions = useCallback(() => {
-    const permisosValidos = [
-      "registrar",
-      "modificar",
-      "eliminar",
-      "consultar",
-      "anular",
-    ];
-    setSelectedActions((prev) => {
-      const newSelectedActions = {};
+  const listaBotones = [
+    { name: "Registrar", value: "registrar", id: "registrar" },
+    { name: "Modificar", value: "modificar", id: "modificar" },
+    { name: "Eliminar", value: "eliminar", id: "eliminar" },
+    { name: "Consultar", value: "consultar", id: "consultar" },
+    { name: "Anular", value: "anular", id: "anular" },
+  ];
+  const listaPermisos = [
+    "registrar",
+    "modificar",
+    "eliminar",
+    "consultar",
+    "anular",
+  ];
+  const ListadoPermisos = useCallback(() => {
+    setPermisos((prev) => {
+      const model = {};
       data.permisos.forEach((permiso) => {
         const per = Object.keys(permiso)
-          .filter((p) => permisosValidos.includes(p) && permiso[p])
+          .filter((p) => listaPermisos.includes(p) && permiso[p])
           .map((p) => p);
-        newSelectedActions[permiso.menuId] = per;
+        model[permiso.menuId] = per;
       });
       return {
         ...prev,
-        ...newSelectedActions,
+        ...model,
       };
     });
-  }, [data, setSelectedActions]);
-  const handleInputChange = ({ target }) => {
-    const value = uppercase(target.value);
+  }, [data, setPermisos]);
+  const ValidarData = ({ target }) => {
     setData({
       ...data,
-      [target.name]: value,
+      [target.name]: uppercase(target.value),
     });
   };
-  const handleSelectAll = (checked) => {
-    if (checked) {
-      setValue(botones.map((item) => item.value));
+  const ValidarCheckTodos = (check) => {
+    if (check) {
+      setSelectedButton(listaBotones.map((item) => item.value));
     } else {
-      setValue([]);
+      setSelectedButton([]);
     }
-    setChecked(checked);
-    setSelectedActions((prev) => ({
+    setChecked(check);
+    setPermisos((prev) => ({
       ...prev,
-      [selectedMenu]: checked ? botones.map((item) => item.value) : [],
+      [selectedMenu]: check ? listaBotones.map((item) => item.value) : [],
     }));
   };
-  const handleMenuClick = (event) => {
-    setSelectedMenu(event.target.innerText);
+  const ValidarMenu = (e) => {
+    setSelectedMenu(e.target.innerText);
   };
   function uppercase(value) {
     if (value && typeof value === "string") {
@@ -231,6 +154,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "UsuarioPermiso"]}
+      titulo="Configuración de Permisos"
       tamañoModal={[Global.ModalGrande, Global.FormGrande]}
     >
       <Mensajes
@@ -253,13 +177,12 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <select
             id="tipoUsuarioId"
             name="tipoUsuarioId"
-            onChange={handleInputChange}
+            onChange={ValidarData}
             className={Global.SelectStyle}
-            value={tipoUsuarioId}
           >
-            {dataTipoUsuario.map((usuario) => (
-              <option key={usuario.id} value={usuario.id}>
-                {usuario.descripcion}
+            {dataTipoUsuario.map((tipoUsuario) => (
+              <option key={tipoUsuario.id} value={tipoUsuario.id}>
+                {tipoUsuario.descripcion}
               </option>
             ))}
           </select>
@@ -273,7 +196,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="menus"
             name="menus"
             value={selectedMenu}
-            onChange={handleInputChange}
+            onChange={ValidarData}
             className={Global.InputStyle}
           />
         </div>
@@ -281,32 +204,32 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
       <div className="flex justify-between py-2">
         <SelectButton
-          value={selectedActions[selectedMenu] || []}
+          value={permisos[selectedMenu] || []}
           optionLabel="name"
-          options={botones}
+          options={listaBotones}
           multiple
           onChange={(e) => {
-            setSelectedActions((prev) => ({
+            setPermisos((prev) => ({
               ...prev,
               [selectedMenu]: e.value,
             }));
-            setValue(e.value);
-            setChecked(e.value.length === botones.length);
+            setSelectedButton(e.value);
+            setChecked(e.value.length === listaBotones.length);
           }}
         />
 
         <div className="flex max-h-11">
-          <div className={Global.CheckStyle}>
+          <div className={Global.CheckStyleBorder}>
             <Checkbox
               inputId="all"
               onChange={(e) => {
                 setChecked(e.checked);
-                handleSelectAll(e.checked);
+                ValidarCheckTodos(e.checked);
               }}
               checked={checked}
             ></Checkbox>
           </div>
-          <label htmlFor="all" className={Global.LabelCheckStyle}>
+          <label htmlFor="all" className={Global.LabelCheckStyleBorder}>
             Todos
           </label>
         </div>
@@ -328,9 +251,9 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   <li
                     className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
                     key={item.id}
-                    onClick={handleMenuClick}
+                    onClick={ValidarMenu}
                   >
-                    <button type="button" onClick={handleMenuClick}>
+                    <button type="button" onClick={ValidarMenu}>
                       {item.nombre}
                     </button>
                   </li>

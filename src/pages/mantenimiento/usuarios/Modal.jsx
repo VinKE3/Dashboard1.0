@@ -44,6 +44,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Usuario"]}
+      titulo="Usuario"
     >
       <div className={Global.ContenedorVarios}>
         <div className={Global.ContenedorInputFull}>

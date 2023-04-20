@@ -75,6 +75,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "TipoCambio"]}
+      titulo="Tipo de Cambio"
       tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
     >
       <div className="flex">

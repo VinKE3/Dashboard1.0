@@ -8,9 +8,10 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import store from "store2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -33,7 +34,7 @@ const TablaStyle = styled.div`
 
 const Cargos = () => {
   //#region useState
-  const { usuario } = useAuth();
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
@@ -48,29 +49,10 @@ const Cargos = () => {
 
   //#region useEffect
   useEffect(() => {
-    if (usuario == "AD") {
-      setPermisos([true, true, true, true]);
-      Listar(filtro, 1);
-    } else {
-      //Consulta a la Api para traer los permisos
-    }
-  }, [usuario]);
-  useEffect(() => {
-    filtro;
-  }, [filtro]);
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
-  useEffect(() => {
-    modo;
-  }, [modo]);
-  useEffect(() => {
-    if (!modal) {
-      Listar(filtro, index + 1);
+    if (visible) {
+      if (!modal) {
+        Listar(filtro, index + 1);
+      }
     }
   }, [modal]);
   useEffect(() => {
@@ -78,6 +60,32 @@ const Cargos = () => {
       Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
+
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar(filtro, 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      setVisible(true);
+      setPermisos([true, true, true, true, true]);
+      Listar(filtro, 1);
+    } else {
+      GetPermisos();
+    }
+  }, []);
   //#endregion
 
   //#region Funciones API
@@ -91,6 +99,20 @@ const Cargos = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Cargo/${id}`);
     setObjeto(result.data.data);
+  };
+  const GetPermisos = async () => {
+    const permiso = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "Cargo"
+    );
+    console.log(permiso);
+    setPermisos([
+      permiso.registrar,
+      permiso.modificar,
+      permiso.eliminar,
+      permiso.consultar,
+      permiso.anular,
+    ]);
   };
   //#endregion
 
@@ -179,51 +201,55 @@ const Cargos = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Cargos</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Cargos</h2>
 
-        {/* Filtro*/}
-        <FiltroBasico
-          textLabel={"Descripción"}
-          inputPlaceHolder={"Descripción"}
-          inputId={"descripcion"}
-          inputName={"descripcion"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        />
-        {/* Filtro*/}
+            {/* Filtro*/}
+            <FiltroBasico
+              textLabel={"Descripción"}
+              inputPlaceHolder={"Descripción"}
+              inputId={"descripcion"}
+              inputName={"descripcion"}
+              inputMax={"200"}
+              botonId={"buscar"}
+              FiltradoButton={FiltradoButton}
+              FiltradoKeyPress={FiltradoKeyPress}
+            />
+            {/* Filtro*/}
 
-        {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )}
-        {/* Boton */}
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-      <ToastContainer />
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
-  //#endregion
 };
-
+//#endregion
 export default Cargos;

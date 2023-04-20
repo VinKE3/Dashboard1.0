@@ -10,7 +10,7 @@ const BotonBasico = ({ botonClass, botonIcon, botonText, click }) => {
         size="sm"
         className="m-0 sm:pt-1 sm:pr-1 sm:pl-0"
       />
-      <span className="hidden sm:block text-base sm:text-sm">{botonText}</span>
+      <span className="hidden sm:block md:text-sm">{botonText}</span>
     </button>
   );
 };
