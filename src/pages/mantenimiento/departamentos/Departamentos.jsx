@@ -92,7 +92,7 @@ const Departamentos = () => {
   const GetPermisos = async () => {
     const result = await GetUsuarioId(
       store.session.get("usuarioId"),
-      "Correlativo"
+      "Departamento"
     );
     setPermisos([
       result.registrar,

@@ -32,7 +32,6 @@ const SidebarMenus = ({
   const handleLogout = () => {
     borrarTodosLosTokens();
     window.location.href = "/login";
-    console.log("logout");
   };
 
   return (

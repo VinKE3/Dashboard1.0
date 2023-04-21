@@ -9,7 +9,7 @@ const Delete = async (menu, id, setRespuesta) => {
     iconColor: "#F7BF3A",
     showCancelButton: true,
     color: "#fff",
-    background: "radial-gradient(circle, #424446, #222231)",
+    background: "#1a1a2e",
     confirmButtonColor: "#eea508",
     confirmButtonText: "Aceptar",
     cancelButtonColor: "#d33",

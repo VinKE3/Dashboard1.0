@@ -90,7 +90,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     document.getElementById("distritoId").value = dataGeneral.distritoId;
   }, [dataDist]);
   useEffect(() => {
-    dataGeneral && console.log(dataGeneral);
+    dataGeneral;
     if (Object.entries(dataGeneral).length > 0) {
       if (modo != "Registrar") ListarDireccion();
     }

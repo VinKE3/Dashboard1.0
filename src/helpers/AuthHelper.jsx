@@ -62,14 +62,12 @@ function usuarioGuardar(data) {
   const { usuario } = data;
   store.local("usuario", usuario);
   store.session("usuario", usuario);
-  console.log("usuario", usuario);
 }
 
 function usuarioIdGuardar(data) {
   const { usuarioId } = data;
   store.local("usuarioId", usuarioId);
   store.session("usuarioId", usuarioId);
-  console.log("usuarioId", usuarioId);
 }
 
 export const authHelper = {

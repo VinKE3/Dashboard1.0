@@ -30,7 +30,7 @@ const LayoutAdmin = () => {
         <div className="h-[78vh] md:h-[84vh] overflow-y-scroll px-0 md:px-4">
           <Outlet />
         </div>
-        <div className="h-[8vh]">
+        <div className="h-auto">
           <Footer />
         </div>
       </div>

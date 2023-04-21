@@ -5,14 +5,13 @@ import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import moment from "moment";
 import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
 import * as Global from "../../../components/Global";
+import Swal from "sweetalert2";
 import { Checkbox } from "primereact/checkbox";
 import store from "store2";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -23,27 +22,32 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 150px;
+    width: 160px;
   }
   & th:nth-child(3) {
-    width: 150px;
+    width: 100px;
   }
-  & th:nth-child(4) {
-    width: 250px;
+  & th:nth-child(6) {
+    width: 50px;
+    text-align: center;
+  }
+  & th:nth-child(7) {
+    width: 90px;
+    text-align: center;
   }
   & th:nth-child(8) {
-    width: 25px;
+    width: 50px;
+    text-align: center;
   }
   & th:last-child {
-    width: 130px;
+    width: 80px;
     text-align: center;
   }
 `;
 
 const BloquearCompra = () => {
   //#region UseState
-  const { usuario } = useAuth();
-  const [objeto, setObjeto] = useState([]);
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
@@ -57,35 +61,10 @@ const BloquearCompra = () => {
 
   //#region useEffect
   useEffect(() => {
-    console.log(usuario == "AD");
-    if (store.session.get("usuario") == "AD") {
-      setPermisos([false, false, true, false]);
-      Listar(filtro, 1);
-    } else {
-      //Consulta a la Api para traer los permisos
+    if (Object.entries(tipoDeDocumento).length > 0) {
+      document.getElementById("tipoDocumentoId").value = -1;
     }
-  }, [usuario]);
-
-  useEffect(() => {
-    tipoDeDocumento;
-    document.getElementById("tipoDocumentoId").value = -1;
   }, [tipoDeDocumento]);
-
-  useEffect(() => {
-    datos;
-    console.log("datos", datos);
-  }, [datos]);
-
-  useEffect(() => {
-    filtro;
-  }, [filtro]);
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
   useEffect(() => {
     if (respuestaAlert) {
       Listar(filtro, index + 1);
@@ -93,8 +72,30 @@ const BloquearCompra = () => {
   }, [respuestaAlert]);
 
   useEffect(() => {
-    TipoDeDocumentos();
-    Listar(filtro, 1);
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar(filtro, 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      TipoDeDocumentos();
+      setVisible(true);
+      setPermisos([false, true, false, false, false]);
+      Listar(filtro, 1);
+    } else {
+      GetPermisos();
+    }
   }, []);
   //#endregion
 
@@ -106,7 +107,6 @@ const BloquearCompra = () => {
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
-
   const TipoDeDocumentos = async () => {
     const result = await ApiMasy.get(
       `api/Compra/BloquearCompra/FormularioTablas`
@@ -118,6 +118,13 @@ const BloquearCompra = () => {
     }));
     tiposDocumento.unshift({ id: "-1", descripcion: "TODOS" });
     setTipoDeDocumento(tiposDocumento);
+  };
+  const GetPermisos = async () => {
+    const result = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "BloquearCompra"
+    );
+    setPermisos([false, result.modificar, false, false, false]);
   };
   //#endregion
 
@@ -134,7 +141,7 @@ const BloquearCompra = () => {
       fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
       tipoDocumento == -1
     ) {
-      Listar("", boton);
+      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
     } else {
       if (tipoDocumento == -1) {
         Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
@@ -161,7 +168,7 @@ const BloquearCompra = () => {
       fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
       tipoDocumento == -1
     ) {
-      Listar("", index);
+      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
     } else {
       if (tipoDocumento == -1) {
         Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
@@ -194,7 +201,7 @@ const BloquearCompra = () => {
         fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
         tipoDocumento == -1
       ) {
-        Listar("", index);
+        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
       } else {
         if (tipoDocumento == -1) {
           Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
@@ -208,7 +215,6 @@ const BloquearCompra = () => {
     }, 1000);
     setTimer(newTimer);
   };
-
   const FiltradoFechaFin = (e) => {
     clearTimeout(timer);
     let fechaInicio = document.getElementById("fechaInicio").value;
@@ -226,7 +232,7 @@ const BloquearCompra = () => {
         fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
         tipoDocumento == -1
       ) {
-        Listar("", index);
+        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
       } else {
         if (tipoDocumento == -1) {
           Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
@@ -240,11 +246,10 @@ const BloquearCompra = () => {
     }, 1000);
     setTimer(newTimer);
   };
-
   const FiltradoButton = () => {
     setIndex(0);
     if (filtro == "") {
-      Listar("", 1);
+      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, 1);
     } else {
       Listar(filtro, 1);
     }
@@ -290,22 +295,21 @@ const BloquearCompra = () => {
       });
     }
   };
-
   const ModificarCheckAll = async (ids, isBloqueado) => {
     let model = {
       ids: ids,
       isBloqueado: isBloqueado,
     };
     const title = isBloqueado
-      ? "Bloquear 50 registros de compras"
-      : "Desbloquear 50 registros de compras";
+      ? "Bloquear Registros de Compras (50 registros mostrados)"
+      : "Desbloquear Registros de Compras (50 registros mostrados)";
     const result = Swal.fire({
       title: title,
       icon: "warning",
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1E1F25",
+      background: "#1a1a2e",
       confirmButtonColor: "#EE8100",
       confirmButtonText: "Aceptar",
       cancelButtonColor: "#d33",
@@ -345,25 +349,23 @@ const BloquearCompra = () => {
             });
           }
         });
+        setChecked(isBloqueado);
+      } else {
+        setChecked(!isBloqueado);
       }
     });
-    console.log(result);
-
     setRespuestaAlert(true);
   };
-
-  const handleChange = (e, ids) => {
-    setChecked(e.checked);
+  const ValidarCheckTotal = (e, ids) => {
     if (e.checked) {
       ModificarCheckAll(ids, true);
     } else {
       ModificarCheckAll(ids, false);
     }
   };
-
   //#endregion
 
-  //#region Columnas y Selects
+  //#region Columnas
   const columnas = [
     {
       Header: "Id",
@@ -374,7 +376,7 @@ const BloquearCompra = () => {
       accessor: "numeroDocumento",
     },
     {
-      Header: "Fecha Contable",
+      Header: "Fecha",
       accessor: "fechaContable",
       Cell: ({ value }) => {
         return moment(value).format("DD/MM/YYYY");
@@ -385,19 +387,25 @@ const BloquearCompra = () => {
       accessor: "proveedorNombre",
     },
     {
-      Header: "Proveedor Numero",
+      Header: "RUC",
       accessor: "proveedorNumero",
     },
     {
-      Header: "Moneda",
+      Header: "Mon",
       accessor: "monedaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Total",
       accessor: "total",
+      Cell: ({ value }) => {
+        return <p className="text-end">{value}</p>;
+      },
     },
     {
-      Header: "Bloqueado",
+      Header: "B",
       accessor: "isBloqueado",
       Cell: ({ value }) => {
         return value ? (
@@ -433,106 +441,112 @@ const BloquearCompra = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <div className="flex items-center justify-between">
-          <h2 className={Global.TituloH2}>Bloquear Compra</h2>
-          <div className="flex  h-10">
-            <div className={Global.LabelStyle}>
-              <Checkbox
-                id="isBloqueado"
-                name="isBloqueado"
-                onChange={(e) => {
-                  handleChange(
-                    e,
-                    datos.map((d) => d.id)
-                  );
-                }}
-                checked={checked}
-              ></Checkbox>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <div className="flex items-center justify-between">
+              <h2 className={Global.TituloH2}>Bloquear Compra</h2>
+              <div className="flex">
+                <div className={Global.CheckStyleBorder}>
+                  <Checkbox
+                    inputId="isBloqueado"
+                    name="isBloqueado"
+                    onChange={(e) => {
+                      ValidarCheckTotal(
+                        e,
+                        datos.map((d) => d.id)
+                      );
+                    }}
+                    checked={checked}
+                  ></Checkbox>
+                </div>
+                <label
+                  htmlFor="isBloqueado"
+                  className={
+                    Global.LabelCheckStyleBorder + " font-semibold !pb-2"
+                  }
+                >
+                  Bloquear Todos
+                </label>
+              </div>
             </div>
-            <label
-              htmlFor="todos"
-              className={
-                Global.InputStyle + " font-semibold !text-lg !p-1 !px-3"
-              }
-            >
-              Bloquear Todos
-            </label>
-          </div>
-        </div>
 
-        {/* Filtro*/}
-        <div className={Global.ContenedorFiltro}>
-          <div className={Global.ContenedorInputFull}>
-            <label name="tipoDocumentoId" className={Global.LabelStyle}>
-              Tipo de Documento:
-            </label>
-            <select
-              id="tipoDocumentoId"
-              name="tipoDocumentoId"
-              onChange={FiltradoSelect}
-              className={Global.InputStyle}
-            >
-              {tipoDeDocumento.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {" "}
-                  {tipo.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={Global.ContenedorInput42pct}>
-            <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-              Tipo
-            </label>
-            <input
-              type="date"
-              id="fechaInicio"
-              name="fechaInicio"
-              onChange={FiltradoFechaInicio}
-              defaultValue={moment()
-                .subtract(2, "years")
-                .startOf("year")
-                .format("yyyy-MM-DD")}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.ContenedorInput42pct}>
-            <label htmlFor="fechaFin" className={Global.LabelStyle}>
-              Tipo
-            </label>
-            <input
-              type="date"
-              id="fechaFin"
-              name="fechaFin"
-              onChange={FiltradoFechaFin}
-              defaultValue={moment(new Date()).format("yyyy-MM-DD")}
-              className={Global.InputBoton}
-            />
-            <button
-              id="buscar"
-              className={Global.BotonBuscar}
-              onClick={FiltradoButton}
-            >
-              <FaSearch />
-            </button>
-          </div>
-        </div>
-        {/* Filtro*/}
+            {/* Filtro*/}
+            <div className={Global.ContenedorFiltro}>
+              <div className={Global.ContenedorInputFull}>
+                <label name="tipoDocumentoId" className={Global.LabelStyle}>
+                  Tipo de Documento:
+                </label>
+                <select
+                  id="tipoDocumentoId"
+                  name="tipoDocumentoId"
+                  onChange={FiltradoSelect}
+                  className={Global.InputStyle}
+                >
+                  {tipoDeDocumento.map((tipo) => (
+                    <option key={tipo.id} value={tipo.id}>
+                      {" "}
+                      {tipo.descripcion}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={Global.ContenedorInput42pct}>
+                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                  Desde
+                </label>
+                <input
+                  type="date"
+                  id="fechaInicio"
+                  name="fechaInicio"
+                  onChange={FiltradoFechaInicio}
+                  defaultValue={moment()
+                    .subtract(2, "years")
+                    .startOf("year")
+                    .format("yyyy-MM-DD")}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.ContenedorInput42pct}>
+                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                  Hasta
+                </label>
+                <input
+                  type="date"
+                  id="fechaFin"
+                  name="fechaFin"
+                  onChange={FiltradoFechaFin}
+                  defaultValue={moment(new Date()).format("yyyy-MM-DD")}
+                  className={Global.InputBoton}
+                />
+                <button
+                  id="buscar"
+                  className={Global.BotonBuscar}
+                  onClick={FiltradoButton}
+                >
+                  <FaSearch />
+                </button>
+              </div>
+            </div>
+            {/* Filtro*/}
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-      <ToastContainer />
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

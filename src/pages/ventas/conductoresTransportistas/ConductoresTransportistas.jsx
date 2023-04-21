@@ -153,7 +153,7 @@ const Conductor = () => {
       let model = {
         id: "00",
         empresaId: "01",
-        empresaTransporteId: "",
+        empresaTransporteId: "0001  ",
         nombre: "",
         numeroDocumentoIdentidad: "",
         licenciaConducir: "",

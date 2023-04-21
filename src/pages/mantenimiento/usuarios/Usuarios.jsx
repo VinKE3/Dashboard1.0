@@ -14,7 +14,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { Checkbox } from "primereact/checkbox";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-
+import store from "store2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -47,60 +48,75 @@ import React from "react";
 
 const Usuarios = () => {
   //#region useState
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
+  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
-  const [objeto, setObjeto] = useState([]);
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [modal, setModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState(false);
+  const [modalClave, setModalClave] = useState(false);
   const [modo, setModo] = useState("Registrar");
-  const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const [showModalConfiguracion, setShowModalConfiguracion] = useState(false);
-  const [showModalClave, setShowModalClave] = useState(false);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    filtro;
-  }, [filtro]);
-
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
-  useEffect(() => {
-    modo;
-  }, [modo]);
-
-  useEffect(() => {
-    if (!modal) {
-      Listar(filtro, index);
+    if (visible) {
+      if (!modal) {
+        Listar("", index + 1);
+      }
     }
   }, [modal]);
-
   useEffect(() => {
-    if (!showModalConfiguracion) {
-      Listar(filtro, index);
+    if (visible) {
+      if (!modalConfig) {
+        Listar(filtro, index);
+      }
     }
-  }, [showModalConfiguracion]);
-
+  }, [modalConfig]);
   useEffect(() => {
-    if (!showModalClave) {
-      Listar(filtro, index);
+    if (visible) {
+      if (!modalClave) {
+        Listar(filtro, index);
+      }
     }
-  }, [showModalClave]);
+  }, [modalClave]);
 
   useEffect(() => {
     if (respuestaAlert) {
       Listar(filtro, index);
     }
   }, [respuestaAlert]);
+
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar("", 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      setVisible(true);
+      setPermisos([true, true, true, true, true]);
+      Listar("", 1);
+    } else {
+      GetPermisos();
+    }
+  }, []);
   //#endregion
 
   //#region Funciones API
@@ -129,6 +145,19 @@ const Usuarios = () => {
       claveNuevaConfirmacion: "",
     };
     setObjeto(model);
+  };
+  const GetPermisos = async () => {
+    const result = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "Usuario"
+    );
+    setPermisos([
+      result.registrar,
+      result.modificar,
+      result.eliminar,
+      result.consultar,
+      result.anular,
+    ]);
   };
   //#endregion
 
@@ -196,7 +225,7 @@ const Usuarios = () => {
         await GetConfigId(
           document.querySelector("tr.selected-row").firstChild.innerHTML
         );
-        setShowModalConfiguracion(true);
+        setModalConfig(true);
       }
     } else {
       toast.info("Seleccione una Fila", {
@@ -221,7 +250,7 @@ const Usuarios = () => {
         await GetClaveId(
           document.querySelector("tr.selected-row").firstChild.innerHTML
         );
-        setShowModalClave(true);
+        setModalClave(true);
       }
     } else {
       toast.info("Seleccione una Fila", {
@@ -313,89 +342,83 @@ const Usuarios = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Usuarios</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Usuarios</h2>
 
-        {/* Filtro*/}
-        <FiltroBasico
-          textLabel={"Nick"}
-          inputPlaceHolder={"Nick"}
-          inputId={"nick2"}
-          inputName={"nick"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        />
-        {/* Filtro*/}
+            {/* Filtro*/}
+            <FiltroBasico
+              textLabel={"Nick"}
+              inputPlaceHolder={"Nick"}
+              inputId={"nick2"}
+              inputName={"nick"}
+              inputMax={"200"}
+              botonId={"buscar"}
+              FiltradoButton={FiltradoButton}
+              FiltradoKeyPress={FiltradoKeyPress}
+            />
+            {/* Filtro*/}
 
-        {/* Boton */}
-        <div className="flex gap-1">
-          {permisos[0] && (
-            <BotonBasico
-              botonText="Registrar"
-              botonClass={Global.BotonRegistrar}
-              botonIcon={faPlus}
-              click={() => AbrirModal()}
+            {/* Boton */}
+            <div className="flex gap-1">
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Registrar"
+                  botonClass={Global.BotonRegistrar}
+                  botonIcon={faPlus}
+                  click={() => AbrirModal()}
+                />
+              )}
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Configuracion"
+                  botonClass={Global.BotonConfigurar}
+                  botonIcon={faGear}
+                  click={() => AbrirModalConfigurar()}
+                />
+              )}
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Cambiar Contraseña"
+                  botonClass={Global.BotonAgregar}
+                  botonIcon={faKey}
+                  click={() => AbrirModalClave()}
+                />
+              )}
+            </div>
+            {/* Boton */}
+
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
+
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalConfig && (
+            <ModalConfiguracion
+              setModal={setModalConfig}
+              modo={modo}
+              objeto={objeto}
             />
           )}
-          {permisos[0] && (
-            <BotonBasico
-              botonText="Configuracion"
-              botonClass={Global.BotonConfigurar}
-              botonIcon={faGear}
-              click={() => AbrirModalConfigurar()}
-            />
+          {modalClave && (
+            <ModalClave setModal={setModalClave} modo={modo} objeto={objeto} />
           )}
-          {permisos[0] && (
-            <BotonBasico
-              botonText="Cambiar Contraseña"
-              botonClass={Global.BotonAgregar}
-              botonIcon={faKey}
-              click={() => AbrirModalClave()}
-            />
-          )}
-        </div>
-        {/* Boton */}
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-
-      {modal && (
-        <Modal
-          setModal={setModal}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
       )}
-      {showModalConfiguracion && (
-        <ModalConfiguracion
-          setModal={setShowModalConfiguracion}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
-      )}
-      {showModalClave && (
-        <ModalClave
-          setModal={setShowModalClave}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
-      )}
-      <ToastContainer />
     </>
   );
   //#endregion

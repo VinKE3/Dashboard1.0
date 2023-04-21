@@ -113,7 +113,7 @@ const CuentasCorrientes = () => {
   const GetPermisos = async () => {
     const result = await GetUsuarioId(
       store.session.get("usuarioId"),
-      "Correlativo"
+      "CuentaCorriente"
     );
     setPermisos([
       result.registrar,

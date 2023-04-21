@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
@@ -11,12 +11,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-  }, [data]);
-  useEffect(() => {
-    checked;
-  }, [checked]);
   //#endregion
 
   //#region Funciones
@@ -30,7 +24,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       }));
     }
   };
-
   function uppercase(e) {
     e.target.value = e.target.value.toUpperCase();
   }
@@ -56,7 +49,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             id="id"
             name="id"
             placeholder="id"
-            value={data.id}
+            value={data.id ?? ""}
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={ValidarData}
@@ -89,7 +82,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               inputId="habilitarAfectarStock"
               name="habilitarAfectarStock"
               readOnly={modo == "Consultar" ? true : false}
-              value={data.habilitarAfectarStock}
+              value={data.habilitarAfectarStock ?? ""}
               onChange={(e) => {
                 setChecked2(e.checked);
                 ValidarData(e);

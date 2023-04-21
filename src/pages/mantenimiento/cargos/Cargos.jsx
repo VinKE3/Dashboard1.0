@@ -105,7 +105,6 @@ const Cargos = () => {
       store.session.get("usuarioId"),
       "Cargo"
     );
-    console.log(permiso);
     setPermisos([
       permiso.registrar,
       permiso.modificar,

@@ -45,7 +45,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="00"
             readOnly={modo == "Registrar" ? false : true}
-            value={data.id}
+            value={data.id ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}
           />
@@ -61,7 +61,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             autoComplete="off"
             placeholder="Nombre"
             readOnly={modo == "Consultar" ? true : false}
-            value={data.nombre}
+            value={data.nombre == ""}
             onChange={ValidarData}
             className={Global.InputStyle}
           />

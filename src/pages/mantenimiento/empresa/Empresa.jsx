@@ -32,54 +32,7 @@ const TablaStyle = styled.div`
 
 const Empresa = ({ modo }) => {
   //#region useState
-  const [dataGeneral, setDataGeneral] = useState({
-    id: "",
-    numeroDocumentoIdentidad: "",
-    nombre: "",
-    direccion: " ",
-    departamentoId: "",
-    provinciaId: "",
-    distritoId: "",
-    telefono: "",
-    celular: "",
-    correoElectronico: "",
-    observacion: "",
-    concarEmpresaId: "",
-    concarEmpresaNombre: "",
-    concarUsuarioVenta: "",
-    concarUsuarioCompra: "",
-    concarUsuarioPago: "",
-    concarUsuarioCobro: "",
-    filtroFechaInicio: "",
-    filtroFechaFin: "",
-    anioHabilitado1: "",
-    anioHabilitado2: "",
-    mesesHabilitados: "",
-    porcentajesIGV: [
-      {
-        porcentaje: 0,
-        default: true,
-      },
-    ],
-    porcentajesRetencion: [
-      {
-        porcentaje: 0,
-        default: true,
-      },
-    ],
-    porcentajesDetraccion: [
-      {
-        porcentaje: 0,
-        default: true,
-      },
-    ],
-    porcentajesPercepcion: [
-      {
-        porcentaje: 0,
-        default: true,
-      },
-    ],
-  });
+  const [dataGeneral, setDataGeneral] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [checkboxes, setCheckboxes] = useState({
@@ -135,9 +88,6 @@ const Empresa = ({ modo }) => {
 
   //#region useEffect
   useEffect(() => {
-    Configuracion();
-  }, []);
-  useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
       setDataGeneral({
         ...dataGeneral,
@@ -149,13 +99,15 @@ const Empresa = ({ modo }) => {
   }, [dataUbigeo]);
 
   useEffect(() => {
-    dataGeneral;
     if (refrescar) {
       GuardarTodo(new Event("click"));
       setRefrescar(false);
     }
-    mesesHabilitados;
   }, [dataGeneral, mesesHabilitados]);
+
+  useEffect(() => {
+    Configuracion();
+  }, []);
   //#endregion
 
   //#region Funciones
@@ -336,6 +288,7 @@ const Empresa = ({ modo }) => {
         default: item.default,
       }))
       .map((item) => ({ ...item, id: contadorPercepcion++ }));
+
     setMesesHabilitados(result.data.data.mesesHabilitados.split(","));
     setDataGeneral(result.data.data);
     setPorcentajesIGV(igv);

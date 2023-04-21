@@ -21,7 +21,7 @@ const BotonCRUD = ({
   //#region Render
   return (
     <div className="flex item-center justify-center">
-      {permisos[1] ? (
+      {permisos[2] ? (
         <div className={Global.TablaBotonConsultar}>
           <button
             id="boton-consultar"
@@ -35,7 +35,7 @@ const BotonCRUD = ({
       ) : (
         ""
       )}
-      {permisos[2] ? (
+      {permisos[1] ? (
         <div className={Global.TablaBotonModificar}>
           <button
             id="boton-modificar"

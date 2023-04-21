@@ -148,122 +148,126 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Render
   return (
-    <ModalBasic
-      setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
-      objeto={data}
-      modo={modo}
-      menu={["Mantenimiento", "UsuarioPermiso"]}
-      titulo="Configuración de Permisos"
-      tamañoModal={[Global.ModalGrande, Global.FormGrande]}
-    >
-      <Mensajes
-        tipoMensaje={2}
-        mensaje={[
-          "NO CONFIGURADO: No contiene ningún permiso (no configurable).",
-          "ADMINISTRADOR: Se le concede todos los permisos (no configurable).",
-          "MANTENIMIENTO: Se le concede todos los permisos, excepto el Anular (no configurable).",
-          "CONSULTA: Se le concede los permisos de Consultar y Refrescar (no configurable).",
-          "PERSONALIZADO: Se le concede los permisos asignados de la parte inferior (configurable).",
-        ]}
-        cerrar={false}
-      />
-
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputMitad}>
-          <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
-            Tipo de Usuario
-          </label>
-          <select
-            id="tipoUsuarioId"
-            name="tipoUsuarioId"
-            onChange={ValidarData}
-            className={Global.SelectStyle}
-          >
-            {dataTipoUsuario.map((tipoUsuario) => (
-              <option key={tipoUsuario.id} value={tipoUsuario.id}>
-                {tipoUsuario.descripcion}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className={Global.ContenedorInputMitad}>
-          <label htmlFor="menus" className={Global.LabelStyle}>
-            Menú:
-          </label>
-          <input
-            type="text"
-            id="menus"
-            name="menus"
-            value={selectedMenu}
-            onChange={ValidarData}
-            className={Global.InputStyle}
+    <>
+      {Object.entries(dataTipoUsuario).length > 0 && (
+        <ModalBasic
+          setModal={setModal}
+          setRespuestaModal={setRespuestaModal}
+          objeto={data}
+          modo={modo}
+          menu={["Mantenimiento", "UsuarioPermiso"]}
+          titulo="Configuración de Permisos"
+          tamañoModal={[Global.ModalGrande, Global.FormGrande]}
+        >
+          <Mensajes
+            tipoMensaje={2}
+            mensaje={[
+              "NO CONFIGURADO: No contiene ningún permiso (no configurable).",
+              "ADMINISTRADOR: Se le concede todos los permisos (no configurable).",
+              "MANTENIMIENTO: Se le concede todos los permisos, excepto el Anular (no configurable).",
+              "CONSULTA: Se le concede los permisos de Consultar y Refrescar (no configurable).",
+              "PERSONALIZADO: Se le concede los permisos asignados de la parte inferior (configurable).",
+            ]}
+            cerrar={false}
           />
-        </div>
-      </div>
 
-      <div className="flex justify-between py-2">
-        <SelectButton
-          value={permisos[selectedMenu] || []}
-          optionLabel="name"
-          options={listaBotones}
-          multiple
-          onChange={(e) => {
-            setPermisos((prev) => ({
-              ...prev,
-              [selectedMenu]: e.value,
-            }));
-            setSelectedButton(e.value);
-            setChecked(e.value.length === listaBotones.length);
-          }}
-        />
-
-        <div className="flex max-h-11">
-          <div className={Global.CheckStyleBorder}>
-            <Checkbox
-              inputId="all"
-              onChange={(e) => {
-                setChecked(e.checked);
-                ValidarCheckTodos(e.checked);
-              }}
-              checked={checked}
-            ></Checkbox>
-          </div>
-          <label htmlFor="all" className={Global.LabelCheckStyleBorder}>
-            Todos
-          </label>
-        </div>
-      </div>
-
-      <div>
-        <div className="card mt-4">
-          <Accordion>
-            <AccordionTab
-              header={
-                <div className="flex align-items-center">
-                  <span className=" vertical-align-middle">Menus</span>
-                  <i className="pi pi-cog ml-2"></i>
-                </div>
-              }
-            >
-              <ul>
-                {menu.map((item) => (
-                  <li
-                    className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
-                    key={item.id}
-                    onClick={ValidarMenu}
-                  >
-                    <button type="button" onClick={ValidarMenu}>
-                      {item.nombre}
-                    </button>
-                  </li>
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputMitad}>
+              <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
+                Tipo de Usuario
+              </label>
+              <select
+                id="tipoUsuarioId"
+                name="tipoUsuarioId"
+                onChange={ValidarData}
+                className={Global.SelectStyle}
+              >
+                {dataTipoUsuario.map((tipoUsuario) => (
+                  <option key={tipoUsuario.id} value={tipoUsuario.id}>
+                    {tipoUsuario.descripcion}
+                  </option>
                 ))}
-              </ul>
-            </AccordionTab>
-          </Accordion>
-        </div>
-      </div>
-    </ModalBasic>
+              </select>
+            </div>
+            <div className={Global.ContenedorInputMitad}>
+              <label htmlFor="menus" className={Global.LabelStyle}>
+                Menú:
+              </label>
+              <input
+                type="text"
+                id="menus"
+                name="menus"
+                value={selectedMenu}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-between py-2">
+            <SelectButton
+              value={permisos[selectedMenu] || []}
+              optionLabel="name"
+              options={listaBotones}
+              multiple
+              onChange={(e) => {
+                setPermisos((prev) => ({
+                  ...prev,
+                  [selectedMenu]: e.value,
+                }));
+                setSelectedButton(e.value);
+                setChecked(e.value.length === listaBotones.length);
+              }}
+            />
+
+            <div className="flex max-h-11">
+              <div className={Global.CheckStyleBorder}>
+                <Checkbox
+                  inputId="all"
+                  onChange={(e) => {
+                    setChecked(e.checked);
+                    ValidarCheckTodos(e.checked);
+                  }}
+                  checked={checked}
+                ></Checkbox>
+              </div>
+              <label htmlFor="all" className={Global.LabelCheckStyleBorder}>
+                Todos
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <div className="card mt-4">
+              <Accordion>
+                <AccordionTab
+                  header={
+                    <div className="flex align-items-center">
+                      <span className=" vertical-align-middle">Menus</span>
+                      <i className="pi pi-cog ml-2"></i>
+                    </div>
+                  }
+                >
+                  <ul>
+                    {menu.map((item) => (
+                      <li
+                        className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                        key={item.id}
+                        onClick={ValidarMenu}
+                      >
+                        <button type="button" onClick={ValidarMenu}>
+                          {item.nombre}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionTab>
+              </Accordion>
+            </div>
+          </div>
+        </ModalBasic>
+      )}
+    </>
   );
   //#endregion
 };

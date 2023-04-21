@@ -56,25 +56,22 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    men;
-  }, [men]);
-  useEffect(() => {
-    tipoMen;
-    RetornarMensaje();
+    if (tipoMen == 0) {
+      setRespuesta(true);
+    }
   }, [tipoMen]);
   useEffect(() => {
-    respuesta;
     if (respuesta) {
       RetornarMensaje();
     }
   }, [respuesta]);
   useEffect(() => {
-    dataTipoDoc;
-    document.getElementById("tipoDocumentoIdentidadId").value =
-      dataGeneral.tipoDocumentoIdentidadId;
+    if (Object.entries(dataTipoDoc).length > 0) {
+      document.getElementById("tipoDocumentoIdentidadId").value =
+        dataGeneral.tipoDocumentoIdentidadId;
+    }
   }, [dataTipoDoc]);
   useEffect(() => {
-    dataUbigeo;
     if (Object.keys(dataUbigeo).length > 0) {
       setDataGeneral({
         ...dataGeneral,
@@ -85,7 +82,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataUbigeo]);
   useEffect(() => {
-    dataGeneral;
     if (Object.entries(dataGeneral).length > 0) {
       if (document.getElementById("tipoDocumentoIdentidadId")) {
         document.getElementById("tipoDocumentoIdentidadId").value =
@@ -95,10 +91,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataGeneral]);
 
   useEffect(() => {
-    dataCcorriente;
-  }, [dataCcorriente]);
-  useEffect(() => {
-    objetoCcorriente;
     if (Object.entries(objetoCcorriente).length > 0) {
       if (document.getElementById("monedaId")) {
         document.getElementById("monedaId").value = objetoCcorriente.monedaId;
@@ -109,36 +101,16 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
   }, [objetoCcorriente]);
-  useEffect(() => {
-    dataCcorrienteMoneda;
-  }, [dataCcorrienteMoneda]);
-  useEffect(() => {
-    dataCcorrienteEntidad;
-  }, [dataCcorrienteEntidad]);
-  useEffect(() => {
-    estadoCcorriente;
-  }, [estadoCcorriente]);
 
   useEffect(() => {
-    dataContacto;
-  }, [dataContacto]);
-  useEffect(() => {
-    objetoContacto;
     if (Object.entries(objetoContacto).length > 0) {
       if (document.getElementById("cargoId")) {
         document.getElementById("cargoId").value = objetoContacto.cargoId;
       }
     }
   }, [objetoContacto]);
-  useEffect(() => {
-    dataContactoCargo;
-  }, [dataContactoCargo]);
-  useEffect(() => {
-    estadoContacto;
-  }, [estadoContacto]);
 
   useEffect(() => {
-    dataGeneral;
     Tablas();
     if (modo != "Registrar") {
       ListarCcorriente();
@@ -250,12 +222,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         progress: undefined,
         theme: "dark",
       });
-      await ListarContacto();
-      await ListarCcorriente();
-      await Limpiar();
-      setEstadoContacto(false);
-      setEstadoCcorriente(false);
     }
+    await ListarContacto();
+    await ListarCcorriente();
+    await Limpiar();
+    setEstadoContacto(false);
+    setEstadoCcorriente(false);
   };
   //#endregion
 
@@ -492,507 +464,501 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Render
   return (
-    <ModalBasic
-      setModal={setModal}
-      objeto={dataGeneral}
-      modo={modo}
-      menu={["Mantenimiento", "Proveedor"]}
-      tamañoModal={[Global.ModalGrande, Global.FormTabs]}
-    >
-      <TabView>
-        <TabPanel
-          header="Datos Principales"
-          leftIcon="pi pi-user mr-2"
-          style={{ color: "green" }}
+    <>
+      {Object.entries(dataTipoDoc).length > 0 && (
+        <ModalBasic
+          setModal={setModal}
+          objeto={dataGeneral}
+          modo={modo}
+          menu={["Mantenimiento", "Proveedor"]}
+          titulo="Proveedor"
+          tamañoModal={[Global.ModalGrande, Global.FormTabs]}
         >
-          <div className="grid gap-y-3 md:gap-x-2">
-            <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInputMitad}>
-                <label
-                  htmlFor="tipoDocumentoIdentidadId"
-                  className={Global.LabelStyle}
-                >
-                  Tipo Doc
-                </label>
-                <select
-                  id="tipoDocumentoIdentidadId"
-                  name="tipoDocumentoIdentidadId"
-                  onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
-                  className={Global.SelectStyle}
-                >
-                  {dataTipoDoc.map((map) => (
-                    <option key={map.id} value={map.id}>
-                      {map.abreviatura}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className={Global.ContenedorInputMitad}>
-                <label
-                  htmlFor="numeroDocumentoIdentidad"
-                  className={Global.LabelStyle}
-                >
-                  Número Doc
-                </label>
-                <input
-                  type="text"
-                  id="numeroDocumentoIdentidad"
-                  name="numeroDocumentoIdentidad"
-                  autoComplete="off"
-                  placeholder="Número Documento Identidad"
-                  readOnly={modo == "Consultar" ? true : false}
-                  value={
-                    dataGeneral.numeroDocumentoIdentidad == null
-                      ? ""
-                      : dataGeneral.numeroDocumentoIdentidad
-                  }
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="consultarApi"
-                  hidden={modo == "Consultar" ? true : false}
-                  onClick={(e) => ValidarConsultarDocumento(e)}
-                  className={Global.BotonBuscar}
-                >
-                  <FaSearch></FaSearch>
-                </button>
-              </div>
-            </div>
-            <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
-                Nombre
-              </label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                autoComplete="off"
-                placeholder="Nombre"
-                readOnly={modo == "Consultar" ? true : false}
-                value={dataGeneral.nombre == null ? "" : dataGeneral.nombre}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.ContenedorVarios}>
-              <div className={Global.ContenedorInput96}>
-                <label htmlFor="telefono" className={Global.LabelStyle}>
-                  Teléfono
-                </label>
-                <input
-                  type="text"
-                  id="telefono"
-                  name="telefono"
-                  autoComplete="off"
-                  placeholder="Teléfono"
-                  readOnly={modo == "Consultar" ? true : false}
-                  value={
-                    dataGeneral.telefono == null ? "" : dataGeneral.telefono
-                  }
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.ContenedorInputFull}>
-                <label
-                  htmlFor="correoElectronico"
-                  className={Global.LabelStyle}
-                >
-                  Correo
-                </label>
-                <input
-                  type="text"
-                  id="correoElectronico"
-                  name="correoElectronico"
-                  autoComplete="off"
-                  placeholder="Correo"
-                  readOnly={modo == "Consultar" ? true : false}
-                  value={
-                    dataGeneral.correoElectronico == null
-                      ? ""
-                      : dataGeneral.correoElectronico
-                  }
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className="flex">
-              <label htmlFor="direccionPrincipal" className={Global.LabelStyle}>
-                Dirección
-              </label>
-              <input
-                type="text"
-                id="direccionPrincipal"
-                name="direccionPrincipal"
-                autoComplete="off"
-                placeholder="Dirección Principal"
-                readOnly={modo == "Consultar" ? true : false}
-                value={
-                  dataGeneral.direccionPrincipal == null
-                    ? ""
-                    : dataGeneral.direccionPrincipal
-                }
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <Ubigeo
-              modo={modo}
-              setDataUbigeo={setDataUbigeo}
-              id={["departamentoId", "provinciaId", "distritoId"]}
-              dato={{
-                departamentoId: dataGeneral.departamentoId,
-                provinciaId: dataGeneral.provinciaId,
-                distritoId: dataGeneral.distritoId,
-              }}
-            ></Ubigeo>
-          </div>
-        </TabPanel>
-        {modo != "Registrar" ? (
-          <TabPanel
-            header="Cuentas Corrientes"
-            leftIcon="pi pi-money-bill mr-2"
-          >
-            {/* Boton */}
-            {modo == "Consultar" ? (
-              ""
-            ) : (
-              <>
-                <Mensajes
-                  tipoMensaje={2}
-                  mensaje={[Global.MensajeInformacion]}
-                  cerrar={false}
-                />
-                <BotonBasico
-                  botonText="Agregar"
-                  botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
-                  botonIcon={faPlus}
-                  click={(e) => {
-                    AgregarCcorriente(e);
-                  }}
-                />
-              </>
-            )}
-            {/* Boton */}
-
-            {/* Form Cuenta Corriente */}
-            {estadoCcorriente && (
-              <div className={Global.FormSecundario}>
-                {tipoMen > 0 && (
-                  <Mensajes
-                    tipoMensaje={tipoMen}
-                    mensaje={men}
-                    Click={(e) => {
-                      e.preventDefault();
-                      setMen([]);
-                      setTipoMen(-1);
-                    }}
-                  />
-                )}
-
+          <TabView>
+            <TabPanel
+              header="Datos Principales"
+              leftIcon="pi pi-user mr-2"
+              style={{ color: "green" }}
+            >
+              <div className="grid gap-y-3 md:gap-x-2">
                 <div className={Global.ContenedorVarios}>
-                  <div className={Global.ContenedorInput40pct}>
-                    <label htmlFor="monedaId" className={Global.LabelStyle}>
-                      Moneda
+                  <div className={Global.ContenedorInputMitad}>
+                    <label
+                      htmlFor="tipoDocumentoIdentidadId"
+                      className={Global.LabelStyle}
+                    >
+                      Tipo Doc
                     </label>
                     <select
-                      id="monedaId"
-                      name="monedaId"
-                      onChange={ValidarDataCcorriente}
+                      id="tipoDocumentoIdentidadId"
+                      name="tipoDocumentoIdentidadId"
+                      onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
                       className={Global.SelectStyle}
                     >
-                      {dataCcorrienteMoneda.map((map) => (
+                      {dataTipoDoc.map((map) => (
                         <option key={map.id} value={map.id}>
                           {map.abreviatura}
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div className={Global.ContenedorInputFull}>
-                    <label htmlFor="numero" className={Global.LabelStyle}>
-                      Número
-                    </label>
-                    <input
-                      type="text"
-                      id="numero"
-                      name="numero"
-                      autoComplete="off"
-                      maxLength="60"
-                      placeholder="Número"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={objetoCcorriente.numero}
-                      onChange={ValidarDataCcorriente}
-                      className={Global.InputStyle}
-                    />
-                  </div>
-                </div>
-                <div className="flex">
-                  <label
-                    htmlFor="entidadBancariaId"
-                    className={Global.LabelStyle}
-                  >
-                    E.B.
-                  </label>
-                  <select
-                    id="entidadBancariaId"
-                    name="entidadBancariaId"
-                    onChange={ValidarDataCcorriente}
-                    disabled={modo == "Consultar" ? true : false}
-                    className={Global.SelectStyle}
-                  >
-                    {dataCcorrienteEntidad.map((map) => (
-                      <option key={map.id} value={map.id}>
-                        {map.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-start">
-                  {modo == "Consultar" ? (
-                    ""
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={EnviarCcorriente}
-                      className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                    >
-                      Guardar
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setEstadoCcorriente(false)}
-                    className={
-                      Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                    }
-                  >
-                    CERRAR
-                  </button>
-                </div>
-                {/*footer*/}
-              </div>
-            )}
-            {/* Form Cuenta Corriente */}
-            {/* Tabla */}
-            <TablaStyle>
-              <TableBasic columnas={colCcorriente} datos={dataCcorriente} />
-            </TablaStyle>
-            {/* Tabla */}
-          </TabPanel>
-        ) : (
-          ""
-        )}
-        {modo != "Registrar" ? (
-          <TabPanel header="Contactos" leftIcon="pi pi-user mr-2">
-            {/* Boton */}
-            {modo == "Consultar" ? (
-              ""
-            ) : (
-              <>
-                <Mensajes
-                  tipoMensaje={2}
-                  mensaje={[Global.MensajeInformacion]}
-                  cerrar={false}
-                />
-                <BotonBasico
-                  botonText="Agregar"
-                  botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
-                  botonIcon={faPlus}
-                  click={(e) => {
-                    AgregarContacto(e);
-                  }}
-                />
-              </>
-            )}
-            {/* Boton */}
-
-            {/* Form Contactos */}
-            {estadoContacto && (
-              <div className={Global.FormSecundario}>
-                {tipoMen > 0 && (
-                  <Mensajes
-                    tipoMensaje={tipoMen}
-                    mensaje={men}
-                    Click={(e) => {
-                      e.preventDefault();
-                      setMen([]);
-                      setTipoMen(-1);
-                    }}
-                  />
-                )}
-
-                <div className={Global.ContenedorVarios}>
-                  <div className={Global.ContenedorInputFull}>
-                    <label htmlFor="nombres" className={Global.LabelStyle}>
-                      Nombres
-                    </label>
-                    <input
-                      type="text"
-                      id="nombres"
-                      name="nombres"
-                      autoComplete="off"
-                      placeholder="Nombres"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={objetoContacto.nombres}
-                      onChange={ValidarDataContacto}
-                      className={Global.InputStyle}
-                    />
-                  </div>
-                  <div className={Global.ContenedorInput96}>
+                  <div className={Global.ContenedorInputMitad}>
                     <label
                       htmlFor="numeroDocumentoIdentidad"
                       className={Global.LabelStyle}
                     >
-                      DNI:
+                      Número Doc
                     </label>
                     <input
                       type="text"
                       id="numeroDocumentoIdentidad"
                       name="numeroDocumentoIdentidad"
                       autoComplete="off"
-                      maxLength="15"
-                      placeholder="N° Documento Identidad"
+                      placeholder="Número Documento Identidad"
                       readOnly={modo == "Consultar" ? true : false}
-                      value={objetoContacto.numeroDocumentoIdentidad}
-                      onChange={ValidarDataContacto}
-                      className={Global.InputStyle}
+                      value={dataGeneral.numeroDocumentoIdentidad ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputBoton}
                     />
-                  </div>
-                </div>
-
-                <div className={Global.ContenedorVarios}>
-                  <div className={Global.ContenedorInputFull}>
-                    <label htmlFor="cargoId" className={Global.LabelStyle}>
-                      Cargo
-                    </label>
-                    <select
-                      id="cargoId"
-                      name="cargoId"
-                      onChange={ValidarDataContacto}
-                      disabled={modo == "Consultar" ? true : false}
-                      className={Global.SelectStyle}
+                    <button
+                      id="consultarApi"
+                      hidden={modo == "Consultar" ? true : false}
+                      onClick={(e) => ValidarConsultarDocumento(e)}
+                      className={Global.BotonBuscar}
                     >
-                      {dataContactoCargo.map((cargo) => (
-                        <option key={cargo.id} value={cargo.id}>
-                          {cargo.descripcion}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className={Global.ContenedorInput96}>
-                    <label htmlFor="celular" className={Global.LabelStyle}>
-                      Celular
-                    </label>
-                    <input
-                      type="text"
-                      id="celular"
-                      name="celular"
-                      autoComplete="off"
-                      maxLength="15"
-                      placeholder="Celular"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={objetoContacto.celular}
-                      onChange={ValidarDataContacto}
-                      className={Global.InputStyle}
-                    />
+                      <FaSearch></FaSearch>
+                    </button>
                   </div>
                 </div>
-
+                <div className="flex">
+                  <label htmlFor="nombre" className={Global.LabelStyle}>
+                    Nombre
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    autoComplete="off"
+                    placeholder="Nombre"
+                    readOnly={modo == "Consultar" ? true : false}
+                    value={dataGeneral.nombre ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
                 <div className={Global.ContenedorVarios}>
                   <div className={Global.ContenedorInput96}>
                     <label htmlFor="telefono" className={Global.LabelStyle}>
-                      Telefono
+                      Teléfono
                     </label>
                     <input
                       type="text"
                       id="telefono"
                       name="telefono"
                       autoComplete="off"
-                      maxLength="15"
                       placeholder="Teléfono"
                       readOnly={modo == "Consultar" ? true : false}
-                      value={objetoContacto.telefono}
-                      onChange={ValidarDataContacto}
+                      value={dataGeneral.telefono ?? ""}
+                      onChange={ValidarData}
                       className={Global.InputStyle}
                     />
                   </div>
                   <div className={Global.ContenedorInputFull}>
-                    <label htmlFor="correo" className={Global.LabelStyle}>
+                    <label
+                      htmlFor="correoElectronico"
+                      className={Global.LabelStyle}
+                    >
                       Correo
                     </label>
                     <input
                       type="text"
-                      id="correo"
-                      name="correo"
+                      id="correoElectronico"
+                      name="correoElectronico"
                       autoComplete="off"
                       placeholder="Correo"
                       readOnly={modo == "Consultar" ? true : false}
-                      value={objetoContacto.correo}
-                      onChange={ValidarDataContacto}
+                      value={dataGeneral.correoElectronico ?? ""}
+                      onChange={ValidarData}
                       className={Global.InputStyle}
                     />
                   </div>
                 </div>
-
                 <div className="flex">
-                  <label htmlFor="direccion" className={Global.LabelStyle}>
+                  <label
+                    htmlFor="direccionPrincipal"
+                    className={Global.LabelStyle}
+                  >
                     Dirección
                   </label>
                   <input
                     type="text"
-                    id="direccion"
-                    name="direccion"
+                    id="direccionPrincipal"
+                    name="direccionPrincipal"
                     autoComplete="off"
-                    placeholder="Dirección"
+                    placeholder="Dirección Principal"
                     readOnly={modo == "Consultar" ? true : false}
-                    value={objetoContacto.direccion}
-                    onChange={ValidarDataContacto}
+                    value={dataGeneral.direccionPrincipal ?? ""}
+                    onChange={ValidarData}
                     className={Global.InputStyle}
                   />
                 </div>
-                {/*footer*/}
-                <div className="flex items-center justify-start">
-                  {modo == "Consultar" ? (
-                    ""
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={EnviarContacto}
-                      className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                    >
-                      Guardar
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setEstadoContacto(false)}
-                    className={
-                      Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                    }
-                  >
-                    CERRAR
-                  </button>
-                </div>
-                {/*footer*/}
+                <Ubigeo
+                  modo={modo}
+                  setDataUbigeo={setDataUbigeo}
+                  id={["departamentoId", "provinciaId", "distritoId"]}
+                  dato={{
+                    departamentoId: dataGeneral.departamentoId,
+                    provinciaId: dataGeneral.provinciaId,
+                    distritoId: dataGeneral.distritoId,
+                  }}
+                ></Ubigeo>
               </div>
+            </TabPanel>
+            {modo != "Registrar" ? (
+              <TabPanel
+                header="Cuentas Corrientes"
+                leftIcon="pi pi-money-bill mr-2"
+              >
+                {/* Boton */}
+                {modo == "Consultar" ? (
+                  ""
+                ) : (
+                  <>
+                    <Mensajes
+                      tipoMensaje={2}
+                      mensaje={[Global.MensajeInformacion]}
+                      cerrar={false}
+                    />
+                    <BotonBasico
+                      botonText="Agregar"
+                      botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
+                      botonIcon={faPlus}
+                      click={(e) => {
+                        AgregarCcorriente(e);
+                      }}
+                    />
+                  </>
+                )}
+                {/* Boton */}
+
+                {/* Form Cuenta Corriente */}
+                {estadoCcorriente && (
+                  <div className={Global.FormSecundario}>
+                    {tipoMen > 0 && (
+                      <Mensajes
+                        tipoMensaje={tipoMen}
+                        mensaje={men}
+                        Click={(e) => {
+                          e.preventDefault();
+                          setMen([]);
+                          setTipoMen(-1);
+                        }}
+                      />
+                    )}
+
+                    <div className={Global.ContenedorVarios}>
+                      <div className={Global.ContenedorInput40pct}>
+                        <label htmlFor="monedaId" className={Global.LabelStyle}>
+                          Moneda
+                        </label>
+                        <select
+                          id="monedaId"
+                          name="monedaId"
+                          onChange={ValidarDataCcorriente}
+                          disabled={modo == "Consultar" ? true : false}
+                          className={Global.SelectStyle}
+                        >
+                          {dataCcorrienteMoneda.map((map) => (
+                            <option key={map.id} value={map.id}>
+                              {map.abreviatura}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className={Global.ContenedorInputFull}>
+                        <label htmlFor="numero" className={Global.LabelStyle}>
+                          Número
+                        </label>
+                        <input
+                          type="text"
+                          id="numero"
+                          name="numero"
+                          autoComplete="off"
+                          maxLength="60"
+                          placeholder="Número"
+                          readOnly={modo == "Consultar" ? true : false}
+                          value={objetoCcorriente.numero ?? ""}
+                          onChange={ValidarDataCcorriente}
+                          className={Global.InputStyle}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex">
+                      <label
+                        htmlFor="entidadBancariaId"
+                        className={Global.LabelStyle}
+                      >
+                        E.B.
+                      </label>
+                      <select
+                        id="entidadBancariaId"
+                        name="entidadBancariaId"
+                        onChange={ValidarDataCcorriente}
+                        disabled={modo == "Consultar" ? true : false}
+                        className={Global.SelectStyle}
+                      >
+                        {dataCcorrienteEntidad.map((map) => (
+                          <option key={map.id} value={map.id}>
+                            {map.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {/*footer*/}
+                    <div className="flex items-center justify-start">
+                      {modo == "Consultar" ? (
+                        ""
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={EnviarCcorriente}
+                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                        >
+                          Guardar
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setEstadoCcorriente(false)}
+                        className={
+                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                        }
+                      >
+                        CERRAR
+                      </button>
+                    </div>
+                    {/*footer*/}
+                  </div>
+                )}
+                {/* Form Cuenta Corriente */}
+                {/* Tabla */}
+                <TablaStyle>
+                  <TableBasic columnas={colCcorriente} datos={dataCcorriente} />
+                </TablaStyle>
+                {/* Tabla */}
+              </TabPanel>
+            ) : (
+              ""
             )}
-            {/* Form Contactos */}
-            {/* Tabla */}
-            <TablaStyle>
-              <TableBasic columnas={colContacto} datos={dataContacto} />
-            </TablaStyle>
-            {/* Tabla */}
-          </TabPanel>
-        ) : (
-          ""
-        )}
-      </TabView>
-    </ModalBasic>
+            {modo != "Registrar" ? (
+              <TabPanel header="Contactos" leftIcon="pi pi-user mr-2">
+                {/* Boton */}
+                {modo == "Consultar" ? (
+                  ""
+                ) : (
+                  <>
+                    <Mensajes
+                      tipoMensaje={2}
+                      mensaje={[Global.MensajeInformacion]}
+                      cerrar={false}
+                    />
+                    <BotonBasico
+                      botonText="Agregar"
+                      botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
+                      botonIcon={faPlus}
+                      click={(e) => {
+                        AgregarContacto(e);
+                      }}
+                    />
+                  </>
+                )}
+                {/* Boton */}
+
+                {/* Form Contactos */}
+                {estadoContacto && (
+                  <div className={Global.FormSecundario}>
+                    {tipoMen > 0 && (
+                      <Mensajes
+                        tipoMensaje={tipoMen}
+                        mensaje={men}
+                        Click={(e) => {
+                          e.preventDefault();
+                          setMen([]);
+                          setTipoMen(-1);
+                        }}
+                      />
+                    )}
+
+                    <div className={Global.ContenedorVarios}>
+                      <div className={Global.ContenedorInputFull}>
+                        <label htmlFor="nombres" className={Global.LabelStyle}>
+                          Nombres
+                        </label>
+                        <input
+                          type="text"
+                          id="nombres"
+                          name="nombres"
+                          autoComplete="off"
+                          placeholder="Nombres"
+                          readOnly={modo == "Consultar" ? true : false}
+                          value={objetoContacto.nombres ?? ""}
+                          onChange={ValidarDataContacto}
+                          className={Global.InputStyle}
+                        />
+                      </div>
+                      <div className={Global.ContenedorInput96}>
+                        <label
+                          htmlFor="numeroDocumentoIdentidad"
+                          className={Global.LabelStyle}
+                        >
+                          DNI:
+                        </label>
+                        <input
+                          type="text"
+                          id="numeroDocumentoIdentidad"
+                          name="numeroDocumentoIdentidad"
+                          autoComplete="off"
+                          maxLength="15"
+                          placeholder="N° Documento Identidad"
+                          readOnly={modo == "Consultar" ? true : false}
+                          value={objetoContacto.numeroDocumentoIdentidad ?? ""}
+                          onChange={ValidarDataContacto}
+                          className={Global.InputStyle}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={Global.ContenedorVarios}>
+                      <div className={Global.ContenedorInputFull}>
+                        <label htmlFor="cargoId" className={Global.LabelStyle}>
+                          Cargo
+                        </label>
+                        <select
+                          id="cargoId"
+                          name="cargoId"
+                          onChange={ValidarDataContacto}
+                          disabled={modo == "Consultar" ? true : false}
+                          className={Global.SelectStyle}
+                        >
+                          {dataContactoCargo.map((cargo) => (
+                            <option key={cargo.id} value={cargo.id}>
+                              {cargo.descripcion}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className={Global.ContenedorInput96}>
+                        <label htmlFor="celular" className={Global.LabelStyle}>
+                          Celular
+                        </label>
+                        <input
+                          type="text"
+                          id="celular"
+                          name="celular"
+                          autoComplete="off"
+                          maxLength="15"
+                          placeholder="Celular"
+                          readOnly={modo == "Consultar" ? true : false}
+                          value={objetoContacto.celular ?? ""}
+                          onChange={ValidarDataContacto}
+                          className={Global.InputStyle}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={Global.ContenedorVarios}>
+                      <div className={Global.ContenedorInput96}>
+                        <label htmlFor="telefono" className={Global.LabelStyle}>
+                          Telefono
+                        </label>
+                        <input
+                          type="text"
+                          id="telefono"
+                          name="telefono"
+                          autoComplete="off"
+                          maxLength="15"
+                          placeholder="Teléfono"
+                          readOnly={modo == "Consultar" ? true : false}
+                          value={objetoContacto.telefono ?? ""}
+                          onChange={ValidarDataContacto}
+                          className={Global.InputStyle}
+                        />
+                      </div>
+                      <div className={Global.ContenedorInputFull}>
+                        <label htmlFor="correo" className={Global.LabelStyle}>
+                          Correo
+                        </label>
+                        <input
+                          type="text"
+                          id="correo"
+                          name="correo"
+                          autoComplete="off"
+                          placeholder="Correo"
+                          readOnly={modo == "Consultar" ? true : false}
+                          value={objetoContacto.correo ?? ""}
+                          onChange={ValidarDataContacto}
+                          className={Global.InputStyle}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex">
+                      <label htmlFor="direccion" className={Global.LabelStyle}>
+                        Dirección
+                      </label>
+                      <input
+                        type="text"
+                        id="direccion"
+                        name="direccion"
+                        autoComplete="off"
+                        placeholder="Dirección"
+                        readOnly={modo == "Consultar" ? true : false}
+                        value={objetoContacto.direccion ?? ""}
+                        onChange={ValidarDataContacto}
+                        className={Global.InputStyle}
+                      />
+                    </div>
+                    {/*footer*/}
+                    <div className="flex items-center justify-start">
+                      {modo == "Consultar" ? (
+                        ""
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={EnviarContacto}
+                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                        >
+                          Guardar
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setEstadoContacto(false)}
+                        className={
+                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                        }
+                      >
+                        CERRAR
+                      </button>
+                    </div>
+                    {/*footer*/}
+                  </div>
+                )}
+                {/* Form Contactos */}
+                {/* Tabla */}
+                <TablaStyle>
+                  <TableBasic columnas={colContacto} datos={dataContacto} />
+                </TablaStyle>
+                {/* Tabla */}
+              </TabPanel>
+            ) : (
+              ""
+            )}
+          </TabView>
+        </ModalBasic>
+      )}
+    </>
   );
   //#endregion
 };

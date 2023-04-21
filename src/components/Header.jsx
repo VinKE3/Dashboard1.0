@@ -45,7 +45,7 @@ const Header = () => {
     window.location.href = "/login";
   };
   return (
-    <header className="h-[13vh] md:h-[8vh] px-3 border-b border-light">
+    <header className="h-auto py-2 px-3 border-b border-light">
       <nav className="h-full pb-3 md:pb-0 flex flex-col md:flex-row items-center justify-between">
         <h1 className="pb-2 md:pb-0 font-bold text-xl">
           Bienvenido{" "}

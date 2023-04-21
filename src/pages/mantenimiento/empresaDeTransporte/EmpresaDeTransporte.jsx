@@ -107,7 +107,7 @@ const EmpresadeTransporte = () => {
   const GetPermisos = async () => {
     const result = await GetUsuarioId(
       store.session.get("usuarioId"),
-      "Correlativo"
+      "EmpresaTransporte"
     );
     setPermisos([
       result.registrar,

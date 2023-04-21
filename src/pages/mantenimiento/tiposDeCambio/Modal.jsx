@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import * as Global from "../../../components/Global";
 import ApiMasy from "../../../api/ApiMasy";
 import moment from "moment";
@@ -12,9 +12,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-  }, [data]);
   //#endregion
 
   //#region Funciones

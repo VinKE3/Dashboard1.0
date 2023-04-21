@@ -8,9 +8,10 @@ import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import store from "store2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -31,51 +32,58 @@ const TablaStyle = styled.div`
 
 const Proveedores = () => {
   //#region useState
-  const { usuario } = useAuth();
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
   useEffect(() => {
-    if (usuario == "AD") {
-      setPermisos([true, true, true, true]);
-      Listar(filtro, 1);
-    } else {
-      //Consulta a la Api para traer los permisos
-    }
-  }, [usuario]);
-  useEffect(() => {
-    filtro;
-  }, [filtro]);
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
-  useEffect(() => {
-    modo;
-  }, [modo]);
-  useEffect(() => {
-    if (!modal) {
-      Listar(filtro, index + 1);
+    if (visible) {
+      if (!modal) {
+        Listar("", index + 1);
+      }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index + 1);
+      Listar("", index + 1);
     }
   }, [respuestaAlert]);
+
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar("", 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      setVisible(true);
+      setPermisos([true, true, true, true, true]);
+      Listar("", 1);
+    } else {
+      GetPermisos();
+    }
+  }, []);
   //#endregion
 
   //#region Funciones API
@@ -89,6 +97,19 @@ const Proveedores = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
     setObjeto(result.data.data);
+  };
+  const GetPermisos = async () => {
+    const result = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "CuentaCorriente"
+    );
+    setPermisos([
+      result.registrar,
+      result.modificar,
+      result.eliminar,
+      result.consultar,
+      result.anular,
+    ]);
   };
   //#endregion
 
@@ -216,77 +237,83 @@ const Proveedores = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Proveedores</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Proveedores</h2>
 
-        {/* Filtro*/}
-        <div className={Global.ContenedorFiltro}>
-          <div className={Global.ContenedorInput96}>
-            <label htmlFor="documento" className={Global.LabelStyle}>
-              N° Documento
-            </label>
-            <input
-              type="text"
-              name="documento"
-              id="documento"
-              autoFocus
-              autoComplete="off"
-              placeholder="Número Documento Identidad"
-              onChange={FiltradoDocumento}
-              className={Global.InputStyle}
-            />
+            {/* Filtro*/}
+            <div className={Global.ContenedorFiltro}>
+              <div className={Global.ContenedorInput96}>
+                <label htmlFor="documento" className={Global.LabelStyle}>
+                  N° Documento
+                </label>
+                <input
+                  type="text"
+                  name="documento"
+                  id="documento"
+                  autoFocus
+                  autoComplete="off"
+                  placeholder="Número Documento Identidad"
+                  onChange={FiltradoDocumento}
+                  className={Global.InputStyle}
+                />
+              </div>
+
+              <div className={Global.ContenedorInputsFiltro}>
+                <label htmlFor="nombre" className={Global.LabelStyle}>
+                  Nombre:
+                </label>
+                <input
+                  type="text"
+                  name="nombre"
+                  id="nombre"
+                  autoComplete="off"
+                  placeholder="Nombre"
+                  onChange={FiltradoNombre}
+                  className={Global.InputBoton}
+                />
+                <button
+                  id="buscar"
+                  className={Global.BotonBuscar}
+                  onClick={FiltradoButton}
+                >
+                  <FaSearch />
+                </button>
+              </div>
+            </div>
+            {/* Filtro*/}
+
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
+
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
           </div>
 
-          <div className={Global.ContenedorInputsFiltro}>
-            <label htmlFor="nombre" className={Global.LabelStyle}>
-              Nombre:
-            </label>
-            <input
-              type="text"
-              name="nombre"
-              id="nombre"
-              autoComplete="off"
-              placeholder="Nombre"
-              onChange={FiltradoNombre}
-              className={Global.InputBoton}
-            />
-            <button
-              id="buscar"
-              className={Global.BotonBuscar}
-              onClick={FiltradoButton}
-            >
-              <FaSearch />
-            </button>
-          </div>
-        </div>
-        {/* Filtro*/}
-
-        {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )}
-        {/* Boton */}
-
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-      <ToastContainer />
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

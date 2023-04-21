@@ -12,26 +12,25 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region useEffect
   useEffect(() => {
-    dataDep && console.log(dataDep);
+    setUbigeo(dato);
+  }, [dato]);
+  useEffect(() => {
     document.getElementById(Id[0]).value = ubigeo.departamentoId;
     ConsultarProvincia();
   }, [dataDep]);
   useEffect(() => {
-    dataProv;
     document.getElementById(Id[1]).value = ubigeo.provinciaId;
     ConsultarDistrito();
   }, [dataProv]);
   useEffect(() => {
-    dataDist;
     document.getElementById(Id[2]).value = ubigeo.distritoId;
   }, [dataDist]);
   useEffect(() => {
-    ubigeo;
     document.getElementById(Id[0]).value = ubigeo.departamentoId;
     ConsultarProvincia();
   }, [ubigeo]);
   useEffect(() => {
-      Tablas();
+    Tablas();
   }, []);
   //#endregion
 
