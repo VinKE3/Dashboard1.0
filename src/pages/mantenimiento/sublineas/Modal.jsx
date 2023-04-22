@@ -76,7 +76,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="lineaId"
                 onChange={ValidarData}
                 disabled={modo == "Registrar" ? false : true}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataLinea.map((linea) => (
                   <option key={linea.id} value={linea.id}>

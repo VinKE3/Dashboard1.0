@@ -447,7 +447,7 @@ const BloquearCompra = () => {
             <div className="flex items-center justify-between">
               <h2 className={Global.TituloH2}>Bloquear Compra</h2>
               <div className="flex">
-                <div className={Global.CheckStyleBorder}>
+                <div className={Global.CheckStyle}>
                   <Checkbox
                     inputId="isBloqueado"
                     name="isBloqueado"
@@ -463,7 +463,7 @@ const BloquearCompra = () => {
                 <label
                   htmlFor="isBloqueado"
                   className={
-                    Global.LabelCheckStyleBorder + " font-semibold !pb-2"
+                    Global.LabelCheckStyle + " font-semibold !pb-2"
                   }
                 >
                   Bloquear Todos

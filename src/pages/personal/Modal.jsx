@@ -96,6 +96,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataMoneda(result.data.data.monedas);
   };
   //#endregion
+  
   //#region  Render
   return (
     <>
@@ -306,7 +307,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="sexoId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataSexo.map((map) => (
                   <option key={map.id} value={map.id}>
@@ -324,7 +325,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="estadoCivilId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataEstadoCivil.map((map) => (
                   <option key={map.id} value={map.id}>
@@ -361,7 +362,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="cargoId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataCargo.map((map) => (
                   <option key={map.id} value={map.id}>
@@ -398,7 +399,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="entidadBancariaId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataEntidad.map((map) => (
                   <option key={map.id} value={map.id}>
@@ -419,7 +420,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="tipoCuentaBancariaId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataTipoCuenta.map((map) => (
                   <option key={map.id} value={map.id}>
@@ -437,7 +438,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="monedaId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataMoneda.map((map) => (
                   <option key={map.id} value={map.id}>

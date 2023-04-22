@@ -372,7 +372,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     name="tipoDocumentoIdentidadId"
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
-                    className={Global.SelectStyle}
+                    className={Global.InputStyle}
                   >
                     {dataTipoDoc.map((tipo) => (
                       <option key={tipo.id} value={tipo.id}>
@@ -493,7 +493,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     name="departamentoId"
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
-                    className={Global.SelectStyle}
+                    className={Global.InputStyle}
                   >
                     {dataDep.map((departamento) => (
                       <option key={departamento.id} value={departamento.id}>
@@ -511,7 +511,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     name="provinciaId"
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
-                    className={Global.SelectStyle}
+                    className={Global.InputStyle}
                   >
                     {dataProv.map((provincia) => (
                       <option key={provincia.id} value={provincia.id}>
@@ -529,7 +529,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     name="distritoId"
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
-                    className={Global.SelectStyle}
+                    className={Global.InputStyle}
                   >
                     {Object.entries(dataDist).length > 0 &&
                       dataDist.map((distrito) => (
@@ -601,7 +601,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                         name="departamentoId"
                         onChange={ValidarDataDirecciones}
                         disabled={modo == "Consultar" ? true : false}
-                        className={Global.SelectStyle}
+                        className={Global.InputStyle}
                       >
                         {dataDep.map((departamento) => (
                           <option key={departamento.id} value={departamento.id}>
@@ -622,7 +622,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                         name="provinciaId"
                         onChange={ValidarDataDirecciones}
                         disabled={modo == "Consultar" ? true : false}
-                        className={Global.SelectStyle}
+                        className={Global.InputStyle}
                       >
                         {dataDep[
                           document.getElementById("departamentoId")
@@ -643,7 +643,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                         name="distritoId"
                         onChange={ValidarDataDirecciones}
                         disabled={modo == "Consultar" ? true : false}
-                        className={Global.SelectStyle}
+                        className={Global.InputStyle}
                       >
                         {dataDist.map((distrito) => (
                           <option key={distrito.id} value={distrito.id}>

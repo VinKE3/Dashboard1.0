@@ -180,7 +180,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 id="tipoUsuarioId"
                 name="tipoUsuarioId"
                 onChange={ValidarData}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataTipoUsuario.map((tipoUsuario) => (
                   <option key={tipoUsuario.id} value={tipoUsuario.id}>
@@ -221,7 +221,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             />
 
             <div className="flex max-h-11">
-              <div className={Global.CheckStyleBorder}>
+              <div className={Global.CheckStyle}>
                 <Checkbox
                   inputId="all"
                   onChange={(e) => {
@@ -231,7 +231,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   checked={checked}
                 ></Checkbox>
               </div>
-              <label htmlFor="all" className={Global.LabelCheckStyleBorder}>
+              <label htmlFor="all" className={Global.LabelCheckStyle}>
                 Todos
               </label>
             </div>

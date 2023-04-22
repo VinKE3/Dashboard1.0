@@ -494,7 +494,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="tipoDocumentoIdentidadId"
                       onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
-                      className={Global.SelectStyle}
+                      className={Global.InputStyle}
                     >
                       {dataTipoDoc.map((map) => (
                         <option key={map.id} value={map.id}>
@@ -667,7 +667,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="monedaId"
                           onChange={ValidarDataCcorriente}
                           disabled={modo == "Consultar" ? true : false}
-                          className={Global.SelectStyle}
+                          className={Global.InputStyle}
                         >
                           {dataCcorrienteMoneda.map((map) => (
                             <option key={map.id} value={map.id}>
@@ -706,7 +706,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         name="entidadBancariaId"
                         onChange={ValidarDataCcorriente}
                         disabled={modo == "Consultar" ? true : false}
-                        className={Global.SelectStyle}
+                        className={Global.InputStyle}
                       >
                         {dataCcorrienteEntidad.map((map) => (
                           <option key={map.id} value={map.id}>
@@ -839,7 +839,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="cargoId"
                           onChange={ValidarDataContacto}
                           disabled={modo == "Consultar" ? true : false}
-                          className={Global.SelectStyle}
+                          className={Global.InputStyle}
                         >
                           {dataContactoCargo.map((cargo) => (
                             <option key={cargo.id} value={cargo.id}>

@@ -96,7 +96,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="tipoVentaCompraId"
                 disabled={modo == "Registrar" ? false : true}
                 onChange={ValidarData}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataModal.map((forma) => (
                   <option key={forma.id} value={forma.id}>

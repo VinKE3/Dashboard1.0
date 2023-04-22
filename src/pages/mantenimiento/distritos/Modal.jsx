@@ -104,7 +104,7 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
                 name="departamentoId"
                 onChange={ValidarData}
                 disabled={modo == "Registrar" ? false : true}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataDepartamento.map((departamento) => (
                   <option key={departamento.id} value={departamento.id}>
@@ -123,7 +123,7 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
               name="provinciaId"
               onChange={ValidarData}
               disabled={modo == "Registrar" ? false : true}
-              className={Global.SelectStyle}
+              className={Global.InputStyle}
             >
               {dataProvincia.map((provincia) => (
                 <option key={provincia.id} value={provincia.id}>

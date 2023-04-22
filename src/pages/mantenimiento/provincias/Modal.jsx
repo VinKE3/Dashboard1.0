@@ -76,7 +76,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="departamentoId"
                 onChange={ValidarData}
                 disabled={modo == "Registrar" ? false : true}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataDepartamento.map((departamento) => (
                   <option key={departamento.id} value={departamento.id}>

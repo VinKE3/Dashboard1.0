@@ -611,7 +611,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="tipoDocumentoIdentidadId"
                       onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
-                      className={Global.SelectStyle}
+                      className={Global.InputStyle}
                     >
                       {dataTipoDoc.map((tipo) => (
                         <option key={tipo.id} value={tipo.id}>
@@ -928,7 +928,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="cargoId"
                           onChange={ValidarDataContacto}
                           disabled={modo == "Consultar" ? true : false}
-                          className={Global.SelectStyle}
+                          className={Global.InputStyle}
                         >
                           {dataContactoCargo.map((cargo) => (
                             <option key={cargo.id} value={cargo.id}>
@@ -1098,7 +1098,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="personalId"
                           onChange={ValidarDataPersonal}
                           disabled={modo == "Consultar" ? true : false}
-                          className={Global.SelectStyle}
+                          className={Global.InputStyle}
                         >
                           {dataPersonalCombo.map((personal) => (
                             <option key={personal.id} value={personal.id}>

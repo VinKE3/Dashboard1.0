@@ -96,7 +96,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="tipo"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataModal.map((tipo) => (
                   <option key={tipo.id} value={tipo.id}>

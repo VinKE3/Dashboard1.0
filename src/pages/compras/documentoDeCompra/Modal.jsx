@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalBasic from "../../../components/ModalBasic";
-import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import TableBasic from "../../../components/tablas/TableBasic";
-import { TabView, TabPanel } from "primereact/tabview";
-import Ubigeo from "../../../components/filtros/Ubigeo";
-import Insert from "../../../components/CRUD/Insert";
-import Update from "../../../components/CRUD/Update";
-import Delete from "../../../components/CRUD/Delete";
-import Mensajes from "../../../components/Mensajes";
+import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
 import { toast } from "react-toastify";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
@@ -35,27 +30,11 @@ const TablaStyle = styled.div`
 //#endregion
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
-  const [dataGeneral, setDataGeneral] = useState(objeto);
+  const [data, setData] = useState(objeto);
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
-  const [dataUbigeo, setDataUbigeo] = useState([]);
   const [tipoMen, setTipoMen] = useState(-1);
   const [men, setMen] = useState([]);
   const [respuesta, setRespuesta] = useState(false);
-
-  const [dataDireccion, setDataDireccion] = useState([]);
-  const [objetoDireccion, setObjetoDireccion] = useState([]);
-  const [dataUbiDirec, setDataUbiDirec] = useState([]);
-  const [estadoDireccion, setEstadoDireccion] = useState(false);
-
-  const [dataContacto, setDataContacto] = useState([]);
-  const [dataContactoCargo, setDataContactoCargo] = useState([]);
-  const [objetoContacto, setObjetoContacto] = useState([]);
-  const [estadoContacto, setEstadoContacto] = useState(false);
-
-  const [dataPersonal, setDataPersonal] = useState([]);
-  const [dataPersonalCombo, setDataPersonalCombo] = useState([]);
-  const [objetoPersonal, setObjetoPersonal] = useState([]);
-  const [estadoPersonal, setEstadoPersonal] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -72,128 +51,28 @@ const Modal = ({ setModal, modo, objeto }) => {
   useEffect(() => {
     if (document.getElementById("tipoDocumentoIdentidadId")) {
       document.getElementById("tipoDocumentoIdentidadId").value =
-        dataGeneral.tipoDocumentoIdentidadId;
+        data.tipoDocumentoIdentidadId;
     }
   }, [dataTipoDoc]);
-  useEffect(() => {
-    if (Object.keys(dataUbigeo).length > 0) {
-      setDataGeneral({
-        ...dataGeneral,
-        departamentoId: dataUbigeo.departamentoId,
-        provinciaId: dataUbigeo.provinciaId,
-        distritoId: dataUbigeo.distritoId,
-      });
-    }
-  }, [dataUbigeo]);
-
-  useEffect(() => {
-    if (Object.keys(dataUbiDirec).length > 0) {
-      setObjetoDireccion({
-        ...objetoDireccion,
-        departamentoId: dataUbiDirec.departamentoId,
-        provinciaId: dataUbiDirec.provinciaId,
-        distritoId: dataUbiDirec.distritoId,
-      });
-    }
-  }, [dataUbiDirec]);
-  useEffect(() => {
-    if (Object.entries(objetoContacto).length > 0) {
-      if (document.getElementById("cargoId")) {
-        document.getElementById("cargoId").value = objetoContacto.cargoId;
-      }
-    }
-  }, [objetoContacto]);
-  useEffect(() => {
-    if (Object.entries(objetoPersonal).length > 0) {
-      if (document.getElementById("personalId")) {
-        document.getElementById("personalId").value = objetoPersonal.personalId;
-      }
-    }
-  }, [objetoPersonal]);
 
   useEffect(() => {
     Tablas();
-    if (modo != "Registrar") {
-      ListarDireccion();
-      ListarContacto();
-      ListarPersonal();
-      TablasCargo();
-      TablasPersonal();
-    }
   }, []);
   //#endregion
 
   //#region Funciones
   const ValidarData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setDataGeneral((prevState) => ({
+      setData((prevState) => ({
         ...prevState,
         [target.name]: target.value,
       }));
     } else {
-      setDataGeneral((prevState) => ({
+      setData((prevState) => ({
         ...prevState,
         [target.name]: target.value.toUpperCase(),
       }));
     }
-  };
-  const ValidarDataDireccion = async ({ target }) => {
-    setObjetoDireccion((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
-  };
-  const ValidarDataContacto = async ({ target }) => {
-    setObjetoContacto((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
-  };
-  const ValidarDataPersonal = async ({ target }) => {
-    setObjetoPersonal((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
-  };
-  const ValidarConsultarDocumento = (e) => {
-    e.preventDefault();
-    let documento = document.getElementById("numeroDocumentoIdentidad").value;
-    let tipo = document.getElementById("tipoDocumentoIdentidadId").value;
-    if (tipo == 1) {
-      tipo = "dni";
-    } else if (tipo == 6) {
-      tipo = "ruc";
-    } else {
-      tipo = "";
-    }
-    ConsultarDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
-  };
-  const AgregarDireccion = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarDireccion();
-    } else {
-      await GetDireccion(id);
-    }
-    setEstadoDireccion(true);
-  };
-  const AgregarContacto = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarContacto();
-    } else {
-      await GetContacto(id);
-    }
-    setEstadoContacto(true);
-  };
-  const AgregarPersonal = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarPersonal();
-    } else {
-      await GetPersonal(id);
-    }
-    setEstadoPersonal(true);
   };
   const Limpiar = async (e) => {
     if (e != null) {
@@ -202,40 +81,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     setMen([]);
     setTipoMen(-1);
     setRespuesta(false);
-  };
-  const LimpiarDireccion = async () => {
-    setObjetoDireccion({
-      id: 0,
-      clienteId: dataGeneral.id,
-      direccion: "",
-      departamentoId: "15",
-      provinciaId: "01",
-      distritoId: "01",
-      comentario: "",
-      isActivo: true,
-    });
-  };
-  const LimpiarContacto = async () => {
-    setObjetoContacto({
-      id: "",
-      clienteId: dataGeneral.id,
-      contactoId: 0,
-      nombres: "",
-      numeroDocumentoIdentidad: "",
-      celular: "",
-      telefono: "",
-      cargoId: 2,
-      correoElectronico: "",
-      direccion: "",
-    });
-  };
-  const LimpiarPersonal = async () => {
-    setObjetoPersonal({
-      id: "",
-      clienteId: dataGeneral.id,
-      personalId: "<<NI>>01",
-      default: true,
-    });
   };
   const RetornarMensaje = async () => {
     if (tipoMen == 0) {
@@ -250,22 +95,16 @@ const Modal = ({ setModal, modo, objeto }) => {
         theme: "dark",
       });
     }
-    await ListarDireccion();
-    await ListarContacto();
-    await ListarPersonal();
-    await Limpiar();
-    setEstadoDireccion(false);
-    setEstadoContacto(false);
-    setEstadoPersonal(false);
   };
   //#endregion
 
   //#region API
   const Tablas = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Cliente/FormularioTablas`
+      `api/Compra/DocumentoCompra/FormularioTablas`
     );
-    setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
+    console.log(result.data.data.tiposDocumento);
+    setDataTipoDoc(result.data.data.tiposDocumento);
   };
   const ConsultarDocumento = async (filtroApi = "") => {
     document.getElementById("consultarApi").hidden = true;
@@ -279,19 +118,18 @@ const Modal = ({ setModal, modo, objeto }) => {
         provinciaId: res.data.data.ubigeo[1],
         distritoId: res.data.data.ubigeo[2],
       };
-      setDataGeneral({
-        ...dataGeneral,
+      setData({
+        ...data,
         numeroDocumentoIdentidad: model.numeroDocumentoIdentidad,
         nombre: model.nombre,
         direccionPrincipal: model.direccionPrincipal,
         departamentoId:
           model.departamentoId == ""
-            ? dataGeneral.departamentoId
+            ? data.departamentoId
             : model.departamentoId,
         provinciaId:
-          model.provinciaId == "" ? dataGeneral.provinciaId : model.provinciaId,
-        distritoId:
-          model.distritoId == "" ? dataGeneral.distritoId : model.distritoId,
+          model.provinciaId == "" ? data.provinciaId : model.provinciaId,
+        distritoId: model.distritoId == "" ? data.distritoId : model.distritoId,
       });
       toast.success("Datos extraídos exitosamente", {
         position: "bottom-right",
@@ -321,7 +159,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   const ListarDireccion = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${dataGeneral.id}`
+      `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${data.id}`
     );
     setDataDireccion(result.data.data);
   };
@@ -343,82 +181,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       await Update(
         ["Mantenimiento", "ClienteDireccion"],
         objetoDireccion,
-        setTipoMen,
-        setMen
-      );
-    }
-  };
-
-  const TablasCargo = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteContacto/FormularioTablas`
-    );
-    setDataContactoCargo(result.data.data.cargos);
-  };
-  const ListarContacto = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteContacto/ListarPorCliente?clienteId=${dataGeneral.id}`
-    );
-    setDataContacto(result.data.data);
-  };
-  const GetContacto = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/ClienteContacto/${id}`);
-    setObjetoContacto(result.data.data);
-  };
-  const EnviarClienteContacto = async () => {
-    if (objetoContacto.id == 0) {
-      await Insert(
-        ["Mantenimiento", "ClienteContacto"],
-        objetoContacto,
-        setTipoMen,
-        setMen
-      );
-    } else {
-      await Update(
-        ["Mantenimiento", "ClienteContacto"],
-        objetoContacto,
-        setTipoMen,
-        setMen
-      );
-    }
-  };
-
-  const TablasPersonal = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/ClientePersonal/FormularioTablas`
-    );
-    let model = result.data.data.personal.map((res) => ({
-      id: res.id,
-      personal:
-        res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-    }));
-    setDataPersonalCombo(model);
-  };
-  const ListarPersonal = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/ClientePersonal/ListarPorCliente?clienteId=${dataGeneral.id}`
-    );
-    let model = result.data.data.map((res) => ({
-      id: res.id,
-      personal:
-        res.personal.apellidoPaterno +
-        " " +
-        res.personal.apellidoMaterno +
-        " " +
-        res.personal.nombres,
-      numeroDocumentoIdentidad: res.personal.numeroDocumentoIdentidad,
-    }));
-    setDataPersonal(model);
-  };
-  const GetPersonal = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/ClientePersonal/${id}`);
-    setObjetoPersonal(result.data.data);
-  };
-  const EnviarClientePersonal = async () => {
-    if (objetoPersonal.id == "") {
-      await Insert(
-        ["Mantenimiento", "ClientePersonal"],
-        objetoPersonal,
         setTipoMen,
         setMen
       );
@@ -478,105 +240,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       ),
     },
   ];
-  const colContacto = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Nombres",
-      accessor: "nombres",
-    },
-    {
-      Header: "Documento",
-      accessor: "numeroDocumentoIdentidad",
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <div className="flex item-center justify-center">
-          {modo == "Consultar" ? (
-            ""
-          ) : (
-            <>
-              <div className={Global.TablaBotonModificar}>
-                <button
-                  id="boton-modificar"
-                  onClick={(e) => AgregarContacto(e, row.values.id)}
-                  className="p-0 px-1"
-                  title="Click para modificar registro"
-                >
-                  <FaPen></FaPen>
-                </button>
-              </div>
-
-              <div className={Global.TablaBotonEliminar}>
-                <button
-                  id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    Delete(
-                      ["Mantenimiento", "ClienteContacto"],
-                      row.values.id,
-                      setRespuesta
-                    );
-                  }}
-                  className="p-0 px-1"
-                  title="Click para eliminar registro"
-                >
-                  <FaTrashAlt></FaTrashAlt>
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      ),
-    },
-  ];
-  const colPersonal = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Nombres",
-      accessor: "personal",
-    },
-    {
-      Header: "Documento",
-      accessor: "numeroDocumentoIdentidad",
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <div className="flex item-center justify-center">
-          {modo == "Consultar" ? (
-            ""
-          ) : (
-            <>
-              <div className={Global.TablaBotonEliminar}>
-                <button
-                  id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    Delete(
-                      ["Mantenimiento", "ClientePersonal"],
-                      row.values.id,
-                      setRespuesta
-                    );
-                  }}
-                  className="p-0 px-1"
-                  title="Click para eliminar registro"
-                >
-                  <FaTrashAlt></FaTrashAlt>
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      ),
-    },
-  ];
   //#endregion
 
   //#region Render
@@ -585,566 +248,289 @@ const Modal = ({ setModal, modo, objeto }) => {
       {Object.entries(dataTipoDoc).length > 0 && (
         <ModalBasic
           setModal={setModal}
-          objeto={dataGeneral}
+          objeto={data}
           modo={modo}
-          menu={["Mantenimiento", "Cliente"]}
-          titulo="Cliente"
-          tamañoModal={[Global.ModalMediano, Global.FormTabs]}
+          menu={["Compra", "DocumentoCompra"]}
+          titulo="Documentos de Compra"
+          tamañoModal={[Global.ModalGrande, Global.FormGrande]}
         >
-          <TabView>
-            <TabPanel
-              header="Datos Principales"
-              leftIcon="pi pi-user mr-2"
-              style={{ color: "green" }}
-            >
-              <div className="grid gap-y-3 md:gap-x-2">
-                <div className={Global.ContenedorVarios}>
-                  <div className={Global.ContenedorInputMitad}>
-                    <label
-                      htmlFor="tipoDocumentoIdentidadId"
-                      className={Global.LabelStyle}
-                    >
-                      Tipo Doc
-                    </label>
-                    <select
-                      id="tipoDocumentoIdentidadId"
-                      name="tipoDocumentoIdentidadId"
-                      onChange={ValidarData}
-                      disabled={modo == "Consultar" ? true : false}
-                      className={Global.SelectStyle}
-                    >
-                      {dataTipoDoc.map((tipo) => (
-                        <option key={tipo.id} value={tipo.id}>
-                          {tipo.abreviatura}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className={Global.ContenedorInputMitad}>
-                    <label
-                      htmlFor="numeroDocumentoIdentidad"
-                      className={Global.LabelStyle}
-                    >
-                      Número Doc
-                    </label>
-                    <input
-                      type="text"
-                      id="numeroDocumentoIdentidad"
-                      name="numeroDocumentoIdentidad"
-                      autoComplete="off"
-                      placeholder="Número Documento Identidad"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={dataGeneral.numeroDocumentoIdentidad ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputBoton}
-                    />
-                    <button
-                      id="consultarApi"
-                      hidden={modo == "Consultar" ? true : false}
-                      onClick={(e) => ValidarConsultarDocumento(e)}
-                      className={Global.BotonBuscar}
-                    >
-                      <FaSearch></FaSearch>
-                    </button>
-                  </div>
-                </div>
-                <div className="flex">
-                  <label htmlFor="nombre" className={Global.LabelStyle}>
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    name="nombre"
-                    autoComplete="off"
-                    placeholder="Nombre"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={dataGeneral.nombre ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <div className={Global.ContenedorVarios}>
-                  <div className={Global.ContenedorInput96}>
-                    <label htmlFor="telefono" className={Global.LabelStyle}>
-                      Teléfono
-                    </label>
-                    <input
-                      type="text"
-                      id="telefono"
-                      name="telefono"
-                      autoComplete="off"
-                      placeholder="Teléfono"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={dataGeneral.telefono ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
-                    />
-                  </div>
-                  <div className={Global.ContenedorInputFull}>
-                    <label
-                      htmlFor="correoElectronico"
-                      className={Global.LabelStyle}
-                    >
-                      Correo
-                    </label>
-                    <input
-                      type="text"
-                      id="correoElectronico"
-                      name="correoElectronico"
-                      autoComplete="off"
-                      placeholder="Correo"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={dataGeneral.correoElectronico ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
-                    />
-                  </div>
-                </div>
-                <div className="flex">
-                  <label
-                    htmlFor="direccionPrincipal"
-                    className={Global.LabelStyle}
-                  >
-                    Dirección
-                  </label>
-                  <input
-                    type="text"
-                    id="direccionPrincipal"
-                    name="direccionPrincipal"
-                    autoComplete="off"
-                    placeholder="Dirección Principal"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={dataGeneral.direccionPrincipal ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <Ubigeo
-                  modo={modo}
-                  setDataUbigeo={setDataUbigeo}
-                  id={["departamentoId", "provinciaId", "distritoId"]}
-                  dato={{
-                    departamentoId: dataGeneral.departamentoId,
-                    provinciaId: dataGeneral.provinciaId,
-                    distritoId: dataGeneral.distritoId,
-                  }}
-                ></Ubigeo>
-              </div>
-            </TabPanel>
-            {modo != "Registrar" ? (
-              <TabPanel
-                header="Direcciones"
-                leftIcon="pi pi-home mr-2"
-                className="text-yellow-500"
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="id" className={Global.LabelStyle}>
+                Tipo Doc.
+              </label>
+              <select
+                id="tipoDocumentoId"
+                name="tipoDocumentoId"
+                onChange={ValidarData}
+                disabled={modo == "Consultar" ? true : false}
+                className={Global.InputStyle}
               >
-                {/* Boton */}
-                {modo == "Consultar" ? (
-                  ""
-                ) : (
-                  <>
-                    <Mensajes
-                      tipoMensaje={2}
-                      mensaje={[
-                        "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
-                      ]}
-                      cerrar={false}
-                    />
-                    <BotonBasico
-                      botonText="Agregar"
-                      botonClass={Global.BotonAgregar}
-                      botonIcon={faPlus}
-                      click={(e) => {
-                        AgregarDireccion(e);
-                      }}
-                    />
-                  </>
-                )}
-                {/* Boton */}
+                {dataTipoDoc.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.descripcion}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="serie" className={Global.LabelStyle}>
+                DNI
+              </label>
+              <input
+                type="text"
+                id="serie"
+                name="serie"
+                placeholder="Serie"
+                maxLength="4"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.serie ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="numero" className={Global.LabelStyle}>
+                DNI
+              </label>
+              <input
+                type="text"
+                id="numero"
+                name="numero"
+                placeholder="numero"
+                maxLength="10"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.numero ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+          </div>
 
-                {/* Form Direcciones */}
-                {estadoDireccion && (
-                  <div className={Global.FormSecundario}>
-                    {tipoMen > 0 && (
-                      <Mensajes
-                        tipoMensaje={tipoMen}
-                        mensaje={men}
-                        Click={(e) => {
-                          e.preventDefault();
-                          setMen([]);
-                          setTipoMen(-1);
-                        }}
-                      />
-                    )}
-                    <div className="flex">
-                      <label htmlFor="direccion" className={Global.LabelStyle}>
-                        Dirección
-                      </label>
-                      <input
-                        type="text"
-                        id="direccion"
-                        name="direccion"
-                        autoComplete="off"
-                        placeholder="Dirección secundaria"
-                        readOnly={modo == "Consultar" ? true : false}
-                        value={objetoDireccion.direccion ?? ""}
-                        onChange={ValidarDataDireccion}
-                        className={Global.InputStyle}
-                      />
-                    </div>
-                    <Ubigeo
-                      modo={modo}
-                      setDataUbigeo={setDataUbiDirec}
-                      id={["depaId", "provId", "disId"]}
-                      dato={{
-                        departamentoId: objetoDireccion.departamentoId,
-                        provinciaId: objetoDireccion.provinciaId,
-                        distritoId: objetoDireccion.distritoId,
-                      }}
-                    ></Ubigeo>
-                    {/*footer*/}
-                    <div className="flex items-center justify-start">
-                      {modo == "Consultar" ? (
-                        ""
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={EnviarClienteDireccion}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                        >
-                          Guardar
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setEstadoDireccion(false)}
-                        className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                        }
-                      >
-                        CERRAR
-                      </button>
-                    </div>
-                    {/*footer*/}
-                  </div>
-                )}
-                {/* Form Direcciones */}
-                {/* Tabla */}
-                <TablaStyle>
-                  <TableBasic columnas={colDireccion} datos={dataDireccion} />
-                </TablaStyle>
-                {/* Tabla */}
-              </TabPanel>
-            ) : (
-              ""
-            )}
-            {modo != "Registrar" ? (
-              <TabPanel header="Contactos" leftIcon="pi pi-user mr-2">
-                {/* Boton */}
-                {modo == "Consultar" ? (
-                  ""
-                ) : (
-                  <>
-                    <Mensajes
-                      tipoMensaje={2}
-                      mensaje={[
-                        "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
-                      ]}
-                      cerrar={false}
-                    />
-                    <BotonBasico
-                      botonText="Agregar"
-                      botonClass={Global.BotonAgregar}
-                      botonIcon={faPlus}
-                      click={(e) => {
-                        AgregarContacto(e);
-                      }}
-                    />
-                  </>
-                )}
-                {/* Boton */}
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+                F. Emisión
+              </label>
+              <input
+                type="date"
+                id="fechaEmision"
+                name="fechaEmision"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="fechaContable" className={Global.LabelStyle}>
+                F. Contable
+              </label>
+              <input
+                type="date"
+                id="fechaContable"
+                name="fechaContable"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={moment(data.fechaContable ?? "").format("yyyy-MM-DD")}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="fechaVencimiento" className={Global.LabelStyle}>
+                F. Vcmto
+              </label>
+              <input
+                type="date"
+                id="fechaVencimiento"
+                name="fechaVencimiento"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={moment(data.fechaVencimiento ?? "").format("yyyy-MM-DD")}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+          </div>
 
-                {/* Form Contactos */}
-                {estadoContacto && (
-                  <div className={Global.FormSecundario}>
-                    {tipoMen > 0 && (
-                      <Mensajes
-                        tipoMensaje={tipoMen}
-                        mensaje={men}
-                        Click={(e) => {
-                          e.preventDefault();
-                          setMen([]);
-                          setTipoMen(-1);
-                        }}
-                      />
-                    )}
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputMitad}>
+              <label
+                htmlFor="proveedorNumeroDocumentoIdentidad"
+                className={Global.LabelStyle}
+              >
+                RUC/DNI:
+              </label>
+              <input
+                type="text"
+                id="proveedorNumeroDocumentoIdentidad"
+                name="proveedorNumeroDocumentoIdentidad"
+                placeholder="N° Documento Identidad"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.proveedorNumeroDocumentoIdentidad ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputFull}>
+              <label htmlFor="proveedorNombre" className={Global.LabelStyle}>
+                Proveedor
+              </label>
+              <input
+                type="text"
+                id="proveedorNombre"
+                name="proveedorNombre"
+                placeholder="Proveedor"
+                autoComplete="off"
+                readOnly={true}
+                value={data.proveedorNombre ?? ""}
+                onChange={ValidarData}
+                className={Global.InputBoton}
+              />
+              <button
+                id="consultar"
+                className={Global.BotonBuscar + " !rounded-none"}
+                hidden={modo == "Consultar" ? true : false}
+              >
+                <FaSearch></FaSearch>
+              </button>
+              <div className={Global.ContenedorInput20pct}>
+              <div className={Global.CheckStyle + " !rounded-none"}>
+                <Checkbox
+                  inputId="isActivo"
+                  name="isActivo"
+                  readOnly={modo == "Consultar" ? true : false}
+                  value={data.isActivo}
+                  onChange={(e) => {
+                    ValidarData(e);
+                  }}
+                  checked={data.isActivo ? checked : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="isActivo"
+                className={Global.InputStyle + " !bg-transparent !border-l-0"}
+              >
+                Varios
+              </label>
+            </div>
+            </div>
+          </div>
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
-                        <label htmlFor="nombres" className={Global.LabelStyle}>
-                          Nombres
-                        </label>
-                        <input
-                          type="text"
-                          id="nombres"
-                          name="nombres"
-                          autoComplete="off"
-                          placeholder="Nombres"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoContacto.nombres ?? ""}
-                          onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                      <div className={Global.ContenedorInput96}>
-                        <label
-                          htmlFor="numeroDocumentoIdentidad"
-                          className={Global.LabelStyle}
-                        >
-                          DNI:
-                        </label>
-                        <input
-                          type="text"
-                          id="numeroDocumentoIdentidad"
-                          name="numeroDocumentoIdentidad"
-                          autoComplete="off"
-                          maxLength="15"
-                          placeholder="N° Documento Identidad"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoContacto.numeroDocumentoIdentidad ?? ""}
-                          onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                    </div>
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="fechaNacimiento" className={Global.LabelStyle}>
+                Fec. Nac.
+              </label>
+              <input
+                type="date"
+                id="fechaNacimiento"
+                name="fechaNacimiento"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={moment(data.fechaNacimiento ?? "").format("yyyy-MM-DD")}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="sexoId" className={Global.LabelStyle}>
+                Sexo
+              </label>
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
-                        <label htmlFor="cargoId" className={Global.LabelStyle}>
-                          Cargo
-                        </label>
-                        <select
-                          id="cargoId"
-                          name="cargoId"
-                          onChange={ValidarDataContacto}
-                          disabled={modo == "Consultar" ? true : false}
-                          className={Global.SelectStyle}
-                        >
-                          {dataContactoCargo.map((cargo) => (
-                            <option key={cargo.id} value={cargo.id}>
-                              {cargo.descripcion}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className={Global.ContenedorInput96}>
-                        <label htmlFor="celular" className={Global.LabelStyle}>
-                          Celular
-                        </label>
-                        <input
-                          type="text"
-                          id="celular"
-                          name="celular"
-                          autoComplete="off"
-                          maxLength="15"
-                          placeholder="Celular"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoContacto.celular ?? ""}
-                          onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                    </div>
+            </div>
+            <div className={Global.ContenedorInputTercio}>
+              <label htmlFor="estadoCivilId" className={Global.LabelStyle}>
+                Estado Civil
+              </label>
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInput96}>
-                        <label htmlFor="telefono" className={Global.LabelStyle}>
-                          Telefono
-                        </label>
-                        <input
-                          type="text"
-                          id="telefono"
-                          name="telefono"
-                          autoComplete="off"
-                          maxLength="15"
-                          placeholder="Teléfono"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoContacto.telefono ?? ""}
-                          onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                      <div className={Global.ContenedorInputFull}>
-                        <label htmlFor="correo" className={Global.LabelStyle}>
-                          Correo
-                        </label>
-                        <input
-                          type="text"
-                          id="correo"
-                          name="correo"
-                          autoComplete="off"
-                          placeholder="Correo"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoContacto.correo ?? ""}
-                          onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                    </div>
+            </div>
+          </div>
 
-                    <div className="flex">
-                      <label htmlFor="direccion" className={Global.LabelStyle}>
-                        Dirección
-                      </label>
-                      <input
-                        type="text"
-                        id="direccion"
-                        name="direccion"
-                        autoComplete="off"
-                        placeholder="Dirección"
-                        readOnly={modo == "Consultar" ? true : false}
-                        value={objetoContacto.direccion ?? ""}
-                        onChange={ValidarDataContacto}
-                        className={Global.InputStyle}
-                      />
-                    </div>
-                    {/*footer*/}
-                    <div className="flex items-center justify-start">
-                      {modo == "Consultar" ? (
-                        ""
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={EnviarClienteContacto}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                        >
-                          Guardar
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setEstadoContacto(false)}
-                        className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                        }
-                      >
-                        CERRAR
-                      </button>
-                    </div>
-                    {/*footer*/}
-                  </div>
-                )}
-                {/* Form Contactos */}
-                {/* Tabla */}
-                <TablaStyle>
-                  <TableBasic columnas={colContacto} datos={dataContacto} />
-                </TablaStyle>
-                {/* Tabla */}
-              </TabPanel>
-            ) : (
-              ""
-            )}
-            {modo != "Registrar" ? (
-              <TabPanel header="Personal" leftIcon="pi pi-user mr-2">
-                {/* Boton */}
-                {modo == "Consultar" ? (
-                  ""
-                ) : (
-                  <>
-                    <Mensajes
-                      tipoMensaje={2}
-                      mensaje={[
-                        "Cualquier registro, modificación o eliminación de direcciones será guardado automáticamente en la base de datos, usar con precaución.",
-                      ]}
-                      cerrar={false}
-                    />
-                    <BotonBasico
-                      botonText="Agregar"
-                      botonClass={Global.BotonAgregar}
-                      botonIcon={faPlus}
-                      click={(e) => {
-                        AgregarPersonal(e);
-                      }}
-                    />
-                  </>
-                )}
-                {/* Boton */}
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputFull}>
+              <label htmlFor="correoElectronico" className={Global.LabelStyle}>
+                Correo Electrónico
+              </label>
+              <input
+                type="text"
+                id="correoElectronico"
+                name="correoElectronico"
+                placeholder="Correo Electrónico"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.correoElectronico ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.ContenedorInputMitad}>
+              <label htmlFor="cargoId" className={Global.LabelStyle}>
+                Cargo
+              </label>
 
-                {/* Form Personal */}
-                {estadoPersonal && (
-                  <div className={Global.FormSecundario}>
-                    {tipoMen > 0 && (
-                      <Mensajes
-                        tipoMensaje={tipoMen}
-                        mensaje={men}
-                        Click={(e) => {
-                          e.preventDefault();
-                          setMen([]);
-                          setTipoMen(-1);
-                        }}
-                      />
-                    )}
+            </div>
+          </div>
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
-                        <label
-                          htmlFor="personalId"
-                          className={Global.LabelStyle}
-                        >
-                          Personal
-                        </label>
-                        <select
-                          id="personalId"
-                          name="personalId"
-                          onChange={ValidarDataPersonal}
-                          disabled={modo == "Consultar" ? true : false}
-                          className={Global.SelectStyle}
-                        >
-                          {dataPersonalCombo.map((personal) => (
-                            <option key={personal.id} value={personal.id}>
-                              {personal.personal}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    {/*footer*/}
-                    <div className="flex items-center justify-start">
-                      {modo == "Consultar" ? (
-                        ""
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={EnviarClientePersonal}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                        >
-                          Guardar
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setEstadoPersonal(false)}
-                        className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                        }
-                      >
-                        CERRAR
-                      </button>
-                    </div>
-                    {/*footer*/}
-                  </div>
-                )}
-                {/* Form Personal */}
-                {/* Tabla */}
-                <TablaStyle>
-                  <TableBasic columnas={colPersonal} datos={dataPersonal} />
-                </TablaStyle>
-                {/* Tabla */}
-              </TabPanel>
-            ) : (
-              ""
-            )}
-          </TabView>
+          <div className="flex">
+            <label htmlFor="observacion" className={Global.LabelStyle}>
+              Observación
+            </label>
+            <input
+              type="text"
+              id="observacion"
+              name="observacion"
+              placeholder="Observación"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.observacion ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputFull}>
+              <label htmlFor="entidadBancariaId" className={Global.LabelStyle}>
+                E.Bancaria
+              </label>
+
+            </div>
+            <div className={Global.ContenedorInput60pct}>
+              <label
+                htmlFor="tipoCuentaBancariaId"
+                className={Global.LabelStyle}
+              >
+                T.Cuenta
+              </label>
+            </div>
+            <div className={Global.ContenedorInputMitad}>
+              <label htmlFor="monedaId" className={Global.LabelStyle}>
+                Moneda
+              </label>
+
+            </div>
+          </div>
+          <div className="flex">
+            <label htmlFor="cuentaCorriente" className={Global.LabelStyle}>
+              Cuenta Corriente
+            </label>
+            <input
+              type="text"
+              id="cuentaCorriente"
+              name="cuentaCorriente"
+              placeholder="N° Cuenta Corriente"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.cuentaCorriente ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
         </ModalBasic>
       )}
     </>

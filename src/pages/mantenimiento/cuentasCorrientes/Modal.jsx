@@ -96,7 +96,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="tipoCuentaDescripcion"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataTCuenta.map((tipo) => (
                   <option key={tipo.id} value={tipo.id}>
@@ -114,7 +114,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="monedaId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataMoneda.map((moneda) => (
                   <option key={moneda.id} value={moneda.id}>
@@ -134,7 +134,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="entidadBancariaId"
                 onChange={ValidarData}
                 disabled={modo == "Consultar" ? true : false}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataEntidad.map((entidad) => (
                   <option key={entidad.id} value={entidad.id}>

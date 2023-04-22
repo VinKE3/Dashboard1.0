@@ -1211,7 +1211,7 @@ const Empresa = ({ modo }) => {
             </div>
 
             <div className="flex">
-              <div className={Global.CheckStyleBorder}>
+              <div className={Global.CheckStyle}>
                 <Checkbox
                   inputId="todos"
                   name="todos"
@@ -1220,7 +1220,7 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.checked}
                 />
               </div>
-              <label htmlFor="todos" className={Global.LabelCheckStyleBorder}>
+              <label htmlFor="todos" className={Global.LabelCheckStyle}>
                 Todos
               </label>
             </div>
@@ -1490,7 +1490,7 @@ const Empresa = ({ modo }) => {
               />
             </div>
             <div className="flex">
-              <div className={Global.CheckStyleBorder}>
+              <div className={Global.CheckStyle}>
                 <Checkbox
                   inputId="todos2"
                   name="todos2"
@@ -1499,7 +1499,7 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.checked}
                 />
               </div>
-              <label htmlFor="todos2" className={Global.LabelCheckStyleBorder}>
+              <label htmlFor="todos2" className={Global.LabelCheckStyle}>
                 Todos
               </label>
             </div>

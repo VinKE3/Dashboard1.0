@@ -63,7 +63,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="tipoDocumentoId"
                 disabled={modo == "Consultar" ? true : false}
                 onChange={ValidarData}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataTipoDocumento.map((forma) => (
                   <option key={forma.id} value={forma.id}>

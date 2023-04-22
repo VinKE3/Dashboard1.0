@@ -122,7 +122,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="empresaTransporteId"
                 onChange={ValidarData}
                 disabled={modo != "Consultar" ? false : true}
-                className={Global.SelectStyle}
+                className={Global.InputStyle}
               >
                 {dataModal.map((map) => (
                   <option key={map.id} value={map.id}>
