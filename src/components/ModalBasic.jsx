@@ -15,7 +15,8 @@ const ModalBasic = ({
   modo,
   menu,
   titulo,
-  tamañoModal = [Global.ModalPequeño, Global.FormSimple],
+  tamañoModal = [Global.ModalPequeño, Global.Form],
+  cerrar = true,
 }) => {
   //#region useState
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -83,12 +84,14 @@ const ModalBasic = ({
               <h3 className="text-3xl md:text-2xl font-semibold text-light">
                 {modo + " " + titulo}
               </h3>
-              <button
-                className="p-1 ml-auto bg-transparent border-0 hover:text-red-500 text-light float-right text-3xl md:text-2xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={CerrarModal}
-              >
-                <FontAwesomeIcon icon={faXmark} size="lg" />
-              </button>
+              {cerrar && (
+                <button
+                  className="p-1 ml-auto bg-transparent border-0 hover:text-red-500 text-light float-right text-3xl md:text-2xl leading-none font-semibold outline-none focus:outline-none"
+                  onClick={CerrarModal}
+                >
+                  <FontAwesomeIcon icon={faXmark} size="lg" />
+                </button>
+              )}
             </div>
             {/*header*/}
 

@@ -92,7 +92,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region Render
   return (
-    <div className={Global.ContenedorVarios}>
+    <div className={Global.ContenedorInputs}>
       <div className={Global.ContenedorInputTercio}>
         <label htmlFor={Id[0]} className={Global.LabelStyle}>
           Dep.

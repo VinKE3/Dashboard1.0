@@ -73,7 +73,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "TipoCambio"]}
       titulo="Tipo de Cambio"
-      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
+      tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
       <div className="flex">
         <label htmlFor="id" className={Global.LabelStyle}>
@@ -97,8 +97,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <FaSearch></FaSearch>
         </button>
       </div>
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputFull}>
+      <div className={Global.ContenedorInputs}>
+        <div className={Global.InputFull}>
           <label htmlFor="precioCompra" className={Global.LabelStyle}>
             P. Compra
           </label>
@@ -113,7 +113,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInputFull}>
+        <div className={Global.InputFull}>
           <label htmlFor="precioVenta" className={Global.LabelStyle}>
             P.Venta
           </label>

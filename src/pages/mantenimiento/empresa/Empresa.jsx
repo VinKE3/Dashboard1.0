@@ -884,7 +884,7 @@ const Empresa = ({ modo }) => {
 
   //#region Render
   return (
-    <div className={Global.FormSimple + " !py-0"}>
+    <div className={Global.Form + " !py-0"}>
       <TabView>
         <TabPanel
           header="Datos Principales"
@@ -892,7 +892,7 @@ const Empresa = ({ modo }) => {
           style={{ color: "white" }}
         >
           <div className="grid gap-y-3 md:gap-x-2">
-            <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.ContenedorInput60pct}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
@@ -911,7 +911,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.InputFull}>
                 <label htmlFor="nombre" className={Global.LabelStyle}>
                   Nombre
                 </label>
@@ -928,7 +928,7 @@ const Empresa = ({ modo }) => {
                 />
               </div>
             </div>
-            <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.ContenedorInput60pct}>
                 <label htmlFor="telefono" className={Global.LabelStyle}>
                   Teléfono
@@ -944,7 +944,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.InputFull}>
                 <label
                   htmlFor="correoElectronico"
                   className={Global.LabelStyle}
@@ -963,7 +963,7 @@ const Empresa = ({ modo }) => {
                 />
               </div>
             </div>
-            <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.ContenedorInput60pct}>
                 <label htmlFor="celular" className={Global.LabelStyle}>
                   Celular
@@ -979,7 +979,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.InputFull}>
                 <label htmlFor="observacion" className={Global.LabelStyle}>
                   Observacion
                 </label>
@@ -1019,7 +1019,7 @@ const Empresa = ({ modo }) => {
                 distritoId: dataGeneral.distritoId,
               }}
             ></Ubigeo>
-            <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.ContenedorInput40pct}>
                 <label htmlFor="concarEmpresaId" className={Global.LabelStyle}>
                   Id Concar
@@ -1035,7 +1035,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.InputFull}>
                 <label
                   htmlFor="concarEmpresaNombre"
                   className={Global.LabelStyle}
@@ -1054,7 +1054,7 @@ const Empresa = ({ modo }) => {
                 />
               </div>
             </div>
-            <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="concarUsuarioVenta"
@@ -1092,7 +1092,7 @@ const Empresa = ({ modo }) => {
                 />
               </div>
             </div>
-            <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="concarUsuarioPago"
@@ -1130,20 +1130,19 @@ const Empresa = ({ modo }) => {
                 />
               </div>
             </div>
-            <div className={Global.ContenedorVarios}>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.ContenedorInputMitad}>
                 <label
                   htmlFor="filtroFechaInicio"
                   className={Global.LabelStyle}
                 >
-                  Fecha Inicio
+                  Desde
                 </label>
                 <input
                   type="date"
                   id="filtroFechaInicio"
                   name="filtroFechaInicio"
                   autoComplete="off"
-                  placeholder="Fecha Inicio"
                   value={
                     dataGeneral.filtroFechaInicio == null
                       ? ""
@@ -1157,14 +1156,13 @@ const Empresa = ({ modo }) => {
               </div>
               <div className={Global.ContenedorInputMitad}>
                 <label htmlFor="filtroFechaFin" className={Global.LabelStyle}>
-                  Fecha Fin
+                  Hasta
                 </label>
                 <input
                   type="date"
                   id="filtroFechaFin"
                   name="filtroFechaFin"
                   autoComplete="off"
-                  placeholder="Fecha Fin"
                   value={
                     dataGeneral.filtroFechaFin == null
                       ? ""
@@ -1193,8 +1191,8 @@ const Empresa = ({ modo }) => {
           leftIcon="pi pi-calendar mr-2"
           style={{ color: "white" }}
         >
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorRow + " !gap-x-0 mb-1"}>
+            <div className={Global.InputFull}>
               <label htmlFor="anioHabilitado1" className={Global.LabelStyle}>
                 Año 1
               </label>
@@ -1206,12 +1204,12 @@ const Empresa = ({ modo }) => {
                 placeholder="año"
                 value={dataGeneral.anioHabilitado1}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={Global.InputBoton}
               />
             </div>
 
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.CheckAnidado}>
                 <Checkbox
                   inputId="todos"
                   name="todos"
@@ -1226,9 +1224,9 @@ const Empresa = ({ modo }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="enero"
                   name="enero"
@@ -1243,12 +1241,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.enero ? true : false}
                 />
               </div>
-              <label htmlFor="enero" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="enero"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Enero
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="febrero"
                   name="febrero"
@@ -1263,12 +1264,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.febrero ? true : false}
                 />
               </div>
-              <label htmlFor="febrero" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="febrero"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Febrero
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="marzo"
                   name="marzo"
@@ -1283,12 +1287,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.marzo ? true : false}
                 />
               </div>
-              <label htmlFor="marzo" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="marzo"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Marzo
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="abril"
                   name="abril"
@@ -1303,14 +1310,17 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.abril ? true : false}
                 />
               </div>
-              <label htmlFor="abril" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="abril"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Abril
               </label>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="mayo"
                   name="mayo"
@@ -1325,12 +1335,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.mayo ? true : false}
                 />
               </div>
-              <label htmlFor="mayo" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="mayo"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Mayo
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="junio"
                   name="junio"
@@ -1345,12 +1358,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.junio ? true : false}
                 />
               </div>
-              <label htmlFor="junio" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="junio"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Junio
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="julio"
                   name="julio"
@@ -1365,12 +1381,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.julio ? true : false}
                 />
               </div>
-              <label htmlFor="julio" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="julio"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Julio
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="agosto"
                   name="agosto"
@@ -1385,14 +1404,17 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.agosto ? true : false}
                 />
               </div>
-              <label htmlFor="agosto" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="agosto"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Agosto
               </label>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="septiembre"
                   name="septiembre"
@@ -1407,12 +1429,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.septiembre ? true : false}
                 />
               </div>
-              <label htmlFor="septiembre" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="septiembre"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Setiembre
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="octubre"
                   name="octubre"
@@ -1427,12 +1452,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.octubre ? true : false}
                 />
               </div>
-              <label htmlFor="octubre" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="octubre"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Octubre
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="noviembre"
                   name="noviembre"
@@ -1447,12 +1475,15 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.noviembre ? true : false}
                 />
               </div>
-              <label htmlFor="noviembre" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="noviembre"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Noviembre
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="diciembre"
                   name="diciembre"
@@ -1467,14 +1498,17 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes.diciembre ? true : false}
                 />
               </div>
-              <label htmlFor="diciembre" className={Global.LabelCheckStyle}>
+              <label
+                htmlFor="diciembre"
+                className={Global.LabelCheckStyle + Global.SinBorde}
+              >
                 Diciembre
               </label>
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios + " mt-4"}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorRow + " !gap-x-0 mt-4 mb-1"}>
+            <div className={Global.InputFull}>
               <label htmlFor="anioHabilitado2" className={Global.LabelStyle}>
                 Año 2
               </label>
@@ -1486,11 +1520,11 @@ const Empresa = ({ modo }) => {
                 placeholder="año"
                 value={dataGeneral.anioHabilitado2}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={Global.InputBoton}
               />
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.CheckAnidado}>
                 <Checkbox
                   inputId="todos2"
                   name="todos2"
@@ -1505,9 +1539,9 @@ const Empresa = ({ modo }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="enero2"
                   name="enero2"
@@ -1522,12 +1556,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.enero2 ? true : false}
                 />
               </div>
-              <label htmlFor="enero2" className={Global.LabelCheckStyle}>
+              <label htmlFor="enero2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Enero
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="febrero2"
                   name="febrero2"
@@ -1542,12 +1576,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.febrero2 ? true : false}
                 />
               </div>
-              <label htmlFor="febrero2" className={Global.LabelCheckStyle}>
+              <label htmlFor="febrero2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Febrero
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="marzo2"
                   name="marzo2"
@@ -1562,12 +1596,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.marzo2 ? true : false}
                 />
               </div>
-              <label htmlFor="marzo2" className={Global.LabelCheckStyle}>
+              <label htmlFor="marzo2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Marzo
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="abril2"
                   name="abril2"
@@ -1582,14 +1616,14 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.abril2 ? true : false}
                 />
               </div>
-              <label htmlFor="abril2" className={Global.LabelCheckStyle}>
+              <label htmlFor="abril2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Abril
               </label>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="mayo2"
                   name="mayo2"
@@ -1604,12 +1638,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.mayo2 ? true : false}
                 />
               </div>
-              <label htmlFor="mayo2" className={Global.LabelCheckStyle}>
+              <label htmlFor="mayo2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Mayo
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="junio2"
                   name="junio2"
@@ -1624,12 +1658,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.junio2 ? true : false}
                 />
               </div>
-              <label htmlFor="junio2" className={Global.LabelCheckStyle}>
+              <label htmlFor="junio2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Junio
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="julio2"
                   name="julio2"
@@ -1644,12 +1678,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.julio2 ? true : false}
                 />
               </div>
-              <label htmlFor="julio2" className={Global.LabelCheckStyle}>
+              <label htmlFor="julio2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Julio
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="agosto2"
                   name="agosto2"
@@ -1664,14 +1698,14 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.agosto2 ? true : false}
                 />
               </div>
-              <label htmlFor="agosto2" className={Global.LabelCheckStyle}>
+              <label htmlFor="agosto2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Agosto
               </label>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="septiembre2"
                   name="septiembre2"
@@ -1686,12 +1720,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.septiembre2 ? true : false}
                 />
               </div>
-              <label htmlFor="septiembre2" className={Global.LabelCheckStyle}>
+              <label htmlFor="septiembre2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Setiembre
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="octubre2"
                   name="octubre2"
@@ -1706,12 +1740,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.octubre2 ? true : false}
                 />
               </div>
-              <label htmlFor="octubre2" className={Global.LabelCheckStyle}>
+              <label htmlFor="octubre2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Octubre
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="noviembre2"
                   name="noviembre2"
@@ -1726,12 +1760,12 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.noviembre2 ? true : false}
                 />
               </div>
-              <label htmlFor="noviembre2" className={Global.LabelCheckStyle}>
+              <label htmlFor="noviembre2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Noviembre
               </label>
             </div>
             <div className="flex">
-              <div className={Global.CheckStyle}>
+              <div className={Global.CheckStyle + Global.SinBorde}>
                 <Checkbox
                   inputId="diciembre2"
                   name="diciembre2"
@@ -1746,7 +1780,7 @@ const Empresa = ({ modo }) => {
                   checked={checkboxes2.diciembre2 ? true : false}
                 />
               </div>
-              <label htmlFor="diciembre2" className={Global.LabelCheckStyle}>
+              <label htmlFor="diciembre2" className={Global.LabelCheckStyle + Global.SinBorde}>
                 Diciembre
               </label>
             </div>
@@ -1779,12 +1813,13 @@ const Empresa = ({ modo }) => {
                 click={(e) => {
                   AgregarIgv(e);
                 }}
+                containerClass=""
               />
               {/* Form */}
               {estadoIgv && (
                 <div className={Global.FormSecundario}>
-                  <div className={Global.ContenedorVarios}>
-                    <div className={Global.ContenedorInputFull}>
+                  <div className={Global.ContenedorRow}>
+                    <div className={Global.InputFull}>
                       <label htmlFor="porcentaje" className={Global.LabelStyle}>
                         Porcentaje
                       </label>
@@ -1800,7 +1835,7 @@ const Empresa = ({ modo }) => {
                         className={Global.InputStyle}
                       />
                     </div>
-                    <div className={Global.ContenedorInputMitad}>
+                    <div className={Global.ContenedorInput36}>
                       <label htmlFor="defaultIgv" className={Global.LabelStyle}>
                         Default
                       </label>
@@ -1859,12 +1894,13 @@ const Empresa = ({ modo }) => {
                 click={(e) => {
                   AgregarRetencion(e);
                 }}
+                containerClass=""
               />
               {/* Form */}
               {estadoRetencion && (
                 <div className={Global.FormSecundario}>
-                  <div className={Global.ContenedorVarios}>
-                    <div className={Global.ContenedorInputFull}>
+                  <div className={Global.ContenedorRow}>
+                    <div className={Global.InputFull}>
                       <label htmlFor="porcentaje" className={Global.LabelStyle}>
                         Porcentaje
                       </label>
@@ -1880,7 +1916,7 @@ const Empresa = ({ modo }) => {
                         className={Global.InputStyle}
                       />
                     </div>
-                    <div className={Global.ContenedorInputMitad}>
+                    <div className={Global.ContenedorInput36}>
                       <label
                         htmlFor="defaultRetencion"
                         className={Global.LabelStyle}
@@ -1945,12 +1981,13 @@ const Empresa = ({ modo }) => {
                 click={(e) => {
                   AgregarDetraccion(e);
                 }}
+                containerClass=""
               />
               {/* Form */}
               {estadoDetraccion && (
                 <div className={Global.FormSecundario}>
-                  <div className={Global.ContenedorVarios}>
-                    <div className={Global.ContenedorInputFull}>
+                  <div className={Global.ContenedorRow}>
+                    <div className={Global.InputFull}>
                       <label htmlFor="porcentaje" className={Global.LabelStyle}>
                         Porcentaje
                       </label>
@@ -1966,7 +2003,7 @@ const Empresa = ({ modo }) => {
                         className={Global.InputStyle}
                       />
                     </div>
-                    <div className={Global.ContenedorInputMitad}>
+                    <div className={Global.ContenedorInput36}>
                       <label
                         htmlFor="defaultDetraccion"
                         className={Global.LabelStyle}
@@ -2031,12 +2068,13 @@ const Empresa = ({ modo }) => {
                 click={(e) => {
                   AgregarPercepcion(e);
                 }}
+                containerClass=""
               />
               {/* Form */}
               {estadoPercepcion && (
                 <div className={Global.FormSecundario}>
-                  <div className={Global.ContenedorVarios}>
-                    <div className={Global.ContenedorInputFull}>
+                  <div className={Global.ContenedorRow}>
+                    <div className={Global.InputFull}>
                       <label htmlFor="porcentaje" className={Global.LabelStyle}>
                         Porcentaje
                       </label>
@@ -2052,7 +2090,7 @@ const Empresa = ({ modo }) => {
                         className={Global.InputStyle}
                       />
                     </div>
-                    <div className={Global.ContenedorInputMitad}>
+                    <div className={Global.ContenedorInput36}>
                       <label
                         htmlFor="defaultPercepcion"
                         className={Global.LabelStyle}
@@ -2091,7 +2129,7 @@ const Empresa = ({ modo }) => {
                       type="button"
                       onClick={() => setEstadoPercepcion(false)}
                       className={
-                        Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                        Global.BotonCancelarModal + " py-2 sm:py-1 px-3"
                       }
                     >
                       CERRAR

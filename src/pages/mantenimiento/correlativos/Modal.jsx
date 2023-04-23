@@ -51,10 +51,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Correlativo"]}
           titulo="Correlativo"
-          tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
+          tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
                 Tipo de Documento
               </label>
@@ -89,8 +89,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               />
             </div>
           </div>
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label
                 htmlFor="tipoDocumentoDescripcion"
                 className={Global.LabelStyle}

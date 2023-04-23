@@ -50,10 +50,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "TipoCobroPago"]}
           titulo="Tipo de Pago"
-          tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
+          tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="descripcion" className={Global.LabelStyle}>
                 Descripción
               </label>
@@ -86,8 +86,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               />
             </div>
           </div>
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="tipoVentaCompraId" className={Global.LabelStyle}>
                 Forma Pago
               </label>

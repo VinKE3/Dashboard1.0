@@ -25,40 +25,42 @@ const Modal = ({ setModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "Cargo"]}
       titulo="Cargo"
-      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
+      tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputFull}>
-          <label htmlFor="descripcion" className={Global.LabelStyle}>
-            Descripción
-          </label>
-          <input
-            type="text"
-            id="descripcion"
-            name="descripcion"
-            autoComplete="off"
-            placeholder="Descripción"
-            readOnly={modo == "Consultar" ? true : false}
-            value={data.descripcion ?? ""}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
-        </div>
-        <div className={Global.ContenedorInput56}>
-          <label htmlFor="sueldo" className={Global.LabelStyle}>
-            Sueldo
-          </label>
-          <input
-            type="number"
-            id="sueldo"
-            name="sueldo"
-            autoComplete="off"
-            placeholder="Sueldo"
-            readOnly={modo == "Consultar" ? true : false}
-            defaultValue={data.sueldo ?? ""}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
+      <div className={Global.ContenedorBasico}>
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="descripcion" className={Global.LabelStyle}>
+              Descripción
+            </label>
+            <input
+              type="text"
+              id="descripcion"
+              name="descripcion"
+              autoComplete="off"
+              placeholder="Descripción"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.descripcion ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.ContenedorInput56}>
+            <label htmlFor="sueldo" className={Global.LabelStyle}>
+              Sueldo
+            </label>
+            <input
+              type="number"
+              id="sueldo"
+              name="sueldo"
+              autoComplete="off"
+              placeholder="Sueldo"
+              readOnly={modo == "Consultar" ? true : false}
+              defaultValue={data.sueldo ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
         </div>
       </div>
     </ModalBasic>

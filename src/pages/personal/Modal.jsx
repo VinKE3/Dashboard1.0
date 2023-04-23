@@ -107,9 +107,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Personal"]}
           titulo="Personal"
-          tamañoModal={[Global.ModalGrande, Global.FormGrande]}
+          tamañoModal={[Global.ModalGrande, Global.Form]}
         >
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputMitad}>
               <label htmlFor="id" className={Global.LabelStyle}>
                 Código
@@ -126,7 +126,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputFull}>
+            <div className={Global.InputFull}>
               <label
                 htmlFor="numeroDocumentoIdentidad"
                 className={Global.LabelStyle}
@@ -169,7 +169,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputTercio}>
               <label htmlFor="apellidoPaterno" className={Global.LabelStyle}>
                 Ap.Paterno
@@ -231,8 +231,8 @@ const Modal = ({ setModal, modo, objeto }) => {
             }}
           ></Ubigeo>
 
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="direccion" className={Global.LabelStyle}>
                 Dirección
               </label>
@@ -282,7 +282,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputTercio}>
               <label htmlFor="fechaNacimiento" className={Global.LabelStyle}>
                 Fec. Nac.
@@ -336,8 +336,8 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="correoElectronico" className={Global.LabelStyle}>
                 Correo Electrónico
               </label>
@@ -389,8 +389,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               className={Global.InputStyle}
             />
           </div>
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="entidadBancariaId" className={Global.LabelStyle}>
                 E.Bancaria
               </label>

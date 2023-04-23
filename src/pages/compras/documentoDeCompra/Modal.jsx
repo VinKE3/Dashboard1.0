@@ -252,10 +252,11 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Compra", "DocumentoCompra"]}
           titulo="Documentos de Compra"
-          tamañoModal={[Global.ModalGrande, Global.FormGrande]}
+          tamañoModal={[Global.ModalFull, Global.Form]}
+          cerrar={false}
         >
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputTercio}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="id" className={Global.LabelStyle}>
                 Tipo Doc.
               </label>
@@ -275,7 +276,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
             <div className={Global.ContenedorInputTercio}>
               <label htmlFor="serie" className={Global.LabelStyle}>
-                DNI
+                Serie
               </label>
               <input
                 type="text"
@@ -290,9 +291,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputTercio}>
+            <div className={Global.ContenedorInputMitad}>
               <label htmlFor="numero" className={Global.LabelStyle}>
-                DNI
+                Número
               </label>
               <input
                 type="text"
@@ -309,7 +310,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputTercio}>
               <label htmlFor="fechaEmision" className={Global.LabelStyle}>
                 F. Emisión
@@ -357,7 +358,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputMitad}>
               <label
                 htmlFor="proveedorNumeroDocumentoIdentidad"
@@ -377,7 +378,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputFull}>
+            <div className={Global.InputFull}>
               <label htmlFor="proveedorNombre" className={Global.LabelStyle}>
                 Proveedor
               </label>
@@ -399,30 +400,30 @@ const Modal = ({ setModal, modo, objeto }) => {
               >
                 <FaSearch></FaSearch>
               </button>
-              <div className={Global.ContenedorInput20pct}>
-              <div className={Global.CheckStyle + " !rounded-none"}>
-                <Checkbox
-                  inputId="isActivo"
-                  name="isActivo"
-                  readOnly={modo == "Consultar" ? true : false}
-                  value={data.isActivo}
-                  onChange={(e) => {
-                    ValidarData(e);
-                  }}
-                  checked={data.isActivo ? checked : ""}
-                ></Checkbox>
+              <div className={Global.ContenedorInput36 + " !w-20"}>
+                <div className={Global.CheckStyle + Global.CheckAnidado}>
+                  <Checkbox
+                    inputId="isActivo"
+                    name="isActivo"
+                    readOnly={modo == "Consultar" ? true : false}
+                    value={data.isActivo}
+                    onChange={(e) => {
+                      ValidarData(e);
+                    }}
+                    checked={data.isActivo ? checked : ""}
+                  ></Checkbox>
+                </div>
+                <label
+                  htmlFor="isActivo"
+                  className={Global.InputStyle + " !bg-transparent !border-l-0"}
+                >
+                  Varios
+                </label>
               </div>
-              <label
-                htmlFor="isActivo"
-                className={Global.InputStyle + " !bg-transparent !border-l-0"}
-              >
-                Varios
-              </label>
-            </div>
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputTercio}>
               <label htmlFor="fechaNacimiento" className={Global.LabelStyle}>
                 Fec. Nac.
@@ -442,18 +443,16 @@ const Modal = ({ setModal, modo, objeto }) => {
               <label htmlFor="sexoId" className={Global.LabelStyle}>
                 Sexo
               </label>
-
             </div>
             <div className={Global.ContenedorInputTercio}>
               <label htmlFor="estadoCivilId" className={Global.LabelStyle}>
                 Estado Civil
               </label>
-
             </div>
           </div>
 
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="correoElectronico" className={Global.LabelStyle}>
                 Correo Electrónico
               </label>
@@ -473,7 +472,6 @@ const Modal = ({ setModal, modo, objeto }) => {
               <label htmlFor="cargoId" className={Global.LabelStyle}>
                 Cargo
               </label>
-
             </div>
           </div>
 
@@ -493,12 +491,11 @@ const Modal = ({ setModal, modo, objeto }) => {
               className={Global.InputStyle}
             />
           </div>
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="entidadBancariaId" className={Global.LabelStyle}>
                 E.Bancaria
               </label>
-
             </div>
             <div className={Global.ContenedorInput60pct}>
               <label
@@ -512,7 +509,6 @@ const Modal = ({ setModal, modo, objeto }) => {
               <label htmlFor="monedaId" className={Global.LabelStyle}>
                 Moneda
               </label>
-
             </div>
           </div>
           <div className="flex">

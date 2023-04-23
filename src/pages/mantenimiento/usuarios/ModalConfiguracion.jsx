@@ -157,7 +157,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "UsuarioPermiso"]}
           titulo="Configuración de Permisos"
-          tamañoModal={[Global.ModalGrande, Global.FormGrande]}
+          tamañoModal={[Global.ModalGrande, Global.Form]}
         >
           <Mensajes
             tipoMensaje={2}
@@ -171,7 +171,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             cerrar={false}
           />
 
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputMitad}>
               <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
                 Tipo de Usuario

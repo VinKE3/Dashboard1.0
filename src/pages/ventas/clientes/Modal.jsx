@@ -359,7 +359,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <Tabs.Group aria-label="Default tabs" style="underline">
           <Tabs.Item active={true} title="Datos Principales">
             <div className="grid gap-y-3 md:gap-x-2">
-              <div className={Global.ContenedorVarios}>
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.ContenedorInputMitad}>
                   <label
                     htmlFor="tipoDocumentoIdentidadId"
@@ -426,7 +426,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorVarios}>
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.ContenedorInputMitad}>
                   <label htmlFor="telefono" className={Global.LabelStyle}>
                     Teléfono
@@ -483,7 +483,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorVarios}>
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.ContenedorInputTercio}>
                   <label htmlFor="departamentoId" className={Global.LabelStyle}>
                     Dep.
@@ -588,7 +588,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                       className={Global.InputStyle}
                     />
                   </div>
-                  {/* <div className={Global.ContenedorVarios}>
+                  {/* <div className={Global.ContenedorInputs}>
                     <div className={Global.ContenedorInputTercio}>
                       <label
                         htmlFor="departamentoIdDireccion"

@@ -589,7 +589,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Cliente"]}
           titulo="Cliente"
-          tamañoModal={[Global.ModalMediano, Global.FormTabs]}
+          tamañoModal={[Global.ModalMediano, Global.Form]}
         >
           <TabView>
             <TabPanel
@@ -597,8 +597,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               leftIcon="pi pi-user mr-2"
               style={{ color: "green" }}
             >
-              <div className="grid gap-y-3 md:gap-x-2">
-                <div className={Global.ContenedorVarios}>
+              <div
+                className={Global.ContenedorBasico + " grid gap-y-3 md:gap-x-2"}
+              >
+                <div className={Global.ContenedorInputs}>
                   <div className={Global.ContenedorInputMitad}>
                     <label
                       htmlFor="tipoDocumentoIdentidadId"
@@ -664,7 +666,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                   />
                 </div>
-                <div className={Global.ContenedorVarios}>
+                <div className={Global.ContenedorInputs}>
                   <div className={Global.ContenedorInput96}>
                     <label htmlFor="telefono" className={Global.LabelStyle}>
                       Teléfono
@@ -681,7 +683,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       className={Global.InputStyle}
                     />
                   </div>
-                  <div className={Global.ContenedorInputFull}>
+                  <div className={Global.InputFull}>
                     <label
                       htmlFor="correoElectronico"
                       className={Global.LabelStyle}
@@ -742,7 +744,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {modo == "Consultar" ? (
                   ""
                 ) : (
-                  <>
+                  <div className="mb-4">
                     <Mensajes
                       tipoMensaje={2}
                       mensaje={[
@@ -757,8 +759,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarDireccion(e);
                       }}
+                      containerClass=""
                     />
-                  </>
+                  </div>
                 )}
                 {/* Boton */}
 
@@ -844,7 +847,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {modo == "Consultar" ? (
                   ""
                 ) : (
-                  <>
+                  <div className="mb-4">
                     <Mensajes
                       tipoMensaje={2}
                       mensaje={[
@@ -859,8 +862,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarContacto(e);
                       }}
+                      containerClass=""
                     />
-                  </>
+                  </div>
                 )}
                 {/* Boton */}
 
@@ -879,8 +883,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     )}
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
+                    <div className={Global.ContenedorInputs}>
+                      <div className={Global.InputFull}>
                         <label htmlFor="nombres" className={Global.LabelStyle}>
                           Nombres
                         </label>
@@ -918,8 +922,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </div>
                     </div>
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
+                    <div className={Global.ContenedorInputs}>
+                      <div className={Global.InputFull}>
                         <label htmlFor="cargoId" className={Global.LabelStyle}>
                           Cargo
                         </label>
@@ -956,7 +960,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </div>
                     </div>
 
-                    <div className={Global.ContenedorVarios}>
+                    <div className={Global.ContenedorInputs}>
                       <div className={Global.ContenedorInput96}>
                         <label htmlFor="telefono" className={Global.LabelStyle}>
                           Telefono
@@ -974,7 +978,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           className={Global.InputStyle}
                         />
                       </div>
-                      <div className={Global.ContenedorInputFull}>
+                      <div className={Global.InputFull}>
                         <label htmlFor="correo" className={Global.LabelStyle}>
                           Correo
                         </label>
@@ -1050,7 +1054,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {modo == "Consultar" ? (
                   ""
                 ) : (
-                  <>
+                  <div className="mb-4">
                     <Mensajes
                       tipoMensaje={2}
                       mensaje={[
@@ -1065,8 +1069,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarPersonal(e);
                       }}
+                      containerClass=""
                     />
-                  </>
+                  </div>
                 )}
                 {/* Boton */}
 
@@ -1085,8 +1090,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     )}
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
+                    <div className={Global.ContenedorInputs}>
+                      <div className={Global.InputFull}>
                         <label
                           htmlFor="personalId"
                           className={Global.LabelStyle}

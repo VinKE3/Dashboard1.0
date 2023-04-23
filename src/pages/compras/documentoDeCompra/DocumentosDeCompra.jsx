@@ -389,7 +389,7 @@ const DocumentosdeCompra = () => {
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
-              <div className={Global.ContenedorInputFull}>
+              <div className={Global.InputFull}>
                 <label name="tipoDocumentoId" className={Global.LabelStyle}>
                   Proveedor
                 </label>

@@ -34,9 +34,9 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "Usuario/CambiarClave"]}
       titulo="Contraseña"
-      tamañoModal={[Global.ModalPequeño, Global.FormGrande]}
+      tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
-      <div className={Global.ContenedorInputFull}>
+      <div className={Global.InputFull}>
         <label htmlFor="claveAnterior" className={Global.LabelStyle}>
           Clave Anterior
         </label>
@@ -51,7 +51,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           className={Global.InputStyle}
         />
       </div>
-      <div className={Global.ContenedorInputFull}>
+      <div className={Global.InputFull}>
         <label htmlFor="claveNueva" className={Global.LabelStyle}>
           Clave Nueva
         </label>
@@ -66,7 +66,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           className={Global.InputStyle}
         />
       </div>
-      <div className={Global.ContenedorInputFull}>
+      <div className={Global.InputFull}>
         <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle}>
           Confirmar Clave Nueva
         </label>

@@ -481,7 +481,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               style={{ color: "green" }}
             >
               <div className="grid gap-y-3 md:gap-x-2">
-                <div className={Global.ContenedorVarios}>
+                <div className={Global.ContenedorInputs}>
                   <div className={Global.ContenedorInputMitad}>
                     <label
                       htmlFor="tipoDocumentoIdentidadId"
@@ -547,7 +547,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                   />
                 </div>
-                <div className={Global.ContenedorVarios}>
+                <div className={Global.ContenedorInputs}>
                   <div className={Global.ContenedorInput96}>
                     <label htmlFor="telefono" className={Global.LabelStyle}>
                       Teléfono
@@ -564,7 +564,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       className={Global.InputStyle}
                     />
                   </div>
-                  <div className={Global.ContenedorInputFull}>
+                  <div className={Global.InputFull}>
                     <label
                       htmlFor="correoElectronico"
                       className={Global.LabelStyle}
@@ -657,7 +657,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     )}
 
-                    <div className={Global.ContenedorVarios}>
+                    <div className={Global.ContenedorInputs}>
                       <div className={Global.ContenedorInput40pct}>
                         <label htmlFor="monedaId" className={Global.LabelStyle}>
                           Moneda
@@ -676,7 +676,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           ))}
                         </select>
                       </div>
-                      <div className={Global.ContenedorInputFull}>
+                      <div className={Global.InputFull}>
                         <label htmlFor="numero" className={Global.LabelStyle}>
                           Número
                         </label>
@@ -790,8 +790,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     )}
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
+                    <div className={Global.ContenedorInputs}>
+                      <div className={Global.InputFull}>
                         <label htmlFor="nombres" className={Global.LabelStyle}>
                           Nombres
                         </label>
@@ -829,8 +829,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </div>
                     </div>
 
-                    <div className={Global.ContenedorVarios}>
-                      <div className={Global.ContenedorInputFull}>
+                    <div className={Global.ContenedorInputs}>
+                      <div className={Global.InputFull}>
                         <label htmlFor="cargoId" className={Global.LabelStyle}>
                           Cargo
                         </label>
@@ -867,7 +867,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </div>
                     </div>
 
-                    <div className={Global.ContenedorVarios}>
+                    <div className={Global.ContenedorInputs}>
                       <div className={Global.ContenedorInput96}>
                         <label htmlFor="telefono" className={Global.LabelStyle}>
                           Telefono
@@ -885,7 +885,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           className={Global.InputStyle}
                         />
                       </div>
-                      <div className={Global.ContenedorInputFull}>
+                      <div className={Global.InputFull}>
                         <label htmlFor="correo" className={Global.LabelStyle}>
                           Correo
                         </label>

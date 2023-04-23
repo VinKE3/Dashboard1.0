@@ -65,9 +65,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "CuentaCorriente"]}
           titulo="Cuenta Corriente"
-          tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
+          tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInput40pct}>
               <label htmlFor="cuentaCorrienteId" className={Global.LabelStyle}>
                 Código
@@ -84,7 +84,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputFull}>
+            <div className={Global.InputFull}>
               <label
                 htmlFor="tipoCuentaDescripcion"
                 className={Global.LabelStyle}
@@ -124,8 +124,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               </select>
             </div>
           </div>
-          <div className={Global.ContenedorVarios}>
-            <div className={Global.ContenedorInputFull}>
+          <div className={Global.ContenedorInputs}>
+            <div className={Global.InputFull}>
               <label htmlFor="entidadBancariaId" className={Global.LabelStyle}>
                 E.Bancaria
               </label>
@@ -143,7 +143,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 ))}
               </select>
             </div>
-            <div className={Global.ContenedorInputFull}>
+            <div className={Global.InputFull}>
               <label htmlFor="numero" className={Global.LabelStyle}>
                 Número de Cuenta
               </label>

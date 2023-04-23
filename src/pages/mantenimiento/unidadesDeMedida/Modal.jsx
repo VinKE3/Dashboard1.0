@@ -27,9 +27,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "UnidadMedida"]}
       titulo="Unidad de Medida"
-      tamañoModal={[Global.ModalPequeño, Global.FormSimple]}
+      tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
-      <div className={Global.ContenedorVarios}>
+      <div className={Global.ContenedorInputs}>
         <div className={Global.ContenedorInputMitad}>
           <label htmlFor="id" className={Global.LabelStyle}>
             Código
@@ -63,7 +63,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
       </div>
-      <div className={Global.ContenedorInputFull}>
+      <div className={Global.InputFull}>
         <label htmlFor="descripcion" className={Global.LabelStyle}>
           Descripción
         </label>

@@ -39,8 +39,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       menu={["Mantenimiento", "Usuario"]}
       titulo="Usuario"
     >
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputFull}>
+      <div className={Global.ContenedorInputs}>
+        <div className={Global.InputFull}>
           <label htmlFor="id" className={Global.LabelStyle}>
             Código
           </label>
@@ -95,8 +95,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           </label>
         </div>
       </div>
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputFull}>
+      <div className={Global.ContenedorInputs}>
+        <div className={Global.InputFull}>
           <label htmlFor="nick" className={Global.LabelStyle}>
             Nick
           </label>
@@ -113,7 +113,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInputFull}>
+        <div className={Global.InputFull}>
           <label htmlFor="personalId" className={Global.LabelStyle}>
             Personal
           </label>
@@ -131,8 +131,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
       </div>
-      <div className={Global.ContenedorVarios}>
-        <div className={Global.ContenedorInputFull}>
+      <div className={Global.ContenedorInputs}>
+        <div className={Global.InputFull}>
           <label htmlFor="clave" className={Global.LabelStyle}>
             Clave
           </label>
@@ -149,7 +149,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             className={Global.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInputFull}>
+        <div className={Global.InputFull}>
           <label htmlFor="claveConfirmacion" className={Global.LabelStyle}>
             Repetir Clave
           </label>
@@ -167,7 +167,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
       </div>
-      <div className={Global.ContenedorInputFull}>
+      <div className={Global.InputFull}>
         <label htmlFor="observacion" className={Global.LabelStyle}>
           Observacion
         </label>

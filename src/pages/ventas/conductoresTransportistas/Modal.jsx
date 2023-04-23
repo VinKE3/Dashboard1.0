@@ -73,9 +73,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Conductor"]}
           titulo="Conductor"
-          tamañoModal={[Global.ModalMediano, Global.FormGrande]}
+          tamañoModal={[Global.ModalMediano, Global.Form]}
         >
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInput60pct}>
               <label htmlFor="id" className={Global.LabelStyle}>
                 Código
@@ -110,7 +110,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 Activo
               </label>
             </div>
-            <div className={Global.ContenedorInputFull}>
+            <div className={Global.InputFull}>
               <label
                 htmlFor="empresaTransporteId"
                 className={Global.LabelStyle}
@@ -148,7 +148,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               className={Global.InputStyle}
             />
           </div>
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInput42pct}>
               <label
                 htmlFor="numeroDocumentoIdentidad"
@@ -168,7 +168,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputFull}>
+            <div className={Global.InputFull}>
               <label htmlFor="licenciaConducir" className={Global.LabelStyle}>
                 Licencia de Conducir
               </label>
@@ -185,7 +185,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             </div>
           </div>
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputMitad}>
               <label htmlFor="telefono" className={Global.LabelStyle}>
                 Telefono

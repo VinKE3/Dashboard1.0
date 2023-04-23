@@ -40,9 +40,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "EmpresaTransporte"]}
           titulo="Empresa Transporte"
-          tamañoModal={[Global.ModalPequeño, Global.FormGrande]}
+          tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInput72}>
               <label htmlFor="id" className={Global.LabelStyle}>
                 Código
@@ -59,7 +59,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputFull}>
+            <div className={Global.InputFull}>
               <label
                 htmlFor="numeroDocumentoIdentidad"
                 className={Global.LabelStyle}
@@ -95,7 +95,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               className={Global.InputStyle}
             />
           </div>
-          <div className={Global.ContenedorVarios}>
+          <div className={Global.ContenedorInputs}>
             <div className={Global.ContenedorInputMitad}>
               <label htmlFor="telefono" className={Global.LabelStyle}>
                 Telefono
