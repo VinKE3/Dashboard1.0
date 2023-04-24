@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
@@ -40,7 +40,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   return (
     <>
       {Object.entries(dataLinea).length > 0 && (
-        <ModalBasic
+        <ModalCrud
           setModal={setModal}
           setRespuestaModal={setRespuestaModal}
           objeto={data}
@@ -49,60 +49,62 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           titulo="Sublinea"
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.ContenedorInput48}>
-              <label htmlFor="subLineaId" className={Global.LabelStyle}>
-                Código
+          <div className={Global.ContenedorBasico}>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.ContenedorInput48}>
+                <label htmlFor="subLineaId" className={Global.LabelStyle}>
+                  Código
+                </label>
+                <input
+                  type="text"
+                  id="subLineaId"
+                  name="subLineaId"
+                  autoComplete="off"
+                  maxLength="2"
+                  placeholder="00"
+                  readOnly={modo == "Registrar" ? false : true}
+                  defaultValue={data.subLineaId ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="lineaId" className={Global.LabelStyle}>
+                  Línea
+                </label>
+                <select
+                  id="lineaId"
+                  name="lineaId"
+                  onChange={ValidarData}
+                  disabled={modo == "Registrar" ? false : true}
+                  className={Global.InputStyle}
+                >
+                  {dataLinea.map((linea) => (
+                    <option key={linea.id} value={linea.id}>
+                      {linea.descripcion}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex">
+              <label htmlFor="descripcion" className={Global.LabelStyle}>
+                Descripción
               </label>
               <input
                 type="text"
-                id="subLineaId"
-                name="subLineaId"
+                id="descripcion"
+                name="descripcion"
                 autoComplete="off"
-                maxLength="2"
-                placeholder="00"
-                readOnly={modo == "Registrar" ? false : true}
-                defaultValue={data.subLineaId ?? ""}
+                placeholder="Descripción"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.descripcion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="lineaId" className={Global.LabelStyle}>
-                Línea
-              </label>
-              <select
-                id="lineaId"
-                name="lineaId"
-                onChange={ValidarData}
-                disabled={modo == "Registrar" ? false : true}
-                className={Global.InputStyle}
-              >
-                {dataLinea.map((linea) => (
-                  <option key={linea.id} value={linea.id}>
-                    {linea.descripcion}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
-          <div className="flex">
-            <label htmlFor="descripcion" className={Global.LabelStyle}>
-              Descripción
-            </label>
-            <input
-              type="text"
-              id="descripcion"
-              name="descripcion"
-              autoComplete="off"
-              placeholder="Descripción"
-              readOnly={modo == "Consultar" ? true : false}
-              value={data.descripcion ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-        </ModalBasic>
+        </ModalCrud>
       )}
     </>
   );

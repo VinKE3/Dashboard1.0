@@ -463,7 +463,7 @@ const BloquearCompra = () => {
                 <label
                   htmlFor="isBloqueado"
                   className={
-                    Global.LabelCheckStyle + " font-semibold !pb-2"
+                    Global.LabelCheckStyle + " font-semibold"
                   }
                 >
                   Bloquear Todos
@@ -474,7 +474,7 @@ const BloquearCompra = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
-                <label name="tipoDocumentoId" className={Global.LabelStyle}>
+                <label name="tipoDocumentoId" className={Global.LabelStyle + Global.FiltroStyle}>
                   Tipo de Documento:
                 </label>
                 <select
@@ -492,7 +492,7 @@ const BloquearCompra = () => {
                 </select>
               </div>
               <div className={Global.ContenedorInput42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <label htmlFor="fechaInicio" className={Global.LabelStyle + Global.FiltroStyle}>
                   Desde
                 </label>
                 <input
@@ -508,7 +508,7 @@ const BloquearCompra = () => {
                 />
               </div>
               <div className={Global.ContenedorInput42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <label htmlFor="fechaFin" className={Global.LabelStyle + Global.FiltroStyle}>
                   Hasta
                 </label>
                 <input

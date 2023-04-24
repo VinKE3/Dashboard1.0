@@ -246,9 +246,9 @@ const DocumentosdeCompra = () => {
         serie: "",
         numero: "",
         clienteId: "",
-        fechaEmision: "",
-        fechaContable: "",
-        fechaVencimiento: "",
+        fechaEmision: moment().format("YYYY-MM-DD"),
+        fechaContable: moment().format("YYYY-MM-DD"),
+        fechaVencimiento: moment().format("YYYY-MM-DD"),
         proveedorNumeroDocumentoIdentidad: "",
         proveedorDireccion: "",
         tipoCompraId: "",
@@ -390,7 +390,7 @@ const DocumentosdeCompra = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
-                <label name="tipoDocumentoId" className={Global.LabelStyle}>
+                <label name="tipoDocumentoId" className={Global.LabelStyle + Global.FiltroStyle}>
                   Proveedor
                 </label>
                 <input
@@ -403,7 +403,7 @@ const DocumentosdeCompra = () => {
                 />
               </div>
               <div className={Global.ContenedorInput42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <label htmlFor="fechaInicio" className={Global.LabelStyle + Global.FiltroStyle}>
                   Desde
                 </label>
                 <input
@@ -419,7 +419,7 @@ const DocumentosdeCompra = () => {
                 />
               </div>
               <div className={Global.ContenedorInput42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <label htmlFor="fechaFin" className={Global.LabelStyle + Global.FiltroStyle}>
                   Hasta
                 </label>
                 <input

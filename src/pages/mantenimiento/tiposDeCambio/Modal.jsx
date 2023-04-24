@@ -3,7 +3,7 @@ import * as Global from "../../../components/Global";
 import ApiMasy from "../../../api/ApiMasy";
 import moment from "moment";
 import { toast } from "react-toastify";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import { FaSearch } from "react-icons/fa";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
@@ -66,7 +66,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Render
   return (
-    <ModalBasic
+    <ModalCrud
       setModal={setModal}
       setRespuestaModal={setRespuestaModal}
       objeto={data}
@@ -75,61 +75,63 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       titulo="Tipo de Cambio"
       tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
-      <div className="flex">
-        <label htmlFor="id" className={Global.LabelStyle}>
-          Tipo
-        </label>
-        <input
-          type="date"
-          id="id"
-          name="id"
-          readOnly={modo == "Consultar" ? true : false}
-          value={moment(data.id).format("yyyy-MM-DD")}
-          onChange={ValidarData}
-          className={Global.InputBoton}
-        />
-        <button
-          id="consultarTipoCambio"
-          className={Global.BotonBuscar}
-          onClick={(e) => ValidarConsulta(e)}
-          hidden={modo == "Consultar" ? true : false}
-        >
-          <FaSearch></FaSearch>
-        </button>
-      </div>
-      <div className={Global.ContenedorInputs}>
-        <div className={Global.InputFull}>
-          <label htmlFor="precioCompra" className={Global.LabelStyle}>
-            P. Compra
+      <div className={Global.ContenedorBasico}>
+        <div className="flex">
+          <label htmlFor="id" className={Global.LabelStyle}>
+            Tipo
           </label>
           <input
-            type="number"
-            id="precioCompra"
-            name="precioCompra"
-            autoComplete="off"
+            type="date"
+            id="id"
+            name="id"
             readOnly={modo == "Consultar" ? true : false}
-            value={data.precioCompra}
+            value={moment(data.id).format("yyyy-MM-DD")}
             onChange={ValidarData}
-            className={Global.InputStyle}
+            className={Global.InputBoton}
           />
+          <button
+            id="consultarTipoCambio"
+            className={Global.BotonBuscar}
+            onClick={(e) => ValidarConsulta(e)}
+            hidden={modo == "Consultar" ? true : false}
+          >
+            <FaSearch></FaSearch>
+          </button>
         </div>
-        <div className={Global.InputFull}>
-          <label htmlFor="precioVenta" className={Global.LabelStyle}>
-            P.Venta
-          </label>
-          <input
-            type="number"
-            id="precioVenta"
-            name="precioVenta"
-            autoComplete="off"
-            readOnly={modo == "Consultar" ? true : false}
-            value={data.precioVenta}
-            onChange={ValidarData}
-            className={Global.InputStyle}
-          />
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="precioCompra" className={Global.LabelStyle}>
+              P. Compra
+            </label>
+            <input
+              type="number"
+              id="precioCompra"
+              name="precioCompra"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.precioCompra}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.InputFull}>
+            <label htmlFor="precioVenta" className={Global.LabelStyle}>
+              P.Venta
+            </label>
+            <input
+              type="number"
+              id="precioVenta"
+              name="precioVenta"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.precioVenta}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
         </div>
       </div>
-    </ModalBasic>
+    </ModalCrud>
   );
   //#endregion
 };

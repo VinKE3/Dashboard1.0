@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
@@ -40,7 +40,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   return (
     <>
       {Object.entries(dataDepartamento).length > 0 && (
-        <ModalBasic
+        <ModalCrud
           setModal={setModal}
           setRespuestaModal={setRespuestaModal}
           objeto={data}
@@ -49,60 +49,62 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           titulo="Provincia"
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.ContenedorInput48}>
-              <label htmlFor="provinciaId" className={Global.LabelStyle}>
-                Código
+          <div className={Global.ContenedorBasico}>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.ContenedorInput48}>
+                <label htmlFor="provinciaId" className={Global.LabelStyle}>
+                  Código
+                </label>
+                <input
+                  type="text"
+                  id="provinciaId"
+                  name="provinciaId"
+                  autoComplete="off"
+                  maxLength="2"
+                  placeholder="00"
+                  readOnly={modo == "Registrar" ? false : true}
+                  value={data.provinciaId ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="departamentoId" className={Global.LabelStyle}>
+                  Departamento
+                </label>
+                <select
+                  id="departamentoId"
+                  name="departamentoId"
+                  onChange={ValidarData}
+                  disabled={modo == "Registrar" ? false : true}
+                  className={Global.InputStyle}
+                >
+                  {dataDepartamento.map((departamento) => (
+                    <option key={departamento.id} value={departamento.id}>
+                      {departamento.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex">
+              <label htmlFor="nombre" className={Global.LabelStyle}>
+                Provincia
               </label>
               <input
                 type="text"
-                id="provinciaId"
-                name="provinciaId"
+                id="nombre"
+                name="nombre"
                 autoComplete="off"
-                maxLength="2"
-                placeholder="00"
-                readOnly={modo == "Registrar" ? false : true}
-                value={data.provinciaId ?? ""}
+                placeholder="Provincia"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="departamentoId" className={Global.LabelStyle}>
-                Departamento
-              </label>
-              <select
-                id="departamentoId"
-                name="departamentoId"
-                onChange={ValidarData}
-                disabled={modo == "Registrar" ? false : true}
-                className={Global.InputStyle}
-              >
-                {dataDepartamento.map((departamento) => (
-                  <option key={departamento.id} value={departamento.id}>
-                    {departamento.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
-          <div className="flex">
-            <label htmlFor="nombre" className={Global.LabelStyle}>
-              Provincia
-            </label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              autoComplete="off"
-              placeholder="Provincia"
-              readOnly={modo == "Consultar" ? true : false}
-              value={data.nombre ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-        </ModalBasic>
+        </ModalCrud>
       )}
     </>
   );

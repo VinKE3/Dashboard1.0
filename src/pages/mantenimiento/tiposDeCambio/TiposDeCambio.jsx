@@ -271,7 +271,7 @@ const TipodeCambio = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.ContenedorInputsFiltro}>
-                <label htmlFor="anio" className={Global.LabelStyle}>
+                <label htmlFor="anio" className={Global.LabelStyle + Global.FiltroStyle}>
                   Año:
                 </label>
                 <input
@@ -286,7 +286,7 @@ const TipodeCambio = () => {
               </div>
 
               <div className={Global.ContenedorInputsFiltro}>
-                <label id="mes" className={Global.LabelStyle}>
+                <label id="mes" className={Global.LabelStyle + Global.FiltroStyle}>
                   Mes:
                 </label>
                 <select

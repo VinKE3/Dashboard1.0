@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 
@@ -31,7 +31,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Render
   return (
-    <ModalBasic
+    <ModalCrud
       setModal={setModal}
       setRespuestaModal={setRespuestaModal}
       objeto={data}
@@ -39,126 +39,148 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       menu={["Mantenimiento", "Usuario"]}
       titulo="Usuario"
     >
-      <div className={Global.ContenedorInputs}>
-        <div className={Global.InputFull}>
-          <label htmlFor="id" className={Global.LabelStyle}>
-            Código
-          </label>
-          <input
-            type="text"
-            id="id"
-            name="id"
-            placeholder="id"
-            value={data.id ?? ""}
-            autoComplete="off"
-            onKeyUp={uppercase}
-            onChange={ValidarData}
-            readOnly={true}
-            className={Global.InputStyle}
-          />
-        </div>
-        <div className={Global.ContenedorInputMitad}>
-          <div className={Global.LabelStyle}>
-            <Checkbox
-              inputId="isActivo"
-              name="isActivo"
-              readOnly={modo == "Registrar" ? true : false}
-              disabled={modo == "Registrar" ? true : false}
-              value={data.isActivo ? true : false}
-              onChange={(e) => {
-                setChecked(e.checked);
-                ValidarData(e);
-              }}
-              checked={data.isActivo ? checked : ""}
-            ></Checkbox>
+      <div className={Global.ContenedorBasico}>
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="id" className={Global.LabelStyle}>
+              Código
+            </label>
+            <input
+              type="text"
+              id="id"
+              name="id"
+              placeholder="id"
+              value={data.id ?? ""}
+              autoComplete="off"
+              onKeyUp={uppercase}
+              onChange={ValidarData}
+              readOnly={true}
+              className={Global.InputStyle}
+            />
           </div>
-          <label htmlFor="isActivo" className={Global.InputStyle}>
-            Activo{" "}
-          </label>
+          <div className={Global.ContenedorInputMitad}>
+            <div className={Global.LabelStyle}>
+              <Checkbox
+                inputId="isActivo"
+                name="isActivo"
+                readOnly={modo == "Registrar" ? true : false}
+                disabled={modo == "Registrar" ? true : false}
+                value={data.isActivo ? true : false}
+                onChange={(e) => {
+                  setChecked(e.checked);
+                  ValidarData(e);
+                }}
+                checked={data.isActivo ? checked : ""}
+              ></Checkbox>
+            </div>
+            <label htmlFor="isActivo" className={Global.InputStyle}>
+              Activo{" "}
+            </label>
+          </div>
+          <div className={Global.ContenedorInputMitad}>
+            <div className={Global.LabelStyle}>
+              <Checkbox
+                inputId="habilitarAfectarStock"
+                name="habilitarAfectarStock"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.habilitarAfectarStock ?? ""}
+                onChange={(e) => {
+                  setChecked2(e.checked);
+                  ValidarData(e);
+                }}
+                checked={data.habilitarAfectarStock ? checked2 : ""}
+              ></Checkbox>
+            </div>
+            <label
+              htmlFor="habilitarAfectarStock"
+              className={Global.InputStyle}
+            >
+              Afectar Stock
+            </label>
+          </div>
         </div>
-        <div className={Global.ContenedorInputMitad}>
-          <div className={Global.LabelStyle}>
-            <Checkbox
-              inputId="habilitarAfectarStock"
-              name="habilitarAfectarStock"
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="nick" className={Global.LabelStyle}>
+              Nick
+            </label>
+            <input
+              type="text"
+              id="nick"
+              name="nick"
+              placeholder="nick"
+              value={data.nick ?? ""}
+              autoComplete="off"
+              onKeyUp={uppercase}
+              onChange={ValidarData}
               readOnly={modo == "Consultar" ? true : false}
-              value={data.habilitarAfectarStock ?? ""}
-              onChange={(e) => {
-                setChecked2(e.checked);
-                ValidarData(e);
-              }}
-              checked={data.habilitarAfectarStock ? checked2 : ""}
-            ></Checkbox>
+              className={Global.InputStyle}
+            />
           </div>
-          <label htmlFor="habilitarAfectarStock" className={Global.InputStyle}>
-            Afectar Stock
-          </label>
+          <div className={Global.InputFull}>
+            <label htmlFor="personalId" className={Global.LabelStyle}>
+              Personal
+            </label>
+            <input
+              type="text"
+              id="personalId"
+              name="personalId"
+              placeholder="Personal"
+              value={data.personalId ?? ""}
+              autoComplete="off"
+              onKeyUp={uppercase}
+              onChange={ValidarData}
+              readOnly={modo == "Consultar" ? true : false}
+              className={Global.InputStyle}
+            />
+          </div>
         </div>
-      </div>
-      <div className={Global.ContenedorInputs}>
-        <div className={Global.InputFull}>
-          <label htmlFor="nick" className={Global.LabelStyle}>
-            Nick
-          </label>
-          <input
-            type="text"
-            id="nick"
-            name="nick"
-            placeholder="nick"
-            value={data.nick ?? ""}
-            autoComplete="off"
-            onKeyUp={uppercase}
-            onChange={ValidarData}
-            readOnly={modo == "Consultar" ? true : false}
-            className={Global.InputStyle}
-          />
-        </div>
-        <div className={Global.InputFull}>
-          <label htmlFor="personalId" className={Global.LabelStyle}>
-            Personal
-          </label>
-          <input
-            type="text"
-            id="personalId"
-            name="personalId"
-            placeholder="Personal"
-            value={data.personalId ?? ""}
-            autoComplete="off"
-            onKeyUp={uppercase}
-            onChange={ValidarData}
-            readOnly={modo == "Consultar" ? true : false}
-            className={Global.InputStyle}
-          />
-        </div>
-      </div>
-      <div className={Global.ContenedorInputs}>
-        <div className={Global.InputFull}>
-          <label htmlFor="clave" className={Global.LabelStyle}>
-            Clave
-          </label>
-          <input
-            type="password"
-            id="clave"
-            name="clave"
-            placeholder="Clave"
-            value={data.clave ?? ""}
-            autoComplete="off"
-            onKeyUp={uppercase}
-            onChange={ValidarData}
-            readOnly={modo == "Consultar" ? true : false}
-            className={Global.InputStyle}
-          />
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="clave" className={Global.LabelStyle}>
+              Clave
+            </label>
+            <input
+              type="password"
+              id="clave"
+              name="clave"
+              placeholder="Clave"
+              value={data.clave ?? ""}
+              autoComplete="off"
+              onKeyUp={uppercase}
+              onChange={ValidarData}
+              readOnly={modo == "Consultar" ? true : false}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.InputFull}>
+            <label htmlFor="claveConfirmacion" className={Global.LabelStyle}>
+              Repetir Clave
+            </label>
+            <input
+              type="password"
+              id="claveConfirmacion"
+              name="claveConfirmacion"
+              placeholder="Confirmar Clave"
+              value={data.claveConfirmacion ?? ""}
+              autoComplete="off"
+              onKeyUp={uppercase}
+              onChange={ValidarData}
+              readOnly={modo == "Consultar" ? true : false}
+              className={Global.InputStyle}
+            />
+          </div>
         </div>
         <div className={Global.InputFull}>
-          <label htmlFor="claveConfirmacion" className={Global.LabelStyle}>
-            Repetir Clave
+          <label htmlFor="observacion" className={Global.LabelStyle}>
+            Observacion
           </label>
           <input
-            type="password"
-            id="claveConfirmacion"
-            name="claveConfirmacion"
-            placeholder="Confirmar Clave"
-            value={data.claveConfirmacion ?? ""}
+            type="observacion"
+            id="observacion"
+            name="observacion"
+            placeholder="Observacion"
+            value={data.observacion ?? ""}
             autoComplete="off"
             onKeyUp={uppercase}
             onChange={ValidarData}
@@ -167,24 +189,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
       </div>
-      <div className={Global.InputFull}>
-        <label htmlFor="observacion" className={Global.LabelStyle}>
-          Observacion
-        </label>
-        <input
-          type="observacion"
-          id="observacion"
-          name="observacion"
-          placeholder="Observacion"
-          value={data.observacion ?? ""}
-          autoComplete="off"
-          onKeyUp={uppercase}
-          onChange={ValidarData}
-          readOnly={modo == "Consultar" ? true : false}
-          className={Global.InputStyle}
-        />
-      </div>
-    </ModalBasic>
+    </ModalCrud>
   );
   //#endregion
 };

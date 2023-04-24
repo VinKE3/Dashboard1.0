@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import moment from "moment/moment";
-import ModalBasic from "../../components/ModalBasic";
+import ModalCrud from "../../components/ModalCrud";
 import * as Global from "../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 import Ubigeo from "../../components/filtros/Ubigeo";
@@ -101,7 +101,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   return (
     <>
       {Object.entries(dataEstadoCivil).length > 0 && (
-        <ModalBasic
+        <ModalCrud
           setModal={setModal}
           objeto={data}
           modo={modo}
@@ -464,7 +464,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               className={Global.InputStyle}
             />
           </div>
-        </ModalBasic>
+        </ModalCrud>
       )}
     </>
   );

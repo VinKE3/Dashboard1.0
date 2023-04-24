@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import ApiMasy from "../../../api/ApiMasy";
 import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
@@ -150,14 +150,14 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   return (
     <>
       {Object.entries(dataTipoUsuario).length > 0 && (
-        <ModalBasic
+        <ModalCrud
           setModal={setModal}
           setRespuestaModal={setRespuestaModal}
           objeto={data}
           modo={modo}
           menu={["Mantenimiento", "UsuarioPermiso"]}
           titulo="Configuración de Permisos"
-          tamañoModal={[Global.ModalGrande, Global.Form]}
+          tamañoModal={[Global.ModalMediano, Global.Form]}
         >
           <Mensajes
             tipoMensaje={2}
@@ -204,7 +204,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
             </div>
           </div>
 
-          <div className="flex justify-between py-2">
+          <div className="flex justify-between">
             <SelectButton
               value={permisos[selectedMenu] || []}
               optionLabel="name"
@@ -220,7 +220,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
               }}
             />
 
-            <div className="flex max-h-11">
+            <div className="flex max-h-11 font-semibold">
               <div className={Global.CheckStyle}>
                 <Checkbox
                   inputId="all"
@@ -265,7 +265,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
               </Accordion>
             </div>
           </div>
-        </ModalBasic>
+        </ModalCrud>
       )}
     </>
   );

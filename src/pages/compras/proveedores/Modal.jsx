@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import TableBasic from "../../../components/tablas/TableBasic";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -466,13 +466,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   return (
     <>
       {Object.entries(dataTipoDoc).length > 0 && (
-        <ModalBasic
+        <ModalCrud
           setModal={setModal}
           objeto={dataGeneral}
           modo={modo}
           menu={["Mantenimiento", "Proveedor"]}
           titulo="Proveedor"
-          tamañoModal={[Global.ModalGrande, Global.FormTabs]}
+          tamañoModal={[Global.ModalMediano, Global.Form]}
         >
           <TabView>
             <TabPanel
@@ -480,7 +480,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               leftIcon="pi pi-user mr-2"
               style={{ color: "green" }}
             >
-              <div className="grid gap-y-3 md:gap-x-2">
+              <div className={Global.ContenedorBasico}>
                 <div className={Global.ContenedorInputs}>
                   <div className={Global.ContenedorInputMitad}>
                     <label
@@ -624,7 +624,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {modo == "Consultar" ? (
                   ""
                 ) : (
-                  <>
+                  <div className="my-4">
                     <Mensajes
                       tipoMensaje={2}
                       mensaje={[Global.MensajeInformacion]}
@@ -637,8 +637,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarCcorriente(e);
                       }}
+                      containerClass=""
                     />
-                  </>
+                  </div>
                 )}
                 {/* Boton */}
 
@@ -757,7 +758,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {modo == "Consultar" ? (
                   ""
                 ) : (
-                  <>
+                  <div className="my-4">
                     <Mensajes
                       tipoMensaje={2}
                       mensaje={[Global.MensajeInformacion]}
@@ -770,8 +771,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarContacto(e);
                       }}
+                      containerClass=""
                     />
-                  </>
+                  </div>
                 )}
                 {/* Boton */}
 
@@ -956,7 +958,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               ""
             )}
           </TabView>
-        </ModalBasic>
+        </ModalCrud>
       )}
     </>
   );

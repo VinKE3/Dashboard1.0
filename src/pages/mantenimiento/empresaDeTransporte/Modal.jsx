@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
 import Ubigeo from "../../../components/filtros/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
@@ -34,7 +34,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   return (
     <>
       {Object.entries(data).length > 0 && (
-        <ModalBasic
+        <ModalCrud
           setModal={setModal}
           objeto={data}
           modo={modo}
@@ -42,153 +42,155 @@ const Modal = ({ setModal, modo, objeto }) => {
           titulo="Empresa Transporte"
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.ContenedorInput72}>
-              <label htmlFor="id" className={Global.LabelStyle}>
-                Código
-              </label>
-              <input
-                type="text"
-                id="id"
-                name="id"
-                placeholder="id"
-                autoComplete="off"
-                readOnly={true}
-                value={data.id ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
+          <div className={Global.ContenedorBasico}>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.ContenedorInput72}>
+                <label htmlFor="id" className={Global.LabelStyle}>
+                  Código
+                </label>
+                <input
+                  type="text"
+                  id="id"
+                  name="id"
+                  placeholder="id"
+                  autoComplete="off"
+                  readOnly={true}
+                  value={data.id ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputFull}>
+                <label
+                  htmlFor="numeroDocumentoIdentidad"
+                  className={Global.LabelStyle}
+                >
+                  RUC N°
+                </label>
+                <input
+                  type="text"
+                  id="numeroDocumentoIdentidad"
+                  name="numeroDocumentoIdentidad"
+                  placeholder="N° Documento Identidad"
+                  autoComplete="off"
+                  readOnly={modo == "Consultar" ? true : false}
+                  value={data.numeroDocumentoIdentidad ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
             </div>
-            <div className={Global.InputFull}>
-              <label
-                htmlFor="numeroDocumentoIdentidad"
-                className={Global.LabelStyle}
-              >
-                RUC N°
+            <div className="flex">
+              <label htmlFor="nombre" className={Global.LabelStyle}>
+                Razón Social
               </label>
               <input
                 type="text"
-                id="numeroDocumentoIdentidad"
-                name="numeroDocumentoIdentidad"
-                placeholder="N° Documento Identidad"
-                autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
-                value={data.numeroDocumentoIdentidad ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-          <div className="flex">
-            <label htmlFor="nombre" className={Global.LabelStyle}>
-              Razón Social
-            </label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              placeholder="Razón Social"
-              autoComplete="off"
-              readOnly={modo == "Consultar" ? true : false}
-              value={data.nombre ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.ContenedorInputMitad}>
-              <label htmlFor="telefono" className={Global.LabelStyle}>
-                Telefono
-              </label>
-              <input
-                type="text"
-                id="telefono"
-                name="telefono"
-                placeholder="Telefono"
+                id="nombre"
+                name="nombre"
+                placeholder="Razón Social"
                 autoComplete="off"
                 readOnly={modo == "Consultar" ? true : false}
-                value={data.telefono ?? ""}
+                value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputMitad}>
-              <label htmlFor="celular" className={Global.LabelStyle}>
-                Celular
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.ContenedorInputMitad}>
+                <label htmlFor="telefono" className={Global.LabelStyle}>
+                  Telefono
+                </label>
+                <input
+                  type="text"
+                  id="telefono"
+                  name="telefono"
+                  placeholder="Telefono"
+                  autoComplete="off"
+                  readOnly={modo == "Consultar" ? true : false}
+                  value={data.telefono ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.ContenedorInputMitad}>
+                <label htmlFor="celular" className={Global.LabelStyle}>
+                  Celular
+                </label>
+                <input
+                  type="text"
+                  id="celular"
+                  name="celular"
+                  placeholder="Celular"
+                  autoComplete="off"
+                  readOnly={modo == "Consultar" ? true : false}
+                  value={data.celular ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+            </div>
+            <div className="flex">
+              <label htmlFor="correoElectronico" className={Global.LabelStyle}>
+                Email
+              </label>
+              <input
+                type="email"
+                id="correoElectronico"
+                name="correoElectronico"
+                placeholder="Email"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.correoElectronico ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className="flex">
+              <label htmlFor="direccion" className={Global.LabelStyle}>
+                Dirección
               </label>
               <input
                 type="text"
-                id="celular"
-                name="celular"
-                placeholder="Celular"
+                id="direccion"
+                name="direccion"
+                placeholder="Direccion"
                 autoComplete="off"
                 readOnly={modo == "Consultar" ? true : false}
-                value={data.celular ?? ""}
+                value={data.direccion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
             </div>
-          </div>
-          <div className="flex">
-            <label htmlFor="correoElectronico" className={Global.LabelStyle}>
-              Email
-            </label>
-            <input
-              type="email"
-              id="correoElectronico"
-              name="correoElectronico"
-              placeholder="Email"
-              autoComplete="off"
-              readOnly={modo == "Consultar" ? true : false}
-              value={data.correoElectronico ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className="flex">
-            <label htmlFor="direccion" className={Global.LabelStyle}>
-              Dirección
-            </label>
-            <input
-              type="text"
-              id="direccion"
-              name="direccion"
-              placeholder="Direccion"
-              autoComplete="off"
-              readOnly={modo == "Consultar" ? true : false}
-              value={data.direccion ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-          <Ubigeo
-            modo={modo}
-            setDataUbigeo={setDataUbigeo}
-            id={["departamentoId", "provinciaId", "distritoId"]}
-            dato={{
-              departamentoId: data.departamentoId,
-              provinciaId: data.provinciaId,
-              distritoId: data.distritoId,
-            }}
-          ></Ubigeo>
+            <Ubigeo
+              modo={modo}
+              setDataUbigeo={setDataUbigeo}
+              id={["departamentoId", "provinciaId", "distritoId"]}
+              dato={{
+                departamentoId: data.departamentoId,
+                provinciaId: data.provinciaId,
+                distritoId: data.distritoId,
+              }}
+            ></Ubigeo>
 
-          <div className="flex">
-            <label htmlFor="observacion" className={Global.LabelStyle}>
-              Observación
-            </label>
-            <input
-              type="text"
-              id="observacion"
-              name="observacion"
-              placeholder="Observación"
-              autoComplete="off"
-              readOnly={modo == "Consultar" ? true : false}
-              value={data.observacion ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
+            <div className="flex">
+              <label htmlFor="observacion" className={Global.LabelStyle}>
+                Observación
+              </label>
+              <input
+                type="text"
+                id="observacion"
+                name="observacion"
+                placeholder="Observación"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.observacion ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
           </div>
-        </ModalBasic>
+        </ModalCrud>
       )}
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModalBasic from "../../../components/ModalBasic";
+import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
@@ -19,7 +19,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   //#endregion
   return (
-    <ModalBasic
+    <ModalCrud
       setModal={setModal}
       objeto={data}
       modo={modo}
@@ -63,7 +63,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           </div>
         </div>
       </div>
-    </ModalBasic>
+    </ModalCrud>
   );
 };
 
