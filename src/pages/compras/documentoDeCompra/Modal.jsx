@@ -3,14 +3,17 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
 import FiltroOrdenCompra from "../../../components/filtros/FiltroOrdenCompra";
+import Mensajes from "../../../components/Mensajes";
+import TableBasic from "../../../components/tablas/TableBasic";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
-import { FaSearch, FaUndoAlt } from "react-icons/fa";
+import { FaPlus, FaSearch, FaUndoAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
-import Mensajes from "../../../components/Mensajes";
+
 //#region Estilos
+
 const TablaStyle = styled.div`
   & th:first-child {
     display: none;
@@ -203,6 +206,50 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   //#endregion
 
+  //#region Columnas
+  const columnas = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Código",
+      accessor: "codigoBarras",
+    },
+    {
+      Header: "Descripción",
+      accessor: "descripcion",
+    },
+    {
+      Header: "Unidad",
+      accessor: "unidadMedidaDescripcion",
+    },
+    {
+      Header: "Cantidad",
+      accessor: "cantidad",
+    },
+    {
+      Header: "Precio",
+      accessor: "precioUnitario",
+    },
+    {
+      Header: "Importe",
+      accessor: "importe",
+    },
+    {
+      Header: "Acciones",
+      Cell: ({ row }) => (
+        <button
+          onClick={(e) => GetPorId(row.values.id, e)}
+          className={Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1"}
+        >
+          <FaSearch></FaSearch>
+        </button>
+      ),
+    },
+  ];
+  //#endregion
+
   //#region Render
   return (
     <>
@@ -225,7 +272,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             )}
             <div className="grid gap-3">
-              <div className={Global.ContenedorBasico}>
+              <div className={Global.ContenedorBasico + Global.FondoContenedor}>
                 <div className={Global.ContenedorInputs}>
                   <div className={Global.InputFull}>
                     <label htmlFor="id" className={Global.LabelStyle}>
@@ -633,16 +680,20 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico}>
+              <div
+                className={
+                  Global.ContenedorBasico + Global.FondoContenedor + " mt-2"
+                }
+              >
                 <div className={Global.ContenedorInputs}>
                   <div className={Global.InputFull}>
-                    <label htmlFor="id" className={Global.LabelStyle}>
+                    <label htmlFor="descripcion" className={Global.LabelStyle}>
                       Descripción
                     </label>
                     <input
                       type="text"
-                      id="serie"
-                      name="serie"
+                      id="descripcion"
+                      name="descripcion"
                       placeholder="Descripción"
                       autoComplete="off"
                       readOnly={true}
@@ -660,6 +711,87 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </button>
                   </div>
                 </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="id" className={Global.LabelStyle}>
+                      Unidad
+                    </label>
+                    <input
+                      type="number"
+                      id="serie"
+                      name="serie"
+                      autoComplete="off"
+                      readOnly={true}
+                      value={data.serie ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="id" className={Global.LabelStyle}>
+                      Cantidad
+                    </label>
+                    <input
+                      type="number"
+                      id="serie"
+                      name="serie"
+                      placeholder="0"
+                      autoComplete="off"
+                      readOnly={modo != "Consultar" ? false : true}
+                      value={data.serie ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="id" className={Global.LabelStyle}>
+                      P. Unitario
+                    </label>
+                    <input
+                      type="numer"
+                      id="serie"
+                      name="serie"
+                      placeholder="Precio Unitario"
+                      autoComplete="off"
+                      readOnly={modo != "Consultar" ? false : true}
+                      value={data.serie ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="id" className={Global.LabelStyle}>
+                      Importe
+                    </label>
+                    <input
+                      type="number"
+                      id="serie"
+                      name="serie"
+                      placeholder="0"
+                      autoComplete="off"
+                      readOnly={modo != "Consultar" ? false : true}
+                      value={data.serie ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputBoton}
+                    />
+                    <button
+                      id="consultar"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      hidden={modo == "Consultar" ? true : false}
+                      onClick={(e) => AbrirFiltroProveedor(e)}
+                    >
+                      <FaPlus></FaPlus>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+                {/* Tabla */}
+                <TablaStyle>
+                  <TableBasic columnas={columnas} datos={dataDetalle} />
+                </TablaStyle>
+                {/* Tabla */}
               </div>
             </div>
           </ModalCrud>

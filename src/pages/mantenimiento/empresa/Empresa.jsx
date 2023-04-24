@@ -891,7 +891,7 @@ const Empresa = ({ modo }) => {
           leftIcon="pi pi-user mr-2"
           style={{ color: "white" }}
         >
-          <div className={Global.ContenedorBasico}>
+          <div className={Global.ContenedorBasico + " pt-5 rounded-t-none"}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.Input60pct}>
                 <label
@@ -1191,7 +1191,7 @@ const Empresa = ({ modo }) => {
           leftIcon="pi pi-calendar mr-2"
           style={{ color: "white" }}
         >
-          <div className={Global.ContenedorBasico}>
+          <div className={Global.ContenedorBasico + " pt-5 rounded-t-none"}>
             <div className={Global.ContenedorRow + " !gap-x-0 mb-1"}>
               <div className={Global.InputFull}>
                 <label htmlFor="anioHabilitado1" className={Global.LabelStyle}>
@@ -1841,7 +1841,7 @@ const Empresa = ({ modo }) => {
           leftIcon="pi pi-calendar mr-2"
           style={{ color: "white" }}
         >
-          <div className={Global.ContenedorBasico}>
+          <div className={Global.ContenedorBasico + " pt-2 rounded-t-none"}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="card">
                 <h4 className={Global.TituloH4}>IGV</h4>

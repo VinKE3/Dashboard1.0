@@ -1,6 +1,6 @@
 //#region Modal
 export var FondoModal =
-  "justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-900/80 ";
+  "justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-700/60 ";
 export var ModalContent =
   "w-full h-full relative flex flex-col border-none rounded-lg outline-none focus:outline-none bg-gradient-to-b from-neutral-900 to-neutral-800 ";
 export var ModalPequeño =
@@ -21,7 +21,8 @@ export var FormSecundario = "min-w-fit min-h-fit grid gap-y-3 md:gap-x-2 ";
 
 //#region Contendores Inputs
 export var ContenedorBasico =
-  "grid gap-y-3 md:gap-x-2 py-3 px-2 rounded-lg bg-gray-800/90 shadow-md shadow-gray-700/70 ";
+  "grid gap-y-3 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 ";
+export var FondoContenedor = "bg-gray-800/90 shadow-md shadow-gray-700/60 ";
 export var ContenedorInputs = "flex flex-col md:flex-row gap-y-3 md:gap-x-2 ";
 export var ContenedorFiltro =
   "flex flex-col sm:flex-row sm:justify-between my-2 gap-y-3 sm:gap-x-2 md:text-sm ";
@@ -51,11 +52,11 @@ export var InputsFiltro = "flex flex-1 overflow-hidden ";
 export var LabelStyle =
   "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-900/20 border-gray-600 lg:text-sm text-light font-semibold ";
 export var LabelCheckStyle =
-  "rounded-none rounded-r-lg border border-l-0 block flex-1 min-w-0 w-full py-2.5 pr-2.5 pl-1 border-gray-600 text-light md:text-sm leading-normal cursor-pointer ";
+  "rounded-none rounded-r-lg border border-l-0 block flex-1 min-w-0 w-full py-2.5 lg:py-1.5 pr-2.5 pl-1 border-gray-600 text-light md:text-sm leading-normal cursor-pointer ";
 export var InputStyle =
-  "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
+  "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full py-2.5 lg:py-1.5 px-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
 export var InputBoton =
-  "rounded-none border block flex-1 min-w-0 w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
+  "rounded-none border block flex-1 min-w-0 w-full py-2.5 lg:py-1.5 px-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
 export var CheckStyle =
   "flex inline-flex items-center pl-3 pr-1 rounded-l-md border border-r-0 border-gray-600 text-light font-semibold ";
 export var Anidado = "!border-l-0 rounded-l-none ";
