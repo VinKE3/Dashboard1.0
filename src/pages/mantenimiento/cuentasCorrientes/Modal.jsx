@@ -69,7 +69,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         >
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput40pct}>
+              <div className={Global.Input40pct}>
                 <label
                   htmlFor="cuentaCorrienteId"
                   className={Global.LabelStyle}
@@ -109,7 +109,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.ContenedorInput40pct}>
+              <div className={Global.Input40pct}>
                 <label htmlFor="monedaId" className={Global.LabelStyle}>
                   Moneda
                 </label>

@@ -482,7 +482,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             >
               <div className={Global.ContenedorBasico}>
                 <div className={Global.ContenedorInputs}>
-                  <div className={Global.ContenedorInputMitad}>
+                  <div className={Global.InputMitad}>
                     <label
                       htmlFor="tipoDocumentoIdentidadId"
                       className={Global.LabelStyle}
@@ -503,7 +503,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ))}
                     </select>
                   </div>
-                  <div className={Global.ContenedorInputMitad}>
+                  <div className={Global.InputMitad}>
                     <label
                       htmlFor="numeroDocumentoIdentidad"
                       className={Global.LabelStyle}
@@ -525,7 +525,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="consultarApi"
                       hidden={modo == "Consultar" ? true : false}
                       onClick={(e) => ValidarConsultarDocumento(e)}
-                      className={Global.BotonBuscar}
+                      className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
                     >
                       <FaSearch></FaSearch>
                     </button>
@@ -548,7 +548,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={Global.ContenedorInputs}>
-                  <div className={Global.ContenedorInput96}>
+                  <div className={Global.Input96}>
                     <label htmlFor="telefono" className={Global.LabelStyle}>
                       Teléfono
                     </label>
@@ -659,7 +659,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     )}
 
                     <div className={Global.ContenedorInputs}>
-                      <div className={Global.ContenedorInput40pct}>
+                      <div className={Global.Input40pct}>
                         <label htmlFor="monedaId" className={Global.LabelStyle}>
                           Moneda
                         </label>
@@ -809,7 +809,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           className={Global.InputStyle}
                         />
                       </div>
-                      <div className={Global.ContenedorInput96}>
+                      <div className={Global.Input96}>
                         <label
                           htmlFor="numeroDocumentoIdentidad"
                           className={Global.LabelStyle}
@@ -850,7 +850,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           ))}
                         </select>
                       </div>
-                      <div className={Global.ContenedorInput96}>
+                      <div className={Global.Input96}>
                         <label htmlFor="celular" className={Global.LabelStyle}>
                           Celular
                         </label>
@@ -870,7 +870,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </div>
 
                     <div className={Global.ContenedorInputs}>
-                      <div className={Global.ContenedorInput96}>
+                      <div className={Global.Input96}>
                         <label htmlFor="telefono" className={Global.LabelStyle}>
                           Telefono
                         </label>

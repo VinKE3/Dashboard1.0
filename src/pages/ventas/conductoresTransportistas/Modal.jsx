@@ -77,7 +77,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput60pct}>
+              <div className={Global.Input60pct}>
                 <label htmlFor="id" className={Global.LabelStyle}>
                   Código
                 </label>
@@ -93,7 +93,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInput33pct}>
+              <div className={Global.Input33pct}>
                 <div className={Global.LabelStyle}>
                   <Checkbox
                     inputId="isActivo"
@@ -150,7 +150,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput42pct}>
+              <div className={Global.Input42pct}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
                   className={Global.LabelStyle}
@@ -187,7 +187,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="telefono" className={Global.LabelStyle}>
                   Telefono
                 </label>
@@ -203,7 +203,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="celular" className={Global.LabelStyle}>
                   Celular
                 </label>

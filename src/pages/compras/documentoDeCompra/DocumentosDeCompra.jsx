@@ -8,7 +8,7 @@ import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import Modal from "./Modal";
 import moment from "moment";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
@@ -90,33 +90,6 @@ const DocumentosdeCompra = () => {
       GetPermisos();
     }
   }, []);
-  //#endregion
-
-  //#region Funciones API
-  const Listar = async (filtro = "", pagina = 1) => {
-    const result = await ApiMasy.get(
-      `api/Compra/DocumentoCompra/Listar?Pagina=${pagina}${filtro}`
-    );
-    setDatos(result.data.data.data);
-    setTotal(result.data.data.total);
-  };
-  const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${id}`);
-    setObjeto(result.data.data);
-  };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "DocumentoCompra"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
-  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -235,47 +208,111 @@ const DocumentosdeCompra = () => {
   };
   //#endregion
 
-  //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
-    setModo(modo);
-    if (modo == "Registrar") {
-      setObjeto({
-        empresaId: "",
-        proveedorId: "",
-        tipoDocumentoId: "",
-        serie: "",
-        numero: "",
-        clienteId: "",
-        fechaEmision: moment().format("YYYY-MM-DD"),
-        fechaContable: moment().format("YYYY-MM-DD"),
-        fechaVencimiento: moment().format("YYYY-MM-DD"),
-        proveedorNumeroDocumentoIdentidad: "",
-        proveedorDireccion: "",
-        tipoCompraId: "",
-        monedaId: "",
-        tipoCambio: 0,
-        tipoPagoId: "",
-        numeroOperacion: "",
-        cuentaCorrienteId: "",
-        documentoReferenciaId: "",
-        abonar: false,
-        motivoNotaId: "",
-        motivoSustento: "",
-        guiaRemision: "",
-        observacion: "",
-        subTotal: 0,
-        porcentajeIGV: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        total: 0,
-        incluyeIGV: false,
-        afectarStock: false,
-        detalles: []
+  //#region Funciones API
+  const Listar = async (filtro = "", pagina = 1) => {
+    const result = await ApiMasy.get(
+      `api/Compra/DocumentoCompra/Listar?Pagina=${pagina}${filtro}`
+    );
+    setDatos(result.data.data.data);
+    setTotal(result.data.data.total);
+  };
+  const GetPorId = async (id) => {
+    const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${id}`);
+    setObjeto(result.data.data);
+  };
+  const GetPermisos = async () => {
+    const result = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "DocumentoCompra"
+    );
+    setPermisos([
+      result.registrar,
+      result.modificar,
+      result.eliminar,
+      result.consultar,
+      result.anular,
+    ]);
+  };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Compra/DocumentoCompra/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (result.data.messages[0].tipo == 1) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 7000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
       });
+      return false;
     } else {
-      await GetPorId(id);
+      return true;
     }
-    setModal(true);
+  };
+  //#endregion
+
+  //#region Funciones Modal
+  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
+    setModo(modo);
+    switch (accion) {
+      case 0: {
+        setObjeto({
+          empresaId: "",
+          proveedorId: "",
+          tipoDocumentoId: "",
+          serie: "",
+          numero: "",
+          clienteId: "000000",
+          fechaEmision: moment().format("YYYY-MM-DD"),
+          fechaContable: moment().format("YYYY-MM-DD"),
+          fechaVencimiento: moment().format("YYYY-MM-DD"),
+          proveedorNumeroDocumentoIdentidad: "",
+          proveedorDireccion: "",
+          tipoCompraId: "CO",
+          monedaId: "S",
+          tipoCambio: 0,
+          tipoPagoId: "EF",
+          numeroOperacion: "",
+          cuentaCorrienteId: "",
+          documentoReferenciaId: "",
+          abonar: false,
+          motivoNotaId: "",
+          motivoSustento: "",
+          guiaRemision: "",
+          observacion: "",
+          subTotal: 0,
+          porcentajeIGV: 0,
+          montoIGV: 0,
+          totalNeto: 0,
+          total: 0,
+          incluyeIGV: false,
+          afectarStock: false,
+          detalles: [],
+          ordenesCompraRelacionadas: [],
+        });
+        setModal(true);
+        break;
+      }
+      case 1: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          await GetPorId(id);
+          setModal(true);
+        }
+        break;
+      }
+      case 3: {
+        await GetPorId(id);
+        setModal(true);
+        break;
+      }
+      default:
+        break;
+    }
   };
   //#endregion
 
@@ -369,10 +406,10 @@ const DocumentosdeCompra = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Mantenimiento", "Cliente"]}
+          menu={["Compra", "DocumentoCompra"]}
           id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+          ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+          ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
         />
       ),
     },
@@ -390,7 +427,10 @@ const DocumentosdeCompra = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
-                <label name="tipoDocumentoId" className={Global.LabelStyle + Global.FiltroStyle}>
+                <label
+                  name="tipoDocumentoId"
+                  className={Global.LabelStyle + Global.FiltroStyle}
+                >
                   Proveedor
                 </label>
                 <input
@@ -402,8 +442,11 @@ const DocumentosdeCompra = () => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInput42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle + Global.FiltroStyle}>
+              <div className={Global.Input42pct}>
+                <label
+                  htmlFor="fechaInicio"
+                  className={Global.LabelStyle + Global.FiltroStyle}
+                >
                   Desde
                 </label>
                 <input
@@ -418,8 +461,11 @@ const DocumentosdeCompra = () => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInput42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle + Global.FiltroStyle}>
+              <div className={Global.Input42pct}>
+                <label
+                  htmlFor="fechaFin"
+                  className={Global.LabelStyle + Global.FiltroStyle}
+                >
                   Hasta
                 </label>
                 <input
@@ -432,7 +478,9 @@ const DocumentosdeCompra = () => {
                 />
                 <button
                   id="buscar"
-                  className={Global.BotonBuscar}
+                  className={
+                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                  }
                   onClick={FiltradoButton}
                 >
                   <FaSearch />

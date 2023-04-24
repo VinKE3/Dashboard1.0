@@ -491,7 +491,7 @@ const BloquearCompra = () => {
                   ))}
                 </select>
               </div>
-              <div className={Global.ContenedorInput42pct}>
+              <div className={Global.Input42pct}>
                 <label htmlFor="fechaInicio" className={Global.LabelStyle + Global.FiltroStyle}>
                   Desde
                 </label>
@@ -507,7 +507,7 @@ const BloquearCompra = () => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInput42pct}>
+              <div className={Global.Input42pct}>
                 <label htmlFor="fechaFin" className={Global.LabelStyle + Global.FiltroStyle}>
                   Hasta
                 </label>
@@ -521,7 +521,7 @@ const BloquearCompra = () => {
                 />
                 <button
                   id="buscar"
-                  className={Global.BotonBuscar}
+                  className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
                   onClick={FiltradoButton}
                 >
                   <FaSearch />

@@ -6,7 +6,7 @@ const Mensajes = ({ tipoMensaje, mensaje, cerrar = true, Click }) => {
   //#region Funcion cambiar fondo del mensaje
   const FondoColor = (tipoMensaje) => {
     if (tipoMensaje == 1) {
-      return "bg-red-700/90 ";
+      return "bg-red-600/90 ";
     }
     if (tipoMensaje == 2) {
       return "bg-blue-600/80 ";

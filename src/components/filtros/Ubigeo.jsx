@@ -93,7 +93,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#region Render
   return (
     <div className={Global.ContenedorInputs}>
-      <div className={Global.ContenedorInputTercio}>
+      <div className={Global.InputTercio}>
         <label htmlFor={Id[0]} className={Global.LabelStyle}>
           Dep.
         </label>
@@ -111,7 +111,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           ))}
         </select>
       </div>
-      <div className={Global.ContenedorInputTercio}>
+      <div className={Global.InputTercio}>
         <label htmlFor={Id[1]} className={Global.LabelStyle}>
           Prov.
         </label>
@@ -129,7 +129,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           ))}
         </select>
       </div>
-      <div className={Global.ContenedorInputTercio}>
+      <div className={Global.InputTercio}>
         <label htmlFor={Id[2]} className={Global.LabelStyle}>
           Dist.
         </label>

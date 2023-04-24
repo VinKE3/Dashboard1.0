@@ -70,7 +70,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInput42pct}>
+              <div className={Global.Input42pct}>
                 <label htmlFor="abreviatura" className={Global.LabelStyle}>
                   Abreviatura
                 </label>
@@ -109,7 +109,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.ContenedorInput42pct}>
+              <div className={Global.Input42pct}>
                 <label htmlFor="plazo" className={Global.LabelStyle}>
                   Plazo
                 </label>

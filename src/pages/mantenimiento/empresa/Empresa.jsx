@@ -893,7 +893,7 @@ const Empresa = ({ modo }) => {
         >
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput60pct}>
+              <div className={Global.Input60pct}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
                   className={Global.LabelStyle}
@@ -929,7 +929,7 @@ const Empresa = ({ modo }) => {
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput60pct}>
+              <div className={Global.Input60pct}>
                 <label htmlFor="telefono" className={Global.LabelStyle}>
                   Teléfono
                 </label>
@@ -964,7 +964,7 @@ const Empresa = ({ modo }) => {
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput60pct}>
+              <div className={Global.Input60pct}>
                 <label htmlFor="celular" className={Global.LabelStyle}>
                   Celular
                 </label>
@@ -1020,7 +1020,7 @@ const Empresa = ({ modo }) => {
               }}
             ></Ubigeo>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput40pct}>
+              <div className={Global.Input40pct}>
                 <label htmlFor="concarEmpresaId" className={Global.LabelStyle}>
                   Id Concar
                 </label>
@@ -1055,7 +1055,7 @@ const Empresa = ({ modo }) => {
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label
                   htmlFor="concarUsuarioVenta"
                   className={Global.LabelStyle}
@@ -1073,7 +1073,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label
                   htmlFor="concarUsuarioCompra"
                   className={Global.LabelStyle}
@@ -1093,7 +1093,7 @@ const Empresa = ({ modo }) => {
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label
                   htmlFor="concarUsuarioPago"
                   className={Global.LabelStyle}
@@ -1111,7 +1111,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label
                   htmlFor="concarUsuarioCobro"
                   className={Global.LabelStyle}
@@ -1131,7 +1131,7 @@ const Empresa = ({ modo }) => {
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label
                   htmlFor="filtroFechaInicio"
                   className={Global.LabelStyle}
@@ -1154,7 +1154,7 @@ const Empresa = ({ modo }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="filtroFechaFin" className={Global.LabelStyle}>
                   Hasta
                 </label>
@@ -1210,7 +1210,7 @@ const Empresa = ({ modo }) => {
               </div>
 
               <div className="flex">
-                <div className={Global.CheckStyle + Global.CheckAnidado}>
+                <div className={Global.CheckStyle + Global.Anidado}>
                   <Checkbox
                     inputId="todos"
                     name="todos"
@@ -1525,7 +1525,7 @@ const Empresa = ({ modo }) => {
                 />
               </div>
               <div className="flex">
-                <div className={Global.CheckStyle + Global.CheckAnidado}>
+                <div className={Global.CheckStyle + Global.Anidado}>
                   <Checkbox
                     inputId="todos2"
                     name="todos2"
@@ -1877,7 +1877,7 @@ const Empresa = ({ modo }) => {
                           className={Global.InputStyle}
                         />
                       </div>
-                      <div className={Global.ContenedorInput36}>
+                      <div className={Global.Input36}>
                         <label
                           htmlFor="defaultIgv"
                           className={Global.LabelStyle}
@@ -1964,7 +1964,7 @@ const Empresa = ({ modo }) => {
                           className={Global.InputStyle}
                         />
                       </div>
-                      <div className={Global.ContenedorInput36}>
+                      <div className={Global.Input36}>
                         <label
                           htmlFor="defaultRetencion"
                           className={Global.LabelStyle}
@@ -2054,7 +2054,7 @@ const Empresa = ({ modo }) => {
                           className={Global.InputStyle}
                         />
                       </div>
-                      <div className={Global.ContenedorInput36}>
+                      <div className={Global.Input36}>
                         <label
                           htmlFor="defaultDetraccion"
                           className={Global.LabelStyle}
@@ -2144,7 +2144,7 @@ const Empresa = ({ modo }) => {
                           className={Global.InputStyle}
                         />
                       </div>
-                      <div className={Global.ContenedorInput36}>
+                      <div className={Global.Input36}>
                         <label
                           htmlFor="defaultPercepcion"
                           className={Global.LabelStyle}

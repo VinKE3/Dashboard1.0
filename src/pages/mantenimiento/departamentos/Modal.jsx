@@ -32,7 +32,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     >
       <div className={Global.ContenedorBasico}>
         <div className={Global.ContenedorInputs}>
-          <div className={Global.ContenedorInput56}>
+          <div className={Global.Input56}>
             <label htmlFor="id" className={Global.LabelStyle}>
               Código
             </label>

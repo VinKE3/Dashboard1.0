@@ -73,7 +73,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="serie" className={Global.LabelStyle}>
                   Serie
                 </label>
@@ -110,7 +110,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="numero" className={Global.LabelStyle}>
                   Número
                 </label>

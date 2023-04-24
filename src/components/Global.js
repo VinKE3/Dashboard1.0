@@ -1,7 +1,8 @@
 //#region Modal
-export var FondoModal = "justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-900/80 "
+export var FondoModal =
+  "justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-900/80 ";
 export var ModalContent =
-  "w-full h-full relative flex flex-col  border-none rounded-lg outline-none focus:outline-none bg-gradient-to-b from-gray-900 to-gray-800 ";
+  "w-full h-full relative flex flex-col border-none rounded-lg outline-none focus:outline-none bg-gradient-to-b from-neutral-900 to-neutral-800 ";
 export var ModalPequeño =
   "relative h-full md:h-fit w-full md:w-11/12 lg:w-3/4 my-0 mx-auto lg:max-w-3xl";
 export var ModalMediano =
@@ -11,37 +12,39 @@ export var ModalGrande =
 export var ModalFull = "relative h-full w-full my-0 mx-auto";
 export var ModalHeader = "flex pt-4 pb-0 px-4 rounded-tt ";
 export var ModalBody = "h-full w-full overflow-y-auto relative ";
-export var ModalFooter = "flex justify-end mt-3 pb-3 md:pb-2 px-5 ounded-bt ";
-export var Form = "min-w-fit w-full h-full py-4 px-6 ";
+export var ModalFooter =
+  "flex items-center justify-end py-3 md:py-2 px-5 rounded-bt ";
+export var Form = "min-w-fit w-full h-full py-4 px-6 overflow-y-auto ";
 export var FormTabs = "min-w-fit h-full py-0 pt-2 px-4 ";
 export var FormSecundario = "min-w-fit min-h-fit grid gap-y-3 md:gap-x-2 ";
 //#endregion
 
 //#region Contendores Inputs
 export var ContenedorBasico =
-  "grid gap-y-3 md:gap-x-2 py-3 px-2 rounded-lg bg-gray-700/10 shadow-md shadow-black/70 ";
+  "grid gap-y-3 md:gap-x-2 py-3 px-2 rounded-lg bg-gray-800/90 shadow-md shadow-gray-700/70 ";
 export var ContenedorInputs = "flex flex-col md:flex-row gap-y-3 md:gap-x-2 ";
-export var ContenedorRow = "flex flex-row gap-y-3 gap-x-2 ";
-export var InputFull = "flex w-full min-w-min ";
-export var ContenedorInputMitad = "flex min-w-min md:w-1/2";
-export var ContenedorInputTercio = "flex min-w-min md:w-4/12";
-export var ContenedorInput20pct = "flex min-w-min md:w-1/5";
-export var ContenedorInput25pct = "flex min-w-min md:w-1/3";
-export var ContenedorInput33pct = "flex min-w-min md:w-1/4";
-export var ContenedorInput40pct = "flex min-w-min md:w-2/5";
-export var ContenedorInput42pct = "flex min-w-min md:w-5/12";
-export var ContenedorInput60pct = "flex min-w-min md:w-3/5";
-export var ContenedorInput66pct = "flex min-w-min md:w-2/3";
-export var ContenedorInput75pct = "flex min-w-min md:w-3/4";
-export var ContenedorInput80pct = "flex min-w-min md:w-4/5";
-export var ContenedorInput96 = "flex min-w-min md:w-96";
-export var ContenedorInput72 = "flex min-w-min md:w-72";
-export var ContenedorInput56 = "flex min-w-min md:w-56";
-export var ContenedorInput48 = "flex min-w-min md:w-48";
-export var ContenedorInput36 = "flex min-w-min md:w-36";
 export var ContenedorFiltro =
   "flex flex-col sm:flex-row sm:justify-between my-2 gap-y-3 sm:gap-x-2 md:text-sm ";
-export var ContenedorInputsFiltro = "flex flex-1 overflow-hidden ";
+export var ContenedorRow = "flex flex-row gap-y-3 gap-x-2 ";
+export var Input = "flex min-w-min ";
+export var InputFull = "flex w-full min-w-min ";
+export var InputMitad = "flex min-w-min md:w-1/2";
+export var InputTercio = "flex min-w-min md:w-4/12";
+export var Input20pct = "flex min-w-min md:w-1/5";
+export var Input25pct = "flex min-w-min md:w-1/3";
+export var Input33pct = "flex min-w-min md:w-1/4";
+export var Input40pct = "flex min-w-min md:w-2/5";
+export var Input42pct = "flex min-w-min md:w-5/12";
+export var Input60pct = "flex min-w-min md:w-3/5";
+export var Input66pct = "flex min-w-min md:w-2/3";
+export var Input75pct = "flex min-w-min md:w-3/4";
+export var Input80pct = "flex min-w-min md:w-4/5";
+export var Input96 = "flex min-w-min md:w-96";
+export var Input72 = "flex min-w-min md:w-72";
+export var Input56 = "flex min-w-min md:w-56";
+export var Input48 = "flex min-w-min md:w-48";
+export var Input36 = "flex min-w-min md:w-36";
+export var InputsFiltro = "flex flex-1 overflow-hidden ";
 //#endregion
 
 //#region Inputs
@@ -55,7 +58,7 @@ export var InputBoton =
   "rounded-none border block flex-1 min-w-0 w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
 export var CheckStyle =
   "flex inline-flex items-center pl-3 pr-1 rounded-l-md border border-r-0 border-gray-600 text-light font-semibold ";
-export var CheckAnidado = "!border-l-0 rounded-l-none ";
+export var Anidado = "!border-l-0 rounded-l-none ";
 export var SinBorde = "!border-none  ";
 export var FiltroStyle = "!bg-gray-800/70 ";
 //#endregion
@@ -73,8 +76,9 @@ export var BotonCancelarModal =
   "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-2 border-red-600 font-semibold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all md:text-sm duration-150 ";
 export var BotonBasic =
   "flex px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 font-semibold text-gray-100 md:text-sm uppercase ";
-export var BotonBuscar =
-  "px-3 rounded-none rounded-r-lg bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 ";
+export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
+export var BotonPrimary =
+  "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 ";
 export var BotonRegistrar =
   "bg-gradient-to-b from-blue-600 to-blue-800 hover:bg-gradient-to-b hover:from-blue-400 hover:to-blue-600 ";
 export var BotonConfigurar =
@@ -96,7 +100,7 @@ export var CerrarModal =
 //#region Tablas
 export var TablaCabecera =
   "text-left bg-gradient-to-b from-slate-800 to-slate-900";
-export var TablaBody = "bg-gradient-to-b from-secondary-100 to-slate-800";
+export var TablaBody = "bg-gradient-to-b from-gray-800 to-slate-800";
 export var TablaBotonConsultar =
   "w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125";
 export var TablaBotonModificar =

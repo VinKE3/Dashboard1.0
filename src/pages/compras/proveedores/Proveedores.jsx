@@ -244,7 +244,7 @@ const Proveedores = () => {
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
-              <div className={Global.ContenedorInput96}>
+              <div className={Global.Input96}>
                 <label htmlFor="documento" className={Global.LabelStyle + Global.FiltroStyle}>
                   N° Documento
                 </label>
@@ -260,7 +260,7 @@ const Proveedores = () => {
                 />
               </div>
 
-              <div className={Global.ContenedorInputsFiltro}>
+              <div className={Global.InputsFiltro}>
                 <label htmlFor="nombre" className={Global.LabelStyle + Global.FiltroStyle}>
                   Nombre:
                 </label>
@@ -275,7 +275,7 @@ const Proveedores = () => {
                 />
                 <button
                   id="buscar"
-                  className={Global.BotonBuscar}
+                  className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
                   onClick={FiltradoButton}
                 >
                   <FaSearch />

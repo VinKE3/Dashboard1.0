@@ -28,7 +28,7 @@ const FiltroBasico = ({
       />
 
       <button
-        className={Global.BotonBuscar}
+        className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
         id={botonId}
         onClick={FiltradoButton}
       >

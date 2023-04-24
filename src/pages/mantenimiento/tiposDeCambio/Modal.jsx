@@ -91,7 +91,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
           <button
             id="consultarTipoCambio"
-            className={Global.BotonBuscar}
+            className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
             onClick={(e) => ValidarConsulta(e)}
             hidden={modo == "Consultar" ? true : false}
           >

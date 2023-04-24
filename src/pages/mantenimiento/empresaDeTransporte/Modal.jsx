@@ -44,7 +44,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInput72}>
+              <div className={Global.Input72}>
                 <label htmlFor="id" className={Global.LabelStyle}>
                   Código
                 </label>
@@ -97,7 +97,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             </div>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="telefono" className={Global.LabelStyle}>
                   Telefono
                 </label>
@@ -113,7 +113,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="celular" className={Global.LabelStyle}>
                   Celular
                 </label>

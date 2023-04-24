@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaPlus } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 
@@ -13,6 +13,9 @@ const TablaStyle = styled.div`
   }
   & tbody td:first-child {
     display: none;
+  }
+  & th:nth-child(4) {
+    color: transparent;
   }
   & th:last-child {
     width: 40px;
@@ -36,7 +39,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
 
   //#region Funciones Filtrado
   const FiltradoDocumento = async (e) => {
-    let nombre = document.getElementById("nombre");
+    let nombre = document.getElementById("nombre").value;
     let documento = e.target.value;
     clearTimeout(timer);
     setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
@@ -78,8 +81,9 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
       `api/Mantenimiento/Proveedor/Listar?pagina=${pagina}${filtro}`
     );
     let model = result.data.data.data;
-    model.shift();
-    console.log(model);
+    if (filtro == "") {
+      model.shift();
+    }
     setDatos(model);
   };
   const GetPorId = async (id, e) => {
@@ -103,7 +107,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
       accessor: "id",
     },
     {
-      Header: "Número Doc",
+      Header: "N° Documento",
       accessor: "numeroDocumentoIdentidad",
     },
     {
@@ -113,7 +117,10 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
     {
       Header: "-",
       Cell: ({ row }) => (
-        <button onClick={(e) => GetPorId(row.values.id, e)}>
+        <button
+          onClick={(e) => GetPorId(row.values.id, e)}
+          className={Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1"}
+        >
           <FaSearch></FaSearch>
         </button>
       ),
@@ -132,15 +139,24 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
         titulo="Consultar Proveedores"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
-          <div className={""}>
-            <span>Hola</span>
-          </div>
+          <>
+            <button className={Global.BotonOkModal + " flex items-center justify-center"} type="button">
+              <FaPlus></FaPlus>
+              <p className="pl-2">Nuevo</p></button>
+            <button
+              className={Global.BotonCancelarModal}
+              type="button"
+              onClick={() => setModal(false)}
+            >
+              CERRAR
+            </button>
+          </>
         }
       >
         {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.ContenedorInputMitad}>
+              <div className={Global.Input60pct}>
                 <label htmlFor="documento" className={Global.LabelStyle}>
                   N° Documento
                 </label>
@@ -170,7 +186,9 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
                 <button
                   id="consultar"
                   onClick={FiltradoButton}
-                  className={Global.BotonBuscar}
+                  className={
+                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                  }
                 >
                   <FaSearch></FaSearch>
                 </button>

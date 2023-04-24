@@ -31,7 +31,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     >
       <div className={Global.ContenedorBasico}>
         <div className={Global.ContenedorInputs}>
-          <div className={Global.ContenedorInputMitad}>
+          <div className={Global.InputMitad}>
             <label htmlFor="id" className={Global.LabelStyle}>
               Código
             </label>
@@ -47,7 +47,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               className={Global.InputStyle}
             />
           </div>
-          <div className={Global.ContenedorInputMitad}>
+          <div className={Global.InputMitad}>
             <label htmlFor="codigoSunat" className={Global.LabelStyle}>
               Código SUNAT
             </label>

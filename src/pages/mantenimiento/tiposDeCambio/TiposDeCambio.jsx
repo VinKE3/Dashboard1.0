@@ -270,7 +270,7 @@ const TipodeCambio = () => {
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
-              <div className={Global.ContenedorInputsFiltro}>
+              <div className={Global.InputsFiltro}>
                 <label htmlFor="anio" className={Global.LabelStyle + Global.FiltroStyle}>
                   Año:
                 </label>
@@ -285,7 +285,7 @@ const TipodeCambio = () => {
                 />
               </div>
 
-              <div className={Global.ContenedorInputsFiltro}>
+              <div className={Global.InputsFiltro}>
                 <label id="mes" className={Global.LabelStyle + Global.FiltroStyle}>
                   Mes:
                 </label>
@@ -304,7 +304,7 @@ const TipodeCambio = () => {
                 </select>
                 <button
                   id="buscar"
-                  className={Global.BotonBuscar}
+                  className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
                   onClick={FiltradoButton}
                 >
                   <FaSearch />

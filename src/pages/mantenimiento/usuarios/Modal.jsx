@@ -58,7 +58,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               className={Global.InputStyle}
             />
           </div>
-          <div className={Global.ContenedorInputMitad}>
+          <div className={Global.InputMitad}>
             <div className={Global.LabelStyle}>
               <Checkbox
                 inputId="isActivo"
@@ -77,7 +77,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               Activo{" "}
             </label>
           </div>
-          <div className={Global.ContenedorInputMitad}>
+          <div className={Global.InputMitad}>
             <div className={Global.LabelStyle}>
               <Checkbox
                 inputId="habilitarAfectarStock"
