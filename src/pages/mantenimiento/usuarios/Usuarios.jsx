@@ -9,12 +9,13 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import ModalConfiguracion from "./ModalConfiguracion";
 import ModalClave from "./ModalClave";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import * as Global from "../../../components/Global";
+import { ToastContainer, toast } from "react-toastify";
 import { Checkbox } from "primereact/checkbox";
-
+import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../components/Global";
+import store from "store2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -23,14 +24,18 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(2) {
-    width: 100px;
-  }
   & th:nth-child(3) {
-    width: 250px;
+    width: 120px;
   }
   & th:nth-child(4) {
-    width: 250px;
+    text-align: center;
+  }
+  & th:nth-child(5) {
+    text-align: center;
+  }
+  & th:nth-child(6) {
+    width: 70px;
+    text-align: center;
   }
   & th:last-child {
     width: 130px;
@@ -43,60 +48,76 @@ import React from "react";
 
 const Usuarios = () => {
   //#region useState
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
+  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
-  const [objeto, setObjeto] = useState([]);
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [modal, setModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState(false);
+  const [modalClave, setModalClave] = useState(false);
   const [modo, setModo] = useState("Registrar");
-  const [respuestaModal, setRespuestaModal] = useState(false);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const [showModalConfiguracion, setShowModalConfiguracion] = useState(false);
-  const [showModalClave, setShowModalClave] = useState(false);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    filtro;
-  }, [filtro]);
-
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
-  useEffect(() => {
-    modo;
-  }, [modo]);
-
-  useEffect(() => {
-    if (!modal) {
-      Listar(filtro, index);
+    if (visible) {
+      if (!modal) {
+        Listar("", index + 1);
+      }
     }
   }, [modal]);
-
   useEffect(() => {
-    if (!showModalConfiguracion) {
-      Listar(filtro, index);
+    if (visible) {
+      if (!modalConfig) {
+        Listar(filtro, index);
+      }
     }
-  }, [showModalConfiguracion]);
-
+  }, [modalConfig]);
   useEffect(() => {
-    if (!showModalClave) {
-      Listar(filtro, index);
+    if (visible) {
+      if (!modalClave) {
+        Listar(filtro, index);
+      }
     }
-  }, [showModalClave]);
+  }, [modalClave]);
 
   useEffect(() => {
     if (respuestaAlert) {
       Listar(filtro, index);
     }
   }, [respuestaAlert]);
+
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar("", 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      setVisible(true);
+      setPermisos([true, true, true, true, true]);
+      Listar("", 1);
+    } else {
+      GetPermisos();
+    }
+  }, []);
+  //#endregion
 
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
@@ -110,13 +131,34 @@ const Usuarios = () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPorUsuarioId = async (id) => {
+  const GetConfigId = async (id) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/UsuarioPermiso/Listar?usuarioId=${id}`
     );
     setObjeto(result.data.data);
   };
-
+  const GetClaveId = async (id) => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
+    let model = {
+      claveAnterior: result.data.data.clave,
+      claveNueva: "",
+      claveNuevaConfirmacion: "",
+    };
+    setObjeto(model);
+  };
+  const GetPermisos = async () => {
+    const result = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "Usuario"
+    );
+    setPermisos([
+      result.registrar,
+      result.modificar,
+      result.eliminar,
+      result.consultar,
+      result.anular,
+    ]);
+  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -134,18 +176,18 @@ const Usuarios = () => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&nick=${f}`);
-    if (f != "") setIndex(1);
+    if (f != "") setIndex(0);
     const newTimer = setTimeout(() => {
       if (f == "") {
-        Listar("", index);
+        Listar("", index + 1);
       } else {
-        Listar(`&nick=${f}`, index);
+        Listar(`&nick=${f}`, index + 1);
       }
     }, 200);
     setTimer(newTimer);
   };
   const FiltradoButton = () => {
-    setIndex(1);
+    setIndex(0);
     if (filtro == "") {
       Listar("", 1);
     } else {
@@ -158,32 +200,71 @@ const Usuarios = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      setObjeto([]);
+      setObjeto({
+        id: "00",
+        nick: "",
+        observacion: "",
+        isActivo: true,
+        habilitarAfectarStock: true,
+        personalId: "",
+        clave: "",
+        claveConfirmacion: "",
+      });
     } else {
       await GetPorId(id);
     }
     setModal(true);
   };
-
   const AbrirModalConfigurar = async (modo = "Modificar") => {
-    let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
-    setModo(modo);
-    await GetPorUsuarioId(a);
-    setShowModalConfiguracion(true);
-  };
-
-  const AbrirModalClave = async (modo = "Clave") => {
-    let a = document.querySelector("tr.selected-row").firstChild.innerHTML;
-    setModo(modo);
-    if (modo == "Clave") {
-      setObjeto([]);
+    let tabla = document
+      .querySelector("table > tbody")
+      .querySelector("tr.selected-row");
+    if (tabla != null) {
+      if (tabla.classList.contains("selected-row")) {
+        setModo(modo);
+        await GetConfigId(
+          document.querySelector("tr.selected-row").firstChild.innerHTML
+        );
+        setModalConfig(true);
+      }
     } else {
-      await GetPorId(a);
-      ObtenerClaves(a);
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
-    setShowModalClave(true);
   };
-
+  const AbrirModalClave = async (modo = "Modificar") => {
+    let tabla = document
+      .querySelector("table > tbody")
+      .querySelector("tr.selected-row");
+    if (tabla != null) {
+      if (tabla.classList.contains("selected-row")) {
+        setModo(modo);
+        await GetClaveId(
+          document.querySelector("tr.selected-row").firstChild.innerHTML
+        );
+        setModalClave(true);
+      }
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
   //#endregion
 
   //#region Columnas
@@ -204,14 +285,26 @@ const Usuarios = () => {
       Header: "Fecha Inicio",
       accessor: "fechaInicio",
       Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+        return value == null ? (
+          <p className="flex justify-center">--/--/----</p>
+        ) : (
+          <p className="flex justify-center">
+            {moment(value).format("DD/MM/YYYY")}
+          </p>
+        );
       },
     },
     {
       Header: "Fecha Modificacion",
       accessor: "fechaModificacion",
       Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+        return value == null ? (
+          <p className="flex justify-center">--/--/----</p>
+        ) : (
+          <p className="flex justify-center">
+            {moment(value).format("DD/MM/YYYY")}
+          </p>
+        );
       },
     },
 
@@ -220,9 +313,13 @@ const Usuarios = () => {
       accessor: "isActivo",
       Cell: ({ value }) => {
         return value ? (
-          <Checkbox checked={true} />
+          <div className="flex justify-center">
+            <Checkbox checked={true} />
+          </div>
         ) : (
-          <Checkbox checked={false} />
+          <div className="flex justify-center">
+            <Checkbox checked={false} />
+          </div>
         );
       },
     },
@@ -245,89 +342,83 @@ const Usuarios = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Usuarios</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Usuarios</h2>
 
-        {/* Filtro*/}
-        <FiltroBasico
-          textLabel={"Nick"}
-          inputPlaceHolder={"Nick"}
-          inputId={"nick2"}
-          inputName={"nick"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        />
-        {/* Filtro*/}
+            {/* Filtro*/}
+            <FiltroBasico
+              textLabel={"Nick"}
+              inputPlaceHolder={"Nick"}
+              inputId={"nick2"}
+              inputName={"nick"}
+              inputMax={"200"}
+              botonId={"buscar"}
+              FiltradoButton={FiltradoButton}
+              FiltradoKeyPress={FiltradoKeyPress}
+            />
+            {/* Filtro*/}
 
-        {/* Boton */}
-        <div className="flex gap-1">
-          {permisos[0] && (
-            <BotonBasico
-              botonText="Registrar"
-              botonClass={Global.BotonRegistrar}
-              botonIcon={faPlus}
-              click={() => AbrirModal()}
+            {/* Boton */}
+            <div className="flex gap-1">
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Registrar"
+                  botonClass={Global.BotonRegistrar}
+                  botonIcon={faPlus}
+                  click={() => AbrirModal()}
+                />
+              )}
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Configuracion"
+                  botonClass={Global.BotonConfigurar}
+                  botonIcon={faGear}
+                  click={() => AbrirModalConfigurar()}
+                />
+              )}
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Cambiar Contraseña"
+                  botonClass={Global.BotonAgregar}
+                  botonIcon={faKey}
+                  click={() => AbrirModalClave()}
+                />
+              )}
+            </div>
+            {/* Boton */}
+
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
+
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalConfig && (
+            <ModalConfiguracion
+              setModal={setModalConfig}
+              modo={modo}
+              objeto={objeto}
             />
           )}
-          {permisos[0] && (
-            <BotonBasico
-              botonText="Configuracion"
-              botonClass={Global.BotonConfigurar}
-              botonIcon={faGear}
-              click={() => AbrirModalConfigurar()}
-            />
+          {modalClave && (
+            <ModalClave setModal={setModalClave} modo={modo} objeto={objeto} />
           )}
-          {permisos[0] && (
-            <BotonBasico
-              botonText="Cambiar Contraseña"
-              botonClass={Global.BotonCambiarContraseña}
-              botonIcon={faKey}
-              click={() => AbrirModalClave()}
-            />
-          )}
-        </div>
-        {/* Boton */}
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-
-      {modal && (
-        <Modal
-          setModal={setModal}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
       )}
-      {showModalConfiguracion && (
-        <ModalConfiguracion
-          setModal={setShowModalConfiguracion}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
-      )}
-      {showModalClave && (
-        <ModalClave
-          setModal={setShowModalClave}
-          modo={modo}
-          setRespuestaModal={setRespuestaModal}
-          objeto={objeto}
-        />
-      )}
-      <ToastContainer />
     </>
   );
   //#endregion

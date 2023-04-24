@@ -2,16 +2,15 @@ import { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-
+import store from "store2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -19,6 +18,12 @@ const TablaStyle = styled.div`
   }
   & tbody td:first-child {
     display: none;
+  }
+  & th:nth-child(2) {
+    width: 150px;
+  }
+  & th:nth-child(4) {
+    width: 150px;
   }
   & th:last-child {
     width: 130px;
@@ -29,13 +34,11 @@ const TablaStyle = styled.div`
 
 const Correlativos = () => {
   //#region useState
-  const { usuario } = useAuth();
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
-  const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [objeto, setObjeto] = useState([]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
@@ -44,36 +47,43 @@ const Correlativos = () => {
 
   //#region useEffect
   useEffect(() => {
-    if (usuario == "AD") {
-      setPermisos([true, true, true, true]);
-      Listar(filtro, 1);
-    } else {
-      //Consulta a la Api para traer los permisos
-    }
-  }, [usuario]);
-  useEffect(() => {
-    filtro;
-  }, [filtro]);
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
-  useEffect(() => {
-    modo;
-  }, [modo]);
-  useEffect(() => {
-    if (!modal) {
-      Listar(filtro, index + 1);
+    if (visible) {
+      if (!modal) {
+        Listar("", index + 1);
+      }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index + 1);
+      Listar("", index + 1);
     }
   }, [respuestaAlert]);
+
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar("", 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      setVisible(true);
+      setPermisos([true, true, true, true, true]);
+      Listar("", 1);
+    } else {
+      GetPermisos();
+    }
+  }, []);
   //#endregion
 
   //#region Funciones API
@@ -89,42 +99,27 @@ const Correlativos = () => {
       `api/Mantenimiento/Correlativo/${tipoDocumentoId}/${serie}`
     );
     setObjeto(result.data.data);
-    console.log(result.data);
+  };
+  const GetPermisos = async () => {
+    const result = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "Correlativo"
+    );
+    setPermisos([
+      result.registrar,
+      result.modificar,
+      result.eliminar,
+      result.consultar,
+      result.anular,
+    ]);
   };
   //#endregion
 
   //#region Funciones Filtrado
   const FiltradoPaginado = (e) => {
-    let filtro = document.getElementById("descripcion").value;
     let boton = e.selected + 1;
     setIndex(e.selected);
-    if (filtro == "") {
-      Listar("", boton);
-    } else {
-      Listar(`&descripcion=${filtro}`, boton);
-    }
-  };
-  const FiltradoKeyPress = async (e) => {
-    clearTimeout(timer);
-    let f = e.target.value;
-    setFiltro(`&descripcion=${f}`);
-    if (f != "") setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (f == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(`&descripcion=${f}`, index + 1);
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const FiltradoButton = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+    Listar("", boton);
   };
   //#endregion
 
@@ -132,13 +127,12 @@ const Correlativos = () => {
   const AbrirModal = async (tipoDocumentoId, serie, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         tipoDocumentoId: "01",
         tipoDocumentoDescripcion: "",
         serie: "",
         numero: 0,
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(tipoDocumentoId, serie);
     }
@@ -199,48 +193,41 @@ const Correlativos = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Correlativos</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Correlativos</h2>
 
-        {/* Filtro*/}
-        {/* <FiltroBasico
-          textLabel={"Descripción"}
-          inputPlaceHolder={"Descripción"}
-          inputId={"descripcion"}
-          inputName={"descripcion"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        /> */}
-        {/* Filtro*/}
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
 
-        {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )}
-        {/* Boton */}
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-      <ToastContainer />
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

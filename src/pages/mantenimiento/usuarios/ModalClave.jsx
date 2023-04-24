@@ -1,103 +1,89 @@
-import React, { useState, useEffect } from "react";
-import ModalBasic from "../../../components/ModalBasic";
+import React, { useState } from "react";
+import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
-import ApiMasy from "../../../api/ApiMasy";
-import Mensajes from "../../../components/Mensajes";
 
 const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState({
-    claveAnterior: "",
-    claveNueva: "",
-    claveNuevaConfirmacion: "",
-  });
+  const [data, setData] = useState(objeto);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    objeto;
-    if (modo != "Clave") {
-      setData(objeto);
-    }
-  }, [objeto]);
-
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
   //#endregion
 
   //#region Funciones
-  function uppercase(value) {
-    if (value && typeof value === "string") {
-      return value.toUpperCase();
-    }
-    return value;
-  }
-  const handleInputChange = ({ target }) => {
+  const ValidarData = ({ target }) => {
     const value = uppercase(target.value);
     setData({
       ...data,
       [target.name]: value,
     });
   };
-
+  function uppercase(value) {
+    if (value && typeof value === "string") {
+      return value.toUpperCase();
+    }
+    return value;
+  }
   //#endregion
 
   return (
-    <ModalBasic
+    <ModalCrud
       setModal={setModal}
       setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
-      menu={["Mantenimiento", "Usuario"]}
+      menu={["Mantenimiento", "Usuario/CambiarClave"]}
+      titulo="Contraseña"
+      tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
-      <div className={Global.ContenedorInputFull}>
-        <label htmlFor="claveAnterior" className={Global.LabelStyle}>
-          Clave Anterior
-        </label>
-        <input
-          type="text"
-          id="claveAnterior"
-          name="claveAnterior"
-          placeholder="Clave Anterior"
-          value={data.claveAnterior}
-          autoComplete="off"
-          onChange={handleInputChange}
-          className={Global.InputStyle}
-        />
+      <div className={Global.ContenedorBasico}>
+        <div className={Global.InputFull}>
+          <label htmlFor="claveAnterior" className={Global.LabelStyle}>
+            Clave Anterior
+          </label>
+          <input
+            type="text"
+            id="claveAnterior"
+            name="claveAnterior"
+            placeholder="Clave Anterior"
+            value={data.claveAnterior ?? ""}
+            autoComplete="off"
+            onChange={ValidarData}
+            className={Global.InputStyle}
+          />
+        </div>
+        <div className={Global.InputFull}>
+          <label htmlFor="claveNueva" className={Global.LabelStyle}>
+            Clave Nueva
+          </label>
+          <input
+            type="text"
+            id="claveNueva"
+            name="claveNueva"
+            placeholder="Clave Nueva"
+            value={data.claveNueva ?? ""}
+            autoComplete="off"
+            onChange={ValidarData}
+            className={Global.InputStyle}
+          />
+        </div>
+        <div className={Global.InputFull}>
+          <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle}>
+            Confirmar Clave Nueva
+          </label>
+          <input
+            type="text"
+            id="claveNuevaConfirmacion"
+            name="claveNuevaConfirmacion"
+            placeholder="Confirmar Clave Nueva"
+            value={data.claveNuevaConfirmacion ?? ""}
+            autoComplete="off"
+            onChange={ValidarData}
+            className={Global.InputStyle}
+          />
+        </div>
       </div>
-      <div className={Global.ContenedorInputFull}>
-        <label htmlFor="claveNueva" className={Global.LabelStyle}>
-          Clave Nueva
-        </label>
-        <input
-          type="text"
-          id="claveNueva"
-          name="claveNueva"
-          placeholder="Clave Nueva"
-          value={data.claveNueva}
-          autoComplete="off"
-          onChange={handleInputChange}
-          className={Global.InputStyle}
-        />
-      </div>
-      <div className={Global.ContenedorInputFull}>
-        <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle}>
-          Confirmar Clave Nueva
-        </label>
-        <input
-          type="text"
-          id="claveNuevaConfirmacion"
-          name="claveNuevaConfirmacion"
-          placeholder="Confirmar Clave Nueva"
-          value={data.claveNuevaConfirmacion}
-          autoComplete="off"
-          onChange={handleInputChange}
-          className={Global.InputStyle}
-        />
-      </div>
-    </ModalBasic>
+    </ModalCrud>
   );
 };
 

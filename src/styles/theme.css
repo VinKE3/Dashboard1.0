@@ -1623,7 +1623,7 @@
   color: #f88c79;
 }
 .p-selectbutton .p-button {
-  background: #161d21;
+  background: #151E2D;
   border: 2px solid #263238;
   color: #e6e6e6;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s,
@@ -1634,7 +1634,7 @@
   color: #b3b3b3;
 }
 .p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover {
-  background: #0f0f0f;
+  background: #131517;
   border-color: #263238;
   color: #e6e6e6;
 }
@@ -4848,7 +4848,7 @@
   padding: 1rem;
   border: 2px solid #263238;
   color: #e6e6e6;
-  background: #161d21;
+  /* background: #0f0f0f; */
   font-weight: 600;
   border-radius: 6px;
   transition: box-shadow 0.3s;
@@ -4869,14 +4869,14 @@
 .p-accordion
   .p-accordion-header:not(.p-highlight):not(.p-disabled):hover
   .p-accordion-header-link {
-  background: #0f0f0f;
+  /* background: #0f0f0f; */
   border-color: #263238;
   color: #e6e6e6;
 }
 .p-accordion
   .p-accordion-header:not(.p-disabled).p-highlight
   .p-accordion-header-link {
-  background: #161d21;
+  /* background: #161d21; */
   border-color: #263238;
   color: #e6e6e6;
   border-bottom-right-radius: 0;
@@ -4886,13 +4886,13 @@
   .p-accordion-header:not(.p-disabled).p-highlight:hover
   .p-accordion-header-link {
   border-color: #263238;
-  background: #0f0f0f;
+  /* background: #0f0f0f; */
   color: #e6e6e6;
 }
 .p-accordion .p-accordion-content {
   padding: 1rem;
   border: 2px solid #263238;
-  background: #161d21;
+  /* background: #161d21; */
   color: #e6e6e6;
   border-top: 0;
   border-top-right-radius: 0;
@@ -5117,7 +5117,7 @@
   border: solid #263238;
   border-width: 0 0 2px 0;
   border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #263238 rgba(0, 0, 0, 0);
-  background: #161d21;
+  background: transparent;
   color: #b3b3b3;
   padding: 1rem;
   font-weight: 600;
@@ -5135,12 +5135,12 @@
   .p-tabview-nav
   li:not(.p-highlight):not(.p-disabled):hover
   .p-tabview-nav-link {
-  background: #161d21;
+  background: transparent;
   border-color: #fde047;
-  color: #e6e6e6;
+  color: #fde047;
 }
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
-  background: #161d21;
+  background: transparent;
   border-color: #fde047;
   color: #fde047;
 }
@@ -5162,7 +5162,7 @@
 }
 .p-tabview .p-tabview-panels {
   background: none;
-  padding: 1rem;
+  /* padding: 1rem; */
   border: 0 none;
   color: #e6e6e6;
   border-bottom-right-radius: 6px;

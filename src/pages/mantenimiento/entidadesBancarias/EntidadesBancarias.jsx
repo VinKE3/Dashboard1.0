@@ -8,9 +8,10 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import store from "store2";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -29,51 +30,58 @@ const TablaStyle = styled.div`
 
 const EntidadesBancarias = () => {
   //#region useState
-  const { usuario } = useAuth();
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([true, true, true, true]);
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
   useEffect(() => {
-    if (usuario == "AD") {
-      setPermisos([true, true, true, true]);
-      Listar(filtro, 1);
-    } else {
-      //Consulta a la Api para traer los permisos
-    }
-  }, [usuario]);
-  useEffect(() => {
-    filtro;
-  }, [filtro]);
-  useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
-
-  useEffect(() => {
-    modo;
-  }, [modo]);
-  useEffect(() => {
-    if (!modal) {
-      Listar(filtro, index + 1);
+    if (visible) {
+      if (!modal) {
+        Listar("", index + 1);
+      }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index + 1);
+      Listar("", index + 1);
     }
   }, [respuestaAlert]);
+
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar("", 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    if (store.session.get("usuario") == "AD") {
+      setVisible(true);
+      setPermisos([true, true, true, true, true]);
+      Listar("", 1);
+    } else {
+      GetPermisos();
+    }
+  }, []);
   //#endregion
 
   //#region Funciones API
@@ -87,6 +95,19 @@ const EntidadesBancarias = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/EntidadBancaria/${id}`);
     setObjeto(result.data.data);
+  };
+  const GetPermisos = async () => {
+    const result = await GetUsuarioId(
+      store.session.get("usuarioId"),
+      "EntidadBancaria"
+    );
+    setPermisos([
+      result.registrar,
+      result.modificar,
+      result.eliminar,
+      result.consultar,
+      result.anular,
+    ]);
   };
   //#endregion
 
@@ -129,13 +150,12 @@ const EntidadesBancarias = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         id: "00",
         nombre: "",
         numeroDocumentoIdentidad: "",
         tipo: "BANCO",
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(id);
     }
@@ -176,48 +196,54 @@ const EntidadesBancarias = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Entidades Bancarias</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Entidades Bancarias</h2>
 
-        {/* Filtro*/}
-        <FiltroBasico
-          textLabel={"Nombre"}
-          inputPlaceHolder={"Nombre"}
-          inputId={"nombre"}
-          inputName={"nombre"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        />
-        {/* Filtro*/}
+            {/* Filtro*/}
+            <FiltroBasico
+              textLabel={"Nombre"}
+              inputPlaceHolder={"Nombre"}
+              inputId={"nombre"}
+              inputName={"nombre"}
+              inputMax={"200"}
+              botonId={"buscar"}
+              FiltradoButton={FiltradoButton}
+              FiltradoKeyPress={FiltradoKeyPress}
+            />
+            {/* Filtro*/}
 
-        {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )}
-        {/* Boton */}
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
 
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-      <ToastContainer />
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

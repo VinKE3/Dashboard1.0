@@ -32,19 +32,18 @@ const SidebarMenus = ({
   const handleLogout = () => {
     borrarTodosLosTokens();
     window.location.href = "/login";
-    console.log("logout");
   };
 
   return (
     <div
-      className={`h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto top-0 bg-secondary-100 p-4 flex flex-col z-50 
+      className={`h-[100vh] overflow-y-scroll fixed xl:static w-full md:w-[50%] lg:w-[35%] xl:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-100
        ${showMenu ? "left-0" : "-left-full"}
        transition-all`}
     >
       <div className="h-[8vh]  ">
-        <h1 className="text-center text-2xl font-bold text-white h-[6vh] bg-secondary-900 rounded-lg">
+        <h1 className="h-[6vh] text-center text-2xl font-bold text-ligth">
           <Link to={"/"}>
-            AKRON<span className="text-primary text-4xl">.</span>
+            CYKRON<span className="text-primary text-4xl">.</span>
           </Link>
         </h1>
       </div>
@@ -56,14 +55,14 @@ const SidebarMenus = ({
                 <button
                   id={seccion.id}
                   onClick={onClickSubMenu}
-                  className="w-full flex items-center py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors"
+                  className="w-full flex items-center py-2 px-4 rounded-lg hover:bg-secondary-900 transition-colors font-semibold md:font-normal text-lg md:text-base"
                 >
-                  <h1
+                  <span
                     id={seccion.id}
                     className="flex flex-1 items-center gap-4"
                   >
                     {seccion.icon} {seccion.title}
-                  </h1>
+                  </span>
                   <RiArrowRightSLine
                     id={seccion.id}
                     className={`mt-1 ${
@@ -104,7 +103,7 @@ const SidebarMenus = ({
       <div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-4 py-2 px-4 rounded-lg bg-secondary-900 hover:text-primary transition-colors w-full"
+          className="flex items-center gap-4 py-2 px-4 rounded-lg hover:bg-secondary-900 hover:text-primary transition-colors w-full"
         >
           <RiLogoutCircleRLine className="text-primary" /> Cerrar sesión
         </button>

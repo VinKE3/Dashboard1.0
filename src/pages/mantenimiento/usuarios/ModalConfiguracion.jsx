@@ -1,226 +1,140 @@
 import React, { useState, useEffect } from "react";
-import ModalBasic from "../../../components/ModalBasic";
-import * as Global from "../../../components/Global";
+import ModalCrud from "../../../components/ModalCrud";
 import ApiMasy from "../../../api/ApiMasy";
+import * as Global from "../../../components/Global";
+import { Checkbox } from "primereact/checkbox";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { SelectButton } from "primereact/selectbutton";
 import { useMenu } from "../../../context/ContextMenu";
-import { Checkbox } from "primereact/checkbox";
 import Mensajes from "../../../components/Mensajes";
 import { useCallback } from "react";
 
 const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const { getMenu, menu } = useMenu();
-  const [selectedMenu, setSelectedMenu] = useState("");
-  const [value, setValue] = useState([]);
-  const botones = [
-    { name: "Registrar", value: "registrar", id: "registrar" },
-    { name: "Modificar", value: "modificar", id: "modificar" },
-    { name: "Eliminar", value: "eliminar", id: "eliminar" },
-    { name: "Consultar", value: "consultar", id: "consultar" },
-    { name: "Anular", value: "anular", id: "anular" },
-  ];
-  const [checked, setChecked] = useState(false);
-  const [selectedActions, setSelectedActions] = useState({});
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
-  const [tipoUsuarioId, setTipoUsuarioId] = useState("");
-  const [dataPermisos, setDataPermisos] = useState({
-    registrar: false,
-    modificar: false,
-    eliminar: false,
-    consultar: false,
-    anular: false,
-    menuId: "",
-    usuarioId: "",
-  });
-
+  const [permisos, setPermisos] = useState({}); //Listado general de permisos
+  const [selectedMenu, setSelectedMenu] = useState(""); //Menu seleccionado
+  const [selectedButton, setSelectedButton] = useState([]); //Listado de botones seleccionados
+  const [checked, setChecked] = useState(false);
+  const { getMenu, menu } = useMenu();
   //#endregion
-  const convertirASelectActions = useCallback(() => {
-    const permisosValidos = [
-      "registrar",
-      "modificar",
-      "eliminar",
-      "consultar",
-      "anular",
-    ];
-    setSelectedActions((prev) => {
-      const newSelectedActions = {};
-      data.permisos.forEach((permiso) => {
-        const per = Object.keys(permiso)
-          .filter((p) => permisosValidos.includes(p) && permiso[p])
-          .map((p) => p);
-        newSelectedActions[permiso.menuId] = per;
-      });
-      return {
-        ...prev,
-        ...newSelectedActions,
-      };
-    });
-  }, [data, setSelectedActions]);
 
   //#region useEffect
   useEffect(() => {
-    if (Object.entries(value).length > 0) {
+    if (selectedMenu != "") {
       setData((prevData) => {
-        const existingPermiso = prevData.permisos.find(
+        const model = prevData.permisos.find(
           (permiso) => permiso.menuId === selectedMenu
         );
-        if (existingPermiso) {
+        if (model) {
           return {
             ...prevData,
             permisos: prevData.permisos.map((permiso) =>
               permiso.menuId === selectedMenu
                 ? {
                     ...permiso,
-                    registrar: value.includes("registrar"),
-                    modificar: value.includes("modificar"),
-                    eliminar: value.includes("eliminar"),
-                    consultar: value.includes("consultar"),
-                    anular: value.includes("anular"),
+                    registrar: selectedButton.includes("registrar"),
+                    modificar: selectedButton.includes("modificar"),
+                    eliminar: selectedButton.includes("eliminar"),
+                    consultar: selectedButton.includes("consultar"),
+                    anular: selectedButton.includes("anular"),
                   }
                 : permiso
             ),
           };
         } else {
-          const newPermiso = {
+          const model = {
             menuId: selectedMenu,
             usuarioId: data.usuarioId,
-            registrar: value.includes("registrar"),
-            modificar: value.includes("modificar"),
-            eliminar: value.includes("eliminar"),
-            consultar: value.includes("consultar"),
-            anular: value.includes("anular"),
+            registrar: selectedButton.includes("registrar"),
+            modificar: selectedButton.includes("modificar"),
+            eliminar: selectedButton.includes("eliminar"),
+            consultar: selectedButton.includes("consultar"),
+            anular: selectedButton.includes("anular"),
           };
-
           return {
             ...prevData,
-            permisos: [...prevData.permisos, newPermiso],
+            permisos: [...prevData.permisos, model],
           };
         }
       });
     }
-  }, [value]);
-
-  // useEffect(() => {
-  //   if (Object.entries(value).length > 0) {
-  //     setData((prevData) => {
-  //       // Check if the user already has permissions for the selected menu
-  //       const permissionsExist = prevData.permisos.some(
-  //         (permiso) => permiso.menuId === selectedMenu
-  //       );
-
-  //       // If the user doesn't have permissions for the selected menu, add a new permission object to the array
-  //       if (!permissionsExist) {
-  //         const newPermiso = {
-  //           menuId: selectedMenu,
-  //           usuarioId: data.usuarioId,
-  //           registrar: value.includes("registrar"),
-  //           modificar: value.includes("modificar"),
-  //           eliminar: value.includes("eliminar"),
-  //           consultar: value.includes("consultar"),
-  //           anular: value.includes("anular"),
-  //         };
-
-  //         return {
-  //           ...prevData,
-  //           permisos: [...prevData.permisos, newPermiso],
-  //         };
-  //       }
-
-  //       // If the user already has permissions for the selected menu, update the existing permission object
-  //       return {
-  //         ...prevData,
-  //         permisos: prevData.permisos.map((permiso) =>
-  //           permiso.menuId === selectedMenu
-  //             ? {
-  //                 ...permiso,
-  //                 registrar: value.includes("registrar"),
-  //                 modificar: value.includes("modificar"),
-  //                 eliminar: value.includes("eliminar"),
-  //                 consultar: value.includes("consultar"),
-  //                 anular: value.includes("anular"),
-  //               }
-  //             : permiso
-  //         ),
-  //       };
-  //     });
-  //   }
-  // }, [value]);
+  }, [selectedButton]);
 
   useEffect(() => {
-    selectedMenu;
-    setDataPermisos(data.permisos.find((x) => x.menuId === selectedMenu));
-  }, [selectedMenu]);
-
-  useEffect(() => {
-    dataPermisos;
-  }, [dataPermisos]);
-
-  useEffect(() => {
-    data;
     if (Object.entries(data).length > 0) {
       if (document.getElementById("tipoUsuarioId")) {
         document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
       }
     }
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    setTipoUsuarioId(data.tipoUsuarioId);
-  }, [data.tipoUsuarioId]);
+  }, [dataTipoUsuario]);
 
   useEffect(() => {
     getMenu();
     Tablas();
-
     data;
-    if (Object.entries(data).length > 0) {
-      convertirASelectActions();
-    } else {
-      setSelectedActions({});
-    }
+    ListadoPermisos();
   }, []);
-
   //#endregion
 
   //#region Funciones
+  const listaBotones = [
+    { name: "Registrar", value: "registrar", id: "registrar" },
+    { name: "Modificar", value: "modificar", id: "modificar" },
+    { name: "Eliminar", value: "eliminar", id: "eliminar" },
+    { name: "Consultar", value: "consultar", id: "consultar" },
+    { name: "Anular", value: "anular", id: "anular" },
+  ];
+  const listaPermisos = [
+    "registrar",
+    "modificar",
+    "eliminar",
+    "consultar",
+    "anular",
+  ];
+  const ListadoPermisos = useCallback(() => {
+    setPermisos((prev) => {
+      const model = {};
+      data.permisos.forEach((permiso) => {
+        const per = Object.keys(permiso)
+          .filter((p) => listaPermisos.includes(p) && permiso[p])
+          .map((p) => p);
+        model[permiso.menuId] = per;
+      });
+      return {
+        ...prev,
+        ...model,
+      };
+    });
+  }, [data, setPermisos]);
+  const ValidarData = ({ target }) => {
+    setData({
+      ...data,
+      [target.name]: uppercase(target.value),
+    });
+  };
+  const ValidarCheckTodos = (check) => {
+    if (check) {
+      setSelectedButton(listaBotones.map((item) => item.value));
+    } else {
+      setSelectedButton([]);
+    }
+    setChecked(check);
+    setPermisos((prev) => ({
+      ...prev,
+      [selectedMenu]: check ? listaBotones.map((item) => item.value) : [],
+    }));
+  };
+  const ValidarMenu = (e) => {
+    setSelectedMenu(e.target.innerText);
+  };
   function uppercase(value) {
     if (value && typeof value === "string") {
       return value.toUpperCase();
     }
     return value;
   }
-  const handleInputChange = ({ target }) => {
-    const value = uppercase(target.value);
-    setData({
-      ...data,
-      [target.name]: value,
-    });
-  };
-
-  const handleSelectAll = (checked) => {
-    if (checked) {
-      setValue(botones.map((item) => item.value));
-    } else {
-      setValue([]);
-    }
-    setChecked(checked);
-    setSelectedActions((prev) => ({
-      ...prev,
-      [selectedMenu]: checked ? botones.map((item) => item.value) : [],
-    }));
-    console.log(checked, "checked");
-    console.log(value, "value");
-    console.log(selectedActions, "selectedActions");
-  };
-
-  const handleMenuClick = (event) => {
-    setSelectedMenu(event.target.innerText);
-  };
-
   //#endregion
 
   //#region API
@@ -232,121 +146,132 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   };
   //#endregion
 
+  //#region Render
   return (
-    <ModalBasic
-      setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
-      objeto={data}
-      modo={modo}
-      menu={["Mantenimiento", "UsuarioPermiso"]}
-      tamañoModal={[Global.ModalFull]}
-    >
-      <div className={Global.FormTabs}>
-        <Mensajes
-          tipoMensaje={2}
-          mensaje={[
-            "NO CONFIGURADO: No contiene ningún permiso (no configurable).",
-            "ADMINISTRADOR: Se le concede todos los permisos (no configurable).",
-            "MANTENIMIENTO: Se le concede todos los permisos, excepto el Anular (no configurable).",
-            "CONSULTA: Se le concede los permisos de Consultar y Refrescar (no configurable).",
-            "PERSONALIZADO: Se le concede los permisos asignados de la parte inferior (configurable).",
-          ]}
-          cerrar={false}
-        />
-        <div className="flex">
-          <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
-            Tipo de Usuario
-          </label>
-          <select
-            id="tipoUsuarioId"
-            name="tipoUsuarioId"
-            onChange={handleInputChange}
-            className={Global.SelectStyle}
-            value={tipoUsuarioId}
-          >
-            {dataTipoUsuario.map((usuario) => (
-              <option key={usuario.id} value={usuario.id}>
-                {usuario.descripcion}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className={Global.ContenedorInputFull}>
-          <label htmlFor="menus" className={Global.LabelStyle}>
-            Menú:
-          </label>
-          <input
-            type="text"
-            id="menus"
-            name="menus"
-            value={selectedMenu}
-            onChange={handleInputChange}
-            className={Global.InputStyle}
+    <>
+      {Object.entries(dataTipoUsuario).length > 0 && (
+        <ModalCrud
+          setModal={setModal}
+          setRespuestaModal={setRespuestaModal}
+          objeto={data}
+          modo={modo}
+          menu={["Mantenimiento", "UsuarioPermiso"]}
+          titulo="Configuración de Permisos"
+          tamañoModal={[Global.ModalMediano, Global.Form]}
+        >
+          <Mensajes
+            tipoMensaje={2}
+            mensaje={[
+              "NO CONFIGURADO: No contiene ningún permiso (no configurable).",
+              "ADMINISTRADOR: Se le concede todos los permisos (no configurable).",
+              "MANTENIMIENTO: Se le concede todos los permisos, excepto el Anular (no configurable).",
+              "CONSULTA: Se le concede los permisos de Consultar y Refrescar (no configurable).",
+              "PERSONALIZADO: Se le concede los permisos asignados de la parte inferior (configurable).",
+            ]}
+            cerrar={false}
           />
-        </div>
 
-        <div className="card flex justify-content-center gap-3">
-          <div>
-            <SelectButton
-              value={selectedActions[selectedMenu] || []}
-              onChange={(e) => {
-                setSelectedActions((prev) => ({
-                  ...prev,
-                  [selectedMenu]: e.value,
-                }));
-                setValue(e.value);
-                setChecked(e.value.length === botones.length);
-              }}
-              optionLabel="name"
-              options={botones}
-              multiple
-            />
-          </div>
-          <div className="mt-2 ml-2 flex gap-2">
-            <div>
-              <Checkbox
-                onChange={(e) => {
-                  setChecked(e.checked);
-                  handleSelectAll(e.checked);
-                }}
-                checked={checked}
-              ></Checkbox>
-            </div>
-            <div>
-              <label>Todos</label>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="card mt-4">
-            <Accordion>
-              <AccordionTab
-                header={
-                  <div className="flex align-items-center">
-                    <span className=" vertical-align-middle">Menus</span>
-                    <i className="pi pi-cog ml-2"></i>
-                  </div>
-                }
-              >
-                <ul>
-                  {menu.map((item) => (
-                    <li
-                      className="hover:text-primary p-1 border-b"
-                      key={item.id}
-                    >
-                      <button type="button" onClick={handleMenuClick}>
-                        {item.nombre}
-                      </button>
-                    </li>
+          <div className={Global.ContenedorBasico}>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputMitad}>
+                <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
+                  Tipo de Usuario
+                </label>
+                <select
+                  id="tipoUsuarioId"
+                  name="tipoUsuarioId"
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                >
+                  {dataTipoUsuario.map((tipoUsuario) => (
+                    <option key={tipoUsuario.id} value={tipoUsuario.id}>
+                      {tipoUsuario.descripcion}
+                    </option>
                   ))}
-                </ul>
-              </AccordionTab>
-            </Accordion>
+                </select>
+              </div>
+              <div className={Global.InputMitad}>
+                <label htmlFor="menus" className={Global.LabelStyle}>
+                  Menú:
+                </label>
+                <input
+                  type="text"
+                  id="menus"
+                  name="menus"
+                  value={selectedMenu}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <SelectButton
+                value={permisos[selectedMenu] || []}
+                optionLabel="name"
+                options={listaBotones}
+                multiple
+                onChange={(e) => {
+                  setPermisos((prev) => ({
+                    ...prev,
+                    [selectedMenu]: e.value,
+                  }));
+                  setSelectedButton(e.value);
+                  setChecked(e.value.length === listaBotones.length);
+                }}
+              />
+
+              <div className="flex max-h-11 font-semibold">
+                <div className={Global.CheckStyle}>
+                  <Checkbox
+                    inputId="all"
+                    onChange={(e) => {
+                      setChecked(e.checked);
+                      ValidarCheckTodos(e.checked);
+                    }}
+                    checked={checked}
+                  ></Checkbox>
+                </div>
+                <label htmlFor="all" className={Global.LabelCheckStyle}>
+                  Todos
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div className="card mt-4">
+                <Accordion>
+                  <AccordionTab
+                    header={
+                      <div className="flex align-items-center">
+                        <span className=" vertical-align-middle">Menus</span>
+                        <i className="pi pi-cog ml-2"></i>
+                      </div>
+                    }
+                  >
+                    <ul>
+                      {menu.map((item) => (
+                        <li
+                          className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                          key={item.id}
+                          onClick={ValidarMenu}
+                        >
+                          <button type="button" onClick={ValidarMenu}>
+                            {item.nombre}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionTab>
+                </Accordion>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </ModalBasic>
+        </ModalCrud>
+      )}
+    </>
   );
+  //#endregion
 };
 
 export default ModalConfiguracion;

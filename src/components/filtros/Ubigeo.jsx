@@ -3,7 +3,7 @@ import ApiMasy from "../../api/ApiMasy";
 import * as Global from "../../../src/components/Global";
 const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#region useState
-  const [ubigeo, setUbigeo] = useState([]);
+  const [ubigeo, setUbigeo] = useState(dato);
   const [dataDep, setDataDep] = useState([]);
   const [dataProv, setDataProv] = useState([]);
   const [dataDist, setDataDist] = useState([]);
@@ -12,25 +12,20 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region useEffect
   useEffect(() => {
-    dato;
     setUbigeo(dato);
   }, [dato]);
   useEffect(() => {
-    dataDep;
     document.getElementById(Id[0]).value = ubigeo.departamentoId;
     ConsultarProvincia();
   }, [dataDep]);
   useEffect(() => {
-    dataProv;
     document.getElementById(Id[1]).value = ubigeo.provinciaId;
     ConsultarDistrito();
   }, [dataProv]);
   useEffect(() => {
-    dataDist;
     document.getElementById(Id[2]).value = ubigeo.distritoId;
   }, [dataDist]);
   useEffect(() => {
-    ubigeo;
     document.getElementById(Id[0]).value = ubigeo.departamentoId;
     ConsultarProvincia();
   }, [ubigeo]);
@@ -97,8 +92,8 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region Render
   return (
-    <div className={Global.ContenedorVarios}>
-      <div className={Global.ContenedorInputTercio}>
+    <div className={Global.ContenedorInputs}>
+      <div className={Global.InputTercio}>
         <label htmlFor={Id[0]} className={Global.LabelStyle}>
           Dep.
         </label>
@@ -107,7 +102,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           name={Id[0]}
           onChange={Retornar}
           disabled={modo == "Consultar" ? true : false}
-          className={Global.SelectStyle}
+          className={Global.InputStyle}
         >
           {dataDep.map((departamento) => (
             <option key={departamento.id} value={departamento.id}>
@@ -116,7 +111,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           ))}
         </select>
       </div>
-      <div className={Global.ContenedorInputTercio}>
+      <div className={Global.InputTercio}>
         <label htmlFor={Id[1]} className={Global.LabelStyle}>
           Prov.
         </label>
@@ -125,7 +120,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           name={Id[1]}
           onChange={Retornar}
           disabled={modo == "Consultar" ? true : false}
-          className={Global.SelectStyle}
+          className={Global.InputStyle}
         >
           {dataProv.map((provincia) => (
             <option key={provincia.id} value={provincia.id}>
@@ -134,7 +129,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           ))}
         </select>
       </div>
-      <div className={Global.ContenedorInputTercio}>
+      <div className={Global.InputTercio}>
         <label htmlFor={Id[2]} className={Global.LabelStyle}>
           Dist.
         </label>
@@ -143,7 +138,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           name={Id[2]}
           onChange={Retornar}
           disabled={modo == "Consultar" ? true : false}
-          className={Global.SelectStyle}
+          className={Global.InputStyle}
         >
           {Object.entries(dataDist).length > 0 &&
             dataDist.map((distrito) => (

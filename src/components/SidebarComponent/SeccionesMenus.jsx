@@ -7,7 +7,6 @@ import {
   FaMoneyCheck,
   FaFileAlt,
   FaToolbox,
-  FaDollarSign,
 } from "react-icons/fa";
 
 function seccionesList() {
@@ -45,10 +44,6 @@ function seccionesList() {
         {
           path: "/ventas/registro-de-venta-articulo",
           title: "Registro de Venta - Articulo",
-        },
-        {
-          path: "/ventas/bloquear-venta",
-          title: "Bloquear Venta",
         },
       ],
     },
@@ -162,17 +157,6 @@ function seccionesList() {
       ],
     },
     {
-      title: "Finanzas",
-      id: "finanzas",
-      icon: <FaDollarSign className="text-primary" />,
-      items: [
-        {
-          path: "/finanzas/bloquear-movimiento-bancario",
-          title: "Bloquear Movimiento Bancario",
-        },
-      ],
-    },
-    {
       title: "Personal",
       id: "personal",
       icon: <FaUsers className="text-primary" />,
@@ -231,10 +215,6 @@ function seccionesList() {
         {
           path: "/tesoreria/recibo-de-egreso",
           title: "Recibo de Egreso",
-        },
-        {
-          path: "/tesoreria/bloquear-recibo-de-egreso",
-          title: "Bloquear Recibo Egreso",
         },
       ],
     },

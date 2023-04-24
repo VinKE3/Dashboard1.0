@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import store from "store2";
 import { authHelper } from "../helpers/AuthHelper";
 import { RiLogoutCircleRLine } from "react-icons/ri";
+import * as Global from "../components/Global";
 
 const Header = () => {
   const menu = useRef(null);
@@ -42,28 +43,34 @@ const Header = () => {
   const handleLogout = () => {
     borrarTodosLosTokens();
     window.location.href = "/login";
-    console.log("logout");
   };
   return (
-    <header className="h-[10vh] border-b border-b-primario md:p-8 items-center pb-8 lg:pb-0">
-      <nav className=" flex flex-col md:flex-row items-center justify-between">
-        <h1 className="mb-1 font-bold just text-xl">
+    <header className="h-auto py-2 px-3 border-b border-light">
+      <nav className="h-full pb-3 md:pb-0 flex flex-col md:flex-row items-center justify-between">
+        <h1 className="pb-2 md:pb-0 font-bold text-xl">
           Bienvenido{" "}
           <span className="text-primary">{store.session.get("usuario")}</span>
         </h1>
         <div className="card flex justify-content-center gap-2">
           <Menu model={items} popup ref={menu} />
           <Button
-            label="Empresa"
             icon="pi pi-building"
             onClick={(e) => menu.current.toggle(e)}
-          />
+            className={
+              Global.BotonBasic + " " + Global.BotonHeader + " !border-none"
+            }
+          >
+            <span className="hidden sm:block pl-2">EMPRESA</span>
+          </Button>
           <div>
             <Button
               onClick={handleLogout}
-              className="flex items-center font-bold gap-4 py-2 px-4 rounded-lg bg-primary transition-colors w-full text-black"
+              className={
+                Global.BotonBasic + " " + Global.BotonHeader + " !border-none"
+              }
             >
-              <RiLogoutCircleRLine className="text-black" /> Cerrar sesión
+              <RiLogoutCircleRLine className="text-black" />
+              <span className="hidden sm:block pl-2">Cerrar sesión</span>
             </Button>
           </div>
         </div>
