@@ -63,9 +63,6 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
 
   //#region useEffect;
   useEffect(() => {
-    console.log(objetoSeleccion);
-  }, [objetoSeleccion]);
-  useEffect(() => {
     if (refrescar) {
       objetoSeleccion;
       setRefrescar(false);

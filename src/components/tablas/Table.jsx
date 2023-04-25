@@ -87,7 +87,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
 
   //#region Render
   return (
-    <div className="flex flex-col mt-2 overflow-x-auto shadow-md rounded md:text-sm">
+    <div className="flex flex-col overflow-x-auto shadow-md rounded md:text-sm">
       {/* Div Mostrar filas */}
       {/* <div className="flex align-items-center justify-between"> */}
       {/* Div Mostrar Filas */}

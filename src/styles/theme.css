@@ -1554,14 +1554,15 @@
 .p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
   outline: 0 none;
   outline-offset: 0;
-  box-shadow: 0 0 0 1px #fde047;
+
   border-color: #9eade6;
 }
 .p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
   width: 12px;
   height: 12px;
   transition-duration: 0.3s;
-  background-color: #000;
+  background-color: #fde047;
+  border: 6px solid #1c1f20;
 }
 .p-radiobutton .p-radiobutton-box.p-highlight {
   border-color: #fde047;
@@ -1623,7 +1624,7 @@
   color: #f88c79;
 }
 .p-selectbutton .p-button {
-  background: #151E2D;
+  background: #151e2d;
   border: 2px solid #263238;
   color: #e6e6e6;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
-import { FaSearch, FaPlus } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 
@@ -14,12 +14,18 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(4) {
-    color: transparent;
+  & th:nth-child(2) {
+    width: 90px;
+  }
+  & th:nth-child(5),
+  & th:nth-child(6) {
+    width: 80px;
+    text-align: right;
   }
   & th:last-child {
-    width: 40px;
+    width: 60px;
     text-align: center;
+    color: transparent;
   }
 `;
 //#endregion
@@ -38,30 +44,30 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoDocumento = async (e) => {
-    let nombre = document.getElementById("nombre").value;
-    let documento = e.target.value;
+  const FiltradoCodigo = async (e) => {
+    let descripcion = document.getElementById("descripcion").value;
+    let codigo = e.target.value;
     clearTimeout(timer);
-    setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
+    setFiltro(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
     const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
+      if (codigo == "" && descripcion == "") {
         Listar("", 1);
       } else {
-        Listar(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
+        Listar(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
       }
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoNombre = async (e) => {
-    let documento = document.getElementById("documento").value;
-    let nombre = e.target.value;
+  const FiltradoDescripcion = async (e) => {
+    let codigo = document.getElementById("codigoBarras").value;
+    let descripcion = e.target.value;
     clearTimeout(timer);
-    setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
+    setFiltro(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
     const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
+      if (codigo == "" && descripcion == "") {
         Listar("", 1);
       } else {
-        Listar(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
+        Listar(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
       }
     }, 200);
     setTimer(newTimer);
@@ -84,13 +90,19 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
   };
   const GetPorId = async (id, e) => {
     e.preventDefault();
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
+    const result = await ApiMasy.get(`api/Mantenimiento/Articulo/${id}`);
     setObjeto({
-      proveedorId: result.data.data.id,
-      proveedorNumeroDocumentoIdentidad:
-        result.data.data.numeroDocumentoIdentidad,
-      proveedorDireccion: result.data.data.direccionPrincipal,
-      proveedorNombre: result.data.data.nombre,
+      id: result.data.data.id,
+      lineaId: result.data.data.lineaId,
+      subLineaId: result.data.data.subLineaId,
+      articuloId: result.data.data.articuloId,
+      unidadMedidaId: result.data.data.unidadMedidaId,
+      marcaId: result.data.data.marcaId,
+      descripcion: result.data.data.descripcion,
+      codigoBarras: result.data.data.codigoBarras,
+      precioUnitario: result.data.data.precioCompra,
+      unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion ?? result.data.data.unidadMedidaId,
+      stock: result.data.data.stock,
     });
     setModal(false);
   };
@@ -103,22 +115,47 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       accessor: "id",
     },
     {
-      Header: "N° Documento",
-      accessor: "numeroDocumentoIdentidad",
+      Header: "Cod Barra",
+      accessor: "codigoBarras",
     },
     {
-      Header: "Nombre",
-      accessor: "nombre",
+      Header: "Descripción",
+      accessor: "descripcion",
+    },
+    {
+      Header: "Unidad",
+      accessor: "unidadMedidaAbreviatura",
+      Cell: ({ value }) => {
+        return <p className="text-right">{value}</p>;
+      },
+    },
+    {
+      Header: "Stock",
+      accessor: "stock",
+      Cell: ({ value }) => {
+        return <p className="text-right">{value}</p>;
+      },
+    },
+    {
+      Header: "P. Venta",
+      accessor: "precioVenta",
+      Cell: ({ value }) => {
+        return <p className="text-right">{value}</p>;
+      },
     },
     {
       Header: "-",
       Cell: ({ row }) => (
-        <button
-          onClick={(e) => GetPorId(row.values.id, e)}
-          className={Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1"}
-        >
-          <FaSearch></FaSearch>
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={(e) => GetPorId(row.values.id, e)}
+            className={
+              Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1.5"
+            }
+          >
+            <FaSearch></FaSearch>
+          </button>
+        </div>
       ),
     },
   ];
@@ -132,13 +169,10 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Consultar Proveedores"
+        titulo="Buscar Artículo"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
-            <button className={Global.BotonOkModal + " flex items-center justify-center"} type="button">
-              <FaPlus></FaPlus>
-              <p className="pl-2">Nuevo</p></button>
             <button
               className={Global.BotonCancelarModal}
               type="button"
@@ -153,30 +187,30 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.Input60pct}>
-                <label htmlFor="documento" className={Global.LabelStyle}>
-                  N° Documento
+                <label htmlFor="codigoBarras" className={Global.LabelStyle}>
+                  Cod. Barras
                 </label>
                 <input
                   type="text"
-                  id="documento"
-                  name="documento"
-                  placeholder="N° Documento"
+                  id="codigoBarras"
+                  name="codigoBarras"
+                  placeholder="Código Barras"
                   autoComplete="off"
-                  onChange={FiltradoDocumento}
+                  onChange={FiltradoCodigo}
                   className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
-                <label htmlFor="nombre" className={Global.LabelStyle}>
-                  Nombre
+                <label htmlFor="descripcion" className={Global.LabelStyle}>
+                  Descripción
                 </label>
                 <input
                   type="text"
-                  id="nombre"
-                  name="nombre"
-                  placeholder="Nombre"
+                  id="descripcion"
+                  name="descripcion"
+                  placeholder="Descripción"
                   autoComplete="off"
-                  onChange={FiltradoNombre}
+                  onChange={FiltradoDescripcion}
                   className={Global.InputBoton}
                 />
                 <button

@@ -14,7 +14,7 @@ export var ModalHeader = "flex pt-4 pb-0 px-4 rounded-tt ";
 export var ModalBody = "h-full w-full overflow-y-auto relative ";
 export var ModalFooter =
   "flex items-center justify-end py-3 md:py-2 px-5 rounded-bt ";
-export var Form = "min-w-fit w-full h-full py-4 px-6 overflow-y-auto ";
+export var Form = "min-w-fit w-full h-full py-5 px-6 overflow-y-auto ";
 export var FormTabs = "min-w-fit h-full py-0 pt-2 px-4 ";
 export var FormSecundario = "min-w-fit min-h-fit grid gap-y-3 md:gap-x-2 ";
 //#endregion
@@ -62,6 +62,7 @@ export var CheckStyle =
 export var Anidado = "!border-l-0 rounded-l-none ";
 export var SinBorde = "!border-none  ";
 export var FiltroStyle = "!bg-gray-800/70 ";
+export var Disabled = "!bg-gray-800/90 ";
 //#endregion
 
 //#region Titulos H
@@ -76,7 +77,7 @@ export var BotonOkModal =
 export var BotonCancelarModal =
   "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-2 border-red-600 font-semibold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all md:text-sm duration-150 ";
 export var BotonBasic =
-  "flex px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 font-semibold text-gray-100 md:text-sm uppercase ";
+  "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 font-semibold text-gray-100 md:text-sm uppercase ";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
 export var BotonPrimary =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 ";

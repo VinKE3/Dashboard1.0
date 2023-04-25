@@ -3,17 +3,29 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
 import FiltroOrdenCompra from "../../../components/filtros/FiltroOrdenCompra";
+import FiltroArticulo from "../../../components/filtros/FiltroArticulo";
 import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
-import { FaPlus, FaSearch, FaUndoAlt } from "react-icons/fa";
+import { RadioButton } from "primereact/radiobutton";
+import {
+  FaPlus,
+  FaSearch,
+  FaUndoAlt,
+  FaPen,
+  FaTrashAlt,
+  FaTransgenderAlt,
+} from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
+import { toast, ToastContainer } from "react-toastify";
 
 //#region Estilos
 const TablaStyle = styled.div`
+  &thead {
+  }
   & th:first-child {
     display: none;
   }
@@ -24,14 +36,21 @@ const TablaStyle = styled.div`
     width: 120px;
   }
   & th:nth-child(4),
-  & th:nth-child(5),
+  & th:nth-child(5) {
+    width: 80px;
+    min-width: 80px;
+    text-align: center;
+  }
+
   & th:nth-child(6),
   & th:nth-child(7) {
-    width: 90px;
-    text-align: right;
+    width: 144px;
+    min-width: 144px;
+    text-align: center;
   }
   & th:last-child {
-    width: 120px;
+    width: 75px;
+    min-width: 75px;
     text-align: center;
   }
 `;
@@ -43,17 +62,23 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
   const [dataProveedor, setDataProveedor] = useState([]);
   const [dataOC, setDataOC] = useState([]);
+  const [dataArt, setDataArt] = useState([]);
   const [checkVarios, setCheckVarios] = useState(false);
   const [checkIgv, setCheckIgv] = useState(false);
   const [checkStock, setCheckStock] = useState(false);
+  const [checkFiltro, setCheckFiltro] = useState("productos");
+  const [habilitarFiltro, setHabilitarFiltro] = useState(false);
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataTipoComp, setDataTipoComp] = useState([]);
   const [dataTipoPag, setDataTipoPag] = useState([]);
+  const [dataIgv, setDataIgv] = useState([]);
   const [modalProv, setModalProv] = useState(false);
   const [modalOC, setModalOC] = useState(false);
+  const [modalArt, setModalArt] = useState(false);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
+  const [refrescar, setRefrescar] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -63,24 +88,26 @@ const Modal = ({ setModal, modo, objeto }) => {
         data.tipoDocumentoIdentidadId;
     }
   }, [dataTipoDoc]);
-
   useEffect(() => {
     if (document.getElementById("monedaId")) {
       document.getElementById("monedaId").value = data.monedaId;
     }
   }, [dataMoneda]);
-
   useEffect(() => {
     if (document.getElementById("tipoCompraId")) {
       document.getElementById("tipoCompraId").value = data.tipoCompraId;
     }
   }, [dataTipoComp]);
-
   useEffect(() => {
     if (document.getElementById("tipoPagoId")) {
       document.getElementById("tipoPagoId").value = data.tipoPagoId;
     }
   }, [dataTipoPag]);
+  useEffect(() => {
+    if (document.getElementById("porcentajesIGV")) {
+      document.getElementById("porcentajesIGV").value = data.porcentajeIGV;
+    }
+  }, [dataIgv]);
 
   useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
@@ -93,7 +120,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   }, [dataProveedor]);
-
   useEffect(() => {
     if (Object.keys(dataOC).length > 0) {
       setData({
@@ -102,6 +128,24 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   }, [dataOC]);
+  useEffect(() => {
+    console.log("data");
+    console.log(data);
+    console.log("data");
+  }, [data]);
+  useEffect(() => {
+    console.log("dataDetalle");
+    console.log(dataDetalle);
+    console.log("dataDetalle");
+  }, [dataDetalle]);
+
+  useEffect(() => {
+    if (refrescar) {
+      dataDetalle;
+      setDataArt([]);
+      setRefrescar(false);
+    }
+  }, [refrescar]);
 
   useEffect(() => {
     if (modo != "Registrar") {
@@ -137,67 +181,129 @@ const Modal = ({ setModal, modo, objeto }) => {
           proveedorNombre: "CLIENTES VARIOS",
         }));
       } else {
-        setDataProveedor((prevState) => ({
+        setData((prevState) => ({
           ...prevState,
-          proveedorId: "",
-          proveedorNumeroDocumentoIdentidad: "",
-          proveedorDireccion: "",
-          proveedorNombre: "",
+          [target.name]: target.value.toUpperCase(),
         }));
       }
     }
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
-  const ValidarDataIgv = async ({ target }) => {
-    if (target.name == "default") {
-      setObjetoIgv({ ...objetoIgv, [target.name]: target.checked });
+  const ValidarDataArt = async ({ target }) => {
+    if (target.name == "productos") {
+      setCheckFiltro(target.name);
+      setHabilitarFiltro(false);
+      setDataArt([]);
+    } else if (target.name == "variosFiltro") {
+      setCheckFiltro(target.name);
+      setHabilitarFiltro(true);
+      setDataArt({
+        id: "00000000",
+        lineaId: "00",
+        subLineaId: "00",
+        articuloId: "0000",
+        marcaId: 1,
+        codigoBarras: "000000",
+        descripcion: "",
+        stock: "-",
+        unidadMedidaId: "07",
+        unidadMedidaDescripcion: "UNIDAD",
+        cantidad: 0,
+        precioUnitario: 0,
+        importe: 0,
+      });
     } else {
-      setObjetoIgv((prevState) => ({
+      setDataArt((prevState) => ({
         ...prevState,
         [target.name]: target.value.toUpperCase(),
       }));
+      if (
+        target.name == "cantidad" ||
+        target.name == "importe" ||
+        target.name == "precioUnitario"
+      ) {
+        CalcularDetalleMontos(target.name);
+      }
     }
   };
-  const AgregarIgv = async (e, id = "") => {
+  const ValidarDetalle = async () => {
+    if (Object.entries(dataArt).length == 0) {
+      return [false, "Seleccione un Producto"];
+    } else if (dataArt.descripcion == undefined) {
+      return [false, "La descripción no puede estar vacía"];
+    } else if (dataArt.unidadMedidaDescripcion == undefined) {
+      return [false, "La Unidad de Medida no puede estar vacía"];
+    } else if (IsNumeroValido(dataArt.cantidad, false) != "") {
+      document.getElementById("cantidad").focus();
+      return [false, "Cantidad: " + IsNumeroValido(dataArt.cantidad, false)];
+    } else if (IsNumeroValido(dataArt.precioUnitario, false) != "") {
+      document.getElementById("precioUnitario").focus();
+      return [
+        false,
+        "Precio Unitario: " + IsNumeroValido(dataArt.precioUnitario, false),
+      ];
+    } else if (IsNumeroValido(dataArt.importe, false) != "") {
+      document.getElementById("importe").focus();
+      return [false, "Importe: " + IsNumeroValido(dataArt.importe, false)];
+    } else {
+      return [true, ""];
+    }
+  };
+  const AgregarDetalle = async (e) => {
     e.preventDefault();
-    if (e.target.innerText == "AGREGAR") {
-      setObjetoIgv({
-        id: -1,
-        porcentaje: 0,
-        default: false,
-      });
+    let resultado = await ValidarDetalle();
+    if (resultado[0]) {
+      if (dataArt.detalleId != undefined) {
+        // dataDetalle[dataArt.id] = {
+        //   lineaId: dataArt.lineaId,
+        //   subLineaId: dataArt.subLineaId,
+        //   articuloId: dataArt.articuloId,
+        //   unidadMedidaId: dataArt.unidadMedidaId,
+        //   marcaId: dataArt.marcaId,
+        //   descripcion: dataArt.descripcion,
+        //   codigoBarras: dataArt.codigoBarras,
+        //   precioUnitario: dataArt.precioCompra,
+        //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+        //   stock: dataArt.stock,
+        // };
+      } else {
+        dataDetalle.push({
+          id: dataArt.id,
+          lineaId: dataArt.lineaId,
+          subLineaId: dataArt.subLineaId,
+          articuloId: dataArt.articuloId,
+          marcaId: dataArt.marcaId,
+          codigoBarras: dataArt.codigoBarras,
+          descripcion: dataArt.descripcion,
+          stock: dataArt.stock,
+          unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+          unidadMedidaId: dataArt.unidadMedidaId,
+          cantidad: dataArt.cantidad,
+          precioUnitario: dataArt.precioUnitario,
+          montoIgv: dataArt.montoIgv,
+          subTotal: dataArt.subTotal,
+          importe: dataArt.importe,
+        });
+
+        const sumaImportes = dataDetalle.reduce((acumulado, actual) => {
+          return acumulado + actual.importe;
+        }, 0);
+        
+        setRefrescar(true);
+      }
     } else {
-      setObjetoIgv({
-        id: id,
-        porcentaje: dataGeneral.porcentajesIGV[id].porcentaje,
-        default: dataGeneral.porcentajesIGV[id].default,
+      toast.error(resultado[1], {
+        position: "bottom-right",
+        autoClose: 7000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
       });
     }
-    setEstadoIgv(true);
   };
-  const EnviarIgv = async () => {
-    if (objetoIgv.id > -1) {
-      porcentajesIGV[objetoIgv.id] = {
-        porcentaje: objetoIgv.porcentaje,
-        default: objetoIgv.default,
-      };
-    } else {
-      porcentajesIGV.push({
-        porcentaje: objetoIgv.porcentaje,
-        default: objetoIgv.default,
-      });
-    }
-    setDataGeneral({
-      ...dataGeneral,
-      porcentajesIGV,
-    });
-    setRefrescar(true);
-    setEstadoIgv(false);
-  };
-  const EliminarIgv = async (id) => {
+  const EliminarDetalle = async (id) => {
     setRefrescar(true);
     const model = porcentajesIGV.filter((model) => model.id !== id);
     Swal.fire({
@@ -220,6 +326,66 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     });
   };
+  const CalcularDetalleMontos = async (origen) => {
+    let cantidad = parseInt(document.getElementById("cantidad").value || 0);
+    let precioUnitario = parseInt(
+      document.getElementById("precioUnitario").value || 0
+    );
+    let importe = parseInt(document.getElementById("importe").value || 0);
+
+    if (origen == "cantidad" || origen == "precioUnitario") {
+      importe = RedondearNumero(cantidad * precioUnitario, 2);
+    } else {
+      precioUnitario =
+        cantidad != 0 ? RedondearNumero(importe / cantidad, 4) : 0;
+    }
+    let subTotal = RedondearNumero(importe / 1.18, 2);
+    let montoIgv = RedondearNumero(importe - subTotal, 2);
+    setDataArt({
+      ...dataArt,
+      precioUnitario: precioUnitario,
+      importe: importe,
+      cantidad: cantidad,
+      montoIgv: montoIgv,
+      subTotal: subTotal,
+    });
+    if (Object.entries(dataDetalle).length > 0) {
+    } 
+  };
+  const RedondearNumero = (number, precision) => {
+    let shift = function (number, exponent) {
+      let numArray = ("" + number).split("e");
+      return +(
+        numArray[0] +
+        "e" +
+        (numArray[1] ? +numArray[1] + exponent : exponent)
+      );
+    };
+    precision = precision === undefined ? 0 : precision;
+    return shift(Math.round(shift(number, +precision)), -precision);
+  };
+  const IsNumeroValido = (
+    dato,
+    permitirCero = true,
+    permitirNegativos = false
+  ) => {
+    let numero = parseFloat(dato);
+
+    if (isNaN(numero)) {
+      return "El número es requerido.";
+    }
+    if (!permitirCero && numero === 0) {
+      return "El número ingresado debe ser mayor a cero (0.00).";
+    }
+    if (!permitirNegativos && numero < 0) {
+      return "El número ingresado no puede ser negativo.";
+    }
+    return "";
+  };
+  const OcultarMensajes = () => {
+    setMensaje([]);
+    setTipoMensaje(-1);
+  };
   //#endregion
 
   //#region API
@@ -231,6 +397,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataMoneda(result.data.data.monedas);
     setDataTipoComp(result.data.data.tiposCompra);
     setDataTipoPag(result.data.data.tiposPago);
+    setDataIgv(result.data.data.porcentajesIGV);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
@@ -278,6 +445,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       setModalOC(true);
     }
   };
+  const AbrirFiltroArticulo = async (e) => {
+    e.preventDefault();
+    setModalArt(true);
+  };
   //#endregion
 
   //#region Columnas
@@ -312,14 +483,14 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Precio",
       accessor: "precioUnitario",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return <p className="text-right pr-5">{value}</p>;
       },
     },
     {
       Header: "Importe",
       accessor: "importe",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return <p className="text-right pr-5">{value}</p>;
       },
     },
     {
@@ -346,7 +517,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="boton-eliminar"
                   onClick={(e) => {
                     e.preventDefault();
-                    EliminarIgv(row.values.id);
+                    EliminarDetalle(row.values.id);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -373,7 +544,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             modo={modo}
             menu={["Compra", "DocumentoCompra"]}
             titulo="Documentos de Compra"
-            tamañoModal={[Global.ModalFull, Global.Form]}
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
           >
             {tipoMensaje > 0 && (
@@ -384,7 +555,11 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             )}
 
-            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+            <div
+              className={
+                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
+              }
+            >
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="id" className={Global.LabelStyle}>
@@ -510,7 +685,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={true}
                     value={data.proveedorNumeroDocumentoIdentidad ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
                 <div className={Global.InputFull}>
@@ -529,7 +704,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={true}
                     value={dataProveedor.proveedorNombre ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={Global.InputBoton + Global.Disabled}
                   />
                   <button
                     id="consultar"
@@ -706,7 +881,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       }) ?? ""
                     }
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={Global.InputBoton + Global.Disabled}
                   />
                   <button
                     id="consultarOC"
@@ -780,7 +955,51 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
 
-            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+            <div
+              className={
+                Global.ContenedorBasico + " mb-2 " + Global.FondoContenedor
+              }
+            >
+              <div className="flex gap-x-1">
+                <div className={Global.Input + " w-32"}>
+                  <div className={Global.CheckStyle}>
+                    <RadioButton
+                      inputId="productos"
+                      name="productos"
+                      disabled={modo == "Consultar" ? true : false}
+                      onChange={(e) => {
+                        ValidarDataArt(e);
+                      }}
+                      checked={checkFiltro == "productos" ? true : ""}
+                    ></RadioButton>
+                  </div>
+                  <label
+                    htmlFor="productos"
+                    className={Global.LabelCheckStyle + " !py-1 "}
+                  >
+                    Productos
+                  </label>
+                </div>
+                <div className={Global.Input + " w-32"}>
+                  <div className={Global.CheckStyle}>
+                    <RadioButton
+                      inputId="variosFiltro"
+                      name="variosFiltro"
+                      disabled={modo == "Consultar" ? true : false}
+                      onChange={(e) => {
+                        ValidarDataArt(e);
+                      }}
+                      checked={checkFiltro == "variosFiltro" ? true : ""}
+                    ></RadioButton>
+                  </div>
+                  <label
+                    htmlFor="variosFiltro"
+                    className={Global.LabelCheckStyle + " !py-1 "}
+                  >
+                    Varios
+                  </label>
+                </div>
+              </div>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="descripcion" className={Global.LabelStyle}>
@@ -792,100 +1011,181 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="descripcion"
                     placeholder="Descripción"
                     autoComplete="off"
-                    readOnly={true}
-                    value={data.serie ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputBoton}
+                    readOnly={!habilitarFiltro ? true : false}
+                    value={dataArt.descripcion ?? ""}
+                    onChange={ValidarDataArt}
+                    className={
+                      !habilitarFiltro
+                        ? Global.InputBoton + Global.Disabled
+                        : Global.InputBoton
+                    }
                   />
                   <button
                     id="consultar"
                     className={Global.BotonBuscar + Global.BotonPrimary}
+                    disabled={!habilitarFiltro ? false : true}
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => AbrirFiltroProveedor(e)}
+                    onClick={(e) => AbrirFiltroArticulo(e)}
                   >
                     <FaSearch></FaSearch>
                   </button>
                 </div>
-              </div>
-              <div className={Global.ContenedorInputs}>
                 <div className={Global.Input25pct}>
-                  <label htmlFor="id" className={Global.LabelStyle}>
-                    Unidad
+                  <label htmlFor="stock" className={Global.LabelStyle}>
+                    Stock
                   </label>
                   <input
-                    type="number"
-                    id="serie"
-                    name="serie"
+                    type="stock"
+                    id="stock"
+                    name="stock"
                     autoComplete="off"
                     readOnly={true}
-                    value={data.serie ?? ""}
-                    onChange={ValidarData}
+                    value={dataArt.stock ?? ""}
+                    onChange={ValidarDataArt}
                     className={Global.InputStyle}
                   />
                 </div>
+              </div>
+
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.Input25pct}>
-                  <label htmlFor="id" className={Global.LabelStyle}>
+                  <label
+                    htmlFor="unidadMedidaDescripcion"
+                    className={Global.LabelStyle}
+                  >
+                    Unidad
+                  </label>
+                  <input
+                    type="text"
+                    id="unidadMedidaDescripcion"
+                    name="unidadMedidaDescripcion"
+                    autoComplete="off"
+                    readOnly={true}
+                    value={dataArt.unidadMedidaDescripcion ?? ""}
+                    onChange={ValidarDataArt}
+                    className={Global.InputStyle}
+                  />
+                </div>
+
+                <div className={Global.Input25pct}>
+                  <label htmlFor="cantidad" className={Global.LabelStyle}>
                     Cantidad
                   </label>
                   <input
                     type="number"
-                    id="serie"
-                    name="serie"
+                    id="cantidad"
+                    name="cantidad"
                     placeholder="0"
                     autoComplete="off"
-                    readOnly={modo != "Consultar" ? false : true}
-                    value={data.serie ?? ""}
-                    onChange={ValidarData}
+                    readOnly={modo == "Registrar" ? false : true}
+                    value={dataArt.cantidad ?? ""}
+                    onChange={ValidarDataArt}
                     className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.Input25pct}>
-                  <label htmlFor="id" className={Global.LabelStyle}>
+                  <label htmlFor="precioUnitario" className={Global.LabelStyle}>
                     P. Unitario
                   </label>
                   <input
-                    type="numer"
-                    id="serie"
-                    name="serie"
+                    type="number"
+                    id="precioUnitario"
+                    name="precioUnitario"
                     placeholder="Precio Unitario"
                     autoComplete="off"
-                    readOnly={modo != "Consultar" ? false : true}
-                    value={data.serie ?? ""}
-                    onChange={ValidarData}
+                    readOnly={modo == "Registrar" ? false : true}
+                    value={dataArt.precioUnitario ?? ""}
+                    onChange={ValidarDataArt}
                     className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.Input25pct}>
-                  <label htmlFor="id" className={Global.LabelStyle}>
+                  <label htmlFor="importe" className={Global.LabelStyle}>
                     Importe
                   </label>
                   <input
                     type="number"
-                    id="serie"
-                    name="serie"
+                    id="importe"
+                    name="importe"
                     placeholder="0"
                     autoComplete="off"
-                    readOnly={modo != "Consultar" ? false : true}
-                    value={data.serie ?? ""}
-                    onChange={ValidarData}
+                    readOnly={modo == "Registrar" ? false : true}
+                    value={dataArt.importe ?? ""}
+                    onChange={ValidarDataArt}
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultar"
+                    id="agregarDetalle"
                     className={Global.BotonBuscar + Global.BotonPrimary}
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => AbrirFiltroProveedor(e)}
+                    onClick={(e) => AgregarDetalle(e)}
                   >
                     <FaPlus></FaPlus>
                   </button>
                 </div>
               </div>
             </div>
+
             {/* Tabla */}
             <TablaStyle>
               <TableBasic columnas={columnas} datos={dataDetalle} />
             </TablaStyle>
             {/* Tabla */}
+
+            <div className="bg-gradient-to-t from-gray-900 to-gray-800">
+              <div className="flex">
+                <div className="w-full border border-r-0 border-gray-400"></div>
+                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-gray-400">
+                  <p className="font-semibold text-white">SubTotal</p>
+                </div>
+                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-gray-400">
+                  <p className="font-bold text-white">
+                    {data.subTotal ?? "0.00"}
+                  </p>
+                </div>
+                <div className="w-28 px-2 border border-gray-400"></div>
+              </div>
+              <div className="flex">
+                <div className="w-full border border-r-0 border-t-0 border-gray-400"></div>
+                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
+                  <label
+                    htmlFor="porcentajeIGV"
+                    className="font-semibold text-white"
+                  >
+                    IGV
+                  </label>
+                  <select
+                    id="porcentajeIGV"
+                    name="porcentajeIGV"
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className="ml-2 bg-gray-700 rounded-md"
+                  >
+                    {dataIgv.map((map) => (
+                      <option key={map.porcentaje} value={map.porcentaje}>
+                        {map.porcentaje}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
+                  <p className="font-bold text-white">
+                    {data.montoIGV ?? "0.00"}
+                  </p>
+                </div>
+                <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
+              </div>
+              <div className="flex">
+                <div className="w-full border border-r-0 border-t-0 border-gray-400"></div>
+                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
+                  <p className="font-semibold text-white">Total</p>
+                </div>
+                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
+                  <p className="font-bold text-white">{data.total ?? "0.00"}</p>
+                </div>
+                <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
+              </div>
+            </div>
           </ModalCrud>
         </>
       )}
@@ -900,6 +1200,10 @@ const Modal = ({ setModal, modo, objeto }) => {
           objeto={data.ordenesCompraRelacionadas}
         />
       )}
+      {modalArt && (
+        <FiltroArticulo setModal={setModalArt} setObjeto={setDataArt} />
+      )}
+      <ToastContainer />
     </>
   );
   //#endregion

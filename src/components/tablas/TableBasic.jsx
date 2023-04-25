@@ -71,7 +71,7 @@ const TableBasic = ({ columnas, datos }) => {
 
   //#region Render
   return (
-    <div className="flex flex-col mt-2 overflow-x-auto shadow-md rounded md:text-sm">
+    <div className="flex flex-col overflow-x-auto shadow-md rounded md:text-sm">
       {/* Tabla */}
       <Tabla>
         <table {...getTableProps()} id="tabla" className="w-full text-light">
@@ -81,7 +81,7 @@ const TableBasic = ({ columnas, datos }) => {
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="py-2 px-2"
+                    className="p-2"
                   >
                     {column.render("Header")}
                   </th>
@@ -103,7 +103,7 @@ const TableBasic = ({ columnas, datos }) => {
                     return (
                       <td
                         {...cell.getCellProps()}
-                        className="py-2 px-2 text-left "
+                        className="p-2 text-left"
                       >
                         {cell.render("Cell")}
                       </td>
