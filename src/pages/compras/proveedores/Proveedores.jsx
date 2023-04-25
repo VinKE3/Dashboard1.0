@@ -20,7 +20,7 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(2) {
+  & th:nth-child(1) {
     width: 100px;
   }
   & th:last-child {
