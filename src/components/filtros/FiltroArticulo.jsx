@@ -96,12 +96,12 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       lineaId: result.data.data.lineaId,
       subLineaId: result.data.data.subLineaId,
       articuloId: result.data.data.articuloId,
-      unidadMedidaId: result.data.data.unidadMedidaId,
       marcaId: result.data.data.marcaId,
       descripcion: result.data.data.descripcion,
       codigoBarras: result.data.data.codigoBarras,
       precioUnitario: result.data.data.precioCompra,
-      unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion ?? result.data.data.unidadMedidaId,
+      unidadMedidaId: result.data.data.unidadMedidaId,
+      unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion || "",
       stock: result.data.data.stock,
     });
     setModal(false);

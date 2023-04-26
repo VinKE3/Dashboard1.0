@@ -1163,7 +1163,8 @@
   border-color: #ff9a9a;
 }
 .p-inputtext {
-  font-family: Lato, Helvetica, sans-serif;
+  background-color:  transparent !important ;
+  /* font-family: Lato, Helvetica, sans-serif;
   font-size: 1rem;
   color: #e6e6e6;
   background: #0e1315;
@@ -1172,16 +1173,16 @@
   transition: background-color 0.3s, color 0.3s, border-color 0.3s,
     box-shadow 0.3s;
   appearance: none;
-  border-radius: 6px;
+  border-radius: 6px; */
 }
 .p-inputtext:enabled:hover {
-  border-color: #2d3e44;
+  /* border-color: #2d3e44; */
 }
 .p-inputtext:enabled:focus {
-  outline: 0 none;
+  /* outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 1px #fde047;
-  border-color: #9eade6;
+  border-color: #9eade6; */
 }
 .p-inputtext.p-invalid.p-component {
   border-color: #ff9a9a;
@@ -1209,7 +1210,7 @@
   color: #b3b3b3;
 }
 .p-input-icon-left > .p-inputtext {
-  padding-left: 2.5rem;
+  /* padding-left: 2.5rem; */
 }
 .p-input-icon-left.p-float-label > label {
   left: 2.5rem;
@@ -1236,21 +1237,21 @@
   color: #b3b3b3;
 }
 .p-input-filled .p-inputtext {
-  background-color: #263238;
+  /* background-color: #263238; */
 }
 .p-input-filled .p-inputtext:enabled:hover {
-  background-color: #263238;
+  /* background-color: #263238; */
 }
 .p-input-filled .p-inputtext:enabled:focus {
-  background-color: #263238;
+  /* background-color: #263238; */
 }
 .p-inputtext-sm .p-inputtext {
-  font-size: 0.875rem;
-  padding: 0.4375rem 0.65625rem;
+  /* font-size: 0.875rem;
+  padding: 0.4375rem 0.65625rem; */
 }
 .p-inputtext-lg .p-inputtext {
-  font-size: 1.25rem;
-  padding: 0.625rem 0.9375rem;
+  /* font-size: 1.25rem;
+  padding: 0.625rem 0.9375rem; */
 }
 .p-listbox {
   background: #161d21;

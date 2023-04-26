@@ -115,7 +115,6 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
   const GetDatos = async (e, obj) => {
     e.preventDefault();
     if (objetoSeleccion.length == 0) {
-      console.log("primer");
       setObjetoSeleccion([obj]);
     } else {
       objetoSeleccion.push(obj);

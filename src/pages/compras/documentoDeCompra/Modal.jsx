@@ -15,7 +15,7 @@ import {
   FaUndoAlt,
   FaPen,
   FaTrashAlt,
-  FaTransgenderAlt,
+  FaPaste,
 } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
@@ -24,8 +24,6 @@ import { toast, ToastContainer } from "react-toastify";
 
 //#region Estilos
 const TablaStyle = styled.div`
-  &thead {
-  }
   & th:first-child {
     display: none;
   }
@@ -64,8 +62,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataOC, setDataOC] = useState([]);
   const [dataArt, setDataArt] = useState([]);
   const [checkVarios, setCheckVarios] = useState(false);
-  const [checkIgv, setCheckIgv] = useState(false);
-  const [checkStock, setCheckStock] = useState(false);
   const [checkFiltro, setCheckFiltro] = useState("productos");
   const [habilitarFiltro, setHabilitarFiltro] = useState(false);
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
@@ -73,9 +69,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataTipoComp, setDataTipoComp] = useState([]);
   const [dataTipoPag, setDataTipoPag] = useState([]);
   const [dataIgv, setDataIgv] = useState([]);
+  const [dataCtacte, setDataCtacte] = useState([]);
+  const [dataMotivoNota, setDataMotivoNota] = useState([]);
   const [modalProv, setModalProv] = useState(false);
   const [modalOC, setModalOC] = useState(false);
   const [modalArt, setModalArt] = useState(false);
+  const [detalleId, setDetalleId] = useState(1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
@@ -108,6 +107,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       document.getElementById("porcentajesIGV").value = data.porcentajeIGV;
     }
   }, [dataIgv]);
+  useEffect(() => {
+    if (document.getElementById("cuentaCorrienteId")) {
+      document.getElementById("cuentaCorrienteId").value =
+        data.cuentaCorrienteId;
+    }
+  }, [dataCtacte]);
+  useEffect(() => {
+    if (document.getElementById("motivoNotaId")) {
+      document.getElementById("motivoNotaId").value = data.motivoNotaId;
+    }
+  }, [dataMotivoNota]);
 
   useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
@@ -129,37 +139,50 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataOC]);
   useEffect(() => {
-    console.log("dataDetalle");
-    console.log(dataDetalle);
-    console.log("dataDetalle");
+    if (Object.entries(dataDetalle).length > 0) {
+      setData({ ...data, detalles: dataDetalle });
+    }
   }, [dataDetalle]);
   useEffect(() => {
-    console.log("data");
-    console.log(data);
-    console.log("data");
+    if (Object.entries(data).length > 0) {
+      if (document.getElementById("porcentajeIGV")) {
+        document.getElementById("porcentajeIGV").value = data.porcentajeIGV;
+      }
+    }
   }, [data]);
+
   useEffect(() => {
     if (refrescar) {
       dataDetalle;
       ActualizarImportesTotales();
       setDataArt([]);
       setRefrescar(false);
+      document.getElementById("productos").checked = true;
+      document.getElementById("productos").dispatchEvent(new Event("click", { bubbles: true }));
     }
   }, [refrescar]);
+
   useEffect(() => {
     if (modo != "Registrar") {
       GetPorId(data.proveedorId);
     } else {
       GetPorIdTipoCambio(data.fechaEmision);
     }
+    ConsultarCtacte();
     Tablas();
   }, []);
   //#endregion
 
   //#region Funciones
   const ValidarData = async ({ target }) => {
-    if (target.name == "incluyeIGV" || target.name == "afectarStock") {
-      if (target.name == "incluyeIGV") ActualizarImportesTotales();
+    if (
+      target.name == "incluyeIGV" ||
+      target.name == "afectarStock" ||
+      target.name == "abonar"
+    ) {
+      if (target.name == "incluyeIGV") {
+        setRefrescar(true);
+      }
       setData((prevState) => ({
         ...prevState,
         [target.name]: target.checked,
@@ -171,8 +194,43 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
     if (target.name == "porcentajeIGV") {
-      console.log("aqui aqui aqui")
       setRefrescar(true);
+    }
+    if (target.name == "tipoPagoId") {
+      if (target.value != "CH" || target.value != "DE") {
+        setData((prevState) => ({
+          ...prevState,
+          numeroOperacion: "",
+          cuentaCorrienteId: "",
+        }));
+      }
+    }
+    if (target.name == "tipoDocumentoId") {
+      if (target.value != "07" || target.value != "08") {
+        setData((prevState) => ({
+          ...prevState,
+          documentoReferenciaId: "",
+          motivoNotaId: "",
+          motivoSustento: "",
+        }));
+      }
+    }
+
+    if (target.name == "fechaEmision") {
+      console.log(target.name);
+      toast(
+        "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+        {
+          position: "bottom-right",
+          autoClose: 7000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     }
   };
   const ValidarVarios = async ({ target }) => {
@@ -185,9 +243,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorNombre: "CLIENTES VARIOS",
       }));
     } else {
-      setData((prevState) => ({
+      setDataProveedor((prevState) => ({
         ...prevState,
-        [target.name]: target.value.toUpperCase(),
+        proveedorId: "",
+        proveedorNumeroDocumentoIdentidad: "",
+        proveedorDireccion: "",
+        proveedorNombre: "",
       }));
     }
   };
@@ -251,25 +312,37 @@ const Modal = ({ setModal, modo, objeto }) => {
       return [true, ""];
     }
   };
-  const AgregarDetalle = async (e) => {
+  const AgregarDetalle = async (e, id) => {
+    e.preventDefault();
+    let model = dataDetalle.find((map) => map.id === id);
+    setDataArt(model);
+  };
+  const EnviarDetalle = async (e) => {
     e.preventDefault();
     let resultado = await ValidarDetalle();
     if (resultado[0]) {
-      if (dataArt.detalleId != undefined) {
-        // dataDetalle[dataArt.id] = {
-        //   lineaId: dataArt.lineaId,
-        //   subLineaId: dataArt.subLineaId,
-        //   articuloId: dataArt.articuloId,
-        //   unidadMedidaId: dataArt.unidadMedidaId,
-        //   marcaId: dataArt.marcaId,
-        //   descripcion: dataArt.descripcion,
-        //   codigoBarras: dataArt.codigoBarras,
-        //   precioUnitario: dataArt.precioCompra,
-        //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-        //   stock: dataArt.stock,
-        // };
+      if (dataArt.detalleId > -1) {
+        dataDetalle[dataArt.detalleId - 1] = {
+          detalleId: dataArt.detalleId,
+          id: dataArt.id,
+          lineaId: dataArt.lineaId,
+          subLineaId: dataArt.subLineaId,
+          articuloId: dataArt.articuloId,
+          marcaId: dataArt.marcaId,
+          codigoBarras: dataArt.codigoBarras,
+          descripcion: dataArt.descripcion,
+          stock: dataArt.stock,
+          unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+          unidadMedidaId: dataArt.unidadMedidaId,
+          cantidad: dataArt.cantidad,
+          precioUnitario: dataArt.precioUnitario,
+          montoIgv: dataArt.montoIgv,
+          subTotal: dataArt.subTotal,
+          importe: dataArt.importe,
+        };
       } else {
         dataDetalle.push({
+          detalleId: detalleId,
           id: dataArt.id,
           lineaId: dataArt.lineaId,
           subLineaId: dataArt.subLineaId,
@@ -286,9 +359,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           subTotal: dataArt.subTotal,
           importe: dataArt.importe,
         });
-        await ActualizarImportesTotales();
-        setRefrescar(true);
+        setDetalleId(detalleId + 1);
       }
+      setRefrescar(true);
     } else {
       toast.error(resultado[1], {
         position: "bottom-right",
@@ -302,28 +375,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   };
-  const EliminarDetalle = async (id) => {
+  const EliminarDetalle = async (e, id) => {
+    e.preventDefault();
+    let model = dataDetalle.filter((map) => map.detalleId !== id);
+    setDataDetalle(model);
     setRefrescar(true);
-    const model = porcentajesIGV.filter((model) => model.id !== id);
-    Swal.fire({
-      title: "Eliminar registro",
-      icon: "warning",
-      iconColor: "#F7BF3A",
-      showCancelButton: true,
-      color: "#fff",
-      background: "radial-gradient(circle, #272a2c, #222231)",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setDataGeneral({
-          ...dataGeneral,
-          porcentajesIGV: model,
-        });
-      }
-    });
   };
 
   const ActualizarImportesTotales = async () => {
@@ -332,10 +388,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }, 0);
 
     let porcentajeIgvSeleccionado = data.porcentajeIGV;
-    console.log(porcentajeIgvSeleccionado);
-    console.log(data.porcentajeIGV);
     let incluyeIgv = data.incluyeIGV;
-    console.log(incluyeIgv);
     let total = 0,
       subTotal = 0,
       montoIgv = 0;
@@ -360,6 +413,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       subTotal: FormatoNumero(subTotal.toFixed(2)),
       montoIGV: FormatoNumero(montoIgv.toFixed(2)),
       totalNeto: FormatoNumero(total.toFixed(2)),
+      total: FormatoNumero(total.toFixed(2)),
     });
   };
   const CalcularDetalleMontos = async (origen) => {
@@ -385,8 +439,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       montoIgv: montoIgv,
       subTotal: subTotal,
     });
-    if (Object.entries(dataDetalle).length > 0) {
-    }
   };
   const RedondearNumero = (number, precision) => {
     let shift = function (number, exponent) {
@@ -439,6 +491,20 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoComp(result.data.data.tiposCompra);
     setDataTipoPag(result.data.data.tiposPago);
     setDataIgv(result.data.data.porcentajesIGV);
+    setDataMotivoNota(result.data.data.motivosNota);
+  };
+  const ConsultarCtacte = async () => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/CuentaCorriente/Listar`
+    );
+    let model = result.data.data.data.map((res) => ({
+      id: res.cuentaCorrienteId,
+      descripcion:
+        res.monedaId == "D"
+          ? res.numero + " | " + res.entidadBancariaNombre + " |  [US$]"
+          : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
+    }));
+    setDataCtacte(model);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
@@ -469,6 +535,22 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...data,
         tipoCambio: result.data.data.precioCompra,
       });
+      toast.success(
+        "El tipo de cambio del día " +
+          moment(data.fechaEmision).format("DD/MM/YYYY") +
+          " es: " +
+          result.data.data.precioCompra,
+        {
+          position: "bottom-right",
+          autoClose: 7000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
       setTipoMensaje(-1);
       setMensaje([]);
     }
@@ -497,6 +579,10 @@ const Modal = ({ setModal, modo, objeto }) => {
     {
       Header: "id",
       accessor: "id",
+    },
+    {
+      Header: "detalleId",
+      accessor: "detalleId",
     },
     {
       Header: "Código",
@@ -559,7 +645,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={(e) => AgregarIgv(e, row.values.id)}
+                  onClick={(e) => AgregarDetalle(e, row.values.detalleId)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -571,8 +657,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={(e) => {
-                    e.preventDefault();
-                    EliminarDetalle(row.values.id);
+                    EliminarDetalle(e, row.values.detalleId);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -624,8 +709,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoDocumentoId"
                     name="tipoDocumentoId"
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
-                    className={Global.InputStyle}
+                    disabled={modo == "Registrar" ? false : true}
+                    className={modo == "Registrar" ? Global.InputStyle : Global.InputStyle + Global.Disabled}
                   >
                     {dataTipoDoc.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -645,10 +730,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Serie"
                     maxLength="4"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    readOnly={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={modo == "Registrar" ? Global.InputStyle : Global.InputStyle + Global.Disabled}
                   />
                 </div>
                 <div className={Global.InputMitad}>
@@ -659,13 +744,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="numero"
                     name="numero"
-                    placeholder="numero"
+                    placeholder="Número"
                     maxLength="10"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    readOnly={modo == "Registrar" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={modo == "Registrar" ? Global.InputStyle : Global.InputStyle + Global.Disabled}
                   />
                 </div>
               </div>
@@ -769,6 +854,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       " !rounded-none"
                     }
                     hidden={modo == "Consultar" ? true : false}
+                    disabled={checkVarios ? true : false}
                     onClick={(e) => AbrirFiltroProveedor(e)}
                   >
                     <FaSearch></FaSearch>
@@ -781,7 +867,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         readOnly={modo == "Consultar" ? true : false}
                         onChange={(e) => {
                           setCheckVarios(e.checked);
-                          ValidarData(e);
+                          ValidarVarios(e);
                         }}
                         checked={checkVarios ? true : ""}
                       ></Checkbox>
@@ -880,9 +966,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
-                <div className={Global.InputMitad}>
+                <div
+                  className={
+                    data.tipoPagoId == "CH" || data.tipoPagoId == "DE"
+                      ? Global.Input42pct
+                      : Global.InputFull
+                  }
+                >
                   <label htmlFor="tipoPagoId" className={Global.LabelStyle}>
-                    T. Pago
+                    Tipo Pago
                   </label>
                   <select
                     id="tipoPagoId"
@@ -891,14 +983,167 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {dataTipoPag.map((map) => (
-                      <option key={map.id} value={map.id}>
-                        {map.descripcion}
-                      </option>
-                    ))}
+                    {dataTipoPag
+                      .filter(
+                        (model) => model.tipoVentaCompraId == data.tipoCompraId
+                      )
+                      .map((map) => (
+                        <option key={map.id} value={map.id}>
+                          {map.descripcion}
+                        </option>
+                      ))}
                   </select>
                 </div>
-                <div className={Global.InputMitad}>
+
+                {data.tipoPagoId == "CH" || data.tipoPagoId == "DE" ? (
+                  <>
+                    <div className={Global.InputTercio}>
+                      <label
+                        htmlFor="numeroOperacion"
+                        className={Global.LabelStyle}
+                      >
+                        Nro. Ope.
+                      </label>
+                      <input
+                        type="text"
+                        id="numeroOperacion"
+                        name="numeroOperacion"
+                        autoComplete="off"
+                        placeholder="Número de Operación"
+                        readOnly={modo == "Consultar" ? true : false}
+                        value={data.numeroOperacion ?? ""}
+                        onChange={ValidarData}
+                        className={Global.InputStyle}
+                      />
+                    </div>
+                    <div className={Global.InputTercio}>
+                      <label
+                        htmlFor="cuentaCorrienteId"
+                        className={Global.LabelStyle}
+                      >
+                        Cta. Cte.
+                      </label>
+                      <select
+                        id="cuentaCorrienteId"
+                        name="cuentaCorrienteId"
+                        onChange={ValidarData}
+                        disabled={modo == "Consultar" ? true : false}
+                        className={Global.InputStyle}
+                      >
+                        <option key={"-1"} value={""}>
+                          --SELECCIONAR--
+                        </option>
+                        {dataCtacte.map((map) => (
+                          <option key={map.id} value={map.id}>
+                            {map.descripcion}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+              {data.tipoDocumentoId == "07" || data.tipoDocumentoId == "08" ? (
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input66pct}>
+                    <label
+                      htmlFor="documentoReferenciaId"
+                      className={Global.LabelStyle}
+                    >
+                      Doc. Ref.
+                    </label>
+                    <select
+                      id="documentoReferenciaId"
+                      name="documentoReferenciaId"
+                      onChange={ValidarData}
+                      disabled={modo == "Consultar" ? true : false}
+                      className={Global.InputBoton}
+                    >
+                      {dataTipoPag.map((map) => (
+                        <option key={map.id} value={map.id}>
+                          {map.descripcion}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      id="consultar"
+                      className={
+                        Global.BotonBuscar +
+                        Global.BotonPrimary +
+                        " !rounded-none"
+                      }
+                      hidden={modo == "Consultar" ? true : false}
+                      onClick={(e) => AbrirFiltroProveedor(e)}
+                    >
+                      <FaPaste></FaPaste>
+                    </button>
+                    <div className={Global.Input + " w-16"}>
+                      <div className={Global.CheckStyle + Global.Anidado}>
+                        <Checkbox
+                          inputId="abonar"
+                          name="abonar"
+                          readOnly={modo == "Consultar" ? true : false}
+                          onChange={(e) => {
+                            ValidarData(e);
+                          }}
+                          checked={data.abonar ? true : ""}
+                        ></Checkbox>
+                      </div>
+                      <label
+                        htmlFor="abonar"
+                        className={Global.LabelCheckStyle}
+                      >
+                        Abo.
+                      </label>
+                    </div>
+                  </div>
+                  <div className={Global.Input60pct}>
+                    <label htmlFor="motivoNotaId" className={Global.LabelStyle}>
+                      Motivo
+                    </label>
+                    <select
+                      id="motivoNotaId"
+                      name="motivoNotaId"
+                      onChange={ValidarData}
+                      disabled={modo == "Consultar" ? true : false}
+                      className={Global.InputStyle}
+                    >
+                      <option key={"-1"} value={""}>
+                        {"--SELECCIONAR--"}
+                      </option>
+                      {dataMotivoNota
+                        .filter(
+                          (model) =>
+                            model.tipoDocumentoId == data.tipoDocumentoId
+                        )
+                        .map((map) => (
+                          <option key={map.id} value={map.id}>
+                            {map.descripcion}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <input
+                      type="text"
+                      id="motivoSustento"
+                      name="motivoSustento"
+                      autoComplete="off"
+                      placeholder="Sustento"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.motivoSustento ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle + " rounded-l-md"}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.Input66pct}>
                   <label htmlFor="guiaRemision" className={Global.LabelStyle}>
                     Guía Rem.
                   </label>
@@ -914,8 +1159,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                   />
                 </div>
-              </div>
-              <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label
                     htmlFor="numeroDocumento"
@@ -961,8 +1204,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="observacion"
                     placeholder="Observación"
                     autoComplete="off"
-                    readOnly={true}
-                    value={dataProveedor.observacion ?? ""}
+                    readOnly={modo == "Consultar" ? true : false}
+                    value={data.observacion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton}
                   />
@@ -973,10 +1216,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         name="incluyeIGV"
                         readOnly={modo == "Consultar" ? true : false}
                         onChange={(e) => {
-                          setCheckIgv(e.checked);
-                          ValidarData();
+                          ValidarData(e);
                         }}
-                        checked={checkIgv ? true : ""}
+                        checked={data.incluyeIGV ? true : ""}
                       ></Checkbox>
                     </div>
                     <label
@@ -993,10 +1235,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         name="afectarStock"
                         readOnly={modo == "Consultar" ? true : false}
                         onChange={(e) => {
-                          setCheckStock(e.checked);
-                          ValidarData();
+                          ValidarData(e);
                         }}
-                        checked={checkStock ? true : ""}
+                        checked={data.afectarStock ? true : ""}
                       ></Checkbox>
                     </div>
                     <label
@@ -1021,11 +1262,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <RadioButton
                       inputId="productos"
                       name="productos"
+                      value="productos"
                       disabled={modo == "Consultar" ? true : false}
                       onChange={(e) => {
                         ValidarDataArt(e);
                       }}
-                      checked={checkFiltro == "productos" ? true : ""}
+                      checked={checkFiltro === "productos"}
                     ></RadioButton>
                   </div>
                   <label
@@ -1040,11 +1282,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <RadioButton
                       inputId="variosFiltro"
                       name="variosFiltro"
+                      value="variosFiltro"
                       disabled={modo == "Consultar" ? true : false}
                       onChange={(e) => {
                         ValidarDataArt(e);
                       }}
-                      checked={checkFiltro == "variosFiltro" ? true : ""}
+                      checked={checkFiltro === "variosFiltro"}
                     ></RadioButton>
                   </div>
                   <label
@@ -1132,7 +1375,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="cantidad"
                     placeholder="0"
                     autoComplete="off"
-                    readOnly={modo == "Registrar" ? false : true}
+                    readOnly={modo == "Consultar" ? true : false}
                     value={dataArt.cantidad ?? ""}
                     onChange={ValidarDataArt}
                     className={Global.InputStyle}
@@ -1148,7 +1391,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="precioUnitario"
                     placeholder="Precio Unitario"
                     autoComplete="off"
-                    readOnly={modo == "Registrar" ? false : true}
+                    readOnly={modo == "Consultar" ? true : false}
                     value={dataArt.precioUnitario ?? ""}
                     onChange={ValidarDataArt}
                     className={Global.InputStyle}
@@ -1164,16 +1407,20 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="importe"
                     placeholder="0"
                     autoComplete="off"
-                    readOnly={modo == "Registrar" ? false : true}
+                    readOnly={modo == "Consultar" ? true : false}
                     value={dataArt.importe ?? ""}
                     onChange={ValidarDataArt}
                     className={Global.InputBoton}
+                    min="0.00"
+                    step="0.001"
+                    max="1.00"
+                    presicion={2} //very important
                   />
                   <button
-                    id="agregarDetalle"
+                    id="enviarDetalle"
                     className={Global.BotonBuscar + Global.BotonPrimary}
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => AgregarDetalle(e)}
+                    onClick={(e) => EnviarDetalle(e)}
                   >
                     <FaPlus></FaPlus>
                   </button>
@@ -1236,9 +1483,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <p className="font-semibold text-white">Total</p>
                 </div>
                 <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
-                  <p className="font-bold text-white">
-                    {data.totalNeto ?? "0.00"}
-                  </p>
+                  <p className="font-bold text-white">{data.total ?? "0.00"}</p>
                 </div>
                 <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
               </div>

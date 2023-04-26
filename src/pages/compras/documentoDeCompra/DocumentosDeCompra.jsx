@@ -49,19 +49,24 @@ const DocumentosdeCompra = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const filtroInicial =
+    "&fechaInicio=" +
+    moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") +
+    "&fechaFin=" +
+    moment().format("YYYY-MM-DD");
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar(filtro, index + 1);
+        Listar(filtroInicial, index + 1);
       }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index + 1);
+      Listar(filtroInicial, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -77,7 +82,7 @@ const DocumentosdeCompra = () => {
         setVisible(false);
       } else {
         setVisible(true);
-        Listar(filtro, 1);
+        Listar(filtroInicial, 1);
       }
     }
   }, [permisos]);
@@ -85,7 +90,7 @@ const DocumentosdeCompra = () => {
     if (store.session.get("usuario") == "AD") {
       setVisible(true);
       setPermisos([true, true, true, true, true]);
-      Listar(filtro, 1);
+      Listar(filtroInicial, 1);
     } else {
       GetPermisos();
     }
@@ -237,7 +242,7 @@ const DocumentosdeCompra = () => {
     const result = await ApiMasy.get(
       `api/Compra/DocumentoCompra/IsPermitido?accion=${accion}&id=${id}`
     );
-    if (result.data.messages[0].tipo == 1) {
+    if (!result.data.data) {
       toast.error(String(result.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 7000,
@@ -263,7 +268,7 @@ const DocumentosdeCompra = () => {
         setObjeto({
           empresaId: "",
           proveedorId: "",
-          tipoDocumentoId: "",
+          tipoDocumentoId: "01",
           serie: "",
           numero: "",
           clienteId: "000000",
@@ -279,16 +284,16 @@ const DocumentosdeCompra = () => {
           numeroOperacion: "",
           cuentaCorrienteId: "",
           documentoReferenciaId: "",
-          abonar: false,
+          abonar: true,
           motivoNotaId: "",
           motivoSustento: "",
           guiaRemision: "",
           observacion: "",
-          subTotal: 0,
-          porcentajeIGV: 0,
-          montoIGV: 0,
-          totalNeto: 0,
-          total: 0,
+          subTotal: 0.00,
+          porcentajeIGV: 0.00,
+          montoIGV: 0.00,
+          totalNeto: 0.00,
+          total: 0.00,
           incluyeIGV: false,
           afectarStock: false,
           detalles: [],
