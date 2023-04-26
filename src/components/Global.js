@@ -10,7 +10,7 @@ export var ModalMediano =
 export var ModalGrande =
   "relative h-full max-h-full lg:h-fit w-full lg:w-4/5 xl:w-4/5 2xl:w-2/3 my-0 mx-auto";
 export var ModalFull = "relative h-full w-full my-0 mx-auto";
-export var ModalHeader = "flex pt-4 pb-0 px-4 rounded-tt ";
+export var ModalHeader = "flex py-4 px-4 rounded-tt ";
 export var ModalBody = "h-full w-full overflow-y-auto relative ";
 export var ModalFooter =
   "flex items-center justify-end py-3 md:py-2 px-5 rounded-bt ";

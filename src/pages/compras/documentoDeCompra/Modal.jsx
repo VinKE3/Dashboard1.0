@@ -129,24 +129,23 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataOC]);
   useEffect(() => {
+    console.log("dataDetalle");
+    console.log(dataDetalle);
+    console.log("dataDetalle");
+  }, [dataDetalle]);
+  useEffect(() => {
     console.log("data");
     console.log(data);
     console.log("data");
   }, [data]);
   useEffect(() => {
-    console.log("dataDetalle");
-    console.log(dataDetalle);
-    console.log("dataDetalle");
-  }, [dataDetalle]);
-
-  useEffect(() => {
     if (refrescar) {
       dataDetalle;
+      ActualizarImportesTotales();
       setDataArt([]);
       setRefrescar(false);
     }
   }, [refrescar]);
-
   useEffect(() => {
     if (modo != "Registrar") {
       GetPorId(data.proveedorId);
@@ -159,33 +158,37 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   const ValidarData = async ({ target }) => {
-    if (target.name != "varios") {
-      if (target.name == "incluyeIGV" || target.name == "afectarStock") {
-        setData((prevState) => ({
-          ...prevState,
-          [target.name]: target.checked,
-        }));
-      } else {
-        setData((prevState) => ({
-          ...prevState,
-          [target.name]: target.value.toUpperCase(),
-        }));
-      }
+    if (target.name == "incluyeIGV" || target.name == "afectarStock") {
+      if (target.name == "incluyeIGV") ActualizarImportesTotales();
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
     } else {
-      if (target.checked) {
-        setDataProveedor((prevState) => ({
-          ...prevState,
-          proveedorId: "000000",
-          proveedorNumeroDocumentoIdentidad: "00000000000",
-          proveedorDireccion: null,
-          proveedorNombre: "CLIENTES VARIOS",
-        }));
-      } else {
-        setData((prevState) => ({
-          ...prevState,
-          [target.name]: target.value.toUpperCase(),
-        }));
-      }
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
+    if (target.name == "porcentajeIGV") {
+      console.log("aqui aqui aqui")
+      setRefrescar(true);
+    }
+  };
+  const ValidarVarios = async ({ target }) => {
+    if (target.checked) {
+      setDataProveedor((prevState) => ({
+        ...prevState,
+        proveedorId: "000000",
+        proveedorNumeroDocumentoIdentidad: "00000000000",
+        proveedorDireccion: null,
+        proveedorNombre: "CLIENTES VARIOS",
+      }));
+    } else {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
     }
   };
   const ValidarDataArt = async ({ target }) => {
@@ -283,11 +286,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           subTotal: dataArt.subTotal,
           importe: dataArt.importe,
         });
-
-        const sumaImportes = dataDetalle.reduce((acumulado, actual) => {
-          return acumulado + actual.importe;
-        }, 0);
-        
+        await ActualizarImportesTotales();
         setRefrescar(true);
       }
     } else {
@@ -326,6 +325,43 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     });
   };
+
+  const ActualizarImportesTotales = async () => {
+    let importeTotal = dataDetalle.reduce((i, map) => {
+      return i + map.importe;
+    }, 0);
+
+    let porcentajeIgvSeleccionado = data.porcentajeIGV;
+    console.log(porcentajeIgvSeleccionado);
+    console.log(data.porcentajeIGV);
+    let incluyeIgv = data.incluyeIGV;
+    console.log(incluyeIgv);
+    let total = 0,
+      subTotal = 0,
+      montoIgv = 0;
+
+    if (incluyeIgv) {
+      total = RedondearNumero(importeTotal, 2);
+      subTotal = RedondearNumero(
+        total / (1 + porcentajeIgvSeleccionado / 100),
+        2
+      );
+      montoIgv = RedondearNumero(total - subTotal, 2);
+    } else {
+      subTotal = RedondearNumero(importeTotal, 2);
+      montoIgv = RedondearNumero(
+        subTotal * (porcentajeIgvSeleccionado / 100),
+        2
+      );
+      total = RedondearNumero(subTotal + montoIgv, 2);
+    }
+    setData({
+      ...data,
+      subTotal: FormatoNumero(subTotal.toFixed(2)),
+      montoIGV: FormatoNumero(montoIgv.toFixed(2)),
+      totalNeto: FormatoNumero(total.toFixed(2)),
+    });
+  };
   const CalcularDetalleMontos = async (origen) => {
     let cantidad = parseInt(document.getElementById("cantidad").value || 0);
     let precioUnitario = parseInt(
@@ -350,7 +386,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       subTotal: subTotal,
     });
     if (Object.entries(dataDetalle).length > 0) {
-    } 
+    }
   };
   const RedondearNumero = (number, precision) => {
     let shift = function (number, exponent) {
@@ -363,6 +399,11 @@ const Modal = ({ setModal, modo, objeto }) => {
     };
     precision = precision === undefined ? 0 : precision;
     return shift(Math.round(shift(number, +precision)), -precision);
+  };
+  const FormatoNumero = (x) => {
+    let parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   };
   const IsNumeroValido = (
     dato,
@@ -482,6 +523,20 @@ const Modal = ({ setModal, modo, objeto }) => {
     {
       Header: "Precio",
       accessor: "precioUnitario",
+      Cell: ({ value }) => {
+        return <p className="text-right pr-5">{value}</p>;
+      },
+    },
+    {
+      Header: "subTotal",
+      accessor: "subTotal",
+      Cell: ({ value }) => {
+        return <p className="text-right pr-5">{value}</p>;
+      },
+    },
+    {
+      Header: "montoIgv",
+      accessor: "montoIgv",
       Cell: ({ value }) => {
         return <p className="text-right pr-5">{value}</p>;
       },
@@ -1157,7 +1212,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="porcentajeIGV"
                     name="porcentajeIGV"
-                    onChange={ValidarData}
+                    onChange={(e) => ValidarData(e)}
                     disabled={modo == "Consultar" ? true : false}
                     className="ml-2 bg-gray-700 rounded-md"
                   >
@@ -1181,7 +1236,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <p className="font-semibold text-white">Total</p>
                 </div>
                 <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
-                  <p className="font-bold text-white">{data.total ?? "0.00"}</p>
+                  <p className="font-bold text-white">
+                    {data.totalNeto ?? "0.00"}
+                  </p>
                 </div>
                 <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
               </div>
