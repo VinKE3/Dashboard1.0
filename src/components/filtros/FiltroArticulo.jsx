@@ -5,7 +5,7 @@ import TableBasic from "../tablas/TableBasic";
 import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
-
+import * as Funciones from "../Funciones";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -18,9 +18,14 @@ const TablaStyle = styled.div`
     width: 90px;
   }
   & th:nth-child(5),
-  & th:nth-child(6) {
-    width: 80px;
+  & th:nth-child(7) {
+    width: 70px;
     text-align: right;
+  }
+  & th:nth-child(4),
+  & th:nth-child(6) {
+    width: 35px;
+    text-align: center;
   }
   & th:last-child {
     width: 60px;
@@ -103,6 +108,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       unidadMedidaId: result.data.data.unidadMedidaId,
       unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion || "",
       stock: result.data.data.stock,
+      monedaId: result.data.data.monedaId,
     });
     setModal(false);
   };
@@ -126,7 +132,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       Header: "Unidad",
       accessor: "unidadMedidaAbreviatura",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return <p className="text-center">{value}</p>;
       },
     },
     {
@@ -137,10 +143,19 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       },
     },
     {
+      Header: "M",
+      accessor: "monedaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+      },
+    },
+    {
       Header: "P. Venta",
       accessor: "precioVenta",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return (
+          <p className="text-right">{Funciones.RedondearNumero(value, 4)}</p>
+        );
       },
     },
     {

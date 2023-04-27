@@ -7,6 +7,7 @@ import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 import Swal from "sweetalert2";
+import { toast, ToastContainer } from "react-toastify";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -54,8 +55,8 @@ const TablaDetalle = styled.div`
 
 const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
   //#region useState
-  const [datos, setDatos] = useState([]);
-  const [objetoSeleccion, setObjetoSeleccion] = useState(objeto);
+  const [data, setData] = useState([]);
+  const [dataSeleccion, setDataSeleccion] = useState(objeto);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
   const [refrescar, setRefrescar] = useState(false);
@@ -64,7 +65,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
   //#region useEffect;
   useEffect(() => {
     if (refrescar) {
-      objetoSeleccion;
+      dataSeleccion;
       setRefrescar(false);
     }
   }, [refrescar]);
@@ -112,38 +113,54 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const GetDatos = async (e, obj) => {
-    
+  const GetDatos = async (e, id = "") => {
     e.preventDefault();
-    if (objetoSeleccion.length == 0) {
-      setObjetoSeleccion([obj]);
+    const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
+    if (Object.entries(dataSeleccion).length > 0) {
+      let index = dataSeleccion.findIndex(
+        (map) => map.id === result.data.data.id
+      );
+      if (index > -1) {
+        toast.error("Ya existe el elemento seleccionado", {
+          position: "bottom-right",
+          autoClose: 1800,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     } else {
-      objetoSeleccion.push(obj);
+      dataSeleccion.push(result.data.data);
       setRefrescar(true);
     }
   };
   const EliminarFila = async (e, id) => {
     e.preventDefault();
-    let model = objetoSeleccion.filter((model) => model.id !== id);
+    let model = dataSeleccion.filter((model) => model.id !== id);
     Swal.fire({
       title: "Eliminar selección",
       icon: "warning",
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "radial-gradient(circle, #272a2c, #222231)",
+      background: "#1a1a2e",
       confirmButtonColor: "#eea508",
       confirmButtonText: "Aceptar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setObjetoSeleccion(model);
+        setDataSeleccion(model);
       }
     });
   };
   const Guardar = async () => {
-    setObjeto({ ordenesCompraRelacionadas: objetoSeleccion });
+    setObjeto({
+      ordenesCompraRelacionadas: dataSeleccion,
+    });
     setModal(false);
   };
   //#endregion
@@ -153,7 +170,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
     const result = await ApiMasy.get(
       `api/Compra/OrdenCompra/ListarPendientes?pagina=${pagina}&proveedorId=${id}${filtro}`
     );
-    setDatos(result.data.data.data);
+    setData(result.data.data.data);
   };
   //#endregion
 
@@ -196,12 +213,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
       Header: "-",
       Cell: ({ row }) => (
         <button
-          onClick={(e) =>
-            GetDatos(e, {
-              id: row.values.id,
-              numeroDocumento: row.values.numeroDocumento,
-            })
-          }
+          onClick={(e) => GetDatos(e, row.values.id)}
           className={Global.BotonBasic + Global.BotonAgregar + " !px-3 !py-2"}
         >
           <FaCheck></FaCheck>
@@ -314,11 +326,11 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
 
               {/* Tabla */}
               <TablaStyle>
-                <TableBasic columnas={columnas} datos={datos} />
+                <TableBasic columnas={columnas} datos={data} />
               </TablaStyle>
               {/* Tabla */}
             </div>
-            {objetoSeleccion.length > 0 && (
+            {dataSeleccion.length > 0 && (
               <div className={Global.ContenedorBasico}>
                 <h4 className="text-xl text-light font-bold">
                   Documentos Seleccionados
@@ -327,7 +339,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
                 <TablaDetalle>
                   <TableBasic
                     columnas={columnSeleccion}
-                    datos={objetoSeleccion}
+                    datos={dataSeleccion}
                   />
                 </TablaDetalle>
                 {/* Tabla */}
@@ -336,6 +348,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
           </div>
         }
       </ModalBasic>
+      <ToastContainer />
     </>
   );
   //#endregion

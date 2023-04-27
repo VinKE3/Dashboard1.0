@@ -100,9 +100,13 @@ export var CerrarModal =
 //#endregion
 
 //#region Tablas
-export var TablaCabecera =
-  "text-left bg-gradient-to-b from-slate-800 to-slate-900";
-export var TablaBody = "bg-gradient-to-b from-gray-800 to-slate-800";
+export var THeader =
+  "text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
+export var TBody = "bg-gradient-to-b from-gray-800 to-slate-800 ";
+export var Tr = "border-b border-gray-400 ";
+export var Td = "p-2 text-left ";
+
+
 export var TablaBotonConsultar =
   "w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125";
 export var TablaBotonModificar =

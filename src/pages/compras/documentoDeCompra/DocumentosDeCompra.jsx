@@ -268,6 +268,7 @@ const DocumentosdeCompra = () => {
         setObjeto({
           empresaId: "",
           proveedorId: "",
+          proveedorNombre: "",
           tipoDocumentoId: "01",
           serie: "",
           numero: "",

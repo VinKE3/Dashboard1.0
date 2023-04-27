@@ -114,7 +114,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
       {/* Tabla */}
       <Tabla>
         <table {...getTableProps()} id="tabla" className="w-full text-light">
-          <thead className={Global.TablaCabecera}>
+          <thead className={Global.THeader}>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
@@ -129,7 +129,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
             ))}
           </thead>
 
-          <tbody {...getTableBodyProps()} className={Global.TablaBody}>
+          <tbody {...getTableBodyProps()} className={Global.TBody}>
             {page.map((row) => {
               prepareRow(row);
               return (

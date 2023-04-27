@@ -20,6 +20,8 @@ import {
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
+import * as Funciones from "../../../components/Funciones";
+import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 
 //#region Estilos
@@ -31,24 +33,33 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
+    display: none;
+  }
+  & tbody td:nth-child(2) {
+    display: none;
+  }
+  & th:nth-child(3) {
     width: 120px;
   }
-  & th:nth-child(4),
-  & th:nth-child(5) {
+  & th:nth-child(5),
+  & th:nth-child(6) {
     width: 80px;
     min-width: 80px;
+    max-width: 80px;
     text-align: center;
   }
 
-  & th:nth-child(6),
-  & th:nth-child(7) {
+  & th:nth-child(7),
+  & th:nth-child(8) {
     width: 144px;
     min-width: 144px;
+    max-width: 144px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 75px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
 `;
@@ -71,6 +82,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataIgv, setDataIgv] = useState([]);
   const [dataCtacte, setDataCtacte] = useState([]);
   const [dataMotivoNota, setDataMotivoNota] = useState([]);
+  const [dataDocRef, setDataDocRef] = useState([]);
   const [modalProv, setModalProv] = useState(false);
   const [modalOC, setModalOC] = useState(false);
   const [modalArt, setModalArt] = useState(false);
@@ -118,6 +130,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       document.getElementById("motivoNotaId").value = data.motivoNotaId;
     }
   }, [dataMotivoNota]);
+  useEffect(() => {
+    dataDocRef;
+    if (document.getElementById("documentoReferenciaId")) {
+      document.getElementById("documentoReferenciaId").value =
+        data.documentoReferenciaId;
+    }
+  }, [dataDocRef]);
 
   useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
@@ -126,16 +145,46 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorId: dataProveedor.proveedorId,
         proveedorNumeroDocumentoIdentidad:
           dataProveedor.proveedorNumeroDocumentoIdentidad,
+        proveedorNombre: dataProveedor.proveedorNombre,
         proveedorDireccion: dataProveedor.proveedorDireccion ?? "",
       });
+      if (dataProveedor.proveedorId != "") {
+        GetDocReferencia(dataProveedor.proveedorId);
+        setRefrescar(true);
+      } else {
+        setDataDocRef([]);
+        setRefrescar(true);
+      }
     }
   }, [dataProveedor]);
   useEffect(() => {
     if (Object.keys(dataOC).length > 0) {
-      setData({
-        ...data,
-        ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
-      });
+      if (dataOC.ordenesCompraRelacionadas.length > 0) {
+        let obj = dataOC.ordenesCompraRelacionadas[dataOC.ordenesCompraRelacionadas.length - 1];
+        setData({
+          ...data,
+          proveedorNumeroDocumentoIdentidad:
+            obj.proveedorNumeroDocumentoIdentidad,
+          proveedorNombre: obj.proveedorNombre,
+          proveedorDireccion: obj.proveedorDireccion ?? "",
+          cuentaCorrienteId: obj.cuentaCorrienteId ?? "",
+          monedaId: obj.monedaId,
+          tipoCambio: obj.tipoCambio,
+          porcentajeIGV: obj.porcentajeIGV,
+          incluyeIGV: obj.incluyeIGV,
+          observacion: obj.observacion,
+          afectarStock: true,
+          tipoCompraId: obj.tipoCompraId,
+          tipoPagoId: obj.tipoPagoId,
+          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
+        });
+      } else {
+        setData({
+          ...data,
+          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
+        });
+      }
+      setRefrescar(true);
     }
   }, [dataOC]);
   useEffect(() => {
@@ -143,7 +192,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData({ ...data, detalles: dataDetalle });
     }
   }, [dataDetalle]);
+  useEffect(() => {}, [dataArt]);
   useEffect(() => {
+    console.log(data);
     if (Object.entries(data).length > 0) {
       if (document.getElementById("porcentajeIGV")) {
         document.getElementById("porcentajeIGV").value = data.porcentajeIGV;
@@ -153,21 +204,32 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   useEffect(() => {
     if (refrescar) {
+      data;
       dataDetalle;
+      dataDocRef;
       ActualizarImportesTotales();
       setDataArt([]);
       setRefrescar(false);
-      document.getElementById("productos").checked = true;
-      document
-        .getElementById("productos")
-        .dispatchEvent(new Event("click", { bubbles: true }));
+      if (document.getElementById("productos")) {
+        document.getElementById("productos").checked = true;
+        document
+          .getElementById("productos")
+          .dispatchEvent(new Event("click", { bubbles: true }));
+      }
     }
   }, [refrescar]);
+  useEffect(() => {
+    if (!modalArt) {
+      if (Object.entries(dataArt).length > 0) {
+        if (data.monedaId != dataArt.monedaId && dataArt.Id != "000000") {
+          ConvertirPreciosAMoneda(dataArt, data.monedaId, data.tipoCambio);
+        }
+      }
+    }
+  }, [modalArt]);
 
   useEffect(() => {
     if (modo != "Registrar") {
-      GetPorId(data.proveedorId);
-    } else {
       GetPorIdTipoCambio(data.fechaEmision);
     }
     ConsultarCtacte();
@@ -232,20 +294,35 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "fechaEmision") {
-      console.log(target.name);
-      toast(
-        "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
-        {
-          position: "bottom-right",
-          autoClose: 7000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      setTimeout(() => {
+        toast(
+          "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+          {
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          }
+        );
+      }, 2000);
+    }
+
+    if (target.name == "tipoPagoId") {
+      if (data.tipoCompraId != "CO") {
+        let model = dataTipoPag.find((map) => map.id === target.value);
+        let fechaHoy = moment().format("YYYY-MM-DD");
+        let nuevaFecha = moment(fechaHoy)
+          .add(model.plazo, "days")
+          .format("YYYY-MM-DD");
+        setData((prevData) => ({
+          ...prevData,
+          fechaVencimiento: nuevaFecha,
+        }));
+      }
     }
   };
   const ValidarVarios = async ({ target }) => {
@@ -255,7 +332,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorId: "000000",
         proveedorNumeroDocumentoIdentidad: "00000000000",
         proveedorDireccion: null,
-        proveedorNombre: "CLIENTES VARIOS",
+        proveedorNombre: "PROVEEDORES VARIOS",
       }));
     } else {
       setDataProveedor((prevState) => ({
@@ -264,6 +341,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorNumeroDocumentoIdentidad: "",
         proveedorDireccion: "",
         proveedorNombre: "",
+        ordenesCompraRelacionadas: [],
       }));
     }
   };
@@ -311,25 +389,32 @@ const Modal = ({ setModal, modo, objeto }) => {
       return [false, "La descripción no puede estar vacía"];
     } else if (dataArt.unidadMedidaDescripcion == undefined) {
       return [false, "La Unidad de Medida no puede estar vacía"];
-    } else if (IsNumeroValido(dataArt.cantidad, false) != "") {
+    } else if (Funciones.IsNumeroValido(dataArt.cantidad, false) != "") {
       document.getElementById("cantidad").focus();
-      return [false, "Cantidad: " + IsNumeroValido(dataArt.cantidad, false)];
-    } else if (IsNumeroValido(dataArt.precioUnitario, false) != "") {
+      return [
+        false,
+        "Cantidad: " + Funciones.IsNumeroValido(dataArt.cantidad, false),
+      ];
+    } else if (Funciones.IsNumeroValido(dataArt.precioUnitario, false) != "") {
       document.getElementById("precioUnitario").focus();
       return [
         false,
-        "Precio Unitario: " + IsNumeroValido(dataArt.precioUnitario, false),
+        "Precio Unitario: " +
+          Funciones.IsNumeroValido(dataArt.precioUnitario, false),
       ];
-    } else if (IsNumeroValido(dataArt.importe, false) != "") {
+    } else if (Funciones.IsNumeroValido(dataArt.importe, false) != "") {
       document.getElementById("importe").focus();
-      return [false, "Importe: " + IsNumeroValido(dataArt.importe, false)];
+      return [
+        false,
+        "Importe: " + Funciones.IsNumeroValido(dataArt.importe, false),
+      ];
     } else {
       return [true, ""];
     }
   };
   const AgregarDetalle = async (e, id) => {
     e.preventDefault();
-    let model = dataDetalle.find((map) => map.id === id);
+    let model = dataDetalle.find((map) => map.detalleId === id);
     setDataArt(model);
   };
   const EnviarDetalle = async (e) => {
@@ -380,7 +465,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       toast.error(resultado[1], {
         position: "bottom-right",
-        autoClose: 7000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -392,11 +477,125 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const EliminarDetalle = async (e, id) => {
     e.preventDefault();
-    let model = dataDetalle.filter((map) => map.detalleId !== id);
-    setDataDetalle(model);
-    setRefrescar(true);
+    if (id != "") {
+      let model = dataDetalle.filter((map) => map.detalleId !== id);
+      setDataDetalle(model);
+      setRefrescar(true);
+    }
   };
+  const DetalleDocReferencia = async (e, id) => {
+    e.preventDefault();
+    if (id != "") {
+      const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${id}`);
+      Swal.fire({
+        title: "¿Desea copiar los detalles del documento?",
+        text: result.data.data.numeroDocumento,
+        icon: "warning",
+        iconColor: "#F7BF3A",
+        showCancelButton: true,
+        color: "#fff",
+        background: "#1a1a2e",
+        confirmButtonColor: "#eea508",
+        confirmButtonText: "Aceptar",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+      }).then((res) => {
+        if (res.isConfirmed) {
+          setDataDetalle(result.data.data.detalles);
+          setRefrescar(true);
+        }
+      });
+    }
+  };
+  const ConvertirPreciosAMoneda = async (
+    data,
+    monedaId,
+    tipoCambio,
+    precisionRedondeo = 2
+  ) => {
+    if (monedaId != "D" && monedaId != "S") {
+      toast.error("No es posible hacer la conversión a la moneda ingresada", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return null;
+    }
 
+    if (tipoCambio == 0) {
+      toast.error(
+        "No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
+        {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      return null;
+    }
+
+    let precioCompra = 0,
+      precioVenta1 = 0,
+      precioVenta2 = 0,
+      precioVenta3 = 0,
+      precioVenta4 = 0;
+
+    if (monedaId == "D") {
+      precioCompra = Funciones.RedondearNumero(
+        data.precioUnitario / tipoCambio,
+        precisionRedondeo
+      );
+      // precioVenta1 = RedondearNumero(
+      //   data.PrecioVenta1 / tipoCambio,
+      //   precisionRedondeo
+      // );
+      // precioVenta2 = RedondearNumero(
+      //   data.PrecioVenta2 / tipoCambio,
+      //   precisionRedondeo
+      // );
+      // precioVenta3 = RedondearNumero(
+      //   data.PrecioVenta3 / tipoCambio,
+      //   precisionRedondeo
+      // );
+      // precioVenta4 = RedondearNumero(
+      //   data.PrecioVenta4 / tipoCambio,
+      //   precisionRedondeo
+      // );
+    } else {
+      precioCompra = Funciones.RedondearNumero(
+        data.precioUnitario * tipoCambio,
+        precisionRedondeo
+      );
+      // precioVenta1 = RedondearNumero(
+      //   data.PrecioVenta1 * tipoCambio,
+      //   precisionRedondeo
+      // );
+      // precioVenta2 = RedondearNumero(
+      //   data.PrecioVenta2 * tipoCambio,
+      //   precisionRedondeo
+      // );
+      // precioVenta3 = RedondearNumero(
+      //   data.PrecioVenta3 * tipoCambio,
+      //   precisionRedondeo
+      // );
+      // precioVenta4 = RedondearNumero(
+      //   data.PrecioVenta4 * tipoCambio,
+      //   precisionRedondeo
+      // );
+    }
+
+    setDataArt({ ...dataArt, precioUnitario: precioCompra });
+  };
   const ActualizarImportesTotales = async () => {
     let importeTotal = dataDetalle.reduce((i, map) => {
       return i + map.importe;
@@ -409,26 +608,26 @@ const Modal = ({ setModal, modo, objeto }) => {
       montoIgv = 0;
 
     if (incluyeIgv) {
-      total = RedondearNumero(importeTotal, 2);
-      subTotal = RedondearNumero(
+      total = Funciones.RedondearNumero(importeTotal, 2);
+      subTotal = Funciones.RedondearNumero(
         total / (1 + porcentajeIgvSeleccionado / 100),
         2
       );
-      montoIgv = RedondearNumero(total - subTotal, 2);
+      montoIgv = Funciones.RedondearNumero(total - subTotal, 2);
     } else {
-      subTotal = RedondearNumero(importeTotal, 2);
-      montoIgv = RedondearNumero(
+      subTotal = Funciones.RedondearNumero(importeTotal, 2);
+      montoIgv = Funciones.RedondearNumero(
         subTotal * (porcentajeIgvSeleccionado / 100),
         2
       );
-      total = RedondearNumero(subTotal + montoIgv, 2);
+      total = Funciones.RedondearNumero(subTotal + montoIgv, 2);
     }
     setData({
       ...data,
-      subTotal: FormatoNumero(subTotal.toFixed(2)),
-      montoIGV: FormatoNumero(montoIgv.toFixed(2)),
-      totalNeto: FormatoNumero(total.toFixed(2)),
-      total: FormatoNumero(total.toFixed(2)),
+      subTotal: Funciones.FormatoNumero(subTotal.toFixed(2)),
+      montoIGV: Funciones.FormatoNumero(montoIgv.toFixed(2)),
+      totalNeto: Funciones.FormatoNumero(total.toFixed(2)),
+      total: Funciones.FormatoNumero(total.toFixed(2)),
     });
   };
   const CalcularDetalleMontos = async (origen) => {
@@ -439,13 +638,13 @@ const Modal = ({ setModal, modo, objeto }) => {
     let importe = parseInt(document.getElementById("importe").value || 0);
 
     if (origen == "cantidad" || origen == "precioUnitario") {
-      importe = RedondearNumero(cantidad * precioUnitario, 2);
+      importe = Funciones.RedondearNumero(cantidad * precioUnitario, 2);
     } else {
       precioUnitario =
-        cantidad != 0 ? RedondearNumero(importe / cantidad, 4) : 0;
+        cantidad != 0 ? Funciones.RedondearNumero(importe / cantidad, 4) : 0;
     }
-    let subTotal = RedondearNumero(importe / 1.18, 2);
-    let montoIgv = RedondearNumero(importe - subTotal, 2);
+    let subTotal = Funciones.RedondearNumero(importe / 1.18, 2);
+    let montoIgv = Funciones.RedondearNumero(importe - subTotal, 2);
     setDataArt({
       ...dataArt,
       precioUnitario: precioUnitario,
@@ -454,41 +653,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       montoIgv: montoIgv,
       subTotal: subTotal,
     });
-  };
-  const RedondearNumero = (number, precision) => {
-    let shift = function (number, exponent) {
-      let numArray = ("" + number).split("e");
-      return +(
-        numArray[0] +
-        "e" +
-        (numArray[1] ? +numArray[1] + exponent : exponent)
-      );
-    };
-    precision = precision === undefined ? 0 : precision;
-    return shift(Math.round(shift(number, +precision)), -precision);
-  };
-  const FormatoNumero = (x) => {
-    let parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  };
-  const IsNumeroValido = (
-    dato,
-    permitirCero = true,
-    permitirNegativos = false
-  ) => {
-    let numero = parseFloat(dato);
-
-    if (isNaN(numero)) {
-      return "El número es requerido.";
-    }
-    if (!permitirCero && numero === 0) {
-      return "El número ingresado debe ser mayor a cero (0.00).";
-    }
-    if (!permitirNegativos && numero < 0) {
-      return "El número ingresado no puede ser negativo.";
-    }
-    return "";
   };
   const OcultarMensajes = () => {
     setMensaje([]);
@@ -521,16 +685,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }));
     setDataCtacte(model);
   };
-  const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
-    setDataProveedor({
-      proveedorId: result.data.data.id,
-      proveedorNumeroDocumentoIdentidad:
-        result.data.data.numeroDocumentoIdentidad,
-      proveedorDireccion: result.data.data.direccionPrincipal,
-      proveedorNombre: result.data.data.nombre,
-    });
-  };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
     if (result.name == "AxiosError") {
@@ -557,7 +711,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           result.data.data.precioCompra,
         {
           position: "bottom-right",
-          autoClose: 7000,
+          autoClose: 2000,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
@@ -569,6 +723,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       setTipoMensaje(-1);
       setMensaje([]);
     }
+  };
+  const GetDocReferencia = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Compra/DocumentoCompra/GetDocumentosReferencia?proveedorId=${id}`
+    );
+    setDataDocRef(result.data.data);
+    setRefrescar(true);
   };
   //#endregion
 
@@ -596,7 +757,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "id",
     },
     {
-      Header: "detalleId",
+      Header: "id",
       accessor: "detalleId",
     },
     {
@@ -611,42 +772,40 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Unidad",
       accessor: "unidadMedidaDescripcion",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return <p className="text-right pr-5">{value}</p>;
       },
     },
     {
       Header: "Cantidad",
       accessor: "cantidad",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return (
+          <p className="text-right pr-5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
       },
     },
     {
       Header: "Precio",
       accessor: "precioUnitario",
       Cell: ({ value }) => {
-        return <p className="text-right pr-5">{value}</p>;
-      },
-    },
-    {
-      Header: "subTotal",
-      accessor: "subTotal",
-      Cell: ({ value }) => {
-        return <p className="text-right pr-5">{value}</p>;
-      },
-    },
-    {
-      Header: "montoIgv",
-      accessor: "montoIgv",
-      Cell: ({ value }) => {
-        return <p className="text-right pr-5">{value}</p>;
+        return (
+          <p className="text-right pr-5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
       },
     },
     {
       Header: "Importe",
       accessor: "importe",
       Cell: ({ value }) => {
-        return <p className="text-right pr-5">{value}</p>;
+        return (
+          <p className="text-right pr-5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
       },
     },
     {
@@ -869,7 +1028,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Proveedor"
                     autoComplete="off"
                     readOnly={true}
-                    value={dataProveedor.proveedorNombre ?? ""}
+                    value={data.proveedorNombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton + Global.Disabled}
                   />
@@ -1088,21 +1247,26 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       className={Global.InputBoton}
                     >
-                      {dataTipoPag.map((map) => (
+                      <option key={"-1"} value={""}>
+                        {"--SELECCIONAR--"}
+                      </option>
+                      {dataDocRef.map((map) => (
                         <option key={map.id} value={map.id}>
-                          {map.descripcion}
+                          {map.numeroDocumento}
                         </option>
                       ))}
                     </select>
                     <button
-                      id="consultar"
+                      id="detalleDocReferencia"
                       className={
                         Global.BotonBuscar +
                         Global.BotonPrimary +
                         " !rounded-none"
                       }
                       hidden={modo == "Consultar" ? true : false}
-                      onClick={(e) => AbrirFiltroProveedor(e)}
+                      onClick={(e) =>
+                        DetalleDocReferencia(e, data.documentoReferenciaId)
+                      }
                     >
                       <FaPaste></FaPaste>
                     </button>
@@ -1246,6 +1410,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           ValidarData(e);
                         }}
                         checked={data.incluyeIGV ? true : ""}
+                        disabled={data.tipoDocumentoId == "03" ? true : false}
                       ></Checkbox>
                     </div>
                     <label
@@ -1350,7 +1515,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.BotonBuscar + Global.BotonPrimary}
                     disabled={!habilitarFiltro ? false : true}
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => AbrirFiltroArticulo(e)}
+                    onClick={(e) => {
+                      setDataArt([]);
+                      AbrirFiltroArticulo(e);
+                    }}
                   >
                     <FaSearch></FaSearch>
                   </button>
@@ -1367,7 +1535,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={true}
                     value={dataArt.stock ?? ""}
                     onChange={ValidarDataArt}
-                    className={Global.InputStyle}
+                    className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
               </div>
@@ -1388,7 +1556,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={true}
                     value={dataArt.unidadMedidaDescripcion ?? ""}
                     onChange={ValidarDataArt}
-                    className={Global.InputStyle}
+                    className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
 
@@ -1457,11 +1625,23 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             {/* Tabla */}
             <TablaStyle>
-              <TableBasic columnas={columnas} datos={dataDetalle} />
+              <TableBasic
+                columnas={columnas}
+                datos={dataDetalle}
+                estilos={[
+                  "",
+                  "",
+                  "",
+                  "border ",
+                  "",
+                  "border border-b-0",
+                  "border",
+                ]}
+              />
             </TablaStyle>
             {/* Tabla */}
 
-            <div className="bg-gradient-to-t from-gray-900 to-gray-800">
+            <div className="bg-gradient-to-t from-gray-900 to-gray-800 border-t-0">
               {data.tipoDocumentoId != "03" ? (
                 <>
                   <div className="flex">
@@ -1474,7 +1654,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         {data.subTotal ?? "0.00"}
                       </p>
                     </div>
-                    <div className="w-28 px-2 border border-gray-400"></div>
+                    <div className="w-28 px-1 border border-gray-400"></div>
                   </div>
                   <div className="flex">
                     <div className="w-full border border-r-0 border-t-0 border-gray-400"></div>
@@ -1504,7 +1684,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         {data.montoIGV ?? "0.00"}
                       </p>
                     </div>
-                    <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
+                    <div className="w-28 px-1 border border-t-0 border-gray-400"></div>
                   </div>
                 </>
               ) : (
@@ -1518,7 +1698,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
                   <p className="font-bold text-white">{data.total ?? "0.00"}</p>
                 </div>
-                <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
+                <div className="w-28 px-1 border border-t-0 border-gray-400"></div>
               </div>
             </div>
           </ModalCrud>
