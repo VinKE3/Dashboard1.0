@@ -75,7 +75,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
 
   //#region Funciones Filtrado
   const FiltradoDocumento = async (e) => {
-    let nombre = document.getElementById("nombre").value;
+    let nombre = document.getElementById("nombre").value || "";
     let documento = e.target.value;
     clearTimeout(timer);
     setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
@@ -89,7 +89,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
     setTimer(newTimer);
   };
   const FiltradoNombre = async (e) => {
-    let documento = document.getElementById("documento").value;
+    let documento = document.getElementById("documento").value || "";
     let nombre = e.target.value;
     clearTimeout(timer);
     setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
@@ -113,6 +113,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
 
   //#region Funciones
   const GetDatos = async (e, obj) => {
+    
     e.preventDefault();
     if (objetoSeleccion.length == 0) {
       setObjetoSeleccion([obj]);
@@ -121,7 +122,6 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
       setRefrescar(true);
     }
   };
-
   const EliminarFila = async (e, id) => {
     e.preventDefault();
     let model = objetoSeleccion.filter((model) => model.id !== id);

@@ -158,7 +158,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDataArt([]);
       setRefrescar(false);
       document.getElementById("productos").checked = true;
-      document.getElementById("productos").dispatchEvent(new Event("click", { bubbles: true }));
+      document
+        .getElementById("productos")
+        .dispatchEvent(new Event("click", { bubbles: true }));
     }
   }, [refrescar]);
 
@@ -206,6 +208,19 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
     if (target.name == "tipoDocumentoId") {
+      if (target.value == "03") {
+        setData((prevState) => ({
+          ...prevState,
+          incluyeIGV: true,
+        }));
+        return;
+      }
+      if (target.value != "03") {
+        setData((prevState) => ({
+          ...prevState,
+          incluyeIGV: false,
+        }));
+      }
       if (target.value != "07" || target.value != "08") {
         setData((prevState) => ({
           ...prevState,
@@ -710,7 +725,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoDocumentoId"
                     onChange={ValidarData}
                     disabled={modo == "Registrar" ? false : true}
-                    className={modo == "Registrar" ? Global.InputStyle : Global.InputStyle + Global.Disabled}
+                    className={
+                      modo == "Registrar"
+                        ? Global.InputStyle
+                        : Global.InputStyle + Global.Disabled
+                    }
                   >
                     {dataTipoDoc.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -733,7 +752,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
-                    className={modo == "Registrar" ? Global.InputStyle : Global.InputStyle + Global.Disabled}
+                    className={
+                      modo == "Registrar"
+                        ? Global.InputStyle
+                        : Global.InputStyle + Global.Disabled
+                    }
                   />
                 </div>
                 <div className={Global.InputMitad}>
@@ -750,7 +773,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
-                    className={modo == "Registrar" ? Global.InputStyle : Global.InputStyle + Global.Disabled}
+                    className={
+                      modo == "Registrar"
+                        ? Global.InputStyle
+                        : Global.InputStyle + Global.Disabled
+                    }
                   />
                 </div>
               </div>
@@ -1435,48 +1462,54 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Tabla */}
 
             <div className="bg-gradient-to-t from-gray-900 to-gray-800">
-              <div className="flex">
-                <div className="w-full border border-r-0 border-gray-400"></div>
-                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-gray-400">
-                  <p className="font-semibold text-white">SubTotal</p>
-                </div>
-                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-gray-400">
-                  <p className="font-bold text-white">
-                    {data.subTotal ?? "0.00"}
-                  </p>
-                </div>
-                <div className="w-28 px-2 border border-gray-400"></div>
-              </div>
-              <div className="flex">
-                <div className="w-full border border-r-0 border-t-0 border-gray-400"></div>
-                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
-                  <label
-                    htmlFor="porcentajeIGV"
-                    className="font-semibold text-white"
-                  >
-                    IGV
-                  </label>
-                  <select
-                    id="porcentajeIGV"
-                    name="porcentajeIGV"
-                    onChange={(e) => ValidarData(e)}
-                    disabled={modo == "Consultar" ? true : false}
-                    className="ml-2 bg-gray-700 rounded-md"
-                  >
-                    {dataIgv.map((map) => (
-                      <option key={map.porcentaje} value={map.porcentaje}>
-                        {map.porcentaje}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
-                  <p className="font-bold text-white">
-                    {data.montoIGV ?? "0.00"}
-                  </p>
-                </div>
-                <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
-              </div>
+              {data.tipoDocumentoId != "03" ? (
+                <>
+                  <div className="flex">
+                    <div className="w-full border border-r-0 border-gray-400"></div>
+                    <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-gray-400">
+                      <p className="font-semibold text-white">SubTotal</p>
+                    </div>
+                    <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-gray-400">
+                      <p className="font-bold text-white">
+                        {data.subTotal ?? "0.00"}
+                      </p>
+                    </div>
+                    <div className="w-28 px-2 border border-gray-400"></div>
+                  </div>
+                  <div className="flex">
+                    <div className="w-full border border-r-0 border-t-0 border-gray-400"></div>
+                    <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
+                      <label
+                        htmlFor="porcentajeIGV"
+                        className="font-semibold text-white"
+                      >
+                        IGV
+                      </label>
+                      <select
+                        id="porcentajeIGV"
+                        name="porcentajeIGV"
+                        onChange={(e) => ValidarData(e)}
+                        disabled={modo == "Consultar" ? true : false}
+                        className="ml-2 bg-gray-700 rounded-md"
+                      >
+                        {dataIgv.map((map) => (
+                          <option key={map.porcentaje} value={map.porcentaje}>
+                            {map.porcentaje}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
+                      <p className="font-bold text-white">
+                        {data.montoIGV ?? "0.00"}
+                      </p>
+                    </div>
+                    <div className="w-28 px-2 border border-t-0 border-gray-400"></div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
               <div className="flex">
                 <div className="w-full border border-r-0 border-t-0 border-gray-400"></div>
                 <div className="py-1 flex justify-end w-36 pl-28 pr-6 border border-r-0 border-t-0 border-gray-400">
