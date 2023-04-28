@@ -23,6 +23,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/Funciones";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
+import { set } from "date-fns";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -86,7 +87,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [modalProv, setModalProv] = useState(false);
   const [modalOC, setModalOC] = useState(false);
   const [modalArt, setModalArt] = useState(false);
-  const [detalleId, setDetalleId] = useState(1);
+  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
@@ -94,48 +95,19 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (document.getElementById("tipoDocumentoIdentidadId")) {
-      document.getElementById("tipoDocumentoIdentidadId").value =
-        data.tipoDocumentoIdentidadId;
-    }
+    // ActualizarCombos();
   }, [dataTipoDoc]);
   useEffect(() => {
-    if (document.getElementById("monedaId")) {
-      document.getElementById("monedaId").value = data.monedaId;
-    }
-  }, [dataMoneda]);
+    console.log("detalleId");
+    console.log(detalleId);
+    console.log("detalleId");
+  }, [detalleId]);
   useEffect(() => {
-    if (document.getElementById("tipoCompraId")) {
-      document.getElementById("tipoCompraId").value = data.tipoCompraId;
-    }
-  }, [dataTipoComp]);
-  useEffect(() => {
-    if (document.getElementById("tipoPagoId")) {
-      document.getElementById("tipoPagoId").value = data.tipoPagoId;
-    }
-  }, [dataTipoPag]);
-  useEffect(() => {
-    if (document.getElementById("porcentajesIGV")) {
-      document.getElementById("porcentajesIGV").value = data.porcentajeIGV;
-    }
-  }, [dataIgv]);
-  useEffect(() => {
-    if (document.getElementById("cuentaCorrienteId")) {
-      document.getElementById("cuentaCorrienteId").value =
-        data.cuentaCorrienteId;
-    }
-  }, [dataCtacte]);
-  useEffect(() => {
-    if (document.getElementById("motivoNotaId")) {
-      document.getElementById("motivoNotaId").value = data.motivoNotaId;
-    }
-  }, [dataMotivoNota]);
-  useEffect(() => {
-    dataDocRef;
-    if (document.getElementById("documentoReferenciaId")) {
-      document.getElementById("documentoReferenciaId").value =
-        data.documentoReferenciaId;
-    }
+    // dataDocRef;
+    // if (document.getElementById("documentoReferenciaId")) {
+    //   document.getElementById("documentoReferenciaId").value =
+    //     data.documentoReferenciaId;
+    // }
   }, [dataDocRef]);
 
   useEffect(() => {
@@ -160,7 +132,11 @@ const Modal = ({ setModal, modo, objeto }) => {
   useEffect(() => {
     if (Object.keys(dataOC).length > 0) {
       if (dataOC.ordenesCompraRelacionadas.length > 0) {
-        let obj = dataOC.ordenesCompraRelacionadas[dataOC.ordenesCompraRelacionadas.length - 1];
+        //Obtenemos el último índice del array
+        let obj =
+          dataOC.ordenesCompraRelacionadas[
+            dataOC.ordenesCompraRelacionadas.length - 1
+          ];
         setData({
           ...data,
           proveedorNumeroDocumentoIdentidad:
@@ -178,11 +154,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           tipoPagoId: obj.tipoPagoId,
           ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
         });
+        //Añadimos los detalles
+        AgregarDetalleOC();
       } else {
         setData({
           ...data,
           ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
         });
+        //Limpia los detalles
+        setDataDetalle([]);
       }
       setRefrescar(true);
     }
@@ -193,14 +173,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataDetalle]);
   useEffect(() => {}, [dataArt]);
-  useEffect(() => {
-    console.log(data);
-    if (Object.entries(data).length > 0) {
-      if (document.getElementById("porcentajeIGV")) {
-        document.getElementById("porcentajeIGV").value = data.porcentajeIGV;
-      }
-    }
-  }, [data]);
+  useEffect(() => {}, [data]);
 
   useEffect(() => {
     if (refrescar) {
@@ -238,6 +211,32 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
+  const ActualizarCombos = async () => {
+    if (Object.entries(dataTipoDoc).length > 0) {
+      if (document.getElementById("tipoDocumentoId")) {
+        document.getElementById("tipoDocumentoId").value = data.tipoDocumentoId;
+      }
+      if (document.getElementById("monedaId")) {
+        document.getElementById("monedaId").value = data.monedaId;
+      }
+      if (document.getElementById("tipoCompraId")) {
+        document.getElementById("tipoCompraId").value = data.tipoCompraId;
+      }
+      if (document.getElementById("tipoPagoId")) {
+        document.getElementById("tipoPagoId").value = data.tipoPagoId;
+      }
+      if (document.getElementById("porcentajeIGV")) {
+        document.getElementById("porcentajeIGV").value = data.porcentajeIGV;
+      }
+      if (document.getElementById("cuentaCorrienteId")) {
+        document.getElementById("cuentaCorrienteId").value =
+          data.cuentaCorrienteId;
+      }
+      if (document.getElementById("motivoNotaId")) {
+        document.getElementById("motivoNotaId").value = data.motivoNotaId;
+      }
+    }
+  };
   const ValidarData = async ({ target }) => {
     if (
       target.name == "incluyeIGV" ||
@@ -257,18 +256,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         [target.name]: target.value.toUpperCase(),
       }));
     }
-    if (target.name == "porcentajeIGV") {
-      setRefrescar(true);
-    }
-    if (target.name == "tipoPagoId") {
-      if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
-          numeroOperacion: "",
-          cuentaCorrienteId: "",
-        }));
-      }
-    }
+
     if (target.name == "tipoDocumentoId") {
       if (target.value == "03") {
         setData((prevState) => ({
@@ -292,7 +280,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         }));
       }
     }
-
     if (target.name == "fechaEmision") {
       setTimeout(() => {
         toast(
@@ -311,6 +298,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       }, 2000);
     }
 
+    if (target.name == "porcentajeIGV") {
+      setRefrescar(true);
+    }
+
+    if (target.name == "tipoCompraId") {
+      setData((prevData) => ({
+        ...prevData,
+        tipoPagoId: "",
+      }));
+    }
+
     if (target.name == "tipoPagoId") {
       if (data.tipoCompraId != "CO") {
         let model = dataTipoPag.find((map) => map.id === target.value);
@@ -323,6 +321,36 @@ const Modal = ({ setModal, modo, objeto }) => {
           fechaVencimiento: nuevaFecha,
         }));
       }
+
+      if (target.value != "CH" || target.value != "DE") {
+        setData((prevState) => ({
+          ...prevState,
+          numeroOperacion: "",
+          cuentaCorrienteId: "",
+        }));
+      }
+    }
+  };
+  const Numeracion = async (e) => {
+    if (e.target.name == "numero") {
+      let num = e.target.value;
+      if (num.length < 10) {
+        num = ("0000000000" + num).slice(-10);
+      }
+      setData((prevState) => ({
+        ...prevState,
+        numero: num,
+      }));
+    }
+    if (e.target.name == "serie") {
+      let num = e.target.value;
+      if (num.length < 4) {
+        num = ("0000000000" + num).slice(-4);
+      }
+      setData((prevState) => ({
+        ...prevState,
+        serie: num,
+      }));
     }
   };
   const ValidarVarios = async ({ target }) => {
@@ -412,12 +440,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       return [true, ""];
     }
   };
-  const AgregarDetalle = async (e, id) => {
+  const CargarDetalle = async (e, id) => {
     e.preventDefault();
-    let model = dataDetalle.find((map) => map.detalleId === id);
-    setDataArt(model);
+    setDataArt(dataDetalle.find((map) => map.detalleId === id));
   };
-  const EnviarDetalle = async (e) => {
+  const AgregarDetalleArticulo = async (e) => {
     e.preventDefault();
     let resultado = await ValidarDetalle();
     if (resultado[0]) {
@@ -436,32 +463,59 @@ const Modal = ({ setModal, modo, objeto }) => {
           unidadMedidaId: dataArt.unidadMedidaId,
           cantidad: dataArt.cantidad,
           precioUnitario: dataArt.precioUnitario,
-          montoIgv: dataArt.montoIgv,
+          montoIGV: dataArt.montoIGV,
           subTotal: dataArt.subTotal,
           importe: dataArt.importe,
         };
+        setRefrescar(true);
       } else {
-        dataDetalle.push({
-          detalleId: detalleId,
-          id: dataArt.id,
-          lineaId: dataArt.lineaId,
-          subLineaId: dataArt.subLineaId,
-          articuloId: dataArt.articuloId,
-          marcaId: dataArt.marcaId,
-          codigoBarras: dataArt.codigoBarras,
-          descripcion: dataArt.descripcion,
-          stock: dataArt.stock,
-          unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-          unidadMedidaId: dataArt.unidadMedidaId,
-          cantidad: dataArt.cantidad,
-          precioUnitario: dataArt.precioUnitario,
-          montoIgv: dataArt.montoIgv,
-          subTotal: dataArt.subTotal,
-          importe: dataArt.importe,
+        let model = dataDetalle.find((map) => {
+          return map.articuloId == dataArt.articuloId;
         });
-        setDetalleId(detalleId + 1);
+        if (model == undefined) {
+          dataDetalle.push({
+            detalleId: detalleId,
+            id: dataArt.id,
+            lineaId: dataArt.lineaId,
+            subLineaId: dataArt.subLineaId,
+            articuloId: dataArt.articuloId,
+            marcaId: dataArt.marcaId,
+            codigoBarras: dataArt.codigoBarras,
+            descripcion: dataArt.descripcion,
+            stock: dataArt.stock,
+            unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+            unidadMedidaId: dataArt.unidadMedidaId,
+            cantidad: dataArt.cantidad,
+            precioUnitario: dataArt.precioUnitario,
+            montoIGV: dataArt.montoIGV,
+            subTotal: dataArt.subTotal,
+            importe: dataArt.importe,
+          });
+          setDetalleId(detalleId + 1);
+          setRefrescar(true);
+        } else {
+          Swal.fire({
+            title: "Aviso del sistema",
+            text:
+              "El artículo " +
+              model.descripcion +
+              " ya está registrado en el detalle, ¿Desea modificar los datos de venta del artículo?",
+            icon: "error",
+            iconColor: "#F7BF3A",
+            showCancelButton: true,
+            color: "#fff",
+            background: "#1a1a2e",
+            confirmButtonColor: "#eea508",
+            confirmButtonText: "Aceptar",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+          }).then((res) => {
+            if (res.isConfirmed) {
+              CargarDetalle(e, model.detalleId);
+            }
+          });
+        }
       }
-      setRefrescar(true);
     } else {
       toast.error(resultado[1], {
         position: "bottom-right",
@@ -475,13 +529,93 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   };
+  const AgregarDetalleOC = async () => {
+    let objetoOC =
+      dataOC.ordenesCompraRelacionadas[
+        dataOC.ordenesCompraRelacionadas.length - 1
+      ].detalles[0];
+    let detalleActual = dataDetalle.find((map) => {
+      return map.articuloId == objetoOC.articuloId;
+    });
+    if (detalleActual == undefined) {
+      dataDetalle.push({
+        detalleId: detalleId,
+        id: objetoOC.id,
+        lineaId: objetoOC.lineaId,
+        subLineaId: objetoOC.subLineaId,
+        articuloId: objetoOC.articuloId,
+        marcaId: objetoOC.marcaId,
+        codigoBarras: objetoOC.codigoBarras,
+        descripcion: objetoOC.descripcion,
+        stock: objetoOC.stock,
+        unidadMedidaDescripcion: objetoOC.unidadMedidaDescripcion,
+        unidadMedidaId: objetoOC.unidadMedidaId,
+        cantidad: objetoOC.cantidad,
+        precioUnitario: objetoOC.precioUnitario,
+        montoIGV: objetoOC.montoIGV,
+        subTotal: objetoOC.subTotal,
+        importe: objetoOC.importe,
+      });
+      setDetalleId(detalleId + 1);
+    } else {
+      let cantidad = detalleActual.cantidad + objetoOC.cantidad;
+      let importe = cantidad * detalleActual.precioUnitario;
+      let subTotal = importe * (data.porcentajeIGV / 100);
+      let montoIGV = importe - subTotal;
+      dataDetalle[detalleActual.detalleId - 1] = {
+        id: objetoOC.id,
+        lineaId: objetoOC.lineaId,
+        subLineaId: objetoOC.subLineaId,
+        articuloId: objetoOC.articuloId,
+        marcaId: objetoOC.marcaId,
+        codigoBarras: objetoOC.codigoBarras,
+        descripcion: objetoOC.descripcion,
+        stock: objetoOC.stock,
+        unidadMedidaDescripcion: objetoOC.unidadMedidaDescripcion,
+        unidadMedidaId: objetoOC.unidadMedidaId,
+        cantidad: cantidad,
+        precioUnitario: detalleActual.precioUnitario,
+        importe: importe,
+        subTotal: subTotal,
+        montoIGV: montoIGV,
+      };
+    }
+    setRefrescar(true);
+  };
   const EliminarDetalle = async (e, id) => {
     e.preventDefault();
     if (id != "") {
       let model = dataDetalle.filter((map) => map.detalleId !== id);
       setDataDetalle(model);
+      setDetalleId(detalleId - 1);
       setRefrescar(true);
     }
+  };
+  const CalcularDetalleMontos = async (origen) => {
+    let cantidad = parseInt(document.getElementById("cantidad").value || 0);
+    let precioUnitario = parseInt(
+      document.getElementById("precioUnitario").value || 0
+    );
+    let importe = parseInt(document.getElementById("importe").value || 0);
+
+    if (origen == "cantidad" || origen == "precioUnitario") {
+      importe = Funciones.RedondearNumero(cantidad * precioUnitario, 2);
+    } else {
+      precioUnitario =
+        cantidad != 0 ? Funciones.RedondearNumero(importe / cantidad, 4) : 0;
+    }
+
+    let subTotal = Funciones.RedondearNumero(importe / 1.18, 2);
+    let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
+
+    setDataArt({
+      ...dataArt,
+      cantidad: cantidad,
+      precioUnitario: precioUnitario,
+      importe: importe,
+      subTotal: subTotal,
+      montoIGV: montoIGV,
+    });
   };
   const DetalleDocReferencia = async (e, id) => {
     e.preventDefault();
@@ -605,7 +739,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     let incluyeIgv = data.incluyeIGV;
     let total = 0,
       subTotal = 0,
-      montoIgv = 0;
+      montoIGV = 0;
 
     if (incluyeIgv) {
       total = Funciones.RedondearNumero(importeTotal, 2);
@@ -613,45 +747,21 @@ const Modal = ({ setModal, modo, objeto }) => {
         total / (1 + porcentajeIgvSeleccionado / 100),
         2
       );
-      montoIgv = Funciones.RedondearNumero(total - subTotal, 2);
+      montoIGV = Funciones.RedondearNumero(total - subTotal, 2);
     } else {
       subTotal = Funciones.RedondearNumero(importeTotal, 2);
-      montoIgv = Funciones.RedondearNumero(
+      montoIGV = Funciones.RedondearNumero(
         subTotal * (porcentajeIgvSeleccionado / 100),
         2
       );
-      total = Funciones.RedondearNumero(subTotal + montoIgv, 2);
+      total = Funciones.RedondearNumero(subTotal + montoIGV, 2);
     }
     setData({
       ...data,
       subTotal: Funciones.FormatoNumero(subTotal.toFixed(2)),
-      montoIGV: Funciones.FormatoNumero(montoIgv.toFixed(2)),
+      montoIGV: Funciones.FormatoNumero(montoIGV.toFixed(2)),
       totalNeto: Funciones.FormatoNumero(total.toFixed(2)),
       total: Funciones.FormatoNumero(total.toFixed(2)),
-    });
-  };
-  const CalcularDetalleMontos = async (origen) => {
-    let cantidad = parseInt(document.getElementById("cantidad").value || 0);
-    let precioUnitario = parseInt(
-      document.getElementById("precioUnitario").value || 0
-    );
-    let importe = parseInt(document.getElementById("importe").value || 0);
-
-    if (origen == "cantidad" || origen == "precioUnitario") {
-      importe = Funciones.RedondearNumero(cantidad * precioUnitario, 2);
-    } else {
-      precioUnitario =
-        cantidad != 0 ? Funciones.RedondearNumero(importe / cantidad, 4) : 0;
-    }
-    let subTotal = Funciones.RedondearNumero(importe / 1.18, 2);
-    let montoIgv = Funciones.RedondearNumero(importe - subTotal, 2);
-    setDataArt({
-      ...dataArt,
-      precioUnitario: precioUnitario,
-      importe: importe,
-      cantidad: cantidad,
-      montoIgv: montoIgv,
-      subTotal: subTotal,
     });
   };
   const OcultarMensajes = () => {
@@ -819,7 +929,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={(e) => AgregarDetalle(e, row.values.detalleId)}
+                  onClick={(e) => CargarDetalle(e, row.values.detalleId)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -882,6 +992,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="tipoDocumentoId"
                     name="tipoDocumentoId"
+                    value={data.tipoDocumentoId ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Registrar" ? false : true}
                     className={
@@ -911,6 +1022,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
+                    onBlur={(e) => Numeracion(e)}
                     className={
                       modo == "Registrar"
                         ? Global.InputStyle
@@ -932,6 +1044,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
+                    onBlur={(e) => Numeracion(e)}
                     className={
                       modo == "Registrar"
                         ? Global.InputStyle
@@ -1092,6 +1205,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="monedaId"
                     name="monedaId"
+                    value={data.monedaId ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
@@ -1139,6 +1253,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="tipoCompraId"
                     name="tipoCompraId"
+                    value={data.tipoCompraId ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
@@ -1165,6 +1280,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="tipoPagoId"
                     name="tipoPagoId"
+                    value={data.tipoPagoId ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
@@ -1212,6 +1328,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <select
                         id="cuentaCorrienteId"
                         name="cuentaCorrienteId"
+                        value={data.cuentaCorrienteId ?? ""}
                         onChange={ValidarData}
                         disabled={modo == "Consultar" ? true : false}
                         className={Global.InputStyle}
@@ -1243,6 +1360,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <select
                       id="documentoReferenciaId"
                       name="documentoReferenciaId"
+                      value={data.documentoReferenciaId ?? ""}
                       onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
                       className={Global.InputBoton}
@@ -1297,6 +1415,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <select
                       id="motivoNotaId"
                       name="motivoNotaId"
+                      value={data.motivoNotaId ?? ""}
                       onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
                       className={Global.InputStyle}
@@ -1565,7 +1684,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     Cantidad
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    pattern="/^[0-9a-zA-Z]$/"
                     id="cantidad"
                     name="cantidad"
                     placeholder="0"
@@ -1615,7 +1735,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="enviarDetalle"
                     className={Global.BotonBuscar + Global.BotonPrimary}
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => EnviarDetalle(e)}
+                    onClick={(e) => AgregarDetalleArticulo(e)}
                   >
                     <FaPlus></FaPlus>
                   </button>
@@ -1668,6 +1788,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <select
                         id="porcentajeIGV"
                         name="porcentajeIGV"
+                        value={data.porcentajeIGV ?? ""}
                         onChange={(e) => ValidarData(e)}
                         disabled={modo == "Consultar" ? true : false}
                         className="ml-2 bg-gray-700 rounded-md"

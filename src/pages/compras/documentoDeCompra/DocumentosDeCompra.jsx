@@ -291,7 +291,7 @@ const DocumentosdeCompra = () => {
           guiaRemision: "",
           observacion: "",
           subTotal: 0.00,
-          porcentajeIGV: 0.00,
+          porcentajeIGV: 18,
           montoIGV: 0.00,
           totalNeto: 0.00,
           total: 0.00,

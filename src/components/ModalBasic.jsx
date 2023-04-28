@@ -39,7 +39,7 @@ const ModalBasic = ({
 
             {/*body*/}
             <div className={Global.ModalBody}>
-              <form className={tamañoModal[1]}>{children}</form>
+              <div className={tamañoModal[1]}>{children}</div>
             </div>
             {/*body*/}
 
