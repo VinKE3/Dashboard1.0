@@ -84,6 +84,10 @@ function seccionesList() {
       icon: <FaTools className="text-primary" />,
       items: [
         {
+          path: "/mantenimiento/articulos",
+          title: "Articulos",
+        },
+        {
           path: "/mantenimiento/tipos-de-cambio",
           title: "Tipos de Cambio",
         },

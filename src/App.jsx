@@ -25,6 +25,7 @@ import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArti
 import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
 import BloquearCompra from "./pages/compras/bloquearCompra/BloquearCompra";
 //*Pages mantenimiento
+import Articulo from "./pages/mantenimiento/articulo/Articulo";
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
 import Clientes from "./pages/mantenimiento/cliente/Cliente";
 import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
@@ -117,6 +118,7 @@ function App() {
           <Route path="/compras/bloquear-compra" element={<BloquearCompra />} />
           {/** //!MANTENIMIENTO */}
           <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
+          <Route path="/mantenimiento/articulos" element={<Articulo />} />
           <Route
             path="/mantenimiento/correlativos"
             element={<Correlativos />}
