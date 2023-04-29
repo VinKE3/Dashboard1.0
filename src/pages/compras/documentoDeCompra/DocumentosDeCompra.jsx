@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
@@ -38,35 +38,46 @@ const TablaStyle = styled.div`
 
 const DocumentosdeCompra = () => {
   //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
-  const [objeto, setObjeto] = useState([]);
+  const [filtro, setFiltro] = useState({
+    fechaInicio:
+      moment().subtract(1, "years").startOf("year").format("yyyy") + "-01-01",
+    fechaFin: moment().format("YYYY-MM-DD"),
+    nombre: "",
+  });
+  const [cadena, setCadena] = useState(
+    `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&proveedorNombre=${filtro.nombre}`
+  );
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const filtroInicial =
-    "&fechaInicio=" +
-    moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") +
-    "&fechaFin=" +
-    moment().format("YYYY-MM-DD");
   //#endregion
 
   //#region useEffect
   useEffect(() => {
+    setCadena(
+      `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&proveedorNombre=${filtro.nombre}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+  useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar(filtroInicial, index + 1);
+        Listar(cadena, index + 1);
       }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtroInicial, index + 1);
+      Listar(cadena, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -82,7 +93,7 @@ const DocumentosdeCompra = () => {
         setVisible(false);
       } else {
         setVisible(true);
-        Listar(filtroInicial, 1);
+        Listar(cadena, 1);
       }
     }
   }, [permisos]);
@@ -90,7 +101,7 @@ const DocumentosdeCompra = () => {
     if (store.session.get("usuario") == "AD") {
       setVisible(true);
       setPermisos([true, true, true, true, true]);
-      Listar(filtroInicial, 1);
+      Listar(cadena, 1);
     } else {
       GetPermisos();
     }
@@ -98,118 +109,23 @@ const DocumentosdeCompra = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let proveedor = document.getElementById("proveedorNombre").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (
-      fechaInicio ==
-        moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") &&
-      fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-      proveedor == ""
-    ) {
-      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
-    } else {
-      Listar(
-        `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&proveedorNombre=${proveedor}`,
-        boton
-      );
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const FiltradoProveedor = async (e) => {
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let proveedor = e.target.value;
+  const Filtro = async () => {
     clearTimeout(timer);
-    if (proveedor != "") setIndex(0);
-    setFiltro(
-      `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&proveedorNombre=${proveedor}`,
-      index + 1
-    );
+    setIndex(0);
     const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-        proveedor == ""
-      ) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        Listar(
-          `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&proveedorNombre=${proveedor}`,
-          index + 1
-        );
-      }
+      Listar(cadena, index + 1);
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoFechaInicio = (e) => {
-    clearTimeout(timer);
-    let fechaInicio = e.target.value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let proveedor = document.getElementById("proveedorNombre").value;
-    setFiltro(
-      `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&proveedorNombre=${proveedor}`,
-      index + 1
-    );
-    if (
-      fechaInicio !=
-      moment().subtract(1, "years").startOf("year").format("yyyy-MM-DD")
-    )
-      setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-        proveedor == ""
-      ) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        Listar(
-          `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&proveedorNombre=${proveedor}`,
-          index + 1
-        );
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-  const FiltradoFechaFin = (e) => {
-    clearTimeout(timer);
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = e.target.value;
-    let proveedor = document.getElementById("proveedorNombre").value;
-    setFiltro(
-      `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&proveedorNombre=${proveedor}`,
-      index + 1
-    );
-    if (fechaFin != moment(new Date()).format("yyyy-MM-DD")) setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(1, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-        proveedor == ""
-      ) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        Listar(
-          `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&proveedorNombre=${proveedor}`,
-          index + 1
-        );
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-  const FiltradoButton = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, 1);
-    } else {
-      Listar(filtro, 1);
-    }
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
@@ -290,11 +206,11 @@ const DocumentosdeCompra = () => {
           motivoSustento: "",
           guiaRemision: "",
           observacion: "",
-          subTotal: 0.00,
+          subTotal: 0.0,
           porcentajeIGV: 18,
-          montoIGV: 0.00,
-          totalNeto: 0.00,
-          total: 0.00,
+          montoIGV: 0.0,
+          totalNeto: 0.0,
+          total: 0.0,
           incluyeIGV: false,
           afectarStock: false,
           detalles: [],
@@ -323,103 +239,107 @@ const DocumentosdeCompra = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Fecha",
-      accessor: "fechaContable",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YY");
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Emisión",
-      accessor: "fechaEmision",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YY");
+      {
+        Header: "Fecha",
+        accessor: "fechaContable",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YY");
+        },
       },
-    },
-    {
-      Header: "N° Documento",
-      accessor: "numeroDocumento",
-    },
-    {
-      Header: "Proveedor",
-      accessor: "proveedorNombre",
-    },
-    {
-      Header: "RUC",
-      accessor: "proveedorNumero",
-    },
-    {
-      Header: "M",
-      accessor: "monedaId",
-    },
-    {
-      Header: "Total",
-      accessor: "total",
-      Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+      {
+        Header: "Emisión",
+        accessor: "fechaEmision",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YY");
+        },
       },
-    },
-    {
-      Header: "C",
-      accessor: "isCancelado",
-      Cell: ({ value }) => {
-        return (
-          <div className="flex justify-center">
-            <Checkbox checked={value} />
-          </div>
-        );
+      {
+        Header: "N° Documento",
+        accessor: "numeroDocumento",
       },
-    },
-    {
-      Header: "B",
-      accessor: "isBloqueado",
-      Cell: ({ value }) => {
-        return (
-          <div className="flex justify-center">
-            <Checkbox checked={value} />
-          </div>
-        );
+      {
+        Header: "Proveedor",
+        accessor: "proveedorNombre",
       },
-    },
-    {
-      Header: "S",
-      accessor: "afectarStock",
-      Cell: ({ value }) => {
-        return (
-          <div className="flex justify-center">
-            <Checkbox checked={value} />
-          </div>
-        );
+      {
+        Header: "RUC",
+        accessor: "proveedorNumero",
       },
-    },
-    {
-      Header: "O. Compra",
-      accessor: "ordenCompra",
-    },
-    {
-      Header: "G. Remisión",
-      accessor: "guiaRemision",
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Compra", "DocumentoCompra"]}
-          id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-        />
-      ),
-    },
-  ];
+      {
+        Header: "M",
+        accessor: "monedaId",
+      },
+      {
+        Header: "Total",
+        accessor: "total",
+        Cell: ({ value }) => {
+          return <p className="text-right">{value}</p>;
+        },
+      },
+      {
+        Header: "C",
+        accessor: "isCancelado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "B",
+        accessor: "isBloqueado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "S",
+        accessor: "afectarStock",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "O. Compra",
+        accessor: "ordenCompra",
+      },
+      {
+        Header: "G. Remisión",
+        accessor: "guiaRemision",
+      },
+      {
+        Header: "Acciones",
+        accessor: "none",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Compra", "DocumentoCompra"]}
+            id={row.values.id}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+          />
+        ),
+      },
+    ],
+    []
+  );
   //#endregion
 
   //#region Render
@@ -434,17 +354,19 @@ const DocumentosdeCompra = () => {
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
                 <label
-                  name="tipoDocumentoId"
+                  name="nombre"
                   className={Global.LabelStyle + Global.FiltroStyle}
                 >
                   Proveedor
                 </label>
                 <input
                   type="text"
-                  id="proveedorNombre"
-                  name="proveedorNombre"
+                  id="nombre"
+                  name="nombre"
                   placeholder="Proveedor"
-                  onChange={FiltradoProveedor}
+                  autoComplete="off"
+                  value={filtro.nombre}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
@@ -459,11 +381,8 @@ const DocumentosdeCompra = () => {
                   type="date"
                   id="fechaInicio"
                   name="fechaInicio"
-                  onChange={FiltradoFechaInicio}
-                  defaultValue={moment()
-                    .subtract(1, "year")
-                    .startOf("year")
-                    .format("yyyy-MM-DD")}
+                  value={filtro.fechaInicio}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
@@ -478,8 +397,8 @@ const DocumentosdeCompra = () => {
                   type="date"
                   id="fechaFin"
                   name="fechaFin"
-                  onChange={FiltradoFechaFin}
-                  defaultValue={moment(new Date()).format("yyyy-MM-DD")}
+                  value={filtro.fechaFin}
+                  onChange={ValidarData}
                   className={Global.InputBoton}
                 />
                 <button
@@ -487,7 +406,7 @@ const DocumentosdeCompra = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={FiltradoButton}
+                  onClick={Filtro}
                 >
                   <FaSearch />
                 </button>

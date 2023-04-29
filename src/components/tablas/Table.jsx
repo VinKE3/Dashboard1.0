@@ -203,4 +203,4 @@ const Table = ({ columnas, datos, total, index, Click }) => {
   //#endregion
 };
 
-export default Table;
+export default React.memo(Table);
