@@ -119,7 +119,7 @@ const Distrito = () => {
       Listar(`&nombre=${filtro}`, boton);
     }
   };
-  const FiltradoKeyPress = async (e) => {
+  const onChange = async (e) => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&nombre=${f}`);
@@ -133,7 +133,7 @@ const Distrito = () => {
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoButton = () => {
+  const onClick = () => {
     setIndex(0);
     if (filtro == "") {
       Listar("", 1);
@@ -206,13 +206,13 @@ const Distrito = () => {
             {/* Filtro*/}
             <FiltroBasico
               textLabel={"Distrito"}
-              inputPlaceHolder={"Distrito"}
+              placeHolder={"Distrito"}
               inputId={"nombre"}
-              inputName={"nombre"}
-              inputMax={"200"}
+              name={"nombre"}
+              maxLength={"200"}
               botonId={"buscar"}
-              FiltradoButton={FiltradoButton}
-              FiltradoKeyPress={FiltradoKeyPress}
+              onClick={onClick}
+              onChange={onChange}
             />
             {/* Filtro*/}
 

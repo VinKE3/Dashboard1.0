@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
+import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
-import { faPlus, faKey, faGear } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
 import Modal from "./Modal";
 import ModalConfiguracion from "./ModalConfiguracion";
 import ModalClave from "./ModalClave";
-import moment from "moment";
-import { ToastContainer, toast } from "react-toastify";
 import { Checkbox } from "primereact/checkbox";
+import { ToastContainer, toast } from "react-toastify";
+import moment from "moment";
+import styled from "styled-components";
+import { faPlus, faKey, faGear } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -48,47 +48,59 @@ import React from "react";
 
 const Usuarios = () => {
   //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
-  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
+  const [filtro, setFiltro] = useState({
+    nick: "",
+  });
+  const [cadena, setCadena] = useState(`&nick=${filtro.nick}`);
+
+  //Modal
   const [modal, setModal] = useState(false);
   const [modalConfig, setModalConfig] = useState(false);
   const [modalClave, setModalClave] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
+  //Modal
   //#endregion
 
   //#region useEffect
   useEffect(() => {
+    setCadena(`&nick=${filtro.nick}`);
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+
+  useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar("", index + 1);
+        Listar(cadena, index + 1);
       }
     }
   }, [modal]);
   useEffect(() => {
     if (visible) {
       if (!modalConfig) {
-        Listar(filtro, index);
+        Listar(cadena, index);
       }
     }
   }, [modalConfig]);
   useEffect(() => {
     if (visible) {
       if (!modalClave) {
-        Listar(filtro, index);
+        Listar(cadena, index);
       }
     }
   }, [modalClave]);
-
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index);
+      Listar(cadena, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -104,18 +116,12 @@ const Usuarios = () => {
         setVisible(false);
       } else {
         setVisible(true);
-        Listar("", 1);
+        Listar(cadena, 1);
       }
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setVisible(true);
-      setPermisos([true, true, true, true, true]);
-      Listar("", 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("Usuario", setPermisos);
   }, []);
   //#endregion
 
@@ -146,53 +152,26 @@ const Usuarios = () => {
     };
     setObjeto(model);
   };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "Usuario"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
-  };
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let filtro = document.getElementById("nick").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected + 1);
-    if (filtro == "") {
-      Listar("", boton);
-    } else {
-      Listar(`&nick=${filtro}`, boton);
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const FiltradoKeyPress = async (e) => {
+  const Filtro = async () => {
     clearTimeout(timer);
-    let f = e.target.value;
-    setFiltro(`&nick=${f}`);
-    if (f != "") setIndex(0);
+    setIndex(0);
     const newTimer = setTimeout(() => {
-      if (f == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(`&nick=${f}`, index + 1);
-      }
+      Listar(cadena, index + 1);
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoButton = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
@@ -268,75 +247,78 @@ const Usuarios = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "ID",
-      accessor: "id",
-    },
-    {
-      Header: "Nick",
-      accessor: "nick",
-    },
-    {
-      Header: "Tipo Usuario",
-      accessor: "tipoUsuarioDescripcion",
-    },
-    {
-      Header: "Fecha Inicio",
-      accessor: "fechaInicio",
-      Cell: ({ value }) => {
-        return value == null ? (
-          <p className="flex justify-center">--/--/----</p>
-        ) : (
-          <p className="flex justify-center">
-            {moment(value).format("DD/MM/YYYY")}
-          </p>
-        );
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Fecha Modificacion",
-      accessor: "fechaModificacion",
-      Cell: ({ value }) => {
-        return value == null ? (
-          <p className="flex justify-center">--/--/----</p>
-        ) : (
-          <p className="flex justify-center">
-            {moment(value).format("DD/MM/YYYY")}
-          </p>
-        );
+      {
+        Header: "Nick",
+        accessor: "nick",
       },
-    },
+      {
+        Header: "Tipo Usuario",
+        accessor: "tipoUsuarioDescripcion",
+      },
+      {
+        Header: "F. Inicio",
+        accessor: "fechaInicio",
+        Cell: ({ value }) => {
+          return value == null ? (
+            <p className="flex justify-center">--/--/----</p>
+          ) : (
+            <p className="flex justify-center">
+              {moment(value).format("DD/MM/YYYY")}
+            </p>
+          );
+        },
+      },
+      {
+        Header: "F. Modificacion",
+        accessor: "fechaModificacion",
+        Cell: ({ value }) => {
+          return value == null ? (
+            <p className="flex justify-center">--/--/----</p>
+          ) : (
+            <p className="flex justify-center">
+              {moment(value).format("DD/MM/YYYY")}
+            </p>
+          );
+        },
+      },
 
-    {
-      Header: "Activo",
-      accessor: "isActivo",
-      Cell: ({ value }) => {
-        return value ? (
-          <div className="flex justify-center">
-            <Checkbox checked={true} />
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            <Checkbox checked={false} />
-          </div>
-        );
+      {
+        Header: "Activo",
+        accessor: "isActivo",
+        Cell: ({ value }) => {
+          return value ? (
+            <div className="flex justify-center">
+              <Checkbox checked={true} />
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <Checkbox checked={false} />
+            </div>
+          );
+        },
       },
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Mantenimiento", "Usuario"]}
-          id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
-        />
-      ),
-    },
-  ];
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Mantenimiento", "Usuario"]}
+            id={row.values.id}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
@@ -350,24 +332,25 @@ const Usuarios = () => {
             {/* Filtro*/}
             <FiltroBasico
               textLabel={"Nick"}
-              inputPlaceHolder={"Nick"}
-              inputId={"nick2"}
-              inputName={"nick"}
-              inputMax={"200"}
+              maxLength={"200"}
+              name={"nickFiltro"}
+              placeHolder={"Nick"}
+              value={filtro.nick}
+              onChange={ValidarData}
               botonId={"buscar"}
-              FiltradoButton={FiltradoButton}
-              FiltradoKeyPress={FiltradoKeyPress}
+              onClick={ValidarData}
             />
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="flex gap-1">
+            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
               {permisos[0] && (
                 <BotonBasico
                   botonText="Registrar"
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AbrirModal()}
+                  containerClass=""
                 />
               )}
               {permisos[0] && (
@@ -376,6 +359,7 @@ const Usuarios = () => {
                   botonClass={Global.BotonConfigurar}
                   botonIcon={faGear}
                   click={() => AbrirModalConfigurar()}
+                  containerClass=""
                 />
               )}
               {permisos[0] && (
@@ -384,6 +368,7 @@ const Usuarios = () => {
                   botonClass={Global.BotonAgregar}
                   botonIcon={faKey}
                   click={() => AbrirModalClave()}
+                  containerClass=""
                 />
               )}
             </div>

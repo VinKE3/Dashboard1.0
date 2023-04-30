@@ -85,7 +85,7 @@ const ModalCrud = ({
 
             {/*body*/}
             <div className={Global.ModalBody}>
-              <form className={tamañoModal[1]}>
+              <div className={tamañoModal[1]}>
                 {tipoMensaje > 0 && (
                   <Mensajes
                     tipoMensaje={tipoMensaje}
@@ -94,7 +94,7 @@ const ModalCrud = ({
                   />
                 )}
                 {children}
-              </form>
+              </div>
             </div>
             {/*body*/}
 

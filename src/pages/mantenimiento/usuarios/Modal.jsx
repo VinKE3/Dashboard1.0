@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import ModalCrud from "../../../components/ModalCrud";
-import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
+import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [checked, setChecked] = useState(true);
-  const [checked2, setChecked2] = useState(true);
   //#endregion
 
   //#region useEffect
@@ -24,9 +22,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       }));
     }
   };
-  function uppercase(e) {
-    e.target.value = e.target.value.toUpperCase();
-  }
   //#endregion
 
   //#region Render
@@ -42,7 +37,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       <div className={Global.ContenedorBasico}>
         <div className={Global.ContenedorInputs}>
           <div className={Global.InputFull}>
-            <label htmlFor="id" className={Global.LabelStyle}>
+            <label
+              htmlFor="id"
+              className={Global.LabelStyle + Global.FiltroStyle}
+            >
               Código
             </label>
             <input
@@ -52,25 +50,19 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               placeholder="id"
               value={data.id ?? ""}
               autoComplete="off"
-              onKeyUp={uppercase}
               onChange={ValidarData}
               readOnly={true}
               className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputMitad}>
-            <div className={Global.LabelStyle}>
+            <div className={Global.LabelStyle + Global.FiltroStyle}>
               <Checkbox
                 inputId="isActivo"
                 name="isActivo"
                 readOnly={modo == "Registrar" ? true : false}
-                disabled={modo == "Registrar" ? true : false}
-                value={data.isActivo ? true : false}
-                onChange={(e) => {
-                  setChecked(e.checked);
-                  ValidarData(e);
-                }}
-                checked={data.isActivo ? checked : ""}
+                onChange={(e) => ValidarData(e)}
+                checked={data.isActivo ? true : ""}
               ></Checkbox>
             </div>
             <label htmlFor="isActivo" className={Global.InputStyle}>
@@ -78,17 +70,13 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             </label>
           </div>
           <div className={Global.InputMitad}>
-            <div className={Global.LabelStyle}>
+            <div className={Global.LabelStyle + Global.FiltroStyle}>
               <Checkbox
                 inputId="habilitarAfectarStock"
                 name="habilitarAfectarStock"
                 readOnly={modo == "Consultar" ? true : false}
-                value={data.habilitarAfectarStock ?? ""}
-                onChange={(e) => {
-                  setChecked2(e.checked);
-                  ValidarData(e);
-                }}
-                checked={data.habilitarAfectarStock ? checked2 : ""}
+                onChange={(e) => ValidarData(e)}
+                checked={data.habilitarAfectarStock ? true : ""}
               ></Checkbox>
             </div>
             <label
@@ -101,7 +89,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         </div>
         <div className={Global.ContenedorInputs}>
           <div className={Global.InputFull}>
-            <label htmlFor="nick" className={Global.LabelStyle}>
+            <label
+              htmlFor="nick"
+              className={Global.LabelStyle + Global.FiltroStyle}
+            >
               Nick
             </label>
             <input
@@ -111,14 +102,16 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               placeholder="nick"
               value={data.nick ?? ""}
               autoComplete="off"
-              onKeyUp={uppercase}
               onChange={ValidarData}
               readOnly={modo == "Consultar" ? true : false}
               className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputFull}>
-            <label htmlFor="personalId" className={Global.LabelStyle}>
+            <label
+              htmlFor="personalId"
+              className={Global.LabelStyle + Global.FiltroStyle}
+            >
               Personal
             </label>
             <input
@@ -128,7 +121,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               placeholder="Personal"
               value={data.personalId ?? ""}
               autoComplete="off"
-              onKeyUp={uppercase}
               onChange={ValidarData}
               readOnly={modo == "Consultar" ? true : false}
               className={Global.InputStyle}
@@ -137,7 +129,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         </div>
         <div className={Global.ContenedorInputs}>
           <div className={Global.InputFull}>
-            <label htmlFor="clave" className={Global.LabelStyle}>
+            <label
+              htmlFor="clave"
+              className={Global.LabelStyle + Global.FiltroStyle}
+            >
               Clave
             </label>
             <input
@@ -147,14 +142,16 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               placeholder="Clave"
               value={data.clave ?? ""}
               autoComplete="off"
-              onKeyUp={uppercase}
               onChange={ValidarData}
               readOnly={modo == "Consultar" ? true : false}
               className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputFull}>
-            <label htmlFor="claveConfirmacion" className={Global.LabelStyle}>
+            <label
+              htmlFor="claveConfirmacion"
+              className={Global.LabelStyle + Global.FiltroStyle}
+            >
               Repetir Clave
             </label>
             <input
@@ -164,7 +161,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               placeholder="Confirmar Clave"
               value={data.claveConfirmacion ?? ""}
               autoComplete="off"
-              onKeyUp={uppercase}
               onChange={ValidarData}
               readOnly={modo == "Consultar" ? true : false}
               className={Global.InputStyle}
@@ -172,7 +168,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           </div>
         </div>
         <div className={Global.InputFull}>
-          <label htmlFor="observacion" className={Global.LabelStyle}>
+          <label
+            htmlFor="observacion"
+            className={Global.LabelStyle + Global.FiltroStyle}
+          >
             Observacion
           </label>
           <input
@@ -182,7 +181,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             placeholder="Observacion"
             value={data.observacion ?? ""}
             autoComplete="off"
-            onKeyUp={uppercase}
             onChange={ValidarData}
             readOnly={modo == "Consultar" ? true : false}
             className={Global.InputStyle}

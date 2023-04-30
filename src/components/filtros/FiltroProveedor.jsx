@@ -66,7 +66,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoButton = () => {
+  const onClick = () => {
     if (filtro == "") {
       Listar("", 1);
     } else {
@@ -185,7 +185,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
                 />
                 <button
                   id="consultar"
-                  onClick={FiltradoButton}
+                  onClick={onClick}
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }

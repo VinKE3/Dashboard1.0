@@ -246,7 +246,7 @@ const BloquearCompra = () => {
     }, 1000);
     setTimer(newTimer);
   };
-  const FiltradoButton = () => {
+  const onClick = () => {
     setIndex(0);
     if (filtro == "") {
       Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, 1);
@@ -522,7 +522,7 @@ const BloquearCompra = () => {
                 <button
                   id="buscar"
                   className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
-                  onClick={FiltradoButton}
+                  onClick={onClick}
                 >
                   <FaSearch />
                 </button>

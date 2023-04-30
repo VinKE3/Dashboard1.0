@@ -136,7 +136,7 @@ const CuentasCorrientes = () => {
       Listar(`&numero=${filtro}`, boton);
     }
   };
-  const FiltradoKeyPress = async (e) => {
+  const onChange = async (e) => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&numero=${f}`);
@@ -150,7 +150,7 @@ const CuentasCorrientes = () => {
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoButton = () => {
+  const onClick = () => {
     setIndex(0);
     if (filtro == "") {
       Listar("", 1);
@@ -237,13 +237,12 @@ const CuentasCorrientes = () => {
             {/* Filtro*/}
             <FiltroBasico
               textLabel={"Número de Cuenta"}
-              inputPlaceHolder={"Número de Cuenta"}
-              inputId={"numero"}
-              inputName={"numero"}
-              inputMax={"40"}
+              placeHolder={"Número de Cuenta"}
+              name={"numero"}
+              maxLength={"40"}
               botonId={"buscar"}
-              FiltradoButton={FiltradoButton}
-              FiltradoKeyPress={FiltradoKeyPress}
+              onClick={onClick}
+              onChange={onChange}
             />
             {/* Filtro*/}
 

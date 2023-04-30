@@ -63,14 +63,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   }, [selectedButton]);
 
   useEffect(() => {
-    if (Object.entries(data).length > 0) {
-      if (document.getElementById("tipoUsuarioId")) {
-        document.getElementById("tipoUsuarioId").value = data.tipoUsuarioId;
-      }
-    }
-  }, [dataTipoUsuario]);
-
-  useEffect(() => {
     getMenu();
     Tablas();
     data;
@@ -109,10 +101,10 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
     });
   }, [data, setPermisos]);
   const ValidarData = ({ target }) => {
-    setData({
-      ...data,
-      [target.name]: uppercase(target.value),
-    });
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
   const ValidarCheckTodos = (check) => {
     if (check) {
@@ -129,12 +121,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const ValidarMenu = (e) => {
     setSelectedMenu(e.target.innerText);
   };
-  function uppercase(value) {
-    if (value && typeof value === "string") {
-      return value.toUpperCase();
-    }
-    return value;
-  }
   //#endregion
 
   //#region API
@@ -174,24 +160,25 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputMitad}>
-                <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
+                <label htmlFor="tipoUsuarioId" className={Global.LabelStyle + Global.FiltroStyle}>
                   Tipo de Usuario
                 </label>
                 <select
                   id="tipoUsuarioId"
                   name="tipoUsuarioId"
+                  value={data.tipoUsuarioId ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 >
-                  {dataTipoUsuario.map((tipoUsuario) => (
-                    <option key={tipoUsuario.id} value={tipoUsuario.id}>
-                      {tipoUsuario.descripcion}
+                  {dataTipoUsuario.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
                     </option>
                   ))}
                 </select>
               </div>
               <div className={Global.InputMitad}>
-                <label htmlFor="menus" className={Global.LabelStyle}>
+                <label htmlFor="menus" className={Global.LabelStyle + Global.FiltroStyle}>
                   Menú:
                 </label>
                 <input
@@ -221,7 +208,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 }}
               />
 
-              <div className="flex max-h-11 font-semibold">
+              <div className={Global.Input}>
                 <div className={Global.CheckStyle}>
                   <Checkbox
                     inputId="all"

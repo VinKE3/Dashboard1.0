@@ -128,7 +128,7 @@ const Personal = () => {
       Listar(`&nombreCompleto=${filtro}`, boton);
     }
   };
-  const FiltradoKeyPress = async (e) => {
+  const onChange = async (e) => {
     clearTimeout(timer);
     let f = e.target.value;
     setFiltro(`&nombreCompleto=${f}`);
@@ -142,7 +142,7 @@ const Personal = () => {
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoButton = () => {
+  const onClick = () => {
     setIndex(0);
     if (filtro == "") {
       Listar("", 1);
@@ -232,13 +232,13 @@ const Personal = () => {
             {/* Filtro*/}
             <FiltroBasico
               textLabel={"Nombre"}
-              inputPlaceHolder={"Nombre"}
+              placeHolder={"Nombre"}
               inputId={"nombreCompleto"}
-              inputName={"nombreCompleto"}
-              inputMax={"200"}
+              name={"nombreCompleto"}
+              maxLength={"200"}
               botonId={"buscar"}
-              FiltradoButton={FiltradoButton}
-              FiltradoKeyPress={FiltradoKeyPress}
+              onClick={onClick}
+              onChange={onChange}
             />
             {/* Filtro*/}
 

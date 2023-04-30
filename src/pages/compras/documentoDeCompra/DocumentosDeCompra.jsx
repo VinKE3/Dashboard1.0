@@ -1,19 +1,19 @@
 import { useEffect, useState, useMemo } from "react";
+import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaSearch } from "react-icons/fa";
-import styled from "styled-components";
 import Modal from "./Modal";
-import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
 import { toast, ToastContainer } from "react-toastify";
+import moment from "moment";
+import styled from "styled-components";
+import { FaSearch } from "react-icons/fa";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import { Checkbox } from "primereact/checkbox";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -134,7 +134,12 @@ const DocumentosdeCompra = () => {
     const result = await ApiMasy.get(
       `api/Compra/DocumentoCompra/Listar?Pagina=${pagina}${filtro}`
     );
-    setDatos(result.data.data.data);
+    setDatos(
+      result.data.data.data.map((res) => ({
+        acciones: "",
+        ...res,
+      }))
+    );
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
@@ -325,7 +330,7 @@ const DocumentosdeCompra = () => {
       },
       {
         Header: "Acciones",
-        accessor: "none",
+        accessor: "acciones",
         Cell: ({ row }) => (
           <BotonCRUD
             setRespuestaAlert={setRespuestaAlert}

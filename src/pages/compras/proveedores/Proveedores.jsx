@@ -167,7 +167,7 @@ const Proveedores = () => {
     }, 200);
     setTimer(newTimer);
   };
-  const FiltradoButton = () => {
+  const onClick = () => {
     setIndex(0);
     if (filtro == "") {
       Listar("", 1);
@@ -276,7 +276,7 @@ const Proveedores = () => {
                 <button
                   id="buscar"
                   className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
-                  onClick={FiltradoButton}
+                  onClick={onClick}
                 >
                   <FaSearch />
                 </button>

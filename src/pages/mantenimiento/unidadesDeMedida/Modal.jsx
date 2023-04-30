@@ -32,7 +32,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       <div className={Global.ContenedorBasico}>
         <div className={Global.ContenedorInputs}>
           <div className={Global.InputMitad}>
-            <label htmlFor="id" className={Global.LabelStyle}>
+            <label htmlFor="id" className={Global.LabelStyle + Global.FiltroStyle}>
               Código
             </label>
             <input
@@ -48,7 +48,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             />
           </div>
           <div className={Global.InputMitad}>
-            <label htmlFor="codigoSunat" className={Global.LabelStyle}>
+            <label htmlFor="codigoSunat" className={Global.LabelStyle + Global.FiltroStyle}>
               Código SUNAT
             </label>
             <input
@@ -65,7 +65,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           </div>
         </div>
         <div className={Global.InputFull}>
-          <label htmlFor="descripcion" className={Global.LabelStyle}>
+          <label htmlFor="descripcion" className={Global.LabelStyle + Global.FiltroStyle}>
             Descripción
           </label>
           <input

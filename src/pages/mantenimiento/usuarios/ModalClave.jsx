@@ -12,18 +12,11 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Funciones
   const ValidarData = ({ target }) => {
-    const value = uppercase(target.value);
-    setData({
-      ...data,
-      [target.name]: value,
-    });
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
-  function uppercase(value) {
-    if (value && typeof value === "string") {
-      return value.toUpperCase();
-    }
-    return value;
-  }
   //#endregion
 
   return (
@@ -38,7 +31,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
     >
       <div className={Global.ContenedorBasico}>
         <div className={Global.InputFull}>
-          <label htmlFor="claveAnterior" className={Global.LabelStyle}>
+          <label htmlFor="claveAnterior" className={Global.LabelStyle + Global.FiltroStyle}>
             Clave Anterior
           </label>
           <input
@@ -53,7 +46,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
         <div className={Global.InputFull}>
-          <label htmlFor="claveNueva" className={Global.LabelStyle}>
+          <label htmlFor="claveNueva" className={Global.LabelStyle + Global.FiltroStyle}>
             Clave Nueva
           </label>
           <input
@@ -68,7 +61,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
         <div className={Global.InputFull}>
-          <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle}>
+          <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle + Global.FiltroStyle}>
             Confirmar Clave Nueva
           </label>
           <input

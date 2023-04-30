@@ -3,34 +3,33 @@ import { FaSearch } from "react-icons/fa";
 import * as Global from "../../components/Global";
 const FiltroBasico = ({
   textLabel,
-  inputPlaceHolder,
-  inputId,
-  inputName,
-  inputMax,
+  value,
+  name,
+  placeHolder,
+  maxLength,
+  onChange,
   botonId,
-  FiltradoButton,
-  FiltradoKeyPress,
+  onClick,
 }) => {
   return (
-    <div className="flex mt-2 mb-2 rounded-1 border-gray-200 overflow-hidden md:text-sm">
+    <div className={Global.InputFull  + " mb-2"}>
       <label className={Global.LabelStyle + Global.FiltroStyle}>{textLabel}</label>
-
       <input
         type="text"
-        className={Global.InputBoton}
+        id={name}
+        name={name}
+        maxLength={maxLength}
         autoComplete="off"
         spellCheck="false"
-        placeholder={inputPlaceHolder}
-        id={inputId}
-        name={inputName}
-        maxLength={inputMax}
-        onChange={FiltradoKeyPress}
+        placeholder={placeHolder}
+        value = {value ?? ""}
+        onChange={onChange}
+        className={Global.InputBoton}
       />
-
       <button
         className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
         id={botonId}
-        onClick={FiltradoButton}
+        onClick={onClick}
       >
         <FaSearch></FaSearch>
       </button>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import * as Global from "../../../components/Global";
 import ApiMasy from "../../../api/ApiMasy";
-import moment from "moment";
-import { toast } from "react-toastify";
 import ModalCrud from "../../../components/ModalCrud";
+import { toast } from "react-toastify";
+import moment from "moment";
 import { FaSearch } from "react-icons/fa";
+import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
@@ -21,24 +21,26 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       [target.name]: target.value,
     }));
   };
-  const ValidarConsulta = (e) => {
-    e.preventDefault();
-    let fecha = document.getElementById("id").value;
-    ConsultarTipoCambio("?fecha=" + fecha);
-  };
   //#endregion
 
   //#region Funciones API
-  const ConsultarTipoCambio = async (filtroApi = "") => {
-    const res = await ApiMasy.get(
-      `api/Servicio/ConsultarTipoCambio${filtroApi}`
-    );
-    setData({
-      id: res.data.data.fecha,
-      precioCompra: res.data.data.precioCompra,
-      precioVenta: res.data.data.precioVenta,
-    });
-    if (res.status == 200) {
+  const ConsultarTipoCambio = async (filtro = "") => {
+    const resultado = await ApiMasy.get(`api/Servicio/ConsultarTipoCambio${filtro}`);
+    if (modo == "Modificar") {
+      setData({
+        ...data,
+        precioCompra: resultado.data.data.precioCompra,
+        precioVenta: resultado.data.data.precioVenta,
+      });
+    } else {
+      setData({
+        id: resultado.data.data.fecha,
+        precioCompra: resultado.data.data.precioCompra,
+        precioVenta: resultado.data.data.precioVenta,
+      });
+    }
+
+    if (resultado.status == 200) {
       toast.success("Tipo de Cambio extraído exitosamente", {
         position: "bottom-right",
         autoClose: 5000,
@@ -50,7 +52,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         theme: "colored",
       });
     } else {
-      toast.error(String(result.response.data.messages[0].textos), {
+      toast.error(String(resultado.response.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -77,7 +79,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     >
       <div className={Global.ContenedorBasico}>
         <div className="flex">
-          <label htmlFor="id" className={Global.LabelStyle}>
+          <label htmlFor="id" className={Global.LabelStyle + Global.FiltroStyle}>
             Tipo
           </label>
           <input
@@ -91,16 +93,18 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
           <button
             id="consultarTipoCambio"
-            className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
-            onClick={(e) => ValidarConsulta(e)}
+            className={
+              Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+            }
             hidden={modo == "Consultar" ? true : false}
+            onClick={() => ConsultarTipoCambio(`?fecha=${data.id}`)}
           >
             <FaSearch></FaSearch>
           </button>
         </div>
         <div className={Global.ContenedorInputs}>
           <div className={Global.InputFull}>
-            <label htmlFor="precioCompra" className={Global.LabelStyle}>
+            <label htmlFor="precioCompra" className={Global.LabelStyle + Global.FiltroStyle}>
               P. Compra
             </label>
             <input
@@ -115,8 +119,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             />
           </div>
           <div className={Global.InputFull}>
-            <label htmlFor="precioVenta" className={Global.LabelStyle}>
-              P.Venta
+            <label htmlFor="precioVenta" className={Global.LabelStyle + Global.FiltroStyle}>
+              P. Venta
             </label>
             <input
               type="number"

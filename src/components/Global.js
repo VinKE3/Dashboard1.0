@@ -52,7 +52,7 @@ export var InputsFiltro = "flex flex-1 overflow-hidden ";
 export var LabelStyle =
   "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-900/20 border-gray-600 lg:text-sm text-light font-semibold ";
 export var LabelCheckStyle =
-  "rounded-none rounded-r-lg border border-l-0 block flex-1 min-w-0 w-full py-2.5 lg:py-1.5 pr-2.5 pl-1 border-gray-600 text-light md:text-sm leading-normal cursor-pointer ";
+  "inline-flex items-center rounded-r-lg border border-l-0 flex-1 min-w-0 w-full py-2.5 lg:py-1.5 pr-2.5 pl-1 border-gray-600 text-light md:text-sm leading-normal cursor-pointer ";
 export var InputStyle =
   "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full py-2.5 lg:py-1.5 px-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
 export var InputBoton =
@@ -75,7 +75,7 @@ export var TituloModal = "text-3xl md:text-2xl font-semibold text-light ";
 export var BotonOkModal =
   "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black text-light font-semibold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 md:text-sm uppercase border-2 border-gray-800";
 export var BotonCancelarModal =
-  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-2 border-red-600 font-semibold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all md:text-sm duration-150 ";
+  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-2 border-red-600 font-bold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all md:text-sm duration-150 ";
 export var BotonBasic =
   "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 font-semibold text-gray-100 md:text-sm uppercase ";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
