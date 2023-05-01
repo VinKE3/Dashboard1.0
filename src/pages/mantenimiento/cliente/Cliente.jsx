@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaSearch } from "react-icons/fa";
-import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
+import { FaSearch } from "react-icons/fa";
+import styled from "styled-components";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -23,45 +22,54 @@ const TablaStyle = styled.div`
   & th:nth-child(2) {
     width: 100px;
   }
-  & th:nth-child(3) {
-    width: 250px;
-  }
-  & th:nth-child(4) {
-    width: 250px;
-  }
   & th:last-child {
-    width: 130px;
     text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 //#endregion
 
 const Clientes = () => {
   //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
-  const [objeto, setObjeto] = useState([]);
+  const [filtro, setFiltro] = useState({
+    documento: "",
+    nombre: "",
+  });
+  const [cadena, setCadena] = useState(
+    `&numeroDocumentoIdentidad=${filtro.documento}&nombre=${filtro.nombre}`
+  );
+  //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
+  useEffect(() => {
+    setCadena(`&numeroDocumentoIdentidad=${filtro.documento}&nombre=${filtro.nombre}`);
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+
   useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar(filtro, index + 1);
+        Listar(cadena, index + 1);
       }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index + 1);
+      Listar(cadena, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -77,18 +85,12 @@ const Clientes = () => {
         setVisible(false);
       } else {
         setVisible(true);
-        Listar(filtro, 1);
+        Listar(cadena, 1);
       }
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setVisible(true);
-      setPermisos([true, true, true, true, true]);
-      Listar(filtro, 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("Cliente", setPermisos);
   }, []);
   //#endregion
 
@@ -104,82 +106,26 @@ const Clientes = () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Cliente/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "Cliente"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
-  };
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let documento = document.getElementById("documento").value;
-    let nombre = document.getElementById("nombre").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (documento == "" && nombre == "") {
-      Listar("", boton);
-    } else {
-      Listar(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, boton);
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const FiltradoDocumento = async (e) => {
-    let nombre = document.getElementById("nombre");
-    let documento = e.target.value;
+  const Filtro = async () => {
     clearTimeout(timer);
-    setFiltro(
-      `&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`,
-      index + 1
-    );
-    if (documento != "") setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(
-          `&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`,
-          index + 1
-        );
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const FiltradoNombre = async (e) => {
-    let documento = document.getElementById("documento").value;
-    let nombre = e.target.value;
-    clearTimeout(timer);
-    setFiltro(
-      `&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`,
-      index + 1
-    );
-    if (nombre != "") setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(
-          `&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`,
-          index + 1
-        );
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const onClick = () => {
     setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+    const newTimer = setTimeout(() => {
+      Listar(cadena, 1);
+    }, 200);
+    setTimer(newTimer);
+  };
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
@@ -215,37 +161,40 @@ const Clientes = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Número Doc",
-      accessor: "numeroDocumentoIdentidad",
-    },
-    {
-      Header: "Nombre",
-      accessor: "nombre",
-    },
-    {
-      Header: "Dirección",
-      accessor: "direccionPrincipal",
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Mantenimiento", "Cliente"]}
-          id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
-        />
-      ),
-    },
-  ];
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
+      },
+      {
+        Header: "Número Doc",
+        accessor: "numeroDocumentoIdentidad",
+      },
+      {
+        Header: "Nombre",
+        accessor: "nombre",
+      },
+      {
+        Header: "Dirección",
+        accessor: "direccionPrincipal",
+      },
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Mantenimiento", "Cliente"]}
+            id={row.values.id}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
@@ -259,7 +208,7 @@ const Clientes = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.Input96}>
-                <label htmlFor="documento" className={Global.LabelStyle + Global.FiltroStyle}>
+                <label htmlFor="documento" className={Global.LabelStyle}>
                   N° Documento
                 </label>
                 <input
@@ -268,13 +217,14 @@ const Clientes = () => {
                   id="documento"
                   autoComplete="off"
                   placeholder="Número Documento Identidad"
-                  onChange={FiltradoDocumento}
+                  value={filtro.documento}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
 
               <div className={Global.InputsFiltro}>
-                <label htmlFor="nombre" className={Global.LabelStyle + Global.FiltroStyle}>
+                <label htmlFor="nombre" className={Global.LabelStyle}>
                   Nombre:
                 </label>
                 <input
@@ -284,13 +234,16 @@ const Clientes = () => {
                   autoFocus
                   autoComplete="off"
                   placeholder="Nombre"
-                  onChange={FiltradoNombre}
+                  value={filtro.nombre}
+                  onChange={ValidarData}
                   className={Global.InputBoton}
                 />
                 <button
                   id="buscar"
-                  className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
-                  onClick={onClick}
+                  className={
+                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                  }
+                  onClick={Filtro}
                 >
                   <FaSearch />
                 </button>

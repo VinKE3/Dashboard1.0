@@ -31,7 +31,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
     >
       <div className={Global.ContenedorBasico}>
         <div className={Global.InputFull}>
-          <label htmlFor="claveAnterior" className={Global.LabelStyle + Global.FiltroStyle}>
+          <label htmlFor="claveAnterior" className={Global.LabelStyle}>
             Clave Anterior
           </label>
           <input
@@ -46,7 +46,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
         <div className={Global.InputFull}>
-          <label htmlFor="claveNueva" className={Global.LabelStyle + Global.FiltroStyle}>
+          <label htmlFor="claveNueva" className={Global.LabelStyle}>
             Clave Nueva
           </label>
           <input
@@ -61,7 +61,7 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
           />
         </div>
         <div className={Global.InputFull}>
-          <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle + Global.FiltroStyle}>
+          <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle}>
             Confirmar Clave Nueva
           </label>
           <input

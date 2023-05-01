@@ -11,12 +11,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.entries(dataModal).length > 0) {
-      document.getElementById("tipoVentaCompraId").value =
-        data.tipoVentaCompraId;
-    }
-  }, [dataModal]);
-  useEffect(() => {
     Tablas();
   }, []);
   //#endregion
@@ -99,6 +93,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   id="tipoVentaCompraId"
                   name="tipoVentaCompraId"
                   disabled={modo == "Registrar" ? false : true}
+                  value={data.tipoVentaCompraId ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 >

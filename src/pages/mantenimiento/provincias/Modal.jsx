@@ -11,11 +11,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.entries(dataDepartamento).length > 0) {
-      document.getElementById("departamentoId").value = data.departamentoId;
-    }
-  }, [dataDepartamento]);
-  useEffect(() => {
     Tablas();
   }, []);
   //#endregion
@@ -75,6 +70,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="departamentoId"
                   name="departamentoId"
+                  value={data.departamentoId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Registrar" ? false : true}
                   className={Global.InputStyle}

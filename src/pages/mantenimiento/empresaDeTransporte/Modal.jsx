@@ -71,8 +71,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="numeroDocumentoIdentidad"
                   name="numeroDocumentoIdentidad"
-                  placeholder="N° Documento Identidad"
                   autoComplete="off"
+                  maxLength={11}
+                  placeholder="N° Documento Identidad"
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
@@ -107,6 +108,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="telefono"
                   placeholder="Telefono"
                   autoComplete="off"
+                  maxLength={20}
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.telefono ?? ""}
                   onChange={ValidarData}

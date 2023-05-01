@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
+import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -20,43 +19,59 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
+  & th:nth-child(5) {
+    text-align: center;
+    width: 60px;
+  }
   & th:nth-child(6) {
     text-align: right;
-    width: 90px;
+    width: 100px;
   }
   & th:last-child {
-    width: 130px;
     text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 //#endregion
 
 const CuentasCorrientes = () => {
   //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
-  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
+  const [filtro, setFiltro] = useState({
+    numero: "",
+  });
+  const [cadena, setCadena] = useState(`&numero=${filtro.numero}`);
+  //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
   //#region useEffect;
   useEffect(() => {
+    setCadena(`&numero=${filtro.numero}`);
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+
+  useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar("", index + 1);
+        Listar(cadena, index + 1);
       }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar("", index + 1);
+      Listar(cadena, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -72,18 +87,12 @@ const CuentasCorrientes = () => {
         setVisible(false);
       } else {
         setVisible(true);
-        Listar("", 1);
+        Listar(cadena, 1);
       }
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setVisible(true);
-      setPermisos([true, true, true, true, true]);
-      Listar("", 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("CuentaCorriente", setPermisos);
   }, []);
   //#endregion
 
@@ -92,71 +101,38 @@ const CuentasCorrientes = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/CuentaCorriente/Listar?pagina=${pagina}${filtro}`
     );
-    let model = result.data.data.data.map((res) => ({
-      id: res.empresaId + res.cuentaCorrienteId,
-      empresaId: res.empresaId,
-      cuentaCorrienteId: res.cuentaCorrienteId,
-      entidadBancariaNombre: res.entidadBancariaNombre,
-      entidadBancariaTipo: res.entidadBancariaTipo,
-      monedaId: res.monedaId,
-      numero: res.numero,
-      saldoFinal: res.saldoFinal,
-      tipoCuentaDescripcion: res.tipoCuentaDescripcion,
-    }));
-    setDatos(model);
+    setDatos(
+      result.data.data.data.map((res) => ({
+        id: res.empresaId + res.cuentaCorrienteId,
+        ...res,
+      }))
+    );
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/CuentaCorriente/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "CuentaCorriente"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
-  };
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let filtro = document.getElementById("numero").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (filtro == "") {
-      Listar("", boton);
-    } else {
-      Listar(`&numero=${filtro}`, boton);
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const onChange = async (e) => {
+  const Filtro = async () => {
     clearTimeout(timer);
-    let f = e.target.value;
-    setFiltro(`&numero=${f}`);
-    if (f != "") setIndex(0);
+    setIndex(0);
     const newTimer = setTimeout(() => {
-      if (f == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(`&numero=${f}`, index + 1);
-      }
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
-  const onClick = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
@@ -184,46 +160,50 @@ const CuentasCorrientes = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "Código",
-      accessor: "id",
-    },
-    {
-      Header: "Número Cuenta",
-      accessor: "numero",
-    },
-    {
-      Header: "Tipo Cuenta",
-      accessor: "tipoCuentaDescripcion",
-    },
-    {
-      Header: "Entidad Bancaria",
-      accessor: "entidadBancariaNombre",
-    },
-    {
-      Header: "M",
-      accessor: "monedaId",
-    },
-    {
-      Header: "Saldo Final",
-      accessor: "saldoFinal",
-      Cell: ({ value }) => <span className="flex justify-end">{value}</span>,
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Mantenimiento", "CuentaCorriente"]}
-          id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
-        />
-      ),
-    },
-  ];
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "Código",
+        accessor: "id",
+      },
+      {
+        Header: "Número Cuenta",
+        accessor: "numero",
+      },
+      {
+        Header: "Tipo Cuenta",
+        accessor: "tipoCuentaDescripcion",
+      },
+      {
+        Header: "Entidad Bancaria",
+        accessor: "entidadBancariaNombre",
+      },
+      {
+        Header: "M",
+        accessor: "monedaId",
+        Cell: ({ value }) => <p className="text-center">{value}</p>,
+      },
+      {
+        Header: "Saldo Final",
+        accessor: "saldoFinal",
+        Cell: ({ value }) => <p className="text-right">{value}</p>,
+      },
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Mantenimiento", "CuentaCorriente"]}
+            id={row.values.id}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
@@ -240,9 +220,10 @@ const CuentasCorrientes = () => {
               placeHolder={"Número de Cuenta"}
               name={"numero"}
               maxLength={"40"}
+              value={filtro.numero}
+              onChange={ValidarData}
               botonId={"buscar"}
-              onClick={onClick}
-              onChange={onChange}
+              onClick={Filtro}
             />
             {/* Filtro*/}
 

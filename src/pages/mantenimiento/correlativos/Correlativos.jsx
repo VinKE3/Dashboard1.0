@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -26,22 +25,24 @@ const TablaStyle = styled.div`
     width: 150px;
   }
   & th:last-child {
-    width: 130px;
     text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 //#endregion
 
 const Correlativos = () => {
   //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
-  const [objeto, setObjeto] = useState([]);
+  //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
@@ -76,13 +77,7 @@ const Correlativos = () => {
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setVisible(true);
-      setPermisos([true, true, true, true, true]);
-      Listar("", 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("Correlativo", setPermisos);
   }, []);
   //#endregion
 
@@ -100,26 +95,12 @@ const Correlativos = () => {
     );
     setObjeto(result.data.data);
   };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "Correlativo"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
-  };
   //#endregion
 
   //#region Funciones Filtrado
   const FiltradoPaginado = (e) => {
-    let boton = e.selected + 1;
     setIndex(e.selected);
-    Listar("", boton);
+    Listar("", e.selected + 1);
   };
   //#endregion
 
@@ -141,53 +122,56 @@ const Correlativos = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Tipo de Documento",
-      accessor: "tipoDocumentoId",
-    },
-    {
-      Header: "Tipo de Documento Descripción",
-      accessor: "tipoDocumentoDescripcion",
-    },
-    {
-      Header: "Serie",
-      accessor: "serie",
-    },
-    {
-      Header: "Número",
-      accessor: "numero",
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Mantenimiento", "Correlativos"]}
-          id={row.values.id}
-          ClickConsultar={() =>
-            AbrirModal(
-              row.values.tipoDocumentoId,
-              row.values.serie,
-              "Consultar"
-            )
-          }
-          ClickModificar={() =>
-            AbrirModal(
-              row.values.tipoDocumentoId,
-              row.values.serie,
-              "Modificar"
-            )
-          }
-        />
-      ),
-    },
-  ];
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
+      },
+      {
+        Header: "Tipo Documento",
+        accessor: "tipoDocumentoId",
+      },
+      {
+        Header: "Descripción",
+        accessor: "tipoDocumentoDescripcion",
+      },
+      {
+        Header: "Serie",
+        accessor: "serie",
+      },
+      {
+        Header: "Número",
+        accessor: "numero",
+      },
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Mantenimiento", "Correlativos"]}
+            id={row.values.id}
+            ClickConsultar={() =>
+              AbrirModal(
+                row.values.tipoDocumentoId,
+                row.values.serie,
+                "Consultar"
+              )
+            }
+            ClickModificar={() =>
+              AbrirModal(
+                row.values.tipoDocumentoId,
+                row.values.serie,
+                "Modificar"
+              )
+            }
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render

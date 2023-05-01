@@ -7,7 +7,6 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   const [dataDep, setDataDep] = useState([]);
   const [dataProv, setDataProv] = useState([]);
   const [dataDist, setDataDist] = useState([]);
-  let Id = id;
   //#endregion
 
   //#region useEffect
@@ -15,18 +14,18 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
     setUbigeo(dato);
   }, [dato]);
   useEffect(() => {
-    document.getElementById(Id[0]).value = ubigeo.departamentoId;
+    document.getElementById(id[0]).value = ubigeo.departamentoId;
     ConsultarProvincia();
   }, [dataDep]);
   useEffect(() => {
-    document.getElementById(Id[1]).value = ubigeo.provinciaId;
+    document.getElementById(id[1]).value = ubigeo.provinciaId;
     ConsultarDistrito();
   }, [dataProv]);
   useEffect(() => {
-    document.getElementById(Id[2]).value = ubigeo.distritoId;
+    document.getElementById(id[2]).value = ubigeo.distritoId;
   }, [dataDist]);
   useEffect(() => {
-    document.getElementById(Id[0]).value = ubigeo.departamentoId;
+    document.getElementById(id[0]).value = ubigeo.departamentoId;
     ConsultarProvincia();
   }, [ubigeo]);
   useEffect(() => {
@@ -35,22 +34,28 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#endregion
 
   //#region Funciones
-  const Retornar = async ({ target }) => {
-    if (target.name == Id[0]) {
+  const ValidarData = async ({ target }) => {
+    if (target.name == id[0]) {
       await ConsultarProvincia();
-      document.getElementById(Id[1]).selectedIndex = 0;
+      document.getElementById(id[1]).selectedIndex = 0;
       document
-        .getElementById(Id[1])
+        .getElementById(id[1])
         .dispatchEvent(new Event("change", { bubbles: true }));
-    } else if (target.name == Id[1]) {
+    } else if (target.name == id[1]) {
       await ConsultarDistrito();
-      document.getElementById(Id[2]).selectedIndex = 0;
+      document.getElementById(id[2]).selectedIndex = 0;
+      setDataUbigeo({
+        departamentoId: document.getElementById(id[0]).value,
+        provinciaId: document.getElementById(id[1]).value,
+        distritoId: document.getElementById(id[2]).value,
+      });
+    } else {
+      setDataUbigeo({
+        departamentoId: document.getElementById(id[0]).value,
+        provinciaId: document.getElementById(id[1]).value,
+        distritoId: document.getElementById(id[2]).value,
+      });
     }
-    setDataUbigeo({
-      departamentoId: document.getElementById(Id[0]).value,
-      provinciaId: document.getElementById(Id[1]).value,
-      distritoId: document.getElementById(Id[2]).value,
-    });
   };
   //#endregion
 
@@ -63,7 +68,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   };
   const ConsultarProvincia = async () => {
     if (dataDep.length > 0) {
-      let index = document.getElementById(Id[0]).selectedIndex;
+      let index = document.getElementById(id[0]).selectedIndex;
       if (index == -1) index = 0;
       let model = dataDep[index].provincias.map((res) => ({
         id: res.id,
@@ -77,7 +82,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   };
   const ConsultarDistrito = async () => {
     if (dataProv.length > 0) {
-      let index = document.getElementById(Id[1]).selectedIndex;
+      let index = document.getElementById(id[1]).selectedIndex;
       if (index == -1) index = 0;
       let model = dataProv[index].distritos.map((res) => ({
         id: res.id,
@@ -94,13 +99,13 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   return (
     <div className={Global.ContenedorInputs}>
       <div className={Global.InputTercio}>
-        <label htmlFor={Id[0]} className={Global.LabelStyle}>
+        <label htmlFor={id[0]} className={Global.LabelStyle}>
           Dep.
         </label>
         <select
-          id={Id[0]}
-          name={Id[0]}
-          onChange={Retornar}
+          id={id[0]}
+          name={id[0]}
+          onChange={ValidarData}
           disabled={modo == "Consultar" ? true : false}
           className={Global.InputStyle}
         >
@@ -112,13 +117,13 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
         </select>
       </div>
       <div className={Global.InputTercio}>
-        <label htmlFor={Id[1]} className={Global.LabelStyle}>
+        <label htmlFor={id[1]} className={Global.LabelStyle}>
           Prov.
         </label>
         <select
-          id={Id[1]}
-          name={Id[1]}
-          onChange={Retornar}
+          id={id[1]}
+          name={id[1]}
+          onChange={ValidarData}
           disabled={modo == "Consultar" ? true : false}
           className={Global.InputStyle}
         >
@@ -130,13 +135,13 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
         </select>
       </div>
       <div className={Global.InputTercio}>
-        <label htmlFor={Id[2]} className={Global.LabelStyle}>
+        <label htmlFor={id[2]} className={Global.LabelStyle}>
           Dist.
         </label>
         <select
-          id={Id[2]}
-          name={Id[2]}
-          onChange={Retornar}
+          id={id[2]}
+          name={id[2]}
+          onChange={ValidarData}
           disabled={modo == "Consultar" ? true : false}
           className={Global.InputStyle}
         >

@@ -39,7 +39,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <div className={Global.InputFull}>
             <label
               htmlFor="id"
-              className={Global.LabelStyle + Global.FiltroStyle}
+              className={Global.LabelStyle}
             >
               Código
             </label>
@@ -56,7 +56,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             />
           </div>
           <div className={Global.InputMitad}>
-            <div className={Global.LabelStyle + Global.FiltroStyle}>
+            <div className={Global.LabelStyle}>
               <Checkbox
                 inputId="isActivo"
                 name="isActivo"
@@ -70,7 +70,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             </label>
           </div>
           <div className={Global.InputMitad}>
-            <div className={Global.LabelStyle + Global.FiltroStyle}>
+            <div className={Global.LabelStyle}>
               <Checkbox
                 inputId="habilitarAfectarStock"
                 name="habilitarAfectarStock"
@@ -91,7 +91,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <div className={Global.InputFull}>
             <label
               htmlFor="nick"
-              className={Global.LabelStyle + Global.FiltroStyle}
+              className={Global.LabelStyle}
             >
               Nick
             </label>
@@ -110,7 +110,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <div className={Global.InputFull}>
             <label
               htmlFor="personalId"
-              className={Global.LabelStyle + Global.FiltroStyle}
+              className={Global.LabelStyle}
             >
               Personal
             </label>
@@ -131,7 +131,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <div className={Global.InputFull}>
             <label
               htmlFor="clave"
-              className={Global.LabelStyle + Global.FiltroStyle}
+              className={Global.LabelStyle}
             >
               Clave
             </label>
@@ -150,7 +150,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <div className={Global.InputFull}>
             <label
               htmlFor="claveConfirmacion"
-              className={Global.LabelStyle + Global.FiltroStyle}
+              className={Global.LabelStyle}
             >
               Repetir Clave
             </label>
@@ -170,7 +170,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <div className={Global.InputFull}>
           <label
             htmlFor="observacion"
-            className={Global.LabelStyle + Global.FiltroStyle}
+            className={Global.LabelStyle}
           >
             Observacion
           </label>

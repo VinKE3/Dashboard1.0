@@ -160,7 +160,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputMitad}>
-                <label htmlFor="tipoUsuarioId" className={Global.LabelStyle + Global.FiltroStyle}>
+                <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
                   Tipo de Usuario
                 </label>
                 <select
@@ -178,7 +178,7 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 </select>
               </div>
               <div className={Global.InputMitad}>
-                <label htmlFor="menus" className={Global.LabelStyle + Global.FiltroStyle}>
+                <label htmlFor="menus" className={Global.LabelStyle}>
                   Menú:
                 </label>
                 <input

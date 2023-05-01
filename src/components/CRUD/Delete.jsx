@@ -26,7 +26,7 @@ const Delete = async (menu, id, setRespuesta) => {
           }
           toast.error(err, {
             position: "bottom-right",
-            autoClose: 7000,
+            autoClose: 2000,
             hideProgressBar: true,
             closeOnClick: true,
             pauseOnHover: true,
@@ -39,7 +39,7 @@ const Delete = async (menu, id, setRespuesta) => {
           setRespuesta(true);
           toast.success(String(response.data.messages[0].textos), {
             position: "bottom-right",
-            autoClose: 5000,
+            autoClose: 2000,
             hideProgressBar: true,
             closeOnClick: true,
             pauseOnHover: true,

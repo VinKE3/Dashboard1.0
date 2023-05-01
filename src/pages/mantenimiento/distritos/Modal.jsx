@@ -13,15 +13,9 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
   //#region useEffect
   useEffect(() => {
     if (Object.entries(dataDepartamento).length > 0) {
-      document.getElementById("departamentoId").value = data.departamentoId;
       ConsultarProvincia();
     }
   }, [dataDepartamento]);
-  useEffect(() => {
-    if (Object.entries(dataProvincia).length > 0) {
-      document.getElementById("provinciaId").value = data.provinciaId;
-    }
-  }, [dataProvincia]);
   useEffect(() => {
     ConsultarDepartamento();
   }, []);
@@ -30,13 +24,21 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
   //#region Funciones
   const ValidarData = async ({ target }) => {
     if (target.name == "departamentoId") {
+      setData((prevState) => ({
+        ...prevState,
+        departamentoId: target.value,
+      }));
       await ConsultarProvincia();
       document.getElementById("provinciaId").selectedIndex = 0;
+      document
+        .getElementById("provinciaId")
+        .dispatchEvent(new Event("change", { bubbles: true }));
+    } else {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
     }
-    setData((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
   };
   //#endregion
 
@@ -45,21 +47,23 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Distrito/FormularioTablas`
     );
-    let depa = result.data.data.departamentos.map((res) => ({
-      id: res.id,
-      nombre: res.nombre,
-      provincias: res.provincias,
-    }));
-    setDataDepartamento(depa);
+    setDataDepartamento(
+      result.data.data.departamentos.map((res) => ({
+        id: res.id,
+        nombre: res.nombre,
+        provincias: res.provincias,
+      }))
+    );
   };
   const ConsultarProvincia = async () => {
     if (dataDepartamento.length > 0) {
       let index = document.getElementById("departamentoId").selectedIndex;
-      let prov = dataDepartamento[index].provincias.map((res) => ({
-        id: res.id,
-        nombre: res.nombre,
-      }));
-      setDataProvincia(prov);
+      setDataProvincia(
+        dataDepartamento[index].provincias.map((res) => ({
+          id: res.id,
+          nombre: res.nombre,
+        }))
+      );
     }
   };
   //#endregion
@@ -103,13 +107,14 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
                 <select
                   id="departamentoId"
                   name="departamentoId"
+                  value={data.departamentoId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Registrar" ? false : true}
                   className={Global.InputStyle}
                 >
-                  {dataDepartamento.map((departamento) => (
-                    <option key={departamento.id} value={departamento.id}>
-                      {departamento.nombre}
+                  {dataDepartamento.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.nombre}
                     </option>
                   ))}
                 </select>
@@ -122,6 +127,7 @@ const Modal = ({ setModal, setRespuestaModal, objeto, modo }) => {
               <select
                 id="provinciaId"
                 name="provinciaId"
+                value={data.provinciaId ?? ""}
                 onChange={ValidarData}
                 disabled={modo == "Registrar" ? false : true}
                 className={Global.InputStyle}

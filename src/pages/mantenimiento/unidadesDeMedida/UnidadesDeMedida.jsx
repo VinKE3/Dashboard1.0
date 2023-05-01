@@ -113,7 +113,7 @@ const UnidadesDeMedida = () => {
     clearTimeout(timer);
     setIndex(0);
     const newTimer = setTimeout(() => {
-      Listar(cadena, index + 1);
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
@@ -184,7 +184,7 @@ const UnidadesDeMedida = () => {
               value={filtro.descripcion}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={ValidarData}
+              onClick={Filtro}
             />
             {/* Filtro*/}
 

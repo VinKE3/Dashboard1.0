@@ -70,12 +70,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [respuesta]);
   useEffect(() => {
-    if (document.getElementById("tipoDocumentoIdentidadId")) {
-      document.getElementById("tipoDocumentoIdentidadId").value =
-        dataGeneral.tipoDocumentoIdentidadId;
-    }
-  }, [dataTipoDoc]);
-  useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
       setDataGeneral({
         ...dataGeneral,
@@ -96,20 +90,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   }, [dataUbiDirec]);
-  useEffect(() => {
-    if (Object.entries(objetoContacto).length > 0) {
-      if (document.getElementById("cargoId")) {
-        document.getElementById("cargoId").value = objetoContacto.cargoId;
-      }
-    }
-  }, [objetoContacto]);
-  useEffect(() => {
-    if (Object.entries(objetoPersonal).length > 0) {
-      if (document.getElementById("personalId")) {
-        document.getElementById("personalId").value = objetoPersonal.personalId;
-      }
-    }
-  }, [objetoPersonal]);
 
   useEffect(() => {
     Tablas();
@@ -295,7 +275,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
       toast.success("Datos extraídos exitosamente", {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -307,7 +287,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       toast.error(String(res.response.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -609,6 +589,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <select
                       id="tipoDocumentoIdentidadId"
                       name="tipoDocumentoIdentidadId"
+                      value={dataGeneral.tipoDocumentoIdentidadId ?? ""}
                       onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
                       className={Global.InputStyle}
@@ -642,7 +623,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="consultarApi"
                       hidden={modo == "Consultar" ? true : false}
                       onClick={(e) => ValidarConsultarDocumento(e)}
-                      className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
+                      className={
+                        Global.BotonBuscar +
+                        Global.Anidado +
+                        Global.BotonPrimary
+                      }
                     >
                       <FaSearch></FaSearch>
                     </button>
@@ -928,6 +913,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <select
                           id="cargoId"
                           name="cargoId"
+                          value={dataGeneral.cargoId ?? ""}
                           onChange={ValidarDataContacto}
                           disabled={modo == "Consultar" ? true : false}
                           className={Global.InputStyle}
@@ -1099,6 +1085,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <select
                           id="personalId"
                           name="personalId"
+                          value={dataGeneral.personalId ?? ""}
                           onChange={ValidarDataPersonal}
                           disabled={modo == "Consultar" ? true : false}
                           className={Global.InputStyle}

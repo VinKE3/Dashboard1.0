@@ -55,7 +55,7 @@ const Usuarios = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    nick: "",
+    nickFiltro: "",
   });
   const [cadena, setCadena] = useState(`&nick=${filtro.nick}`);
 
@@ -71,7 +71,7 @@ const Usuarios = () => {
 
   //#region useEffect
   useEffect(() => {
-    setCadena(`&nick=${filtro.nick}`);
+    setCadena(`&nick=${filtro.nickFiltro}`);
   }, [filtro]);
   useEffect(() => {
     Filtro();
@@ -165,7 +165,7 @@ const Usuarios = () => {
     clearTimeout(timer);
     setIndex(0);
     const newTimer = setTimeout(() => {
-      Listar(cadena, index + 1);
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
@@ -335,10 +335,10 @@ const Usuarios = () => {
               maxLength={"200"}
               name={"nickFiltro"}
               placeHolder={"Nick"}
-              value={filtro.nick}
+              value={filtro.nickFiltro}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={ValidarData}
+              onClick={Filtro}
             />
             {/* Filtro*/}
 

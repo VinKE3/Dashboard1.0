@@ -6,15 +6,10 @@ import * as Global from "../../../components/Global";
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataLinea, setDataLinea] = useState([]);
+  const [dataModal, setDataModal] = useState([]);
   //#endregion
 
   //#region useEffect.
-  useEffect(() => {
-    if (Object.entries(dataLinea).length > 0) {
-      document.getElementById("lineaId").value = data.lineaId;
-    }
-  }, [dataLinea]);
   useEffect(() => {
     Tablas();
   }, []);
@@ -32,14 +27,14 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region API
   const Tablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Linea/Listar`);
-    setDataLinea(result.data.data.data);
+    setDataModal(result.data.data.data);
   };
   //#endregion
 
   //#region Render
   return (
     <>
-      {Object.entries(dataLinea).length > 0 && (
+      {Object.entries(dataModal).length > 0 && (
         <ModalCrud
           setModal={setModal}
           setRespuestaModal={setRespuestaModal}
@@ -75,11 +70,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="lineaId"
                   name="lineaId"
+                  value={data.lineaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Registrar" ? false : true}
                   className={Global.InputStyle}
                 >
-                  {dataLinea.map((linea) => (
+                  {dataModal.map((linea) => (
                     <option key={linea.id} value={linea.id}>
                       {linea.descripcion}
                     </option>

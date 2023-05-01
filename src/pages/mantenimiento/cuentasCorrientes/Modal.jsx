@@ -13,23 +13,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.entries(dataTCuenta).length > 0) {
-      document.getElementById("tipoCuentaDescripcion").value =
-        data.tipoCuentaDescripcion;
-    }
-  }, [dataTCuenta]);
-  useEffect(() => {
-    if (Object.entries(dataMoneda).length > 0) {
-      document.getElementById("monedaId").value = data.monedaId;
-    }
-  }, [dataMoneda]);
-  useEffect(() => {
-    if (Object.entries(dataEntidad).length > 0) {
-      document.getElementById("entidadBancariaId").value =
-        data.entidadBancariaId;
-    }
-  }, [dataEntidad]);
-  useEffect(() => {
     Tablas();
   }, []);
   //#endregion
@@ -98,6 +81,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="tipoCuentaDescripcion"
                   name="tipoCuentaDescripcion"
+                  value={data.tipoCuentaDescripcion ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -116,6 +100,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="monedaId"
                   name="monedaId"
+                  value={data.monedaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -139,6 +124,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="entidadBancariaId"
                   name="entidadBancariaId"
+                  value={data.entidadBancariaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}

@@ -16,17 +16,18 @@ import Swal from "sweetalert2";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
-    /* display: none; */
+    display: none;
   }
   & tbody td:first-child {
-    /* display: none; */
+    display: none;
   }
   th:nth-child(3) {
     text-align: center;
   }
   & th:last-child {
-    width: 130px;
     text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 
@@ -884,1328 +885,1354 @@ const Empresa = ({ modo }) => {
 
   //#region Render
   return (
-    <div className={Global.Form}>
-      <TabView>
-        <TabPanel
-          header="Datos Principales"
-          leftIcon="pi pi-user mr-2"
-          style={{ color: "white" }}
-        >
-          <div className={Global.ContenedorBasico + " pt-5 rounded-t-none"}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input60pct}>
-                <label
-                  htmlFor="numeroDocumentoIdentidad"
-                  className={Global.LabelStyle}
-                >
-                  Número Doc
-                </label>
-                <input
-                  type="text"
-                  id="numeroDocumentoIdentidad"
-                  name="numeroDocumentoIdentidad"
-                  autoComplete="off"
-                  placeholder="Número Documento Identidad"
-                  value={dataGeneral.numeroDocumentoIdentidad ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="nombre" className={Global.LabelStyle}>
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  autoComplete="off"
-                  placeholder="Nombre"
-                  value={dataGeneral.nombre ?? ""}
-                  typeof="text"
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input60pct}>
-                <label htmlFor="telefono" className={Global.LabelStyle}>
-                  Teléfono
-                </label>
-                <input
-                  type="text"
-                  id="telefono"
-                  name="telefono"
-                  autoComplete="off"
-                  placeholder="Teléfono"
-                  value={dataGeneral.telefono ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
-                <label
-                  htmlFor="correoElectronico"
-                  className={Global.LabelStyle}
-                >
-                  Correo
-                </label>
-                <input
-                  type="text"
-                  id="correoElectronico"
-                  name="correoElectronico"
-                  autoComplete="off"
-                  placeholder="Correo"
-                  value={dataGeneral.correoElectronico ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input60pct}>
-                <label htmlFor="celular" className={Global.LabelStyle}>
-                  Celular
-                </label>
-                <input
-                  type="text"
-                  id="celular"
-                  name="celular"
-                  autoComplete="off"
-                  placeholder="Celular"
-                  value={dataGeneral.celular ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="observacion" className={Global.LabelStyle}>
-                  Observacion
-                </label>
-                <input
-                  type="text"
-                  id="observacion"
-                  name="observacion"
-                  autoComplete="off"
-                  placeholder="Observacion"
-                  value={dataGeneral.observacion ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className="flex">
-              <label htmlFor="direccion" className={Global.LabelStyle}>
-                Dirección
-              </label>
-              <input
-                type="text"
-                id="direccion"
-                name="direccion"
-                autoComplete="off"
-                placeholder="Dirección"
-                value={dataGeneral.direccion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <Ubigeo
-              setDataUbigeo={setDataUbigeo}
-              id={["departamentoId", "provinciaId", "distritoId"]}
-              dato={{
-                departamentoId: dataGeneral.departamentoId,
-                provinciaId: dataGeneral.provinciaId,
-                distritoId: dataGeneral.distritoId,
-              }}
-            ></Ubigeo>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input40pct}>
-                <label htmlFor="concarEmpresaId" className={Global.LabelStyle}>
-                  Id Concar
-                </label>
-                <input
-                  type="text"
-                  id="concarEmpresaId"
-                  name="concarEmpresaId"
-                  autoComplete="off"
-                  placeholder="Número Concar Id"
-                  value={dataGeneral.concarEmpresaId ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
-                <label
-                  htmlFor="concarEmpresaNombre"
-                  className={Global.LabelStyle}
-                >
-                  Empresa Concar
-                </label>
-                <input
-                  type="text"
-                  id="concarEmpresaNombre"
-                  name="concarEmpresaNombre"
-                  autoComplete="off"
-                  placeholder="Empresa Concar"
-                  value={dataGeneral.concarEmpresaNombre ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
-                <label
-                  htmlFor="concarUsuarioVenta"
-                  className={Global.LabelStyle}
-                >
-                  Usuario Venta
-                </label>
-                <input
-                  type="text"
-                  id="concarUsuarioVenta"
-                  name="concarUsuarioVenta"
-                  autoComplete="off"
-                  placeholder="Usuario Venta"
-                  value={dataGeneral.concarUsuarioVenta ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputMitad}>
-                <label
-                  htmlFor="concarUsuarioCompra"
-                  className={Global.LabelStyle}
-                >
-                  Usuario Compra
-                </label>
-                <input
-                  type="text"
-                  id="concarUsuarioCompra"
-                  name="concarUsuarioCompra"
-                  autoComplete="off"
-                  placeholder="Usuario Compra"
-                  value={dataGeneral.concarUsuarioCompra ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
-                <label
-                  htmlFor="concarUsuarioPago"
-                  className={Global.LabelStyle}
-                >
-                  Usuario Pago
-                </label>
-                <input
-                  type="text"
-                  id="concarUsuarioPago"
-                  name="concarUsuarioPago"
-                  autoComplete="off"
-                  placeholder="Usuario Pago"
-                  value={dataGeneral.concarUsuarioPago ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputMitad}>
-                <label
-                  htmlFor="concarUsuarioCobro"
-                  className={Global.LabelStyle}
-                >
-                  Usuario Cobro
-                </label>
-                <input
-                  type="text"
-                  id="concarUsuarioCobro"
-                  name="concarUsuarioCobro"
-                  autoComplete="off"
-                  placeholder="Usuario Cobro"
-                  value={dataGeneral.concarUsuarioCobro ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
-                <label
-                  htmlFor="filtroFechaInicio"
-                  className={Global.LabelStyle}
-                >
-                  Desde
-                </label>
-                <input
-                  type="date"
-                  id="filtroFechaInicio"
-                  name="filtroFechaInicio"
-                  autoComplete="off"
-                  value={
-                    dataGeneral.filtroFechaInicio == null
-                      ? ""
-                      : moment(dataGeneral.filtroFechaInicio).format(
-                          "yyyy-MM-DD"
-                        )
-                  }
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="filtroFechaFin" className={Global.LabelStyle}>
-                  Hasta
-                </label>
-                <input
-                  type="date"
-                  id="filtroFechaFin"
-                  name="filtroFechaFin"
-                  autoComplete="off"
-                  value={
-                    dataGeneral.filtroFechaFin == null
-                      ? ""
-                      : moment(dataGeneral.filtroFechaFin).format("yyyy-MM-DD")
-                  }
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className="flex justify-end border-t pt-2 border-light ">
-              <button
-                id="guardarTodo"
-                className={Global.BotonOkModal}
-                type="button"
-                onClick={GuardarTodo}
-              >
-                Guardar Cambios
-              </button>
-            </div>
-          </div>
-        </TabPanel>
-
-        <TabPanel
-          header="Habilitar Periodo"
-          leftIcon="pi pi-calendar mr-2"
-          style={{ color: "white" }}
-        >
-          <div className={Global.ContenedorBasico + " pt-5 rounded-t-none"}>
-            <div className={Global.ContenedorRow + " !gap-x-0 mb-1"}>
-              <div className={Global.InputFull}>
-                <label htmlFor="anioHabilitado1" className={Global.LabelStyle}>
-                  Año 1
-                </label>
-                <input
-                  type="number"
-                  id="anioHabilitado1"
-                  name="anioHabilitado1"
-                  autoComplete="off"
-                  placeholder="año"
-                  value={dataGeneral.anioHabilitado1}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-              </div>
-
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.Anidado}>
-                  <Checkbox
-                    inputId="todos"
-                    name="todos"
-                    value={checkboxes.checked}
-                    onChange={handleCheckAll}
-                    checked={checkboxes.checked}
-                  />
-                </div>
-                <label htmlFor="todos" className={Global.LabelCheckStyle}>
-                  Todos
-                </label>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="enero"
-                    name="enero"
-                    value={mesesHabilitados[0]}
-                    onChange={(e) => {
-                      handleCheck([0, 0], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        enero: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.enero ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="enero"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Enero
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="febrero"
-                    name="febrero"
-                    value={mesesHabilitados[1]}
-                    onChange={(e) => {
-                      handleCheck([1, 1], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        febrero: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.febrero ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="febrero"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Febrero
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="marzo"
-                    name="marzo"
-                    value={mesesHabilitados[2]}
-                    onChange={(e) => {
-                      handleCheck([2, 2], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        marzo: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.marzo ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="marzo"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Marzo
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="abril"
-                    name="abril"
-                    value={mesesHabilitados[3]}
-                    onChange={(e) => {
-                      handleCheck([3, 3], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        abril: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.abril ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="abril"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Abril
-                </label>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="mayo"
-                    name="mayo"
-                    value={mesesHabilitados[4]}
-                    onChange={(e) => {
-                      handleCheck([4, 4], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        mayo: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.mayo ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="mayo"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Mayo
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="junio"
-                    name="junio"
-                    value={mesesHabilitados[5]}
-                    onChange={(e) => {
-                      handleCheck([5, 5], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        junio: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.junio ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="junio"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Junio
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="julio"
-                    name="julio"
-                    value={mesesHabilitados[6]}
-                    onChange={(e) => {
-                      handleCheck([6, 6], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        julio: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.julio ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="julio"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Julio
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="agosto"
-                    name="agosto"
-                    value={mesesHabilitados[7]}
-                    onChange={(e) => {
-                      handleCheck([7, 7], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        agosto: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.agosto ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="agosto"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Agosto
-                </label>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="septiembre"
-                    name="septiembre"
-                    value={mesesHabilitados[8]}
-                    onChange={(e) => {
-                      handleCheck([8, 8], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        septiembre: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.septiembre ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="septiembre"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Setiembre
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="octubre"
-                    name="octubre"
-                    value={mesesHabilitados[9]}
-                    onChange={(e) => {
-                      handleCheck([9, 9], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        octubre: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.octubre ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="octubre"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Octubre
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="noviembre"
-                    name="noviembre"
-                    value={mesesHabilitados[10]}
-                    onChange={(e) => {
-                      handleCheck([10, 10], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        noviembre: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.noviembre ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="noviembre"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Noviembre
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="diciembre"
-                    name="diciembre"
-                    value={mesesHabilitados[11]}
-                    onChange={(e) => {
-                      handleCheck([11, 11], e.target.checked);
-                      setCheckboxes({
-                        ...checkboxes,
-                        diciembre: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes.diciembre ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="diciembre"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Diciembre
-                </label>
-              </div>
-            </div>
-
-            <div className={Global.ContenedorRow + " !gap-x-0 mt-4 mb-1"}>
-              <div className={Global.InputFull}>
-                <label htmlFor="anioHabilitado2" className={Global.LabelStyle}>
-                  Año 2
-                </label>
-                <input
-                  type="number"
-                  id="anioHabilitado2"
-                  name="anioHabilitado2"
-                  autoComplete="off"
-                  placeholder="año"
-                  value={dataGeneral.anioHabilitado2}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.Anidado}>
-                  <Checkbox
-                    inputId="todos2"
-                    name="todos2"
-                    value={checkboxes2.checked}
-                    onChange={handleCheckAll2}
-                    checked={checkboxes2.checked}
-                  />
-                </div>
-                <label htmlFor="todos2" className={Global.LabelCheckStyle}>
-                  Todos
-                </label>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="enero2"
-                    name="enero2"
-                    value={mesesHabilitados[12]}
-                    onChange={(e) => {
-                      handleCheck([0, 12], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        enero2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.enero2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="enero2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Enero
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="febrero2"
-                    name="febrero2"
-                    value={mesesHabilitados[13]}
-                    onChange={(e) => {
-                      handleCheck([1, 13], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        febrero2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.febrero2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="febrero2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Febrero
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="marzo2"
-                    name="marzo2"
-                    value={mesesHabilitados[14]}
-                    onChange={(e) => {
-                      handleCheck([2, 14], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        marzo2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.marzo2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="marzo2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Marzo
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="abril2"
-                    name="abril2"
-                    value={mesesHabilitados[15]}
-                    onChange={(e) => {
-                      handleCheck([3, 15], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        abril2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.abril2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="abril2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Abril
-                </label>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="mayo2"
-                    name="mayo2"
-                    value={mesesHabilitados[16]}
-                    onChange={(e) => {
-                      handleCheck([4, 16], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        mayo2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.mayo2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="mayo2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Mayo
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="junio2"
-                    name="junio2"
-                    value={mesesHabilitados[17]}
-                    onChange={(e) => {
-                      handleCheck([5, 17], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        junio2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.junio2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="junio2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Junio
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="julio2"
-                    name="julio2"
-                    value={mesesHabilitados[18]}
-                    onChange={(e) => {
-                      handleCheck([6, 18], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        julio2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.julio2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="julio2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Julio
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="agosto2"
-                    name="agosto2"
-                    value={mesesHabilitados[19]}
-                    onChange={(e) => {
-                      handleCheck([7, 19], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        agosto2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.agosto2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="agosto2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Agosto
-                </label>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="septiembre2"
-                    name="septiembre2"
-                    value={mesesHabilitados[20]}
-                    onChange={(e) => {
-                      handleCheck([8, 20], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        septiembre2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.septiembre2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="septiembre2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Setiembre
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="octubre2"
-                    name="octubre2"
-                    value={mesesHabilitados[21]}
-                    onChange={(e) => {
-                      handleCheck([9, 21], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        octubre2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.octubre2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="octubre2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Octubre
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="noviembre2"
-                    name="noviembre2"
-                    value={mesesHabilitados[22]}
-                    onChange={(e) => {
-                      handleCheck([10, 22], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        noviembre2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.noviembre2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="noviembre2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Noviembre
-                </label>
-              </div>
-              <div className="flex">
-                <div className={Global.CheckStyle + Global.SinBorde}>
-                  <Checkbox
-                    inputId="diciembre2"
-                    name="diciembre2"
-                    value={mesesHabilitados[23]}
-                    onChange={(e) => {
-                      handleCheck([11, 23], e.target.checked);
-                      setCheckboxes2({
-                        ...checkboxes2,
-                        diciembre2: e.target.checked,
-                      });
-                    }}
-                    checked={checkboxes2.diciembre2 ? true : false}
-                  />
-                </div>
-                <label
-                  htmlFor="diciembre2"
-                  className={Global.LabelCheckStyle + Global.SinBorde}
-                >
-                  Diciembre
-                </label>
-              </div>
-            </div>
-
-            <div className="mt-10 pt-3 border-t border-light flex justify-end">
-              <button
-                id="guardarTodo"
-                className={Global.BotonOkModal}
-                type="button"
-                onClick={GuardarTodo}
-              >
-                Guardar Cambios
-              </button>
-            </div>
-          </div>
-        </TabPanel>
-
-        <TabPanel
-          header="Configuracion"
-          leftIcon="pi pi-calendar mr-2"
-          style={{ color: "white" }}
-        >
-          <div className={Global.ContenedorBasico + " pt-2 rounded-t-none"}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="card">
-                <h4 className={Global.TituloH4}>IGV</h4>
-                <BotonBasico
-                  botonText="Agregar"
-                  botonClass={Global.BotonAgregar}
-                  botonIcon={faPlus}
-                  click={(e) => {
-                    AgregarIgv(e);
-                  }}
-                  containerClass="mb-3"
-                />
-                {/* Form */}
-                {estadoIgv && (
-                  <div className={Global.FormSecundario}>
-                    <div className={Global.ContenedorRow}>
-                      <div className={Global.InputFull}>
-                        <label
-                          htmlFor="porcentaje"
-                          className={Global.LabelStyle}
-                        >
-                          Porcentaje
-                        </label>
-                        <input
-                          type="number"
-                          id="porcentaje"
-                          name="porcentaje"
-                          autoComplete="off"
-                          placeholder="Porcentaje"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoIgv.porcentaje}
-                          onChange={ValidarDataIgv}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                      <div className={Global.Input36}>
-                        <label
-                          htmlFor="defaultIgv"
-                          className={Global.LabelStyle}
-                        >
-                          Default
-                        </label>
-                        <div className={Global.InputStyle}>
-                          <Checkbox
-                            inputId="defaultIgv"
-                            id="default"
-                            name="default"
-                            value={objetoIgv.default}
-                            checked={objetoIgv.default}
-                            onChange={(e) => {
-                              setCheckedIgv(e.checked);
-                              ValidarDataIgv(e);
-                            }}
-                          ></Checkbox>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/*footer*/}
-                    <div className="flex items-center justify-start">
-                      {modo == "Consultar" ? (
-                        ""
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={EnviarIgv}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                        >
-                          Guardar
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setEstadoIgv(false)}
-                        className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                        }
-                      >
-                        CERRAR
-                      </button>
-                    </div>
-                    {/*footer*/}
+    <>
+      {Object.entries(dataGeneral).length > 0 && (
+        <div className={Global.Form}>
+          <TabView>
+            <TabPanel
+              header="Datos Principales"
+              leftIcon="pi pi-user mr-2"
+              style={{ color: "white" }}
+            >
+              <div className={Global.ContenedorBasico + " pt-5 rounded-t-none"}>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input60pct}>
+                    <label
+                      htmlFor="numeroDocumentoIdentidad"
+                      className={Global.LabelStyle}
+                    >
+                      Número Doc
+                    </label>
+                    <input
+                      type="text"
+                      id="numeroDocumentoIdentidad"
+                      name="numeroDocumentoIdentidad"
+                      autoComplete="off"
+                      placeholder="Número Documento Identidad"
+                      value={dataGeneral.numeroDocumentoIdentidad ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
                   </div>
-                )}
-                <TablaStyle>
-                  <TableBasic columnas={colIgv} datos={porcentajesIGV} />
-                </TablaStyle>
-              </div>
-              <div className="card">
-                <h4 className={Global.TituloH4}>RETENCIONES</h4>
-                <BotonBasico
-                  botonText="Agregar"
-                  botonClass={Global.BotonAgregar}
-                  botonIcon={faPlus}
-                  click={(e) => {
-                    AgregarRetencion(e);
-                  }}
-                  containerClass="mb-3"
-                />
-                {/* Form */}
-                {estadoRetencion && (
-                  <div className={Global.FormSecundario}>
-                    <div className={Global.ContenedorRow}>
-                      <div className={Global.InputFull}>
-                        <label
-                          htmlFor="porcentaje"
-                          className={Global.LabelStyle}
-                        >
-                          Porcentaje
-                        </label>
-                        <input
-                          type="number"
-                          id="porcentaje"
-                          name="porcentaje"
-                          autoComplete="off"
-                          placeholder="Porcentaje"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoRetencion.porcentaje}
-                          onChange={ValidarDataRetencion}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                      <div className={Global.Input36}>
-                        <label
-                          htmlFor="defaultRetencion"
-                          className={Global.LabelStyle}
-                        >
-                          Default
-                        </label>
-                        <div className={Global.InputStyle}>
-                          <Checkbox
-                            inputId="defaultRetencion"
-                            id="default"
-                            name="default"
-                            value={objetoRetencion.default}
-                            checked={objetoRetencion.default}
-                            onChange={(e) => {
-                              setCheckedRetencion(e.checked);
-                              ValidarDataRetencion(e);
-                            }}
-                          ></Checkbox>
-                        </div>
-                      </div>
-                    </div>
-                    {/*footer*/}
-                    <div className="flex items-center justify-start">
-                      {modo == "Consultar" ? (
-                        ""
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={EnviarRetencion}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                        >
-                          Guardar
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setEstadoRetencion(false)}
-                        className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                        }
-                      >
-                        CERRAR
-                      </button>
-                    </div>
-                    {/*footer*/}
+                  <div className={Global.InputFull}>
+                    <label htmlFor="nombre" className={Global.LabelStyle}>
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      name="nombre"
+                      autoComplete="off"
+                      placeholder="Nombre"
+                      value={dataGeneral.nombre ?? ""}
+                      typeof="text"
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
                   </div>
-                )}
-                {/* Form */}
-                <TablaStyle>
-                  <TableBasic
-                    columnas={colRetencion}
-                    datos={porcentajesRetencion}
-                  />
-                </TablaStyle>
-              </div>
-              <div className="card">
-                <h4 className={Global.TituloH4}>DETRACCIONES</h4>
-                <BotonBasico
-                  botonText="Agregar"
-                  botonClass={Global.BotonAgregar}
-                  botonIcon={faPlus}
-                  click={(e) => {
-                    AgregarDetraccion(e);
-                  }}
-                  containerClass="mb-3"
-                />
-                {/* Form */}
-                {estadoDetraccion && (
-                  <div className={Global.FormSecundario}>
-                    <div className={Global.ContenedorRow}>
-                      <div className={Global.InputFull}>
-                        <label
-                          htmlFor="porcentaje"
-                          className={Global.LabelStyle}
-                        >
-                          Porcentaje
-                        </label>
-                        <input
-                          type="number"
-                          id="porcentaje"
-                          name="porcentaje"
-                          autoComplete="off"
-                          placeholder="Porcentaje"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoDetraccion.porcentaje}
-                          onChange={ValidarDataDetraccion}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                      <div className={Global.Input36}>
-                        <label
-                          htmlFor="defaultDetraccion"
-                          className={Global.LabelStyle}
-                        >
-                          Default
-                        </label>
-                        <div className={Global.InputStyle}>
-                          <Checkbox
-                            inputId="defaultDetraccion"
-                            id="default"
-                            name="default"
-                            value={objetoDetraccion.default}
-                            checked={objetoDetraccion.default}
-                            onChange={(e) => {
-                              setCheckedDetraccion(e.checked);
-                              ValidarDataDetraccion(e);
-                            }}
-                          ></Checkbox>
-                        </div>
-                      </div>
-                    </div>
-                    {/*footer*/}
-                    <div className="flex items-center justify-start">
-                      {modo == "Consultar" ? (
-                        ""
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={EnviarIDetraccion}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                        >
-                          Guardar
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setEstadoDetraccion(false)}
-                        className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
-                        }
-                      >
-                        CERRAR
-                      </button>
-                    </div>
-                    {/*footer*/}
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input60pct}>
+                    <label htmlFor="telefono" className={Global.LabelStyle}>
+                      Teléfono
+                    </label>
+                    <input
+                      type="text"
+                      id="telefono"
+                      name="telefono"
+                      autoComplete="off"
+                      placeholder="Teléfono"
+                      value={dataGeneral.telefono ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
                   </div>
-                )}
-                {/* Form */}
-                <TablaStyle>
-                  <TableBasic
-                    columnas={colDetraccion}
-                    datos={porcentajesDetraccion}
-                  />
-                </TablaStyle>
-              </div>
-              <div className="card">
-                <h4 className={Global.TituloH4}>PERCEPCIONES</h4>
-                <BotonBasico
-                  botonText="Agregar"
-                  botonClass={Global.BotonAgregar}
-                  botonIcon={faPlus}
-                  click={(e) => {
-                    AgregarPercepcion(e);
-                  }}
-                  containerClass="mb-3"
-                />
-                {/* Form */}
-                {estadoPercepcion && (
-                  <div className={Global.FormSecundario}>
-                    <div className={Global.ContenedorRow}>
-                      <div className={Global.InputFull}>
-                        <label
-                          htmlFor="porcentaje"
-                          className={Global.LabelStyle}
-                        >
-                          Porcentaje
-                        </label>
-                        <input
-                          type="number"
-                          id="porcentaje"
-                          name="porcentaje"
-                          autoComplete="off"
-                          placeholder="Porcentaje"
-                          readOnly={modo == "Consultar" ? true : false}
-                          value={objetoPercepcion.porcentaje}
-                          onChange={ValidarDataPercepcion}
-                          className={Global.InputStyle}
-                        />
-                      </div>
-                      <div className={Global.Input36}>
-                        <label
-                          htmlFor="defaultPercepcion"
-                          className={Global.LabelStyle}
-                        >
-                          Default
-                        </label>
-                        <div className={Global.InputStyle}>
-                          <Checkbox
-                            inputId="defaultPercepcion"
-                            id="default"
-                            name="default"
-                            value={objetoPercepcion.default}
-                            checked={objetoPercepcion.default}
-                            onChange={(e) => {
-                              setCheckedPercepcion(e.checked);
-                              ValidarDataPercepcion(e);
-                            }}
-                          ></Checkbox>
-                        </div>
-                      </div>
-                    </div>
-                    {/*footer*/}
-                    <div className="flex items-center justify-start">
-                      {modo == "Consultar" ? (
-                        ""
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={EnviarPercepcion}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
-                        >
-                          Guardar
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setEstadoPercepcion(false)}
-                        className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1 px-3"
-                        }
-                      >
-                        CERRAR
-                      </button>
-                    </div>
-                    {/*footer*/}
+                  <div className={Global.InputFull}>
+                    <label
+                      htmlFor="correoElectronico"
+                      className={Global.LabelStyle}
+                    >
+                      Correo
+                    </label>
+                    <input
+                      type="text"
+                      id="correoElectronico"
+                      name="correoElectronico"
+                      autoComplete="off"
+                      placeholder="Correo"
+                      value={dataGeneral.correoElectronico ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
                   </div>
-                )}
-                {/* Form */}
-                <TablaStyle>
-                  <TableBasic
-                    columnas={colPercepcion}
-                    datos={porcentajesPercepcion}
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input60pct}>
+                    <label htmlFor="celular" className={Global.LabelStyle}>
+                      Celular
+                    </label>
+                    <input
+                      type="text"
+                      id="celular"
+                      name="celular"
+                      autoComplete="off"
+                      placeholder="Celular"
+                      value={dataGeneral.celular ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="observacion" className={Global.LabelStyle}>
+                      Observacion
+                    </label>
+                    <input
+                      type="text"
+                      id="observacion"
+                      name="observacion"
+                      autoComplete="off"
+                      placeholder="Observacion"
+                      value={dataGeneral.observacion ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className="flex">
+                  <label htmlFor="direccion" className={Global.LabelStyle}>
+                    Dirección
+                  </label>
+                  <input
+                    type="text"
+                    id="direccion"
+                    name="direccion"
+                    autoComplete="off"
+                    placeholder="Dirección"
+                    value={dataGeneral.direccion ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
                   />
-                </TablaStyle>
+                </div>
+                <Ubigeo
+                  setDataUbigeo={setDataUbigeo}
+                  id={["departamentoId", "provinciaId", "distritoId"]}
+                  dato={{
+                    departamentoId: dataGeneral.departamentoId,
+                    provinciaId: dataGeneral.provinciaId,
+                    distritoId: dataGeneral.distritoId,
+                  }}
+                ></Ubigeo>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input40pct}>
+                    <label
+                      htmlFor="concarEmpresaId"
+                      className={Global.LabelStyle}
+                    >
+                      Id Concar
+                    </label>
+                    <input
+                      type="text"
+                      id="concarEmpresaId"
+                      name="concarEmpresaId"
+                      autoComplete="off"
+                      placeholder="Número Concar Id"
+                      value={dataGeneral.concarEmpresaId ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputFull}>
+                    <label
+                      htmlFor="concarEmpresaNombre"
+                      className={Global.LabelStyle}
+                    >
+                      Empresa Concar
+                    </label>
+                    <input
+                      type="text"
+                      id="concarEmpresaNombre"
+                      name="concarEmpresaNombre"
+                      autoComplete="off"
+                      placeholder="Empresa Concar"
+                      value={dataGeneral.concarEmpresaNombre ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="concarUsuarioVenta"
+                      className={Global.LabelStyle}
+                    >
+                      Usuario Venta
+                    </label>
+                    <input
+                      type="text"
+                      id="concarUsuarioVenta"
+                      name="concarUsuarioVenta"
+                      autoComplete="off"
+                      placeholder="Usuario Venta"
+                      value={dataGeneral.concarUsuarioVenta ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="concarUsuarioCompra"
+                      className={Global.LabelStyle}
+                    >
+                      Usuario Compra
+                    </label>
+                    <input
+                      type="text"
+                      id="concarUsuarioCompra"
+                      name="concarUsuarioCompra"
+                      autoComplete="off"
+                      placeholder="Usuario Compra"
+                      value={dataGeneral.concarUsuarioCompra ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="concarUsuarioPago"
+                      className={Global.LabelStyle}
+                    >
+                      Usuario Pago
+                    </label>
+                    <input
+                      type="text"
+                      id="concarUsuarioPago"
+                      name="concarUsuarioPago"
+                      autoComplete="off"
+                      placeholder="Usuario Pago"
+                      value={dataGeneral.concarUsuarioPago ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="concarUsuarioCobro"
+                      className={Global.LabelStyle}
+                    >
+                      Usuario Cobro
+                    </label>
+                    <input
+                      type="text"
+                      id="concarUsuarioCobro"
+                      name="concarUsuarioCobro"
+                      autoComplete="off"
+                      placeholder="Usuario Cobro"
+                      value={dataGeneral.concarUsuarioCobro ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="filtroFechaInicio"
+                      className={Global.LabelStyle}
+                    >
+                      Desde
+                    </label>
+                    <input
+                      type="date"
+                      id="filtroFechaInicio"
+                      name="filtroFechaInicio"
+                      autoComplete="off"
+                      value={
+                        dataGeneral.filtroFechaInicio == null
+                          ? ""
+                          : moment(dataGeneral.filtroFechaInicio).format(
+                              "yyyy-MM-DD"
+                            )
+                      }
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="filtroFechaFin"
+                      className={Global.LabelStyle}
+                    >
+                      Hasta
+                    </label>
+                    <input
+                      type="date"
+                      id="filtroFechaFin"
+                      name="filtroFechaFin"
+                      autoComplete="off"
+                      value={
+                        dataGeneral.filtroFechaFin == null
+                          ? ""
+                          : moment(dataGeneral.filtroFechaFin).format(
+                              "yyyy-MM-DD"
+                            )
+                      }
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end border-t pt-2 border-light ">
+                  <button
+                    id="guardarTodo"
+                    className={Global.BotonOkModal}
+                    type="button"
+                    onClick={GuardarTodo}
+                  >
+                    Guardar Cambios
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-        </TabPanel>
-      </TabView>
-      <ToastContainer />
-    </div>
+            </TabPanel>
+
+            <TabPanel
+              header="Habilitar Periodo"
+              leftIcon="pi pi-calendar mr-2"
+              style={{ color: "white" }}
+            >
+              <div className={Global.ContenedorBasico + " pt-5 rounded-t-none"}>
+                <div className={Global.ContenedorRow + " !gap-x-0 mb-1"}>
+                  <div className={Global.InputFull}>
+                    <label
+                      htmlFor="anioHabilitado1"
+                      className={Global.LabelStyle}
+                    >
+                      Año 1
+                    </label>
+                    <input
+                      type="number"
+                      id="anioHabilitado1"
+                      name="anioHabilitado1"
+                      autoComplete="off"
+                      placeholder="año"
+                      value={dataGeneral.anioHabilitado1}
+                      onChange={ValidarData}
+                      className={Global.InputBoton}
+                    />
+                  </div>
+
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <Checkbox
+                        inputId="todos"
+                        name="todos"
+                        value={checkboxes.checked}
+                        onChange={handleCheckAll}
+                        checked={checkboxes.checked}
+                      />
+                    </div>
+                    <label htmlFor="todos" className={Global.LabelCheckStyle}>
+                      Todos
+                    </label>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="enero"
+                        name="enero"
+                        value={mesesHabilitados[0]}
+                        onChange={(e) => {
+                          handleCheck([0, 0], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            enero: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.enero ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="enero"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Enero
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="febrero"
+                        name="febrero"
+                        value={mesesHabilitados[1]}
+                        onChange={(e) => {
+                          handleCheck([1, 1], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            febrero: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.febrero ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="febrero"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Febrero
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="marzo"
+                        name="marzo"
+                        value={mesesHabilitados[2]}
+                        onChange={(e) => {
+                          handleCheck([2, 2], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            marzo: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.marzo ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="marzo"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Marzo
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="abril"
+                        name="abril"
+                        value={mesesHabilitados[3]}
+                        onChange={(e) => {
+                          handleCheck([3, 3], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            abril: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.abril ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="abril"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Abril
+                    </label>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="mayo"
+                        name="mayo"
+                        value={mesesHabilitados[4]}
+                        onChange={(e) => {
+                          handleCheck([4, 4], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            mayo: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.mayo ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="mayo"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Mayo
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="junio"
+                        name="junio"
+                        value={mesesHabilitados[5]}
+                        onChange={(e) => {
+                          handleCheck([5, 5], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            junio: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.junio ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="junio"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Junio
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="julio"
+                        name="julio"
+                        value={mesesHabilitados[6]}
+                        onChange={(e) => {
+                          handleCheck([6, 6], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            julio: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.julio ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="julio"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Julio
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="agosto"
+                        name="agosto"
+                        value={mesesHabilitados[7]}
+                        onChange={(e) => {
+                          handleCheck([7, 7], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            agosto: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.agosto ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="agosto"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Agosto
+                    </label>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="septiembre"
+                        name="septiembre"
+                        value={mesesHabilitados[8]}
+                        onChange={(e) => {
+                          handleCheck([8, 8], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            septiembre: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.septiembre ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="septiembre"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Setiembre
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="octubre"
+                        name="octubre"
+                        value={mesesHabilitados[9]}
+                        onChange={(e) => {
+                          handleCheck([9, 9], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            octubre: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.octubre ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="octubre"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Octubre
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="noviembre"
+                        name="noviembre"
+                        value={mesesHabilitados[10]}
+                        onChange={(e) => {
+                          handleCheck([10, 10], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            noviembre: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.noviembre ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="noviembre"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Noviembre
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="diciembre"
+                        name="diciembre"
+                        value={mesesHabilitados[11]}
+                        onChange={(e) => {
+                          handleCheck([11, 11], e.target.checked);
+                          setCheckboxes({
+                            ...checkboxes,
+                            diciembre: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes.diciembre ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="diciembre"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Diciembre
+                    </label>
+                  </div>
+                </div>
+
+                <div className={Global.ContenedorRow + " !gap-x-0 mt-4 mb-1"}>
+                  <div className={Global.InputFull}>
+                    <label
+                      htmlFor="anioHabilitado2"
+                      className={Global.LabelStyle}
+                    >
+                      Año 2
+                    </label>
+                    <input
+                      type="number"
+                      id="anioHabilitado2"
+                      name="anioHabilitado2"
+                      autoComplete="off"
+                      placeholder="año"
+                      value={dataGeneral.anioHabilitado2}
+                      onChange={ValidarData}
+                      className={Global.InputBoton}
+                    />
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <Checkbox
+                        inputId="todos2"
+                        name="todos2"
+                        value={checkboxes2.checked}
+                        onChange={handleCheckAll2}
+                        checked={checkboxes2.checked}
+                      />
+                    </div>
+                    <label htmlFor="todos2" className={Global.LabelCheckStyle}>
+                      Todos
+                    </label>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="enero2"
+                        name="enero2"
+                        value={mesesHabilitados[12]}
+                        onChange={(e) => {
+                          handleCheck([0, 12], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            enero2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.enero2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="enero2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Enero
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="febrero2"
+                        name="febrero2"
+                        value={mesesHabilitados[13]}
+                        onChange={(e) => {
+                          handleCheck([1, 13], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            febrero2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.febrero2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="febrero2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Febrero
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="marzo2"
+                        name="marzo2"
+                        value={mesesHabilitados[14]}
+                        onChange={(e) => {
+                          handleCheck([2, 14], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            marzo2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.marzo2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="marzo2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Marzo
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="abril2"
+                        name="abril2"
+                        value={mesesHabilitados[15]}
+                        onChange={(e) => {
+                          handleCheck([3, 15], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            abril2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.abril2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="abril2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Abril
+                    </label>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="mayo2"
+                        name="mayo2"
+                        value={mesesHabilitados[16]}
+                        onChange={(e) => {
+                          handleCheck([4, 16], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            mayo2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.mayo2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="mayo2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Mayo
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="junio2"
+                        name="junio2"
+                        value={mesesHabilitados[17]}
+                        onChange={(e) => {
+                          handleCheck([5, 17], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            junio2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.junio2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="junio2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Junio
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="julio2"
+                        name="julio2"
+                        value={mesesHabilitados[18]}
+                        onChange={(e) => {
+                          handleCheck([6, 18], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            julio2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.julio2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="julio2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Julio
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="agosto2"
+                        name="agosto2"
+                        value={mesesHabilitados[19]}
+                        onChange={(e) => {
+                          handleCheck([7, 19], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            agosto2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.agosto2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="agosto2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Agosto
+                    </label>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:mt-1">
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="septiembre2"
+                        name="septiembre2"
+                        value={mesesHabilitados[20]}
+                        onChange={(e) => {
+                          handleCheck([8, 20], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            septiembre2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.septiembre2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="septiembre2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Setiembre
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="octubre2"
+                        name="octubre2"
+                        value={mesesHabilitados[21]}
+                        onChange={(e) => {
+                          handleCheck([9, 21], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            octubre2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.octubre2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="octubre2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Octubre
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="noviembre2"
+                        name="noviembre2"
+                        value={mesesHabilitados[22]}
+                        onChange={(e) => {
+                          handleCheck([10, 22], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            noviembre2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.noviembre2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="noviembre2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Noviembre
+                    </label>
+                  </div>
+                  <div className="flex">
+                    <div className={Global.CheckStyle + Global.SinBorde}>
+                      <Checkbox
+                        inputId="diciembre2"
+                        name="diciembre2"
+                        value={mesesHabilitados[23]}
+                        onChange={(e) => {
+                          handleCheck([11, 23], e.target.checked);
+                          setCheckboxes2({
+                            ...checkboxes2,
+                            diciembre2: e.target.checked,
+                          });
+                        }}
+                        checked={checkboxes2.diciembre2 ? true : false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="diciembre2"
+                      className={Global.LabelCheckStyle + Global.SinBorde}
+                    >
+                      Diciembre
+                    </label>
+                  </div>
+                </div>
+
+                <div className="mt-10 pt-3 border-t border-light flex justify-end">
+                  <button
+                    id="guardarTodo"
+                    className={Global.BotonOkModal}
+                    type="button"
+                    onClick={GuardarTodo}
+                  >
+                    Guardar Cambios
+                  </button>
+                </div>
+              </div>
+            </TabPanel>
+
+            <TabPanel
+              header="Configuracion"
+              leftIcon="pi pi-calendar mr-2"
+              style={{ color: "white" }}
+            >
+              <div className={Global.ContenedorBasico + " pt-2 rounded-t-none"}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="card">
+                    <h4 className={Global.TituloH4}>IGV</h4>
+                    <BotonBasico
+                      botonText="Agregar"
+                      botonClass={Global.BotonAgregar}
+                      botonIcon={faPlus}
+                      click={(e) => {
+                        AgregarIgv(e);
+                      }}
+                      containerClass="mb-3"
+                    />
+                    {/* Form */}
+                    {estadoIgv && (
+                      <div className={Global.FormSecundario}>
+                        <div className={Global.ContenedorRow}>
+                          <div className={Global.InputFull}>
+                            <label
+                              htmlFor="porcentaje"
+                              className={Global.LabelStyle}
+                            >
+                              Porcentaje
+                            </label>
+                            <input
+                              type="number"
+                              id="porcentaje"
+                              name="porcentaje"
+                              autoComplete="off"
+                              placeholder="Porcentaje"
+                              readOnly={modo == "Consultar" ? true : false}
+                              value={objetoIgv.porcentaje}
+                              onChange={ValidarDataIgv}
+                              className={Global.InputStyle}
+                            />
+                          </div>
+                          <div className={Global.Input36}>
+                            <label
+                              htmlFor="defaultIgv"
+                              className={Global.LabelStyle}
+                            >
+                              Default
+                            </label>
+                            <div className={Global.InputStyle}>
+                              <Checkbox
+                                inputId="defaultIgv"
+                                id="default"
+                                name="default"
+                                value={objetoIgv.default}
+                                checked={objetoIgv.default}
+                                onChange={(e) => {
+                                  setCheckedIgv(e.checked);
+                                  ValidarDataIgv(e);
+                                }}
+                              ></Checkbox>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/*footer*/}
+                        <div className="flex items-center justify-start">
+                          {modo == "Consultar" ? (
+                            ""
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={EnviarIgv}
+                              className={
+                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                              }
+                            >
+                              Guardar
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setEstadoIgv(false)}
+                            className={
+                              Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                            }
+                          >
+                            CERRAR
+                          </button>
+                        </div>
+                        {/*footer*/}
+                      </div>
+                    )}
+                    <TablaStyle>
+                      <TableBasic columnas={colIgv} datos={porcentajesIGV} />
+                    </TablaStyle>
+                  </div>
+                  <div className="card">
+                    <h4 className={Global.TituloH4}>RETENCIONES</h4>
+                    <BotonBasico
+                      botonText="Agregar"
+                      botonClass={Global.BotonAgregar}
+                      botonIcon={faPlus}
+                      click={(e) => {
+                        AgregarRetencion(e);
+                      }}
+                      containerClass="mb-3"
+                    />
+                    {/* Form */}
+                    {estadoRetencion && (
+                      <div className={Global.FormSecundario}>
+                        <div className={Global.ContenedorRow}>
+                          <div className={Global.InputFull}>
+                            <label
+                              htmlFor="porcentaje"
+                              className={Global.LabelStyle}
+                            >
+                              Porcentaje
+                            </label>
+                            <input
+                              type="number"
+                              id="porcentaje"
+                              name="porcentaje"
+                              autoComplete="off"
+                              placeholder="Porcentaje"
+                              readOnly={modo == "Consultar" ? true : false}
+                              value={objetoRetencion.porcentaje}
+                              onChange={ValidarDataRetencion}
+                              className={Global.InputStyle}
+                            />
+                          </div>
+                          <div className={Global.Input36}>
+                            <label
+                              htmlFor="defaultRetencion"
+                              className={Global.LabelStyle}
+                            >
+                              Default
+                            </label>
+                            <div className={Global.InputStyle}>
+                              <Checkbox
+                                inputId="defaultRetencion"
+                                id="default"
+                                name="default"
+                                value={objetoRetencion.default}
+                                checked={objetoRetencion.default}
+                                onChange={(e) => {
+                                  setCheckedRetencion(e.checked);
+                                  ValidarDataRetencion(e);
+                                }}
+                              ></Checkbox>
+                            </div>
+                          </div>
+                        </div>
+                        {/*footer*/}
+                        <div className="flex items-center justify-start">
+                          {modo == "Consultar" ? (
+                            ""
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={EnviarRetencion}
+                              className={
+                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                              }
+                            >
+                              Guardar
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setEstadoRetencion(false)}
+                            className={
+                              Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                            }
+                          >
+                            CERRAR
+                          </button>
+                        </div>
+                        {/*footer*/}
+                      </div>
+                    )}
+                    {/* Form */}
+                    <TablaStyle>
+                      <TableBasic
+                        columnas={colRetencion}
+                        datos={porcentajesRetencion}
+                      />
+                    </TablaStyle>
+                  </div>
+                  <div className="card">
+                    <h4 className={Global.TituloH4}>DETRACCIONES</h4>
+                    <BotonBasico
+                      botonText="Agregar"
+                      botonClass={Global.BotonAgregar}
+                      botonIcon={faPlus}
+                      click={(e) => {
+                        AgregarDetraccion(e);
+                      }}
+                      containerClass="mb-3"
+                    />
+                    {/* Form */}
+                    {estadoDetraccion && (
+                      <div className={Global.FormSecundario}>
+                        <div className={Global.ContenedorRow}>
+                          <div className={Global.InputFull}>
+                            <label
+                              htmlFor="porcentaje"
+                              className={Global.LabelStyle}
+                            >
+                              Porcentaje
+                            </label>
+                            <input
+                              type="number"
+                              id="porcentaje"
+                              name="porcentaje"
+                              autoComplete="off"
+                              placeholder="Porcentaje"
+                              readOnly={modo == "Consultar" ? true : false}
+                              value={objetoDetraccion.porcentaje}
+                              onChange={ValidarDataDetraccion}
+                              className={Global.InputStyle}
+                            />
+                          </div>
+                          <div className={Global.Input36}>
+                            <label
+                              htmlFor="defaultDetraccion"
+                              className={Global.LabelStyle}
+                            >
+                              Default
+                            </label>
+                            <div className={Global.InputStyle}>
+                              <Checkbox
+                                inputId="defaultDetraccion"
+                                id="default"
+                                name="default"
+                                value={objetoDetraccion.default}
+                                checked={objetoDetraccion.default}
+                                onChange={(e) => {
+                                  setCheckedDetraccion(e.checked);
+                                  ValidarDataDetraccion(e);
+                                }}
+                              ></Checkbox>
+                            </div>
+                          </div>
+                        </div>
+                        {/*footer*/}
+                        <div className="flex items-center justify-start">
+                          {modo == "Consultar" ? (
+                            ""
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={EnviarIDetraccion}
+                              className={
+                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                              }
+                            >
+                              Guardar
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setEstadoDetraccion(false)}
+                            className={
+                              Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                            }
+                          >
+                            CERRAR
+                          </button>
+                        </div>
+                        {/*footer*/}
+                      </div>
+                    )}
+                    {/* Form */}
+                    <TablaStyle>
+                      <TableBasic
+                        columnas={colDetraccion}
+                        datos={porcentajesDetraccion}
+                      />
+                    </TablaStyle>
+                  </div>
+                  <div className="card">
+                    <h4 className={Global.TituloH4}>PERCEPCIONES</h4>
+                    <BotonBasico
+                      botonText="Agregar"
+                      botonClass={Global.BotonAgregar}
+                      botonIcon={faPlus}
+                      click={(e) => {
+                        AgregarPercepcion(e);
+                      }}
+                      containerClass="mb-3"
+                    />
+                    {/* Form */}
+                    {estadoPercepcion && (
+                      <div className={Global.FormSecundario}>
+                        <div className={Global.ContenedorRow}>
+                          <div className={Global.InputFull}>
+                            <label
+                              htmlFor="porcentaje"
+                              className={Global.LabelStyle}
+                            >
+                              Porcentaje
+                            </label>
+                            <input
+                              type="number"
+                              id="porcentaje"
+                              name="porcentaje"
+                              autoComplete="off"
+                              placeholder="Porcentaje"
+                              readOnly={modo == "Consultar" ? true : false}
+                              value={objetoPercepcion.porcentaje}
+                              onChange={ValidarDataPercepcion}
+                              className={Global.InputStyle}
+                            />
+                          </div>
+                          <div className={Global.Input36}>
+                            <label
+                              htmlFor="defaultPercepcion"
+                              className={Global.LabelStyle}
+                            >
+                              Default
+                            </label>
+                            <div className={Global.InputStyle}>
+                              <Checkbox
+                                inputId="defaultPercepcion"
+                                id="default"
+                                name="default"
+                                value={objetoPercepcion.default}
+                                checked={objetoPercepcion.default}
+                                onChange={(e) => {
+                                  setCheckedPercepcion(e.checked);
+                                  ValidarDataPercepcion(e);
+                                }}
+                              ></Checkbox>
+                            </div>
+                          </div>
+                        </div>
+                        {/*footer*/}
+                        <div className="flex items-center justify-start">
+                          {modo == "Consultar" ? (
+                            ""
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={EnviarPercepcion}
+                              className={
+                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                              }
+                            >
+                              Guardar
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setEstadoPercepcion(false)}
+                            className={
+                              Global.BotonCancelarModal + " py-2 sm:py-1 px-3"
+                            }
+                          >
+                            CERRAR
+                          </button>
+                        </div>
+                        {/*footer*/}
+                      </div>
+                    )}
+                    {/* Form */}
+                    <TablaStyle>
+                      <TableBasic
+                        columnas={colPercepcion}
+                        datos={porcentajesPercepcion}
+                      />
+                    </TablaStyle>
+                  </div>
+                </div>
+              </div>
+            </TabPanel>
+          </TabView>
+          <ToastContainer />
+        </div>
+      )}
+    </>
   );
   //#endregion
 };

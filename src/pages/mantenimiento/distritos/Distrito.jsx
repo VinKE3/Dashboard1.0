@@ -1,52 +1,63 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
+import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:last-child {
-    width: 130px;
     text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 //#endregion
 
 const Distrito = () => {
   //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
-  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
+  const [filtro, setFiltro] = useState({
+    nombre: "",
+  });
+  const [cadena, setCadena] = useState(`&nombre=${filtro.nombre}`);
+  //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
   //#region useEffect;
   useEffect(() => {
+    setCadena(`&nombre=${filtro.nombre}`);
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+
+  useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar("", index + 1);
+        Listar(cadena, index + 1);
       }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar("", index + 1);
+      Listar(cadena, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -62,18 +73,12 @@ const Distrito = () => {
         setVisible(false);
       } else {
         setVisible(true);
-        Listar("", 1);
+        Listar(cadena, 1);
       }
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setVisible(true);
-      setPermisos([true, true, true, true, true]);
-      Listar("", 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("Distrito", setPermisos);
   }, []);
   //#endregion
 
@@ -82,64 +87,38 @@ const Distrito = () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Distrito/Listar?pagina=${pagina}${filtro}`
     );
-    let model = result.data.data.data.map((res) => ({
-      Id: res.departamentoId + res.provinciaId + res.distritoId,
-      ...res,
-    }));
-    setDatos(model);
+    setDatos(
+      result.data.data.data.map((res) => ({
+        Id: res.departamentoId + res.provinciaId + res.distritoId,
+        ...res,
+      }))
+    );
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Distrito/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "Distrito"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
-  };
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let filtro = document.getElementById("nombre").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (filtro == "") {
-      Listar("", boton);
-    } else {
-      Listar(`&nombre=${filtro}`, boton);
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const onChange = async (e) => {
+  const Filtro = async () => {
     clearTimeout(timer);
-    let f = e.target.value;
-    setFiltro(`&nombre=${f}`);
-    if (f != "") setIndex(0);
+    setIndex(0);
     const newTimer = setTimeout(() => {
-      if (f == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(`&nombre=${f}`, index + 1);
-      }
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
-  const onClick = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
@@ -161,38 +140,41 @@ const Distrito = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "Código",
-      accessor: "Id",
-    },
-    {
-      Header: "Departamento",
-      accessor: "departamentoNombre",
-    },
-    {
-      Header: "Provincia",
-      accessor: "provinciaNombre",
-    },
-    {
-      Header: "Distrito",
-      accessor: "nombre",
-    },
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "Código",
+        accessor: "Id",
+      },
+      {
+        Header: "Departamento",
+        accessor: "departamentoNombre",
+      },
+      {
+        Header: "Provincia",
+        accessor: "provinciaNombre",
+      },
+      {
+        Header: "Distrito",
+        accessor: "nombre",
+      },
 
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Mantenimiento", "Distrito"]}
-          id={row.values.Id}
-          ClickConsultar={() => AbrirModal(row.values.Id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.Id, "Modificar")}
-        />
-      ),
-    },
-  ];
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Mantenimiento", "Distrito"]}
+            id={row.values.Id}
+            ClickConsultar={() => AbrirModal(row.values.Id, "Consultar")}
+            ClickModificar={() => AbrirModal(row.values.Id, "Modificar")}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
@@ -207,12 +189,12 @@ const Distrito = () => {
             <FiltroBasico
               textLabel={"Distrito"}
               placeHolder={"Distrito"}
-              inputId={"nombre"}
               name={"nombre"}
               maxLength={"200"}
+              value={filtro.nombre}
+              onChange={ValidarData}
               botonId={"buscar"}
-              onClick={onClick}
-              onChange={onChange}
+              onClick={Filtro}
             />
             {/* Filtro*/}
 

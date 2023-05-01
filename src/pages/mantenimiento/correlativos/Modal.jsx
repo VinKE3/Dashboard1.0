@@ -11,12 +11,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (document.getElementById("tipoDocumentoId")) {
-      document.getElementById("tipoDocumentoId").value = data.tipoDocumentoId;
-    }
-  }, [dataTipoDocumento]);
-
-  useEffect(() => {
     Tablas();
   }, []);
   //#endregion
@@ -62,8 +56,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="tipoDocumentoId"
                   name="tipoDocumentoId"
-                  disabled={modo == "Consultar" ? true : false}
+                  value={data.tipoDocumentoId ?? ""}
                   onChange={ValidarData}
+                  disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
                 >
                   {dataTipoDocumento.map((forma) => (

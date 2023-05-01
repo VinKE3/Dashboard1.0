@@ -110,9 +110,9 @@ const TipodeCambio = () => {
   };
   const Filtro = async () => {
     clearTimeout(timer);
-    setIndex(0);
     const newTimer = setTimeout(() => {
-      Listar(cadena, index + 1);
+      setIndex(0);
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
@@ -242,7 +242,7 @@ const TipodeCambio = () => {
               <div className={Global.InputsFiltro}>
                 <label
                   htmlFor="anio"
-                  className={Global.LabelStyle + Global.FiltroStyle}
+                  className={Global.LabelStyle}
                 >
                   Año:
                 </label>
@@ -260,7 +260,7 @@ const TipodeCambio = () => {
               <div className={Global.InputsFiltro}>
                 <label
                   id="mes"
-                  className={Global.LabelStyle + Global.FiltroStyle}
+                  className={Global.LabelStyle}
                 >
                   Mes:
                 </label>

@@ -360,7 +360,7 @@ const DocumentosdeCompra = () => {
               <div className={Global.InputFull}>
                 <label
                   name="nombre"
-                  className={Global.LabelStyle + Global.FiltroStyle}
+                  className={Global.LabelStyle}
                 >
                   Proveedor
                 </label>
@@ -378,7 +378,7 @@ const DocumentosdeCompra = () => {
               <div className={Global.Input42pct}>
                 <label
                   htmlFor="fechaInicio"
-                  className={Global.LabelStyle + Global.FiltroStyle}
+                  className={Global.LabelStyle}
                 >
                   Desde
                 </label>
@@ -394,7 +394,7 @@ const DocumentosdeCompra = () => {
               <div className={Global.Input42pct}>
                 <label
                   htmlFor="fechaFin"
-                  className={Global.LabelStyle + Global.FiltroStyle}
+                  className={Global.LabelStyle}
                 >
                   Hasta
                 </label>

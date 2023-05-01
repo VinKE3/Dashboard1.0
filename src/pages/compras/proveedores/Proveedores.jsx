@@ -245,7 +245,7 @@ const Proveedores = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.Input96}>
-                <label htmlFor="documento" className={Global.LabelStyle + Global.FiltroStyle}>
+                <label htmlFor="documento" className={Global.LabelStyle}>
                   N° Documento
                 </label>
                 <input
@@ -261,7 +261,7 @@ const Proveedores = () => {
               </div>
 
               <div className={Global.InputsFiltro}>
-                <label htmlFor="nombre" className={Global.LabelStyle + Global.FiltroStyle}>
+                <label htmlFor="nombre" className={Global.LabelStyle}>
                   Nombre:
                 </label>
                 <input

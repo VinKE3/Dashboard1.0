@@ -8,9 +8,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-  }, [data]);
   //#endregion
 
   //#region Funciones
@@ -45,6 +42,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               name="id"
               autoComplete="off"
               placeholder="00"
+              maxLength={2}
               readOnly={modo == "Registrar" ? false : true}
               value={data.id ?? ""}
               onChange={ValidarData}

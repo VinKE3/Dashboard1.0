@@ -13,7 +13,7 @@ const FiltroBasico = ({
 }) => {
   return (
     <div className={Global.InputFull  + " mb-2"}>
-      <label className={Global.LabelStyle + Global.FiltroStyle}>{textLabel}</label>
+      <label className={Global.LabelStyle}>{textLabel}</label>
       <input
         type="text"
         id={name}

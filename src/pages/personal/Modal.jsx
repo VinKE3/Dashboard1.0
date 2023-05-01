@@ -15,7 +15,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataEntidad, setDataEntidad] = useState([]);
   const [dataTipoCuenta, setDataTipoCuenta] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  const [checked, setChecked] = useState(true);
   //#endregion
 
   //#region useEffect
@@ -29,39 +28,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   }, [dataUbigeo]);
-  useEffect(() => {
-    if (Object.entries(dataSexo).length > 0) {
-      document.getElementById("sexoId").value = data.sexoId;
-    }
-  }, [dataSexo]);
-  useEffect(() => {
-    if (Object.entries(dataEstadoCivil).length > 0) {
-      document.getElementById("estadoCivilId").value = data.estadoCivilId;
-    }
-  }, [dataEstadoCivil]);
-  useEffect(() => {
-    if (Object.entries(dataCargo).length > 0) {
-      document.getElementById("cargoId").value = data.cargoId;
-    }
-  }, [dataCargo]);
-  useEffect(() => {
-    if (Object.entries(dataEntidad).length > 0) {
-      document.getElementById("entidadBancariaId").value =
-        data.entidadBancariaId;
-    }
-  }, [dataEntidad]);
-  useEffect(() => {
-    if (Object.entries(dataTipoCuenta).length > 0) {
-      document.getElementById("tipoCuentaBancariaId").value =
-        data.tipoCuentaBancariaId;
-    }
-  }, [dataTipoCuenta]);
-  useEffect(() => {
-    if (Object.entries(dataMoneda).length > 0) {
-      document.getElementById("monedaId").value =
-        data.monedaId == null ? "" : data.monedaId;
-    }
-  }, [dataMoneda]);
   useEffect(() => {
     Tablas();
   }, []);
@@ -155,10 +121,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.isActivo}
                     onChange={(e) => {
-                      setChecked(e.checked);
                       ValidarData(e);
                     }}
-                    checked={data.isActivo ? checked : ""}
+                    checked={data.isActivo ? true : ""}
                   ></Checkbox>
                 </div>
                 <label
@@ -223,13 +188,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             <Ubigeo
               modo={modo}
-              setDataUbigeo={setDataUbigeo}
               id={["departamentoId", "provinciaId", "distritoId"]}
               dato={{
                 departamentoId: data.departamentoId,
                 provinciaId: data.provinciaId,
                 distritoId: data.distritoId,
               }}
+              setDataUbigeo={setDataUbigeo}
             ></Ubigeo>
 
             <div className={Global.ContenedorInputs}>
@@ -308,6 +273,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="sexoId"
                   name="sexoId"
+                  value={data.sexoId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -326,6 +292,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="estadoCivilId"
                   name="estadoCivilId"
+                  value={data.estadoCivilId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -366,6 +333,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="cargoId"
                   name="cargoId"
+                  value={data.cargoId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -406,6 +374,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="entidadBancariaId"
                   name="entidadBancariaId"
+                  value={data.entidadBancariaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -427,6 +396,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="tipoCuentaBancariaId"
                   name="tipoCuentaBancariaId"
+                  value={data.tipoCuentaBancariaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -445,6 +415,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="monedaId"
                   name="monedaId"
+                  value={data.monedaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}

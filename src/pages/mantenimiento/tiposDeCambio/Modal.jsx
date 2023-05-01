@@ -79,7 +79,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     >
       <div className={Global.ContenedorBasico}>
         <div className="flex">
-          <label htmlFor="id" className={Global.LabelStyle + Global.FiltroStyle}>
+          <label htmlFor="id" className={Global.LabelStyle}>
             Tipo
           </label>
           <input
@@ -104,7 +104,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         </div>
         <div className={Global.ContenedorInputs}>
           <div className={Global.InputFull}>
-            <label htmlFor="precioCompra" className={Global.LabelStyle + Global.FiltroStyle}>
+            <label htmlFor="precioCompra" className={Global.LabelStyle}>
               P. Compra
             </label>
             <input
@@ -119,7 +119,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             />
           </div>
           <div className={Global.InputFull}>
-            <label htmlFor="precioVenta" className={Global.LabelStyle + Global.FiltroStyle}>
+            <label htmlFor="precioVenta" className={Global.LabelStyle}>
               P. Venta
             </label>
             <input

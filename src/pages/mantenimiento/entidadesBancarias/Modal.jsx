@@ -11,11 +11,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.entries(dataModal).length > 0) {
-      document.getElementById("tipo").value = data.tipo;
-    }
-  }, [dataModal]);
-  useEffect(() => {
     Tablas();
   }, []);
   //#endregion
@@ -62,7 +57,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   name="id"
                   autoComplete="off"
                   placeholder="00"
-                  readOnly
+                  readOnly={true}
                   value={data.id ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -95,6 +90,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="tipo"
                   name="tipo"
+                  value={data.tipo ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
@@ -117,7 +113,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 name="nombre"
                 autoComplete="off"
                 placeholder="Nombre"
-                readOnly={modo == "Registrar" ? false : true}
+                readOnly={modo == "Consultar" ? true : false}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

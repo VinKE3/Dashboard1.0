@@ -22,7 +22,7 @@ export var FormSecundario = "min-w-fit min-h-fit grid gap-y-3 md:gap-x-2 ";
 //#region Contendores Inputs
 export var ContenedorBasico =
   "grid gap-y-3 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 ";
-export var FondoContenedor = "bg-gray-800/90 shadow-md shadow-gray-700/60 ";
+export var FondoContenedor = "bg-gray-800/40 shadow-md shadow-gray-700/60 ";
 export var ContenedorInputs = "flex flex-col md:flex-row gap-y-3 md:gap-x-2 ";
 export var ContenedorFiltro =
   "flex flex-col sm:flex-row sm:justify-between my-2 gap-y-3 sm:gap-x-2 md:text-sm ";
@@ -50,7 +50,7 @@ export var InputsFiltro = "flex flex-1 overflow-hidden ";
 
 //#region Inputs
 export var LabelStyle =
-  "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-900/20 border-gray-600 lg:text-sm text-light font-semibold ";
+  "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-800/70 border-gray-600 lg:text-sm text-light font-semibold ";
 export var LabelCheckStyle =
   "inline-flex items-center rounded-r-lg border border-l-0 flex-1 min-w-0 w-full py-2.5 lg:py-1.5 pr-2.5 pl-1 border-gray-600 text-light md:text-sm leading-normal cursor-pointer ";
 export var InputStyle =
@@ -61,7 +61,6 @@ export var CheckStyle =
   "flex inline-flex items-center pl-3 pr-1 rounded-l-md border border-r-0 border-gray-600 text-light font-semibold ";
 export var Anidado = "!border-l-0 rounded-l-none ";
 export var SinBorde = "!border-none  ";
-export var FiltroStyle = "!bg-gray-800/70 ";
 export var Disabled = "!bg-gray-800/90 ";
 //#endregion
 
