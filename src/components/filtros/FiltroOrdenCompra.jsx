@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
-import moment from "moment";
-import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
-import styled from "styled-components";
-import * as Global from "../Global";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
+import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
+import moment from "moment";
+import styled from "styled-components";
+import * as Global from "../Global";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -58,11 +58,26 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
   const [data, setData] = useState([]);
   const [dataSeleccion, setDataSeleccion] = useState(objeto);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState({
+    fechaInicio: moment()
+      .subtract(2, "years")
+      .startOf("year")
+      .format("yyyy-MM-DD"),
+    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+  });
+  const [cadena, setCadena] = useState(
+    `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+  );
   const [refrescar, setRefrescar] = useState(false);
   //#endregion
 
   //#region useEffect;
+  useEffect(() => {
+    setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
   useEffect(() => {
     if (refrescar) {
       dataSeleccion;
@@ -70,56 +85,30 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    Listar("", 1);
+    Listar(cadena, 1);
   }, []);
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoDocumento = async (e) => {
-    let nombre = document.getElementById("nombre").value || "";
-    let documento = e.target.value;
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const Filtro = async () => {
     clearTimeout(timer);
-    setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
     const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
-        Listar("", 1);
-      } else {
-        Listar(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
-      }
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const FiltradoNombre = async (e) => {
-    let documento = document.getElementById("documento").value || "";
-    let nombre = e.target.value;
-    clearTimeout(timer);
-    setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
-    const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
-        Listar("", 1);
-      } else {
-        Listar(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const onClick = () => {
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
   };
   //#endregion
 
   //#region Funciones
-  const GetDatos = async (e, id = "") => {
-    e.preventDefault();
-    const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
+  const GetDatos = async (id = "") => {
     if (Object.entries(dataSeleccion).length > 0) {
-      let index = dataSeleccion.findIndex(
-        (map) => map.id === result.data.data.id
-      );
+      let index = dataSeleccion.findIndex((map) => map.id === id);
       if (index > -1) {
         toast.error("Ya existe el elemento seleccionado", {
           position: "bottom-right",
@@ -131,8 +120,13 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
           progress: undefined,
           theme: "colored",
         });
+      } else {
+        const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
+        dataSeleccion.push(result.data.data);
+        setRefrescar(true);
       }
     } else {
+      const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
       dataSeleccion.push(result.data.data);
       setRefrescar(true);
     }
@@ -175,52 +169,57 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Fecha",
-      accessor: "fechaContable",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Documento",
-      accessor: "numeroDocumento",
-    },
-    {
-      Header: "Proveedor",
-      accessor: "proveedorNombre",
-    },
-    {
-      Header: "M",
-      accessor: "monedaId",
-      Cell: ({ value }) => {
-        return <p className="text-center">{value}</p>;
+      {
+        Header: "Fecha",
+        accessor: "fechaContable",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YYYY");
+        },
       },
-    },
-    {
-      Header: "Total",
-      accessor: "total",
-      Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+      {
+        Header: "Documento",
+        accessor: "numeroDocumento",
       },
-    },
-    {
-      Header: "-",
-      Cell: ({ row }) => (
-        <button
-          onClick={(e) => GetDatos(e, row.values.id)}
-          className={Global.BotonBasic + Global.BotonAgregar + " !px-3 !py-2"}
-        >
-          <FaCheck></FaCheck>
-        </button>
-      ),
-    },
-  ];
+      {
+        Header: "Proveedor",
+        accessor: "proveedorNombre",
+      },
+      {
+        Header: "M",
+        accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
+      },
+      {
+        Header: "Total",
+        accessor: "total",
+        Cell: ({ value }) => {
+          return <p className="text-right">{value}</p>;
+        },
+      },
+      {
+        Header: "-",
+        Cell: ({ row }) => (
+          <button
+            onClick={(e) => GetDatos(row.values.id)}
+            className={
+              Global.BotonBasic + Global.BotonAgregar + " !px-3 !py-1.5"
+            }
+          >
+            <FaCheck></FaCheck>
+          </button>
+        ),
+      },
+    ],
+    [data]
+  );
   const columnSeleccion = [
     {
       Header: "id",
@@ -255,7 +254,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Ordenes de Compra"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[Global.ModalMediano, Global.Form + " !py-0"]}
         childrenFooter={
           <>
             <button
@@ -279,8 +278,8 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
         }
       >
         {
-          <div className="grid gap-5">
-            <div className={Global.ContenedorBasico}>
+          <>
+            <div className={Global.ContenedorBasico  + " mb-2"}>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputMitad}>
                   <label htmlFor="fechaInicio" className={Global.LabelStyle}>
@@ -291,11 +290,8 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
                     id="fechaInicio"
                     name="fechaInicio"
                     autoComplete="off"
-                    defaultValue={moment()
-                      .subtract(2, "years")
-                      .startOf("year")
-                      .format("yyyy-MM-DD")}
-                    onChange={FiltradoDocumento}
+                    value={filtro.fechaInicio}
+                    onChange={ValidarData}
                     className={Global.InputStyle}
                   />
                 </div>
@@ -308,13 +304,13 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
                     id="fechaFin"
                     name="fechaFin"
                     autoComplete="off"
-                    defaultValue={moment(new Date()).format("yyyy-MM-DD")}
-                    onChange={FiltradoNombre}
+                    value={filtro.fechaFin}
+                    onChange={ValidarData}
                     className={Global.InputBoton}
                   />
                   <button
                     id="consultar"
-                    onClick={onClick}
+                    onClick={Filtro}
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
@@ -332,9 +328,9 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
             </div>
             {dataSeleccion.length > 0 && (
               <div className={Global.ContenedorBasico}>
-                <h4 className="text-xl text-light font-bold">
+                <p className="text-base text-light font-bold">
                   Documentos Seleccionados
-                </h4>
+                </p>
                 {/* Tabla */}
                 <TablaDetalle>
                   <TableBasic
@@ -345,7 +341,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
                 {/* Tabla */}
               </div>
             )}
-          </div>
+          </>
         }
       </ModalBasic>
       <ToastContainer />

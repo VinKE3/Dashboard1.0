@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 import * as Funciones from "../Funciones";
@@ -158,10 +158,10 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
             <button
               onClick={(e) => GetPorId(row.values.id, e)}
               className={
-                Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1.5"
+                Global.BotonBasic + Global.BotonAgregar + " !px-2 !py-1.5"
               }
             >
-              <FaSearch></FaSearch>
+              <FaCheck></FaCheck>
             </button>
           </div>
         ),

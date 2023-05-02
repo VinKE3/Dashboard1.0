@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
-import { FaSearch, FaPlus } from "react-icons/fa";
+import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 
@@ -14,10 +14,11 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(4) {
-    color: transparent;
+  & th:nth-child(2) {
+    width: 120px;
   }
   & th:last-child {
+    color: transparent;
     width: 40px;
     text-align: center;
   }
@@ -109,10 +110,10 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
           <button
             onClick={(e) => GetPorId(row.values.id, e)}
             className={
-              Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1"
+              Global.BotonBasic + Global.BotonAgregar + " !px-2 !py-1.5"
             }
           >
-            <FaSearch></FaSearch>
+            <FaCheck></FaCheck>
           </button>
         ),
       },
@@ -133,7 +134,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
-            <button
+            {/* <button
               className={
                 Global.BotonOkModal + " flex items-center justify-center"
               }
@@ -141,7 +142,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
             >
               <FaPlus></FaPlus>
               <p className="pl-2">Nuevo</p>
-            </button>
+            </button> */}
             <button
               className={Global.BotonCancelarModal}
               type="button"

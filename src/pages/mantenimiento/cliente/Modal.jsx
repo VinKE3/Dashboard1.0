@@ -367,12 +367,11 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClientePersonal/FormularioTablas`
     );
-    let model = result.data.data.personal.map((res) => ({
+    setDataPersonalCombo(result.data.data.personal.map((res) => ({
       id: res.id,
       personal:
         res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-    }));
-    setDataPersonalCombo(model);
+    })));
   };
   const ListarPersonal = async () => {
     const result = await ApiMasy.get(

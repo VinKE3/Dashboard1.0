@@ -5,7 +5,9 @@ const GetPermisos = async (menu, setPermisos) => {
   if (store.session.get("usuario") == "AD") {
     if (menu == "BloquearCompra") {
       setPermisos([false, true, false, false, false]);
-    }else{
+    } else if (menu == "Correlativo") {
+      setPermisos([true, true, true, false, false]);
+    } else {
       setPermisos([true, true, true, true, true]);
     }
     return true;

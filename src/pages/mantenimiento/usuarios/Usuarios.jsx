@@ -186,7 +186,7 @@ const Usuarios = () => {
         observacion: "",
         isActivo: true,
         habilitarAfectarStock: true,
-        personalId: "",
+        personalId: "<<NI>>01",
         clave: "",
         claveConfirmacion: "",
       });

@@ -150,7 +150,7 @@ const Correlativos = () => {
           <BotonCRUD
             setRespuestaAlert={setRespuestaAlert}
             permisos={permisos}
-            menu={["Mantenimiento", "Correlativos"]}
+            menu={["Mantenimiento", "Correlativo"]}
             id={row.values.id}
             ClickConsultar={() =>
               AbrirModal(
