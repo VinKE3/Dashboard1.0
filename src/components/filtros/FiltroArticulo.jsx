@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
@@ -39,50 +39,42 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState({
+    codigoBarras: "",
+    descripcion: "",
+  });
+  const [cadena, setCadena] = useState(
+    `&codigoBarras=${filtro.codigoBarras}&descripcion=${filtro.descripcion}`
+  );
   //#endregion
 
   //#region useEffect;
   useEffect(() => {
-    Listar("", 1);
+    setCadena(
+      `&codigoBarras=${filtro.codigoBarras}&descripcion=${filtro.descripcion}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+  useEffect(() => {
+    Listar(cadena, 1);
   }, []);
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoCodigo = async (e) => {
-    let descripcion = document.getElementById("descripcion").value;
-    let codigo = e.target.value;
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const Filtro = async () => {
     clearTimeout(timer);
-    setFiltro(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
     const newTimer = setTimeout(() => {
-      if (codigo == "" && descripcion == "") {
-        Listar("", 1);
-      } else {
-        Listar(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
-      }
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const FiltradoDescripcion = async (e) => {
-    let codigo = document.getElementById("codigoBarras").value;
-    let descripcion = e.target.value;
-    clearTimeout(timer);
-    setFiltro(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
-    const newTimer = setTimeout(() => {
-      if (codigo == "" && descripcion == "") {
-        Listar("", 1);
-      } else {
-        Listar(`&codigoBarras=${codigo}&descripcion=${descripcion}`, 1);
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const onClick = () => {
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
   };
   //#endregion
 
@@ -115,65 +107,68 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Cod Barra",
-      accessor: "codigoBarras",
-    },
-    {
-      Header: "Descripción",
-      accessor: "descripcion",
-    },
-    {
-      Header: "Unidad",
-      accessor: "unidadMedidaAbreviatura",
-      Cell: ({ value }) => {
-        return <p className="text-center">{value}</p>;
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Stock",
-      accessor: "stock",
-      Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+      {
+        Header: "Cod Barra",
+        accessor: "codigoBarras",
       },
-    },
-    {
-      Header: "M",
-      accessor: "monedaId",
-      Cell: ({ value }) => {
-        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+      {
+        Header: "Descripción",
+        accessor: "descripcion",
       },
-    },
-    {
-      Header: "P. Venta",
-      accessor: "precioVenta",
-      Cell: ({ value }) => {
-        return (
-          <p className="text-right">{Funciones.RedondearNumero(value, 4)}</p>
-        );
+      {
+        Header: "Unidad",
+        accessor: "unidadMedidaAbreviatura",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
       },
-    },
-    {
-      Header: "-",
-      Cell: ({ row }) => (
-        <div className="flex justify-center">
-          <button
-            onClick={(e) => GetPorId(row.values.id, e)}
-            className={
-              Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1.5"
-            }
-          >
-            <FaSearch></FaSearch>
-          </button>
-        </div>
-      ),
-    },
-  ];
+      {
+        Header: "Stock",
+        accessor: "stock",
+        Cell: ({ value }) => {
+          return <p className="text-right">{value}</p>;
+        },
+      },
+      {
+        Header: "M",
+        accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+        },
+      },
+      {
+        Header: "P. Venta",
+        accessor: "precioVenta",
+        Cell: ({ value }) => {
+          return (
+            <p className="text-right">{Funciones.RedondearNumero(value, 4)}</p>
+          );
+        },
+      },
+      {
+        Header: "-",
+        Cell: ({ row }) => (
+          <div className="flex justify-center">
+            <button
+              onClick={(e) => GetPorId(row.values.id, e)}
+              className={
+                Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1.5"
+              }
+            >
+              <FaSearch></FaSearch>
+            </button>
+          </div>
+        ),
+      },
+    ],
+    [datos]
+  );
   //#endregion
 
   //#region Render
@@ -211,7 +206,8 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
                   name="codigoBarras"
                   placeholder="Código Barras"
                   autoComplete="off"
-                  onChange={FiltradoCodigo}
+                  value={filtro.codigoBarras}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
@@ -225,12 +221,13 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
                   name="descripcion"
                   placeholder="Descripción"
                   autoComplete="off"
-                  onChange={FiltradoDescripcion}
+                  value={filtro.descripcion}
+                  onChange={ValidarData}
                   className={Global.InputBoton}
                 />
                 <button
                   id="consultar"
-                  onClick={onClick}
+                  onClick={Filtro}
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }

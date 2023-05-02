@@ -32,9 +32,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-//#endregion
-
-const Cotizaciones = () => {
+const Cef = () => {
   //#region useState
   const { usuario, usuarioId } = useAuth();
   const [datos, setDatos] = useState([]);
@@ -86,17 +84,17 @@ const Cotizaciones = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/Listar?pagina=${pagina}${filtro}`
+      `api/Compra/CEF/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
+    const result = await ApiMasy.get(`api/Compra/CEF/${id}`);
     setObjeto(result.data.data);
   };
   const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(usuarioId, "Cotizacion");
+    const permiso = await GetUsuarioId(usuarioId, "CEF");
     setPermisos([
       permiso.registrar,
       permiso.modificar,
@@ -118,10 +116,10 @@ const Cotizaciones = () => {
         moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
       fechaFin == moment(new Date()).format("yyyy-MM-DD")
     ) {
-      Listar(`&clienteNombre=${filtro}`, boton);
+      Listar(`&proveedorNombre=${filtro}`, boton);
     } else {
       Listar(
-        `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+        `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
         boton
       );
     }
@@ -132,14 +130,14 @@ const Cotizaciones = () => {
     let fechaInicio = document.getElementById("fechaInicio").value;
     let fechaFin = document.getElementById("fechaFin").value;
     setFiltro(
-      `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
+      `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
     );
     const newTimer = setTimeout(() => {
       if (filtro == "") {
         Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
       } else {
         Listar(
-          `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+          `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
           index + 1
         );
       }
@@ -199,70 +197,40 @@ const Cotizaciones = () => {
     }
   };
   //#endregion
+
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
-        empresaId: "",
-        tipoDocumentoId: "COTIZACION",
-        serie: "",
-        numero: "",
-        fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
-        fechaVencimiento: moment(new Date()).format("YYYY-MM-DD"),
-        clienteId: "",
-        clienteNombre: "",
-        clienteNumeroDocumentoIdentidad: "",
-        clienteDireccionId: 0,
-        clienteDireccion: "",
-        clienteTelefono: "",
-        departamentoId: "",
-        provinciaId: "",
-        distritoId: "",
-        contactoId: "",
-        contactoNombre: "",
-        contactoTelefono: "",
-        contactoCorreoElectronico: "",
-        contactoCargoId: "",
-        contactoCargoDescripcion: "",
-        contactoCelular: "",
-        personalId: "",
-        monedaId: "",
+        empresaId: "string",
+        proveedorId: "string",
+        tipoDocumentoId: "string",
+        serie: "string",
+        numero: "string",
+        clienteId: "string",
+        numeroLetra: "string",
+        fechaRegistro: "2023-04-27T13:44:06.544Z",
+        fechaEmision: "2023-04-27T13:44:06.544Z",
+        fechaVencimiento: "2023-04-27T13:44:06.544Z",
+        proveedorNumeroDocumentoIdentidad: "string",
+        lugarGiro: "string",
+        plazo: 0,
+        tipoCompraId: "string",
+        tipoPagoId: "string",
+        monedaId: "string",
         tipoCambio: 2147483647,
-        tipoVentaId: "",
-        tipoCobroId: "",
-        numeroOperacion: "",
-        cuentaCorrienteDescripcion: "",
-        validez: "",
-        observacion: "",
-        subTotal: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        montoRetencion: 0,
-        montoPercepcion: 0,
         total: 2147483647,
-        porcentajeIGV: 0,
-        porcentajeRetencion: 0,
-        porcentajePercepcion: 0,
-        incluyeIGV: true,
+        documentoReferencia: "string",
         detalles: [
           {
             detalleId: 0,
-            lineaId: "",
-            subLineaId: "",
-            articuloId: "",
-            unidadMedidaId: "",
-            marcaId: 0,
-            descripcion: "",
-            codigoBarras: "",
-            cantidad: 0,
-            precioUnitario: 0,
-            subTotal: 0,
-            montoIGV: 0,
-            importe: 0,
-            presentacion: "",
-            unidadMedidaDescripcion: "",
-            precioCompra: 0,
+            documentoCompraId: "string",
+            documentoCompraFechaEmision: "2023-04-27T13:44:06.544Z",
+            concepto: "string",
+            abono: 0,
+            saldo: 0,
+            ordenCompraRelacionada: "string",
           },
         ],
       };
@@ -281,23 +249,37 @@ const Cotizaciones = () => {
       accessor: "id",
     },
     {
-      Header: "Fecha Emisión",
+      Header: "Fecha",
+      accessor: "fechaRegistro",
+      Cell: ({ value }) => {
+        return moment(value).format("DD/MM/YYYY");
+      },
+    },
+    {
+      Header: "Emisión",
       accessor: "fechaEmision",
       Cell: ({ value }) => {
         return moment(value).format("DD/MM/YYYY");
       },
     },
     {
-      Header: "N° Documento",
-      accessor: "numeroDocumento",
+      Header: "Vencimiento",
+      accessor: "fechaVencimiento",
+      Cell: ({ value }) => {
+        return moment(value).format("DD/MM/YYYY");
+      },
     },
     {
-      Header: "Cliente",
-      accessor: "clienteNombre",
+      Header: "Letra Cambio",
+      accessor: "numero",
     },
     {
-      Header: "Ruc/Dni",
-      accessor: "clienteNumero",
+      Header: "Proveedor",
+      accessor: "proveedorNombre",
+    },
+    {
+      Header: "RUC N°",
+      accessor: "proveedorNumero",
     },
     {
       Header: "Moneda",
@@ -308,8 +290,8 @@ const Cotizaciones = () => {
       accessor: "total",
     },
     {
-      Header: "Anulado",
-      accessor: "isAnulado",
+      Header: "Cancelado",
+      accessor: "isCancelado",
       Cell: ({ value }) => {
         return value ? (
           <Checkbox checked={true} />
@@ -330,23 +312,12 @@ const Cotizaciones = () => {
       },
     },
     {
-      Header: "Facturado",
-      accessor: "isFacturado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
+      Header: "Hora Registro",
+      accessor: "horaRegistro",
     },
     {
-      Header: "Doc.Referencia",
-      accessor: "documentoReferencia",
-    },
-    {
-      Header: "Personal",
-      accessor: "personalNombre",
+      Header: "F. Relacionadas",
+      accessor: "facturasRelacionadas",
     },
     {
       Header: "Acciones",
@@ -354,7 +325,7 @@ const Cotizaciones = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Venta", "Cotizacion"]}
+          menu={["Compra", "CEF"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
@@ -368,7 +339,7 @@ const Cotizaciones = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className={Global.TituloH2}>Cotización</h2>
+        <h2 className={Global.TituloH2}>C.E.F</h2>
 
         {/* Filtro*/}
         <div className={Global.ContenedorFiltro}>
@@ -412,8 +383,8 @@ const Cotizaciones = () => {
         <FiltroBasico
           textLabel={"Proveedor"}
           inputPlaceHolder={"Proveedor"}
-          inputId={"clienteNombre"}
-          inputName={"clienteNombre"}
+          inputId={"proveedorNombre"}
+          inputName={"proveedorNombre"}
           inputMax={"200"}
           botonId={"buscar"}
           FiltradoButton={FiltradoButton}
@@ -452,4 +423,4 @@ const Cotizaciones = () => {
   //#endregion
 };
 
-export default Cotizaciones;
+export default Cef;

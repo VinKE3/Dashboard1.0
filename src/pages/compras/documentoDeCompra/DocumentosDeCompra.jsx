@@ -1,12 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
-import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
-import Modal from "./Modal";
 import { Checkbox } from "primereact/checkbox";
+import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
@@ -30,8 +29,9 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:last-child {
-    max-width: 130px;
     text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 //#endregion
@@ -45,29 +45,33 @@ const DocumentosdeCompra = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio:
-      moment().subtract(1, "years").startOf("year").format("yyyy") + "-01-01",
-    fechaFin: moment().format("YYYY-MM-DD"),
-    nombre: "",
+    proveedorNombre: "",
+    fechaInicio: moment()
+      .subtract(2, "years")
+      .startOf("year")
+      .format("yyyy-MM-DD"),
+    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
   });
   const [cadena, setCadena] = useState(
-    `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&proveedorNombre=${filtro.nombre}`
+    `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
+  //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&proveedorNombre=${filtro.nombre}`
+      `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
     );
   }, [filtro]);
   useEffect(() => {
     Filtro();
   }, [cadena]);
+
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -98,13 +102,7 @@ const DocumentosdeCompra = () => {
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setVisible(true);
-      setPermisos([true, true, true, true, true]);
-      Listar(cadena, 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("DocumentoCompra", setPermisos);
   }, []);
   //#endregion
 
@@ -119,7 +117,7 @@ const DocumentosdeCompra = () => {
     clearTimeout(timer);
     setIndex(0);
     const newTimer = setTimeout(() => {
-      Listar(cadena, index + 1);
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
@@ -134,30 +132,12 @@ const DocumentosdeCompra = () => {
     const result = await ApiMasy.get(
       `api/Compra/DocumentoCompra/Listar?Pagina=${pagina}${filtro}`
     );
-    setDatos(
-      result.data.data.data.map((res) => ({
-        acciones: "",
-        ...res,
-      }))
-    );
+    setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "DocumentoCompra"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
   };
   const GetIsPermitido = async (accion, id) => {
     const result = await ApiMasy.get(
@@ -330,7 +310,6 @@ const DocumentosdeCompra = () => {
       },
       {
         Header: "Acciones",
-        accessor: "acciones",
         Cell: ({ row }) => (
           <BotonCRUD
             setRespuestaAlert={setRespuestaAlert}
@@ -343,7 +322,7 @@ const DocumentosdeCompra = () => {
         ),
       },
     ],
-    []
+    [permisos]
   );
   //#endregion
 
@@ -358,51 +337,42 @@ const DocumentosdeCompra = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
-                <label
-                  name="nombre"
-                  className={Global.LabelStyle}
-                >
+                <label name="proveedorNombre" className={Global.LabelStyle}>
                   Proveedor
                 </label>
                 <input
                   type="text"
-                  id="nombre"
-                  name="nombre"
+                  id="proveedorNombre"
+                  name="proveedorNombre"
                   placeholder="Proveedor"
                   autoComplete="off"
-                  value={filtro.nombre}
+                  value={filtro.proveedorNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
               <div className={Global.Input42pct}>
-                <label
-                  htmlFor="fechaInicio"
-                  className={Global.LabelStyle}
-                >
+                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
                   Desde
                 </label>
                 <input
                   type="date"
                   id="fechaInicio"
                   name="fechaInicio"
-                  value={filtro.fechaInicio}
+                  value={filtro.fechaInicio ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
               <div className={Global.Input42pct}>
-                <label
-                  htmlFor="fechaFin"
-                  className={Global.LabelStyle}
-                >
+                <label htmlFor="fechaFin" className={Global.LabelStyle}>
                   Hasta
                 </label>
                 <input
                   type="date"
                   id="fechaFin"
                   name="fechaFin"
-                  value={filtro.fechaFin}
+                  value={filtro.fechaFin ?? ""}
                   onChange={ValidarData}
                   className={Global.InputBoton}
                 />

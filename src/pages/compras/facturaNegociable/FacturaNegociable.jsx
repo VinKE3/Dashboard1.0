@@ -32,9 +32,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-//#endregion
-
-const Cotizaciones = () => {
+const FacturaNegociable = () => {
   //#region useState
   const { usuario, usuarioId } = useAuth();
   const [datos, setDatos] = useState([]);
@@ -47,11 +45,6 @@ const Cotizaciones = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const filtroInicial =
-    "&fechaInicio=" +
-    moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") +
-    "&fechaFin=" +
-    moment().format("YYYY-MM-DD");
 
   //#endregion
 
@@ -59,25 +52,39 @@ const Cotizaciones = () => {
   useEffect(() => {
     if (store.session.get("usuario") == "AD") {
       setPermisos([true, true, true, true, true]);
-      Listar(filtroInicial, 1);
+      Listar(filtro, 1);
     } else {
       //?Consulta a la Api para traer los permisos
       GetPermisos();
-      Listar(filtroInicial, 1);
+      Listar(filtro, 1);
     }
   }, [usuario]);
+
+  useEffect(() => {
+    datos;
+  }, [datos]);
+
+  useEffect(() => {
+    filtro;
+  }, [filtro]);
+  useEffect(() => {
+    total;
+  }, [total]);
+  useEffect(() => {
+    index;
+  }, [index]);
 
   useEffect(() => {
     modo;
   }, [modo]);
   useEffect(() => {
     if (!modal) {
-      Listar(filtroInicial, index + 1);
+      Listar(filtro, index + 1);
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtroInicial, index + 1);
+      Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -86,17 +93,17 @@ const Cotizaciones = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/Listar?pagina=${pagina}${filtro}`
+      `api/Compra/FacturaNegociable/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
+    const result = await ApiMasy.get(`api/Compra/FacturaNegociable/${id}`);
     setObjeto(result.data.data);
   };
   const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(usuarioId, "Cotizacion");
+    const permiso = await GetUsuarioId(usuarioId, "FacturaNegociable");
     setPermisos([
       permiso.registrar,
       permiso.modificar,
@@ -118,10 +125,10 @@ const Cotizaciones = () => {
         moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
       fechaFin == moment(new Date()).format("yyyy-MM-DD")
     ) {
-      Listar(`&clienteNombre=${filtro}`, boton);
+      Listar(`&proveedorNombre=${filtro}`, boton);
     } else {
       Listar(
-        `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+        `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
         boton
       );
     }
@@ -132,14 +139,14 @@ const Cotizaciones = () => {
     let fechaInicio = document.getElementById("fechaInicio").value;
     let fechaFin = document.getElementById("fechaFin").value;
     setFiltro(
-      `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
+      `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
     );
     const newTimer = setTimeout(() => {
       if (filtro == "") {
         Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
       } else {
         Listar(
-          `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+          `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
           index + 1
         );
       }
@@ -199,72 +206,32 @@ const Cotizaciones = () => {
     }
   };
   //#endregion
+
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
         empresaId: "",
-        tipoDocumentoId: "COTIZACION",
+        proveedorId: "",
+        tipoDocumentoId: "",
         serie: "",
         numero: "",
-        fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
-        fechaVencimiento: moment(new Date()).format("YYYY-MM-DD"),
         clienteId: "",
-        clienteNombre: "",
-        clienteNumeroDocumentoIdentidad: "",
-        clienteDireccionId: 0,
-        clienteDireccion: "",
-        clienteTelefono: "",
-        departamentoId: "",
-        provinciaId: "",
-        distritoId: "",
-        contactoId: "",
-        contactoNombre: "",
-        contactoTelefono: "",
-        contactoCorreoElectronico: "",
-        contactoCargoId: "",
-        contactoCargoDescripcion: "",
-        contactoCelular: "",
-        personalId: "",
+        numeroFactura: "",
+        fechaRegistro: moment(new Date()).format("yyyy-MM-DD"),
+        fechaEmision: moment(new Date()).format("yyyy-MM-DD"),
+        fechaVencimiento: moment(new Date()).format("yyyy-MM-DD"),
+        proveedorNumeroDocumentoIdentidad: "",
+        lugarGiro: "",
+        plazo: 0,
+        tipoCompraId: "CR",
+        tipoPagoId: "EI",
         monedaId: "",
-        tipoCambio: 2147483647,
-        tipoVentaId: "",
-        tipoCobroId: "",
-        numeroOperacion: "",
-        cuentaCorrienteDescripcion: "",
-        validez: "",
-        observacion: "",
-        subTotal: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        montoRetencion: 0,
-        montoPercepcion: 0,
-        total: 2147483647,
-        porcentajeIGV: 0,
-        porcentajeRetencion: 0,
-        porcentajePercepcion: 0,
-        incluyeIGV: true,
-        detalles: [
-          {
-            detalleId: 0,
-            lineaId: "",
-            subLineaId: "",
-            articuloId: "",
-            unidadMedidaId: "",
-            marcaId: 0,
-            descripcion: "",
-            codigoBarras: "",
-            cantidad: 0,
-            precioUnitario: 0,
-            subTotal: 0,
-            montoIGV: 0,
-            importe: 0,
-            presentacion: "",
-            unidadMedidaDescripcion: "",
-            precioCompra: 0,
-          },
-        ],
+        tipoCambio: 0,
+        total: 0,
+        documentoReferencia: "",
+        detalles: [],
       };
       setObjeto(model);
     } else {
@@ -281,8 +248,22 @@ const Cotizaciones = () => {
       accessor: "id",
     },
     {
+      Header: "Fecha Registro",
+      accessor: "fechaRegistro",
+      Cell: ({ value }) => {
+        return moment(value).format("DD/MM/YYYY");
+      },
+    },
+    {
       Header: "Fecha Emisión",
       accessor: "fechaEmision",
+      Cell: ({ value }) => {
+        return moment(value).format("DD/MM/YYYY");
+      },
+    },
+    {
+      Header: "Fecha Vencimiento",
+      accessor: "fechaVencimiento",
       Cell: ({ value }) => {
         return moment(value).format("DD/MM/YYYY");
       },
@@ -292,12 +273,12 @@ const Cotizaciones = () => {
       accessor: "numeroDocumento",
     },
     {
-      Header: "Cliente",
-      accessor: "clienteNombre",
+      Header: "Proveedor",
+      accessor: "proveedorNombre",
     },
     {
-      Header: "Ruc/Dni",
-      accessor: "clienteNumero",
+      Header: "RUC N°",
+      accessor: "proveedorNumero",
     },
     {
       Header: "Moneda",
@@ -308,8 +289,8 @@ const Cotizaciones = () => {
       accessor: "total",
     },
     {
-      Header: "Anulado",
-      accessor: "isAnulado",
+      Header: "Cancelado",
+      accessor: "isCancelado",
       Cell: ({ value }) => {
         return value ? (
           <Checkbox checked={true} />
@@ -330,23 +311,12 @@ const Cotizaciones = () => {
       },
     },
     {
-      Header: "Facturado",
-      accessor: "isFacturado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
+      Header: "Hora Registro",
+      accessor: "horaRegistro",
     },
     {
-      Header: "Doc.Referencia",
+      Header: "D. Referencia",
       accessor: "documentoReferencia",
-    },
-    {
-      Header: "Personal",
-      accessor: "personalNombre",
     },
     {
       Header: "Acciones",
@@ -354,7 +324,7 @@ const Cotizaciones = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Venta", "Cotizacion"]}
+          menu={["Compra", "FacturaNegociable"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
@@ -368,7 +338,7 @@ const Cotizaciones = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className={Global.TituloH2}>Cotización</h2>
+        <h2 className={Global.TituloH2}>Factura Negociable</h2>
 
         {/* Filtro*/}
         <div className={Global.ContenedorFiltro}>
@@ -412,8 +382,8 @@ const Cotizaciones = () => {
         <FiltroBasico
           textLabel={"Proveedor"}
           inputPlaceHolder={"Proveedor"}
-          inputId={"clienteNombre"}
-          inputName={"clienteNombre"}
+          inputId={"proveedorNombre"}
+          inputName={"proveedorNombre"}
           inputMax={"200"}
           botonId={"buscar"}
           FiltradoButton={FiltradoButton}
@@ -452,4 +422,4 @@ const Cotizaciones = () => {
   //#endregion
 };
 
-export default Cotizaciones;
+export default FacturaNegociable;

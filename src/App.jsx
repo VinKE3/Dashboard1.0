@@ -16,9 +16,11 @@ import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
 import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
 import SalidasDeArticulos from "./pages/ventas/salidaDeArticulos/SalidaDeArticulos";
 import RegistroVentaArticulo from "./pages/ventas/registroVentaArituculo/RegistroVentaArticulo";
-
+import BloquearVenta from "./pages/ventas/bloquearVenta/BloquearVenta";
 //*Pages compras
 import Proveedores from "./pages/compras/proveedores/Proveedores";
+import FacturaNegociable from "./pages/compras/facturaNegociable/FacturaNegociable";
+import LetraCambioCompra from "./pages/compras/letraCambioCompra/LetraCambioCompra";
 import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
 import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
@@ -40,20 +42,24 @@ import Conductor from "./pages/mantenimiento/conductor/Conductor";
 import Departamentos from "./pages/mantenimiento/departamentos/Departamentos";
 import Provincias from "./pages/mantenimiento/provincias/Provincias";
 import Distrito from "./pages/mantenimiento/distritos/Distrito";
-import Almacenes from "./pages/mantenimiento/almacenes/Almacenes";
 import CajaChicaConfiguracion from "./pages/mantenimiento/cajaChicaConfiguracion/CajaChicaConfiguracion";
 import Empresa from "./pages/mantenimiento/empresa/Empresa";
 import Correlativos from "./pages/mantenimiento/correlativos/Correlativos";
 import EmpresaDeTransporte from "./pages/mantenimiento/empresaDeTransporte/EmpresaDeTransporte";
 //*Pages almacen
-import Almacen from "./pages/almacen/Almacen";
+import MovimientosArticulos from "./pages/almacen/movimientoArticulos/MovimientosArticulos";
+import CuadreStock from "./pages/almacen/cuadreStock/CuadreStock";
+import EntradaArticulos from "./pages/almacen/entradaArticulos/EntradaArticulos";
+import SalidaArticulos from "./pages/almacen/salidaArticulos/SalidaArticulos";
+import EntradaCilindros from "./pages/almacen/entradaCilindros/EntradaCilindros";
+import SalidaCilindros from "./pages/almacen/salidaCilindros/SalidaCilindros";
+//*Pages Finanzas
+import BloquearMovimientoBancario from "./pages/finanzas/bloquearMovimientoBancario/BloquearMovimientoBancario";
 //*Pages personal
 import Personal from "./pages/personal/Personal";
 //*pages tesoreria
 import CajaChica from "./pages/tesoreria/cajaChica/CajaChica";
 import CobrosCuentaBancaria from "./pages/tesoreria/cobrosCuentasBancaria/CobrosCuentaBancaria";
-import CuentasPorCobrar from "./pages/tesoreria/cuentasPorCobrar/CuentasPorCobrar";
-import CuentasPorPagar from "./pages/tesoreria/cuentasPorPagar/CuentasPorPagar";
 import LetrasCambioCobro from "./pages/tesoreria/letrasCambioCobro/LetrasCambioCobro";
 import LetrasCambioPago from "./pages/tesoreria/letrasCambioPago/LetrasCambioPago";
 import PagosCuentaBnacaria from "./pages/tesoreria/pagosCuentasBancaria/PagosCuentaBnacaria";
@@ -61,6 +67,11 @@ import PagosEnEfectivo from "./pages/tesoreria/pagosEnEfectivo/PagosEnEfectivo";
 import ReciboDeEgreso from "./pages/tesoreria/reciboDeEgreso/ReciboDeEgreso";
 import ReciboDeIngreso from "./pages/tesoreria/reciboDeIngreso/ReciboDeIngreso";
 import Retenciones from "./pages/tesoreria/retenciones/Retenciones";
+import BloquearReciboEgreso from "./pages/tesoreria/bloquearReciboEgreso/BloquearReciboEgreso";
+import Cef from "./pages/compras/cef/Cef";
+import Cheque from "./pages/compras/cheque/Cheque";
+import Articulo from "./pages/mantenimiento/articulo/Articulo";
+import CuentasPorPagar from "./pages/finanzas/cuentasPorPagar/CuentasPorPagar";
 
 function App() {
   return (
@@ -92,6 +103,11 @@ function App() {
             path="/ventas/registro-de-venta-articulo"
             element={<RegistroVentaArticulo />}
           />
+          <Route path="/ventas/bloquear-venta" element={<BloquearVenta />} />
+          <Route
+            path="/compras/factura-negociable"
+            element={<FacturaNegociable />}
+          />
           {/** //!COMPRAS */}
           <Route path="/compras/provedores" element={<Proveedores />} />
           <Route
@@ -99,9 +115,17 @@ function App() {
             element={<DocumentosDeCompra />}
           />
           <Route
+            path="/compras/letra-cambio-compra"
+            element={<LetraCambioCompra />}
+          />
+          <Route
             path="/compras/ordenes-de-compra"
             element={<OrdenesDeCompra />}
           />
+          <Route path="/compras/cef" element={<Cef />} />
+          <Route path="/compras/cheque" element={<Cheque />} />
+
+          <Route path="/compras/bloquear-compra" element={<BloquearCompra />} />
           <Route
             path="/compras/entrada-de-articulos"
             element={<EntradaDeArticulos />}
@@ -110,7 +134,7 @@ function App() {
             path="/compras/registro-de-compra-articulo"
             element={<RegistroCompraArticulo />}
           />
-          <Route path="/compras/bloquear-compra" element={<BloquearCompra />} />
+
           {/** //!MANTENIMIENTO */}
           <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
           <Route
@@ -118,6 +142,7 @@ function App() {
             element={<Correlativos />}
           />
           <Route path="/mantenimiento/empresa" element={<Empresa />} />
+          <Route path="/mantenimiento/articulos" element={<Articulo />} />
           <Route path="/mantenimiento/clientes" element={<Clientes />} />
           <Route
             path="/mantenimiento/tipos-de-cambio"
@@ -147,7 +172,6 @@ function App() {
           />
           <Route path="/mantenimiento/provincias" element={<Provincias />} />
           <Route path="/mantenimiento/distritos" element={<Distrito />} />
-          <Route path="/mantenimiento/almacenes" element={<Almacenes />} />
           <Route
             path="/mantenimiento/caja-chica-configuracion"
             element={<CajaChicaConfiguracion />}
@@ -157,14 +181,40 @@ function App() {
             element={<EmpresaDeTransporte />}
           />
           {/** //!ALMACEN */}
-          <Route path="almacen" element={<Almacen />} />
+          <Route
+            path="almacen/movimientos-articulos"
+            element={<MovimientosArticulos />}
+          />
+          <Route
+            path="almacen/entrada-articulos"
+            element={<EntradaArticulos />}
+          />
+          <Route
+            path="almacen/salida-articulos"
+            element={<SalidaArticulos />}
+          />
+          <Route
+            path="almacen/entrada-cilindros"
+            element={<EntradaCilindros />}
+          />
+          <Route
+            path="almacen/salida-cilindros"
+            element={<SalidaCilindros />}
+          />
+          <Route path="almacen/cuadre-stock" element={<CuadreStock />} />
+          {/** //!FINANZAS */}
+          <Route
+            path="/finanzas/bloquear-movimiento-bancario"
+            element={<BloquearMovimientoBancario />}
+          />
+          <Route
+            path="/finanzas/cuentas-por-pagar"
+            element={<CuentasPorPagar />}
+          />
           {/** //!PERSONAL */}
           <Route path="personal" element={<Personal />} />
           {/** //!TESORERIA */}
-          <Route
-            path="/tesoreria/cuentas-por-cobrar"
-            element={<CuentasPorCobrar />}
-          />
+
           <Route
             path="/tesoreria/cobros-cuentas-bancarias"
             element={<CobrosCuentaBancaria />}
@@ -173,10 +223,6 @@ function App() {
           <Route
             path="/tesoreria/letras-de-cambio-cobro"
             element={<LetrasCambioCobro />}
-          />
-          <Route
-            path="/tesoreria/cuentas-por-pagar"
-            element={<CuentasPorPagar />}
           />
           <Route
             path="/tesoreria/pagos-en-efectivo"
@@ -198,6 +244,10 @@ function App() {
           <Route
             path="/tesoreria/recibo-de-egreso"
             element={<ReciboDeEgreso />}
+          />
+          <Route
+            path="/tesoreria/bloquear-recibo-de-egreso"
+            element={<BloquearReciboEgreso />}
           />
         </Route>
         {/** //!ERROR */}

@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
-import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
+import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
+import moment from "moment";
 import { FaSearch } from "react-icons/fa";
+import { faPlus, faKey, faGear } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import Modal from "./Modal";
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useAuth } from "../../../context/ContextAuth";
-import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 import { Checkbox } from "primereact/checkbox";
-import moment from "moment";
+import store from "store2";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -32,79 +30,85 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-//#endregion
-
-const Cotizaciones = () => {
-  //#region useState
-  const { usuario, usuarioId } = useAuth();
+const CuadreStock = () => {
+  //#region UseState
+  const { usuario } = useAuth();
   const [datos, setDatos] = useState([]);
   const [objeto, setObjeto] = useState([]);
+  const [detalle, setDetalle] = useState([]);
+  const [modo, setModo] = useState("Registrar");
+  const [modal, setModal] = useState(false);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
-  const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [permisos, setPermisos] = useState([false, false, false, false]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const filtroInicial =
-    "&fechaInicio=" +
-    moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") +
-    "&fechaFin=" +
-    moment().format("YYYY-MM-DD");
-
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     if (store.session.get("usuario") == "AD") {
-      setPermisos([true, true, true, true, true]);
-      Listar(filtroInicial, 1);
+      setPermisos([true, true, true, true]);
+      Listar(filtro, 1);
     } else {
-      //?Consulta a la Api para traer los permisos
-      GetPermisos();
-      Listar(filtroInicial, 1);
+      //Consulta a la Api para traer los permisos
     }
   }, [usuario]);
 
   useEffect(() => {
-    modo;
-  }, [modo]);
+    datos;
+  }, [datos]);
+
   useEffect(() => {
-    if (!modal) {
-      Listar(filtroInicial, index + 1);
-    }
-  }, [modal]);
+    filtro;
+  }, [filtro]);
+  useEffect(() => {
+    total;
+  }, [total]);
+  useEffect(() => {
+    index;
+  }, [index]);
+
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtroInicial, index + 1);
+      Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
 
+  useEffect(() => {
+    Listar(filtro, 1);
+  }, []);
   //#endregion
 
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/Listar?pagina=${pagina}${filtro}`
+      `api/Almacen/CuadreStock/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
+
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
+    const result = await ApiMasy.get(`api/Almacen/CuadreStock/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(usuarioId, "Cotizacion");
-    setPermisos([
-      permiso.registrar,
-      permiso.modificar,
-      permiso.eliminar,
-      permiso.consultar,
-      permiso.anular,
-    ]);
+
+  const GetDetalles = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Almacen/CuadreStock/GetDetalles?id=${id}`
+    );
+    setDetalle(result.data.data);
   };
+
+  const GetAbrirCerrar = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Almacen/CuadreStock/AbrirCerrar/${id}`
+    );
+    setObjeto(result.data.data);
+  };
+
   //#endregion
 
   //#region Funciones Filtrado
@@ -118,33 +122,10 @@ const Cotizaciones = () => {
         moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
       fechaFin == moment(new Date()).format("yyyy-MM-DD")
     ) {
-      Listar(`&clienteNombre=${filtro}`, boton);
+      Listar("", boton);
     } else {
-      Listar(
-        `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-        boton
-      );
+      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
     }
-  };
-  const FiltradoKeyPress = async (e) => {
-    clearTimeout(timer);
-    let filtro = e.target.value;
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    setFiltro(
-      `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
-    );
-    const newTimer = setTimeout(() => {
-      if (filtro == "") {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        Listar(
-          `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-          index + 1
-        );
-      }
-    }, 200);
-    setTimer(newTimer);
   };
   const FiltradoFechaInicio = (e) => {
     clearTimeout(timer);
@@ -169,7 +150,6 @@ const Cotizaciones = () => {
     }, 1000);
     setTimer(newTimer);
   };
-
   const FiltradoFechaFin = (e) => {
     clearTimeout(timer);
     let fechaInicio = document.getElementById("fechaInicio").value;
@@ -189,7 +169,6 @@ const Cotizaciones = () => {
     }, 1000);
     setTimer(newTimer);
   };
-
   const FiltradoButton = () => {
     setIndex(0);
     if (filtro == "") {
@@ -199,154 +178,84 @@ const Cotizaciones = () => {
     }
   };
   //#endregion
+
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
-        empresaId: "",
-        tipoDocumentoId: "COTIZACION",
-        serie: "",
-        numero: "",
-        fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
-        fechaVencimiento: moment(new Date()).format("YYYY-MM-DD"),
-        clienteId: "",
-        clienteNombre: "",
-        clienteNumeroDocumentoIdentidad: "",
-        clienteDireccionId: 0,
-        clienteDireccion: "",
-        clienteTelefono: "",
-        departamentoId: "",
-        provinciaId: "",
-        distritoId: "",
-        contactoId: "",
-        contactoNombre: "",
-        contactoTelefono: "",
-        contactoCorreoElectronico: "",
-        contactoCargoId: "",
-        contactoCargoDescripcion: "",
-        contactoCelular: "",
-        personalId: "",
-        monedaId: "",
-        tipoCambio: 2147483647,
-        tipoVentaId: "",
-        tipoCobroId: "",
-        numeroOperacion: "",
-        cuentaCorrienteDescripcion: "",
-        validez: "",
-        observacion: "",
-        subTotal: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        montoRetencion: 0,
-        montoPercepcion: 0,
-        total: 2147483647,
-        porcentajeIGV: 0,
-        porcentajeRetencion: 0,
-        porcentajePercepcion: 0,
-        incluyeIGV: true,
-        detalles: [
-          {
-            detalleId: 0,
-            lineaId: "",
-            subLineaId: "",
-            articuloId: "",
-            unidadMedidaId: "",
-            marcaId: 0,
-            descripcion: "",
-            codigoBarras: "",
-            cantidad: 0,
-            precioUnitario: 0,
-            subTotal: 0,
-            montoIGV: 0,
-            importe: 0,
-            presentacion: "",
-            unidadMedidaDescripcion: "",
-            precioCompra: 0,
-          },
-        ],
-      };
-      setObjeto(model);
+      setObjeto([]);
+      setDetalle([]);
     } else {
       await GetPorId(id);
+      await GetDetalles(id);
     }
     setModal(true);
   };
+
   //#endregion
 
-  //#region Columnas
+  //#region Columnas y Selects
   const columnas = [
     {
       Header: "id",
       accessor: "id",
     },
     {
-      Header: "Fecha Emisión",
-      accessor: "fechaEmision",
+      Header: "Estado",
+      accessor: "estado",
+      Cell: ({ value }) => {
+        return value ? (
+          <div className="">
+            <Checkbox checked={true} />
+          </div>
+        ) : (
+          <div className="">
+            <Checkbox checked={false} />
+          </div>
+        );
+      },
+    },
+    {
+      Header: "Pendiente",
+      accessor: "pendiente",
+      Cell: ({ value }) => {
+        return value ? (
+          <Checkbox checked={true} />
+        ) : (
+          <Checkbox checked={false} />
+        );
+      },
+    },
+    {
+      Header: "Fecha Registro",
+      accessor: "fechaRegistro",
       Cell: ({ value }) => {
         return moment(value).format("DD/MM/YYYY");
       },
     },
     {
-      Header: "N° Documento",
-      accessor: "numeroDocumento",
+      Header: "N°",
+      accessor: "numero",
     },
     {
-      Header: "Cliente",
-      accessor: "clienteNombre",
-    },
-    {
-      Header: "Ruc/Dni",
-      accessor: "clienteNumero",
+      Header: "Responsable",
+      accessor: "responsableNombreCompleto",
     },
     {
       Header: "Moneda",
       accessor: "monedaId",
     },
     {
-      Header: "Total",
-      accessor: "total",
+      Header: "Total Sobra",
+      accessor: "totalSobra",
     },
     {
-      Header: "Anulado",
-      accessor: "isAnulado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
+      Header: "Total Falta",
+      accessor: "totalFalta",
     },
     {
-      Header: "Bloqueado",
-      accessor: "isBloqueado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
-    },
-    {
-      Header: "Facturado",
-      accessor: "isFacturado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
-    },
-    {
-      Header: "Doc.Referencia",
-      accessor: "documentoReferencia",
-    },
-    {
-      Header: "Personal",
-      accessor: "personalNombre",
+      Header: "Saldo Final",
+      accessor: "saldoFinal",
     },
     {
       Header: "Acciones",
@@ -354,11 +263,11 @@ const Cotizaciones = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Venta", "Cotizacion"]}
+          menu={["Mantenimiento", "CuadreStock"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
-        /> //?Se envia el id de la fila
+        />
       ),
     },
   ];
@@ -368,8 +277,9 @@ const Cotizaciones = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className={Global.TituloH2}>Cotización</h2>
-
+        <div className="flex items-center justify-between">
+          <h2 className={Global.TituloH2}>Cuadre de Stock</h2>
+        </div>
         {/* Filtro*/}
         <div className={Global.ContenedorFiltro}>
           <div className={Global.InputFull}>
@@ -409,27 +319,27 @@ const Cotizaciones = () => {
             </button>
           </div>
         </div>
-        <FiltroBasico
-          textLabel={"Proveedor"}
-          inputPlaceHolder={"Proveedor"}
-          inputId={"clienteNombre"}
-          inputName={"clienteNombre"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        />
         {/* Filtro*/}
 
         {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )}
+        <div className="flex gap-1">
+          {permisos[0] && (
+            <BotonBasico
+              botonText="Registrar"
+              botonClass={Global.BotonRegistrar}
+              botonIcon={faPlus}
+              click={() => AbrirModal()}
+            />
+          )}
+          {permisos[0] && (
+            <BotonBasico
+              botonText="Cambiar Contraseña"
+              botonClass={Global.BotonCambiarContraseña}
+              botonIcon={faKey}
+              click={() => AbrirModalClave()}
+            />
+          )}
+        </div>
         {/* Boton */}
 
         {/* Tabla */}
@@ -444,12 +354,19 @@ const Cotizaciones = () => {
         </TablaStyle>
         {/* Tabla */}
       </div>
+      {modal && (
+        <Modal
+          setModal={setModal}
+          modo={modo}
+          objeto={objeto}
+          detalle={detalle}
+        />
+      )}
 
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
       <ToastContainer />
     </>
   );
   //#endregion
 };
 
-export default Cotizaciones;
+export default CuadreStock;

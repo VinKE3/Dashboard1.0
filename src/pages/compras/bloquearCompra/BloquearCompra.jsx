@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import Table from "../../../components/tablas/Table";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import moment from "moment";
-import { FaSearch } from "react-icons/fa";
-import styled from "styled-components";
+import Table from "../../../components/tablas/Table";
+import { Checkbox } from "primereact/checkbox";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
+import { FaSearch } from "react-icons/fa";
+import moment from "moment";
+import "react-toastify/dist/ReactToastify.css";
+import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import Swal from "sweetalert2";
-import { Checkbox } from "primereact/checkbox";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -28,7 +28,7 @@ const TablaStyle = styled.div`
     width: 100px;
   }
   & th:nth-child(6) {
-    width: 50px;
+    width: 40px;
     text-align: center;
   }
   & th:nth-child(7) {
@@ -40,34 +40,49 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:last-child {
-    width: 80px;
     text-align: center;
+    width: 80px;
+    max-width: 80px;
   }
 `;
 
 const BloquearCompra = () => {
   //#region UseState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false]);
+  const [filtro, setFiltro] = useState({
+    tipoDocumentoId: "",
+    fechaInicio: moment()
+      .subtract(2, "years")
+      .startOf("year")
+      .format("yyyy-MM-DD"),
+    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+  });
+  const [cadena, setCadena] = useState(
+    `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+  );
+  //Modal
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
   const [checked, setChecked] = useState(false);
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
   useEffect(() => {
-    if (Object.entries(tipoDeDocumento).length > 0) {
-      document.getElementById("tipoDocumentoId").value = -1;
-    }
-  }, [tipoDeDocumento]);
+    setCadena(
+      `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -82,20 +97,14 @@ const BloquearCompra = () => {
       ) {
         setVisible(false);
       } else {
+        TipoDeDocumentos();
         setVisible(true);
-        Listar(filtro, 1);
+        Listar(cadena, 1);
       }
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      TipoDeDocumentos();
-      setVisible(true);
-      setPermisos([false, true, false, false, false]);
-      Listar(filtro, 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("BloquearCompra", setPermisos);
   }, []);
   //#endregion
 
@@ -116,147 +125,32 @@ const BloquearCompra = () => {
       descripcion: tipo.descripcion,
       abreviatura: tipo.abreviatura,
     }));
-    tiposDocumento.unshift({ id: "-1", descripcion: "TODOS" });
     setTipoDeDocumento(tiposDocumento);
-  };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "BloquearCompra"
-    );
-    setPermisos([false, result.modificar, false, false, false]);
   };
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let tipoDocumento = document.getElementById("tipoDocumentoId").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (
-      fechaInicio ==
-        moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-      fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-      tipoDocumento == -1
-    ) {
-      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
-    } else {
-      if (tipoDocumento == -1) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
-      } else {
-        Listar(
-          `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-          boton
-        );
-      }
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const FiltradoSelect = (e) => {
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let tipoDocumento = e.target.value;
-    setFiltro(
-      `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-      index + 1
-    );
-    if (tipoDocumento != 0) setIndex(0);
-    if (
-      fechaInicio ==
-        moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-      fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-      tipoDocumento == -1
-    ) {
-      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-    } else {
-      if (tipoDocumento == -1) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        Listar(
-          `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-          index + 1
-        );
-      }
-    }
-  };
-  const FiltradoFechaInicio = (e) => {
+  const Filtro = async () => {
     clearTimeout(timer);
-    let fechaInicio = e.target.value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let tipoDocumento = document.getElementById("tipoDocumentoId").value;
-    setFiltro(
-      `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-      index + 1
-    );
-    if (
-      fechaInicio !=
-      moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD")
-    )
-      setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-        tipoDocumento == -1
-      ) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        if (tipoDocumento == -1) {
-          Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-        } else {
-          Listar(
-            `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-            index + 1
-          );
-        }
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-  const FiltradoFechaFin = (e) => {
-    clearTimeout(timer);
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = e.target.value;
-    let tipoDocumento = document.getElementById("tipoDocumentoId").value;
-    setFiltro(
-      `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-      index + 1
-    );
-    if (fechaFin != moment(new Date()).format("yyyy-MM-DD")) setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD") &&
-        tipoDocumento == -1
-      ) {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        if (tipoDocumento == -1) {
-          Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-        } else {
-          Listar(
-            `&tipoDocumentoId=${tipoDocumento}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-            index + 1
-          );
-        }
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-  const onClick = () => {
     setIndex(0);
-    if (filtro == "") {
-      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, 1);
-    } else {
-      Listar(filtro, 1);
-    }
+    const newTimer = setTimeout(() => {
+      Listar(cadena, 1);
+    }, 200);
+    setTimer(newTimer);
+  };
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
-  //#region Funciones Modal
+  //#region Funciones
   const ModificarCheck = async (id, isBloqueado) => {
     let model = {
       ids: [id],
@@ -280,9 +174,8 @@ const BloquearCompra = () => {
         progress: undefined,
         theme: "colored",
       });
-      setRespuestaAlert(false);
     } else {
-      setRespuestaAlert(true);
+      Listar(cadena, index + 1);
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 5000,
@@ -303,7 +196,8 @@ const BloquearCompra = () => {
     const title = isBloqueado
       ? "Bloquear Registros de Compras (50 registros mostrados)"
       : "Desbloquear Registros de Compras (50 registros mostrados)";
-    const result = Swal.fire({
+
+    Swal.fire({
       title: title,
       icon: "warning",
       iconColor: "#F7BF3A",
@@ -334,9 +228,8 @@ const BloquearCompra = () => {
               progress: undefined,
               theme: "colored",
             });
-            setRespuestaAlert(false);
           } else {
-            setRespuestaAlert(true);
+            Listar(cadena, index + 1);
             toast.success(String(response.data.messages[0].textos), {
               position: "bottom-right",
               autoClose: 5000,
@@ -354,88 +247,81 @@ const BloquearCompra = () => {
         setChecked(!isBloqueado);
       }
     });
-    setRespuestaAlert(true);
-  };
-  const ValidarCheckTotal = (e, ids) => {
-    if (e.checked) {
-      ModificarCheckAll(ids, true);
-    } else {
-      ModificarCheckAll(ids, false);
-    }
   };
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "Id",
-      accessor: "id",
-    },
-    {
-      Header: "N° Documento",
-      accessor: "numeroDocumento",
-    },
-    {
-      Header: "Fecha",
-      accessor: "fechaContable",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "Id",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Proveedor",
-      accessor: "proveedorNombre",
-    },
-    {
-      Header: "RUC",
-      accessor: "proveedorNumero",
-    },
-    {
-      Header: "Mon",
-      accessor: "monedaId",
-      Cell: ({ value }) => {
-        return <p className="text-center">{value}</p>;
+      {
+        Header: "N° Documento",
+        accessor: "numeroDocumento",
       },
-    },
-    {
-      Header: "Total",
-      accessor: "total",
-      Cell: ({ value }) => {
-        return <p className="text-end">{value}</p>;
+      {
+        Header: "Fecha",
+        accessor: "fechaContable",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YYYY");
+        },
       },
-    },
-    {
-      Header: "B",
-      accessor: "isBloqueado",
-      Cell: ({ value }) => {
-        return value ? (
-          <div className="flex justify-center">
-            {" "}
-            <Checkbox checked={true} />
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            {" "}
-            <Checkbox checked={false} />
-          </div>
-        );
+      {
+        Header: "Proveedor",
+        accessor: "proveedorNombre",
       },
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Compra", "BloquearCompra"]}
-          id={row.values.id}
-          ClickModificar={() =>
-            ModificarCheck(row.values.id, row.values.isBloqueado)
-          }
-        />
-      ),
-    },
-  ];
+      {
+        Header: "RUC",
+        accessor: "proveedorNumero",
+      },
+      {
+        Header: "M",
+        accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
+      },
+      {
+        Header: "Total",
+        accessor: "total",
+        Cell: ({ value }) => {
+          return <p className="text-end">{value}</p>;
+        },
+      },
+      {
+        Header: "B",
+        accessor: "isBloqueado",
+        Cell: ({ value }) => {
+          return value ? (
+            <div className="flex justify-center">
+              <Checkbox checked={true} />
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <Checkbox checked={false} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Compra", "BloquearCompra"]}
+            id={row.values.id}
+            ClickModificar={() =>
+              ModificarCheck(row.values.id, row.values.isBloqueado)
+            }
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
@@ -452,9 +338,9 @@ const BloquearCompra = () => {
                     inputId="isBloqueado"
                     name="isBloqueado"
                     onChange={(e) => {
-                      ValidarCheckTotal(
-                        e,
-                        datos.map((d) => d.id)
+                      ModificarCheckAll(
+                        datos.map((d) => d.id),
+                        e.checked
                       );
                     }}
                     checked={checked}
@@ -462,9 +348,7 @@ const BloquearCompra = () => {
                 </div>
                 <label
                   htmlFor="isBloqueado"
-                  className={
-                    Global.LabelCheckStyle + " font-semibold"
-                  }
+                  className={Global.LabelCheckStyle + " font-semibold"}
                 >
                   Bloquear Todos
                 </label>
@@ -480,9 +364,13 @@ const BloquearCompra = () => {
                 <select
                   id="tipoDocumentoId"
                   name="tipoDocumentoId"
-                  onChange={FiltradoSelect}
+                  value={filtro.tipoDocumentoId ?? ""}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 >
+                  <option key={-1} value={""}>
+                    {"--TODOS--"}
+                  </option>
                   {tipoDeDocumento.map((tipo) => (
                     <option key={tipo.id} value={tipo.id}>
                       {" "}
@@ -499,11 +387,8 @@ const BloquearCompra = () => {
                   type="date"
                   id="fechaInicio"
                   name="fechaInicio"
-                  onChange={FiltradoFechaInicio}
-                  defaultValue={moment()
-                    .subtract(2, "years")
-                    .startOf("year")
-                    .format("yyyy-MM-DD")}
+                  value={filtro.fechaInicio ?? ""}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
@@ -515,14 +400,16 @@ const BloquearCompra = () => {
                   type="date"
                   id="fechaFin"
                   name="fechaFin"
-                  onChange={FiltradoFechaFin}
-                  defaultValue={moment(new Date()).format("yyyy-MM-DD")}
+                  value={filtro.fechaFin ?? ""}
+                  onChange={ValidarData}
                   className={Global.InputBoton}
                 />
                 <button
                   id="buscar"
-                  className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
-                  onClick={onClick}
+                  className={
+                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                  }
+                  onClick={Filtro}
                 >
                   <FaSearch />
                 </button>

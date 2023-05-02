@@ -15,6 +15,7 @@ import * as Global from "../../../components/Global";
 import store from "store2";
 import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 import { Checkbox } from "primereact/checkbox";
+import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
 
 //#region Estilos
@@ -32,9 +33,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-//#endregion
-
-const Cotizaciones = () => {
+const CuentasPorPagar = () => {
   //#region useState
   const { usuario, usuarioId } = useAuth();
   const [datos, setDatos] = useState([]);
@@ -47,6 +46,7 @@ const Cotizaciones = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [tipo, setTipo] = useState("todos");
   const filtroInicial =
     "&fechaInicio=" +
     moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") +
@@ -86,17 +86,18 @@ const Cotizaciones = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/Listar?pagina=${pagina}${filtro}`
+      `api/Finanzas/CuentaPorPagar/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
+    console.log(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
+    const result = await ApiMasy.get(`api/Finanzas/CuentaPorPagar/${id}`);
     setObjeto(result.data.data);
   };
   const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(usuarioId, "Cotizacion");
+    const permiso = await GetUsuarioId(usuarioId, "CuentaPorPagar");
     setPermisos([
       permiso.registrar,
       permiso.modificar,
@@ -199,72 +200,13 @@ const Cotizaciones = () => {
     }
   };
   //#endregion
+
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
-        empresaId: "",
-        tipoDocumentoId: "COTIZACION",
-        serie: "",
-        numero: "",
-        fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
-        fechaVencimiento: moment(new Date()).format("YYYY-MM-DD"),
-        clienteId: "",
-        clienteNombre: "",
-        clienteNumeroDocumentoIdentidad: "",
-        clienteDireccionId: 0,
-        clienteDireccion: "",
-        clienteTelefono: "",
-        departamentoId: "",
-        provinciaId: "",
-        distritoId: "",
-        contactoId: "",
-        contactoNombre: "",
-        contactoTelefono: "",
-        contactoCorreoElectronico: "",
-        contactoCargoId: "",
-        contactoCargoDescripcion: "",
-        contactoCelular: "",
-        personalId: "",
-        monedaId: "",
-        tipoCambio: 2147483647,
-        tipoVentaId: "",
-        tipoCobroId: "",
-        numeroOperacion: "",
-        cuentaCorrienteDescripcion: "",
-        validez: "",
-        observacion: "",
-        subTotal: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        montoRetencion: 0,
-        montoPercepcion: 0,
-        total: 2147483647,
-        porcentajeIGV: 0,
-        porcentajeRetencion: 0,
-        porcentajePercepcion: 0,
-        incluyeIGV: true,
-        detalles: [
-          {
-            detalleId: 0,
-            lineaId: "",
-            subLineaId: "",
-            articuloId: "",
-            unidadMedidaId: "",
-            marcaId: 0,
-            descripcion: "",
-            codigoBarras: "",
-            cantidad: 0,
-            precioUnitario: 0,
-            subTotal: 0,
-            montoIGV: 0,
-            importe: 0,
-            presentacion: "",
-            unidadMedidaDescripcion: "",
-            precioCompra: 0,
-          },
-        ],
+        id: id,
       };
       setObjeto(model);
     } else {
@@ -273,6 +215,12 @@ const Cotizaciones = () => {
     setModal(true);
   };
   //#endregion
+  const datosFiltrados =
+    tipo === "todos"
+      ? datos
+      : tipo === "soloDeuda"
+      ? datos.filter((dato) => dato.saldo > 0 && dato.saldo <= dato.total)
+      : datos.filter((dato) => dato.abonado === dato.total);
 
   //#region Columnas
   const columnas = [
@@ -281,8 +229,15 @@ const Cotizaciones = () => {
       accessor: "id",
     },
     {
-      Header: "Fecha Emisión",
-      accessor: "fechaEmision",
+      Header: "Fecha",
+      accessor: "fechaContable",
+      Cell: ({ value }) => {
+        return moment(value).format("DD/MM/YYYY");
+      },
+    },
+    {
+      Header: "Vencimiento",
+      accessor: "fechaVencimiento",
       Cell: ({ value }) => {
         return moment(value).format("DD/MM/YYYY");
       },
@@ -292,12 +247,8 @@ const Cotizaciones = () => {
       accessor: "numeroDocumento",
     },
     {
-      Header: "Cliente",
-      accessor: "clienteNombre",
-    },
-    {
-      Header: "Ruc/Dni",
-      accessor: "clienteNumero",
+      Header: "Proveedor",
+      accessor: "proveedorNombre",
     },
     {
       Header: "Moneda",
@@ -308,45 +259,27 @@ const Cotizaciones = () => {
       accessor: "total",
     },
     {
-      Header: "Anulado",
-      accessor: "isAnulado",
+      Header: "Abonado",
+      accessor: "abonado",
+    },
+    {
+      Header: "Saldo",
+      accessor: "saldo",
+    },
+    {
+      Header: "Cancelado",
+      accessor: "isCancelado",
       Cell: ({ value }) => {
         return value ? (
-          <Checkbox checked={true} />
+          <div className="flex justify-center">
+            <Checkbox checked={true} />
+          </div>
         ) : (
-          <Checkbox checked={false} />
+          <div className="flex justify-center">
+            <Checkbox checked={false} />
+          </div>
         );
       },
-    },
-    {
-      Header: "Bloqueado",
-      accessor: "isBloqueado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
-    },
-    {
-      Header: "Facturado",
-      accessor: "isFacturado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
-    },
-    {
-      Header: "Doc.Referencia",
-      accessor: "documentoReferencia",
-    },
-    {
-      Header: "Personal",
-      accessor: "personalNombre",
     },
     {
       Header: "Acciones",
@@ -354,7 +287,7 @@ const Cotizaciones = () => {
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Venta", "Cotizacion"]}
+          menu={["Compra", "CuentasPorPagar"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
@@ -368,8 +301,55 @@ const Cotizaciones = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className={Global.TituloH2}>Cotización</h2>
-
+        <div className="flex items-center justify-between">
+          <h2 className={Global.TituloH2}>Cuentas Por Pagar</h2>
+          <div className="flex gap-3 items-center">
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <div className={Global.LabelStyle}>
+                  <RadioButton
+                    inputId="todos"
+                    name="todos"
+                    value="todos"
+                    onChange={(e) => setTipo(e.target.value)}
+                    checked={tipo === "todos"}
+                  />
+                </div>
+                <label htmlFor="todos" className={Global.InputStyle}>
+                  Todos
+                </label>
+              </div>
+            </div>
+            <div className={Global.InputFull}>
+              <div className={Global.LabelStyle}>
+                <RadioButton
+                  inputId="soloDeuda"
+                  name="soloDeuda"
+                  value="soloDeuda"
+                  onChange={(e) => setTipo(e.target.value)}
+                  checked={tipo === "soloDeuda"}
+                />
+              </div>
+              <label htmlFor="soloDeuda" className={Global.InputStyle}>
+                Deudas
+              </label>
+            </div>
+            <div className={Global.InputFull}>
+              <div className={Global.LabelStyle}>
+                <RadioButton
+                  inputId="soloCancelado"
+                  name="soloCancelado"
+                  value="soloCancelado"
+                  onChange={(e) => setTipo(e.target.value)}
+                  checked={tipo === "soloCancelado"}
+                />
+              </div>
+              <label htmlFor="soloCancelado" className={Global.InputStyle}>
+                Cancelados
+              </label>
+            </div>
+          </div>
+        </div>
         {/* Filtro*/}
         <div className={Global.ContenedorFiltro}>
           <div className={Global.InputFull}>
@@ -422,21 +402,21 @@ const Cotizaciones = () => {
         {/* Filtro*/}
 
         {/* Boton */}
-        {permisos[0] && (
+        {/* {permisos[0] && (
           <BotonBasico
             botonText="Registrar"
             botonClass={Global.BotonRegistrar}
             botonIcon={faPlus}
             click={() => AbrirModal()}
           />
-        )}
+        )} */}
         {/* Boton */}
 
         {/* Tabla */}
         <TablaStyle>
           <Table
             columnas={columnas}
-            datos={datos}
+            datos={datosFiltrados}
             total={total}
             index={index}
             Click={(e) => FiltradoPaginado(e)}
@@ -452,4 +432,4 @@ const Cotizaciones = () => {
   //#endregion
 };
 
-export default Cotizaciones;
+export default CuentasPorPagar;

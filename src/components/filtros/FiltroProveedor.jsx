@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
@@ -28,63 +28,51 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState({
+    numeroDocumentoIdentidad: "",
+    nombre: "",
+  });
+  const [cadena, setCadena] = useState(
+    `&numeroDocumentoIdentidad=${filtro.numeroDocumentoIdentidad}&nombre=${filtro.nombre}`
+  );
   //#endregion
 
   //#region useEffect;
   useEffect(() => {
-    Listar("", 1);
+    setCadena(
+      `&numeroDocumentoIdentidad=${filtro.numeroDocumentoIdentidad}&nombre=${filtro.nombre}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+  useEffect(() => {
+    Listar(cadena, 1);
   }, []);
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoDocumento = async (e) => {
-    let nombre = document.getElementById("nombre").value;
-    let documento = e.target.value;
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const Filtro = async () => {
     clearTimeout(timer);
-    setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
     const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
-        Listar("", 1);
-      } else {
-        Listar(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
-      }
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const FiltradoNombre = async (e) => {
-    let documento = document.getElementById("documento").value;
-    let nombre = e.target.value;
-    clearTimeout(timer);
-    setFiltro(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
-    const newTimer = setTimeout(() => {
-      if (documento == "" && nombre == "") {
-        Listar("", 1);
-      } else {
-        Listar(`&numeroDocumentoIdentidad=${documento}&nombre=${nombre}`, 1);
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const onClick = () => {
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
   };
   //#endregion
 
   //#region API
-  const Listar = async (filtro = "", pagina = 1) => {
+  const Listar = async (f = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Proveedor/Listar?pagina=${pagina}${filtro}`
+      `api/Mantenimiento/Proveedor/Listar?pagina=${pagina}${f}`
     );
-    let model = result.data.data.data;
-    if (filtro == "") {
-      model.shift();
-    }
-    setDatos(model);
+    setDatos(result.data.data.data.filter((res) => res.id !== "000000"));
   };
   const GetPorId = async (id, e) => {
     e.preventDefault();
@@ -101,31 +89,36 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "N° Documento",
-      accessor: "numeroDocumentoIdentidad",
-    },
-    {
-      Header: "Nombre",
-      accessor: "nombre",
-    },
-    {
-      Header: "-",
-      Cell: ({ row }) => (
-        <button
-          onClick={(e) => GetPorId(row.values.id, e)}
-          className={Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1"}
-        >
-          <FaSearch></FaSearch>
-        </button>
-      ),
-    },
-  ];
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
+      },
+      {
+        Header: "N° Documento",
+        accessor: "numeroDocumentoIdentidad",
+      },
+      {
+        Header: "Nombre",
+        accessor: "nombre",
+      },
+      {
+        Header: "-",
+        Cell: ({ row }) => (
+          <button
+            onClick={(e) => GetPorId(row.values.id, e)}
+            className={
+              Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1"
+            }
+          >
+            <FaSearch></FaSearch>
+          </button>
+        ),
+      },
+    ],
+    [datos]
+  );
   //#endregion
 
   //#region Render
@@ -140,9 +133,15 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
-            <button className={Global.BotonOkModal + " flex items-center justify-center"} type="button">
+            <button
+              className={
+                Global.BotonOkModal + " flex items-center justify-center"
+              }
+              type="button"
+            >
               <FaPlus></FaPlus>
-              <p className="pl-2">Nuevo</p></button>
+              <p className="pl-2">Nuevo</p>
+            </button>
             <button
               className={Global.BotonCancelarModal}
               type="button"
@@ -157,16 +156,20 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.Input60pct}>
-                <label htmlFor="documento" className={Global.LabelStyle}>
+                <label
+                  htmlFor="numeroDocumentoIdentidad"
+                  className={Global.LabelStyle}
+                >
                   N° Documento
                 </label>
                 <input
                   type="text"
-                  id="documento"
-                  name="documento"
+                  id="numeroDocumentoIdentidad"
+                  name="numeroDocumentoIdentidad"
                   placeholder="N° Documento"
                   autoComplete="off"
-                  onChange={FiltradoDocumento}
+                  value={filtro.numeroDocumentoIdentidad}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
@@ -180,12 +183,13 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
                   name="nombre"
                   placeholder="Nombre"
                   autoComplete="off"
-                  onChange={FiltradoNombre}
+                  value={filtro.nombre}
+                  onChange={ValidarData}
                   className={Global.InputBoton}
                 />
                 <button
                   id="consultar"
-                  onClick={onClick}
+                  onClick={Filtro}
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }

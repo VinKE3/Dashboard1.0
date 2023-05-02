@@ -7,6 +7,7 @@ import {
   FaMoneyCheck,
   FaFileAlt,
   FaToolbox,
+  FaDollarSign,
 } from "react-icons/fa";
 
 function seccionesList() {
@@ -45,6 +46,10 @@ function seccionesList() {
           path: "/ventas/registro-de-venta-articulo",
           title: "Registro de Venta - Articulo",
         },
+        {
+          path: "/ventas/bloquear-venta",
+          title: "Bloquear Venta",
+        },
       ],
     },
     {
@@ -57,12 +62,32 @@ function seccionesList() {
           title: "Provedores",
         },
         {
+          path: "/compras/factura-negociable",
+          title: "Factura Negociable",
+        },
+        {
+          path: "/compras/letra-cambio-compra",
+          title: "Letra de Cambio",
+        },
+        {
           path: "/compras/documentos-de-compra",
           title: "Documentos de Compra",
         },
         {
           path: "/compras/ordenes-de-compra",
           title: "Ordenes de Compra",
+        },
+        {
+          path: "/compras/cef",
+          title: "C.E.F.",
+        },
+        {
+          path: "/compras/cheque",
+          title: "Programación Cheques",
+        },
+        {
+          path: "/compras/bloquear-compra",
+          title: "Bloquear Compra",
         },
         {
           path: "/compras/entrada-de-articulos",
@@ -72,10 +97,6 @@ function seccionesList() {
           path: "/compras/registro-de-compra-articulo",
           title: "Registro de Compra - Articulo",
         },
-        {
-          path: "/compras/bloquear-compra",
-          title: "Bloquear Compra",
-        },
       ],
     },
     {
@@ -83,6 +104,10 @@ function seccionesList() {
       id: "mantenimiento",
       icon: <FaTools className="text-primary" />,
       items: [
+        {
+          path: "/mantenimiento/articulos",
+          title: "Articulos",
+        },
         {
           path: "/mantenimiento/tipos-de-cambio",
           title: "Tipos de Cambio",
@@ -136,10 +161,6 @@ function seccionesList() {
           title: "Distritos",
         },
         {
-          path: "/mantenimiento/almacenes",
-          title: "Almacenes",
-        },
-        {
           path: "/mantenimiento/caja-chica-configuracion",
           title: "Caja Chica - Configuracion",
         },
@@ -151,8 +172,43 @@ function seccionesList() {
       icon: <FaIndustry className="text-primary" />,
       items: [
         {
-          path: "/almacen",
-          title: "Ver Almacen",
+          path: "/almacen/movimientos-articulos",
+          title: "Movimientos de Articulos",
+        },
+        {
+          path: "/almacen/cuadre-stock",
+          title: "Cuadre de Stock",
+        },
+        {
+          path: "/almacen/entrada-articulos",
+          title: "Entrada de Articulos",
+        },
+        {
+          path: "/almacen/salida-articulos",
+          title: "Salida de Articulos",
+        },
+        {
+          path: "/almacen/entrada-cilindros",
+          title: "Entrada de Cilindros",
+        },
+        {
+          path: "/almacen/salida-cilindros",
+          title: "Salida de Cilindros",
+        },
+      ],
+    },
+    {
+      title: "Finanzas",
+      id: "finanzas",
+      icon: <FaDollarSign className="text-primary" />,
+      items: [
+        {
+          path: "/finanzas/bloquear-movimiento-bancario",
+          title: "Bloquear Movimiento Bancario",
+        },
+        {
+          path: "/finanzas/cuentas-por-pagar",
+          title: "Cuentas por Pagar",
         },
       ],
     },
@@ -215,6 +271,10 @@ function seccionesList() {
         {
           path: "/tesoreria/recibo-de-egreso",
           title: "Recibo de Egreso",
+        },
+        {
+          path: "/tesoreria/bloquear-recibo-de-egreso",
+          title: "Bloquear Recibo de Egreso",
         },
       ],
     },

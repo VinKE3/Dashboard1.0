@@ -32,9 +32,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-//#endregion
-
-const Cotizaciones = () => {
+const EntradaCilindros = () => {
   //#region useState
   const { usuario, usuarioId } = useAuth();
   const [datos, setDatos] = useState([]);
@@ -86,17 +84,17 @@ const Cotizaciones = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/Listar?pagina=${pagina}${filtro}`
+      `api/Almacen/EntradaCilindros/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
+    const result = await ApiMasy.get(`api/Almacen/EntradaCilindros/${id}`);
     setObjeto(result.data.data);
   };
   const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(usuarioId, "Cotizacion");
+    const permiso = await GetUsuarioId(usuarioId, "EntradaCilindros");
     setPermisos([
       permiso.registrar,
       permiso.modificar,
@@ -199,52 +197,25 @@ const Cotizaciones = () => {
     }
   };
   //#endregion
+
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
       let model = {
         empresaId: "",
-        tipoDocumentoId: "COTIZACION",
+        proveedorId: "",
+        tipoDocumentoId: "",
         serie: "",
         numero: "",
-        fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
-        fechaVencimiento: moment(new Date()).format("YYYY-MM-DD"),
         clienteId: "",
+        fechaEmision: "",
         clienteNombre: "",
-        clienteNumeroDocumentoIdentidad: "",
-        clienteDireccionId: 0,
-        clienteDireccion: "",
-        clienteTelefono: "",
-        departamentoId: "",
-        provinciaId: "",
-        distritoId: "",
-        contactoId: "",
-        contactoNombre: "",
-        contactoTelefono: "",
-        contactoCorreoElectronico: "",
-        contactoCargoId: "",
-        contactoCargoDescripcion: "",
-        contactoCelular: "",
         personalId: "",
-        monedaId: "",
-        tipoCambio: 2147483647,
-        tipoVentaId: "",
-        tipoCobroId: "",
-        numeroOperacion: "",
-        cuentaCorrienteDescripcion: "",
-        validez: "",
         observacion: "",
-        subTotal: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        montoRetencion: 0,
-        montoPercepcion: 0,
-        total: 2147483647,
-        porcentajeIGV: 0,
-        porcentajeRetencion: 0,
-        porcentajePercepcion: 0,
-        incluyeIGV: true,
+        isSobrante: true,
+        isVenta: true,
+        totalCilindros: 0,
         detalles: [
           {
             detalleId: 0,
@@ -254,15 +225,15 @@ const Cotizaciones = () => {
             unidadMedidaId: "",
             marcaId: 0,
             descripcion: "",
-            codigoBarras: "",
             cantidad: 0,
-            precioUnitario: 0,
-            subTotal: 0,
-            montoIGV: 0,
-            importe: 0,
-            presentacion: "",
             unidadMedidaDescripcion: "",
-            precioCompra: 0,
+            salidaCilindrosId: "",
+          },
+        ],
+        guiasRelacionadas: [
+          {
+            id: "",
+            numeroDocumento: "",
           },
         ],
       };
@@ -288,35 +259,24 @@ const Cotizaciones = () => {
       },
     },
     {
+      Header: "Hora Emisión",
+      accessor: "horaEmision",
+    },
+    {
       Header: "N° Documento",
       accessor: "numeroDocumento",
     },
     {
-      Header: "Cliente",
+      Header: "Proveedor",
       accessor: "clienteNombre",
     },
     {
-      Header: "Ruc/Dni",
-      accessor: "clienteNumero",
+      Header: "Personal",
+      accessor: "personalNombreCompleto",
     },
     {
-      Header: "Moneda",
-      accessor: "monedaId",
-    },
-    {
-      Header: "Total",
-      accessor: "total",
-    },
-    {
-      Header: "Anulado",
-      accessor: "isAnulado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
+      Header: "Cilindros",
+      accessor: "cilindros",
     },
     {
       Header: "Bloqueado",
@@ -329,32 +289,14 @@ const Cotizaciones = () => {
         );
       },
     },
-    {
-      Header: "Facturado",
-      accessor: "isFacturado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
-      },
-    },
-    {
-      Header: "Doc.Referencia",
-      accessor: "documentoReferencia",
-    },
-    {
-      Header: "Personal",
-      accessor: "personalNombre",
-    },
+
     {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
           setRespuestaAlert={setRespuestaAlert}
           permisos={permisos}
-          menu={["Venta", "Cotizacion"]}
+          menu={["Almacen", "EntradaCilindros"]}
           id={row.values.id}
           ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
           ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
@@ -368,7 +310,7 @@ const Cotizaciones = () => {
   return (
     <>
       <div className="px-2">
-        <h2 className={Global.TituloH2}>Cotización</h2>
+        <h2 className={Global.TituloH2}>Entrada Cilindros</h2>
 
         {/* Filtro*/}
         <div className={Global.ContenedorFiltro}>
@@ -452,4 +394,4 @@ const Cotizaciones = () => {
   //#endregion
 };
 
-export default Cotizaciones;
+export default EntradaCilindros;

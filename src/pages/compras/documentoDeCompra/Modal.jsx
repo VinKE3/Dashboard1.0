@@ -23,7 +23,6 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/Funciones";
 import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
-import { set } from "date-fns";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -95,22 +94,6 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    // ActualizarCombos();
-  }, [dataTipoDoc]);
-  useEffect(() => {
-    console.log("detalleId");
-    console.log(detalleId);
-    console.log("detalleId");
-  }, [detalleId]);
-  useEffect(() => {
-    // dataDocRef;
-    // if (document.getElementById("documentoReferenciaId")) {
-    //   document.getElementById("documentoReferenciaId").value =
-    //     data.documentoReferenciaId;
-    // }
-  }, [dataDocRef]);
-
-  useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
         ...data,
@@ -172,8 +155,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData({ ...data, detalles: dataDetalle });
     }
   }, [dataDetalle]);
-  useEffect(() => {}, [dataArt]);
-  useEffect(() => {}, [data]);
 
   useEffect(() => {
     if (refrescar) {
