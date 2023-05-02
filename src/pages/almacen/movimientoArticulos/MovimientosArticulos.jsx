@@ -2,10 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
+import Modal from "./Modal";
 import Table from "../../../components/tablas/Table";
 import { Checkbox } from "primereact/checkbox";
-import { toast, ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
+import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
@@ -45,6 +45,8 @@ const MovimientosArticulos = () => {
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
+  const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
+  const [conStock, setConStock] = useState(false);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
@@ -60,9 +62,10 @@ const MovimientosArticulos = () => {
     `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
+  const [modal, setModal] = useState(false);
+  const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
-  const [checked, setChecked] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -98,7 +101,7 @@ const MovimientosArticulos = () => {
     }
   }, [permisos]);
   useEffect(() => {
-    GetPermisos("BloquearCompra", setPermisos);
+    GetPermisos("MovimientoArticulo", setPermisos);
   }, []);
   //#endregion
 
@@ -131,7 +134,6 @@ const MovimientosArticulos = () => {
       id: tipo.id,
       descripcion: tipo.descripcion,
     }));
-    tiposDocumento.unshift({ id: "-1", descripcion: "TODOS" });
     setTipoDeDocumento(tiposDocumento);
   };
   //#endregion
@@ -157,93 +159,131 @@ const MovimientosArticulos = () => {
   };
   //#endregion
 
+  //#region
+  const AbrirModal = async (id) => {
+    let model = {
+      Id: id,
+    };
+    setObjeto(model);
+    setModal(true);
+    console.log(model);
+  };
+  //#endregion
+
   //#region Columnas
-  const columnas = [
-    {
-      Header: "Id",
-      accessor: "Id",
-    },
-    {
-      Header: "Linea",
-      accessor: "lineaDescripcion",
-    },
-    {
-      Header: "SubLinea",
-      accessor: "subLineaDescripcion",
-    },
-    {
-      Header: "Marca",
-      accessor: "marcaNombre",
-    },
-    {
-      Header: "Descripcion",
-      accessor: "articuloDescripcion",
-    },
-    {
-      Header: "Moneda",
-      accessor: "monedaId",
-    },
-    {
-      Header: "U.Medida",
-      accessor: "unidadMedidaAbreviatura",
-    },
-    {
-      Header: "S.Inicial",
-      accessor: "stockInicial",
-      Cell: ({ row }) => {
-        return row.values.saldoFinal > 0 ? (
-          <span className="text-green-900">{row.values.stockInicial}</span>
-        ) : (
-          <span className="text-red-500">{row.values.stockInicial}</span>
-        );
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "Id",
+        accessor: "Id",
       },
-    },
-    {
-      Header: "Entradas",
-      accessor: "cantidadEntrada",
-      Cell: ({ row }) => {
-        return row.values.saldoFinal > 0 ? (
-          <span className="text-green-900">{row.values.cantidadEntrada}</span>
-        ) : (
-          <span className="text-red-500">{row.values.cantidadEntrada}</span>
-        );
+      {
+        Header: "Linea",
+        accessor: "lineaDescripcion",
       },
-    },
-    {
-      Header: "Salidas",
-      accessor: "cantidadSalida",
-      Cell: ({ row }) => {
-        return row.values.saldoFinal > 0 ? (
-          <span className="text-green-900">{row.values.cantidadSalida}</span>
-        ) : (
-          <span className="text-red-500">{row.values.cantidadSalida}</span>
-        );
+      {
+        Header: "SubLinea",
+        accessor: "subLineaDescripcion",
       },
-    },
-    {
-      Header: "S.Final",
-      accessor: "saldoFinal",
-      Cell: ({ row }) => {
-        return row.values.saldoFinal > 0 ? (
-          <span className="text-green-900">{row.values.saldoFinal}</span>
-        ) : (
-          <span className="text-red-500">{row.values.saldoFinal}</span>
-        );
+      {
+        Header: "Marca",
+        accessor: "marcaNombre",
       },
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Almacen", "MovimientoArticulos"]}
-          id={row.values.Id}
-          ClickModificar={() => AbrirModal(row.values.Id)}
-        />
-      ),
-    },
-  ];
+      {
+        Header: "Descripcion",
+        accessor: "articuloDescripcion",
+      },
+      {
+        Header: "M",
+        accessor: "monedaId",
+      },
+      {
+        Header: "U.M",
+        accessor: "unidadMedidaAbreviatura",
+      },
+      {
+        Header: "S.Inicial",
+        accessor: "stockInicial",
+        Cell: ({ row }) => {
+          return (
+            <p
+              className={
+                row.values.saldoFinal > 0
+                  ? "text-right text-green-500"
+                  : "text-right  text-red-500"
+              }
+            >
+              {row.values.stockInicial}
+            </p>
+          );
+        },
+      },
+      {
+        Header: "Entradas",
+        accessor: "cantidadEntrada",
+        Cell: ({ row }) => {
+          return (
+            <p
+              className={
+                row.values.saldoFinal > 0
+                  ? "text-right text-green-500"
+                  : "text-right  text-red-500"
+              }
+            >
+              {row.values.cantidadEntrada}
+            </p>
+          );
+        },
+      },
+      {
+        Header: "Salidas",
+        accessor: "cantidadSalida",
+        Cell: ({ row }) => {
+          return (
+            <p
+              className={
+                row.values.saldoFinal > 0
+                  ? "text-right text-green-500"
+                  : "text-right  text-red-500"
+              }
+            >
+              {row.values.cantidadSalida}
+            </p>
+          );
+        },
+      },
+      {
+        Header: "S.Final",
+        accessor: "saldoFinal",
+        Cell: ({ row }) => {
+          return (
+            <p
+              className={
+                row.values.saldoFinal > 0
+                  ? "text-right text-green-500"
+                  : "text-right  text-red-500"
+              }
+            >
+              {row.values.saldoFinal}
+            </p>
+          );
+        },
+      },
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Almacen", "MovimientoArticulos"]}
+            id={row.values.Id}
+            ClickModificar={() => AbrirModal(row.values.Id)}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
