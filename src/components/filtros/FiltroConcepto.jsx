@@ -16,19 +16,6 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  /* & th:nth-child(2) {
-    width: 90px;
-  }
-  & th:nth-child(5),
-  & th:nth-child(7) {
-    width: 70px;
-    text-align: right;
-  }
-  & th:nth-child(4),
-  & th:nth-child(6) {
-    width: 35px;
-    text-align: center;
-  } */
   & th:last-child {
     width: 60px;
     text-align: center;
@@ -42,6 +29,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
+  const [filtroDescripcion, setFiltroDescripcion] = useState("");
   //#endregion
 
   //#region useEffect;
@@ -53,23 +41,18 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
 
   //#region Funciones Filtrado
   const FiltradoDescripcion = async (e) => {
-    // let descripcion = e.target.value;
-    // clearTimeout(timer);
-    // setFiltro(`descripcion=${descripcion}`, 1);
-    // const newTimer = setTimeout(() => {
-    //   if (descripcion == "") {
-    //     Listar("", 1);
-    //   } else {
-    //     Listar(`descripcion=${descripcion}`, 1);
-    //   }
-    // }, 200);
-    // setTimer(newTimer);
-    const descripcion = e.target.value;
-    setFiltro(descripcion);
-    const filteredData = datos.filter((registro) =>
-      registro.descripcion.toLowerCase().includes(descripcion.toLowerCase())
-    );
-    setDatos(filteredData);
+    let descripcion = e.target.value;
+    clearTimeout(timer);
+    setFiltro(`descripcion=${descripcion}`, 1);
+    setFiltroDescripcion(descripcion); // Actualizar el estado filtroDescripcion
+    const newTimer = setTimeout(() => {
+      if (descripcion == "") {
+        Listar("", 1);
+      } else {
+        Listar(`descripcion=${descripcion}`, 1);
+      }
+    }, 200);
+    setTimer(newTimer);
   };
 
   const FiltradoButton = () => {
@@ -86,7 +69,10 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
     const result = await ApiMasy.get(
       `api/Finanzas/CuentaPorPagar/ListarPendientes?pagina=${pagina}${filtro}`
     );
-    setDatos(result.data.data.data);
+    const datosFiltrados = result.data.data.data.filter((dato) =>
+      dato.descripcion.toLowerCase().includes(filtroDescripcion.toLowerCase())
+    );
+    setDatos(datosFiltrados);
   };
 
   const GetConcepto = async (id, e) => {

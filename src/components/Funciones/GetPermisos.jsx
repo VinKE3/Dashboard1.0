@@ -3,7 +3,7 @@ import store from "store2";
 
 const GetPermisos = async (menu, setPermisos) => {
   if (store.session.get("usuario") == "AD") {
-    if (menu == "BloquearCompra") {
+    if (menu == "BloquearCompra" || menu == "BloquearVenta") {
       setPermisos([false, true, false, false, false]);
     } else if (menu == "Correlativo") {
       setPermisos([true, true, true, false, false]);

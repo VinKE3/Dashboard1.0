@@ -1,21 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaSearch } from "react-icons/fa";
-import styled from "styled-components";
+import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
+import moment from "moment";
+import styled from "styled-components";
+import { FaSearch } from "react-icons/fa";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
-import { Checkbox } from "primereact/checkbox";
-import moment from "moment";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -25,60 +22,121 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:last-child {
-    width: 130px;
+  & th:nth-child(2),
+  & th:nth-child(3) {
+    width: 70px;
     text-align: center;
+  }
+  & th:nth-child(4) {
+    width: 140px;
+  }
+  & th:nth-child(9),
+  & th:nth-child(10),
+  & th:nth-child(11) {
+    text-align: center;
+    width: 35px;
+  }
+  & th:nth-child(12) {
+    text-align: center;
+    width: 70px;
+  }
+  & th:last-child {
+    text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 //#endregion
 
 const SalidaCilindros = () => {
   //#region useState
-  const { usuario, usuarioId } = useAuth();
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
+  const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
-  const [objeto, setObjeto] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
+  const [filtro, setFiltro] = useState({
+    clienteNombre: "",
+    fechaInicio: moment()
+      .subtract(2, "years")
+      .startOf("year")
+      .format("yyyy-MM-DD"),
+    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+  });
+  const [cadena, setCadena] = useState(
+    `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+  );
+  //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const filtroInicial =
-    "&fechaInicio=" +
-    moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") +
-    "&fechaFin=" +
-    moment().format("YYYY-MM-DD");
-
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setPermisos([true, true, true, true, true]);
-      Listar(filtroInicial, 1);
-    } else {
-      //?Consulta a la Api para traer los permisos
-      GetPermisos();
-      Listar(filtroInicial, 1);
-    }
-  }, [usuario]);
+    setCadena(
+      `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
 
   useEffect(() => {
-    modo;
-  }, [modo]);
-  useEffect(() => {
-    if (!modal) {
-      Listar(filtroInicial, index + 1);
+    if (visible) {
+      if (!modal) {
+        Listar(cadena, index + 1);
+      }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtroInicial, index + 1);
+      Listar(cadena, index + 1);
     }
   }, [respuestaAlert]);
 
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar(cadena, 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    GetPermisos("SalidaCilindros", setPermisos);
+  }, []);
+  //#endregion
+
+  //#region Funciones Filtrado
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const Filtro = async () => {
+    clearTimeout(timer);
+    setIndex(0);
+    const newTimer = setTimeout(() => {
+      Listar(cadena, 1);
+    }, 200);
+    setTimer(newTimer);
+  };
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
+  };
   //#endregion
 
   //#region Funciones API
@@ -93,116 +151,13 @@ const SalidaCilindros = () => {
     const result = await ApiMasy.get(`api/Almacen/SalidaCilindros/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPermisos = async () => {
-    const permiso = await GetUsuarioId(usuarioId, "SalidaCilindros");
-    setPermisos([
-      permiso.registrar,
-      permiso.modificar,
-      permiso.eliminar,
-      permiso.consultar,
-      permiso.anular,
-    ]);
-  };
-  //#endregion
-
-  //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (
-      fechaInicio ==
-        moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-      fechaFin == moment(new Date()).format("yyyy-MM-DD")
-    ) {
-      Listar(`&clienteNombre=${filtro}`, boton);
-    } else {
-      Listar(
-        `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-        boton
-      );
-    }
-  };
-  const FiltradoKeyPress = async (e) => {
-    clearTimeout(timer);
-    let filtro = e.target.value;
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    setFiltro(
-      `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
-    );
-    const newTimer = setTimeout(() => {
-      if (filtro == "") {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      } else {
-        Listar(
-          `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
-          index + 1
-        );
-      }
-    }, 200);
-    setTimer(newTimer);
-  };
-  const FiltradoFechaInicio = (e) => {
-    clearTimeout(timer);
-    let fechaInicio = e.target.value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    setFiltro(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-    if (
-      fechaInicio !=
-      moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD")
-    )
-      setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD")
-      ) {
-        Listar("", index);
-      } else {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-
-  const FiltradoFechaFin = (e) => {
-    clearTimeout(timer);
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = e.target.value;
-    setFiltro(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-    if (fechaFin != moment(new Date()).format("yyyy-MM-DD")) setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD")
-      ) {
-        Listar("", index);
-      } else {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-
-  const FiltradoButton = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
-  };
   //#endregion
 
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         empresaId: "string",
         tipoDocumentoId: "string",
         serie: "string",
@@ -229,8 +184,7 @@ const SalidaCilindros = () => {
             unidadMedidaDescripcion: "string",
           },
         ],
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(id);
     }
@@ -239,172 +193,194 @@ const SalidaCilindros = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Fecha Emisión",
-      accessor: "fechaEmision",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Hora Emisión",
-      accessor: "horaEmision",
-    },
-    {
-      Header: "N° Documento",
-      accessor: "numeroDocumento",
-    },
-    {
-      Header: "Proveedor",
-      accessor: "clienteNombre",
-    },
-    {
-      Header: "N° Factura",
-      accessor: "numeroFactura",
-    },
-    {
-      Header: "N° Guia",
-      accessor: "numeroGuia",
-    },
-    {
-      Header: "Personal",
-      accessor: "personalNombreCompleto",
-    },
-    {
-      Header: "Cilindros",
-      accessor: "totalCilindros",
-    },
-    {
-      Header: "Anulado",
-      accessor: "isAnulado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
+      {
+        Header: "Emisión",
+        accessor: "fechaEmision",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YY");
+        },
       },
-    },
-    {
-      Header: "Bloqueado",
-      accessor: "isBloqueado",
-      Cell: ({ value }) => {
-        return value ? (
-          <Checkbox checked={true} />
-        ) : (
-          <Checkbox checked={false} />
-        );
+      {
+        Header: "H. Emisión",
+        accessor: "horaEmision",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
       },
-    },
-    {
-      Header: "Tipo Salida",
-      accessor: "tipoSalida",
-    },
+      {
+        Header: "N° Documento",
+        accessor: "numeroDocumento",
+      },
+      {
+        Header: "Cliente",
+        accessor: "clienteNombre",
+      },
+      {
+        Header: "N° Factura",
+        accessor: "numeroFactura",
+      },
+      {
+        Header: "N° Guia",
+        accessor: "numeroGuia",
+      },
+      {
+        Header: "Personal",
+        accessor: "personalNombreCompleto",
+      },
+      {
+        Header: "Cilindros",
+        accessor: "totalCilindros",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
+      },
+      {
+        Header: "A",
+        accessor: "isAnulado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "B",
+        accessor: "isBloqueado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "T. Salida",
+        accessor: "tipoSalida",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
+      },
 
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Almacen", "SalidaCilindros"]}
-          id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
-        /> //?Se envia el id de la fila
-      ),
-    },
-  ];
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Almacen", "SalidaCilindros"]}
+            id={row.values.id}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Salida Cilindros</h2>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Salida Cilindros</h2>
 
-        {/* Filtro*/}
-        <div className={Global.ContenedorFiltro}>
-          <div className={Global.InputFull}>
-            <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-              Tipo
-            </label>
-            <input
-              type="date"
-              id="fechaInicio"
-              name="fechaInicio"
-              onChange={FiltradoFechaInicio}
-              defaultValue={moment()
-                .subtract(2, "years")
-                .startOf("year")
-                .format("yyyy-MM-DD")}
-              className={Global.InputStyle}
-            />
+            {/* Filtro*/}
+            <div className={Global.ContenedorFiltro}>
+              <div className={Global.InputFull}>
+                <label name="clienteNombre" className={Global.LabelStyle}>
+                  Cliente
+                </label>
+                <input
+                  type="text"
+                  id="clienteNombre"
+                  name="clienteNombre"
+                  placeholder="Cliente"
+                  autoComplete="off"
+                  value={filtro.clienteNombre ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.Input42pct}>
+                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                  Desde
+                </label>
+                <input
+                  type="date"
+                  id="fechaInicio"
+                  name="fechaInicio"
+                  value={filtro.fechaInicio ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.Input42pct}>
+                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                  Hasta
+                </label>
+                <input
+                  type="date"
+                  id="fechaFin"
+                  name="fechaFin"
+                  value={filtro.fechaFin ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputBoton}
+                />
+                <button
+                  id="buscar"
+                  className={
+                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                  }
+                  onClick={Filtro}
+                >
+                  <FaSearch />
+                </button>
+              </div>
+            </div>
+            {/* Filtro*/}
+
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
+
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="fechaFin" className={Global.LabelStyle}>
-              Tipo
-            </label>
-            <input
-              type="date"
-              id="fechaFin"
-              name="fechaFin"
-              onChange={FiltradoFechaFin}
-              defaultValue={moment(new Date()).format("yyyy-MM-DD")}
-              className={Global.InputBoton}
-            />
-            <button
-              id="buscar"
-              className={Global.BotonBuscar}
-              onClick={FiltradoButton}
-            >
-              <FaSearch />
-            </button>
-          </div>
-        </div>
-        <FiltroBasico
-          textLabel={"Proveedor"}
-          inputPlaceHolder={"Proveedor"}
-          inputId={"clienteNombre"}
-          inputName={"clienteNombre"}
-          inputMax={"200"}
-          botonId={"buscar"}
-          FiltradoButton={FiltradoButton}
-          FiltradoKeyPress={FiltradoKeyPress}
-        />
-        {/* Filtro*/}
 
-        {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Registrar"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AbrirModal()}
-          />
-        )}
-        {/* Boton */}
-
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-      <ToastContainer />
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

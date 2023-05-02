@@ -45,6 +45,7 @@ const TablaStyle = styled.div`
     max-width: 80px;
   }
 `;
+//#endregion
 
 const BloquearCompra = () => {
   //#region UseState
@@ -166,7 +167,7 @@ const BloquearCompra = () => {
       }
       toast.error(err, {
         position: "bottom-right",
-        autoClose: 7000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -220,7 +221,7 @@ const BloquearCompra = () => {
             }
             toast.error(err, {
               position: "bottom-right",
-              autoClose: 7000,
+              autoClose: 2000,
               hideProgressBar: true,
               closeOnClick: true,
               pauseOnHover: true,

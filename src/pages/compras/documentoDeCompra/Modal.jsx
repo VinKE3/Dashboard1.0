@@ -182,7 +182,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [modalArt]);
 
   useEffect(() => {
-    if (modo != "Registrar") {
+    if (modo == "Registrar") {
       GetPorIdTipoCambio(data.fechaEmision);
     }
     ConsultarCtacte();
@@ -760,6 +760,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         tipoCambio: 0,
       });
     } else {
+      console.log("else");
       setData({
         ...data,
         tipoCambio: result.data.data.precioCompra,
@@ -778,8 +779,10 @@ const Modal = ({ setModal, modo, objeto }) => {
           draggable: true,
           progress: undefined,
           theme: "colored",
+          toastId: "toastTipoCambio",
         }
       );
+
       setTipoMensaje(-1);
       setMensaje([]);
     }

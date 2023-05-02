@@ -209,7 +209,7 @@ const BloquearReciboEgreso = () => {
       }
       toast.error(err, {
         position: "bottom-right",
-        autoClose: 7000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -265,7 +265,7 @@ const BloquearReciboEgreso = () => {
               }
               toast.error(err, {
                 position: "bottom-right",
-                autoClose: 7000,
+                autoClose: 2000,
                 hideProgressBar: true,
                 closeOnClick: true,
                 pauseOnHover: true,

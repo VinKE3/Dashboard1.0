@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
+import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import Table from "../../../components/tablas/Table";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -21,38 +20,54 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:last-child {
-    width: 130px;
     text-align: center;
+    width: 100px;
+    max-width: 100px;
   }
 `;
 //#endregion
 
 const Conductor = () => {
   //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false, false]);
-  const [objeto, setObjeto] = useState([]);
+  const [filtro, setFiltro] = useState({
+    nombre: "",
+  });
+  const [cadena, setCadena] = useState(
+    `&nombre=${filtro.nombre}`
+  );
+  //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
+  useEffect(() => {
+    setCadena(
+      `&nombre=${filtro.nombre}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+
   useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar(filtro, index + 1);
+        Listar(cadena, index + 1);
       }
     }
   }, [modal]);
   useEffect(() => {
     if (respuestaAlert) {
-      Listar(filtro, index);
+      Listar(cadena, index + 1);
     }
   }, [respuestaAlert]);
 
@@ -68,20 +83,13 @@ const Conductor = () => {
         setVisible(false);
       } else {
         setVisible(true);
-        Listar(filtro, 1);
+        Listar(cadena, 1);
       }
     }
   }, [permisos]);
   useEffect(() => {
-    if (store.session.get("usuario") == "AD") {
-      setVisible(true);
-      setPermisos([true, true, true, true, true]);
-      Listar(filtro, 1);
-    } else {
-      GetPermisos();
-    }
+    GetPermisos("Proveedor", setPermisos);
   }, []);
-  //#endregi
   //#endregion
 
   //#region Funciones API
@@ -96,53 +104,26 @@ const Conductor = () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Conductor/${id}`);
     setObjeto(result.data.data);
   };
-  const GetPermisos = async () => {
-    const result = await GetUsuarioId(
-      store.session.get("usuarioId"),
-      "Conductor"
-    );
-    setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
-    ]);
-  };
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let filtro = document.getElementById("descripcion").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (filtro == "") {
-      Listar("", boton);
-    } else {
-      Listar(`&descripcion=${filtro}`, boton);
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const onChange = async (e) => {
+  const Filtro = async () => {
     clearTimeout(timer);
-    let f = e.target.value;
-    setFiltro(`&descripcion=${f}`);
-    if (f != "") setIndex(0);
+    setIndex(0);
     const newTimer = setTimeout(() => {
-      if (f == "") {
-        Listar("", index + 1);
-      } else {
-        Listar(`&descripcion=${f}`, index + 1);
-      }
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
-  const onClick = () => {
-    setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
@@ -176,41 +157,44 @@ const Conductor = () => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Nombre",
-      accessor: "nombre",
-    },
-    {
-      Header: "DNI",
-      accessor: "numeroDocumentoIdentidad",
-    },
-    {
-      Header: "Licencia de Conducir",
-      accessor: "licenciaConducir",
-    },
-    {
-      Header: "Empresa de Transporte",
-      accessor: "empresaTransporteNombre",
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
-          permisos={permisos}
-          menu={["Mantenimiento", "Conductor"]}
-          id={row.values.id}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
-        />
-      ),
-    },
-  ];
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
+      },
+      {
+        Header: "Nombre",
+        accessor: "nombre",
+      },
+      {
+        Header: "DNI",
+        accessor: "numeroDocumentoIdentidad",
+      },
+      {
+        Header: "Licencia de Conducir",
+        accessor: "licenciaConducir",
+      },
+      {
+        Header: "Empresa de Transporte",
+        accessor: "empresaTransporteNombre",
+      },
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Mantenimiento", "Conductor"]}
+            id={row.values.id}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
@@ -228,9 +212,10 @@ const Conductor = () => {
               inputId={"nombre"}
               name={"nombre"}
               maxLength={"200"}
+              value={filtro.nombre}
+              onChange={ValidarData}
               botonId={"buscar"}
-              onClick={onClick}
-              onChange={onChange}
+              onClick={Filtro}
             />
             {/* Filtro*/}
 

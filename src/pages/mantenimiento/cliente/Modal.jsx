@@ -1084,7 +1084,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <select
                           id="personalId"
                           name="personalId"
-                          value={dataGeneral.personalId ?? ""}
+                          value={objetoPersonal.personalId ?? ""}
                           onChange={ValidarDataPersonal}
                           disabled={modo == "Consultar" ? true : false}
                           className={Global.InputStyle}

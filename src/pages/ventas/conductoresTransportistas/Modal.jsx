@@ -9,7 +9,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [data, setData] = useState(objeto);
   const [dataModal, setDataModal] = useState([]);
   const [dataUbigeo, setDataUbigeo] = useState([]);
-  const [checked, setChecked] = useState(true);
   //#endregion
 
   //#region useEffect
@@ -101,10 +100,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.isActivo ?? ""}
                     onChange={(e) => {
-                      setChecked(e.checked);
                       ValidarData(e);
                     }}
-                    checked={data.isActivo ? checked : ""}
+                    checked={data.isActivo ? true : ""}
                   ></Checkbox>
                 </div>
                 <label htmlFor="isActivo" className={Global.InputStyle}>
@@ -121,8 +119,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="empresaTransporteId"
                   name="empresaTransporteId"
-                  onChange={ValidarData}
                   disabled={modo != "Consultar" ? false : true}
+                  value={data.empresaTransporteId ?? ""} 
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 >
                   {dataModal.map((map) => (

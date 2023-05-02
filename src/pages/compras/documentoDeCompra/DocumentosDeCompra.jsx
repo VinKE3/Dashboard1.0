@@ -146,7 +146,7 @@ const DocumentosdeCompra = () => {
     if (!result.data.data) {
       toast.error(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 7000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -259,6 +259,9 @@ const DocumentosdeCompra = () => {
       {
         Header: "M",
         accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
       },
       {
         Header: "Total",

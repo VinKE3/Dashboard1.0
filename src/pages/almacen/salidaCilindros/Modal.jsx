@@ -69,167 +69,165 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       modo={modo}
       menu={["Almacen", "SalidaCilindros"]}
       titulo="Salida de Cilindros"
-      tamañoModal={[Global.ModalGrande, Global.FormSimple]}
+      tamañoModal={[Global.ModalGrande, Global.Form]}
     >
-      <div className="gap-3 grid">
-        <div className={Global.ContenedorBasico}>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.Input60pct}>
-              <label htmlFor="serie" className={Global.LabelStyle}>
-                Serie
-              </label>
-              <input
-                type="text"
-                id="serie"
-                name="serie"
-                maxLength="2"
-                autoComplete="off"
-                placeholder="00"
-                readOnly={modo == "Registrar" ? false : true}
-                value={data.serie ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.Input60pct}>
-              <label htmlFor="numero" className={Global.LabelStyle}>
-                Número
-              </label>
-              <input
-                type="text"
-                id="numero"
-                name="numero"
-                maxLength="2"
-                autoComplete="off"
-                placeholder="00"
-                readOnly={modo == "Registrar" ? false : true}
-                value={data.numero ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.Input40pct}>
-              <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                Fecha
-              </label>
-              <input
-                type="date"
-                id="fechaEmision"
-                name="fechaEmision"
-                maxLength="2"
-                autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
-                value={moment(data.fechaEmision).format("yyyy-MM-DD") ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
+      <div className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}>
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.Input60pct}>
+            <label htmlFor="serie" className={Global.LabelStyle}>
+              Serie
+            </label>
+            <input
+              type="text"
+              id="serie"
+              name="serie"
+              maxLength="2"
+              autoComplete="off"
+              placeholder="00"
+              readOnly={modo == "Registrar" ? false : true}
+              value={data.serie ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.Input60pct}>
+            <label htmlFor="numero" className={Global.LabelStyle}>
+              Número
+            </label>
+            <input
+              type="text"
+              id="numero"
+              name="numero"
+              maxLength="2"
+              autoComplete="off"
+              placeholder="00"
+              readOnly={modo == "Registrar" ? false : true}
+              value={data.numero ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.Input40pct}>
+            <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+              Fecha
+            </label>
+            <input
+              type="date"
+              id="fechaEmision"
+              name="fechaEmision"
+              maxLength="2"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={moment(data.fechaEmision).format("yyyy-MM-DD") ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
           </div>
         </div>
-        <div className={Global.ContenedorBasico}>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="clienteId" className={Global.LabelStyle}>
-                Cliente
-              </label>
-              <input
-                type="text"
-                id="clienteId"
-                name="clienteId"
-                autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
-                value={data.clienteId ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="numeroFactura" className={Global.LabelStyle}>
-                N° Factura
-              </label>
-              <input
-                type="text"
-                id="numeroFactura"
-                name="numeroFactura"
-                autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
-                value={data.numeroFactura ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
+      </div>
+      <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="clienteId" className={Global.LabelStyle}>
+              Cliente
+            </label>
+            <input
+              type="text"
+              id="clienteId"
+              name="clienteId"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.clienteId ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="personalId" className={Global.LabelStyle}>
-                Personal
-              </label>
-              <select
-                id="personalId"
-                name="personalId"
-                readOnly={modo == "Consultar" ? true : false}
-                value={data.personalId ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              >
-                {personal.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.personalId}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="numeroGuia" className={Global.LabelStyle}>
-                N° Guia
-              </label>
-              <input
-                type="text"
-                id="numeroGuia"
-                name="numeroGuia"
-                autoComplete="off"
-                value={data.numeroGuia ?? ""}
-                readOnly={modo == "Consultar" ? true : false}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
+          <div className={Global.InputFull}>
+            <label htmlFor="numeroFactura" className={Global.LabelStyle}>
+              N° Factura
+            </label>
+            <input
+              type="text"
+              id="numeroFactura"
+              name="numeroFactura"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.numeroFactura ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="observacion" className={Global.LabelStyle}>
-                Observación
-              </label>
-              <input
-                type="text"
-                id="observacion"
-                name="observacion"
-                autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
-                value={data.observacion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="descripcion" className={Global.LabelStyle}>
-                Descripcion
-              </label>
+        </div>
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="personalId" className={Global.LabelStyle}>
+              Personal
+            </label>
+            <select
+              id="personalId"
+              name="personalId"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.personalId ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            >
+              {personal.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.personalId}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={Global.InputFull}>
+            <label htmlFor="numeroGuia" className={Global.LabelStyle}>
+              N° Guia
+            </label>
+            <input
+              type="text"
+              id="numeroGuia"
+              name="numeroGuia"
+              autoComplete="off"
+              value={data.numeroGuia ?? ""}
+              readOnly={modo == "Consultar" ? true : false}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+        </div>
+        <div className={Global.ContenedorInputs}>
+          <div className={Global.InputFull}>
+            <label htmlFor="observacion" className={Global.LabelStyle}>
+              Observación
+            </label>
+            <input
+              type="text"
+              id="observacion"
+              name="observacion"
+              autoComplete="off"
+              readOnly={modo == "Consultar" ? true : false}
+              value={data.observacion ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.InputFull}>
+            <label htmlFor="descripcion" className={Global.LabelStyle}>
+              Descripcion
+            </label>
 
-              <select
-                id="descripcion"
-                name="descripcion"
-                readOnly={modo == "Consultar" ? true : false}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              >
-                {tipoSalida.map((item, index) => (
-                  <option key={index} value={item.id}>
-                    {item.descripcion}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              id="descripcion"
+              name="descripcion"
+              readOnly={modo == "Consultar" ? true : false}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            >
+              {tipoSalida.map((item, index) => (
+                <option key={index} value={item.id}>
+                  {item.descripcion}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
