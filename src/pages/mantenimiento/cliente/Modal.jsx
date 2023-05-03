@@ -377,7 +377,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClientePersonal/ListarPorCliente?clienteId=${dataGeneral.id}`
     );
-    let model = result.data.data.map((res) => ({
+    setDataPersonal(result.data.data.map((res) => ({
       id: res.id,
       personal:
         res.personal.apellidoPaterno +
@@ -386,8 +386,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         " " +
         res.personal.nombres,
       numeroDocumentoIdentidad: res.personal.numeroDocumentoIdentidad,
-    }));
-    setDataPersonal(model);
+    })));
   };
   const GetPersonal = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/ClientePersonal/${id}`);

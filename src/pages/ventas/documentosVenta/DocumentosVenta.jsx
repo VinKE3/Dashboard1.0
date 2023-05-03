@@ -1,7 +1,539 @@
-import React from "react";
+import { useEffect, useState, useMemo } from "react";
+import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
+import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
+import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
+import Table from "../../../components/tablas/Table";
+import { Checkbox } from "primereact/checkbox";
+import { RadioButton } from "primereact/radiobutton";
+import Modal from "./Modal";
+import { toast, ToastContainer } from "react-toastify";
+import moment from "moment";
+import styled from "styled-components";
+import { FaSearch } from "react-icons/fa";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../components/Global";
+//#region Estilos
+const TablaStyle = styled.div`
+  & th:first-child {
+    display: none;
+  }
+  & tbody td:first-child {
+    display: none;
+  }
+  & th:nth-child(7),
+  & th:nth-child(8),
+  & th:nth-child(9),
+  & th:nth-child(10),
+  & th:nth-child(11) {
+    text-align: center;
+  }
+  & th:last-child {
+    text-align: center;
+    width: 80px;
+    max-width: 80px;
+  }
+`;
+//#endregion
 
 const DocumentosVenta = () => {
-  return <div>DocumentosVenta</div>;
+  //#region useState
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
+  const [visible, setVisible] = useState(false);
+  const [datos, setDatos] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [index, setIndex] = useState(0);
+  const [timer, setTimer] = useState(null);
+  const [filtro, setFiltro] = useState({
+    clienteNombre: "",
+    fechaInicio: moment()
+      .subtract(2, "years")
+      .startOf("year")
+      .format("yyyy-MM-DD"),
+    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    isEnviado: "",
+  });
+  const [cadena, setCadena] = useState(
+    `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isenviado=${filtro.isEnviado}`
+  );
+  //Modal
+  const [modal, setModal] = useState(false);
+  const [modo, setModo] = useState("Registrar");
+  const [objeto, setObjeto] = useState([]);
+  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  //#endregion
+
+  //#region useEffect;
+  useEffect(() => {
+    setCadena(
+      `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isenviado=${filtro.isEnviado}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+
+  useEffect(() => {
+    if (visible) {
+      if (!modal) {
+        Listar(cadena, index + 1);
+      }
+    }
+  }, [modal]);
+  useEffect(() => {
+    if (respuestaAlert) {
+      Listar(cadena, index + 1);
+    }
+  }, [respuestaAlert]);
+
+  useEffect(() => {
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar(cadena, 1);
+      }
+    }
+  }, [permisos]);
+  useEffect(() => {
+    GetPermisos("DocumentoVenta", setPermisos);
+  }, []);
+  //#endregion
+
+  //#region Funciones Filtrado
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const Filtro = async () => {
+    clearTimeout(timer);
+    setIndex(0);
+    const newTimer = setTimeout(() => {
+      Listar(cadena, 1);
+    }, 200);
+    setTimer(newTimer);
+  };
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
+  };
+  //#endregion
+
+  //#region Funciones API
+  const Listar = async (filtro = "", pagina = 1) => {
+    const result = await ApiMasy.get(
+      `api/Venta/DocumentoVenta/Listar?Pagina=${pagina}${filtro}`
+    );
+    setDatos(result.data.data.data);
+    setTotal(result.data.data.total);
+  };
+  const GetPorId = async (id) => {
+    const result = await ApiMasy.get(`api/Venta/DocumentoVenta/${id}`);
+    setObjeto(result.data.data);
+  };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Venta/DocumentoVenta/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
+  //#endregion
+
+  //#region Funciones Modal
+  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
+    setModo(modo);
+    switch (accion) {
+      case 0: {
+        setObjeto({
+          empresaId: "",
+          tipoDocumentoId: "01",
+          serie: "",
+          numero: "",
+          fechaEmision: moment().format("YYYY-MM-DD"),
+          fechaVencimiento: moment().format("YYYY-MM-DD"),
+          cotizacion: "",
+          contizacionId: "",
+          clienteId: "",
+          clienteNombre: "",
+          clienteTipoDocumentoIdentidad: "",
+          clienteNumeroDocumentoIdentidad: "",
+          clienteDireccionId: "",
+          clienteDireccion: "",
+          personalId: "",
+          letra: "",
+          letraId: "",
+          monedaId: "S",
+          tipoCambio: 0,
+          tipoVentaId: "CO",
+          tipoCobroId: "CP",
+          numeroOperacion: "",
+          cuentaCorrienteId: "",
+          documentoReferenciaId: "",
+          fechaDocumentoReferencia: "",
+          abonar: true,
+          motivoNotaId: "",
+          motivoNotaDescripcion: "",
+          motivoSustento: "",
+          guiaRemision: "",
+          numeroPedido: "",
+          observacion: "",
+          isAnticipo: false,
+          isOperacionGratuita: false,
+          incluyeIGV: true,
+          afectarStock: true,
+          totalOperacionesInafectas: 0,
+          totalOperacionesGratuitas: 0,
+          subTotal: 0,
+          totalAnticipos: 0,
+          totalNeto: 0,
+          montoIGV: 0,
+          montoRetencion: 0,
+          montoDetraccion: 0,
+          montoImpuestoBolsa: 0,
+          total: 0,
+          porcentajeIGV: 18,
+          porcentajeRetencion: 0,
+          porcentajeDetraccion: 0,
+          factorImpuestoBolsa: 0,
+          detalles: [],
+          cuotas: [],
+          anticipos: [],
+          numeroDocumento: "",
+        });
+        setModal(true);
+        break;
+      }
+      case 1: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          await GetPorId(id);
+          setModal(true);
+        }
+        break;
+      }
+      case 3: {
+        await GetPorId(id);
+        setModal(true);
+        break;
+      }
+      default:
+        break;
+    }
+  };
+  //#endregion
+
+  //#region Columnas
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
+      },
+      {
+        Header: "Fecha",
+        accessor: "fechaEmision",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YY");
+        },
+      },
+      {
+        Header: "N° Documento",
+        accessor: "numeroDocumento",
+      },
+      {
+        Header: "Cliente",
+        accessor: "clienteNombre",
+      },
+      {
+        Header: "RUC/DNI",
+        accessor: "clienteNumero",
+      },
+      {
+        Header: "M",
+        accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
+      },
+      {
+        Header: "Total",
+        accessor: "total",
+        Cell: ({ value }) => {
+          return <p className="text-right">{value}</p>;
+        },
+      },
+      {
+        Header: "C",
+        accessor: "isCancelado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "S",
+        accessor: "afectarStock",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "A",
+        accessor: "isAnulado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "B",
+        accessor: "isBloqueado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "Cotización",
+        accessor: "cotizacion",
+      },
+      {
+        Header: "O. Pedido",
+        accessor: "ordenPedido",
+      },
+      {
+        Header: "G. Remisión",
+        accessor: "guiaRemision",
+      },
+      {
+        Header: "Tienda/Vend.",
+        accessor: "tiendaVendedor",
+      },
+      {
+        Header: "Enviado",
+        accessor: "isEnviado",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setRespuestaAlert={setRespuestaAlert}
+            permisos={permisos}
+            menu={["Venta", "DocumentoVenta"]}
+            id={row.values.id}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
+  //#endregion
+
+  //#region Render
+  return (
+    <>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <h2 className={Global.TituloH2}>Documentos de Venta</h2>
+
+            {/* Filtro*/}
+            <div
+              className={Global.ContenedorBasico + " gap-y-1 !border-none !p-0"}
+            >
+              <div className={Global.ContenedorFiltro + " !my-0"}>
+                <div className={Global.InputFull}>
+                  <label name="clienteNombre" className={Global.LabelStyle}>
+                    Cliente
+                  </label>
+                  <input
+                    type="text"
+                    id="clienteNombre"
+                    name="clienteNombre"
+                    placeholder="Cliente"
+                    autoComplete="off"
+                    value={filtro.clienteNombre ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.Input42pct}>
+                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                    Desde
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaInicio"
+                    name="fechaInicio"
+                    value={filtro.fechaInicio ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.Input42pct}>
+                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                    Hasta
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaFin"
+                    name="fechaFin"
+                    value={filtro.fechaFin ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="buscar"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    onClick={Filtro}
+                  >
+                    <FaSearch />
+                  </button>
+                </div>
+              </div>
+              <div
+                className={
+                  Global.ContenedorFiltro +
+                  " !my-0 pb-2 !flex-row !justify-start gap-x-2 "
+                }
+              >
+                <div className={Global.Input + "w-28"}>
+                  <div className={Global.CheckStyle}>
+                    <RadioButton
+                      inputId="isEnviadoTodos"
+                      name="isEnviado"
+                      value={""}
+                      onChange={ValidarData}
+                      checked={filtro.isEnviado === ""}
+                    />
+                  </div>
+                  <label
+                    htmlFor="isEnviadoTodos"
+                    className={Global.LabelCheckStyle + "font-semibold"}
+                  >
+                    Todos
+                  </label>
+                </div>
+                <div className={Global.Input + "w-28"}>
+                  <div className={Global.CheckStyle}>
+                    <RadioButton
+                      inputId="isEnviadoPendiente"
+                      name="isEnviado"
+                      value={false}
+                      onChange={ValidarData}
+                      checked={filtro.isEnviado === false}
+                    />
+                  </div>
+                  <label
+                    htmlFor="isEnviadoPendiente"
+                    className={Global.LabelCheckStyle + "font-semibold"}
+                  >
+                    Pendientes
+                  </label>
+                </div>
+                <div className={Global.Input + "w-28"}>
+                  <div className={Global.CheckStyle}>
+                    <RadioButton
+                      inputId="isEnviado"
+                      name="isEnviado"
+                      value={true}
+                      onChange={ValidarData}
+                      checked={filtro.isEnviado === true}
+                    />
+                  </div>
+                  <label
+                    htmlFor="isEnviado"
+                    className={Global.LabelCheckStyle + "font-semibold"}
+                  >
+                    Enviados
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Filtro*/}
+
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
+
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
+    </>
+  );
+  //#endregion
 };
 
 export default DocumentosVenta;

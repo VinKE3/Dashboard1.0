@@ -30,8 +30,8 @@ const TablaStyle = styled.div`
   }
   & th:last-child {
     text-align: center;
-    width: 100px;
-    max-width: 100px;
+    width: 80px;
+    max-width: 80px;
   }
 `;
 //#endregion

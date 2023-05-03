@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export const RedondearNumero = (number, precision) => {
   let shift = function (number, exponent) {
     let numArray = ("" + number).split("e");
@@ -10,11 +12,13 @@ export const RedondearNumero = (number, precision) => {
   precision = precision === undefined ? 0 : precision;
   return shift(Math.round(shift(number, +precision)), -precision);
 };
+
 export const FormatoNumero = (x) => {
   let parts = x.toString().split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return parts.join(".");
 };
+
 export const IsNumeroValido = (
   dato,
   permitirCero = true,
@@ -32,4 +36,88 @@ export const IsNumeroValido = (
     return "El número ingresado no puede ser negativo.";
   }
   return "";
+};
+
+export const ConvertirPreciosAMoneda = async (
+  tipo,
+  objeto,
+  monedaId,
+  tipoCambio,
+  precisionRedondeo = 2
+) => {
+  let model = {
+    precioCompra: 0,
+    precioVenta: 0,
+  };
+
+  //Validaciones
+  if (monedaId != "D" && monedaId != "S") {
+    toast.error("No es posible hacer la conversión a la moneda ingresada", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    return null;
+  }
+  if (tipoCambio == 0) {
+    toast.error(
+      "No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
+      {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
+    return null;
+  }
+  //Validaciones
+
+  //Calculo
+  if (monedaId == "D") {
+    if (tipo == "compra") {
+      model.precioCompra = RedondearNumero(
+        objeto.precioUnitario / tipoCambio,
+        precisionRedondeo
+      );
+    } else {
+      model.precioCompra = RedondearNumero(
+        objeto.precioCompra / tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta = RedondearNumero(
+        objeto.precioUnitario / tipoCambio,
+        precisionRedondeo
+      );
+    }
+  } else {
+    if (tipo == "compra") {
+      model.precioCompra = RedondearNumero(
+        objeto.precioUnitario * tipoCambio,
+        precisionRedondeo
+      );
+    } else {
+      model.precioCompra = RedondearNumero(
+        objeto.precioCompra * tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta = RedondearNumero(
+        objeto.precioUnitario * tipoCambio,
+        precisionRedondeo
+      );
+    }
+  }
+  //Calculo
+
+  //Retorno
+  return model;
 };

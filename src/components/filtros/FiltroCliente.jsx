@@ -25,7 +25,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const FiltroProveedor = ({ setModal, setObjeto }) => {
+const FiltroCliente = ({ setModal, setObjeto }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -71,18 +71,21 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
   //#region API
   const Listar = async (f = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Proveedor/Listar?pagina=${pagina}${f}`
+      `api/Mantenimiento/Cliente/Listar?pagina=${pagina}${f}`
     );
     setDatos(result.data.data.data.filter((res) => res.id !== "000000"));
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/Cliente/${id}?incluirReferencias=${true}`
+    );
     setObjeto({
-      proveedorId: result.data.data.id,
-      proveedorNumeroDocumentoIdentidad:
+      clienteId: result.data.data.id,
+      clienteNumeroDocumentoIdentidad:
         result.data.data.numeroDocumentoIdentidad,
-      proveedorDireccion: result.data.data.direccionPrincipal,
-      proveedorNombre: result.data.data.nombre,
+      clienteNombre: result.data.data.nombre,
+      clienteDireccionId: result.data.data.direccionPrincipalId,
+      direcciones: result.data.data.direcciones,
     });
     setModal(false);
   };
@@ -129,7 +132,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Consultar Proveedores"
+        titulo="Consultar Clientes"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
@@ -212,4 +215,4 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
   //#endregion
 };
 
-export default FiltroProveedor;
+export default FiltroCliente;

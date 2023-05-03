@@ -21,7 +21,7 @@ export var FormSecundario = "min-w-fit min-h-fit grid gap-y-3 md:gap-x-2 ";
 
 //#region Contendores Inputs
 export var ContenedorBasico =
-  "grid gap-y-3 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 ";
+  "grid gap-y-2.5 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 ";
 export var FondoContenedor = "bg-gray-800/40 shadow-md shadow-gray-700/60 ";
 export var ContenedorInputs = "flex flex-col md:flex-row gap-y-3 md:gap-x-2 ";
 export var ContenedorFiltro =
@@ -99,12 +99,23 @@ export var CerrarModal =
 //#endregion
 
 //#region Tablas
-export var THeader =
-  "text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
+export var THeader = "text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
 export var TBody = "bg-gradient-to-b from-gray-800 to-slate-800 ";
 export var Tr = "border-b border-gray-400 ";
 export var Td = "p-2 text-left ";
 
+//Footer
+export var ContenedorFooter = "bg-gradient-to-t from-gray-900 to-gray-800 ";
+export var FilaVacia = "w-full border border-gray-400 ";
+export var FilaImporte =
+  "min-w-[130px] py-1 px-2 flex justify-end border border-gray-400 ";
+export var FilaPrecio =
+  "min-w-[130px] flex items-center justify-end border border-gray-400 ";
+export var UltimaFila = "min-w-[91px] border border-gray-400 ";
+export var FilaContenido = "pr-4 text-p-align-right font-bold text-light ";
+export var FilaContenidoSelect =
+  "min-w-[45px] ml-2 bg-gray-700 rounded-md font-semibold ";
+//Footer
 
 export var TablaBotonConsultar =
   "w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125";

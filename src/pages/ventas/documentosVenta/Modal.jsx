@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
-import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
-import FiltroOrdenCompra from "../../../components/filtros/FiltroOrdenCompra";
+import FiltroCotizacion from "../../../components/filtros/FiltroCotizacion";
+import FiltroCliente from "../../../components/filtros/FiltroCliente";
 import FiltroArticulo from "../../../components/filtros/FiltroArticulo";
 import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
@@ -66,25 +66,38 @@ const TablaStyle = styled.div`
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
+  //Data General
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
-  const [dataProveedor, setDataProveedor] = useState([]);
-  const [dataOC, setDataOC] = useState([]);
+  //Data General
+  //Tablas
+  const [dataTipoDoc, setDataTipoDoc] = useState([]);
+  const [dataSeries, setDataSeries] = useState([]);
+  const [dataVendedor, setDataVendedor] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  const [dataTipoVenta, setDataTipoVenta] = useState([]);
+  const [dataTipoCobro, setDataTipoCobro] = useState([]);
+  const [dataMotivoNota, setDataMotivoNota] = useState([]);
+  const [dataIgv, setDataIgv] = useState([]);
+  const [dataRetencion, setDataRetencion] = useState([]);
+  const [dataDetraccion, setDataDetraccion] = useState([]);
+  const [dataCtacte, setDataCtacte] = useState([]);
+  const [dataDocRef, setDataDocRef] = useState([]);
+  //Tablas
+  //Data Modales Ayuda
+  const [dataCliente, setDataCliente] = useState([]);
+  const [dataClienteDirec, setDataClienteDirec] = useState([]);
+  const [dataCotizacion, setDataCotizacion] = useState([]);
   const [dataArt, setDataArt] = useState([]);
+  //Data Modales Ayuda
+  //Modales de Ayuda
+  const [modalCliente, setModalCliente] = useState(false);
+  const [modalCotizacion, setModalCotizacion] = useState(false);
+  const [modalArt, setModalArt] = useState(false);
+  //Modales de Ayuda
   const [checkVarios, setCheckVarios] = useState(false);
   const [checkFiltro, setCheckFiltro] = useState("productos");
   const [habilitarFiltro, setHabilitarFiltro] = useState(false);
-  const [dataTipoDoc, setDataTipoDoc] = useState([]);
-  const [dataMoneda, setDataMoneda] = useState([]);
-  const [dataTipoComp, setDataTipoComp] = useState([]);
-  const [dataTipoPag, setDataTipoPag] = useState([]);
-  const [dataIgv, setDataIgv] = useState([]);
-  const [dataCtacte, setDataCtacte] = useState([]);
-  const [dataMotivoNota, setDataMotivoNota] = useState([]);
-  const [dataDocRef, setDataDocRef] = useState([]);
-  const [modalProv, setModalProv] = useState(false);
-  const [modalOC, setModalOC] = useState(false);
-  const [modalArt, setModalArt] = useState(false);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
@@ -93,62 +106,60 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.keys(dataProveedor).length > 0) {
+    if (Object.keys(dataCliente).length > 0) {
+      setDataClienteDirec(dataCliente.direcciones);
       setData({
         ...data,
-        proveedorId: dataProveedor.proveedorId,
-        proveedorNumeroDocumentoIdentidad:
-          dataProveedor.proveedorNumeroDocumentoIdentidad,
-        proveedorNombre: dataProveedor.proveedorNombre,
-        proveedorDireccion: dataProveedor.proveedorDireccion ?? "",
+        clienteId: dataCliente.clienteId,
+        clienteNumeroDocumentoIdentidad:
+          dataCliente.clienteNumeroDocumentoIdentidad,
+        clienteNombre: dataCliente.clienteNombre,
+        clienteDireccionId: dataCliente.clienteDireccionId,
       });
-      if (dataProveedor.proveedorId != "") {
-        GetDocReferencia(dataProveedor.proveedorId);
+      if (dataCliente.clienteId != "") {
+        GetDocReferencia(dataCliente.clienteId);
         setRefrescar(true);
       } else {
         setDataDocRef([]);
         setRefrescar(true);
       }
     }
-  }, [dataProveedor]);
+  }, [dataCliente]);
   useEffect(() => {
-    if (Object.keys(dataOC).length > 0) {
-      if (dataOC.ordenesCompraRelacionadas.length > 0) {
-        //Obtenemos el último índice del array
-        let obj =
-          dataOC.ordenesCompraRelacionadas[
-            dataOC.ordenesCompraRelacionadas.length - 1
-          ];
-        setData({
-          ...data,
-          proveedorNumeroDocumentoIdentidad:
-            obj.proveedorNumeroDocumentoIdentidad,
-          proveedorNombre: obj.proveedorNombre,
-          proveedorDireccion: obj.proveedorDireccion ?? "",
-          cuentaCorrienteId: obj.cuentaCorrienteId ?? "",
-          monedaId: obj.monedaId,
-          tipoCambio: obj.tipoCambio,
-          porcentajeIGV: obj.porcentajeIGV,
-          incluyeIGV: obj.incluyeIGV,
-          observacion: obj.observacion,
-          afectarStock: true,
-          tipoCompraId: obj.tipoCompraId,
-          tipoPagoId: obj.tipoPagoId,
-          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
-        });
-        //Añadimos los detalles
-        AgregarDetalleOC();
-      } else {
-        setData({
-          ...data,
-          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
-        });
-        //Limpia los detalles
-        setDataDetalle([]);
-      }
-      setRefrescar(true);
+    console.log(dataCotizacion);
+    if (Object.keys(dataCotizacion).length > 0) {
+      //Cabecera
+      setData({
+        ...data,
+        personalId: dataCotizacion.personalId,
+        monedaId: dataCotizacion.monedaId,
+        incluyeIGV: dataCotizacion.incluyeIGV,
+        porcentajeIGV: dataCotizacion.porcentajeIGV,
+        porcentajeRetencion: dataCotizacion.porcentajeRetencion,
+        porcentajePercepcion: dataCotizacion.porcentajePercepcion,
+        observacion: dataCotizacion.observacion ?? "",
+        clienteId: dataCotizacion.clienteId,
+        clienteNumeroDocumentoIdentidad:
+          dataCotizacion.clienteNumeroDocumentoIdentidad,
+        clienteNombre: dataCotizacion.clienteNombre,
+        clienteDireccionId: dataCotizacion.clienteDireccionId,
+        cotizacionId: dataCotizacion.cotizacionId,
+        cotizacion: dataCotizacion.cotizacion,
+      });
+      GetDireccion(dataCotizacion.clienteId);
+      //Añadimos los detalles
+      // AgregarDetalleOC();
+    } else {
+      setData({
+        ...data,
+        cotizacionId: dataCotizacion.cotizacionId,
+        cotizacion: dataCotizacion.cotizacion,
+      });
+      //Limpia los detalles
+      // setDataDetalle([]);
     }
-  }, [dataOC]);
+    setRefrescar(true);
+  }, [dataCotizacion]);
   useEffect(() => {
     if (Object.entries(dataDetalle).length > 0) {
       setData({ ...data, detalles: dataDetalle });
@@ -175,7 +186,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
   }, [refrescar]);
-
 
   useEffect(() => {
     if (modo == "Registrar") {
@@ -243,7 +253,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (target.name == "tipoPagoId") {
       if (data.tipoCompraId != "CO") {
-        let model = dataTipoPag.find((map) => map.id === target.value);
+        let model = dataTipoCobro.find((map) => map.id === target.value);
         let fechaHoy = moment().format("YYYY-MM-DD");
         let nuevaFecha = moment(fechaHoy)
           .add(model.plazo, "days")
@@ -302,22 +312,24 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ValidarVarios = async ({ target }) => {
     if (target.checked) {
-      setDataProveedor((prevState) => ({
+      setDataCliente((prevState) => ({
         ...prevState,
-        proveedorId: "000000",
-        proveedorNumeroDocumentoIdentidad: "00000000000",
-        proveedorDireccion: null,
-        proveedorNombre: "PROVEEDORES VARIOS",
+        clienteId: "000000",
+        clienteNumeroDocumentoIdentidad: "00000000000",
+        clienteDireccionId: "",
+        clienteNombre: "CLIENTES VARIOS",
       }));
+      await GetDireccion("000000");
     } else {
-      setDataProveedor((prevState) => ({
+      setDataCliente((prevState) => ({
         ...prevState,
-        proveedorId: "",
-        proveedorNumeroDocumentoIdentidad: "",
-        proveedorDireccion: "",
-        proveedorNombre: "",
+        clienteId: "",
+        clienteNumeroDocumentoIdentidad: "",
+        clienteDireccion: "",
+        clienteNombre: "",
         ordenesCompraRelacionadas: [],
       }));
+      setDataClienteDirec([]);
     }
   };
   const ValidarDataArt = async ({ target }) => {
@@ -635,28 +647,24 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region API
   const Tablas = async () => {
     const result = await ApiMasy.get(
-      `api/Compra/DocumentoCompra/FormularioTablas`
+      `api/Venta/DocumentoVenta/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumento);
-    setDataMoneda(result.data.data.monedas);
-    setDataTipoComp(result.data.data.tiposCompra);
-    setDataTipoPag(result.data.data.tiposPago);
-    setDataIgv(result.data.data.porcentajesIGV);
-    setDataMotivoNota(result.data.data.motivosNota);
-  };
-  const ConsultarCtacte = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/CuentaCorriente/Listar`
-    );
-    setDataCtacte(
-      result.data.data.data.map((res) => ({
-        id: res.cuentaCorrienteId,
-        descripcion:
-          res.monedaId == "D"
-            ? res.numero + " | " + res.entidadBancariaNombre + " |  [US$]"
-            : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
+    setDataSeries(result.data.data.series);
+    setDataVendedor(
+      result.data.data.vendedores.map((res) => ({
+        id: res.id,
+        nombre:
+          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
+    setDataMoneda(result.data.data.monedas);
+    setDataTipoVenta(result.data.data.tiposVenta);
+    setDataTipoCobro(result.data.data.tiposCobro);
+    setDataMotivoNota(result.data.data.motivosNota);
+    setDataIgv(result.data.data.porcentajesIGV);
+    setDataRetencion(result.data.data.porcentajesRetencion);
+    setDataDetraccion(result.data.data.porcentajesDetraccion);
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
@@ -697,9 +705,29 @@ const Modal = ({ setModal, modo, objeto }) => {
       OcultarMensajes();
     }
   };
+  const GetDireccion = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${id}`
+    );
+    setDataClienteDirec(result.data.data);
+  };
+  const ConsultarCtacte = async () => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/CuentaCorriente/Listar`
+    );
+    setDataCtacte(
+      result.data.data.data.map((res) => ({
+        id: res.cuentaCorrienteId,
+        descripcion:
+          res.monedaId == "D"
+            ? res.numero + " | " + res.entidadBancariaNombre + " |  [US$]"
+            : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
+      }))
+    );
+  };
   const GetDocReferencia = async (id) => {
     const result = await ApiMasy.get(
-      `api/Compra/DocumentoCompra/GetDocumentosReferencia?proveedorId=${id}`
+      `api/Venta/DocumentoVenta/GetDocumentosReferencia?clienteId=${id}`
     );
     setDataDocRef(result.data.data);
     setRefrescar(true);
@@ -707,13 +735,11 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirFiltroProveedor = async () => {
-    setModalProv(true);
+  const AbrirFiltroCliente = async () => {
+    setModalCliente(true);
   };
-  const AbrirFiltroOC = async () => {
-    if (data.proveedorId != "") {
-      setModalOC(true);
-    }
+  const AbrirFiltroCotizacion = async () => {
+    setModalCotizacion(true);
   };
   const AbrirFiltroArticulo = async () => {
     setModalArt(true);
@@ -826,8 +852,8 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Compra", "DocumentoCompra"]}
-            titulo="Documentos de Compra"
+            menu={["Venta", "DocumentoVenta"]}
+            titulo="Documentos de Venta"
             tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
           >
@@ -882,23 +908,28 @@ const Modal = ({ setModal, modo, objeto }) => {
                   >
                     Serie
                   </label>
-                  <input
-                    type="text"
+                  <select
                     id="serie"
                     name="serie"
-                    placeholder="Serie"
-                    maxLength="4"
-                    autoComplete="off"
-                    readOnly={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
-                    onBlur={(e) => Numeracion(e)}
+                    disabled={modo == "Registrar" ? false : true}
                     className={
                       modo == "Registrar"
                         ? Global.InputStyle
                         : Global.InputStyle + Global.Disabled
                     }
-                  />
+                  >
+                    {dataSeries
+                      .filter(
+                        (model) => model.tipoDocumentoId == data.tipoDocumentoId
+                      )
+                      .map((map) => (
+                        <option key={map.serie} value={map.serie}>
+                          {map.serie}
+                        </option>
+                      ))}
+                  </select>
                 </div>
                 <div className={Global.InputMitad}>
                   <label
@@ -914,15 +945,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Número"
                     maxLength="10"
                     autoComplete="off"
-                    readOnly={modo == "Registrar" ? false : true}
+                    readOnly={true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
-                    className={
-                      modo == "Registrar"
-                        ? Global.InputStyle
-                        : Global.InputStyle + Global.Disabled
-                    }
+                    className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
               </div>
@@ -948,26 +975,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label
-                    htmlFor="fechaContable"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
-                    F. Contable
-                  </label>
-                  <input
-                    type="date"
-                    id="fechaContable"
-                    name="fechaContable"
-                    autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={moment(data.fechaContable ?? "").format(
-                      "yyyy-MM-DD"
-                    )}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <div className={Global.InputTercio}>
-                  <label
                     htmlFor="fechaVencimiento"
                     className={Global.LabelStyle + Global.FondoOscuro}
                   >
@@ -986,42 +993,71 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                   />
                 </div>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="numeroDocumento"
+                    className={Global.LabelStyle + Global.FondoOscuro}
+                  >
+                    Cotización
+                  </label>
+                  <input
+                    type="text"
+                    id="numeroDocumento"
+                    name="numeroDocumento"
+                    placeholder="Cotización"
+                    autoComplete="off"
+                    readOnly={true}
+                    value={data.cotizacion ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputBoton + Global.Disabled}
+                  />
+                  <button
+                    id="consultarOC"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    hidden={modo == "Consultar" ? true : false}
+                    onClick={() => AbrirFiltroCotizacion()}
+                  >
+                    <FaSearch></FaSearch>
+                  </button>
+                </div>
               </div>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputMitad}>
                   <label
-                    htmlFor="proveedorNumeroDocumentoIdentidad"
+                    htmlFor="clienteNumeroDocumentoIdentidad"
                     className={Global.LabelStyle + Global.FondoOscuro}
                   >
                     RUC/DNI:
                   </label>
                   <input
                     type="text"
-                    id="proveedorNumeroDocumentoIdentidad"
-                    name="proveedorNumeroDocumentoIdentidad"
+                    id="clienteNumeroDocumentoIdentidad"
+                    name="clienteNumeroDocumentoIdentidad"
                     placeholder="N° Documento Identidad"
                     autoComplete="off"
                     readOnly={true}
-                    value={data.proveedorNumeroDocumentoIdentidad ?? ""}
+                    value={data.clienteNumeroDocumentoIdentidad ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
                 <div className={Global.InputFull}>
                   <label
-                    htmlFor="proveedorNombre"
+                    htmlFor="clienteNombre"
                     className={Global.LabelStyle + Global.FondoOscuro}
                   >
-                    Proveedor
+                    Cliente
                   </label>
                   <input
                     type="text"
-                    id="proveedorNombre"
-                    name="proveedorNombre"
-                    placeholder="Proveedor"
+                    id="clienteNombre"
+                    name="clienteNombre"
+                    placeholder="Cliente"
                     autoComplete="off"
                     readOnly={true}
-                    value={data.proveedorNombre ?? ""}
+                    value={data.clienteNombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton + Global.Disabled}
                   />
@@ -1034,7 +1070,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     }
                     hidden={modo == "Consultar" ? true : false}
                     disabled={checkVarios ? true : false}
-                    onClick={() => AbrirFiltroProveedor()}
+                    onClick={() => AbrirFiltroCliente()}
                   >
                     <FaSearch></FaSearch>
                   </button>
@@ -1060,22 +1096,87 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label
-                    htmlFor="proveedorDireccion"
+                    htmlFor="clienteDireccionId"
                     className={Global.LabelStyle + Global.FondoOscuro}
                   >
                     Dirección
                   </label>
-                  <input
-                    type="text"
-                    id="proveedorDireccion"
-                    name="proveedorDireccion"
-                    autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.proveedorDireccion}
+                  <select
+                    id="clienteDireccionId"
+                    name="clienteDireccionId"
+                    value={data.clienteDireccionId ?? ""}
                     onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
-                  />
+                  >
+                    {Object.entries(dataClienteDirec).length > 0 &&
+                      dataClienteDirec.map((map) => (
+                        <option key={map.id} value={map.id}>
+                          {map.direccion}
+                        </option>
+                      ))}
+                  </select>
                 </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div
+                  className={
+                    data.tipoDocumentoId == "07" || data.tipoDocumentoId == "08"
+                      ? Global.InputMitad
+                      : Global.InputFull
+                  }
+                >
+                  <label htmlFor="personalId" className={Global.LabelStyle}>
+                    Vendedor
+                  </label>
+                  <select
+                    id="personalId"
+                    name="personalId"
+                    value={data.personalId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataVendedor.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {data.tipoDocumentoId == "07" ||
+                data.tipoDocumentoId == "08" ? (
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="clienteNombre"
+                      className={Global.LabelStyle + Global.FondoOscuro}
+                    >
+                      Buscar Letra
+                    </label>
+                    <input
+                      type="text"
+                      id="clienteNombre"
+                      name="clienteNombre"
+                      placeholder="Letra"
+                      autoComplete="off"
+                      readOnly={true}
+                      value={data.clienteNombre ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputBoton + Global.Disabled}
+                    />
+                    <button
+                      id="consultar"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      hidden={modo == "Consultar" ? true : false}
+                      disabled={checkVarios ? true : false}
+                      onClick={() => AbrirFiltroCliente()}
+                    >
+                      <FaSearch></FaSearch>
+                    </button>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputTercio}>
@@ -1124,8 +1225,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
                   >
@@ -1147,7 +1247,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {dataTipoComp.map((map) => (
+                    {dataTipoVenta.map((map) => (
                       <option key={map.id} value={map.id}>
                         {map.descripcion}
                       </option>
@@ -1177,7 +1277,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {dataTipoPag
+                    {dataTipoCobro
                       .filter(
                         (model) => model.tipoVentaCompraId == data.tipoCompraId
                       )
@@ -1374,31 +1474,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                   >
                     O.C
                   </label>
-                  <input
-                    type="text"
-                    id="numeroDocumento"
-                    name="numeroDocumento"
-                    placeholder="Orden de Compra"
-                    autoComplete="off"
-                    readOnly={true}
-                    value={
-                      data.ordenesCompraRelacionadas.map((map) => {
-                        return map.numeroDocumento;
-                      }) ?? ""
-                    }
-                    onChange={ValidarData}
-                    className={Global.InputBoton + Global.Disabled}
-                  />
-                  <button
-                    id="consultarOC"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
-                    hidden={modo == "Consultar" ? true : false}
-                    onClick={() => AbrirFiltroOC()}
-                  >
-                    <FaSearch></FaSearch>
-                  </button>
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
@@ -1689,7 +1764,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               {data.tipoDocumentoId != "03" ? (
                 <>
                   <div className="flex">
-                  <div className={Global.FilaVacia}></div>
+                    <div className={Global.FilaVacia}></div>
                     <div className={Global.FilaPrecio}>
                       <p className={Global.FilaContenido}>SubTotal</p>
                     </div>
@@ -1701,7 +1776,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <div className={Global.UltimaFila}></div>
                   </div>
                   <div className="flex">
-                  <div className={Global.FilaVacia}></div>
+                    <div className={Global.FilaVacia}></div>
                     <div className={Global.FilaImporte}>
                       <label
                         htmlFor="porcentajeIGV"
@@ -1750,15 +1825,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           </ModalCrud>
         </>
       )}
-      {modalProv && (
-        <FiltroProveedor setModal={setModalProv} setObjeto={setDataProveedor} />
+      {modalCliente && (
+        <FiltroCliente setModal={setModalCliente} setObjeto={setDataCliente} />
       )}
-      {modalOC && (
-        <FiltroOrdenCompra
-          setModal={setModalOC}
-          id={data.proveedorId}
-          setObjeto={setDataOC}
-          objeto={data.ordenesCompraRelacionadas}
+      {modalCotizacion && (
+        <FiltroCotizacion
+          setModal={setModalCotizacion}
+          id={data.clienteId}
+          setObjeto={setDataCotizacion}
+          objeto={data.cotizacionId}
         />
       )}
       {modalArt && (

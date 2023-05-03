@@ -131,8 +131,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
       setRefrescar(true);
     }
   };
-  const EliminarFila = async (e, id) => {
-    e.preventDefault();
+  const EliminarFila = async (id) => {
     let model = dataSeleccion.filter((model) => model.id !== id);
     Swal.fire({
       title: "Eliminar selección",
@@ -233,7 +232,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
       Header: "-",
       Cell: ({ row }) => (
         <button
-          onClick={(e) => EliminarFila(e, row.values.id)}
+          onClick={() => EliminarFila(row.values.id)}
           className={
             Global.BotonBasic + Global.BotonCancelarModal + " !px-2 !py-1"
           }
