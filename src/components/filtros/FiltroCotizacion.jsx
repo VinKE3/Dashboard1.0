@@ -179,7 +179,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
               <p className="pl-2">Nuevo</p>
             </button> */}
             <button
-              className={Global.BotonCancelarModal}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >

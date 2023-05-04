@@ -5,7 +5,7 @@ export var ModalContent =
   "w-full h-full flex flex-col rounded-lg bg-gradient-to-b from-neutral-900 to-neutral-800 ";
 //Tamaños de Modal
 export var ModalFull = "h-full w-full ";
-export var ModalGrande = "h-full w-full md:h-fit lg:max-w-7xl ";
+export var ModalGrande = "h-full w-full lg:h-[85%] lg:max-w-7xl ";
 export var ModalMediano = "h-full w-full lg:h-[65%] lg:max-w-5xl ";
 export var ModalPequeño = "h-full w-full md:h-fit lg:max-w-3xl ";
 //Tamaños de Modal
