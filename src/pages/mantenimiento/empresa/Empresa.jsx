@@ -1873,7 +1873,13 @@ const Empresa = ({ modo }) => {
                     />
                     {/* Form */}
                     {estadoIgv && (
-                      <div className={Global.FormSecundario}>
+                      <div
+                        className={
+                          Global.ContenedorBasico +
+                          Global.FondoContenedor +
+                          " pb-1 mb-2"
+                        }
+                      >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
                             <label
@@ -1962,7 +1968,13 @@ const Empresa = ({ modo }) => {
                     />
                     {/* Form */}
                     {estadoRetencion && (
-                      <div className={Global.FormSecundario}>
+                      <div
+                        className={
+                          Global.ContenedorBasico +
+                          Global.FondoContenedor +
+                          " pb-1 mb-2"
+                        }
+                      >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
                             <label
@@ -2054,7 +2066,13 @@ const Empresa = ({ modo }) => {
                     />
                     {/* Form */}
                     {estadoDetraccion && (
-                      <div className={Global.FormSecundario}>
+                      <div
+                        className={
+                          Global.ContenedorBasico +
+                          Global.FondoContenedor +
+                          " pb-1 mb-2"
+                        }
+                      >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
                             <label
@@ -2146,7 +2164,13 @@ const Empresa = ({ modo }) => {
                     />
                     {/* Form */}
                     {estadoPercepcion && (
-                      <div className={Global.FormSecundario}>
+                      <div
+                        className={
+                          Global.ContenedorBasico +
+                          Global.FondoContenedor +
+                          " pb-1 mb-2"
+                        }
+                      >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
                             <label

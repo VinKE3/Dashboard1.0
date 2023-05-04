@@ -66,9 +66,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   type="text"
                   id="id"
                   name="id"
-                  placeholder="id"
-                  value={data.id ?? ""}
                   autoComplete="off"
+                  placeholder="Código"
+                  value={data.id ?? ""}
                   onChange={ValidarData}
                   readOnly={true}
                   className={Global.InputStyle}
@@ -80,9 +80,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     inputId="isActivo"
                     name="isActivo"
                     readOnly={modo == "Consultar" ? true : false}
-                    onChange={(e) => ValidarData(e)}
                     checked={data.isActivo ? true : ""}
-                  ></Checkbox>
+                    onChange={(e) => ValidarData(e)}
+                    ></Checkbox>
                 </div>
                 <label htmlFor="isActivo" className={Global.InputStyle}>
                   Activo{" "}
@@ -94,8 +94,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     inputId="habilitarAfectarStock"
                     name="habilitarAfectarStock"
                     readOnly={modo == "Consultar" ? true : false}
-                    onChange={(e) => ValidarData(e)}
                     checked={data.habilitarAfectarStock ? true : ""}
+                    onChange={(e) => ValidarData(e)}
                   ></Checkbox>
                 </div>
                 <label
@@ -116,10 +116,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   id="nick"
                   name="nick"
                   autoComplete="off"
-                  placeholder="nick"
-                  readOnly={modo == "Registrar" ? false : true}
+                  placeholder="Nick de Usuario"
                   value={data.nick ?? ""}
                   onChange={ValidarData}
+                  readOnly={modo == "Registrar" ? false : true}
                   className={Global.InputStyle}
                 />
               </div>
@@ -130,9 +130,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <select
                   id="personalId"
                   name="personalId"
-                  disabled={modo == "Consultar" ? true : false}
                   value={data.personalId ?? ""}
                   onChange={ValidarData}
+                  disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
                 >
                   {dataModal.map((map) => (
@@ -153,9 +153,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     type="password"
                     id="clave"
                     name="clave"
+                    autoComplete="off"
                     placeholder="Clave"
                     value={data.clave ?? ""}
-                    autoComplete="off"
                     onChange={ValidarData}
                     readOnly={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
@@ -172,9 +172,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     type="password"
                     id="claveConfirmacion"
                     name="claveConfirmacion"
-                    placeholder="Confirmar Clave"
-                    value={data.claveConfirmacion ?? ""}
                     autoComplete="off"
+                    placeholder="Repetir Clave"
+                    value={data.claveConfirmacion ?? ""}
                     onChange={ValidarData}
                     readOnly={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
@@ -184,15 +184,15 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             )}
             <div className={Global.InputFull}>
               <label htmlFor="observacion" className={Global.LabelStyle}>
-                Observacion
+                Observación
               </label>
               <input
                 type="observacion"
                 id="observacion"
                 name="observacion"
-                placeholder="Observacion"
-                value={data.observacion ?? ""}
                 autoComplete="off"
+                placeholder="Observación"
+                value={data.observacion ?? ""}
                 onChange={ValidarData}
                 readOnly={modo == "Consultar" ? true : false}
                 className={Global.InputStyle}

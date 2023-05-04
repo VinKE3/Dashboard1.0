@@ -166,7 +166,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Cotizaciones"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[Global.ModalGrande, Global.Form]}
         childrenFooter={
           <>
             {/* <button
@@ -191,6 +191,21 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
         {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="clienteNombre" className={Global.LabelStyle}>
+                  Cliente
+                </label>
+                <input
+                  type="text"
+                  id="clienteNombre"
+                  name="clienteNombre"
+                  placeholder="Cliente"
+                  autoComplete="off"
+                  value={filtro.clienteNombre}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
               <div className={Global.InputMitad}>
                 <label htmlFor="fechaInicio" className={Global.LabelStyle}>
                   Desde
@@ -215,30 +230,6 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
                   name="fechaFin"
                   autoComplete="off"
                   value={filtro.fechaFin}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="consultar"
-                  onClick={Filtro}
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                >
-                  <FaSearch></FaSearch>
-                </button>
-              </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="clienteNombre" className={Global.LabelStyle}>
-                  Cliente
-                </label>
-                <input
-                  type="text"
-                  id="clienteNombre"
-                  name="clienteNombre"
-                  placeholder="Cliente"
-                  autoComplete="off"
-                  value={filtro.clienteNombre}
                   onChange={ValidarData}
                   className={Global.InputBoton}
                 />

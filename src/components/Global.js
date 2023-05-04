@@ -1,22 +1,20 @@
 //#region Modal
 export var FondoModal =
-  "justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none bg-neutral-700/60 ";
+  "flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none bg-neutral-700/60 ";
 export var ModalContent =
-  "w-full h-full relative flex flex-col border-none rounded-lg outline-none focus:outline-none bg-gradient-to-b from-neutral-900 to-neutral-800 ";
-export var ModalPequeño =
-  "relative h-full md:h-fit w-full md:w-11/12 lg:w-3/4 my-0 mx-auto lg:max-w-3xl";
-export var ModalMediano =
-  "relative h-full w-full md:h-5/6 md:w-5/6 xl:w-3/4 2xl:w-2/4 my-0 mx-auto";
-export var ModalGrande =
-  "relative h-full max-h-full lg:h-fit w-full lg:w-4/5 xl:w-4/5 2xl:w-2/3 my-0 mx-auto";
-export var ModalFull = "relative h-full w-full my-0 mx-auto";
-export var ModalHeader = "flex py-4 px-4 rounded-tt ";
-export var ModalBody = "h-full w-full overflow-y-auto relative ";
+  "w-full h-full flex flex-col rounded-lg bg-gradient-to-b from-neutral-900 to-neutral-800 ";
+//Tamaños de Modal
+export var ModalFull = "h-full w-full ";
+export var ModalGrande = "h-full w-full md:h-fit lg:max-w-7xl ";
+export var ModalMediano = "h-full w-full lg:h-[65%] lg:max-w-5xl ";
+export var ModalPequeño = "h-full w-full md:h-fit lg:max-w-3xl ";
+//Tamaños de Modal
+
+export var ModalHeader = "flex pt-4 pb-2 px-5 rounded-tt ";
+export var ModalBody = "h-full w-full overflow-y-auto ";
 export var ModalFooter =
-  "flex items-center justify-end py-3 md:py-2 px-5 rounded-bt ";
-export var Form = "min-w-fit w-full h-full py-5 px-6 overflow-y-auto ";
-export var FormTabs = "min-w-fit h-full py-0 pt-2 px-4 ";
-export var FormSecundario = "min-w-fit min-h-fit grid gap-y-3 md:gap-x-2 ";
+  "flex items-center justify-end gap-x-2 p-3.5 px-5 rounded-bt ";
+export var Form = "min-w-fit w-full h-full py-1.5 px-5 overflow-y-auto ";
 //#endregion
 
 //#region Contendores Inputs
@@ -50,15 +48,15 @@ export var InputsFiltro = "flex flex-1 overflow-hidden ";
 
 //#region Inputs
 export var LabelStyle =
-  "inline-flex items-center px-3 border border-r-0 rounded-l-md bg-gray-800/70 border-gray-600 lg:text-sm text-light font-semibold ";
+  "px-3 inline-flex items-center text-sm font-semibold border border-r-0 rounded-l-md bg-gray-800/70 border-gray-600 text-light  ";
 export var LabelCheckStyle =
-  "inline-flex items-center rounded-r-lg border border-l-0 flex-1 min-w-0 w-full py-2.5 lg:py-1.5 pr-2.5 pl-1 border-gray-600 text-light md:text-sm leading-normal cursor-pointer ";
+  "w-full flex-1 inline-flex items-center py-2.5 lg:py-1.5 pr-2.5 pl-1 text-sm font-semibold leading-normal rounded-r-lg border border-l-0 border-gray-600 text-light cursor-pointer ";
 export var InputStyle =
-  "rounded-none rounded-r-lg border block flex-1 min-w-0 w-full py-2.5 lg:py-1.5 px-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
+  "block w-full flex-1 py-2.5 lg:py-1.5 px-2.5 text-sm font-semibold border rounded-none rounded-r-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-light ";
 export var InputBoton =
-  "rounded-none border block flex-1 min-w-0 w-full py-2.5 lg:py-1.5 px-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-light md:text-sm ";
+  "block w-full py-2.5 lg:py-1.5 px-2.5 flex-1 text-sm font-semibold  border rounded-none bg-gray-700 border-gray-600 placeholder-gray-400 text-light  ";
 export var CheckStyle =
-  "flex inline-flex items-center pl-3 pr-1 rounded-l-md border border-r-0 border-gray-600 text-light font-semibold ";
+  "flex inline-flex items-center pl-3 pr-1 font-semibold rounded-l-md border border-r-0 border-gray-600 text-light  ";
 export var Anidado = "!border-l-0 rounded-l-none ";
 export var SinBorde = "!border-none  ";
 export var Disabled = "!bg-gray-800/90 ";
@@ -71,12 +69,14 @@ export var TituloModal = "text-3xl md:text-2xl font-semibold text-light ";
 //#endregion
 
 //#region Botones
+export var BotonModalBase =
+  "px-6 py-2 text-sm font-semibold border-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 uppercase ";
 export var BotonOkModal =
-  "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black text-light font-semibold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 md:text-sm uppercase border-2 border-gray-800";
+  "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black text-light border-gray-800 ";
 export var BotonCancelarModal =
-  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-2 border-red-600 font-bold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all md:text-sm duration-150 ";
+  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 ";
 export var BotonBasic =
-  "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 font-semibold text-gray-100 md:text-sm uppercase ";
+  "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 text-sm font-semibold uppercase rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 text-gray-100 ";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
 export var BotonPrimary =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 ";
@@ -99,10 +99,10 @@ export var CerrarModal =
 //#endregion
 
 //#region Tablas
-export var THeader = "text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
-export var TBody = "bg-gradient-to-b from-gray-800 to-slate-800 ";
+export var THeader = "text-sm font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
+export var TBody = "text-sm bg-gradient-to-b from-gray-800 to-slate-800 ";
 export var Tr = "border-b border-gray-400 ";
-export var Td = "p-2 text-left ";
+export var Td = " p-2 text-left ";
 
 //Footer
 export var ContenedorFooter = "bg-gradient-to-t from-gray-900 to-gray-800 ";

@@ -248,7 +248,7 @@ const Modal = ({ setModal, objeto }) => {
       objeto={objeto}
       modo={""}
       menu={["Almacen", "MovimientoArticulos"]}
-      tamañoModal={[Global.ModalFull, Global.FormTabs]}
+      tamañoModal={[Global.ModalFull, Global.Form]}
       titulo={["Movimiento de Articulos"]}
     >
       <TablaStyle>

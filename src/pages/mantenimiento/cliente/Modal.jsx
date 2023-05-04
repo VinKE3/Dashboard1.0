@@ -567,7 +567,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Cliente"]}
           titulo="Cliente"
-          tamañoModal={[Global.ModalMediano, Global.Form]}
+          tamañoModal={[Global.ModalMediano, Global.Form + " pt-0"]}
         >
           <TabView>
             <TabPanel
@@ -575,7 +575,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               leftIcon="pi pi-user mr-2"
               style={{ color: "green" }}
             >
-              <div className={Global.ContenedorBasico}>
+              <div className={Global.ContenedorBasico + " mt-4"}>
                 <div className={Global.ContenedorInputs}>
                   <div className={Global.InputMitad}>
                     <label
@@ -748,7 +748,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Direcciones */}
                 {estadoDireccion && (
-                  <div className={Global.FormSecundario}>
+                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -851,7 +851,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Contactos */}
                 {estadoContacto && (
-                  <div className={Global.FormSecundario}>
+                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -1059,7 +1059,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Personal */}
                 {estadoPersonal && (
-                  <div className={Global.FormSecundario}>
+                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -1123,6 +1123,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </div>
                 )}
                 {/* Form Personal */}
+                
                 {/* Tabla */}
                 <TablaStyle>
                   <TableBasic columnas={colPersonal} datos={dataPersonal} />

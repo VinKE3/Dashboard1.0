@@ -104,7 +104,7 @@ const ModalCrud = ({
                 ""
               ) : (
                 <button
-                  className={Global.BotonOkModal}
+                  className={Global.BotonModalBase + Global.BotonOkModal}
                   type="button"
                   onClick={
                     modo == "Registrar"
@@ -116,7 +116,7 @@ const ModalCrud = ({
                 </button>
               )}
               <button
-                className={Global.BotonCancelarModal}
+                className={Global.BotonModalBase + Global.BotonCancelarModal}
                 type="button"
                 onClick={CerrarModal}
               >
