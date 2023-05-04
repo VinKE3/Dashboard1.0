@@ -253,13 +253,15 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Ordenes de Compra"
-        tamañoModal={[Global.ModalMediano, Global.Form + " !py-0"]}
+        tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
             <button
               onClick={() => Guardar()}
               className={
-                Global.BotonOkModal + " flex items-center justify-center"
+                Global.BotonModalBase +
+                Global.BotonOkModal +
+                " flex items-center justify-center"
               }
               type="button"
             >
@@ -267,7 +269,7 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
               <p className="pl-2">Guardar Selección</p>
             </button>
             <button
-              className={Global.BotonCancelarModal}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -278,8 +280,8 @@ const FiltroOrdenCompra = ({ setModal, id, setObjeto, objeto }) => {
       >
         {
           <>
-            <div className={Global.ContenedorBasico  + " mb-2"}>
-              <div className={Global.ContenedorInputs}>
+            <div className={Global.ContenedorBasico + " mb-2"}>
+              <div className={Global.ContenedorInputs + "mb-2"}>
                 <div className={Global.InputMitad}>
                   <label htmlFor="fechaInicio" className={Global.LabelStyle}>
                     Desde

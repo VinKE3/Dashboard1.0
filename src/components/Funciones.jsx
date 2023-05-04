@@ -47,7 +47,10 @@ export const ConvertirPreciosAMoneda = async (
 ) => {
   let model = {
     precioCompra: 0,
-    precioVenta: 0,
+    precioVenta1: 0,
+    precioVenta2: 0,
+    precioVenta3: 0,
+    precioVenta4: 0,
   };
 
   //Validaciones
@@ -86,7 +89,7 @@ export const ConvertirPreciosAMoneda = async (
   if (monedaId == "D") {
     if (tipo == "compra") {
       model.precioCompra = RedondearNumero(
-        objeto.precioUnitario / tipoCambio,
+        objeto.precioCompra / tipoCambio,
         precisionRedondeo
       );
     } else {
@@ -94,15 +97,27 @@ export const ConvertirPreciosAMoneda = async (
         objeto.precioCompra / tipoCambio,
         precisionRedondeo
       );
-      model.precioVenta = RedondearNumero(
-        objeto.precioUnitario / tipoCambio,
+      model.precioVenta1 = RedondearNumero(
+        objeto.precioVenta1 / tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta2 = RedondearNumero(
+        objeto.precioVenta2 / tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta3 = RedondearNumero(
+        objeto.precioVenta3 / tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta4 = RedondearNumero(
+        objeto.precioVenta4 / tipoCambio,
         precisionRedondeo
       );
     }
   } else {
     if (tipo == "compra") {
       model.precioCompra = RedondearNumero(
-        objeto.precioUnitario * tipoCambio,
+        objeto.precioCompra * tipoCambio,
         precisionRedondeo
       );
     } else {
@@ -110,8 +125,20 @@ export const ConvertirPreciosAMoneda = async (
         objeto.precioCompra * tipoCambio,
         precisionRedondeo
       );
-      model.precioVenta = RedondearNumero(
-        objeto.precioUnitario * tipoCambio,
+      model.precioVenta1 = RedondearNumero(
+        objeto.precioVenta1 * tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta2 = RedondearNumero(
+        objeto.precioVenta2 * tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta3 = RedondearNumero(
+        objeto.precioVenta3 * tipoCambio,
+        precisionRedondeo
+      );
+      model.precioVenta4 = RedondearNumero(
+        objeto.precioVenta4 * tipoCambio,
         precisionRedondeo
       );
     }

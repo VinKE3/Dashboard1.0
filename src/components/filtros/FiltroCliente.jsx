@@ -79,6 +79,12 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Cliente/${id}?incluirReferencias=${true}`
     );
+    console.log(result.data.data.personal);
+    let personal = [];
+    if (result.data.data.personal.length > 0) {
+      personal = result.data.data.personal.find((map) => map.default == true);
+    }
+    console.log(personal)
     setObjeto({
       clienteId: result.data.data.id,
       clienteNumeroDocumentoIdentidad:
@@ -86,8 +92,15 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
       clienteNombre: result.data.data.nombre,
       clienteDireccionId: result.data.data.direccionPrincipalId,
       direcciones: result.data.data.direcciones,
+      personal: personal == undefined ? "<<NI>>01" : personal.id,
+      tipoVentaId: result.data.data.tipoVentaId,
+      tipoCobroId: result.data.data.tipoCobroId,
+      //Cotizacion
+      clienteTelefono: result.data.data.telefono,
+      contactos: result.data.data.contactos,
+      //Cotizacion
     });
-    setModal(false);
+    // setModal(false);
   };
   //#endregion
 
@@ -146,7 +159,7 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
               <p className="pl-2">Nuevo</p>
             </button> */}
             <button
-              className={Global.BotonCancelarModal}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -157,7 +170,7 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
       >
         {
           <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
+            <div className={Global.ContenedorInputs + "mb-2"}>
               <div className={Global.Input60pct}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"

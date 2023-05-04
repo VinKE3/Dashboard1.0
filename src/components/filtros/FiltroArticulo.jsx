@@ -17,15 +17,22 @@ const TablaStyle = styled.div`
   & th:nth-child(2) {
     width: 90px;
   }
-  & th:nth-child(5),
-  & th:nth-child(7) {
-    width: 70px;
-    text-align: right;
-  }
   & th:nth-child(4),
   & th:nth-child(6) {
     width: 35px;
     text-align: center;
+  }
+  & th:nth-child(5) {
+    width: 75px;
+    text-align: right;
+  }
+  & th:nth-child(8) {
+    width: 70px;
+    text-align: right;
+  }
+  & th:nth-child(7) {
+    width: 85px;
+    text-align: right;
   }
   & th:last-child {
     width: 60px;
@@ -85,8 +92,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
     );
     setDatos(result.data.data.data);
   };
-  const GetPorId = async (id, e) => {
-    e.preventDefault();
+  const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Articulo/${id}`);
     setObjeto({
       id: result.data.data.id,
@@ -96,11 +102,16 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       marcaId: result.data.data.marcaId,
       descripcion: result.data.data.descripcion,
       codigoBarras: result.data.data.codigoBarras,
-      precioUnitario: result.data.data.precioCompra,
+      precioCompra: result.data.data.precioCompra,
+      precioVenta1: result.data.data.precioVenta1,
+      precioVenta2: result.data.data.precioVenta2,
+      precioVenta3: result.data.data.precioVenta3,
+      precioVenta4: result.data.data.precioVenta4,
       unidadMedidaId: result.data.data.unidadMedidaId,
-      unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion || "",
+      unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion ?? "",
       stock: result.data.data.stock,
       monedaId: result.data.data.monedaId,
+      presentacion: result.data.data.presentacion ?? "",
     });
     setModal(false);
   };
@@ -140,6 +151,15 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         accessor: "monedaId",
         Cell: ({ value }) => {
           return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+        },
+      },
+      {
+        Header: "P. Compra",
+        accessor: "precioCompra",
+        Cell: ({ value }) => {
+          return (
+            <p className="text-right">{Funciones.RedondearNumero(value, 4)}</p>
+          );
         },
       },
       {
@@ -184,7 +204,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         childrenFooter={
           <>
             <button
-              className={Global.BotonCancelarModal}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -195,7 +215,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       >
         {
           <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
+            <div className={Global.ContenedorInputs + "mb-2"}>
               <div className={Global.Input60pct}>
                 <label htmlFor="codigoBarras" className={Global.LabelStyle}>
                   Cod. Barras

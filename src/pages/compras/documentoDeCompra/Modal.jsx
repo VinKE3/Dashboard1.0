@@ -335,10 +335,10 @@ const Modal = ({ setModal, modo, objeto }) => {
         articuloId: "0000",
         marcaId: 1,
         codigoBarras: "000000",
-        descripcion: "",
-        stock: "-",
-        unidadMedidaId: "07",
-        unidadMedidaDescripcion: "UNIDAD",
+        descripcion: "ARTICULOS VARIOS",
+        stock: 0,
+        unidadMedidaId: 1,
+        unidadMedidaDescripcion: "UND",
         cantidad: 0,
         precioUnitario: 0,
         importe: 0,
@@ -400,7 +400,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
           unidadMedidaId: dataArt.unidadMedidaId,
           cantidad: dataArt.cantidad,
-          precioUnitario: dataArt.precioUnitario,
+          precioUnitario: dataArt.precioCompra,
           montoIGV: dataArt.montoIGV,
           subTotal: dataArt.subTotal,
           importe: dataArt.importe,
@@ -408,7 +408,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         setRefrescar(true);
       } else {
         let model = dataDetalle.find((map) => {
-          return map.articuloId == dataArt.articuloId;
+          return map.id == dataArt.id;
         });
         if (model == undefined) {
           dataDetalle.push({
@@ -424,7 +424,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
             unidadMedidaId: dataArt.unidadMedidaId,
             cantidad: dataArt.cantidad,
-            precioUnitario: dataArt.precioUnitario,
+            precioUnitario: dataArt.precioCompra,
             montoIGV: dataArt.montoIGV,
             subTotal: dataArt.subTotal,
             importe: dataArt.importe,
@@ -616,13 +616,26 @@ const Modal = ({ setModal, modo, objeto }) => {
   const ConvertirPrecio = async () => {
     if (Object.entries(dataArt).length > 0) {
       if (data.monedaId != dataArt.monedaId && dataArt.Id != "000000") {
-        const precio = await Funciones.ConvertirPreciosAMoneda(
+        const model = await Funciones.ConvertirPreciosAMoneda(
           "compra",
           dataArt,
           data.monedaId,
           data.tipoCambio
         );
-        setDataArt({ ...dataArt, precioUnitario: precio.precioCompra });
+        setDataArt({
+          ...dataArt,
+          precioCompra: model.precioCompra,
+          precioVenta1: model.precioVenta1,
+          precioVenta2: model.precioVenta2,
+          precioVenta3: model.precioVenta3,
+          precioVenta4: model.precioVenta4,
+          precioUnitario: model.precioVenta1,
+        });
+      } else {
+        setDataArt({
+          ...dataArt,
+          precioUnitario: dataArt.precioCompra,
+        });
       }
     }
   };
@@ -1621,7 +1634,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Precio Unitario"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
-                    value={dataArt.precioUnitario ?? ""}
+                    value={dataArt.precioCompra ?? ""}
                     onChange={(e) => {
                       ValidarDataArt(e);
                       CalcularDetalleMontos(e);
@@ -1649,10 +1662,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                       CalcularDetalleMontos(e);
                     }}
                     className={Global.InputBoton}
-                    min="0.00"
-                    step="0.001"
-                    max="1.00"
-                    presicion={2} //very important
                   />
                   <button
                     id="enviarDetalle"

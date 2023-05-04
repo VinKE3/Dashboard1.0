@@ -2,9 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
-import Swal from "sweetalert2";
-import { toast, ToastContainer } from "react-toastify";
-import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
+import { FaSearch, FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
 import * as Global from "../Global";
@@ -166,7 +164,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Cotizaciones"
-        tamañoModal={[Global.ModalGrande, Global.Form]}
+        tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
             {/* <button
@@ -190,7 +188,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
       >
         {
           <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
+            <div className={Global.ContenedorInputs + " mb-2"}>
               <div className={Global.InputFull}>
                 <label htmlFor="clienteNombre" className={Global.LabelStyle}>
                   Cliente

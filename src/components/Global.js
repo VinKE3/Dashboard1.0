@@ -6,8 +6,8 @@ export var ModalContent =
 //Tamaños de Modal
 export var ModalFull = "h-full w-full ";
 export var ModalGrande = "h-full w-full lg:h-[85%] lg:max-w-7xl ";
-export var ModalMediano = "h-full w-full lg:h-[65%] lg:max-w-5xl ";
-export var ModalPequeño = "h-full w-full md:h-fit lg:max-w-3xl ";
+export var ModalMediano = "h-full w-full lg:h-[75%] max-h-full lg:max-w-5xl ";
+export var ModalPequeño = "h-full w-full md:h-fit md:max-w-2xl lg:max-w-3xl ";
 //Tamaños de Modal
 
 export var ModalHeader = "flex pt-4 pb-2 px-5 rounded-tt ";
@@ -106,12 +106,12 @@ export var Td = " p-2 text-left ";
 
 //Footer
 export var ContenedorFooter = "bg-gradient-to-t from-gray-900 to-gray-800 ";
-export var FilaVacia = "w-full border border-gray-400 ";
+export var FilaVacia = "w-full px-5 flex items-center justify-start border border-gray-400 ";
 export var FilaImporte =
   "min-w-[130px] py-1 px-2 flex justify-end border border-gray-400 ";
 export var FilaPrecio =
   "min-w-[130px] flex items-center justify-end border border-gray-400 ";
-export var UltimaFila = "min-w-[91px] border border-gray-400 ";
+export var UltimaFila = "min-w-[91px] flex items-center justify-center border border-gray-400 ";
 export var FilaContenido = "pr-4 text-p-align-right font-bold text-light ";
 export var FilaContenidoSelect =
   "min-w-[45px] ml-2 bg-gray-700 rounded-md font-semibold ";
