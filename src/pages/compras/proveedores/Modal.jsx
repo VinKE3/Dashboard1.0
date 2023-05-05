@@ -481,6 +481,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="numeroDocumentoIdentidad"
                       name="numeroDocumentoIdentidad"
                       autoComplete="off"
+                      maxLength={dataGeneral.tipoDocumentoIdentidadId == "1" ? 8 : 12}
                       placeholder="Número Documento Identidad"
                       readOnly={modo == "Consultar" ? true : false}
                       value={dataGeneral.numeroDocumentoIdentidad ?? ""}

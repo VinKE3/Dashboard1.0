@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroCotizacion from "../../../components/filtros/FiltroCotizacion";
@@ -373,7 +373,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         lineaId: "00",
         subLineaId: "00",
         articuloId: "0000",
-        tipoExistenciaId: "",
         unidadMedidaId: "1",
         marcaId: 1,
         descripcion: "ARTICULOS VARIOS",
