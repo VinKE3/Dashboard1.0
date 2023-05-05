@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
@@ -115,10 +115,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (Object.keys(dataOC).length > 0) {
       if (dataOC.ordenesCompraRelacionadas.length > 0) {
         //Obtenemos el último índice del array
-        let obj =
-          dataOC.ordenesCompraRelacionadas[
-            dataOC.ordenesCompraRelacionadas.length - 1
-          ];
+        let obj = dataOC.ordenesCompraRelacionadas[dataOC.ordenesCompraRelacionadas.length - 1];
         setData({
           ...data,
           proveedorNumeroDocumentoIdentidad:
@@ -134,7 +131,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           afectarStock: true,
           tipoCompraId: obj.tipoCompraId,
           tipoPagoId: obj.tipoPagoId,
-          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
+          ordenesCompraRelacionadas: ordenesCompraRelacionadas.dataOC.ordenesCompraRelacionadas,
         });
         //Añadimos los detalles
         AgregarDetalleOC();
@@ -175,8 +172,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
   }, [refrescar]);
-
-
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   useEffect(() => {
     if (modo == "Registrar") {
       GetPorIdTipoCambio(data.fechaEmision);
@@ -468,56 +466,80 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const AgregarDetalleOC = async () => {
-    let objetoOC =
+    //Comprueba si existe un registro con el id
+    console.log(data.ordenesCompraRelacionadas);
+    let existeOC = data.ordenesCompraRelacionadas.filter((map) => {
+      return (
+        map.numeroDocumento ==
+        dataOC.ordenesCompraRelacionadas.map(() => {
+          return map.numeroDocumento;
+        })
+      );
+    });
+    console.log(existeOC);
+    //Obtiene el último elemento del array
+    let detalleOC =
       dataOC.ordenesCompraRelacionadas[
         dataOC.ordenesCompraRelacionadas.length - 1
-      ].detalles[0];
-    let detalleActual = dataDetalle.find((map) => {
-      return map.articuloId == objetoOC.articuloId;
-    });
-    if (detalleActual == undefined) {
-      dataDetalle.push({
-        detalleId: detalleId,
-        id: objetoOC.id,
-        lineaId: objetoOC.lineaId,
-        subLineaId: objetoOC.subLineaId,
-        articuloId: objetoOC.articuloId,
-        marcaId: objetoOC.marcaId,
-        codigoBarras: objetoOC.codigoBarras,
-        descripcion: objetoOC.descripcion,
-        stock: objetoOC.stock,
-        unidadMedidaDescripcion: objetoOC.unidadMedidaDescripcion,
-        unidadMedidaId: objetoOC.unidadMedidaId,
-        cantidad: objetoOC.cantidad,
-        precioUnitario: objetoOC.precioUnitario,
-        montoIGV: objetoOC.montoIGV,
-        subTotal: objetoOC.subTotal,
-        importe: objetoOC.importe,
+      ].detalles;
+
+    //Recorre el array
+    detalleOC.map((map) => {
+      //Comprueba si existe un registro con el id
+      let detalleActual = dataDetalle.find((m) => {
+        return m.id == map.id;
       });
-      setDetalleId(detalleId + 1);
-    } else {
-      let cantidad = detalleActual.cantidad + objetoOC.cantidad;
-      let importe = cantidad * detalleActual.precioUnitario;
-      let subTotal = importe * (data.porcentajeIGV / 100);
-      let montoIGV = importe - subTotal;
-      dataDetalle[detalleActual.detalleId - 1] = {
-        id: objetoOC.id,
-        lineaId: objetoOC.lineaId,
-        subLineaId: objetoOC.subLineaId,
-        articuloId: objetoOC.articuloId,
-        marcaId: objetoOC.marcaId,
-        codigoBarras: objetoOC.codigoBarras,
-        descripcion: objetoOC.descripcion,
-        stock: objetoOC.stock,
-        unidadMedidaDescripcion: objetoOC.unidadMedidaDescripcion,
-        unidadMedidaId: objetoOC.unidadMedidaId,
-        cantidad: cantidad,
-        precioUnitario: detalleActual.precioUnitario,
-        importe: importe,
-        subTotal: subTotal,
-        montoIGV: montoIGV,
-      };
-    }
+      if (detalleActual == undefined) {
+        //Si no existe pushea y aumenta 1 en el detalle
+        dataDetalle.push({
+          detalleId: detalleId,
+          id: map.id,
+          lineaId: map.lineaId,
+          subLineaId: map.subLineaId,
+          articuloId: map.articuloId,
+          marcaId: map.marcaId,
+          codigoBarras: map.codigoBarras,
+          descripcion: map.descripcion,
+          stock: map.stock,
+          unidadMedidaDescripcion: map.unidadMedidaDescripcion,
+          unidadMedidaId: map.unidadMedidaId,
+          cantidad: map.cantidad,
+          precioUnitario: map.precioUnitario,
+          montoIGV: map.montoIGV,
+          subTotal: map.subTotal,
+          importe: map.importe,
+        });
+        setDetalleId(detalleId + 1);
+      } else {
+        //Si existe un registro añade al registro actual
+        //Calculos
+        let cantidad = detalleActual.cantidad + map.cantidad;
+        let importe = cantidad * detalleActual.precioUnitario;
+        let subTotal = importe * (data.porcentajeIGV / 100);
+        let montoIGV = importe - subTotal;
+        //Calculos
+
+        //Reemplaza los datos en el índice
+        dataDetalle[detalleActual.detalleId - 1] = {
+          id: map.id,
+          lineaId: map.lineaId,
+          subLineaId: map.subLineaId,
+          articuloId: map.articuloId,
+          marcaId: map.marcaId,
+          codigoBarras: map.codigoBarras,
+          descripcion: map.descripcion,
+          stock: map.stock,
+          unidadMedidaDescripcion: map.unidadMedidaDescripcion,
+          unidadMedidaId: map.unidadMedidaId,
+          cantidad: cantidad,
+          precioUnitario: detalleActual.precioUnitario,
+          importe: importe,
+          subTotal: subTotal,
+          montoIGV: montoIGV,
+        };
+      }
+    });
+
     setRefrescar(true);
   };
   const EliminarDetalle = async (id) => {
@@ -1698,7 +1720,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               {data.tipoDocumentoId != "03" ? (
                 <>
                   <div className="flex">
-                  <div className={Global.FilaVacia}></div>
+                    <div className={Global.FilaVacia}></div>
                     <div className={Global.FilaPrecio}>
                       <p className={Global.FilaContenido}>SubTotal</p>
                     </div>
@@ -1710,7 +1732,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <div className={Global.UltimaFila}></div>
                   </div>
                   <div className="flex">
-                  <div className={Global.FilaVacia}></div>
+                    <div className={Global.FilaVacia}></div>
                     <div className={Global.FilaImporte}>
                       <label
                         htmlFor="porcentajeIGV"
@@ -1767,7 +1789,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           setModal={setModalOC}
           id={data.proveedorId}
           setObjeto={setDataOC}
-          objeto={data.ordenesCompraRelacionadas}
+          objeto={data.numeroDocumento}
         />
       )}
       {modalArt && (
