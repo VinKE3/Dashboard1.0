@@ -222,7 +222,7 @@ const DocumentosVenta = () => {
           detalles: [],
           cuotas: [],
           anticipos: [],
-          // numeroDocumento: "",
+          numeroDocumento: "",
         });
         setModal(true);
         break;

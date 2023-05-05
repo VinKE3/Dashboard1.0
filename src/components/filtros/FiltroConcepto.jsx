@@ -153,7 +153,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
         childrenFooter={
           <>
             <button
-              className={Global.BotonCancelarModal}
+              className={Global.BotonModalBase +Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >

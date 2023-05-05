@@ -615,7 +615,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Cuenta Corriente */}
                 {estadoCcorriente && (
-                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
+                  <div
+                    className={
+                      Global.ContenedorBasico +
+                      Global.FondoContenedor +
+                      " pb-1 mb-2"
+                    }
+                  >
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -696,7 +702,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <button
                           type="button"
                           onClick={EnviarCcorriente}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                          className={
+                            Global.BotonModalBase +
+                            Global.BotonOkModal +
+                            " py-2 sm:py-1 px-3"
+                          }
                         >
                           Guardar
                         </button>
@@ -705,7 +715,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="button"
                         onClick={() => setEstadoCcorriente(false)}
                         className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                          Global.BotonModalBase +
+                          Global.BotonCancelarModal +
+                          " py-2 sm:py-1  px-3"
                         }
                       >
                         CERRAR
@@ -752,7 +764,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Contactos */}
                 {estadoContacto && (
-                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
+                  <div
+                    className={
+                      Global.ContenedorBasico +
+                      Global.FondoContenedor +
+                      " pb-1 mb-2"
+                    }
+                  >
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -903,7 +921,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <button
                           type="button"
                           onClick={EnviarContacto}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                          className={
+                            Global.BotonModalBase +
+                            Global.BotonOkModal +
+                            " py-2 sm:py-1 px-3"
+                          }
                         >
                           Guardar
                         </button>
@@ -912,7 +934,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="button"
                         onClick={() => setEstadoContacto(false)}
                         className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                          Global.BotonModalBase +
+                          Global.BotonCancelarModal +
+                          " py-2 sm:py-1  px-3"
                         }
                       >
                         CERRAR
@@ -922,7 +946,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </div>
                 )}
                 {/* Form Contactos */}
-                
+
                 {/* Tabla */}
                 <TablaStyle>
                   <TableBasic columnas={colContacto} datos={dataContacto} />

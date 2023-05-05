@@ -97,6 +97,9 @@ const Modal = ({ setModal, modo, objeto }) => {
     console.log(data);
   }, [data]);
   useEffect(() => {
+    console.log(data);
+  }, [data]);
+  useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
         ...data,
@@ -185,9 +188,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
   }, [refrescar]);
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   useEffect(() => {
     if (modo == "Registrar") {
       GetPorIdTipoCambio(data.fechaEmision);

@@ -1187,7 +1187,7 @@ const Empresa = ({ modo }) => {
                 <div className="flex justify-end border-t pt-2 border-light ">
                   <button
                     id="guardarTodo"
-                    className={Global.BotonOkModal}
+                    className={Global.BotonModalBase + Global.BotonOkModal}
                     type="button"
                     onClick={GuardarTodo}
                   >
@@ -1843,7 +1843,7 @@ const Empresa = ({ modo }) => {
                 <div className="mt-10 pt-3 border-t border-light flex justify-end">
                   <button
                     id="guardarTodo"
-                    className={Global.BotonOkModal}
+                    className={Global.BotonModalBase + Global.BotonOkModal}
                     type="button"
                     onClick={GuardarTodo}
                   >
@@ -1932,7 +1932,9 @@ const Empresa = ({ modo }) => {
                               type="button"
                               onClick={EnviarIgv}
                               className={
-                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                                Global.BotonModalBase +
+                                Global.BotonOkModal +
+                                " py-2 sm:py-1 px-3"
                               }
                             >
                               Guardar
@@ -1942,7 +1944,9 @@ const Empresa = ({ modo }) => {
                             type="button"
                             onClick={() => setEstadoIgv(false)}
                             className={
-                              Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                              Global.BotonModalBase +
+                              Global.BotonCancelarModal +
+                              " py-2 sm:py-1  px-3"
                             }
                           >
                             CERRAR
@@ -2026,7 +2030,9 @@ const Empresa = ({ modo }) => {
                               type="button"
                               onClick={EnviarRetencion}
                               className={
-                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                                Global.BotonModalBase +
+                                Global.BotonOkModal +
+                                " py-2 sm:py-1 px-3"
                               }
                             >
                               Guardar
@@ -2036,7 +2042,9 @@ const Empresa = ({ modo }) => {
                             type="button"
                             onClick={() => setEstadoRetencion(false)}
                             className={
-                              Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                              Global.BotonModalBase +
+                              Global.BotonCancelarModal +
+                              " py-2 sm:py-1  px-3"
                             }
                           >
                             CERRAR
@@ -2124,7 +2132,9 @@ const Empresa = ({ modo }) => {
                               type="button"
                               onClick={EnviarIDetraccion}
                               className={
-                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                                Global.BotonModalBase +
+                                Global.BotonOkModal +
+                                " py-2 sm:py-1 px-3"
                               }
                             >
                               Guardar
@@ -2134,7 +2144,9 @@ const Empresa = ({ modo }) => {
                             type="button"
                             onClick={() => setEstadoDetraccion(false)}
                             className={
-                              Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                              Global.BotonModalBase +
+                              Global.BotonCancelarModal +
+                              " py-2 sm:py-1  px-3"
                             }
                           >
                             CERRAR
@@ -2222,7 +2234,9 @@ const Empresa = ({ modo }) => {
                               type="button"
                               onClick={EnviarPercepcion}
                               className={
-                                Global.BotonOkModal + " py-2 sm:py-1 px-3"
+                                Global.BotonModalBase +
+                                Global.BotonOkModal +
+                                " py-2 sm:py-1 px-3"
                               }
                             >
                               Guardar
@@ -2232,7 +2246,9 @@ const Empresa = ({ modo }) => {
                             type="button"
                             onClick={() => setEstadoPercepcion(false)}
                             className={
-                              Global.BotonCancelarModal + " py-2 sm:py-1 px-3"
+                              Global.BotonModalBase +
+                              Global.BotonCancelarModal +
+                              " py-2 sm:py-1 px-3"
                             }
                           >
                             CERRAR

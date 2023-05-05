@@ -367,26 +367,30 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClientePersonal/FormularioTablas`
     );
-    setDataPersonalCombo(result.data.data.personal.map((res) => ({
-      id: res.id,
-      personal:
-        res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-    })));
+    setDataPersonalCombo(
+      result.data.data.personal.map((res) => ({
+        id: res.id,
+        personal:
+          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
+      }))
+    );
   };
   const ListarPersonal = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClientePersonal/ListarPorCliente?clienteId=${dataGeneral.id}`
     );
-    setDataPersonal(result.data.data.map((res) => ({
-      id: res.id,
-      personal:
-        res.personal.apellidoPaterno +
-        " " +
-        res.personal.apellidoMaterno +
-        " " +
-        res.personal.nombres,
-      numeroDocumentoIdentidad: res.personal.numeroDocumentoIdentidad,
-    })));
+    setDataPersonal(
+      result.data.data.map((res) => ({
+        id: res.id,
+        personal:
+          res.personal.apellidoPaterno +
+          " " +
+          res.personal.apellidoMaterno +
+          " " +
+          res.personal.nombres,
+        numeroDocumentoIdentidad: res.personal.numeroDocumentoIdentidad,
+      }))
+    );
   };
   const GetPersonal = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/ClientePersonal/${id}`);
@@ -748,7 +752,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Direcciones */}
                 {estadoDireccion && (
-                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
+                  <div
+                    className={
+                      Global.ContenedorBasico +
+                      Global.FondoContenedor +
+                      " pb-1 mb-2"
+                    }
+                  >
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -794,7 +804,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <button
                           type="button"
                           onClick={EnviarClienteDireccion}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                          className={
+                            Global.BotonModalBase +
+                            Global.BotonOkModal +
+                            " py-2 sm:py-1 px-3"
+                          }
                         >
                           Guardar
                         </button>
@@ -803,7 +817,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="button"
                         onClick={() => setEstadoDireccion(false)}
                         className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                          Global.BotonModalBase +
+                          Global.BotonCancelarModal +
+                          " py-2 sm:py-1  px-3"
                         }
                       >
                         CERRAR
@@ -851,7 +867,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Contactos */}
                 {estadoContacto && (
-                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
+                  <div
+                    className={
+                      Global.ContenedorBasico +
+                      Global.FondoContenedor +
+                      " pb-1 mb-2"
+                    }
+                  >
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -911,7 +933,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <select
                           id="cargoId"
                           name="cargoId"
-                          value={dataGeneral.cargoId ?? ""}
+                          value={objetoContacto.cargoId ?? ""}
                           onChange={ValidarDataContacto}
                           disabled={modo == "Consultar" ? true : false}
                           className={Global.InputStyle}
@@ -961,17 +983,20 @@ const Modal = ({ setModal, modo, objeto }) => {
                         />
                       </div>
                       <div className={Global.InputFull}>
-                        <label htmlFor="correo" className={Global.LabelStyle}>
+                        <label
+                          htmlFor="correoElectronico"
+                          className={Global.LabelStyle}
+                        >
                           Correo
                         </label>
                         <input
                           type="text"
-                          id="correo"
-                          name="correo"
+                          id="correoElectronico"
+                          name="correoElectronico"
                           autoComplete="off"
                           placeholder="Correo"
                           readOnly={modo == "Consultar" ? true : false}
-                          value={objetoContacto.correo ?? ""}
+                          value={objetoContacto.correoElectronico ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
                         />
@@ -1002,7 +1027,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <button
                           type="button"
                           onClick={EnviarClienteContacto}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                          className={
+                            Global.BotonModalBase +
+                            Global.BotonOkModal +
+                            " py-2 sm:py-1 px-3"
+                          }
                         >
                           Guardar
                         </button>
@@ -1011,7 +1040,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="button"
                         onClick={() => setEstadoContacto(false)}
                         className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                          Global.BotonModalBase +
+                          Global.BotonCancelarModal +
+                          " py-2 sm:py-1  px-3"
                         }
                       >
                         CERRAR
@@ -1059,7 +1090,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Form Personal */}
                 {estadoPersonal && (
-                  <div className={Global.ContenedorBasico + Global.FondoContenedor + " pb-1 mb-2"}>
+                  <div
+                    className={
+                      Global.ContenedorBasico +
+                      Global.FondoContenedor +
+                      " pb-1 mb-2"
+                    }
+                  >
                     {tipoMen > 0 && (
                       <Mensajes
                         tipoMensaje={tipoMen}
@@ -1104,7 +1141,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <button
                           type="button"
                           onClick={EnviarClientePersonal}
-                          className={Global.BotonOkModal + " py-2 sm:py-1 px-3"}
+                          className={
+                            Global.BotonModalBase +
+                            Global.BotonOkModal +
+                            " py-2 sm:py-1 px-3"
+                          }
                         >
                           Guardar
                         </button>
@@ -1113,7 +1154,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="button"
                         onClick={() => setEstadoPersonal(false)}
                         className={
-                          Global.BotonCancelarModal + " py-2 sm:py-1  px-3"
+                          Global.BotonModalBase +
+                          Global.BotonCancelarModal +
+                          " py-2 sm:py-1  px-3"
                         }
                       >
                         CERRAR
@@ -1123,7 +1166,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </div>
                 )}
                 {/* Form Personal */}
-                
+
                 {/* Tabla */}
                 <TablaStyle>
                   <TableBasic columnas={colPersonal} datos={dataPersonal} />
