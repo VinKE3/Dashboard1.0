@@ -91,14 +91,14 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
     setData(result.data.data.data);
   };
   const GetPorId = async (id) => {
-    console.log(objeto);
+    // console.log(objeto);
     const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
-    let existe = objeto.find((map) => map == result.data.data.numeroDocumento);
-    console.log(existe);
-    // setObjeto({
-      // ordenesCompraRelacionadas: [result.data.data],
-    // });
-    // setModal(false);
+    // let existe = objeto.find((map) => map == result.data.data.numeroDocumento);
+    // console.log(existe);
+    setObjeto({
+      ordenesCompraRelacionadas: [result.data.data],
+    });
+    setModal(false);
   };
   //#endregion
 

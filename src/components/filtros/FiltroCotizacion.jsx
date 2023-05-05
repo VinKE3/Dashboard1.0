@@ -101,6 +101,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
       clienteDireccionId: result.data.data.clienteDireccionId,
       cotizacionId: result.data.data.id,
       cotizacion: result.data.data.serie + "-" + result.data.data.numero,
+      detalles: result.data.data.detalles
     });
     setModal(false);
   };

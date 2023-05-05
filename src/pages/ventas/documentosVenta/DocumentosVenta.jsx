@@ -172,14 +172,14 @@ const DocumentosVenta = () => {
           empresaId: "",
           tipoDocumentoId: "01",
           serie: "F001",
-          numero: "",
+          numero: "0000000000",
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaVencimiento: moment().format("YYYY-MM-DD"),
           cotizacion: "",
-          contizacionId: "",
+          cotizacionId: "",
           clienteId: "",
           clienteNombre: "",
-          clienteTipoDocumentoIdentidad: "",
+          clienteTipoDocumentoIdentidadId: "",
           clienteNumeroDocumentoIdentidad: "",
           clienteDireccionId: "",
           clienteDireccion: "",
@@ -193,7 +193,7 @@ const DocumentosVenta = () => {
           numeroOperacion: "",
           cuentaCorrienteId: "",
           documentoReferenciaId: "",
-          fechaDocumentoReferencia: "",
+          fechaDocumentoReferencia: null,
           abonar: true,
           motivoNotaId: "",
           motivoNotaDescripcion: "",
@@ -218,11 +218,11 @@ const DocumentosVenta = () => {
           porcentajeIGV: 18,
           porcentajeRetencion: 0,
           porcentajeDetraccion: 0,
-          factorImpuestoBolsa: 0.50,
+          factorImpuestoBolsa: 0.5,
           detalles: [],
           cuotas: [],
           anticipos: [],
-          numeroDocumento: "",
+          // numeroDocumento: "",
         });
         setModal(true);
         break;
@@ -386,7 +386,9 @@ const DocumentosVenta = () => {
 
             {/* Filtro*/}
             <div
-              className={Global.ContenedorBasico + " gap-y-1 !border-none !p-0"}
+              className={
+                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+              }
             >
               <div className={Global.ContenedorFiltro + " !my-0"}>
                 <div className={Global.InputFull}>
@@ -440,62 +442,60 @@ const DocumentosVenta = () => {
                   </button>
                 </div>
               </div>
-              <div
-                className={
-                  Global.ContenedorFiltro +
-                  " !my-0 pb-2 !flex-row !justify-start gap-x-2 "
-                }
-              >
-                <div className={Global.Input + "w-28"}>
-                  <div className={Global.CheckStyle}>
-                    <RadioButton
-                      inputId="isEnviadoTodos"
-                      name="isEnviado"
-                      value={""}
-                      onChange={ValidarData}
-                      checked={filtro.isEnviado === ""}
-                    />
+
+              <div className={Global.ContenedorFiltro + " !my-0"}>
+                <div className={Global.InputMitad}>
+                  <div className={Global.Input + "w-28"}>
+                    <div className={Global.CheckStyle}>
+                      <RadioButton
+                        inputId="isEnviadoTodos"
+                        name="isEnviado"
+                        value={""}
+                        onChange={ValidarData}
+                        checked={filtro.isEnviado === ""}
+                      />
+                    </div>
+                    <label
+                      htmlFor="isEnviadoTodos"
+                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                    >
+                      Todos
+                    </label>
                   </div>
-                  <label
-                    htmlFor="isEnviadoTodos"
-                    className={Global.LabelCheckStyle + "font-semibold"}
-                  >
-                    Todos
-                  </label>
-                </div>
-                <div className={Global.Input + "w-28"}>
-                  <div className={Global.CheckStyle}>
-                    <RadioButton
-                      inputId="isEnviadoPendiente"
-                      name="isEnviado"
-                      value={false}
-                      onChange={ValidarData}
-                      checked={filtro.isEnviado === false}
-                    />
+                  <div className={Global.Input + "w-28"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <RadioButton
+                        inputId="isEnviadoPendiente"
+                        name="isEnviado"
+                        value={false}
+                        onChange={ValidarData}
+                        checked={filtro.isEnviado === false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="isEnviadoPendiente"
+                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                    >
+                      Pendientes
+                    </label>
                   </div>
-                  <label
-                    htmlFor="isEnviadoPendiente"
-                    className={Global.LabelCheckStyle + "font-semibold"}
-                  >
-                    Pendientes
-                  </label>
-                </div>
-                <div className={Global.Input + "w-28"}>
-                  <div className={Global.CheckStyle}>
-                    <RadioButton
-                      inputId="isEnviado"
-                      name="isEnviado"
-                      value={true}
-                      onChange={ValidarData}
-                      checked={filtro.isEnviado === true}
-                    />
+                  <div className={Global.Input + "w-28"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <RadioButton
+                        inputId="isEnviado"
+                        name="isEnviado"
+                        value={true}
+                        onChange={ValidarData}
+                        checked={filtro.isEnviado === true}
+                      />
+                    </div>
+                    <label
+                      htmlFor="isEnviado"
+                      className={Global.LabelCheckStyle + "font-semibold"}
+                    >
+                      Enviados
+                    </label>
                   </div>
-                  <label
-                    htmlFor="isEnviado"
-                    className={Global.LabelCheckStyle + "font-semibold"}
-                  >
-                    Enviados
-                  </label>
                 </div>
               </div>
             </div>

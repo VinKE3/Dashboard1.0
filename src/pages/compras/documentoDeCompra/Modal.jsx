@@ -60,6 +60,7 @@ const TablaStyle = styled.div`
     min-width: 90px;
     max-width: 90px;
     text-align: center;
+    color: transparent;
   }
 `;
 //#endregion
@@ -93,6 +94,9 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
+    console.log(data);
+  }, [data]);
+  useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
         ...data,
@@ -115,7 +119,10 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (Object.keys(dataOC).length > 0) {
       if (dataOC.ordenesCompraRelacionadas.length > 0) {
         //Obtenemos el último índice del array
-        let obj = dataOC.ordenesCompraRelacionadas[dataOC.ordenesCompraRelacionadas.length - 1];
+        let obj =
+          dataOC.ordenesCompraRelacionadas[
+            dataOC.ordenesCompraRelacionadas.length - 1
+          ];
         setData({
           ...data,
           proveedorNumeroDocumentoIdentidad:
@@ -131,7 +138,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           afectarStock: true,
           tipoCompraId: obj.tipoCompraId,
           tipoPagoId: obj.tipoPagoId,
-          ordenesCompraRelacionadas: ordenesCompraRelacionadas.dataOC.ordenesCompraRelacionadas,
+          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
         });
         //Añadimos los detalles
         AgregarDetalleOC();
@@ -164,6 +171,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       ActualizarImportesTotales();
       setDataArt([]);
       setRefrescar(false);
+      //Falta validar
+      if (document.getElementById("tipoPagoId")) {
+        document
+          .getElementById("tipoPagoId")
+          .dispatchEvent(new Event("change", { bubbles: true }));
+      }
       if (document.getElementById("productos")) {
         document.getElementById("productos").checked = true;
         document
@@ -186,6 +199,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   const ValidarData = async ({ target }) => {
+    console.log(target.value);
     if (
       target.name == "incluyeIGV" ||
       target.name == "afectarStock" ||
@@ -335,7 +349,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         codigoBarras: "000000",
         descripcion: "ARTICULOS VARIOS",
         stock: 0,
-        unidadMedidaId: 1,
+        unidadMedidaId: "1",
         unidadMedidaDescripcion: "UND",
         cantidad: 0,
         precioUnitario: 0,
@@ -398,7 +412,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
           unidadMedidaId: dataArt.unidadMedidaId,
           cantidad: dataArt.cantidad,
-          precioUnitario: dataArt.precioCompra,
+          precioUnitario: dataArt.precioUnitario,
           montoIGV: dataArt.montoIGV,
           subTotal: dataArt.subTotal,
           importe: dataArt.importe,
@@ -422,7 +436,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
             unidadMedidaId: dataArt.unidadMedidaId,
             cantidad: dataArt.cantidad,
-            precioUnitario: dataArt.precioCompra,
+            precioUnitario: dataArt.precioUnitario,
             montoIGV: dataArt.montoIGV,
             subTotal: dataArt.subTotal,
             importe: dataArt.importe,
@@ -467,7 +481,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const AgregarDetalleOC = async () => {
     //Comprueba si existe un registro con el id
-    console.log(data.ordenesCompraRelacionadas);
     let existeOC = data.ordenesCompraRelacionadas.filter((map) => {
       return (
         map.numeroDocumento ==
@@ -627,6 +640,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       total = Funciones.RedondearNumero(subTotal + montoIGV, 2);
     }
+    console.log(subTotal)
     setData({
       ...data,
       subTotal: Funciones.FormatoNumero(subTotal.toFixed(2)),
@@ -651,7 +665,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           precioVenta2: model.precioVenta2,
           precioVenta3: model.precioVenta3,
           precioVenta4: model.precioVenta4,
-          precioUnitario: model.precioVenta1,
+          precioUnitario: model.precioCompra,
         });
       } else {
         setDataArt({
@@ -1656,7 +1670,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Precio Unitario"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
-                    value={dataArt.precioCompra ?? ""}
+                    value={dataArt.precioUnitario ?? ""}
                     onChange={(e) => {
                       ValidarDataArt(e);
                       CalcularDetalleMontos(e);
