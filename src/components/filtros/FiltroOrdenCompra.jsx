@@ -37,11 +37,25 @@ const TablaStyle = styled.div`
     text-align: center;
   }
 `;
+const TablaDetalle = styled.div`
+  & th:first-child {
+    display: none;
+  }
+  & tbody td:first-child {
+    display: none;
+  }
+  & th:last-child {
+    width: 40px;
+    text-align: center;
+    color: transparent;
+  }
+`;
 //#endregion
 
 const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
   //#region useState
   const [data, setData] = useState([]);
+  const [dataOrdenSeleccionada, setDataOrdenSeleccionada] = useState(objeto);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     fechaInicio: moment()
@@ -67,6 +81,71 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
   }, []);
   //#endregion
 
+  //#region API
+  const Listar = async (filtro = "", pagina = 1) => {
+    const result = await ApiMasy.get(
+      `api/Compra/OrdenCompra/ListarPendientes?pagina=${pagina}&proveedorId=${id}${filtro}`
+    );
+    setData(result.data.data.data);
+  };
+  const GetPorId = async (id) => {
+    console.log(objeto);
+    let existe;
+    if (Object.entries(objeto).length > 0) {
+      existe = objeto.find((map) => map.id == id);
+      console.log(existe);
+    }
+    if (existe != undefined) {
+      const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
+      setObjeto({
+        proveedorNumeroDocumentoIdentidad:
+          result.data.data.proveedorNumeroDocumentoIdentidad,
+        proveedorNombre: result.data.data.proveedorNombre,
+        proveedorDireccion: result.data.data.proveedorDireccion ?? "",
+        cuentaCorrienteId: result.data.data.cuentaCorrienteId ?? "",
+        monedaId: result.data.data.monedaId,
+        tipoCambio: result.data.data.tipoCambio,
+        porcentajeIGV: result.data.data.porcentajeIGV,
+        incluyeIGV: result.data.data.incluyeIGV,
+        observacion: result.data.data.observacion,
+        tipoCompraId: result.data.data.tipoCompraId,
+        tipoPagoId: result.data.data.tipoPagoId,
+        detalles: result.data.data.detalles,
+        ordenesCompraRelacionadas: {
+          id: result.data.data.id,
+          numeroDocumento: result.data.data.numeroDocumento,
+        },
+      });
+      setModal(false);
+    }
+    else{
+      
+    }
+  };
+  //#endregion
+
+  //#region Funciones
+  const EliminarFila = async (id) => {
+    let model = dataOrdenSeleccionada.filter((model) => model.id !== id);
+    Swal.fire({
+      title: "Eliminar selección",
+      icon: "warning",
+      iconColor: "#F7BF3A",
+      showCancelButton: true,
+      color: "#fff",
+      background: "#1a1a2e",
+      confirmButtonColor: "#eea508",
+      confirmButtonText: "Aceptar",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setDataOrdenSeleccionada(model);
+      }
+    });
+  };
+  //#endregion
+
   //#region Funciones Filtrado
   const ValidarData = async ({ target }) => {
     setFiltro((prevState) => ({
@@ -80,25 +159,6 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  //#endregion
-
-  //#region API
-  const Listar = async (filtro = "", pagina = 1) => {
-    const result = await ApiMasy.get(
-      `api/Compra/OrdenCompra/ListarPendientes?pagina=${pagina}&proveedorId=${id}${filtro}`
-    );
-    setData(result.data.data.data);
-  };
-  const GetPorId = async (id) => {
-    // console.log(objeto);
-    const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
-    // let existe = objeto.find((map) => map == result.data.data.numeroDocumento);
-    // console.log(existe);
-    setObjeto({
-      ordenesCompraRelacionadas: [result.data.data],
-    });
-    setModal(false);
   };
   //#endregion
 
@@ -168,9 +228,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       Cell: ({ row }) => (
         <button
           onClick={() => EliminarFila(row.values.id)}
-          className={
-            Global.BotonBasic + Global.BotonCancelarModal + " !px-2 !py-1"
-          }
+          className={Global.BotonBasic + Global.BotonCancelarModal}
         >
           <FaTrash></FaTrash>
         </button>
@@ -190,76 +248,79 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         titulo="Consultar Ordenes de Compra"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
-          <>
-            <button
-              onClick={() => Guardar()}
-              className={
-                Global.BotonModalBase +
-                Global.BotonOkModal +
-                " flex items-center justify-center"
-              }
-              type="button"
-            >
-              <FaCheck></FaCheck>
-              <p className="pl-2">Guardar Selección</p>
-            </button>
-            <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
-              type="button"
-              onClick={() => setModal(false)}
-            >
-              CERRAR
-            </button>
-          </>
+          <button
+            className={Global.BotonModalBase + Global.BotonCancelarModal}
+            type="button"
+            onClick={() => setModal(false)}
+          >
+            CERRAR
+          </button>
         }
       >
         {
-          <div className={Global.ContenedorBasico + " mb-2"}>
-            <div className={Global.ContenedorInputs + "mb-2"}>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-                  Desde
-                </label>
-                <input
-                  type="date"
-                  id="fechaInicio"
-                  name="fechaInicio"
-                  autoComplete="off"
-                  value={filtro.fechaInicio}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
+          <>
+            <div className={Global.ContenedorBasico + " mb-2"}>
+              <div className={Global.ContenedorInputs + "mb-2"}>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                    Desde
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaInicio"
+                    name="fechaInicio"
+                    autoComplete="off"
+                    value={filtro.fechaInicio}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                    Hasta
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaFin"
+                    name="fechaFin"
+                    autoComplete="off"
+                    value={filtro.fechaFin}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="consultar"
+                    onClick={Filtro}
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                  >
+                    <FaSearch></FaSearch>
+                  </button>
+                </div>
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
-                  Hasta
-                </label>
-                <input
-                  type="date"
-                  id="fechaFin"
-                  name="fechaFin"
-                  autoComplete="off"
-                  value={filtro.fechaFin}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="consultar"
-                  onClick={Filtro}
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                >
-                  <FaSearch></FaSearch>
-                </button>
-              </div>
+              {/* Tabla */}
+              <TablaStyle>
+                <TableBasic columnas={columnas} datos={data} />
+              </TablaStyle>
+              {/* Tabla */}
             </div>
-            {/* Tabla */}
-            <TablaStyle>
-              <TableBasic columnas={columnas} datos={data} />
-            </TablaStyle>
-            {/* Tabla */}
-          </div>
+            {Object.entries(dataOrdenSeleccionada).length > 0 && (
+              <div className={Global.ContenedorBasico}>
+                <p className="text-base text-light font-bold">
+                  Órdenes seleccionadas
+                </p>
+                {/* Tabla */}
+                <TablaDetalle>
+                  <TableBasic
+                    columnas={columnSeleccion}
+                    datos={dataOrdenSeleccionada}
+                  />
+                </TablaDetalle>
+                {/* Tabla */}
+              </div>
+            )}
+          </>
         }
       </ModalBasic>
     </>

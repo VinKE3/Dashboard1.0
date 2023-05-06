@@ -74,7 +74,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Tablas
   //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
-  const [dataOC, setDataOC] = useState([]);
+  const [dataOrdenCompra, setDataOrdenCompra] = useState([]);
   const [dataArt, setDataArt] = useState([]);
   //Data Modales Ayuda
   //Modales de Ayuda
@@ -103,6 +103,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorNombre: dataProveedor.proveedorNombre,
         proveedorDireccion: dataProveedor.proveedorDireccion ?? "",
       });
+      //Valida si hay algún proveedor seleccionado
       if (dataProveedor.proveedorId != "") {
         GetDocReferencia(dataProveedor.proveedorId);
         setRefrescar(true);
@@ -113,50 +114,61 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataProveedor]);
   useEffect(() => {
-    if (Object.keys(dataOC).length > 0) {
-      if (dataOC.ordenesCompraRelacionadas.length > 0) {
-        //Obtenemos el último índice del array
-        let obj =
-          dataOC.ordenesCompraRelacionadas[
-            dataOC.ordenesCompraRelacionadas.length - 1
-          ];
-        setData({
-          ...data,
-          proveedorNumeroDocumentoIdentidad:
-            obj.proveedorNumeroDocumentoIdentidad,
-          proveedorNombre: obj.proveedorNombre,
-          proveedorDireccion: obj.proveedorDireccion ?? "",
-          cuentaCorrienteId: obj.cuentaCorrienteId ?? "",
-          monedaId: obj.monedaId,
-          tipoCambio: obj.tipoCambio,
-          porcentajeIGV: obj.porcentajeIGV,
-          incluyeIGV: obj.incluyeIGV,
-          observacion: obj.observacion,
-          afectarStock: true,
-          tipoCompraId: obj.tipoCompraId,
-          tipoPagoId: obj.tipoPagoId,
-          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
-        });
-        //Añadimos los detalles
-        AgregarDetalleOC();
-      } else {
-        setData({
-          ...data,
-          ordenesCompraRelacionadas: dataOC.ordenesCompraRelacionadas,
-        });
-        //Limpia los detalles
-        setDataDetalle([]);
-      }
-      setRefrescar(true);
+    console.log(dataOrdenCompra);
+    if (Object.keys(dataOrdenCompra).length > 0) {
+      //Cabecera
+      setData({
+        ...data,
+        proveedorNumeroDocumentoIdentidad:
+          dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
+        proveedorNombre: dataOrdenCompra.proveedorNombre,
+        proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
+        cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",
+        monedaId: dataOrdenCompra.monedaId,
+        tipoCambio: dataOrdenCompra.tipoCambio,
+        porcentajeIGV: dataOrdenCompra.porcentajeIGV,
+        incluyeIGV: dataOrdenCompra.incluyeIGV,
+        observacion: dataOrdenCompra.observacion,
+        tipoCompraId: dataOrdenCompra.tipoCompraId,
+        tipoPagoId: dataOrdenCompra.tipoPagoId,
+        afectarStock: true,
+        //Ordenes de compra
+        numeroOrdenesCompraRelacionadas:
+          data.numeroOrdenesCompraRelacionadas != undefined
+            ? data.numeroOrdenesCompraRelacionadas +
+              ", " +
+              dataOrdenCompra.ordenesCompraRelacionadas.numeroDocumento
+            : dataOrdenCompra.ordenesCompraRelacionadas.numeroDocumento,
+        ordenesCompraRelacionadas: [
+          ...data.ordenesCompraRelacionadas,
+          dataOrdenCompra.ordenesCompraRelacionadas,
+        ],
+        //Ordenes de compra
+      });
+      //Cabecera
+      //Detalles
+      // AgregarDetalleOC();
+      //Detalles
+    } else {
+      //Si se desea eliminar alguna orden
+      setData({
+        ...data,
+        ordenesCompraRelacionadas: dataOrdenCompra.ordenesCompraRelacionadas,
+      });
+      //Limpia los detalles
+      setDataDetalle([]);
     }
-  }, [dataOC]);
+    setRefrescar(true);
+  }, [dataOrdenCompra]);
   useEffect(() => {
     if (Object.entries(dataDetalle).length > 0) {
+      //Asigna a data los detalles para ser enviados
       setData({ ...data, detalles: dataDetalle });
     }
   }, [dataDetalle]);
   useEffect(() => {
     if (!modalArt) {
+      //Calculos de precios según la moneda al cerrar el modal
       ConvertirPrecio();
     }
   }, [modalArt]);
@@ -439,36 +451,46 @@ const Modal = ({ setModal, modo, objeto }) => {
   const ValidarDetalle = async () => {
     if (Object.entries(dataArt).length == 0) {
       return [false, "Seleccione un Producto"];
-    } else if (dataArt.descripcion == undefined) {
+    }
+
+    //Valida Descripción
+    if (dataArt.descripcion == undefined) {
       return [false, "La descripción no puede estar vacía"];
-    } else if (dataArt.unidadMedidaDescripcion == undefined) {
-      return [false, "La Unidad de Medida no puede estar vacía"];
-    } else if (Funciones.IsNumeroValido(dataArt.cantidad, false) != "") {
+    }
+
+    //Valida montos
+    if (Funciones.IsNumeroValido(dataArt.cantidad, false) != "") {
       document.getElementById("cantidad").focus();
       return [
         false,
         "Cantidad: " + Funciones.IsNumeroValido(dataArt.cantidad, false),
       ];
-    } else if (Funciones.IsNumeroValido(dataArt.precioUnitario, false) != "") {
+    }
+    if (Funciones.IsNumeroValido(dataArt.precioUnitario, false) != "") {
       document.getElementById("precioUnitario").focus();
       return [
         false,
         "Precio Unitario: " +
           Funciones.IsNumeroValido(dataArt.precioUnitario, false),
       ];
-    } else if (Funciones.IsNumeroValido(dataArt.importe, false) != "") {
+    }
+    if (Funciones.IsNumeroValido(dataArt.importe, false) != "") {
       document.getElementById("importe").focus();
       return [
         false,
         "Importe: " + Funciones.IsNumeroValido(dataArt.importe, false),
       ];
-    } else {
-      return [true, ""];
     }
+    //Valida montos
+
+    return [true, ""];
   };
   const AgregarDetalleArticulo = async () => {
+    //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
+
     if (resultado[0]) {
+      //Si tiene detalleId entonces modifica registro
       if (dataArt.detalleId > -1) {
         dataDetalle[dataArt.detalleId - 1] = {
           detalleId: dataArt.detalleId,
@@ -490,9 +512,22 @@ const Modal = ({ setModal, modo, objeto }) => {
         };
         setRefrescar(true);
       } else {
-        let model = dataDetalle.find((map) => {
-          return map.id == dataArt.id;
-        });
+        let model = [];
+        //Valida Artículos Varios
+        if (dataArt.id == "00000000") {
+          //Valida por id y descripción de artículo
+          model = dataDetalle.find((map) => {
+            return (
+              map.id == dataArt.id && map.descripcion == dataArt.descripcion
+            );
+          });
+        } else {
+          //Valida solo por id
+          model = dataDetalle.find((map) => {
+            return map.id == dataArt.id;
+          });
+        }
+
         if (model == undefined) {
           dataDetalle.push({
             detalleId: detalleId,
@@ -537,17 +572,28 @@ const Modal = ({ setModal, modo, objeto }) => {
           });
         }
       }
+      //Luego de añadir el artículo se limpia
+      setDataArt([]);
+      if (document.getElementById("productos")) {
+        document.getElementById("productos").checked = true;
+        document
+          .getElementById("productos")
+          .dispatchEvent(new Event("click", { bubbles: true }));
+      }
     } else {
-      toast.error(resultado[1], {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      //NO cumple validación
+      if (resultado[1] != "") {
+        toast.error(resultado[1], {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     }
   };
   const CargarDetalle = async (id) => {
@@ -565,7 +611,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     let existeOC = data.ordenesCompraRelacionadas.filter((map) => {
       return (
         map.numeroDocumento ==
-        dataOC.ordenesCompraRelacionadas.map(() => {
+        dataOrdenCompra.ordenesCompraRelacionadas.map(() => {
           return map.numeroDocumento;
         })
       );
@@ -573,8 +619,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     console.log(existeOC);
     //Obtiene el último elemento del array
     let detalleOC =
-      dataOC.ordenesCompraRelacionadas[
-        dataOC.ordenesCompraRelacionadas.length - 1
+      dataOrdenCompra.ordenesCompraRelacionadas[
+        dataOrdenCompra.ordenesCompraRelacionadas.length - 1
       ].detalles;
 
     //Recorre el array
@@ -638,16 +684,23 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   //Calculos
   const ActualizarImportesTotales = async () => {
+    //Suma los importes de los detalles
     let importeTotal = dataDetalle.reduce((i, map) => {
       return i + map.importe;
     }, 0);
 
+    //Porcentajes
     let porcentajeIgvSeleccionado = data.porcentajeIGV;
     let incluyeIgv = data.incluyeIGV;
+    //Porcentajes
+
+    //Montos
     let total = 0,
       subTotal = 0,
       montoIGV = 0;
+    //Montos
 
+    //Calculo Check IncluyeIGV
     if (incluyeIgv) {
       total = Funciones.RedondearNumero(importeTotal, 2);
       subTotal = Funciones.RedondearNumero(
@@ -663,7 +716,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       total = Funciones.RedondearNumero(subTotal + montoIGV, 2);
     }
-    console.log(subTotal);
+    //Calculo Check IncluyeIGV
+
     setData({
       ...data,
       subTotal: Funciones.FormatoNumero(subTotal.toFixed(2)),
@@ -686,20 +740,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoPag(result.data.data.tiposPago);
     setDataIgv(result.data.data.porcentajesIGV);
     setDataMotivoNota(result.data.data.motivosNota);
-  };
-  const GetCuentasCorrientes = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/CuentaCorriente/Listar`
-    );
-    setDataCtacte(
-      result.data.data.data.map((res) => ({
-        id: res.cuentaCorrienteId,
-        descripcion:
-          res.monedaId == "D"
-            ? res.numero + " | " + res.entidadBancariaNombre + " |  [US$]"
-            : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
-      }))
-    );
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
@@ -739,6 +779,20 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       OcultarMensajes();
     }
+  };
+  const GetCuentasCorrientes = async () => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/CuentaCorriente/Listar`
+    );
+    setDataCtacte(
+      result.data.data.data.map((res) => ({
+        id: res.cuentaCorrienteId,
+        descripcion:
+          res.monedaId == "D"
+            ? res.numero + " | " + res.entidadBancariaNombre + " |  [US$]"
+            : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
+      }))
+    );
   };
   const GetDocReferencia = async (id) => {
     const result = await ApiMasy.get(
@@ -1404,23 +1458,19 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputFull}>
                   <label
-                    htmlFor="numeroDocumento"
+                    htmlFor="numeroOrdenesCompraRelacionadas"
                     className={Global.LabelStyle + Global.FondoOscuro}
                   >
                     O.C
                   </label>
                   <input
                     type="text"
-                    id="numeroDocumento"
-                    name="numeroDocumento"
+                    id="numeroOrdenesCompraRelacionadas"
+                    name="numeroOrdenesCompraRelacionadas"
                     placeholder="Orden de Compra"
                     autoComplete="off"
                     readOnly={true}
-                    value={
-                      data.ordenesCompraRelacionadas.map((map) => {
-                        return map.numeroDocumento;
-                      }) ?? ""
-                    }
+                    value={data.numeroOrdenesCompraRelacionadas ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton + Global.Disabled}
                   />
@@ -1787,8 +1837,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         <FiltroOrdenCompra
           setModal={setModalOC}
           id={data.proveedorId}
-          setObjeto={setDataOC}
-          objeto={data.numeroDocumento}
+          objeto={data.ordenesCompraRelacionadas}
+          setObjeto={setDataOrdenCompra}
         />
       )}
       {modalArt && (
