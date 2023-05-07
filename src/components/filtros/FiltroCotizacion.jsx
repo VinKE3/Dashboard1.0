@@ -142,9 +142,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
           <div className="flex justify-center">
             <button
               onClick={() => GetPorId(row.values.id)}
-              className={
-                Global.BotonBasic + Global.BotonAgregar + " !px-3 !py-1.5"
-              }
+              className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>

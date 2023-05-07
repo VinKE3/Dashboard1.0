@@ -1553,48 +1553,51 @@ const Modal = ({ setModal, modo, objeto }) => {
                 Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
               }
             >
-              <div className="flex gap-x-1">
-                <div className={Global.Input + " w-32"}>
-                  <div className={Global.CheckStyle}>
-                    <RadioButton
-                      inputId="productos"
-                      name="productos"
-                      value="productos"
-                      disabled={modo == "Consultar" ? true : false}
-                      onChange={(e) => {
-                        ValidarDataArt(e);
-                      }}
-                      checked={checkFiltro === "productos"}
-                    ></RadioButton>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <div className={Global.Input + "w-32"}>
+                    <div className={Global.CheckStyle}>
+                      <RadioButton
+                        inputId="productos"
+                        name="productos"
+                        value="productos"
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataArt(e);
+                        }}
+                        checked={checkFiltro === "productos"}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="productos"
+                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                    >
+                      Productos
+                    </label>
                   </div>
-                  <label
-                    htmlFor="productos"
-                    className={Global.LabelCheckStyle + " !py-1 "}
-                  >
-                    Productos
-                  </label>
-                </div>
-                <div className={Global.Input + " w-32"}>
-                  <div className={Global.CheckStyle}>
-                    <RadioButton
-                      inputId="variosFiltro"
-                      name="variosFiltro"
-                      value="variosFiltro"
-                      disabled={modo == "Consultar" ? true : false}
-                      onChange={(e) => {
-                        ValidarDataArt(e);
-                      }}
-                      checked={checkFiltro === "variosFiltro"}
-                    ></RadioButton>
+                  <div className={Global.Input + "w-32"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <RadioButton
+                        inputId="variosFiltro"
+                        name="variosFiltro"
+                        value="variosFiltro"
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataArt(e);
+                        }}
+                        checked={checkFiltro === "variosFiltro"}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="variosFiltro"
+                      className={Global.LabelCheckStyle + " !py-1 "}
+                    >
+                      Varios
+                    </label>
                   </div>
-                  <label
-                    htmlFor="variosFiltro"
-                    className={Global.LabelCheckStyle + " !py-1 "}
-                  >
-                    Varios
-                  </label>
                 </div>
               </div>
+
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label

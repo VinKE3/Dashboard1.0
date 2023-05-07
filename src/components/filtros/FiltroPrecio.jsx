@@ -58,11 +58,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
                 <div className={Global.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta1)}
-                    className={
-                      Global.BotonBasic +
-                      Global.BotonAgregar +
-                      " !mb-0 !px-3 !py-1.5 "
-                    }
+                    className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
                   >
                     <FaCheck></FaCheck>
                   </button>
@@ -80,11 +76,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
                 <div className={Global.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta2)}
-                    className={
-                      Global.BotonBasic +
-                      Global.BotonAgregar +
-                      " !mb-0 !px-3 !py-1.5 "
-                    }
+                    className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
                   >
                     <FaCheck></FaCheck>
                   </button>
@@ -103,9 +95,9 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
                   <button
                     onClick={() => GetPorId(datos.precioVenta3)}
                     className={
-                      Global.BotonBasic +
+                      Global.BotonModalBase +
                       Global.BotonAgregar +
-                      " !mb-0 !px-3 !py-1.5 "
+                      "border-none"
                     }
                   >
                     <FaCheck></FaCheck>
@@ -125,9 +117,9 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
                   <button
                     onClick={() => GetPorId(datos.precioVenta4)}
                     className={
-                      Global.BotonBasic +
+                      Global.BotonModalBase +
                       Global.BotonAgregar +
-                      " !mb-0 !px-3 !py-1.5 "
+                      "border-none"
                     }
                   >
                     <FaCheck></FaCheck>

@@ -177,9 +177,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
           <div className="flex justify-center">
             <button
               onClick={(e) => GetPorId(row.values.id, e)}
-              className={
-                Global.BotonBasic + Global.BotonAgregar + " !px-2 !py-1.5"
-              }
+              className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>

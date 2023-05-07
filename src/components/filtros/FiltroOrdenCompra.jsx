@@ -3,6 +3,7 @@ import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
@@ -27,10 +28,7 @@ const TablaStyle = styled.div`
   }
   & th:nth-child(6) {
     width: 80px;
-    text-align: center;
-  }
-  & th:nth-child(7) {
-    color: transparent;
+    text-align: right;
   }
   & th:last-child {
     width: 40px;
@@ -47,7 +45,6 @@ const TablaDetalle = styled.div`
   & th:last-child {
     width: 40px;
     text-align: center;
-    color: transparent;
   }
 `;
 //#endregion
@@ -89,13 +86,13 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
     setData(result.data.data.data);
   };
   const GetPorId = async (id) => {
-    console.log(objeto);
     let existe;
+    //Valida si hay un elemento que coincida por el id
     if (Object.entries(objeto).length > 0) {
       existe = objeto.find((map) => map.id == id);
-      console.log(existe);
     }
-    if (existe != undefined) {
+    //Si no existe entonces pasa los datos
+    if (existe == undefined) {
       const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
       setObjeto({
         proveedorNumeroDocumentoIdentidad:
@@ -117,9 +114,18 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         },
       });
       setModal(false);
-    }
-    else{
-      
+    } else {
+      //Si existe manda la alerta
+      toast.error("Ya existe el elemento seleccionado", {
+        position: "bottom-right",
+        autoClose: 1800,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
   //#endregion
@@ -127,6 +133,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
   //#region Funciones
   const EliminarFila = async (id) => {
     let model = dataOrdenSeleccionada.filter((model) => model.id !== id);
+    console.log(model);
     Swal.fire({
       title: "Eliminar selección",
       icon: "warning",
@@ -140,7 +147,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDataOrdenSeleccionada(model);
+        // setObjeto(model);
       }
     });
   };
@@ -199,16 +206,18 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         },
       },
       {
-        Header: "-",
+        Header: " ",
         Cell: ({ row }) => (
-          <button
-            onClick={() => GetPorId(row.values.id)}
-            className={
-              Global.BotonBasic + Global.BotonAgregar + " !px-3 !py-1.5"
-            }
-          >
-            <FaCheck></FaCheck>
-          </button>
+          <div className="flex justify-center">
+            <button
+              onClick={() => GetPorId(row.values.id)}
+              className={
+                Global.BotonModalBase + Global.BotonAgregar + " border-none "
+              }
+            >
+              <FaCheck></FaCheck>
+            </button>
+          </div>
         ),
       },
     ],
@@ -224,14 +233,16 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       accessor: "numeroDocumento",
     },
     {
-      Header: "-",
+      Header: " ",
       Cell: ({ row }) => (
-        <button
-          onClick={() => EliminarFila(row.values.id)}
-          className={Global.BotonBasic + Global.BotonCancelarModal}
-        >
-          <FaTrash></FaTrash>
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={() => EliminarFila(row.values.id)}
+            className={Global.BotonModalBase + Global.BotonEliminar + "border-none"}
+          >
+            <FaTrash></FaTrash>
+          </button>
+        </div>
       ),
     },
   ];
@@ -245,7 +256,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Consultar Ordenes de Compra"
+        titulo="Consultar Órdenes de Compra"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <button
@@ -259,7 +270,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       >
         {
           <>
-            <div className={Global.ContenedorBasico + " mb-2"}>
+            <div className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}>
               <div className={Global.ContenedorInputs + "mb-2"}>
                 <div className={Global.InputMitad}>
                   <label htmlFor="fechaInicio" className={Global.LabelStyle}>
@@ -306,9 +317,9 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
               {/* Tabla */}
             </div>
             {Object.entries(dataOrdenSeleccionada).length > 0 && (
-              <div className={Global.ContenedorBasico}>
-                <p className="text-base text-light font-bold">
-                  Órdenes seleccionadas
+              <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+                <p className=" px-1 text-base text-light font-bold">
+                  SELECCIONADOS 
                 </p>
                 {/* Tabla */}
                 <TablaDetalle>

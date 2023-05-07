@@ -126,9 +126,7 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
         Cell: ({ row }) => (
           <button
             onClick={() => GetPorId(row.values.id)}
-            className={
-              Global.BotonBasic + Global.BotonAgregar + " !px-2 !py-1.5"
-            }
+            className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
           >
             <FaCheck></FaCheck>
           </button>

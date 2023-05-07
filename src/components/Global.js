@@ -86,6 +86,8 @@ export var BotonConfigurar =
   "bg-gradient-to-b from-gray-500 to-gray-800 hover:bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 ";
 export var BotonAgregar =
   "bg-gradient-to-b from-green-700 to-green-800 hover:bg-gradient-to-b hover:from-green-500 hover:to-green-700 ";
+  export var BotonEliminar =
+  "bg-gradient-to-b from-red-700 to-red-800 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-700 ";
 export var BotonHeader =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-700 !text-black ";
 export var BotonPaginacion =
