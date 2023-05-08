@@ -117,40 +117,9 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataProveedor]);
   useEffect(() => {
     if (Object.keys(dataOrdenCompra).length > 0) {
-      if (dataOrdenCompra.accion == "agregar") {
-        //Cabecera
-        setData({
-          ...data,
-          proveedorNumeroDocumentoIdentidad:
-            dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
-          proveedorNombre: dataOrdenCompra.proveedorNombre,
-          proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
-          cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",
-          monedaId: dataOrdenCompra.monedaId,
-          tipoCambio: dataOrdenCompra.tipoCambio,
-          porcentajeIGV: dataOrdenCompra.porcentajeIGV,
-          incluyeIGV: dataOrdenCompra.incluyeIGV,
-          observacion: dataOrdenCompra.observacion,
-          tipoCompraId: dataOrdenCompra.tipoCompraId,
-          tipoPagoId: dataOrdenCompra.tipoPagoId,
-          afectarStock: true,
-          //Ordenes de compra
-          ordenesCompraRelacionadas: [
-            ...data.ordenesCompraRelacionadas,
-            dataOrdenCompra.ordenesCompraRelacionadas,
-          ],
-          // Ordenes de compra
-        });
-        //Cabecera
-      } else {
-        //Cabecera
-        setData({
-          ...data,
-          ordenesCompraRelacionadas:
-            dataOrdenCompra.ordenesCompraRelacionadas || [],
-        });
-        //Cabecera
-      }
+      //Cabecera
+      OrdenDeCompra();
+      //Cabecera
       //Detalles
       DetallesOrdenCompra(dataOrdenCompra.accion);
       //Detalles
@@ -253,18 +222,11 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "tipoPagoId") {
-      if (data.tipoCompraId != "CO") {
-        let model = dataTipoPag.find((map) => map.id === target.value);
-        let fechaHoy = moment().format("YYYY-MM-DD");
-        let nuevaFecha = moment(fechaHoy)
-          .add(model.plazo, "days")
-          .format("YYYY-MM-DD");
-        setData((prevData) => ({
-          ...prevData,
-          fechaVencimiento: nuevaFecha,
-        }));
-      }
-
+      let fecha = await FechaVencimiento(target.value);
+      setData((prevState) => ({
+        ...prevState,
+        fechaVencimiento: fecha,
+      }));
       if (target.value != "CH" || target.value != "DE") {
         setData((prevState) => ({
           ...prevState,
@@ -294,7 +256,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
-  const CambioEmision = async () => {
+  const FechaEmision = async () => {
     toast(
       "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
       {
@@ -308,6 +270,15 @@ const Modal = ({ setModal, modo, objeto }) => {
         theme: "colored",
       }
     );
+  };
+  const FechaVencimiento = async (tipoPagoId) => {
+    if (dataOrdenCompra.tipoCompraId != "CO") {
+      let model = dataTipoPag.find((map) => map.id === tipoPagoId);
+      let fecha = moment(moment().format("YYYY-MM-DD"))
+        .add(model.plazo, "days")
+        .format("YYYY-MM-DD");
+      return fecha;
+    }
   };
   const Numeracion = async (e) => {
     if (e.target.name == "numero") {
@@ -329,6 +300,43 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...prevState,
         serie: num,
       }));
+    }
+  };
+  const OrdenDeCompra = async () => {
+    if (dataOrdenCompra.accion == "agregar") {
+      //Consultar Fecha
+      let fecha = await FechaVencimiento(dataOrdenCompra.tipoPagoId);
+      //Consultar Fecha
+
+      setData({
+        ...data,
+        proveedorNumeroDocumentoIdentidad:
+          dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
+        proveedorNombre: dataOrdenCompra.proveedorNombre,
+        proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
+        cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",
+        monedaId: dataOrdenCompra.monedaId,
+        tipoCambio: dataOrdenCompra.tipoCambio,
+        porcentajeIGV: dataOrdenCompra.porcentajeIGV,
+        incluyeIGV: dataOrdenCompra.incluyeIGV,
+        observacion: dataOrdenCompra.observacion,
+        tipoCompraId: dataOrdenCompra.tipoCompraId,
+        tipoPagoId: dataOrdenCompra.tipoPagoId,
+        afectarStock: true,
+        fechaVencimiento: fecha,
+        //Ordenes de compra
+        ordenesCompraRelacionadas: [
+          ...data.ordenesCompraRelacionadas,
+          dataOrdenCompra.ordenesCompraRelacionadas,
+        ],
+        // Ordenes de compra
+      });
+    } else {
+      setData({
+        ...data,
+        ordenesCompraRelacionadas:
+          dataOrdenCompra.ordenesCompraRelacionadas || [],
+      });
     }
   };
   const DetalleDocReferencia = async (id) => {
@@ -1072,7 +1080,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
-                    onBlur={CambioEmision}
+                    onBlur={FechaEmision}
                     className={Global.InputStyle}
                   />
                 </div>
