@@ -94,9 +94,6 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    console.log(detalleId);
-  }, [detalleId]);
-  useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
         ...data,
@@ -185,7 +182,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (refrescar) {
       data;
       dataDetalle;
-      console.log(detalleId);
       dataDocRef;
       ActualizarImportesTotales();
       setRefrescar(false);
@@ -407,16 +403,17 @@ const Modal = ({ setModal, modo, objeto }) => {
           data.monedaId,
           data.tipoCambio
         );
-        console.log(model);
-        setDataArt({
-          ...dataArt,
-          precioCompra: model.precioCompra,
-          precioVenta1: model.precioVenta1,
-          precioVenta2: model.precioVenta2,
-          precioVenta3: model.precioVenta3,
-          precioVenta4: model.precioVenta4,
-          precioUnitario: model.precioCompra,
-        });
+        if (model != null) {
+          setDataArt({
+            ...dataArt,
+            precioCompra: model.precioCompra,
+            precioVenta1: model.precioVenta1,
+            precioVenta2: model.precioVenta2,
+            precioVenta3: model.precioVenta3,
+            precioVenta4: model.precioVenta4,
+            precioUnitario: model.precioCompra,
+          });
+        }
       } else {
         setDataArt({
           ...dataArt,
@@ -621,7 +618,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     let detalleEliminado = dataDetalle;
     dataOrdenCompra.detalles.map((detalleOrdenCompra) => {
       //Verifica con los detalles ya seleccionados si coincide algún registro por el id
-      console.log(detalleOrdenCompra);
       let detalleActual = dataDetalle.find((map) => {
         return map.id == detalleOrdenCompra.id;
       });
@@ -679,6 +675,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           };
         }
       } else {
+        //ELIMINAR
         if (detalleActual != undefined) {
           //Validamos por la cantidad
           if (detalleActual.cantidad - detalleOrdenCompra.cantidad == 0) {
@@ -686,9 +683,10 @@ const Modal = ({ setModal, modo, objeto }) => {
             detalleEliminado = detalleEliminado.filter(
               (map) => map.id !== detalleActual.id
             );
-            console.log(detalleEliminado);
             //Asigna el nuevo array a dataDetalle
             setDataDetalle(detalleEliminado);
+            setDetalleId(detalleId - 1);
+            setRefrescar(true);
           } else {
             //Caso contrario restamos la cantidad y recalculamos
 

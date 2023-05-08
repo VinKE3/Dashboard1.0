@@ -52,7 +52,6 @@ export const ConvertirPreciosAMoneda = async (
     precioVenta3: 0,
     precioVenta4: 0,
   };
-
   //Validaciones
   if (monedaId != "D" && monedaId != "S") {
     toast.error("No es posible hacer la conversión a la moneda ingresada", {
@@ -84,7 +83,7 @@ export const ConvertirPreciosAMoneda = async (
     return null;
   }
   //Validaciones
-  console.log(monedaId);
+
   //Calculo
   if (monedaId == "D") {
     if (tipo == "compra") {
@@ -115,6 +114,7 @@ export const ConvertirPreciosAMoneda = async (
       );
     }
   } else {
+    //MONEDA SOLES
     if (tipo == "compra") {
       model.precioCompra = RedondearNumero(
         objeto.precioCompra * tipoCambio,
