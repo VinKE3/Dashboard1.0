@@ -396,20 +396,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   const ConvertirPrecio = async () => {
     if (Object.entries(dataArt).length > 0) {
       if (data.monedaId != dataArt.monedaId && dataArt.Id != "000000") {
-        const model = await Funciones.ConvertirPreciosAMoneda(
-          "venta",
-          dataArt,
-          data.monedaId,
-          data.tipoCambio
-        );
+        let precio = await Funciones.ConvertirPreciosAMoneda("venta",dataArt,data.monedaId,data.tipoCambio);
+        console.log("precio")
+        console.log(precio)
         setDataArt({
           ...dataArt,
-          precioCompra: model.precioCompra,
-          precioVenta1: model.precioVenta1,
-          precioVenta2: model.precioVenta2,
-          precioVenta3: model.precioVenta3,
-          precioVenta4: model.precioVenta4,
-          precioUnitario: model.precioVenta1,
+          precioCompra: precio.precioCompra,
+          precioVenta1: precio.precioVenta1,
+          precioVenta2: precio.precioVenta2,
+          precioVenta3: precio.precioVenta3,
+          precioVenta4: precio.precioVenta4,
+          precioUnitario: precio.precioVenta1,
         });
       } else {
         setDataArt({

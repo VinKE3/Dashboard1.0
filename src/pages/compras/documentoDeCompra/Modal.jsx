@@ -94,6 +94,9 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
+    console.log(detalleId);
+  }, [detalleId]);
+  useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
         ...data,
@@ -102,6 +105,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           dataProveedor.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: dataProveedor.proveedorNombre,
         proveedorDireccion: dataProveedor.proveedorDireccion ?? "",
+        ordenesCompraRelacionadas: [],
+        numeroOrdenesCompraRelacionadas: [],
       });
       //Valida si hay algún proveedor seleccionado
       if (dataProveedor.proveedorId != "") {
@@ -114,49 +119,53 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataProveedor]);
   useEffect(() => {
-    console.log(dataOrdenCompra);
     if (Object.keys(dataOrdenCompra).length > 0) {
-      //Cabecera
-      setData({
-        ...data,
-        proveedorNumeroDocumentoIdentidad:
-          dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
-        proveedorNombre: dataOrdenCompra.proveedorNombre,
-        proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
-        cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",
-        monedaId: dataOrdenCompra.monedaId,
-        tipoCambio: dataOrdenCompra.tipoCambio,
-        porcentajeIGV: dataOrdenCompra.porcentajeIGV,
-        incluyeIGV: dataOrdenCompra.incluyeIGV,
-        observacion: dataOrdenCompra.observacion,
-        tipoCompraId: dataOrdenCompra.tipoCompraId,
-        tipoPagoId: dataOrdenCompra.tipoPagoId,
-        afectarStock: true,
-        //Ordenes de compra
-        numeroOrdenesCompraRelacionadas:
-          data.numeroOrdenesCompraRelacionadas != undefined
-            ? data.numeroOrdenesCompraRelacionadas +
-              ", " +
-              dataOrdenCompra.ordenesCompraRelacionadas.numeroDocumento
-            : dataOrdenCompra.ordenesCompraRelacionadas.numeroDocumento,
-        ordenesCompraRelacionadas: [
-          ...data.ordenesCompraRelacionadas,
-          dataOrdenCompra.ordenesCompraRelacionadas,
-        ],
-        //Ordenes de compra
-      });
-      //Cabecera
+      if (dataOrdenCompra.accion == "agregar") {
+        //Cabecera
+        setData({
+          ...data,
+          proveedorNumeroDocumentoIdentidad:
+            dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
+          proveedorNombre: dataOrdenCompra.proveedorNombre,
+          proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
+          cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",
+          monedaId: dataOrdenCompra.monedaId,
+          tipoCambio: dataOrdenCompra.tipoCambio,
+          porcentajeIGV: dataOrdenCompra.porcentajeIGV,
+          incluyeIGV: dataOrdenCompra.incluyeIGV,
+          observacion: dataOrdenCompra.observacion,
+          tipoCompraId: dataOrdenCompra.tipoCompraId,
+          tipoPagoId: dataOrdenCompra.tipoPagoId,
+          afectarStock: true,
+          //Ordenes de compra
+          ordenesCompraRelacionadas: [
+            ...data.ordenesCompraRelacionadas,
+            dataOrdenCompra.ordenesCompraRelacionadas,
+          ],
+          // Ordenes de compra
+        });
+        //Cabecera
+      } else {
+        //Cabecera
+        setData({
+          ...data,
+          ordenesCompraRelacionadas:
+            dataOrdenCompra.ordenesCompraRelacionadas || [],
+        });
+        //Cabecera
+      }
       //Detalles
-      // AgregarDetalleOC();
+      DetallesOrdenCompra(dataOrdenCompra.accion);
       //Detalles
     } else {
-      //Si se desea eliminar alguna orden
+      //Si no quedan elementos reemplaza igualmente dejadno ordenesCompraRelacionadas vacío
       setData({
         ...data,
         ordenesCompraRelacionadas: dataOrdenCompra.ordenesCompraRelacionadas,
       });
-      //Limpia los detalles
+      //Detalles
       setDataDetalle([]);
+      //Detalles
     }
     setRefrescar(true);
   }, [dataOrdenCompra]);
@@ -176,6 +185,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (refrescar) {
       data;
       dataDetalle;
+      console.log(detalleId);
       dataDocRef;
       ActualizarImportesTotales();
       setRefrescar(false);
@@ -193,7 +203,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const ValidarData = async ({ target }) => {
-    console.log(target.value);
     if (
       target.name == "incluyeIGV" ||
       target.name == "afectarStock" ||
@@ -398,6 +407,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           data.monedaId,
           data.tipoCambio
         );
+        console.log(model);
         setDataArt({
           ...dataArt,
           precioCompra: model.precioCompra,
@@ -606,81 +616,114 @@ const Modal = ({ setModal, modo, objeto }) => {
       setRefrescar(true);
     }
   };
-  const AgregarDetalleOC = async () => {
-    //Comprueba si existe un registro con el id
-    let existeOC = data.ordenesCompraRelacionadas.filter((map) => {
-      return (
-        map.numeroDocumento ==
-        dataOrdenCompra.ordenesCompraRelacionadas.map(() => {
-          return map.numeroDocumento;
-        })
-      );
-    });
-    console.log(existeOC);
-    //Obtiene el último elemento del array
-    let detalleOC =
-      dataOrdenCompra.ordenesCompraRelacionadas[
-        dataOrdenCompra.ordenesCompraRelacionadas.length - 1
-      ].detalles;
-
-    //Recorre el array
-    detalleOC.map((map) => {
-      //Comprueba si existe un registro con el id
-      let detalleActual = dataDetalle.find((m) => {
-        return m.id == map.id;
+  const DetallesOrdenCompra = async (accion) => {
+    //Recorre los detalles que nos retorna el Filtro Orden de Compra
+    let detalleEliminado = dataDetalle;
+    dataOrdenCompra.detalles.map((detalleOrdenCompra) => {
+      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
+      console.log(detalleOrdenCompra);
+      let detalleActual = dataDetalle.find((map) => {
+        return map.id == detalleOrdenCompra.id;
       });
-      if (detalleActual == undefined) {
-        //Si no existe pushea y aumenta 1 en el detalle
-        dataDetalle.push({
-          detalleId: detalleId,
-          id: map.id,
-          lineaId: map.lineaId,
-          subLineaId: map.subLineaId,
-          articuloId: map.articuloId,
-          marcaId: map.marcaId,
-          codigoBarras: map.codigoBarras,
-          descripcion: map.descripcion,
-          stock: map.stock,
-          unidadMedidaDescripcion: map.unidadMedidaDescripcion,
-          unidadMedidaId: map.unidadMedidaId,
-          cantidad: map.cantidad,
-          precioUnitario: map.precioUnitario,
-          montoIGV: map.montoIGV,
-          subTotal: map.subTotal,
-          importe: map.importe,
-        });
-        setDetalleId(detalleId + 1);
+      //Validamos si la accion es Agregar o Eliminar
+      if (accion == "agregar") {
+        //Si detalleActual es undefined es porque no existe ningún registro
+        if (detalleActual == undefined) {
+          dataDetalle.push({
+            detalleId: detalleId,
+            id: detalleOrdenCompra.id,
+            lineaId: detalleOrdenCompra.lineaId,
+            subLineaId: detalleOrdenCompra.subLineaId,
+            articuloId: detalleOrdenCompra.articuloId,
+            marcaId: detalleOrdenCompra.marcaId,
+            codigoBarras: detalleOrdenCompra.codigoBarras,
+            descripcion: detalleOrdenCompra.descripcion,
+            stock: detalleOrdenCompra.stock,
+            unidadMedidaDescripcion: detalleOrdenCompra.unidadMedidaDescripcion,
+            unidadMedidaId: detalleOrdenCompra.unidadMedidaId,
+            cantidad: detalleOrdenCompra.cantidad,
+            precioUnitario: detalleOrdenCompra.precioUnitario,
+            montoIGV: detalleOrdenCompra.montoIGV,
+            subTotal: detalleOrdenCompra.subTotal,
+            importe: detalleOrdenCompra.importe,
+          });
+          setDetalleId(detalleId + 1);
+        } else {
+          //Si existe un registro añade al registro actual
+
+          //Calculos
+          let can = detalleActual.cantidad + detalleOrdenCompra.cantidad;
+          let importe = can * detalleActual.precioUnitario;
+          let subTotal = importe * (data.porcentajeIGV / 100);
+          let montoIGV = importe - subTotal;
+          //Calculos
+
+          //Modifica a dataDetalle en el índice que corresponda
+          dataDetalle[detalleActual.detalleId - 1] = {
+            detalleId: detalleActual.detalleId,
+            id: detalleOrdenCompra.id,
+            lineaId: detalleOrdenCompra.lineaId,
+            subLineaId: detalleOrdenCompra.subLineaId,
+            articuloId: detalleOrdenCompra.articuloId,
+            marcaId: detalleOrdenCompra.marcaId,
+            codigoBarras: detalleOrdenCompra.codigoBarras,
+            descripcion: detalleOrdenCompra.descripcion,
+            stock: detalleOrdenCompra.stock,
+            unidadMedidaDescripcion: detalleOrdenCompra.unidadMedidaDescripcion,
+            unidadMedidaId: detalleOrdenCompra.unidadMedidaId,
+            cantidad: can,
+            precioUnitario: detalleOrdenCompra.precioUnitario,
+            importe: importe,
+            subTotal: subTotal,
+            montoIGV: montoIGV,
+          };
+        }
       } else {
-        //Si existe un registro añade al registro actual
-        //Calculos
-        let cantidad = detalleActual.cantidad + map.cantidad;
-        let importe = cantidad * detalleActual.precioUnitario;
-        let subTotal = importe * (data.porcentajeIGV / 100);
-        let montoIGV = importe - subTotal;
-        //Calculos
+        if (detalleActual != undefined) {
+          //Validamos por la cantidad
+          if (detalleActual.cantidad - detalleOrdenCompra.cantidad == 0) {
+            //Si el resultado es 0 entonces se elimina por completo el registro
+            detalleEliminado = detalleEliminado.filter(
+              (map) => map.id !== detalleActual.id
+            );
+            console.log(detalleEliminado);
+            //Asigna el nuevo array a dataDetalle
+            setDataDetalle(detalleEliminado);
+          } else {
+            //Caso contrario restamos la cantidad y recalculamos
 
-        //Reemplaza los datos en el índice
-        dataDetalle[detalleActual.detalleId - 1] = {
-          id: map.id,
-          lineaId: map.lineaId,
-          subLineaId: map.subLineaId,
-          articuloId: map.articuloId,
-          marcaId: map.marcaId,
-          codigoBarras: map.codigoBarras,
-          descripcion: map.descripcion,
-          stock: map.stock,
-          unidadMedidaDescripcion: map.unidadMedidaDescripcion,
-          unidadMedidaId: map.unidadMedidaId,
-          cantidad: cantidad,
-          precioUnitario: detalleActual.precioUnitario,
-          importe: importe,
-          subTotal: subTotal,
-          montoIGV: montoIGV,
-        };
+            //Calculos
+            let cantidad = detalleActual.cantidad - detalleOrdenCompra.cantidad;
+            let importe = cantidad * detalleActual.precioUnitario;
+            let subTotal = importe * (data.porcentajeIGV / 100);
+            let montoIGV = importe - subTotal;
+            //Calculos
+
+            //Modifica a dataDetalle en el índice que corresponda
+            dataDetalle[detalleActual.detalleId - 1] = {
+              detalleId: detalleActual.detalleId,
+              id: detalleOrdenCompra.id,
+              lineaId: detalleOrdenCompra.lineaId,
+              subLineaId: detalleOrdenCompra.subLineaId,
+              articuloId: detalleOrdenCompra.articuloId,
+              marcaId: detalleOrdenCompra.marcaId,
+              codigoBarras: detalleOrdenCompra.codigoBarras,
+              descripcion: detalleOrdenCompra.descripcion,
+              stock: detalleOrdenCompra.stock,
+              unidadMedidaDescripcion:
+                detalleOrdenCompra.unidadMedidaDescripcion,
+              unidadMedidaId: detalleOrdenCompra.unidadMedidaId,
+              cantidad: cantidad,
+              precioUnitario: detalleActual.precioUnitario,
+              importe: importe,
+              subTotal: subTotal,
+              montoIGV: montoIGV,
+            };
+          }
+        }
       }
+      setRefrescar(true);
     });
-
-    setRefrescar(true);
   };
   //Calculos
   const ActualizarImportesTotales = async () => {
@@ -1458,19 +1501,19 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputFull}>
                   <label
-                    htmlFor="numeroOrdenesCompraRelacionadas"
+                    htmlFor="ordenesCompraRelacionadas"
                     className={Global.LabelStyle + Global.FondoOscuro}
                   >
                     O.C
                   </label>
                   <input
                     type="text"
-                    id="numeroOrdenesCompraRelacionadas"
-                    name="numeroOrdenesCompraRelacionadas"
+                    id="ordenesCompraRelacionadas"
+                    name="ordenesCompraRelacionadas"
                     placeholder="Orden de Compra"
                     autoComplete="off"
                     readOnly={true}
-                    value={data.numeroOrdenesCompraRelacionadas ?? ""}
+                    value={data.ordenesCompraRelacionadas ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton + Global.Disabled}
                   />

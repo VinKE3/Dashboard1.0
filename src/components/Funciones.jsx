@@ -84,7 +84,7 @@ export const ConvertirPreciosAMoneda = async (
     return null;
   }
   //Validaciones
-
+  console.log(monedaId);
   //Calculo
   if (monedaId == "D") {
     if (tipo == "compra") {

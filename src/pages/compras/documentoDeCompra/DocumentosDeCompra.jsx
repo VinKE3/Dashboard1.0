@@ -200,6 +200,7 @@ const DocumentosdeCompra = () => {
           afectarStock: false,
           detalles: [],
           ordenesCompraRelacionadas: [],
+          numeroOrdenesCompraRelacionadas: "",
         });
         setModal(true);
         break;

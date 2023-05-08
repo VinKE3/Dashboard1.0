@@ -112,6 +112,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
           id: result.data.data.id,
           numeroDocumento: result.data.data.numeroDocumento,
         },
+        accion: "agregar"
       });
       setModal(false);
     } else {
@@ -132,8 +133,8 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
 
   //#region Funciones
   const EliminarFila = async (id) => {
-    let model = dataOrdenSeleccionada.filter((model) => model.id !== id);
-    console.log(model);
+    let model = dataOrdenSeleccionada.filter((map) => map.id !== id);
+    const res = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
     Swal.fire({
       title: "Eliminar selección",
       icon: "warning",
@@ -147,7 +148,12 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        // setObjeto(model);
+        setObjeto({
+          detalles: res.data.data.detalles,
+          ordenesCompraRelacionadas: model,
+          accion: "eliminar"
+        });
+        setModal(false);
       }
     });
   };
@@ -238,7 +244,9 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         <div className="flex justify-center">
           <button
             onClick={() => EliminarFila(row.values.id)}
-            className={Global.BotonModalBase + Global.BotonEliminar + "border-none"}
+            className={
+              Global.BotonModalBase + Global.BotonEliminar + "border-none"
+            }
           >
             <FaTrash></FaTrash>
           </button>
@@ -270,7 +278,11 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       >
         {
           <>
-            <div className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}>
+            <div
+              className={
+                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+              }
+            >
               <div className={Global.ContenedorInputs + "mb-2"}>
                 <div className={Global.InputMitad}>
                   <label htmlFor="fechaInicio" className={Global.LabelStyle}>
@@ -319,7 +331,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
             {Object.entries(dataOrdenSeleccionada).length > 0 && (
               <div className={Global.ContenedorBasico + Global.FondoContenedor}>
                 <p className=" px-1 text-base text-light font-bold">
-                  SELECCIONADOS 
+                  SELECCIONADOS
                 </p>
                 {/* Tabla */}
                 <TablaDetalle>
