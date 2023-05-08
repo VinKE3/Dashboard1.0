@@ -136,6 +136,12 @@ const Modal = ({ setModal, modo, objeto }) => {
     setRefrescar(true);
   }, [dataOrdenCompra]);
   useEffect(() => {
+    if (Object.entries(data).length > 0) {
+      console.log(data.ordenesCompraRelacionadas);
+      //AQUI VA EL CODIGO
+    }
+  }, [data.ordenesCompraRelacionadas]);
+  useEffect(() => {
     if (Object.entries(dataDetalle).length > 0) {
       //Asigna a data los detalles para ser enviados
       setData({ ...data, detalles: dataDetalle });
