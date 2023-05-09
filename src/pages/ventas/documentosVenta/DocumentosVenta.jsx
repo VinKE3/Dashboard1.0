@@ -8,10 +8,11 @@ import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 //#region Estilos
@@ -242,6 +243,83 @@ const DocumentosVenta = () => {
       }
       default:
         break;
+    }
+  };
+  const Anular = async () => {
+    let tabla = document
+      .querySelector("table > tbody")
+      .querySelector("tr.selected-row");
+    if (tabla != null) {
+      if (tabla.classList.contains("selected-row")) {
+        let id = document.querySelector("tr.selected-row").children[0].innerHTML;
+        let documento = document.querySelector("tr.selected-row").children[2].innerHTML;
+        Swal.fire({
+          title: "¿Desea Anular el documento?",
+          text: documento,
+          icon: "warning",
+          iconColor: "#F7BF3A",
+          showCancelButton: true,
+          color: "#fff",
+          background: "#1a1a2e",
+          confirmButtonColor: "#eea508",
+          confirmButtonText: "Aceptar",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Cancelar",
+        }).then(async (res) => {
+          if (res.isConfirmed) {
+            const result = await ApiMasy.put(
+              `api/Venta/DocumentoVenta/Anular/${id}`
+            );
+            if (result.name == "AxiosError") {
+              if (Object.entries(result.response.data).length > 0) {
+                toast.error(String(result.response.data.messages[0].textos), {
+                  position: "bottom-right",
+                  autoClose: 4000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                });
+              } else {
+                toast.error([result.message], {
+                  position: "bottom-right",
+                  autoClose: 4000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                });
+              }
+            } else {
+              toast.success(result.data.messages[0].textos[0], {
+                position: "bottom-right",
+                autoClose: 4000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }
+          }
+        });
+      }
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
   //#endregion
@@ -499,18 +577,28 @@ const DocumentosVenta = () => {
                 </div>
               </div>
             </div>
-
             {/* Filtro*/}
 
             {/* Boton */}
-            {permisos[0] && (
-              <BotonBasico
-                botonText="Registrar"
-                botonClass={Global.BotonRegistrar}
-                botonIcon={faPlus}
-                click={() => AbrirModal()}
-              />
-            )}
+            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Registrar"
+                  botonClass={Global.BotonRegistrar}
+                  botonIcon={faPlus}
+                  click={() => AbrirModal()}
+                />
+              )}
+              {permisos[4] && (
+                <BotonBasico
+                  botonText="Anular"
+                  botonClass={Global.BotonEliminar}
+                  botonIcon={faBan}
+                  click={() => Anular()}
+                  containerClass=""
+                />
+              )}
+            </div>
             {/* Boton */}
 
             {/* Tabla */}

@@ -6,7 +6,7 @@ import moment from "moment";
 import { FaSearch } from "react-icons/fa";
 import * as Global from "../../../components/Global";
 
-const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   //#endregion

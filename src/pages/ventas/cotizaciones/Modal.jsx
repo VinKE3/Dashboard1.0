@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
-import { Fieldset } from "primereact/fieldset";
 import { Checkbox } from "primereact/checkbox";
 import moment from "moment";
 import ApiMasy from "../../../api/ApiMasy";
-import TableBasic from "../../../components/tablas/TableBasic";
 import Ubigeo from "../../../components/filtros/Ubigeo";
 
-const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [checked, setChecked] = useState(true);
@@ -200,7 +198,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   return (
     <ModalCrud
       setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
       menu={["Venta", "Cotizacion"]}

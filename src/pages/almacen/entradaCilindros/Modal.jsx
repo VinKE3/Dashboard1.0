@@ -29,7 +29,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
@@ -159,7 +159,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <>
           <ModalCrud
             setModal={setModal}
-            setRespuestaModal={setRespuestaModal}
             objeto={data}
             modo={modo}
             menu={["Almacen", "EntradaCilindros"]}

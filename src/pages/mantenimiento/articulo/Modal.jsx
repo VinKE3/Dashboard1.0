@@ -4,7 +4,7 @@ import ModalCrud from "../../../components/ModalCrud";
 import { Checkbox } from "primereact/checkbox";
 import * as Global from "../../../components/Global";
 
-const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
@@ -73,7 +73,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       titulo="Articulo"
       menu={["Mantenimiento", "Articulo"]}
       cerrar={false}
-      tamañoModal={[Global.ModalFull, Global.Form + " !py-0"]}
+      tamañoModal={[Global.ModalFull, Global.Form]}
     >
       <div
         className={Global.ContenedorBasico + " mb-2 " + Global.FondoContenedor}
@@ -147,8 +147,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               className={Global.InputStyle}
             >
               <option value="">--SELECCIONAR--</option>
-              {subLineas
-                .filter((model) => model.lineaId == data.lineaId)
+              {subLineas.filter((model) => model.lineaId == data.lineaId)
                 .map((map) => (
                   <option key={map.subLineaId} value={map.subLineaId}>
                     {map.descripcion}

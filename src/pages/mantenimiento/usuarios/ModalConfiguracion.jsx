@@ -9,7 +9,7 @@ import { useMenu } from "../../../context/ContextMenu";
 import Mensajes from "../../../components/Mensajes";
 import { useCallback } from "react";
 
-const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [dataTipoUsuario, setDataTipoUsuario] = useState([]);
@@ -138,7 +138,6 @@ const ModalConfiguracion = ({ setModal, setRespuestaModal, modo, objeto }) => {
       {Object.entries(dataTipoUsuario).length > 0 && (
         <ModalCrud
           setModal={setModal}
-          setRespuestaModal={setRespuestaModal}
           objeto={data}
           modo={modo}
           menu={["Mantenimiento", "UsuarioPermiso"]}

@@ -3,7 +3,7 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
 
-const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [dataTCuenta, setdataTCuenta] = useState([]);
@@ -43,7 +43,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       {dataTCuenta.length > 0 && (
         <ModalCrud
           setModal={setModal}
-          setRespuestaModal={setRespuestaModal}
           objeto={data}
           modo={modo}
           menu={["Mantenimiento", "CuentaCorriente"]}

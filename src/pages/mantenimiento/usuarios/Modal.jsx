@@ -4,7 +4,7 @@ import ModalCrud from "../../../components/ModalCrud";
 import { Checkbox } from "primereact/checkbox";
 import * as Global from "../../../components/Global";
 
-const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [dataModal, setDataModal] = useState([]);
@@ -50,7 +50,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       {Object.entries(dataModal).length > 0 && (
         <ModalCrud
           setModal={setModal}
-          setRespuestaModal={setRespuestaModal}
           objeto={data}
           modo={modo}
           menu={["Mantenimiento", "Usuario"]}

@@ -1,8 +1,8 @@
 //#region Modal
 export var FondoModal =
-  "flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none bg-neutral-700/60 ";
+  "flex justify-center items-center overflow-x-hidden fixed inset-0 z-50 outline-none bg-neutral-700/60 ";
 export var ModalContent =
-  "w-full h-full flex flex-col rounded-lg bg-gradient-to-b from-neutral-900 to-neutral-800 ";
+  "w-full h-full flex flex-col rounded-lg overflow-y-auto bg-gradient-to-b from-neutral-900 to-neutral-800 ";
 //Tamaños de Modal
 export var ModalFull = "h-full w-full ";
 export var ModalGrande = "h-full w-full lg:h-[85%] lg:max-w-7xl ";

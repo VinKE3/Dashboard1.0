@@ -25,7 +25,7 @@ const TablaStyle = styled.div`
     width: 80px;
   }
 
-  & th:nth-child(4){
+  & th:nth-child(4) {
     text-align: center;
     width: 60px;
   }
@@ -154,18 +154,18 @@ const Articulo = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
-        lineaId: -1,
-        subLineaId: -1,
+      setObjeto({
+        lineaId: "00",
+        subLineaId: "",
         articuloId: "",
-        tipoExistenciaId: -1,
-        unidadMedidaId: -1,
-        marcaId: -1,
+        tipoExistenciaId: "01",
+        unidadMedidaId: "1",
+        marcaId: "36",
         descripcion: "",
         observacion: "",
         codigoBarras: "",
         peso: 0,
-        monedaId: -1,
+        monedaId: "S",
         precioCompra: 0,
         precioCompraDescuento: 0,
         precioVenta1: 0,
@@ -183,8 +183,7 @@ const Articulo = () => {
         isActivo: true,
         controlarStock: true,
         actualizarPrecioCompra: true,
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(id);
     }

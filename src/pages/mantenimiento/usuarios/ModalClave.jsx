@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalCrud from "../../../components/ModalCrud";
 import * as Global from "../../../components/Global";
 
-const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
+const ModalClave = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   //#endregion
@@ -22,7 +22,6 @@ const ModalClave = ({ setModal, setRespuestaModal, modo, objeto }) => {
   return (
     <ModalCrud
       setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "Usuario/CambiarClave"]}

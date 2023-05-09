@@ -136,12 +136,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     setRefrescar(true);
   }, [dataOrdenCompra]);
   useEffect(() => {
-    if (Object.entries(data).length > 0) {
-      console.log(data.ordenesCompraRelacionadas);
-      //AQUI VA EL CODIGO
-    }
-  }, [data.ordenesCompraRelacionadas]);
-  useEffect(() => {
     if (Object.entries(dataDetalle).length > 0) {
       //Asigna a data los detalles para ser enviados
       setData({ ...data, detalles: dataDetalle });
@@ -277,8 +271,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     );
   };
-  const FechaVencimiento = async (tipoPagoId) => {
-    if (dataOrdenCompra.tipoCompraId != "CO") {
+  const FechaVencimiento = async (tipoCompraId, tipoPagoId) => {
+    if (tipoCompraId != "CO") {
       let model = dataTipoPag.find((map) => map.id === tipoPagoId);
       let fecha = moment(moment().format("YYYY-MM-DD"))
         .add(model.plazo, "days")
@@ -311,8 +305,18 @@ const Modal = ({ setModal, modo, objeto }) => {
   const OrdenDeCompra = async () => {
     if (dataOrdenCompra.accion == "agregar") {
       //Consultar Fecha
-      let fecha = await FechaVencimiento(dataOrdenCompra.tipoPagoId);
+      let fecha = await FechaVencimiento(
+        dataOrdenCompra.tipoCompraId,
+        dataOrdenCompra.tipoPagoId
+      );
       //Consultar Fecha
+
+      //Anidar Ordenes de Compra
+      let ordenes = [
+        ...data.ordenesCompraRelacionadas,
+        dataOrdenCompra.ordenesCompraRelacionadas,
+      ];
+      //Anidar Ordenes de Compra
 
       setData({
         ...data,
@@ -329,19 +333,28 @@ const Modal = ({ setModal, modo, objeto }) => {
         tipoCompraId: dataOrdenCompra.tipoCompraId,
         tipoPagoId: dataOrdenCompra.tipoPagoId,
         afectarStock: true,
-        fechaVencimiento: fecha,
+        fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
         //Ordenes de compra
         ordenesCompraRelacionadas: [
           ...data.ordenesCompraRelacionadas,
           dataOrdenCompra.ordenesCompraRelacionadas,
         ],
+        numeroOrdenesCompraRelacionadas: ordenes.map(
+          (map) => map.numeroDocumento
+        ),
         // Ordenes de compra
       });
     } else {
+      //Anidar Ordenes de Compra
+      let ordenes = dataOrdenCompra.ordenesCompraRelacionadas;
+      //Anidar Ordenes de Compra
       setData({
         ...data,
         ordenesCompraRelacionadas:
           dataOrdenCompra.ordenesCompraRelacionadas || [],
+        numeroOrdenesCompraRelacionadas: ordenes.map(
+          (map) => map.numeroDocumento
+        ),
       });
     }
   };
@@ -983,6 +996,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             )}
 
+            {/* Cabecera */}
             <div
               className={
                 Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
@@ -992,11 +1006,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <div className={Global.InputFull}>
                   <label
                     htmlFor="tipoDocumentoId"
-                    className={
-                      Global.LabelStyle +
-                      Global.FondoOscuro +
-                      Global.FondoOscuro
-                    }
+                    className={Global.LabelStyle}
                   >
                     Tipo Doc.
                   </label>
@@ -1020,10 +1030,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </select>
                 </div>
                 <div className={Global.InputTercio}>
-                  <label
-                    htmlFor="serie"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="serie" className={Global.LabelStyle}>
                     Serie
                   </label>
                   <input
@@ -1045,10 +1052,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={Global.InputMitad}>
-                  <label
-                    htmlFor="numero"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="numero" className={Global.LabelStyle}>
                     Número
                   </label>
                   <input
@@ -1072,10 +1076,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputTercio}>
-                  <label
-                    htmlFor="fechaEmision"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="fechaEmision" className={Global.LabelStyle}>
                     F. Emisión
                   </label>
                   <input
@@ -1091,10 +1092,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={Global.InputTercio}>
-                  <label
-                    htmlFor="fechaContable"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="fechaContable" className={Global.LabelStyle}>
                     F. Contable
                   </label>
                   <input
@@ -1113,7 +1111,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <div className={Global.InputTercio}>
                   <label
                     htmlFor="fechaVencimiento"
-                    className={Global.LabelStyle + Global.FondoOscuro}
+                    className={Global.LabelStyle}
                   >
                     F. Vcmto
                   </label>
@@ -1135,7 +1133,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <div className={Global.InputMitad}>
                   <label
                     htmlFor="proveedorNumeroDocumentoIdentidad"
-                    className={Global.LabelStyle + Global.FondoOscuro}
+                    className={Global.LabelStyle}
                   >
                     RUC/DNI:
                   </label>
@@ -1154,7 +1152,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <div className={Global.InputFull}>
                   <label
                     htmlFor="proveedorNombre"
-                    className={Global.LabelStyle + Global.FondoOscuro}
+                    className={Global.LabelStyle}
                   >
                     Proveedor
                   </label>
@@ -1205,7 +1203,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <div className={Global.InputFull}>
                   <label
                     htmlFor="proveedorDireccion"
-                    className={Global.LabelStyle + Global.FondoOscuro}
+                    className={Global.LabelStyle}
                   >
                     Dirección
                   </label>
@@ -1223,10 +1221,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputTercio}>
-                  <label
-                    htmlFor="monedaId"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="monedaId" className={Global.LabelStyle}>
                     Moneda
                   </label>
                   <select
@@ -1245,10 +1240,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </select>
                 </div>
                 <div className={Global.InputTercio}>
-                  <label
-                    htmlFor="tipoCambio"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
                     T. Cambio
                   </label>
                   <input
@@ -1277,10 +1269,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </button>
                 </div>
                 <div className={Global.InputTercio}>
-                  <label
-                    htmlFor="tipoCompraId"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="tipoCompraId" className={Global.LabelStyle}>
                     T. Compra
                   </label>
                   <select
@@ -1307,10 +1296,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       : Global.InputFull
                   }
                 >
-                  <label
-                    htmlFor="tipoPagoId"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="tipoPagoId" className={Global.LabelStyle}>
                     Tipo Pago
                   </label>
                   <select
@@ -1338,7 +1324,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <div className={Global.InputTercio}>
                       <label
                         htmlFor="numeroOperacion"
-                        className={Global.LabelStyle + Global.FondoOscuro}
+                        className={Global.LabelStyle}
                       >
                         Nro. Ope.
                       </label>
@@ -1357,7 +1343,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <div className={Global.InputTercio}>
                       <label
                         htmlFor="cuentaCorrienteId"
-                        className={Global.LabelStyle + Global.FondoOscuro}
+                        className={Global.LabelStyle}
                       >
                         Cta. Cte.
                       </label>
@@ -1389,7 +1375,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <div className={Global.Input66pct}>
                     <label
                       htmlFor="documentoReferenciaId"
-                      className={Global.LabelStyle + Global.FondoOscuro}
+                      className={Global.LabelStyle}
                     >
                       Doc. Ref.
                     </label>
@@ -1445,10 +1431,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </div>
                   </div>
                   <div className={Global.Input60pct}>
-                    <label
-                      htmlFor="motivoNotaId"
-                      className={Global.LabelStyle + Global.FondoOscuro}
-                    >
+                    <label htmlFor="motivoNotaId" className={Global.LabelStyle}>
                       Motivo
                     </label>
                     <select
@@ -1493,10 +1476,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               )}
               <div className={Global.ContenedorInputs}>
                 <div className={Global.Input66pct}>
-                  <label
-                    htmlFor="guiaRemision"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="guiaRemision" className={Global.LabelStyle}>
                     Guía Rem.
                   </label>
                   <input
@@ -1513,19 +1493,19 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputFull}>
                   <label
-                    htmlFor="ordenesCompraRelacionadas"
-                    className={Global.LabelStyle + Global.FondoOscuro}
+                    htmlFor="numeroOrdenesCompraRelacionadas"
+                    className={Global.LabelStyle}
                   >
                     O.C
                   </label>
                   <input
                     type="text"
-                    id="ordenesCompraRelacionadas"
-                    name="ordenesCompraRelacionadas"
+                    id="numeroOrdenesCompraRelacionadas"
+                    name="numeroOrdenesCompraRelacionadas"
                     placeholder="Orden de Compra"
                     autoComplete="off"
                     readOnly={true}
-                    value={data.ordenesCompraRelacionadas ?? ""}
+                    value={data.numeroOrdenesCompraRelacionadas ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton + Global.Disabled}
                   />
@@ -1543,10 +1523,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
-                  <label
-                    htmlFor="observacion"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="observacion" className={Global.LabelStyle}>
                     Observación
                   </label>
                   <input
@@ -1602,7 +1579,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
             </div>
+            {/* Cabecera */}
 
+            {/* Detalles */}
             <div
               className={
                 Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
@@ -1655,10 +1634,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
-                  <label
-                    htmlFor="descripcion"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="descripcion" className={Global.LabelStyle}>
                     Descripción
                   </label>
                   <input
@@ -1690,16 +1666,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </button>
                 </div>
                 <div className={Global.Input25pct}>
-                  <label
-                    htmlFor="stock"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="stock" className={Global.LabelStyle}>
                     Stock
                   </label>
                   <input
                     type="stock"
                     id="stock"
                     name="stock"
+                    placeholder="Stock"
                     autoComplete="off"
                     readOnly={true}
                     value={dataArt.stock ?? ""}
@@ -1712,7 +1686,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <div className={Global.Input25pct}>
                   <label
                     htmlFor="unidadMedidaDescripcion"
-                    className={Global.LabelStyle + Global.FondoOscuro}
+                    className={Global.LabelStyle}
                   >
                     Unidad
                   </label>
@@ -1720,6 +1694,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="unidadMedidaDescripcion"
                     name="unidadMedidaDescripcion"
+                    placeholder="Unidad Medida"
                     autoComplete="off"
                     readOnly={true}
                     value={dataArt.unidadMedidaDescripcion ?? ""}
@@ -1728,10 +1703,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={Global.Input25pct}>
-                  <label
-                    htmlFor="cantidad"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="cantidad" className={Global.LabelStyle}>
                     Cantidad
                   </label>
                   <input
@@ -1750,10 +1722,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={Global.Input25pct}>
-                  <label
-                    htmlFor="precioUnitario"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="precioUnitario" className={Global.LabelStyle}>
                     P. Unitario
                   </label>
                   <input
@@ -1772,10 +1741,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={Global.Input25pct}>
-                  <label
-                    htmlFor="importe"
-                    className={Global.LabelStyle + Global.FondoOscuro}
-                  >
+                  <label htmlFor="importe" className={Global.LabelStyle}>
                     Importe
                   </label>
                   <input
@@ -1803,8 +1769,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
             </div>
+            {/* Detalles */}
 
-            {/* Tabla */}
+            {/* Tabla Detalle */}
             <TablaStyle>
               <TableBasic
                 columnas={columnas}
@@ -1820,7 +1787,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 ]}
               />
             </TablaStyle>
-            {/* Tabla */}
+            {/* Tabla Detalle */}
 
             {/*Tabla Footer*/}
             <div className={Global.ContenedorFooter}>

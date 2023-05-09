@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
