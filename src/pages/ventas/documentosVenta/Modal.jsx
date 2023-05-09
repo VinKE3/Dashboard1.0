@@ -115,6 +115,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           dataCliente.clienteTipoDocumentoIdentidadId,
         clienteNombre: dataCliente.clienteNombre,
         clienteDireccionId: dataCliente.clienteDireccionId,
+        clienteDireccion: dataCliente.clienteDireccion,
         personalId: dataCliente.personalId,
         tipoVentaId: dataCliente.tipoVentaId,
         tipoCobroId: dataCliente.tipoCobroId,
@@ -297,7 +298,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         tipoVentaId: "CO",
         tipoCobroId: "CP",
         clienteDireccionId: 1,
-        personalId: "000000AN.LI01 ",
+        personalId: "AN.LI01 ",
       }));
       await GetDireccion("000000");
     } else {
@@ -800,13 +801,13 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       setData({
         ...data,
-        tipoCambio: result.data.data.precioCompra,
+        tipoCambio: result.data.data.precioVenta,
       });
       toast.success(
         "El tipo de cambio del día " +
           moment(data.fechaEmision).format("DD/MM/YYYY") +
           " es: " +
-          result.data.data.precioCompra,
+          result.data.data.precioVenta,
         {
           position: "bottom-right",
           autoClose: 3000,

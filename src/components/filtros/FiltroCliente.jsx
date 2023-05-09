@@ -79,20 +79,28 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Cliente/${id}?incluirReferencias=${true}`
     );
+    /*
+    Validación de Personal:
+    Primero busca el default de Cliente, en caso no exista, debe buscar el personal default del usuario.
+    En caso no exista debe buscar el personal deafault de la empresa
+    */
     let personal = [];
+
+    //Busca el primer personal que contenga default true
     if (Object.entries(result.data.data.personal).length > 0) {
       personal = result.data.data.personal.find((map) => map.default == true);
     } else {
+      //En caso no exista debe buscar el personal deafault del usuario
       personal.personalId = "<<NI>>01";
     }
     setObjeto({
       clienteId: result.data.data.id,
       clienteTipoDocumentoIdentidadId:
         result.data.data.tipoDocumentoIdentidadId,
-      clienteNumeroDocumentoIdentidad:
-        result.data.data.numeroDocumentoIdentidad,
+      clienteNumeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
       clienteNombre: result.data.data.nombre,
       clienteDireccionId: result.data.data.direccionPrincipalId,
+      clienteDireccion: result.data.data.direccionPrincipal,
       direcciones: result.data.data.direcciones,
       personalId: personal == undefined ? "<<NI>>01" : personal.personalId,
       tipoVentaId: result.data.data.tipoVentaId,
@@ -101,6 +109,9 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
       clienteTelefono: result.data.data.telefono,
       contactos: result.data.data.contactos,
       //Cotizacion
+      //Retencion
+      
+      //Retencion
     });
     setModal(false);
   };

@@ -70,7 +70,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   return (
     <ModalCrud
       setModal={setModal}
-      setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
       menu={["Mantenimiento", "TipoCambio"]}

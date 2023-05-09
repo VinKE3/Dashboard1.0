@@ -174,7 +174,7 @@ const DocumentosVenta = () => {
     switch (accion) {
       case 0: {
         setObjeto({
-          empresaId: "",
+          // empresaId: "",
           tipoDocumentoId: "09",
           serie: "0002",
           numero: "0000000000",
@@ -187,28 +187,24 @@ const DocumentosVenta = () => {
           clienteDireccion: "",
           direccionPartida: "",
           personalId: "",
-          empresaTransporteId: "",
+          empresaTransporteId: "0001  ",
           costoMinimo: 0,
-          conductorId: "",
+          conductorId: "000000",
           licenciaConducir: "",
-          vehiculoId: "",
+          vehiculoId: "004",
           constanciaInscripcion: "",
-          motivoTrasladoId: "",
+          motivoTrasladoId: "01",
           motivoSustento: "",
-          ingresoEgresoStock: "",
-
+          ingresoEgresoStock: "-",
           numeroFactura: "",
           ordenPedido: "",
-          monedaId: "",
-
           observacion: "",
+          monedaId: "S",
           afectarStock: true,
-
           documentoRelacionadoId: "",
-          
           detalles: [],
           documentosRelacionados: [],
-          numeroDocumento: "",
+          // numeroDocumento: "",
         });
         setModal(true);
         break;

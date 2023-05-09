@@ -18,19 +18,13 @@ const TablaStyle = styled.div`
     width: 90px;
   }
   & th:nth-child(4),
-  & th:nth-child(6) {
+  & th:nth-child(5) {
     width: 35px;
     text-align: center;
   }
-  & th:nth-child(5) {
-    width: 75px;
-    text-align: right;
-  }
+  & th:nth-child(6),
+  & th:nth-child(7),
   & th:nth-child(8) {
-    width: 70px;
-    text-align: right;
-  }
-  & th:nth-child(7) {
     width: 85px;
     text-align: right;
   }
@@ -140,13 +134,6 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         },
       },
       {
-        Header: "Stock",
-        accessor: "stock",
-        Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
-        },
-      },
-      {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
@@ -158,7 +145,9 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         accessor: "precioCompra",
         Cell: ({ value }) => {
           return (
-            <p className="text-right">{Funciones.RedondearNumero(value, 4)}</p>
+            <p className="text-right font-bold text-yellow-400">
+              {Funciones.RedondearNumero(value, 4)}
+            </p>
           );
         },
       },
@@ -167,17 +156,38 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         accessor: "precioVenta",
         Cell: ({ value }) => {
           return (
-            <p className="text-right">{Funciones.RedondearNumero(value, 4)}</p>
+            <p className="text-right font-bold text-orange-400">
+              {Funciones.RedondearNumero(value, 4)}
+            </p>
           );
         },
       },
       {
-        Header: "-",
+        Header: "Stock",
+        accessor: "stock",
+        Cell: ({ value }) => {
+          return (
+            <p
+              className={
+                value <= 0
+                  ? "text-right font-bold text-red-400"
+                  : "text-right font-bold text-green-500"
+              }
+            >
+              {value}
+            </p>
+          );
+        },
+      },
+      {
+        Header: " ",
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
               onClick={(e) => GetPorId(row.values.id, e)}
-              className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
+              className={
+                Global.BotonModalBase + Global.BotonAgregar + "border-none"
+              }
             >
               <FaCheck></FaCheck>
             </button>

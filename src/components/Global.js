@@ -52,9 +52,9 @@ export var LabelStyle =
 export var LabelCheckStyle =
   "w-full flex-1 inline-flex items-center py-2.5 lg:py-1.5 pr-2.5 pl-1 text-sm font-semibold leading-normal rounded-r-lg border border-l-0 border-gray-600 text-light cursor-pointer ";
 export var InputStyle =
-  "block w-full flex-1 py-2.5 lg:py-1.5 px-2.5 text-sm font-semibold border rounded-none rounded-r-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-light ";
+  "block w-full flex-1 py-2.5 lg:py-1.5 px-2.5 text-sm border rounded-none rounded-r-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-light ";
 export var InputBoton =
-  "block w-full py-2.5 lg:py-1.5 px-2.5 flex-1 text-sm font-semibold  border rounded-none bg-gray-700 border-gray-600 placeholder-gray-400 text-light  ";
+  "block w-full py-2.5 lg:py-1.5 px-2.5 flex-1 text-sm border rounded-none bg-gray-700 border-gray-600 placeholder-gray-400 text-light  ";
 export var CheckStyle =
   "flex inline-flex items-center pl-3 pr-1 font-semibold rounded-l-md border border-r-0 border-gray-600 text-light  ";
 export var Anidado = "!border-l-0 rounded-l-none ";

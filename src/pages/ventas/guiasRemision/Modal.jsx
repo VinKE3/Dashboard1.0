@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetSimplificado from "../../../components/Funciones/GetSimplificado";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroCliente from "../../../components/filtros/FiltroCliente";
 import FiltroArticulo from "../../../components/filtros/FiltroArticulo";
@@ -15,10 +16,8 @@ import {
   FaPlus,
   FaChevronDown,
   FaSearch,
-  FaUndoAlt,
   FaPen,
   FaTrashAlt,
-  FaPaste,
 } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
@@ -62,6 +61,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
+  const [dataGlobal, setDataGlobal] = useState([]);
   //Data General
   //Tablas
   const [dataConductor, setDataConductor] = useState([]);
@@ -71,6 +71,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataTipo, setDataTipo] = useState([]);
   const [dataVehiculo, setDataVehiculo] = useState([]);
   const [dataVendedor, setDataVendedor] = useState([]);
+  const [dataMotivoTraslado, setDataMotivoTraslado] = useState([]);
   //Tablas
   //Data Modales Ayuda
   const [dataCliente, setDataCliente] = useState([]);
@@ -87,6 +88,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [checkFiltro, setCheckFiltro] = useState("productos");
   const [habilitarFiltro, setHabilitarFiltro] = useState(false);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
+  const [tipoCambio, setTipoCambio] = useState(0);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
@@ -103,23 +105,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteId: dataCliente.clienteId,
         clienteNumeroDocumentoIdentidad:
           dataCliente.clienteNumeroDocumentoIdentidad,
-        clienteTipoDocumentoIdentidadId:
-          dataCliente.clienteTipoDocumentoIdentidadId,
         clienteNombre: dataCliente.clienteNombre,
         clienteDireccionId: dataCliente.clienteDireccionId,
+        clienteDireccion: dataCliente.clienteDireccion,
+        direccionPartida: dataGlobal.empresaDireccion, //Debe ser empresaDireccion de GetSimplificado
         personalId: dataCliente.personalId,
-        tipoVentaId: dataCliente.tipoVentaId,
-        tipoCobroId: dataCliente.tipoCobroId,
       });
-
-      //Consulta los Documentos de Referencia
-      if (dataCliente.clienteId != "") {
-        GetDocReferencia(dataCliente.clienteId);
-        setRefrescar(true);
-      } else {
-        setDataDocRef([]);
-        setRefrescar(true);
-      }
     }
   }, [dataCliente]);
   useEffect(() => {
@@ -168,12 +159,13 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo == "Registrar") {
-      GetPorIdTipoCambio(data.fechaEmision);
-    } else {
+    if (modo != "Registrar") {
       GetDireccion(data.clienteId);
+    }else{
+      GetPorIdTipoCambio(data.fechaEmision);
     }
-    GetCuentasCorrientes();
+
+    DataGlobal();
     Tablas();
   }, []);
   //#endregion
@@ -192,20 +184,47 @@ const Modal = ({ setModal, modo, objeto }) => {
         [target.name]: target.value.toUpperCase(),
       }));
     }
+
+    if (target.name == "motivoTrasladoId") {
+      let model = dataMotivoTraslado.find((map) => map.id === target.value);
+      setData((prevData) => ({
+        ...prevData,
+        ingresoEgresoStock: model.tipo,
+      }));
+    }
   };
   const ClientesVarios = async ({ target }) => {
     if (target.checked) {
+      //Obtiene el personal default
+      let personal = dataGlobal.cliente.personal.find(
+        (map) => map.default == true
+      );
+      //Obtiene el personal default
+
       setDataCliente((prevState) => ({
         ...prevState,
-        clienteId: "000000",
-        clienteNumeroDocumentoIdentidad: "0000",
-        clienteNombre: "CLIENTES VARIOS",
-        tipoVentaId: "CO",
-        tipoCobroId: "CP",
-        clienteDireccionId: 1,
-        personalId: "000000AN.LI01 ",
+        clienteId: dataGlobal.cliente.id,
+        clienteNumeroDocumentoIdentidad:
+          dataGlobal.cliente.numeroDocumentoIdentidad,
+        clienteNombre: dataGlobal.cliente.nombre,
+        tipoVentaId: dataGlobal.cliente.tipoVentaId,
+        tipoCobroId: dataGlobal.cliente.tipoCobroId,
+        clienteDireccionId: dataGlobal.cliente.direccionPrincipalId.toString(),
+        clienteDireccion: dataGlobal.cliente.direccionPrincipal,
+        personalId: personal.personalId,
       }));
-      await GetDireccion("000000");
+      console.log({
+        clienteId: dataGlobal.cliente.id,
+        clienteNumeroDocumentoIdentidad:
+          dataGlobal.cliente.numeroDocumentoIdentidad,
+        clienteNombre: dataGlobal.cliente.nombre,
+        tipoVentaId: dataGlobal.cliente.tipoVentaId,
+        tipoCobroId: dataGlobal.cliente.tipoCobroId,
+        clienteDireccionId: dataGlobal.cliente.direccionPrincipalId.toString(),
+        clienteDireccion: dataGlobal.cliente.direccionPrincipal,
+        personalId: personal.personalId,
+      });
+      setDataClienteDirec(dataGlobal.cliente.direcciones);
     } else {
       setDataCliente((prevState) => ({
         ...prevState,
@@ -213,10 +232,14 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
         clienteDireccionId: "",
-        personalId: "<<NI>>01",
+        personalId: dataGlobal.personalId,
       }));
       setDataClienteDirec([]);
     }
+  };
+  const DataGlobal = async () => {
+    console.log(await GetSimplificado());
+    setDataGlobal(await GetSimplificado());
   };
   const OcultarMensajes = async () => {
     setMensaje([]);
@@ -235,18 +258,18 @@ const Modal = ({ setModal, modo, objeto }) => {
       setCheckFiltro(target.name);
       setHabilitarFiltro(true);
       setDataArt({
-        id: "00000000",
-        lineaId: "00",
-        subLineaId: "00",
-        articuloId: "0000",
-        unidadMedidaId: "1",
-        marcaId: 1,
-        descripcion: "ARTICULOS VARIOS",
-        codigoBarras: "",
-        precioCompra: 0,
-        precioUnitario: 0,
-        stock: 0,
-        unidadMedidaDescripcion: "UND",
+        id: dataGlobal.articulo.id,
+        lineaId: dataGlobal.articulo.lineaId,
+        subLineaId: dataGlobal.articulo.subLineaId,
+        articuloId: dataGlobal.articulo.articuloId,
+        unidadMedidaId: dataGlobal.articulo.unidadMedidaId,
+        marcaId: dataGlobal.articulo.marcaId,
+        descripcion: dataGlobal.articulo.descripcion,
+        codigoBarras: dataGlobal.articulo.codigoBarras,
+        precioCompra: dataGlobal.articulo.precioCompra,
+        precioUnitario: dataGlobal.articulo.precioVenta1,
+        stock: dataGlobal.articulo.stock,
+        unidadMedidaDescripcion: dataGlobal.articulo.unidadMedidaDescripcion,
         //Calculo para Detalle
         cantidad: 0,
         importe: 0,
@@ -266,7 +289,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           "venta",
           dataArt,
           data.monedaId,
-          data.tipoCambio
+          tipoCambio
         );
         if (model != null) {
           setDataArt({
@@ -526,31 +549,32 @@ const Modal = ({ setModal, modo, objeto }) => {
           res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
+    setDataMotivoTraslado(result.data.data.motivosTraslado);
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
     if (result.name == "AxiosError") {
       if (Object.entries(result.response.data).length > 0) {
         setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
+        setMensaje([
+          result.response.data.messages[0].textos,
+          ["No se podrán realizar las conversiones de precios."],
+        ]);
       } else {
         setTipoMensaje(1);
-        setMensaje([result.message]);
+        setMensaje([
+          [result.message],
+          ["No se podrán realizar las conversiones de precios."],
+        ]);
       }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
+      setTipoCambio(0);
     } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioCompra,
-      });
+      setTipoCambio(result.data.data.precioVenta);
       toast.success(
         "El tipo de cambio del día " +
           moment(data.fechaEmision).format("DD/MM/YYYY") +
           " es: " +
-          result.data.data.precioCompra,
+          result.data.data.precioVenta,
         {
           position: "bottom-right",
           autoClose: 3000,
@@ -571,27 +595,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${id}`
     );
     setDataClienteDirec(result.data.data);
-  };
-  const GetCuentasCorrientes = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/CuentaCorriente/Listar`
-    );
-    // setDataCtacte(
-    //   result.data.data.data.map((res) => ({
-    //     id: res.cuentaCorrienteId,
-    //     descripcion:
-    //       res.monedaId == "D"
-    //         ? res.numero + " | " + res.entidadBancariaNombre + " |  [US$]"
-    //         : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
-    //   }))
-    // );
-  };
-  const GetDocReferencia = async (id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/DocumentoVenta/GetDocumentosReferencia?clienteId=${id}`
-    );
-    setDataDocRef(result.data.data);
-    setRefrescar(true);
   };
   //#endregion
 
@@ -1002,6 +1005,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="costoMinimo"
                     name="costoMinimo"
+                    placeholder="Costo Mínimo"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.costoMinimo ?? ""}
@@ -1036,12 +1040,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     htmlFor="licenciaConducir"
                     className={Global.LabelStyle}
                   >
-                    Licencia de conducir
+                    Licencia de Conducir
                   </label>
                   <input
                     type="text"
                     id="licenciaConducir"
                     name="licenciaConducir"
+                    placeholder="Licencia de Conducir"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.licenciaConducir ?? ""}
@@ -1082,6 +1087,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="constanciaInscripcion"
                     name="constanciaInscripcion"
+                    placeholder="Constancia Inscripción"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.constanciaInscripcion ?? ""}
@@ -1107,15 +1113,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {/* {dataMotivoTraslado
-                      .filter(
-                        (model) => model.tipoDocumentoId == data.tipoDocumentoId
-                      )
-                      .map((map) => (
-                        <option key={map.id} value={map.id}>
-                          {map.descripcion}
-                        </option>
-                      ))} */}
+                    {dataMotivoTraslado.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className={Global.InputMitad}>
@@ -1138,8 +1140,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="ingresoEgresoStock"
                       value={data.ingresoEgresoStock ?? ""}
                       onChange={ValidarData}
-                      disabled={modo == "Consultar" ? true : false}
-                      className={Global.InputStyle + Global.Anidado}
+                      disabled={
+                        modo == "Consultar" || data.motivoTrasladoId != "99"
+                          ? true
+                          : false
+                      }
+                      className={
+                        data.motivoTrasladoId != "99"
+                          ? Global.InputStyle + Global.Anidado + Global.Disabled
+                          : Global.InputStyle + Global.Anidado
+                      }
                     >
                       {dataTipo.map((map) => (
                         <option key={map.texto} value={map.texto}>
@@ -1388,18 +1398,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     }}
                     className={Global.InputStyle}
                   />
-                  {dataArt.id != undefined && dataArt.id != "" ? (
-                    <button
-                      id="enviarDetalle"
-                      className={Global.BotonBuscar + Global.BotonPrimary}
-                      hidden={modo == "Consultar" ? true : false}
-                      onClick={() => AbrirFiltroPrecio()}
-                    >
-                      <FaChevronDown></FaChevronDown>
-                    </button>
-                  ) : (
-                    <></>
-                  )}
                 </div>
                 <div className={Global.Input25pct}>
                   <label htmlFor="importe" className={Global.LabelStyle}>
