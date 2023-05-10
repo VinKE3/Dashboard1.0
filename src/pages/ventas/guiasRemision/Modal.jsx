@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
-import GetSimplificado from "../../../components/Funciones/GetSimplificado";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroCliente from "../../../components/filtros/FiltroCliente";
 import FiltroArticulo from "../../../components/filtros/FiltroArticulo";
@@ -55,7 +55,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
-  const [dataGlobal, setDataGlobal] = useState([]);
+  const [dataGlobal] = useState(store.session.get("global"));
   //Data General
   //Tablas
   const [dataConductor, setDataConductor] = useState([]);
@@ -90,9 +90,6 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    console.log(data);
-  }, [data]);
-  useEffect(() => {
     if (Object.keys(dataCliente).length > 0) {
       if (dataCliente.direcciones != undefined) {
         setDataClienteDirec(dataCliente.direcciones);
@@ -105,8 +102,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteNombre: dataCliente.clienteNombre,
         clienteDireccionId: dataCliente.clienteDireccionId,
         clienteDireccion: dataCliente.clienteDireccion,
-        direccionPartida: dataGlobal.empresaDireccion, //Debe ser empresaDireccion de GetSimplificado
-        personalId: dataCliente.personalId,
+        direccionPartida: dataGlobal.empresaDireccion,
+        personalId:
+          dataCliente.personalId == ""
+            ? dataGlobal.personalId
+            : dataCliente.personalId,
       });
     }
   }, [dataCliente]);
@@ -148,12 +148,11 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo != "Registrar") {
-      GetDireccion(data.clienteId);
-    } else {
+    if (modo == "Registrar") {
       GetPorIdTipoCambio(data.fechaEmision);
+    } else {
+      GetDireccion(data.clienteId);
     }
-    DataGlobal();
     Tablas();
   }, []);
   //#endregion
@@ -183,11 +182,11 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ClientesVarios = async ({ target }) => {
     if (target.checked) {
-      //Obtiene el personal default
+      //Obtiene el personal default de Clientes Varios
       let personal = dataGlobal.cliente.personal.find(
         (map) => map.default == true
       );
-      //Obtiene el personal default
+      //Obtiene el personal default de Clientes Varios
 
       setDataCliente((prevState) => ({
         ...prevState,
@@ -195,23 +194,10 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
         clienteNombre: dataGlobal.cliente.nombre,
-        tipoVentaId: dataGlobal.cliente.tipoVentaId,
-        tipoCobroId: dataGlobal.cliente.tipoCobroId,
         clienteDireccionId: dataGlobal.cliente.direccionPrincipalId.toString(),
         clienteDireccion: dataGlobal.cliente.direccionPrincipal,
         personalId: personal.personalId,
       }));
-      console.log({
-        clienteId: dataGlobal.cliente.id,
-        clienteNumeroDocumentoIdentidad:
-          dataGlobal.cliente.numeroDocumentoIdentidad,
-        clienteNombre: dataGlobal.cliente.nombre,
-        tipoVentaId: dataGlobal.cliente.tipoVentaId,
-        tipoCobroId: dataGlobal.cliente.tipoCobroId,
-        clienteDireccionId: dataGlobal.cliente.direccionPrincipalId.toString(),
-        clienteDireccion: dataGlobal.cliente.direccionPrincipal,
-        personalId: personal.personalId,
-      });
       setDataClienteDirec(dataGlobal.cliente.direcciones);
     } else {
       setDataCliente((prevState) => ({
@@ -224,9 +210,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
       setDataClienteDirec([]);
     }
-  };
-  const DataGlobal = async () => {
-    setDataGlobal(await GetSimplificado());
   };
   const Factura = async () => {
     if (dataFactura.accion == "agregar") {
@@ -245,6 +228,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteNombre: dataFactura.clienteNombre,
         clienteDireccionId: dataFactura.clienteDireccionId,
         clienteDireccion: dataFactura.clienteDireccion ?? "",
+        direccionPartida: dataGlobal.empresaDireccion, //Debe ser empresaDireccion de GetSimplificado
         personalId: dataFactura.personalId,
         monedaId: dataFactura.monedaId,
         observacion: dataFactura.observacion,
@@ -597,7 +581,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
           //Calculos
           let cantidad = detalleActual.cantidad + detalleFactura.cantidad;
-          let importe = can * detalleActual.precioUnitario;
+          let importe = cantidad * detalleActual.precioUnitario;
           let subTotal = importe * (data.porcentajeIGV / 100);
           let montoIGV = importe - subTotal;
           //Calculos
@@ -958,7 +942,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={true}
                     value={data.numeroFactura ?? ""}
                     onChange={ValidarData}
-                    className={modo != "Consultar" ? Global.InputBoton + Global.Disabled : Global.InputStyle + Global.Disabled}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton + Global.Disabled
+                        : Global.InputStyle + Global.Disabled
+                    }
                   />
                   <button
                     id="consultarFactura"
@@ -1366,7 +1354,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                           ValidarData(e);
                         }}
                         checked={data.afectarStock ? true : ""}
-                        readOnly={modo == "Consultar" ? true : false}
+                        disabled={
+                          modo == "Consultar" ||
+                          store.session.get("afectarStock") === "False"
+                            ? true
+                            : false
+                        }
                       ></Checkbox>
                     </div>
                     <label
@@ -1555,7 +1548,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ValidarDataArt(e);
                       CalcularImporte(e.target.name);
                     }}
-                    className={Global.InputBoton}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
                   />
                   <button
                     id="enviarDetalle"

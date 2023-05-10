@@ -79,10 +79,9 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
     setObjeto({
       proveedorId: result.data.data.id,
-      proveedorNumeroDocumentoIdentidad:
-        result.data.data.numeroDocumentoIdentidad,
-      proveedorDireccion: result.data.data.direccionPrincipal,
+      proveedorNumeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
       proveedorNombre: result.data.data.nombre,
+      proveedorDireccion: result.data.data.direccionPrincipal,
     });
     setModal(false);
   };

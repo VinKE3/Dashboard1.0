@@ -28,7 +28,7 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
           label: "Clientes",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/ventas/clientes");
+            navigate("/ventas/cliente");
           },
         },
         {
@@ -360,7 +360,7 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
           label: "Clientes",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/ventas/clientes");
+            navigate("/ventas/cliente");
           },
         },
       ],

@@ -41,11 +41,18 @@ function getAccessToken() {
 
 const borrarTokens = () => {
   store.session.remove("access_token");
-  store.local.remove("access_token");
   store.session.remove("usuario");
-  store.local.remove("usuario");
   store.session.remove("usuarioId");
+  store.session.remove("personalId");
+  store.session.remove("afectarStock");
+  store.session.remove("global");
+
+  store.local.remove("access_token");
+  store.local.remove("usuario");
   store.local.remove("usuarioId");
+  store.local.remove("personalId");
+  store.local.remove("afectarStock");
+  store.local.remove("global");
 };
 
 function borrarTodosLosTokens() {
@@ -70,10 +77,31 @@ function usuarioIdGuardar(data) {
   store.session("usuarioId", usuarioId);
 }
 
+function personalIdGuardar(data) {
+  const { personalId } = data;
+  store.local("personalId", personalId);
+  store.session("personalId", personalId);
+}
+
+function afectarStockGuardar(data) {
+  const { afectarStock } = data;
+  store.local("afectarStock", afectarStock);
+  store.session("afectarStock", afectarStock);
+}
+
+function globalGuardar(data) {
+  const { global } = data;
+  store.local("global", global);
+  store.session("global", global);
+}
+
 export const authHelper = {
   getAccessToken,
   borrarTodosLosTokens,
   login,
   usuarioGuardar,
   usuarioIdGuardar,
+  personalIdGuardar,
+  afectarStockGuardar,
+  globalGuardar
 };

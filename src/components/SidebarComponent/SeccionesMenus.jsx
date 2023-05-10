@@ -18,7 +18,7 @@ function seccionesList() {
       icon: <FaBalanceScale className="text-primary" />,
       items: [
         {
-          path: "/ventas/clientes",
+          path: "/ventas/cliente",
           title: "Clientes",
         },
         {

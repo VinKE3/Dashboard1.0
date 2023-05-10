@@ -265,12 +265,28 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const EnviarCcorriente = async () => {
     if (objetoCcorriente.id == 0) {
-      await Insert(
-        ["Mantenimiento", "ProveedorCuentaCorriente"],
-        objetoCcorriente,
-        setTipoMen,
-        setMen
+      let existe = dataCcorriente.find(
+        (map) => map.numero == objetoCcorriente.numero
       );
+      if (existe == undefined) {
+        await Insert(
+          ["Mantenimiento", "ProveedorCuentaCorriente"],
+          objetoCcorriente,
+          setTipoMen,
+          setMen
+        );
+      } else {
+        toast.error("Proveedor Cuenta Corriente: Ya existe el registro ingresado", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     } else {
       await Update(
         ["Mantenimiento", "ProveedorCuentaCorriente"],
@@ -301,12 +317,28 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const EnviarContacto = async () => {
     if (objetoContacto.id == 0) {
-      await Insert(
-        ["Mantenimiento", "ProveedorContacto"],
-        objetoContacto,
-        setTipoMen,
-        setMen
+      let existe = dataContacto.find(
+        (map) => map.nombres == objetoContacto.nombres
       );
+      if (existe == undefined) {
+        await Insert(
+          ["Mantenimiento", "ProveedorContacto"],
+          objetoContacto,
+          setTipoMen,
+          setMen
+        );
+      } else {
+        toast.error("Proveedor Contacto: Ya existe el registro ingresado", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     } else {
       await Update(
         ["Mantenimiento", "ProveedorContacto"],
@@ -481,7 +513,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="numeroDocumentoIdentidad"
                       name="numeroDocumentoIdentidad"
                       autoComplete="off"
-                      maxLength={dataGeneral.tipoDocumentoIdentidadId == "1" ? 8 : 12}
+                      maxLength={
+                        dataGeneral.tipoDocumentoIdentidadId == "1" ? 8 : 12
+                      }
                       placeholder="Número Documento Identidad"
                       readOnly={modo == "Consultar" ? true : false}
                       value={dataGeneral.numeroDocumentoIdentidad ?? ""}

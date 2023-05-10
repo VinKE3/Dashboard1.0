@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
@@ -61,6 +62,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
+  const [dataGlobal] = useState(store.session.get("global"));
   //Data General
   //Tablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
@@ -93,9 +95,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
@@ -243,18 +242,19 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (target.checked) {
       setDataProveedor((prevState) => ({
         ...prevState,
-        proveedorId: "000000",
-        proveedorNumeroDocumentoIdentidad: "00000000000",
-        proveedorDireccion: null,
-        proveedorNombre: "PROVEEDORES VARIOS",
+        proveedorId: dataGlobal.proveedor.id,
+        proveedorNumeroDocumentoIdentidad:
+          dataGlobal.proveedor.numeroDocumentoIdentidad,
+        proveedorNombre: dataGlobal.proveedor.nombre,
+        proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
       }));
     } else {
       setDataProveedor((prevState) => ({
         ...prevState,
         proveedorId: "",
         proveedorNumeroDocumentoIdentidad: "",
-        proveedorDireccion: "",
         proveedorNombre: "",
+        proveedorDireccion: "",
         ordenesCompraRelacionadas: [],
       }));
     }
@@ -324,7 +324,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData({
         ...data,
         proveedorId: dataOrdenCompra.proveedorId,
-        proveedorNumeroDocumentoIdentidad: dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
+        proveedorNumeroDocumentoIdentidad:
+          dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: dataOrdenCompra.proveedorNombre,
         proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
         cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",
@@ -401,17 +402,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       setCheckFiltro(target.name);
       setHabilitarFiltro(true);
       setDataArt({
-        id: "00000000",
-        lineaId: "00",
-        subLineaId: "00",
-        articuloId: "0000",
-        unidadMedidaId: "1",
-        marcaId: 1,
-        descripcion: "ARTICULOS VARIOS",
-        codigoBarras: "",
-        precioUnitario: 0,
-        stock: 0,
-        unidadMedidaDescripcion: "UND",
+        id: dataGlobal.articulo.id,
+        lineaId: dataGlobal.articulo.lineaId,
+        subLineaId: dataGlobal.articulo.subLineaId,
+        articuloId: dataGlobal.articulo.articuloId,
+        unidadMedidaId: dataGlobal.articulo.unidadMedidaId,
+        marcaId: dataGlobal.articulo.marcaId,
+        descripcion: dataGlobal.articulo.descripcion,
+        codigoBarras: dataGlobal.articulo.codigoBarras,
+        precioUnitario: dataGlobal.articulo.precioCompra,
+        stock: dataGlobal.articulo.stock,
+        unidadMedidaDescripcion: dataGlobal.articulo.unidadMedidaDescripcion,
         //Calculo para Detalle
         cantidad: 0,
         importe: 0,
@@ -1510,7 +1511,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={true}
                     value={data.numeroOrdenesCompraRelacionadas ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton + Global.Disabled}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton + Global.Disabled
+                        : Global.InputStyle + Global.Disabled
+                    }
                   />
                   <button
                     id="consultarOC"
@@ -1759,7 +1764,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ValidarDataArt(e);
                       CalcularImporte(e.target.name);
                     }}
-                    className={Global.InputBoton}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
                   />
                   <button
                     id="enviarDetalle"

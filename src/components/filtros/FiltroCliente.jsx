@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
@@ -84,25 +85,29 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
     Primero busca el default de Cliente, en caso no exista, debe buscar el personal default del usuario.
     En caso no exista debe buscar el personal deafault de la empresa
     */
-    let personal = [];
-
-    //Busca el primer personal que contenga default true
-    if (Object.entries(result.data.data.personal).length > 0) {
-      personal = result.data.data.personal.find((map) => map.default == true);
+    let personalId;
+    let personalDefault = result.data.data.personal.find(
+      (map) => map.default == true
+    );
+    if (personalDefault == undefined) {
+      //Obtiene el personal del usuario logeado
+      personalId = store.session.get("personalId");
     } else {
-      //En caso no exista debe buscar el personal deafault del usuario
-      personal.personalId = "<<NI>>01";
+      //Asigna el personal por default del cliente
+      personalId = personalDefault.personalId;
     }
+
     setObjeto({
       clienteId: result.data.data.id,
       clienteTipoDocumentoIdentidadId:
         result.data.data.tipoDocumentoIdentidadId,
-      clienteNumeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
+      clienteNumeroDocumentoIdentidad:
+        result.data.data.numeroDocumentoIdentidad,
       clienteNombre: result.data.data.nombre,
       clienteDireccionId: result.data.data.direccionPrincipalId,
       clienteDireccion: result.data.data.direccionPrincipal,
       direcciones: result.data.data.direcciones,
-      personalId: personal == undefined ? "<<NI>>01" : personal.personalId,
+      personalId: personalId,
       tipoVentaId: result.data.data.tipoVentaId,
       tipoCobroId: result.data.data.tipoCobroId,
       //Cotizacion
@@ -110,7 +115,7 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
       contactos: result.data.data.contactos,
       //Cotizacion
       //Retencion
-      
+
       //Retencion
     });
     setModal(false);
@@ -137,7 +142,9 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
         Cell: ({ row }) => (
           <button
             onClick={() => GetPorId(row.values.id)}
-            className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
+            className={
+              Global.BotonModalBase + Global.BotonAgregar + "border-none"
+            }
           >
             <FaCheck></FaCheck>
           </button>

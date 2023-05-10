@@ -9,7 +9,8 @@ import Login from "./pages/auth/Login";
 //?Pages admin
 import Home from "./pages/admin/Home";
 import Error404 from "./pages/Error404";
-//*Pages ventas
+//Pages ventas
+import Clientes from "./pages/ventas/cliente/Cliente";
 import ConductoresTransportistas from "./pages/ventas/conductoresTransportistas/ConductoresTransportistas";
 import DocumentosDeVenta from "./pages/ventas/documentosVenta/DocumentosVenta";
 import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
@@ -17,7 +18,9 @@ import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
 import SalidasDeArticulos from "./pages/ventas/salidaDeArticulos/SalidaDeArticulos";
 import RegistroVentaArticulo from "./pages/ventas/registroVentaArituculo/RegistroVentaArticulo";
 import BloquearVenta from "./pages/ventas/bloquearVenta/BloquearVenta";
-//*Pages compras
+//Pages ventas
+
+//Pages compras
 import Proveedores from "./pages/compras/proveedores/Proveedores";
 import FacturaNegociable from "./pages/compras/facturaNegociable/FacturaNegociable";
 import LetraCambioCompra from "./pages/compras/letraCambioCompra/LetraCambioCompra";
@@ -26,9 +29,10 @@ import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
 import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
 import BloquearCompra from "./pages/compras/bloquearCompra/BloquearCompra";
-//*Pages mantenimiento
+//Pages compras
+
+//Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
-import Clientes from "./pages/mantenimiento/cliente/Cliente";
 import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
 import Lineas from "./pages/mantenimiento/lineas/Lineas";
 import Sublineas from "./pages/mantenimiento/sublineas/Sublineas";
@@ -38,7 +42,6 @@ import TipoDePago from "./pages/mantenimiento/tipoDePago/TipoDePago";
 import Cargos from "./pages/mantenimiento/cargos/Cargos";
 import EntidadesBancarias from "./pages/mantenimiento/entidadesBancarias/EntidadesBancarias";
 import CuentasCorrientes from "./pages/mantenimiento/cuentasCorrientes/CuentasCorrientes";
-import Conductor from "./pages/mantenimiento/conductor/Conductor";
 import Departamentos from "./pages/mantenimiento/departamentos/Departamentos";
 import Provincias from "./pages/mantenimiento/provincias/Provincias";
 import Distrito from "./pages/mantenimiento/distritos/Distrito";
@@ -46,18 +49,27 @@ import CajaChicaConfiguracion from "./pages/mantenimiento/cajaChicaConfiguracion
 import Empresa from "./pages/mantenimiento/empresa/Empresa";
 import Correlativos from "./pages/mantenimiento/correlativos/Correlativos";
 import EmpresaDeTransporte from "./pages/mantenimiento/empresaDeTransporte/EmpresaDeTransporte";
-//*Pages almacen
+//Pages mantenimiento
+
+//Pages almacen
 import MovimientosArticulos from "./pages/almacen/movimientoArticulos/MovimientosArticulos";
 import CuadreStock from "./pages/almacen/cuadreStock/CuadreStock";
 import EntradaArticulos from "./pages/almacen/entradaArticulos/EntradaArticulos";
 import SalidaArticulos from "./pages/almacen/salidaArticulos/SalidaArticulos";
 import EntradaCilindros from "./pages/almacen/entradaCilindros/EntradaCilindros";
 import SalidaCilindros from "./pages/almacen/salidaCilindros/SalidaCilindros";
-//*Pages Finanzas
+//Pages almacen
+
+
+//Pages Finanzas
 import BloquearMovimientoBancario from "./pages/finanzas/bloquearMovimientoBancario/BloquearMovimientoBancario";
-//*Pages personal
+//Pages Finanzas
+
+//Pages personal
 import Personal from "./pages/personal/Personal";
-//*pages tesoreria
+//Pages personal
+
+//pages tesoreria
 import CajaChica from "./pages/tesoreria/cajaChica/CajaChica";
 import CobrosCuentaBancaria from "./pages/tesoreria/cobrosCuentasBancaria/CobrosCuentaBancaria";
 import LetrasCambioCobro from "./pages/tesoreria/letrasCambioCobro/LetrasCambioCobro";
@@ -72,6 +84,7 @@ import Cef from "./pages/compras/cef/Cef";
 import Cheque from "./pages/compras/cheque/Cheque";
 import Articulo from "./pages/mantenimiento/articulo/Articulo";
 import CuentasPorPagar from "./pages/finanzas/cuentasPorPagar/CuentasPorPagar";
+//pages tesoreria
 
 function App() {
   return (
@@ -81,7 +94,7 @@ function App() {
         <Route path="/" element={<LayoutAdmin />}>
           <Route index element={<Home />} />
           {/** //!VENTAS */}
-          <Route path="/ventas/clientes" element={<Clientes />} />
+          <Route path="/ventas/cliente" element={<Clientes />} />
           <Route
             path="/ventas/conductores-transportistas"
             element={<ConductoresTransportistas />}
@@ -143,7 +156,6 @@ function App() {
           />
           <Route path="/mantenimiento/empresa" element={<Empresa />} />
           <Route path="/mantenimiento/articulos" element={<Articulo />} />
-          <Route path="/mantenimiento/clientes" element={<Clientes />} />
           <Route
             path="/mantenimiento/tipos-de-cambio"
             element={<TiposDeCambio />}
@@ -165,7 +177,6 @@ function App() {
             path="/mantenimiento/cuentas-corrientes"
             element={<CuentasCorrientes />}
           />
-          <Route path="/mantenimiento/conductor" element={<Conductor />} />
           <Route
             path="/mantenimiento/departamentos"
             element={<Departamentos />}

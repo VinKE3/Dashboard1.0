@@ -32,6 +32,24 @@ const TablaStyle = styled.div`
     text-align: center;
   }
 `;
+const TablaPersonal = styled.div`
+  & th:first-child {
+    display: none;
+  }
+  & tbody td:first-child {
+    display: none;
+  }
+  & th:nth-child(2) {
+    display: none;
+  }
+  & tbody td:nth-child(2) {
+    display: none;
+  }
+  & th:last-child {
+    width: 100px;
+    text-align: center;
+  }
+`;
 //#endregion
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -313,12 +331,28 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const EnviarClienteDireccion = async () => {
     if (objetoDireccion.id == 0) {
-      await Insert(
-        ["Mantenimiento", "ClienteDireccion"],
-        objetoDireccion,
-        setTipoMen,
-        setMen
+      let existe = dataDireccion.find(
+        (map) => map.direccion == objetoDireccion.direccion
       );
+      if (existe == undefined) {
+        await Insert(
+          ["Mantenimiento", "ClienteDireccion"],
+          objetoDireccion,
+          setTipoMen,
+          setMen
+        );
+      } else {
+        toast.error("Cliente Dirección: Ya existe el registro ingresado", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     } else {
       await Update(
         ["Mantenimiento", "ClienteDireccion"],
@@ -347,12 +381,28 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const EnviarClienteContacto = async () => {
     if (objetoContacto.id == 0) {
-      await Insert(
-        ["Mantenimiento", "ClienteContacto"],
-        objetoContacto,
-        setTipoMen,
-        setMen
+      let existe = dataContacto.find(
+        (map) => map.nombres == objetoContacto.nombres
       );
+      if (existe == undefined) {
+        await Insert(
+          ["Mantenimiento", "ClienteContacto"],
+          objetoContacto,
+          setTipoMen,
+          setMen
+        );
+      } else {
+        toast.error("Cliente Contacto: Ya existe el registro ingresado", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     } else {
       await Update(
         ["Mantenimiento", "ClienteContacto"],
@@ -381,7 +431,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     );
     setDataPersonal(
       result.data.data.map((res) => ({
-        id: res.id,
+        ...res,
         personal:
           res.personal.apellidoPaterno +
           " " +
@@ -397,13 +447,27 @@ const Modal = ({ setModal, modo, objeto }) => {
     setObjetoPersonal(result.data.data);
   };
   const EnviarClientePersonal = async () => {
-    if (objetoPersonal.id == "") {
+    let existe = dataPersonal.find(
+      (map) => map.personalId == objetoPersonal.personalId
+    );
+    if (existe == undefined) {
       await Insert(
         ["Mantenimiento", "ClientePersonal"],
         objetoPersonal,
         setTipoMen,
         setMen
       );
+    } else {
+      toast.error("Cliente Personal: Ya existe el registro ingresado", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
   //#endregion
@@ -521,6 +585,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "id",
     },
     {
+      Header: "Personal",
+      accessor: "personalId",
+    },
+    {
       Header: "Nombres",
       accessor: "personal",
     },
@@ -539,8 +607,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     Delete(
                       ["Mantenimiento", "ClientePersonal"],
                       row.values.id,
@@ -1101,8 +1168,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Mensajes
                         tipoMensaje={tipoMen}
                         mensaje={men}
-                        Click={(e) => {
-                          e.preventDefault();
+                        Click={() => {
                           setMen([]);
                           setTipoMen(-1);
                         }}
@@ -1168,9 +1234,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Form Personal */}
 
                 {/* Tabla */}
-                <TablaStyle>
+                <TablaPersonal>
                   <TableBasic columnas={colPersonal} datos={dataPersonal} />
-                </TablaStyle>
+                </TablaPersonal>
                 {/* Tabla */}
               </TabPanel>
             ) : (
