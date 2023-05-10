@@ -2,10 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
+import FiltroBasico from "../filtros/FiltroBasico";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
-import moment from "moment";
+import { FaTrash, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 //#region Estilos
@@ -17,21 +17,18 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 100px;
+    width: 135px;
   }
-  & th:nth-child(3) {
-    width: 140px;
-  }
-  & th:nth-child(5) {
+  & th:nth-child(4) {
     width: 30px;
     text-align: center;
   }
-  & th:nth-child(6) {
+  & th:nth-child(5) {
     width: 80px;
     text-align: right;
   }
   & th:last-child {
-    width: 40px;
+    width: 90px;
     text-align: center;
   }
 `;
@@ -49,26 +46,23 @@ const TablaDetalle = styled.div`
 `;
 //#endregion
 
-const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
+const FiltroFactura = ({ setModal, objeto, setObjeto }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [dataFacturaSeleccionada, setDataFacturaSeleccionada] = useState(objeto);
+  const [dataFacturaSeleccionada, setDataFacturaSeleccionada] =
+    useState(objeto);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio: moment()
-      .subtract(2, "years")
-      .startOf("year")
-      .format("yyyy-MM-DD"),
-    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    numeroDocumento: "",
   });
   const [cadena, setCadena] = useState(
-    `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    `&numeroDocumento=${filtro.numeroDocumento}`
   );
   //#endregion
 
   //#region useEffect;
   useEffect(() => {
-    setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
+    setCadena(`&numeroDocumento=${filtro.numeroDocumento}`);
   }, [filtro]);
   useEffect(() => {
     Filtro();
@@ -78,10 +72,10 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
   }, []);
   //#endregion
 
-  //#region API
+  //#region Funciones
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Compra/OrdenCompra/ListarPendientes?pagina=${pagina}&proveedorId=${id}${filtro}`
+      `api/Venta/DocumentoVenta/ListarSimplificado?Pagina=${pagina}${filtro}`
     );
     setData(result.data.data.data);
   };
@@ -93,33 +87,31 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
     }
     //Si no existe entonces pasa los datos
     if (existe == undefined) {
-      const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
+      const result = await ApiMasy.get(`api/Venta/DocumentoVenta/${id}`);
       setObjeto({
-        proveedorNumeroDocumentoIdentidad:
-          result.data.data.proveedorNumeroDocumentoIdentidad,
-        proveedorNombre: result.data.data.proveedorNombre,
-        proveedorDireccion: result.data.data.proveedorDireccion ?? "",
-        cuentaCorrienteId: result.data.data.cuentaCorrienteId ?? "",
+        clienteId: result.data.data.clienteId,
+        clienteNumeroDocumentoIdentidad:
+          result.data.data.clienteNumeroDocumentoIdentidad,
+        clienteNombre: result.data.data.clienteNombre,
+        clienteDireccionId: result.data.data.clienteDireccionId,
+        clienteDireccion: result.data.data.clienteDireccion ?? "",
+        personalId: result.data.data.personalId,
         monedaId: result.data.data.monedaId,
-        tipoCambio: result.data.data.tipoCambio,
-        porcentajeIGV: result.data.data.porcentajeIGV,
-        incluyeIGV: result.data.data.incluyeIGV,
         observacion: result.data.data.observacion,
-        tipoCompraId: result.data.data.tipoCompraId,
-        tipoPagoId: result.data.data.tipoPagoId,
         detalles: result.data.data.detalles,
-        ordenesCompraRelacionadas: {
+        documentoRelacionadoId: result.data.data.id,
+        documentosRelacionados: {
           id: result.data.data.id,
           numeroDocumento: result.data.data.numeroDocumento,
         },
-        accion: "agregar"
+        accion: "agregar",
       });
       setModal(false);
     } else {
       //Si existe manda la alerta
       toast.error("Ya existe el elemento seleccionado", {
         position: "bottom-right",
-        autoClose: 1800,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -129,12 +121,9 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
       });
     }
   };
-  //#endregion
-
-  //#region Funciones
   const EliminarFila = async (id) => {
     let model = dataFacturaSeleccionada.filter((map) => map.id !== id);
-    const res = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
+    const res = await ApiMasy.get(`api/Venta/DocumentoVenta/${id}`);
     Swal.fire({
       title: "Eliminar selección",
       icon: "warning",
@@ -150,8 +139,8 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
       if (result.isConfirmed) {
         setObjeto({
           detalles: res.data.data.detalles,
-          ordenesCompraRelacionadas: model,
-          accion: "eliminar"
+          documentosRelacionados: model,
+          accion: "eliminar",
         });
         setModal(false);
       }
@@ -183,32 +172,25 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
         accessor: "id",
       },
       {
-        Header: "Fecha",
-        accessor: "fechaContable",
-        Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
-        },
-      },
-      {
         Header: "Documento",
         accessor: "numeroDocumento",
       },
       {
-        Header: "Proveedor",
-        accessor: "proveedorNombre",
+        Header: "Razón Social",
+        accessor: "clienteNombre",
       },
       {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
@@ -264,7 +246,7 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Consultar Órdenes de Compra"
+        titulo="Consultar Facturas"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <button
@@ -278,58 +260,13 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
       >
         {
           <>
-            <div
-              className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
-              }
-            >
-              <div className={Global.ContenedorInputs + "mb-2"}>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-                    Desde
-                  </label>
-                  <input
-                    type="date"
-                    id="fechaInicio"
-                    name="fechaInicio"
-                    autoComplete="off"
-                    value={filtro.fechaInicio}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
-                    Hasta
-                  </label>
-                  <input
-                    type="date"
-                    id="fechaFin"
-                    name="fechaFin"
-                    autoComplete="off"
-                    value={filtro.fechaFin}
-                    onChange={ValidarData}
-                    className={Global.InputBoton}
-                  />
-                  <button
-                    id="consultar"
-                    onClick={Filtro}
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
-                  >
-                    <FaSearch></FaSearch>
-                  </button>
-                </div>
-              </div>
-              {/* Tabla */}
-              <TablaStyle>
-                <TableBasic columnas={columnas} datos={data} />
-              </TablaStyle>
-              {/* Tabla */}
-            </div>
+            {/* Tabla Seleccion*/}
             {Object.entries(dataFacturaSeleccionada).length > 0 && (
-              <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+              <div
+                className={
+                  Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                }
+              >
                 <p className=" px-1 text-base text-light font-bold">
                   SELECCIONADOS
                 </p>
@@ -343,6 +280,28 @@ const FiltroFactura = ({ setModal, id, objeto, setObjeto }) => {
                 {/* Tabla */}
               </div>
             )}
+            {/* Tabla Seleccion*/}
+
+            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+              {/* Filtro*/}
+              <FiltroBasico
+                textLabel={"N° Documento"}
+                placeHolder={"N° Documento"}
+                name={"numeroDocumento"}
+                maxLength={"20"}
+                value={filtro.numeroDocumento}
+                onChange={ValidarData}
+                botonId={"buscar"}
+                onClick={Filtro}
+              />
+              {/* Filtro*/}
+
+              {/* Tabla */}
+              <TablaStyle>
+                <TableBasic columnas={columnas} datos={data} />
+              </TablaStyle>
+              {/* Tabla */}
+            </div>
           </>
         }
       </ModalBasic>

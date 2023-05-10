@@ -196,7 +196,7 @@ const DocumentosVenta = () => {
           motivoTrasladoId: "01",
           motivoSustento: "",
           ingresoEgresoStock: "-",
-          numeroFactura: "",
+          numeroFactura: [],
           ordenPedido: "",
           observacion: "",
           monedaId: "S",

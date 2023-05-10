@@ -221,10 +221,16 @@ const Cef = () => {
       {
         Header: "Moneda",
         accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+        },
       },
       {
         Header: "Total",
         accessor: "total",
+        Cell: ({ value }) => {
+          return <p className="text-right font-semibold">{value}</p>;
+        },
       },
       {
         Header: "Cancelado",

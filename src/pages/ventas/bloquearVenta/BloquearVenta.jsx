@@ -22,22 +22,19 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 160px;
+    width: 140px;
   }
   & th:nth-child(3) {
-    width: 100px;
+    width: 90px;
   }
-  & th:nth-child(6) {
+  & th:nth-child(6),
+  & th:nth-child(8) {
     width: 40px;
     text-align: center;
   }
   & th:nth-child(7) {
     width: 90px;
-    text-align: center;
-  }
-  & th:nth-child(8) {
-    width: 50px;
-    text-align: center;
+    text-align: right;
   }
   & th:last-child {
     text-align: center;
@@ -281,14 +278,14 @@ const BloquearVenta = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-end">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {

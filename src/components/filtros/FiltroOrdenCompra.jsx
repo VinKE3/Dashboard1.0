@@ -17,7 +17,7 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 100px;
+    width: 90px;
   }
   & th:nth-child(3) {
     width: 140px;
@@ -31,7 +31,7 @@ const TablaStyle = styled.div`
     text-align: right;
   }
   & th:last-child {
-    width: 40px;
+    width: 90px;
     text-align: center;
   }
 `;
@@ -43,7 +43,7 @@ const TablaDetalle = styled.div`
     display: none;
   }
   & th:last-child {
-    width: 40px;
+    width: 90px;
     text-align: center;
   }
 `;
@@ -95,8 +95,8 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
     if (existe == undefined) {
       const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
       setObjeto({
-        proveedorNumeroDocumentoIdentidad:
-          result.data.data.proveedorNumeroDocumentoIdentidad,
+        proveedorId:result.data.data.proveedorId,
+        proveedorNumeroDocumentoIdentidad:result.data.data.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: result.data.data.proveedorNombre,
         proveedorDireccion: result.data.data.proveedorDireccion ?? "",
         cuentaCorrienteId: result.data.data.cuentaCorrienteId ?? "",
@@ -201,14 +201,14 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
@@ -264,7 +264,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Consultar Órdenes de Compra"
+        titulo="Consultar Ordenes de Compra"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <button

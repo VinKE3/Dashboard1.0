@@ -16,15 +16,18 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 155px;
+    width: 135px;
+  }
+  & th:nth-child(4) {
+    width: 30px;
+    text-align: center;
   }
   & th:nth-child(5) {
-    text-align: right;
     width: 80px;
+    text-align: right;
   }
   & th:last-child {
-    color: transparent;
-    width: 80px;
+    width: 90px;
     text-align: center;
   }
 `;
@@ -126,14 +129,14 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {

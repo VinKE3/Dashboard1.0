@@ -21,8 +21,14 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(7),
-  & th:nth-child(8),
+  & th:nth-child(7){
+    width: 30px;
+    text-align: center;
+  }
+  & th:nth-child(8){
+    width: 80px;
+    text-align: right;
+  }
   & th:nth-child(9),
   & th:nth-child(10),
   & th:nth-child(11) {
@@ -261,14 +267,14 @@ const DocumentosdeCompra = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {

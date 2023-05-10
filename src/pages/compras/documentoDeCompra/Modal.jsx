@@ -94,6 +94,9 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
+    console.log(data);
+  }, [data]);
+  useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
         ...data,
@@ -320,8 +323,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
       setData({
         ...data,
-        proveedorNumeroDocumentoIdentidad:
-          dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
+        proveedorId: dataOrdenCompra.proveedorId,
+        proveedorNumeroDocumentoIdentidad: dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: dataOrdenCompra.proveedorNombre,
         proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
         cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",

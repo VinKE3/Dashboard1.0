@@ -181,7 +181,9 @@ const CuentasCorrientes = () => {
       {
         Header: "M",
         accessor: "monedaId",
-        Cell: ({ value }) => <p className="text-center">{value}</p>,
+        Cell: ({ value }) => {
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+        },
       },
       {
         Header: "Saldo Final",

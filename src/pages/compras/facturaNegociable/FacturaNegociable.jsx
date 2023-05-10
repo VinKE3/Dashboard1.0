@@ -41,7 +41,7 @@ const TablaStyle = styled.div`
     width: 40px;
   }
   & th:nth-child(9){
-    text-align: center;
+    text-align: right;
     width: 65px;
   }
   & th:last-child {
@@ -235,7 +235,7 @@ const FacturaNegociable = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {

@@ -23,7 +23,9 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(7),
+  & th:nth-child(7){
+    text-align: right;
+  }
   & th:nth-child(8),
   & th:nth-child(9),
   & th:nth-child(10),
@@ -31,9 +33,9 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:last-child {
+    width: 90px;
+    max-width: 90px;
     text-align: center;
-    width: 80px;
-    max-width: 80px;
   }
 `;
 //#endregion
@@ -354,14 +356,14 @@ const DocumentosVenta = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {

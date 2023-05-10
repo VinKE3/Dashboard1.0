@@ -316,6 +316,9 @@ const BloquearMovimientoBancario = () => {
     {
       Header: "Moneda",
       accessor: "monedaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+      },
     },
     {
       Header: "Monto",

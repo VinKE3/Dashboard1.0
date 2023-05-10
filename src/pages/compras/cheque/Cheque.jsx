@@ -41,13 +41,13 @@ const TablaStyle = styled.div`
     width: 40px;
   }
   & th:nth-child(9) {
-    text-align: center;
     width: 80px;
+    text-align: right;
   }
   & th:last-child {
-    text-align: center;
     width: 100px;
     max-width: 100px;
+    text-align: center;
   }
 `;
 //#endregion
@@ -235,14 +235,14 @@ const Cheque = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {

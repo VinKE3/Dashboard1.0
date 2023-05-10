@@ -12,13 +12,7 @@ import { toast } from "react-toastify";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
-import {
-  FaPlus,
-  FaChevronDown,
-  FaSearch,
-  FaPen,
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaPlus, FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -96,6 +90,9 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
+    console.log(data);
+  }, [data]);
+  useEffect(() => {
     if (Object.keys(dataCliente).length > 0) {
       if (dataCliente.direcciones != undefined) {
         setDataClienteDirec(dataCliente.direcciones);
@@ -116,30 +113,22 @@ const Modal = ({ setModal, modo, objeto }) => {
   useEffect(() => {
     if (Object.keys(dataFactura).length > 0) {
       //Cabecera
-      setData({
-        ...data,
-        clienteId: dataFactura.clienteId,
-        clienteNumeroDocumentoIdentidad:
-          dataFactura.clienteNumeroDocumentoIdentidad,
-        clienteNombre: dataFactura.clienteNombre,
-        clienteDireccionId: dataFactura.clienteDireccionId,
-        cotizacionId: dataFactura.cotizacionId,
-        cotizacion: dataFactura.cotizacion,
-        personalId: dataFactura.personalId,
-        monedaId: dataFactura.monedaId,
-        incluyeIGV: dataFactura.incluyeIGV,
-        porcentajeIGV: dataFactura.porcentajeIGV,
-        porcentajeRetencion: dataFactura.porcentajeRetencion,
-        porcentajePercepcion: dataFactura.porcentajePercepcion,
-        observacion: dataFactura.observacion ?? "",
-      });
-      GetDireccion(dataFactura.clienteId);
+      Factura();
       //Cabecera
       //Detalles
-      setDataDetalle(dataFactura.detalles);
+      DetallesFactura(dataFactura.accion);
       //Detalles
-      setRefrescar(true);
+    } else {
+      //Si no quedan elementos reemplaza igualmente dejadno documentosRelacionados vacío
+      setData({
+        ...data,
+        documentosRelacionados: dataFactura.documentosRelacionados || [],
+      });
+      //Detalles
+      setDataDetalle([]);
+      //Detalles
     }
+    setRefrescar(true);
   }, [dataFactura]);
   useEffect(() => {
     if (Object.entries(dataDetalle).length > 0) {
@@ -161,10 +150,9 @@ const Modal = ({ setModal, modo, objeto }) => {
   useEffect(() => {
     if (modo != "Registrar") {
       GetDireccion(data.clienteId);
-    }else{
+    } else {
       GetPorIdTipoCambio(data.fechaEmision);
     }
-
     DataGlobal();
     Tablas();
   }, []);
@@ -238,8 +226,48 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const DataGlobal = async () => {
-    console.log(await GetSimplificado());
     setDataGlobal(await GetSimplificado());
+  };
+  const Factura = async () => {
+    if (dataFactura.accion == "agregar") {
+      //Anidar Facturas
+      let facturas = [
+        ...data.documentosRelacionados,
+        dataFactura.documentosRelacionados,
+      ];
+      //Anidar Facturas
+
+      setData({
+        ...data,
+        clienteId: dataFactura.clienteId,
+        clienteNumeroDocumentoIdentidad:
+          dataFactura.clienteNumeroDocumentoIdentidad,
+        clienteNombre: dataFactura.clienteNombre,
+        clienteDireccionId: dataFactura.clienteDireccionId,
+        clienteDireccion: dataFactura.clienteDireccion ?? "",
+        personalId: dataFactura.personalId,
+        monedaId: dataFactura.monedaId,
+        observacion: dataFactura.observacion,
+        //Facturas
+        documentoRelacionadoId: dataFactura.documentoRelacionadoId,
+        documentosRelacionados: [
+          ...data.documentosRelacionados,
+          dataFactura.documentosRelacionados,
+        ],
+        numeroFactura: facturas.map((map) => map.numeroDocumento),
+        // Facturas
+      });
+      GetDireccion(dataFactura.clienteId);
+    } else {
+      //Anidar Facturas
+      let facturas = dataFactura.documentosRelacionados;
+      //Anidar Facturas
+      setData({
+        ...data,
+        documentosRelacionados: dataFactura.documentosRelacionados || [],
+        numeroFactura: facturas.map((map) => map.numeroDocumento),
+      });
+    }
   };
   const OcultarMensajes = async () => {
     setMensaje([]);
@@ -531,6 +559,121 @@ const Modal = ({ setModal, modo, objeto }) => {
       setRefrescar(true);
     }
   };
+  const DetallesFactura = async (accion) => {
+    //Recorre los detalles que nos retorna el Filtro Orden de Compra
+    let detalleEliminado = dataDetalle;
+    dataFactura.detalles.map((detalleFactura) => {
+      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
+      let detalleActual = dataDetalle.find((map) => {
+        return map.id == detalleFactura.id;
+      });
+      //Validamos si la accion es Agregar o Eliminar
+      if (accion == "agregar") {
+        //Si detalleActual es undefined es porque no existe ningún registro
+        if (detalleActual == undefined) {
+          dataDetalle.push({
+            detalleId: detalleId,
+            id: detalleFactura.id,
+            lineaId: detalleFactura.lineaId,
+            subLineaId: detalleFactura.subLineaId,
+            articuloId: detalleFactura.articuloId,
+            unidadMedidaId: detalleFactura.unidadMedidaId,
+            marcaId: detalleFactura.marcaId,
+            descripcion: detalleFactura.descripcion,
+            codigoBarras: detalleFactura.codigoBarras,
+            cantidad: detalleFactura.cantidad,
+            stock: detalleFactura.stock,
+            precioCompra: detalleFactura.precioCompra,
+            precioUnitario: detalleFactura.precioUnitario,
+            subTotal: detalleFactura.subTotal,
+            montoIGV: detalleFactura.montoIGV,
+            importe: detalleFactura.importe,
+            presentacion: detalleFactura.presentacion ?? "",
+            unidadMedidaDescripcion: detalleFactura.unidadMedidaDescripcion,
+          });
+          setDetalleId(detalleId + 1);
+        } else {
+          //Si existe un registro añade al registro actual
+
+          //Calculos
+          let cantidad = detalleActual.cantidad + detalleFactura.cantidad;
+          let importe = can * detalleActual.precioUnitario;
+          let subTotal = importe * (data.porcentajeIGV / 100);
+          let montoIGV = importe - subTotal;
+          //Calculos
+
+          //Modifica a dataDetalle en el índice que corresponda
+          dataDetalle[detalleActual.detalleId - 1] = {
+            detalleId: detalleActual.detalleId,
+            id: detalleFactura.id,
+            lineaId: detalleFactura.lineaId,
+            subLineaId: detalleFactura.subLineaId,
+            articuloId: detalleFactura.articuloId,
+            unidadMedidaId: detalleFactura.unidadMedidaId,
+            marcaId: detalleFactura.marcaId,
+            descripcion: detalleFactura.descripcion,
+            codigoBarras: detalleFactura.codigoBarras,
+            cantidad: cantidad,
+            stock: detalleFactura.stock,
+            precioCompra: detalleFactura.precioCompra,
+            precioUnitario: detalleFactura.precioUnitario,
+            subTotal: subTotal,
+            montoIGV: montoIGV,
+            importe: importe,
+            presentacion: detalleFactura.presentacion ?? "",
+            unidadMedidaDescripcion: detalleFactura.unidadMedidaDescripcion,
+          };
+        }
+      } else {
+        //ELIMINAR
+        if (detalleActual != undefined) {
+          //Validamos por la cantidad
+          if (detalleActual.cantidad - detalleFactura.cantidad == 0) {
+            //Si el resultado es 0 entonces se elimina por completo el registro
+            detalleEliminado = detalleEliminado.filter(
+              (map) => map.id !== detalleActual.id
+            );
+            //Asigna el nuevo array a dataDetalle
+            setDataDetalle(detalleEliminado);
+            setDetalleId(detalleId - 1);
+            setRefrescar(true);
+          } else {
+            //Caso contrario restamos la cantidad y recalculamos
+
+            //Calculos
+            let cantidad = detalleActual.cantidad - detalleFactura.cantidad;
+            let importe = cantidad * detalleActual.precioUnitario;
+            let subTotal = importe * (data.porcentajeIGV / 100);
+            let montoIGV = importe - subTotal;
+            //Calculos
+
+            //Modifica a dataDetalle en el índice que corresponda
+            dataDetalle[detalleActual.detalleId - 1] = {
+              detalleId: detalleActual.detalleId,
+              id: detalleFactura.id,
+              lineaId: detalleFactura.lineaId,
+              subLineaId: detalleFactura.subLineaId,
+              articuloId: detalleFactura.articuloId,
+              unidadMedidaId: detalleFactura.unidadMedidaId,
+              marcaId: detalleFactura.marcaId,
+              descripcion: detalleFactura.descripcion,
+              codigoBarras: detalleFactura.codigoBarras,
+              cantidad: cantidad,
+              stock: detalleFactura.stock,
+              precioCompra: detalleFactura.precioCompra,
+              precioUnitario: detalleFactura.precioUnitario,
+              subTotal: subTotal,
+              montoIGV: montoIGV,
+              importe: importe,
+              presentacion: detalleFactura.presentacion ?? "",
+              unidadMedidaDescripcion: detalleFactura.unidadMedidaDescripcion,
+            };
+          }
+        }
+      }
+      setRefrescar(true);
+    });
+  };
   //#endregion
 
   //#region API
@@ -803,22 +946,19 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={Global.InputFull}>
-                  <label
-                    htmlFor="documentoRelacionado "
-                    className={Global.LabelStyle}
-                  >
+                  <label htmlFor="numeroFactura " className={Global.LabelStyle}>
                     Factura
                   </label>
                   <input
                     type="text"
-                    id="documentoRelacionado "
-                    name="documentoRelacionado "
+                    id="numeroFactura "
+                    name="numeroFactura "
                     placeholder="Buscar Factura"
                     autoComplete="off"
                     readOnly={true}
-                    value={data.documentoRelacionado ?? ""}
+                    value={data.numeroFactura ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton + Global.Disabled}
+                    className={modo != "Consultar" ? Global.InputBoton + Global.Disabled : Global.InputStyle + Global.Disabled}
                   />
                   <button
                     id="consultarFactura"
@@ -1457,9 +1597,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       {modalFactura && (
         <FiltroFactura
           setModal={setModalFactura}
-          id={data.clienteId}
           setObjeto={setDataFactura}
-          objeto={data.cotizacionId}
+          objeto={data.documentosRelacionados}
         />
       )}
       {modalArt && (
@@ -1472,3 +1611,4 @@ const Modal = ({ setModal, modo, objeto }) => {
 };
 
 export default Modal;
+//Falta validar el afectarStock según el usuario, este dato se traerá del token
