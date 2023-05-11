@@ -34,14 +34,18 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(3),
-  & th:nth-child(4) {
+  & th:nth-child(2) {
+    width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(4),
+  & th:nth-child(5) {
     width: 90px;
     text-align: center;
   }
 
-  & th:nth-child(5),
-  & th:nth-child(6) {
+  & th:nth-child(6),
+  & th:nth-child(7) {
     width: 130px;
     min-width: 130px;
     max-width: 130px;
@@ -125,23 +129,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalles
       DetallesOrdenCompra(dataOrdenCompra.accion);
       //Detalles
-    } else {
-      //Si no quedan elementos reemplaza igualmente dejadno ordenesCompraRelacionadas vacío
-      setData({
-        ...data,
-        ordenesCompraRelacionadas: dataOrdenCompra.ordenesCompraRelacionadas,
-      });
-      //Detalles
-      setDataDetalle([]);
-      //Detalles
     }
-    setRefrescar(true);
   }, [dataOrdenCompra]);
   useEffect(() => {
-    if (Object.entries(dataDetalle).length > 0) {
-      //Asigna a data los detalles para ser enviados
-      setData({ ...data, detalles: dataDetalle });
-    }
+    setData({ ...data, detalles: dataDetalle });
   }, [dataDetalle]);
   useEffect(() => {
     if (!modalArt) {
@@ -151,9 +142,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [modalArt]);
   useEffect(() => {
     if (refrescar) {
-      data;
-      dataDetalle;
-      dataDocRef;
       ActualizarImportesTotales();
       setRefrescar(false);
     }
@@ -360,6 +348,11 @@ const Modal = ({ setModal, modo, objeto }) => {
           (map) => map.numeroDocumento
         ),
       });
+      if (dataOrdenCompra.ordenesCompraRelacionadas == []) {
+        //Detalles
+        setDataDetalle([]);
+        //Detalles
+      }
     }
   };
   const DetalleDocReferencia = async (id) => {
@@ -529,25 +522,50 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
-      if (dataArt.detalleId > -1) {
-        dataDetalle[dataArt.detalleId - 1] = {
-          detalleId: dataArt.detalleId,
-          id: dataArt.id,
-          lineaId: dataArt.lineaId,
-          subLineaId: dataArt.subLineaId,
-          articuloId: dataArt.articuloId,
-          marcaId: dataArt.marcaId,
-          codigoBarras: dataArt.codigoBarras,
-          descripcion: dataArt.descripcion,
-          stock: dataArt.stock,
-          unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-          unidadMedidaId: dataArt.unidadMedidaId,
-          cantidad: dataArt.cantidad,
-          precioUnitario: dataArt.precioUnitario,
-          montoIGV: dataArt.montoIGV,
-          subTotal: dataArt.subTotal,
-          importe: dataArt.importe,
-        };
+      if (dataArt.detalleId != undefined) {
+        // dataDetalle[dataArt.detalleId - 1] = {
+        //   detalleId: dataArt.detalleId,
+        //   id: dataArt.id,
+        //   lineaId: dataArt.lineaId,
+        //   subLineaId: dataArt.subLineaId,
+        //   articuloId: dataArt.articuloId,
+        //   marcaId: dataArt.marcaId,
+        //   codigoBarras: dataArt.codigoBarras,
+        //   descripcion: dataArt.descripcion,
+        //   stock: dataArt.stock,
+        //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+        //   unidadMedidaId: dataArt.unidadMedidaId,
+        //   cantidad: dataArt.cantidad,
+        //   precioUnitario: dataArt.precioUnitario,
+        //   montoIGV: dataArt.montoIGV,
+        //   subTotal: dataArt.subTotal,
+        //   importe: dataArt.importe,
+        // };
+        let dataDetalleMod = dataDetalle.map((map) => {
+          if (map.id == dataArt.id) {
+            return {
+              detalleId: dataArt.detalleId,
+              id: dataArt.id,
+              lineaId: dataArt.lineaId,
+              subLineaId: dataArt.subLineaId,
+              articuloId: dataArt.articuloId,
+              marcaId: dataArt.marcaId,
+              codigoBarras: dataArt.codigoBarras,
+              descripcion: dataArt.descripcion,
+              stock: dataArt.stock,
+              unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+              unidadMedidaId: dataArt.unidadMedidaId,
+              cantidad: dataArt.cantidad,
+              precioUnitario: dataArt.precioUnitario,
+              montoIGV: dataArt.montoIGV,
+              subTotal: dataArt.subTotal,
+              importe: dataArt.importe,
+            };
+          } else {
+            return map;
+          }
+        });
+        setDataDetalle(dataDetalleMod);
         setRefrescar(true);
       } else {
         let model = [];
@@ -567,24 +585,45 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
 
         if (model == undefined) {
-          dataDetalle.push({
-            detalleId: detalleId,
-            id: dataArt.id,
-            lineaId: dataArt.lineaId,
-            subLineaId: dataArt.subLineaId,
-            articuloId: dataArt.articuloId,
-            marcaId: dataArt.marcaId,
-            codigoBarras: dataArt.codigoBarras,
-            descripcion: dataArt.descripcion,
-            stock: dataArt.stock,
-            unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-            unidadMedidaId: dataArt.unidadMedidaId,
-            cantidad: dataArt.cantidad,
-            precioUnitario: dataArt.precioUnitario,
-            montoIGV: dataArt.montoIGV,
-            subTotal: dataArt.subTotal,
-            importe: dataArt.importe,
-          });
+          // dataDetalle.push({
+          //   detalleId: detalleId,
+          //   id: dataArt.id,
+          //   lineaId: dataArt.lineaId,
+          //   subLineaId: dataArt.subLineaId,
+          //   articuloId: dataArt.articuloId,
+          //   marcaId: dataArt.marcaId,
+          //   codigoBarras: dataArt.codigoBarras,
+          //   descripcion: dataArt.descripcion,
+          //   stock: dataArt.stock,
+          //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+          //   unidadMedidaId: dataArt.unidadMedidaId,
+          //   cantidad: dataArt.cantidad,
+          //   precioUnitario: dataArt.precioUnitario,
+          //   montoIGV: dataArt.montoIGV,
+          //   subTotal: dataArt.subTotal,
+          //   importe: dataArt.importe,
+          // });
+          setDataDetalle((prev) => [
+            ...prev,
+            {
+              detalleId: detalleId,
+              id: dataArt.id,
+              lineaId: dataArt.lineaId,
+              subLineaId: dataArt.subLineaId,
+              articuloId: dataArt.articuloId,
+              marcaId: dataArt.marcaId,
+              codigoBarras: dataArt.codigoBarras,
+              descripcion: dataArt.descripcion,
+              stock: dataArt.stock,
+              unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+              unidadMedidaId: dataArt.unidadMedidaId,
+              cantidad: dataArt.cantidad,
+              precioUnitario: dataArt.precioUnitario,
+              montoIGV: dataArt.montoIGV,
+              subTotal: dataArt.subTotal,
+              importe: dataArt.importe,
+            },
+          ]);
           setDetalleId(detalleId + 1);
           setRefrescar(true);
         } else {
@@ -605,7 +644,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             cancelButtonText: "Cancelar",
           }).then((res) => {
             if (res.isConfirmed) {
-              CargarDetalle(model.detalleId);
+              CargarDetalle(model.id);
             }
           });
         }
@@ -635,14 +674,27 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (id) => {
-    setDataArt(dataDetalle.find((map) => map.detalleId === id));
+    setDataArt(dataDetalle.find((map) => map.id === id));
   };
   const EliminarDetalle = async (id) => {
-    if (id != "") {
-      setDataDetalle(dataDetalle.filter((map) => map.detalleId !== id));
-      setDetalleId(detalleId - 1);
-      setRefrescar(true);
+    let i = 1;
+    let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
+    if (nuevoDetalle.length > 0) {
+      setDataDetalle(
+        nuevoDetalle.map((map) => {
+          return {
+            ...map,
+            detalleId: i++,
+          };
+        })
+      );
+      setDetalleId(i);
+    } else {
+      //Asgina directamente a cero
+      setDetalleId(0);
+      setDataDetalle(nuevoDetalle);
     }
+    setRefrescar(true);
   };
   const DetallesOrdenCompra = async (accion) => {
     //Recorre los detalles que nos retorna el Filtro Orden de Compra
@@ -652,6 +704,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       let detalleActual = dataDetalle.find((map) => {
         return map.id == detalleOrdenCompra.id;
       });
+
       //Validamos si la accion es Agregar o Eliminar
       if (accion == "agregar") {
         //Si detalleActual es undefined es porque no existe ningún registro
@@ -775,28 +828,22 @@ const Modal = ({ setModal, modo, objeto }) => {
     //Calculo Check IncluyeIGV
     if (incluyeIgv) {
       total = Funciones.RedondearNumero(importeTotal, 2);
-      subTotal = Funciones.RedondearNumero(
-        total / (1 + porcentajeIgvSeleccionado / 100),
-        2
-      );
+      subTotal = Funciones.RedondearNumero(total / (1 + porcentajeIgvSeleccionado / 100),2);
       montoIGV = Funciones.RedondearNumero(total - subTotal, 2);
     } else {
       subTotal = Funciones.RedondearNumero(importeTotal, 2);
-      montoIGV = Funciones.RedondearNumero(
-        subTotal * (porcentajeIgvSeleccionado / 100),
-        2
-      );
+      montoIGV = Funciones.RedondearNumero(subTotal * (porcentajeIgvSeleccionado / 100),2);
       total = Funciones.RedondearNumero(subTotal + montoIGV, 2);
     }
     //Calculo Check IncluyeIGV
 
-    setData({
-      ...data,
+    setData((prevState) => ({
+      ...prevState,
       subTotal: Funciones.FormatoNumero(subTotal.toFixed(2)),
       montoIGV: Funciones.FormatoNumero(montoIGV.toFixed(2)),
       totalNeto: Funciones.FormatoNumero(total.toFixed(2)),
       total: Funciones.FormatoNumero(total.toFixed(2)),
-    });
+    }));
   };
   //Calculos
   //#endregion
@@ -893,7 +940,14 @@ const Modal = ({ setModal, modo, objeto }) => {
   const columnas = [
     {
       Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Item",
       accessor: "detalleId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Descripción",
@@ -903,7 +957,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Unidad",
       accessor: "unidadMedidaDescripcion",
       Cell: ({ value }) => {
-        return <p className="text-center">{value}</p>;
+        return <p className="text-center font-semibold">{value}</p>;
       },
     },
     {
@@ -911,7 +965,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "cantidad",
       Cell: ({ value }) => {
         return (
-          <p className="text-right pr-1.5">
+          <p className="text-right font-semibold pr-1.5">
             {Funciones.RedondearNumero(value, 4)}
           </p>
         );
@@ -922,7 +976,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "precioUnitario",
       Cell: ({ value }) => {
         return (
-          <p className="text-right pr-2.5">
+          <p className="text-right font-semibold pr-2.5">
             {Funciones.RedondearNumero(value, 4)}
           </p>
         );
@@ -933,7 +987,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "importe",
       Cell: ({ value }) => {
         return (
-          <p className="text-right pr-5">
+          <p className="text-right font-semibold pr-5">
             {Funciones.RedondearNumero(value, 4)}
           </p>
         );
@@ -950,7 +1004,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={() => CargarDetalle(row.values.detalleId)}
+                  onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -962,7 +1016,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={() => {
-                    EliminarDetalle(row.values.detalleId);
+                    EliminarDetalle(row.values.id);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"

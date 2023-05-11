@@ -80,11 +80,6 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Cliente/${id}?incluirReferencias=${true}`
     );
-    /*
-    Validación de Personal:
-    Primero busca el default de Cliente, en caso no exista, debe buscar el personal default del usuario.
-    En caso no exista debe buscar el personal deafault de la empresa
-    */
     let personalId;
     let personalDefault = result.data.data.personal.find(
       (map) => map.default == true

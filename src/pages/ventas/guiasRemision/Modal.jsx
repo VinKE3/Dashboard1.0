@@ -27,14 +27,18 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(3),
-  & th:nth-child(4) {
+  & th:nth-child(2) {
+    width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(4),
+  & th:nth-child(5) {
     width: 90px;
     text-align: center;
   }
 
-  & th:nth-child(5),
-  & th:nth-child(6) {
+  & th:nth-child(6),
+  & th:nth-child(7) {
     width: 130px;
     min-width: 130px;
     max-width: 130px;
@@ -90,6 +94,11 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
+    console.log("detalleId")
+    console.log(detalleId);
+    console.log("detalleId")
+  }, [detalleId]);
+  useEffect(() => {
     if (Object.keys(dataCliente).length > 0) {
       if (dataCliente.direcciones != undefined) {
         setDataClienteDirec(dataCliente.direcciones);
@@ -118,22 +127,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalles
       DetallesFactura(dataFactura.accion);
       //Detalles
-    } else {
-      //Si no quedan elementos reemplaza igualmente dejadno documentosRelacionados vacío
-      setData({
-        ...data,
-        documentosRelacionados: dataFactura.documentosRelacionados || [],
-      });
-      //Detalles
-      setDataDetalle([]);
-      //Detalles
+      setRefrescar(true);
     }
-    setRefrescar(true);
   }, [dataFactura]);
   useEffect(() => {
-    if (Object.entries(dataDetalle).length > 0) {
-      setData({ ...data, detalles: dataDetalle });
-    }
+    // console.log(dataDetalle)
+    setData({ ...data, detalles: dataDetalle });
   }, [dataDetalle]);
   useEffect(() => {
     if (!modalArt) {
@@ -142,8 +141,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [modalArt]);
   useEffect(() => {
     if (refrescar) {
-      data;
-      dataDetalle;
       setRefrescar(false);
     }
   }, [refrescar]);
@@ -194,7 +191,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
         clienteNombre: dataGlobal.cliente.nombre,
-        clienteDireccionId: dataGlobal.cliente.direccionPrincipalId.toString(),
+        clienteDireccionId: dataGlobal.cliente.direccionPrincipalId,
         clienteDireccion: dataGlobal.cliente.direccionPrincipal,
         personalId: personal.personalId,
       }));
@@ -251,6 +248,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         documentosRelacionados: dataFactura.documentosRelacionados || [],
         numeroFactura: facturas.map((map) => map.numeroDocumento),
       });
+      if (dataFactura.documentosRelacionados == []) {
+        //Detalles
+        setDataDetalle([]);
+        //Detalles
+      }
     }
   };
   const OcultarMensajes = async () => {
@@ -303,6 +305,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           data.monedaId,
           tipoCambio
         );
+        console.log(model)
         if (model != null) {
           setDataArt({
             ...dataArt,
@@ -426,27 +429,52 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
-      if (dataArt.detalleId > -1) {
-        dataDetalle[dataArt.detalleId - 1] = {
-          detalleId: dataArt.detalleId,
-          id: dataArt.id,
-          lineaId: dataArt.lineaId,
-          subLineaId: dataArt.subLineaId,
-          articuloId: dataArt.articuloId,
-          marcaId: dataArt.marcaId,
-          codigoBarras: dataArt.codigoBarras,
-          descripcion: dataArt.descripcion,
-          stock: dataArt.stock,
-          unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-          unidadMedidaId: dataArt.unidadMedidaId,
-          cantidad: dataArt.cantidad,
-          precioCompra: dataArt.precioCompra,
-          precioUnitario: dataArt.precioUnitario,
-          montoIGV: dataArt.montoIGV,
-          subTotal: dataArt.subTotal,
-          importe: dataArt.importe,
-        };
-        setRefrescar(true);
+      if (dataArt.detalleId != undefined) {
+        // dataDetalle[dataArt.detalleId - 1] = {
+        //   detalleId: dataArt.detalleId,
+        //   id: dataArt.id,
+        //   lineaId: dataArt.lineaId,
+        //   subLineaId: dataArt.subLineaId,
+        //   articuloId: dataArt.articuloId,
+        //   marcaId: dataArt.marcaId,
+        //   codigoBarras: dataArt.codigoBarras,
+        //   descripcion: dataArt.descripcion,
+        //   stock: dataArt.stock,
+        //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+        //   unidadMedidaId: dataArt.unidadMedidaId,
+        //   cantidad: dataArt.cantidad,
+        //   precioCompra: dataArt.precioCompra,
+        //   precioUnitario: dataArt.precioUnitario,
+        //   montoIGV: dataArt.montoIGV,
+        //   subTotal: dataArt.subTotal,
+        //   importe: dataArt.importe,
+        // };
+        let dataDetalleMod = dataDetalle.map((map) => {
+          if (map.id == dataArt.id) {
+            return {
+              detalleId: dataArt.detalleId,
+              id: dataArt.id,
+              lineaId: dataArt.lineaId,
+              subLineaId: dataArt.subLineaId,
+              articuloId: dataArt.articuloId,
+              marcaId: dataArt.marcaId,
+              codigoBarras: dataArt.codigoBarras,
+              descripcion: dataArt.descripcion,
+              stock: dataArt.stock,
+              unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+              unidadMedidaId: dataArt.unidadMedidaId,
+              cantidad: dataArt.cantidad,
+              precioCompra: dataArt.precioCompra,
+              precioUnitario: dataArt.precioUnitario,
+              montoIGV: dataArt.montoIGV,
+              subTotal: dataArt.subTotal,
+              importe: dataArt.importe,
+            };
+          } else {
+            return map;
+          }
+        });
+        setDataDetalle(dataDetalleMod);
       } else {
         let model = [];
         //Valida Artículos Varios
@@ -465,27 +493,48 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
 
         if (model == undefined) {
-          dataDetalle.push({
-            detalleId: detalleId,
-            id: dataArt.id,
-            lineaId: dataArt.lineaId,
-            subLineaId: dataArt.subLineaId,
-            articuloId: dataArt.articuloId,
-            marcaId: dataArt.marcaId,
-            codigoBarras: dataArt.codigoBarras,
-            descripcion: dataArt.descripcion,
-            stock: dataArt.stock,
-            unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-            unidadMedidaId: dataArt.unidadMedidaId,
-            cantidad: dataArt.cantidad,
-            precioCompra: dataArt.precioCompra,
-            precioUnitario: dataArt.precioUnitario,
-            montoIGV: dataArt.montoIGV,
-            subTotal: dataArt.subTotal,
-            importe: dataArt.importe,
-          });
+          // dataDetalle.push({
+          //   detalleId: detalleId,
+          //   id: dataArt.id,
+          //   lineaId: dataArt.lineaId,
+          //   subLineaId: dataArt.subLineaId,
+          //   articuloId: dataArt.articuloId,
+          //   marcaId: dataArt.marcaId,
+          //   codigoBarras: dataArt.codigoBarras,
+          //   descripcion: dataArt.descripcion,
+          //   stock: dataArt.stock,
+          //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+          //   unidadMedidaId: dataArt.unidadMedidaId,
+          //   cantidad: dataArt.cantidad,
+          //   precioCompra: dataArt.precioCompra,
+          //   precioUnitario: dataArt.precioUnitario,
+          //   montoIGV: dataArt.montoIGV,
+          //   subTotal: dataArt.subTotal,
+          //   importe: dataArt.importe,
+          // });
+          setDataDetalle((prev) => [
+            ...prev,
+            {
+              detalleId: detalleId,
+              id: dataArt.id,
+              lineaId: dataArt.lineaId,
+              subLineaId: dataArt.subLineaId,
+              articuloId: dataArt.articuloId,
+              marcaId: dataArt.marcaId,
+              codigoBarras: dataArt.codigoBarras,
+              descripcion: dataArt.descripcion,
+              stock: dataArt.stock,
+              unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
+              unidadMedidaId: dataArt.unidadMedidaId,
+              cantidad: dataArt.cantidad,
+              precioCompra: dataArt.precioCompra,
+              precioUnitario: dataArt.precioUnitario,
+              montoIGV: dataArt.montoIGV,
+              subTotal: dataArt.subTotal,
+              importe: dataArt.importe,
+            },
+          ]);
           setDetalleId(detalleId + 1);
-          setRefrescar(true);
         } else {
           Swal.fire({
             title: "Aviso del sistema",
@@ -504,7 +553,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             cancelButtonText: "Cancelar",
           }).then((res) => {
             if (res.isConfirmed) {
-              CargarDetalle(model.detalleId);
+              CargarDetalle(model.id);
             }
           });
         }
@@ -534,124 +583,246 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (id) => {
-    setDataArt(dataDetalle.find((map) => map.detalleId === id));
+    setDataArt(dataDetalle.find((map) => map.id === id));
   };
   const EliminarDetalle = async (id) => {
-    if (id != "") {
-      setDataDetalle(dataDetalle.filter((map) => map.detalleId !== id));
-      setDetalleId(detalleId - 1);
-      setRefrescar(true);
+    let i = 1;
+    let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
+    if (nuevoDetalle.length > 0) {
+      setDataDetalle(
+        nuevoDetalle.map((map) => {
+          return {
+            ...map,
+            detalleId: i++,
+          };
+        })
+      );
+      setDetalleId(i);
+    } else {
+      //Asgina directamente a cero
+      setDetalleId(0);
+      setDataDetalle(nuevoDetalle);
     }
+    setRefrescar(true);
   };
   const DetallesFactura = async (accion) => {
     //Recorre los detalles que nos retorna el Filtro Orden de Compra
     let detalleEliminado = dataDetalle;
-    dataFactura.detalles.map((detalleFactura) => {
+    //Contador para asignar el detalleId
+    let contador = dataDetalle.length;
+
+    //Mapeado de los detalles que trae dataFactura
+    dataFactura.detalles.map((dataFacturaDetallemap) => {
+      contador++;
+
       //Verifica con los detalles ya seleccionados si coincide algún registro por el id
-      let detalleActual = dataDetalle.find((map) => {
-        return map.id == detalleFactura.id;
+      let dataDetalleExiste = dataDetalle.find((map) => {
+        return map.id == dataFacturaDetallemap.id;
       });
+      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
+
       //Validamos si la accion es Agregar o Eliminar
       if (accion == "agregar") {
-        //Si detalleActual es undefined es porque no existe ningún registro
-        if (detalleActual == undefined) {
-          dataDetalle.push({
-            detalleId: detalleId,
-            id: detalleFactura.id,
-            lineaId: detalleFactura.lineaId,
-            subLineaId: detalleFactura.subLineaId,
-            articuloId: detalleFactura.articuloId,
-            unidadMedidaId: detalleFactura.unidadMedidaId,
-            marcaId: detalleFactura.marcaId,
-            descripcion: detalleFactura.descripcion,
-            codigoBarras: detalleFactura.codigoBarras,
-            cantidad: detalleFactura.cantidad,
-            stock: detalleFactura.stock,
-            precioCompra: detalleFactura.precioCompra,
-            precioUnitario: detalleFactura.precioUnitario,
-            subTotal: detalleFactura.subTotal,
-            montoIGV: detalleFactura.montoIGV,
-            importe: detalleFactura.importe,
-            presentacion: detalleFactura.presentacion ?? "",
-            unidadMedidaDescripcion: detalleFactura.unidadMedidaDescripcion,
-          });
-          setDetalleId(detalleId + 1);
-        } else {
-          //Si existe un registro añade al registro actual
+        //Si dataDetalleExiste es undefined hace el PUSH
+        if (dataDetalleExiste == undefined) {
+          //Toma el valor actual de contador para asignarlo
+          let i = contador;
+          // dataDetalle.push({
+          //   detalleId: detalleId,
+          //   id: dataFacturaDetallemap.id,
+          //   lineaId: dataFacturaDetallemap.lineaId,
+          //   subLineaId: dataFacturaDetallemap.subLineaId,
+          //   articuloId: dataFacturaDetallemap.articuloId,
+          //   unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
+          //   marcaId: dataFacturaDetallemap.marcaId,
+          //   descripcion: dataFacturaDetallemap.descripcion,
+          //   codigoBarras: dataFacturaDetallemap.codigoBarras,
+          //   cantidad: dataFacturaDetallemap.cantidad,
+          //   stock: dataFacturaDetallemap.stock,
+          //   precioCompra: dataFacturaDetallemap.precioCompra,
+          //   precioUnitario: dataFacturaDetallemap.precioUnitario,
+          //   subTotal: dataFacturaDetallemap.subTotal,
+          //   montoIGV: dataFacturaDetallemap.montoIGV,
+          //   importe: dataFacturaDetallemap.importe,
+          //   presentacion: dataFacturaDetallemap.presentacion ?? "",
+          //   unidadMedidaDescripcion: dataFacturaDetallemap.unidadMedidaDescripcion,
+          // });
 
-          //Calculos
-          let cantidad = detalleActual.cantidad + detalleFactura.cantidad;
-          let importe = cantidad * detalleActual.precioUnitario;
-          let subTotal = importe * (data.porcentajeIGV / 100);
-          let montoIGV = importe - subTotal;
-          //Calculos
+          setDataDetalle((prev) => [
+            ...prev,
+            {
+              detalleId: i,
+              id: dataFacturaDetallemap.id,
+              lineaId: dataFacturaDetallemap.lineaId,
+              subLineaId: dataFacturaDetallemap.subLineaId,
+              articuloId: dataFacturaDetallemap.articuloId,
+              unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
+              marcaId: dataFacturaDetallemap.marcaId,
+              descripcion: dataFacturaDetallemap.descripcion,
+              codigoBarras: dataFacturaDetallemap.codigoBarras,
+              cantidad: dataFacturaDetallemap.cantidad,
+              stock: dataFacturaDetallemap.stock,
+              precioCompra: dataFacturaDetallemap.precioCompra,
+              precioUnitario: dataFacturaDetallemap.precioUnitario,
+              subTotal: dataFacturaDetallemap.subTotal,
+              montoIGV: dataFacturaDetallemap.montoIGV,
+              importe: dataFacturaDetallemap.importe,
+              presentacion: dataFacturaDetallemap.presentacion ?? "",
+              unidadMedidaDescripcion:
+                dataFacturaDetallemap.unidadMedidaDescripcion,
+            },
+          ]);
+
+          //Asigna el valor final de contador y le agrega 1
+          setDetalleId(contador + 1);
+        } else {
+          //Modifica registro en base al id
 
           //Modifica a dataDetalle en el índice que corresponda
-          dataDetalle[detalleActual.detalleId - 1] = {
-            detalleId: detalleActual.detalleId,
-            id: detalleFactura.id,
-            lineaId: detalleFactura.lineaId,
-            subLineaId: detalleFactura.subLineaId,
-            articuloId: detalleFactura.articuloId,
-            unidadMedidaId: detalleFactura.unidadMedidaId,
-            marcaId: detalleFactura.marcaId,
-            descripcion: detalleFactura.descripcion,
-            codigoBarras: detalleFactura.codigoBarras,
-            cantidad: cantidad,
-            stock: detalleFactura.stock,
-            precioCompra: detalleFactura.precioCompra,
-            precioUnitario: detalleFactura.precioUnitario,
-            subTotal: subTotal,
-            montoIGV: montoIGV,
-            importe: importe,
-            presentacion: detalleFactura.presentacion ?? "",
-            unidadMedidaDescripcion: detalleFactura.unidadMedidaDescripcion,
-          };
+          // dataDetalle[dataDetalleExiste.detalleId - 1] = {
+          //   detalleId: dataDetalleExiste.detalleId,
+          //   id: dataFacturaDetallemap.id,
+          //   lineaId: dataFacturaDetallemap.lineaId,
+          //   subLineaId: dataFacturaDetallemap.subLineaId,
+          //   articuloId: dataFacturaDetallemap.articuloId,
+          //   unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
+          //   marcaId: dataFacturaDetallemap.marcaId,
+          //   descripcion: dataFacturaDetallemap.descripcion,
+          //   codigoBarras: dataFacturaDetallemap.codigoBarras,
+          //   cantidad: cantidad,
+          //   stock: dataFacturaDetallemap.stock,
+          //   precioCompra: dataFacturaDetallemap.precioCompra,
+          //   precioUnitario: dataFacturaDetallemap.precioUnitario,
+          //   subTotal: subTotal,
+          //   montoIGV: montoIGV,
+          //   importe: importe,
+          //   presentacion: dataFacturaDetallemap.presentacion ?? "",
+          //   unidadMedidaDescripcion: dataFacturaDetallemap.unidadMedidaDescripcion,
+          // };
+
+          let dataDetalleMod = dataDetalle.map((map) => {
+            if (map.id == dataDetalleExiste.id) {
+              //Calculos
+              let cantidad = dataDetalleExiste.cantidad + dataFacturaDetallemap.cantidad;
+              let importe = cantidad * dataDetalleExiste.precioUnitario;
+              let subTotal = importe * (data.porcentajeIGV / 100);
+              let montoIGV = importe - subTotal;
+              //Calculos
+              return {
+                detalleId: dataDetalleExiste.detalleId,
+                id: dataFacturaDetallemap.id,
+                lineaId: dataFacturaDetallemap.lineaId,
+                subLineaId: dataFacturaDetallemap.subLineaId,
+                articuloId: dataFacturaDetallemap.articuloId,
+                unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
+                marcaId: dataFacturaDetallemap.marcaId,
+                descripcion: dataFacturaDetallemap.descripcion,
+                codigoBarras: dataFacturaDetallemap.codigoBarras,
+                cantidad: cantidad,
+                stock: dataFacturaDetallemap.stock,
+                precioCompra: dataFacturaDetallemap.precioCompra,
+                precioUnitario: dataFacturaDetallemap.precioUnitario,
+                importe: importe,
+                subTotal: subTotal,
+                montoIGV: montoIGV,
+                presentacion: dataFacturaDetallemap.presentacion ?? "",
+                unidadMedidaDescripcion:
+                  dataFacturaDetallemap.unidadMedidaDescripcion,
+              };
+            } else {
+              return map;
+            }
+          });
+          setDataDetalle(dataDetalleMod);
         }
       } else {
         //ELIMINAR
-        if (detalleActual != undefined) {
+        if (dataDetalleExiste != undefined) {
           //Validamos por la cantidad
-          if (detalleActual.cantidad - detalleFactura.cantidad == 0) {
+          console.log(dataDetalleExiste.cantidad)
+          console.log(dataFacturaDetallemap.cantidad)
+          console.log(dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad == 0)
+          if (dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad == 0) {
             //Si el resultado es 0 entonces se elimina por completo el registro
-            detalleEliminado = detalleEliminado.filter(
-              (map) => map.id !== detalleActual.id
-            );
-            //Asigna el nuevo array a dataDetalle
-            setDataDetalle(detalleEliminado);
-            setDetalleId(detalleId - 1);
+            detalleEliminado = detalleEliminado.filter((map) => map.id !== dataDetalleExiste.id);
+            //Si el resultado es 0 entonces se elimina por completo el registro
+            console.log(contador);
+            if (detalleEliminado.length > 0) {
+              setDataDetalle(
+                detalleEliminado.map((map) => {
+                  return {
+                    ...map,
+                    detalleId: contador++,
+                  };
+                })
+              );
+              setDetalleId(contador);
+            } else {
+              //Asgina directamente a 1
+              setDetalleId(detalleEliminado.length + 1);
+              setDataDetalle(detalleEliminado);
+            }
             setRefrescar(true);
           } else {
-            //Caso contrario restamos la cantidad y recalculamos
-
-            //Calculos
-            let cantidad = detalleActual.cantidad - detalleFactura.cantidad;
-            let importe = cantidad * detalleActual.precioUnitario;
-            let subTotal = importe * (data.porcentajeIGV / 100);
-            let montoIGV = importe - subTotal;
-            //Calculos
+            //Si la resta es mayor a 0 entonces restamos al detalle encontrado
 
             //Modifica a dataDetalle en el índice que corresponda
-            dataDetalle[detalleActual.detalleId - 1] = {
-              detalleId: detalleActual.detalleId,
-              id: detalleFactura.id,
-              lineaId: detalleFactura.lineaId,
-              subLineaId: detalleFactura.subLineaId,
-              articuloId: detalleFactura.articuloId,
-              unidadMedidaId: detalleFactura.unidadMedidaId,
-              marcaId: detalleFactura.marcaId,
-              descripcion: detalleFactura.descripcion,
-              codigoBarras: detalleFactura.codigoBarras,
-              cantidad: cantidad,
-              stock: detalleFactura.stock,
-              precioCompra: detalleFactura.precioCompra,
-              precioUnitario: detalleFactura.precioUnitario,
-              subTotal: subTotal,
-              montoIGV: montoIGV,
-              importe: importe,
-              presentacion: detalleFactura.presentacion ?? "",
-              unidadMedidaDescripcion: detalleFactura.unidadMedidaDescripcion,
-            };
+            // dataDetalle[dataDetalleExiste.detalleId - 1] = {
+            //   detalleId: dataDetalleExiste.detalleId,
+            //   id: dataFacturaDetallemap.id,
+            //   lineaId: dataFacturaDetallemap.lineaId,
+            //   subLineaId: dataFacturaDetallemap.subLineaId,
+            //   articuloId: dataFacturaDetallemap.articuloId,
+            //   unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
+            //   marcaId: dataFacturaDetallemap.marcaId,
+            //   descripcion: dataFacturaDetallemap.descripcion,
+            //   codigoBarras: dataFacturaDetallemap.codigoBarras,
+            //   cantidad: cantidad,
+            //   stock: dataFacturaDetallemap.stock,
+            //   precioCompra: dataFacturaDetallemap.precioCompra,
+            //   precioUnitario: dataFacturaDetallemap.precioUnitario,
+            //   subTotal: subTotal,
+            //   montoIGV: montoIGV,
+            //   importe: importe,
+            //   presentacion: dataFacturaDetallemap.presentacion ?? "",
+            //   unidadMedidaDescripcion: dataFacturaDetallemap.unidadMedidaDescripcion,
+            // };
+
+            let dataDetalleEliminar = dataDetalle.map((map) => {
+              if (map.id == dataDetalleExiste.id) {
+                //Calculos
+                let cantidad = dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad;
+                let importe = cantidad * dataDetalleExiste.precioUnitario;
+                let subTotal = importe * (data.porcentajeIGV / 100);
+                let montoIGV = importe - subTotal;
+                //Calculos
+
+                return {
+                  detalleId: dataDetalleExiste.detalleId,
+                  id: dataFacturaDetallemap.id,
+                  lineaId: dataFacturaDetallemap.lineaId,
+                  subLineaId: dataFacturaDetallemap.subLineaId,
+                  articuloId: dataFacturaDetallemap.articuloId,
+                  unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
+                  marcaId: dataFacturaDetallemap.marcaId,
+                  descripcion: dataFacturaDetallemap.descripcion,
+                  codigoBarras: dataFacturaDetallemap.codigoBarras,
+                  cantidad: cantidad,
+                  stock: dataFacturaDetallemap.stock,
+                  precioCompra: dataFacturaDetallemap.precioCompra,
+                  precioUnitario: dataFacturaDetallemap.precioUnitario,
+                  subTotal: subTotal,
+                  montoIGV: montoIGV,
+                  importe: importe,
+                  presentacion: dataFacturaDetallemap.presentacion ?? "",
+                  unidadMedidaDescripcion:
+                    dataFacturaDetallemap.unidadMedidaDescripcion,
+                };
+              } else {
+                return map;
+              }
+            });
+            setDataDetalle(dataDetalleEliminar);
           }
         }
       }
@@ -741,7 +912,14 @@ const Modal = ({ setModal, modo, objeto }) => {
   const columnas = [
     {
       Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Item",
       accessor: "detalleId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Descripción",
@@ -751,7 +929,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Unidad",
       accessor: "unidadMedidaDescripcion",
       Cell: ({ value }) => {
-        return <p className="text-center">{value}</p>;
+        return <p className="text-center font-semibold">{value}</p>;
       },
     },
     {
@@ -759,7 +937,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "cantidad",
       Cell: ({ value }) => {
         return (
-          <p className="text-right pr-1.5">
+          <p className="text-right font-semibold pr-1.5">
             {Funciones.RedondearNumero(value, 4)}
           </p>
         );
@@ -770,7 +948,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "precioUnitario",
       Cell: ({ value }) => {
         return (
-          <p className="text-right pr-2.5">
+          <p className="text-right font-semibold pr-2.5">
             {Funciones.RedondearNumero(value, 4)}
           </p>
         );
@@ -781,7 +959,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "importe",
       Cell: ({ value }) => {
         return (
-          <p className="text-right pr-5">
+          <p className="text-right font-semibold pr-5">
             {Funciones.RedondearNumero(value, 4)}
           </p>
         );
@@ -798,7 +976,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={() => CargarDetalle(row.values.detalleId)}
+                  onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -810,7 +988,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={() => {
-                    EliminarDetalle(row.values.detalleId);
+                    EliminarDetalle(row.values.id);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -890,7 +1068,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="10"
                     autoComplete="off"
                     readOnly={true}
-                    value={modo == "Registrar" ? "0000000000" : data.numero}
+                    value={data.numero ?? ""}
                     className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
@@ -1608,4 +1786,3 @@ const Modal = ({ setModal, modo, objeto }) => {
 };
 
 export default Modal;
-//Falta validar el afectarStock según el usuario, este dato se traerá del token

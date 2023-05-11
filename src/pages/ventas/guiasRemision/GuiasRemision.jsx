@@ -44,7 +44,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const DocumentosVenta = () => {
+const GuiasRemision = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
@@ -176,13 +176,13 @@ const DocumentosVenta = () => {
           // empresaId: "",
           tipoDocumentoId: "09",
           serie: "0002",
-          numero: "0000000000",
+          numero: "",
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaTraslado: moment().format("YYYY-MM-DD"),
           clienteId: "",
           clienteNumeroDocumentoIdentidad: "",
           clienteNombre: "",
-          clienteDireccionId: "",
+          clienteDireccionId: 0,
           clienteDireccion: "",
           direccionPartida: "",
           personalId: "",
@@ -195,7 +195,7 @@ const DocumentosVenta = () => {
           motivoTrasladoId: "01",
           motivoSustento: "",
           ingresoEgresoStock: "-",
-          numeroFactura: [],
+          numeroFactura: "",
           ordenPedido: "",
           observacion: "",
           monedaId: "S",
@@ -505,4 +505,4 @@ const DocumentosVenta = () => {
   //#endregion
 };
 
-export default DocumentosVenta;
+export default GuiasRemision;
