@@ -56,7 +56,6 @@ const TablaStyle = styled.div`
     min-width: 90px;
     max-width: 90px;
     text-align: center;
-    color: transparent;
   }
 `;
 //#endregion
@@ -129,6 +128,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalles
       DetallesOrdenCompra(dataOrdenCompra.accion);
       //Detalles
+      OcultarMensajes();
     }
   }, [dataOrdenCompra]);
   useEffect(() => {
@@ -690,8 +690,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       setDetalleId(i);
     } else {
-      //Asgina directamente a cero
-      setDetalleId(0);
+      //Asgina directamente a 1
+      setDetalleId(dataDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
     setRefrescar(true);
@@ -699,108 +699,227 @@ const Modal = ({ setModal, modo, objeto }) => {
   const DetallesOrdenCompra = async (accion) => {
     //Recorre los detalles que nos retorna el Filtro Orden de Compra
     let detalleEliminado = dataDetalle;
-    dataOrdenCompra.detalles.map((detalleOrdenCompra) => {
+    //Contador para asignar el detalleId
+    let contador = dataDetalle.length;
+
+    dataOrdenCompra.detalles.map((dataOCDetallemap) => {
+      contador++;
+
       //Verifica con los detalles ya seleccionados si coincide algún registro por el id
-      let detalleActual = dataDetalle.find((map) => {
-        return map.id == detalleOrdenCompra.id;
+      let dataDetalleExiste = dataDetalle.find((map) => {
+        return map.id == dataOCDetallemap.id;
       });
+      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
 
       //Validamos si la accion es Agregar o Eliminar
       if (accion == "agregar") {
-        //Si detalleActual es undefined es porque no existe ningún registro
-        if (detalleActual == undefined) {
-          dataDetalle.push({
-            detalleId: detalleId,
-            id: detalleOrdenCompra.id,
-            lineaId: detalleOrdenCompra.lineaId,
-            subLineaId: detalleOrdenCompra.subLineaId,
-            articuloId: detalleOrdenCompra.articuloId,
-            marcaId: detalleOrdenCompra.marcaId,
-            codigoBarras: detalleOrdenCompra.codigoBarras,
-            descripcion: detalleOrdenCompra.descripcion,
-            stock: detalleOrdenCompra.stock,
-            unidadMedidaDescripcion: detalleOrdenCompra.unidadMedidaDescripcion,
-            unidadMedidaId: detalleOrdenCompra.unidadMedidaId,
-            cantidad: detalleOrdenCompra.cantidad,
-            precioUnitario: detalleOrdenCompra.precioUnitario,
-            montoIGV: detalleOrdenCompra.montoIGV,
-            subTotal: detalleOrdenCompra.subTotal,
-            importe: detalleOrdenCompra.importe,
-          });
-          setDetalleId(detalleId + 1);
+        //Si dataDetalleExiste es undefined hace el PUSH
+        if (dataDetalleExiste == undefined) {
+          //Toma el valor actual de contador para asignarlo
+          let i = contador;
+          // dataDetalle.push({
+          //   detalleId: detalleId,
+          //   id: dataOCDetallemap.id,
+          //   lineaId: dataOCDetallemap.lineaId,
+          //   subLineaId: dataOCDetallemap.subLineaId,
+          //   articuloId: dataOCDetallemap.articuloId,
+          //   marcaId: dataOCDetallemap.marcaId,
+          //   codigoBarras: dataOCDetallemap.codigoBarras,
+          //   descripcion: dataOCDetallemap.descripcion,
+          //   stock: dataOCDetallemap.stock,
+          //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
+          //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
+          //   cantidad: dataOCDetallemap.cantidad,
+          //   precioUnitario: dataOCDetallemap.precioUnitario,
+          //   montoIGV: dataOCDetallemap.montoIGV,
+          //   subTotal: dataOCDetallemap.subTotal,
+          //   importe: dataOCDetallemap.importe,
+          // });
+          // setDetalleId(detalleId + 1);
+          setDataDetalle((prev) => [
+            ...prev,
+            {
+              detalleId: i,
+              id: dataOCDetallemap.id,
+              lineaId: dataOCDetallemap.lineaId,
+              subLineaId: dataOCDetallemap.subLineaId,
+              articuloId: dataOCDetallemap.articuloId,
+              unidadMedidaId: dataOCDetallemap.unidadMedidaId,
+              marcaId: dataOCDetallemap.marcaId,
+              descripcion: dataOCDetallemap.descripcion,
+              codigoBarras: dataOCDetallemap.codigoBarras,
+              cantidad: dataOCDetallemap.cantidad,
+              stock: dataOCDetallemap.stock,
+              precioUnitario: dataOCDetallemap.precioUnitario,
+              montoIGV: dataOCDetallemap.montoIGV,
+              subTotal: dataOCDetallemap.subTotal,
+              importe: dataOCDetallemap.importe,
+              presentacion: dataOCDetallemap.presentacion ?? "",
+              unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
+            },
+          ]);
+
+          //Asigna el valor final de contador y le agrega 1
+          setDetalleId(contador + 1);
         } else {
-          //Si existe un registro añade al registro actual
+          //Modifica registro en base al id
 
           //Calculos
-          let can = detalleActual.cantidad + detalleOrdenCompra.cantidad;
-          let importe = can * detalleActual.precioUnitario;
-          let subTotal = importe * (data.porcentajeIGV / 100);
-          let montoIGV = importe - subTotal;
+          // let can = dataDetalleExiste.cantidad + dataOCDetallemap.cantidad;
+          // let importe = can * dataDetalleExiste.precioUnitario;
+          // let subTotal = importe * (data.porcentajeIGV / 100);
+          // let montoIGV = importe - subTotal;
           //Calculos
-
           //Modifica a dataDetalle en el índice que corresponda
-          dataDetalle[detalleActual.detalleId - 1] = {
-            detalleId: detalleActual.detalleId,
-            id: detalleOrdenCompra.id,
-            lineaId: detalleOrdenCompra.lineaId,
-            subLineaId: detalleOrdenCompra.subLineaId,
-            articuloId: detalleOrdenCompra.articuloId,
-            marcaId: detalleOrdenCompra.marcaId,
-            codigoBarras: detalleOrdenCompra.codigoBarras,
-            descripcion: detalleOrdenCompra.descripcion,
-            stock: detalleOrdenCompra.stock,
-            unidadMedidaDescripcion: detalleOrdenCompra.unidadMedidaDescripcion,
-            unidadMedidaId: detalleOrdenCompra.unidadMedidaId,
-            cantidad: can,
-            precioUnitario: detalleOrdenCompra.precioUnitario,
-            importe: importe,
-            subTotal: subTotal,
-            montoIGV: montoIGV,
-          };
+          // dataDetalle[dataDetalleExiste.detalleId - 1] = {
+          //   detalleId: dataDetalleExiste.detalleId,
+          //   id: dataOCDetallemap.id,
+          //   lineaId: dataOCDetallemap.lineaId,
+          //   subLineaId: dataOCDetallemap.subLineaId,
+          //   articuloId: dataOCDetallemap.articuloId,
+          //   marcaId: dataOCDetallemap.marcaId,
+          //   codigoBarras: dataOCDetallemap.codigoBarras,
+          //   descripcion: dataOCDetallemap.descripcion,
+          //   stock: dataOCDetallemap.stock,
+          //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
+          //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
+          //   cantidad: can,
+          //   precioUnitario: dataOCDetallemap.precioUnitario,
+          //   importe: importe,
+          //   subTotal: subTotal,
+          //   montoIGV: montoIGV,
+          // };
+
+          let dataDetalleMod = dataDetalle.map((map) => {
+            if (map.id == dataDetalleExiste.id) {
+              //Calculos
+              let cantidad =
+                dataDetalleExiste.cantidad + dataOCDetallemap.cantidad;
+              let importe = cantidad * dataOCDetallemap.precioUnitario;
+              let subTotal = importe * (data.porcentajeIGV / 100);
+              let montoIGV = importe - subTotal;
+              //Calculos
+              return {
+                detalleId: dataDetalleExiste.detalleId,
+                id: dataOCDetallemap.id,
+                lineaId: dataOCDetallemap.lineaId,
+                subLineaId: dataOCDetallemap.subLineaId,
+                articuloId: dataOCDetallemap.articuloId,
+                unidadMedidaId: dataOCDetallemap.unidadMedidaId,
+                marcaId: dataOCDetallemap.marcaId,
+                descripcion: dataOCDetallemap.descripcion,
+                codigoBarras: dataOCDetallemap.codigoBarras,
+                cantidad: cantidad,
+                stock: dataOCDetallemap.stock,
+                precioUnitario: dataOCDetallemap.precioUnitario,
+                subTotal: subTotal,
+                montoIGV: montoIGV,
+                importe: importe,
+                presentacion: dataOCDetallemap.presentacion ?? "",
+                unidadMedidaDescripcion:
+                  dataOCDetallemap.unidadMedidaDescripcion,
+              };
+            } else {
+              return map;
+            }
+          });
+          setDataDetalle(dataDetalleMod);
         }
       } else {
         //ELIMINAR
-        if (detalleActual != undefined) {
+        if (dataDetalleExiste != undefined) {
           //Validamos por la cantidad
-          if (detalleActual.cantidad - detalleOrdenCompra.cantidad == 0) {
+          if (dataDetalleExiste.cantidad - dataOCDetallemap.cantidad == 0) {
             //Si el resultado es 0 entonces se elimina por completo el registro
             detalleEliminado = detalleEliminado.filter(
-              (map) => map.id !== detalleActual.id
+              (map) => map.id !== dataDetalleExiste.id
             );
-            //Asigna el nuevo array a dataDetalle
-            setDataDetalle(detalleEliminado);
-            setDetalleId(detalleId - 1);
+            console.log(detalleEliminado);
+            //Si el resultado es 0 entonces se elimina por completo el registro
+
+            //Toma el valor actual de contador para asignarlo
+            let i = 1;
+            if (detalleEliminado.length > 0) {
+              setDataDetalle(
+                detalleEliminado.map((map) => {
+                  return {
+                    ...map,
+                    detalleId: i++,
+                  };
+                })
+              );
+              setDetalleId(i);
+            } else {
+              //Asgina directamente a 1
+              setDetalleId(detalleEliminado.length + 1);
+              setDataDetalle(detalleEliminado);
+            }
             setRefrescar(true);
           } else {
-            //Caso contrario restamos la cantidad y recalculamos
+            //Si la resta es mayor a 0 entonces restamos al detalle encontrado
 
-            //Calculos
-            let cantidad = detalleActual.cantidad - detalleOrdenCompra.cantidad;
-            let importe = cantidad * detalleActual.precioUnitario;
-            let subTotal = importe * (data.porcentajeIGV / 100);
-            let montoIGV = importe - subTotal;
-            //Calculos
+            // //Calculos
+            // let cantidad =
+            //   dataDetalleExiste.cantidad - dataOCDetallemap.cantidad;
+            // let importe = cantidad * dataDetalleExiste.precioUnitario;
+            // let subTotal = importe * (data.porcentajeIGV / 100);
+            // let montoIGV = importe - subTotal;
+            // //Calculos
+            // //Modifica a dataDetalle en el índice que corresponda
+            // dataDetalle[dataDetalleExiste.detalleId - 1] = {
+            //   detalleId: dataDetalleExiste.detalleId,
+            //   id: dataOCDetallemap.id,
+            //   lineaId: dataOCDetallemap.lineaId,
+            //   subLineaId: dataOCDetallemap.subLineaId,
+            //   articuloId: dataOCDetallemap.articuloId,
+            //   marcaId: dataOCDetallemap.marcaId,
+            //   codigoBarras: dataOCDetallemap.codigoBarras,
+            //   descripcion: dataOCDetallemap.descripcion,
+            //   stock: dataOCDetallemap.stock,
+            //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
+            //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
+            //   cantidad: cantidad,
+            //   precioUnitario: detalleActual.precioUnitario,
+            //   importe: importe,
+            //   subTotal: subTotal,
+            //   montoIGV: montoIGV,
+            // };
 
-            //Modifica a dataDetalle en el índice que corresponda
-            dataDetalle[detalleActual.detalleId - 1] = {
-              detalleId: detalleActual.detalleId,
-              id: detalleOrdenCompra.id,
-              lineaId: detalleOrdenCompra.lineaId,
-              subLineaId: detalleOrdenCompra.subLineaId,
-              articuloId: detalleOrdenCompra.articuloId,
-              marcaId: detalleOrdenCompra.marcaId,
-              codigoBarras: detalleOrdenCompra.codigoBarras,
-              descripcion: detalleOrdenCompra.descripcion,
-              stock: detalleOrdenCompra.stock,
-              unidadMedidaDescripcion:
-                detalleOrdenCompra.unidadMedidaDescripcion,
-              unidadMedidaId: detalleOrdenCompra.unidadMedidaId,
-              cantidad: cantidad,
-              precioUnitario: detalleActual.precioUnitario,
-              importe: importe,
-              subTotal: subTotal,
-              montoIGV: montoIGV,
-            };
+            let dataDetalleEliminar = dataDetalle.map((map) => {
+              if (map.id == dataDetalleExiste.id) {
+                //Calculos
+                let can =
+                  dataDetalleExiste.cantidad - dataOCDetallemap.cantidad;
+                let importe = can * dataDetalleExiste.precioUnitario;
+                let subTotal = importe * (data.porcentajeIGV / 100);
+                let montoIGV = importe - subTotal;
+                //Calculos
+
+                return {
+                  detalleId: dataDetalleExiste.detalleId,
+                  id: dataOCDetallemap.id,
+                  lineaId: dataOCDetallemap.lineaId,
+                  subLineaId: dataOCDetallemap.subLineaId,
+                  articuloId: dataOCDetallemap.articuloId,
+                  unidadMedidaId: dataOCDetallemap.unidadMedidaId,
+                  marcaId: dataOCDetallemap.marcaId,
+                  descripcion: dataOCDetallemap.descripcion,
+                  codigoBarras: dataOCDetallemap.codigoBarras,
+                  cantidad: can,
+                  stock: dataOCDetallemap.stock,
+                  precioUnitario: dataDetalleExiste.precioUnitario,
+                  subTotal: subTotal,
+                  montoIGV: montoIGV,
+                  importe: importe,
+                  presentacion: dataOCDetallemap.presentacion ?? "",
+                  unidadMedidaDescripcion:
+                    dataOCDetallemap.unidadMedidaDescripcion,
+                };
+              } else {
+                return map;
+              }
+            });
+            setDataDetalle(dataDetalleEliminar);
           }
         }
       }
@@ -828,21 +947,27 @@ const Modal = ({ setModal, modo, objeto }) => {
     //Calculo Check IncluyeIGV
     if (incluyeIgv) {
       total = Funciones.RedondearNumero(importeTotal, 2);
-      subTotal = Funciones.RedondearNumero(total / (1 + porcentajeIgvSeleccionado / 100),2);
+      subTotal = Funciones.RedondearNumero(
+        total / (1 + porcentajeIgvSeleccionado / 100),
+        2
+      );
       montoIGV = Funciones.RedondearNumero(total - subTotal, 2);
     } else {
       subTotal = Funciones.RedondearNumero(importeTotal, 2);
-      montoIGV = Funciones.RedondearNumero(subTotal * (porcentajeIgvSeleccionado / 100),2);
+      montoIGV = Funciones.RedondearNumero(
+        subTotal * (porcentajeIgvSeleccionado / 100),
+        2
+      );
       total = Funciones.RedondearNumero(subTotal + montoIGV, 2);
     }
     //Calculo Check IncluyeIGV
 
     setData((prevState) => ({
       ...prevState,
-      subTotal: Funciones.FormatoNumero(subTotal.toFixed(2)),
-      montoIGV: Funciones.FormatoNumero(montoIGV.toFixed(2)),
-      totalNeto: Funciones.FormatoNumero(total.toFixed(2)),
-      total: Funciones.FormatoNumero(total.toFixed(2)),
+      subTotal: Funciones.RedondearNumero(subTotal, 2),
+      montoIGV: Funciones.RedondearNumero(montoIGV, 2),
+      totalNeto: Funciones.RedondearNumero(total, 2),
+      total: Funciones.RedondearNumero(total, 2),
     }));
   };
   //Calculos
@@ -1310,7 +1435,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={
+                      modo == "Consultar"
+                        ? Global.InputStyle
+                        : Global.InputBoton
+                    }
                   />
                   <button
                     id="consultarTipoCambio"

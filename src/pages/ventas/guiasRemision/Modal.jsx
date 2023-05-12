@@ -49,7 +49,6 @@ const TablaStyle = styled.div`
     min-width: 90px;
     max-width: 90px;
     text-align: center;
-    color: transparent;
   }
 `;
 //#endregion
@@ -94,11 +93,6 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    console.log("detalleId")
-    console.log(detalleId);
-    console.log("detalleId")
-  }, [detalleId]);
-  useEffect(() => {
     if (Object.keys(dataCliente).length > 0) {
       if (dataCliente.direcciones != undefined) {
         setDataClienteDirec(dataCliente.direcciones);
@@ -131,7 +125,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataFactura]);
   useEffect(() => {
-    // console.log(dataDetalle)
     setData({ ...data, detalles: dataDetalle });
   }, [dataDetalle]);
   useEffect(() => {
@@ -305,7 +298,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           data.monedaId,
           tipoCambio
         );
-        console.log(model)
+        console.log(model);
         if (model != null) {
           setDataArt({
             ...dataArt,
@@ -599,8 +592,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       setDetalleId(i);
     } else {
-      //Asgina directamente a cero
-      setDetalleId(0);
+      //Asgina directamente a 1
+      setDetalleId(dataDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
     setRefrescar(true);
@@ -703,7 +696,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           let dataDetalleMod = dataDetalle.map((map) => {
             if (map.id == dataDetalleExiste.id) {
               //Calculos
-              let cantidad = dataDetalleExiste.cantidad + dataFacturaDetallemap.cantidad;
+              let cantidad =
+                dataDetalleExiste.cantidad + dataFacturaDetallemap.cantidad;
               let importe = cantidad * dataDetalleExiste.precioUnitario;
               let subTotal = importe * (data.porcentajeIGV / 100);
               let montoIGV = importe - subTotal;
@@ -739,24 +733,28 @@ const Modal = ({ setModal, modo, objeto }) => {
         //ELIMINAR
         if (dataDetalleExiste != undefined) {
           //Validamos por la cantidad
-          console.log(dataDetalleExiste.cantidad)
-          console.log(dataFacturaDetallemap.cantidad)
-          console.log(dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad == 0)
-          if (dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad == 0) {
+          if (
+            dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad ==
+            0
+          ) {
             //Si el resultado es 0 entonces se elimina por completo el registro
-            detalleEliminado = detalleEliminado.filter((map) => map.id !== dataDetalleExiste.id);
+            detalleEliminado = detalleEliminado.filter(
+              (map) => map.id !== dataDetalleExiste.id
+            );
             //Si el resultado es 0 entonces se elimina por completo el registro
-            console.log(contador);
+
+            //Toma el valor actual de contador para asignarlo
+            let i = 1;
             if (detalleEliminado.length > 0) {
               setDataDetalle(
                 detalleEliminado.map((map) => {
                   return {
                     ...map,
-                    detalleId: contador++,
+                    detalleId: i++,
                   };
                 })
               );
-              setDetalleId(contador);
+              setDetalleId(i);
             } else {
               //Asgina directamente a 1
               setDetalleId(detalleEliminado.length + 1);
@@ -791,7 +789,8 @@ const Modal = ({ setModal, modo, objeto }) => {
             let dataDetalleEliminar = dataDetalle.map((map) => {
               if (map.id == dataDetalleExiste.id) {
                 //Calculos
-                let cantidad = dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad;
+                let cantidad =
+                  dataDetalleExiste.cantidad - dataFacturaDetallemap.cantidad;
                 let importe = cantidad * dataDetalleExiste.precioUnitario;
                 let subTotal = importe * (data.porcentajeIGV / 100);
                 let montoIGV = importe - subTotal;

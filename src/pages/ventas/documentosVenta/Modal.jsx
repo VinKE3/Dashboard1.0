@@ -58,7 +58,6 @@ const TablaStyle = styled.div`
     min-width: 90px;
     max-width: 90px;
     text-align: center;
-    color: transparent;
   }
 `;
 //#endregion
@@ -107,9 +106,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    console.log(detalleId);
-  }, [detalleId]);
   useEffect(() => {
     if (Object.keys(dataCliente).length > 0) {
       if (dataCliente.direcciones != undefined) {
@@ -737,8 +733,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       setDetalleId(i);
     } else {
-      //Asgina directamente a cero
-      setDetalleId(0);
+      //Asgina directamente a 1
+      setDetalleId(dataDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
     setRefrescar(true);
@@ -828,17 +824,16 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       total = totalNeto + detraccion + bolsa;
       //Calculos
-
       setData((prevState) => ({
         ...prevState,
-        subTotal: Funciones.FormatoNumero(subTotal.toFixed(2)),
-        montoIGV: Funciones.FormatoNumero(montoIGV.toFixed(2)),
-        totalNeto: Funciones.FormatoNumero(totalNeto.toFixed(2)),
-        montoImpuestoBolsa: Funciones.FormatoNumero(bolsa.toFixed(2)),
-        montoRetencion: Funciones.FormatoNumero(retencion.toFixed(2)),
-        montoDetraccion: Funciones.FormatoNumero(detraccion.toFixed(2)),
+        subTotal: Funciones.RedondearNumero(subTotal, 2),
+        montoIGV: Funciones.RedondearNumero(montoIGV, 2),
+        totalNeto: Funciones.RedondearNumero(totalNeto, 2),
+        montoImpuestoBolsa: Funciones.RedondearNumero(bolsa, 2),
+        montoRetencion: Funciones.RedondearNumero(retencion, 2),
+        montoDetraccion: Funciones.RedondearNumero(detraccion, 2),
         totalOperacionesGratuitas: 0,
-        total: Funciones.FormatoNumero(total.toFixed(2)),
+        total: Funciones.RedondearNumero(total, 2),
       }));
     } else {
       //Asigna a todo 0 y la suma de importes pasa a totalOperacionesGratuitas
