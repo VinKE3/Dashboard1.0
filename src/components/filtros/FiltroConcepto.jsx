@@ -6,7 +6,10 @@ import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import moment from "moment";
 import * as Global from "../Global";
+import { RadioButton } from "primereact/radiobutton";
 import * as Funciones from "../Funciones";
+import { useMemo } from "react";
+import { da } from "date-fns/locale";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -28,51 +31,61 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [filtroDescripcion, setFiltroDescripcion] = useState("");
+  const [filtro, setFiltro] = useState({
+    numeroDocumento: "",
+    tipoDocumentoId: "",
+  });
+  const [cadena, setCadena] = useState(
+    `&numeroDocumento=${filtro.numeroDocumento}&tipoDocumentoId=${filtro.tipoDocumentoId}`
+  );
+  const [tipo, setTipo] = useState("");
   //#endregion
 
   //#region useEffect;
   useEffect(() => {
-    Listar("", 1);
+    setCadena(
+      `&numeroDocumento=${filtro.numeroDocumento}&tipoDocumentoId=${filtro.tipoDocumentoId}`
+    );
+  }, [filtro]);
+  useEffect(() => {
+    Filtro();
+  }, [cadena]);
+  useEffect(() => {
+    Listar(cadena, 1);
   }, []);
-
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoDescripcion = async (e) => {
-    let descripcion = e.target.value;
+  //#region Funciones Filtrado
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const ValidarTipo = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+    setTipo(target.value);
+  };
+  const Filtro = async () => {
     clearTimeout(timer);
-    setFiltro(`descripcion=${descripcion}`, 1);
-    setFiltroDescripcion(descripcion); // Actualizar el estado filtroDescripcion
     const newTimer = setTimeout(() => {
-      if (descripcion == "") {
-        Listar("", 1);
-      } else {
-        Listar(`descripcion=${descripcion}`, 1);
-      }
+      Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
   };
-
-  const FiltradoButton = () => {
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
-  };
+  //#endregion
   //#endregion
 
   //#region API
-  const Listar = async (filtro = filtroActual, pagina = 1) => {
+  const Listar = async (f = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Finanzas/CuentaPorPagar/ListarPendientes?pagina=${pagina}${filtro}`
+      `api/Finanzas/CuentaPorPagar/ListarPendientes?pagina=${pagina}${f}`
     );
-    const datosFiltrados = result.data.data.data.filter((dato) =>
-      dato.descripcion.toLowerCase().includes(filtroDescripcion.toLowerCase())
-    );
-    setDatos(datosFiltrados);
+    setDatos(result.data.data.data);
   };
 
   const GetConcepto = async (id, e) => {
@@ -89,57 +102,59 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
       saldo: model.saldo,
       abono: model.saldo,
     });
-    console.log(model, "FILTRO CONCEPTO");
     setModal(false);
   };
 
-  const columnas = [
-    {
-      Header: "id",
-      accessor: "id",
-    },
-    {
-      Header: "Fecha Emisión",
-      accessor: "fechaEmision",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "id",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Fecha Vencimiento",
-      accessor: "fechaVencimiento",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+      {
+        Header: "Fecha Emisión",
+        accessor: "fechaEmision",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YYYY");
+        },
       },
-    },
-    {
-      Header: "Proveedor",
-      accessor: "descripcion",
-    },
-    {
-      Header: "Moneda",
-      accessor: "monedaId",
-    },
-    {
-      Header: "Saldo",
-      accessor: "saldo",
-    },
-    {
-      Header: "-",
-      Cell: ({ row }) => (
-        <div className="flex justify-center">
-          <button
-            onClick={(e) => GetConcepto(row.values.id, e)}
-            className={
-              Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1.5"
-            }
-          >
-            <FaSearch></FaSearch>
-          </button>
-        </div>
-      ),
-    },
-  ];
+      {
+        Header: "Fecha Vencimiento",
+        accessor: "fechaVencimiento",
+        Cell: ({ value }) => {
+          return moment(value).format("DD/MM/YYYY");
+        },
+      },
+      {
+        Header: "Proveedor",
+        accessor: "descripcion",
+      },
+      {
+        Header: "Moneda",
+        accessor: "monedaId",
+      },
+      {
+        Header: "Saldo",
+        accessor: "saldo",
+      },
+      {
+        Header: "-",
+        Cell: ({ row }) => (
+          <div className="flex justify-center">
+            <button
+              onClick={(e) => GetConcepto(row.values.id, e)}
+              className={
+                Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1.5"
+              }
+            >
+              <FaSearch></FaSearch>
+            </button>
+          </div>
+        ),
+      },
+    ],
+    [datos]
+  );
   //#endregion
   return (
     <>
@@ -153,7 +168,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
         childrenFooter={
           <>
             <button
-              className={Global.BotonModalBase +Global.BotonCancelarModal}
+              className={Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -166,21 +181,79 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
-                <label htmlFor="descripcion" className={Global.LabelStyle}>
-                  Proveedor
+                <div className={Global.LabelStyle}>
+                  <RadioButton
+                    inputId="todos"
+                    name="tipoDocumentoId"
+                    value=""
+                    onChange={ValidarTipo}
+                    checked={tipo === ""}
+                  />
+                </div>
+                <label htmlFor="todos" className={Global.InputStyle}>
+                  Todos
+                </label>
+              </div>
+              <div className={Global.InputFull}>
+                <div className={Global.LabelStyle}>
+                  <RadioButton
+                    inputId="factura"
+                    name="tipoDocumentoId"
+                    value="01"
+                    onChange={ValidarTipo}
+                    checked={tipo === "01"}
+                  />
+                </div>
+                <label htmlFor="factura" className={Global.InputStyle}>
+                  Factura
+                </label>
+              </div>
+              <div className={Global.InputFull}>
+                <div className={Global.LabelStyle}>
+                  <RadioButton
+                    inputId="notaCredito"
+                    name="tipoDocumentoId"
+                    value="07"
+                    onChange={ValidarTipo}
+                    checked={tipo === "07"}
+                  />
+                </div>
+                <label htmlFor="notaCredito" className={Global.InputStyle}>
+                  Nota Credito
+                </label>
+              </div>
+              <div className={Global.InputFull}>
+                <div className={Global.LabelStyle}>
+                  <RadioButton
+                    inputId="letraCambio"
+                    name="tipoDocumentoId"
+                    value="LC"
+                    onChange={ValidarTipo}
+                    checked={tipo === "LC"}
+                  />
+                </div>
+                <label htmlFor="letraCambio" className={Global.InputStyle}>
+                  Letra de Cambio
+                </label>
+              </div>
+            </div>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="numeroDocumento" className={Global.LabelStyle}>
+                  Numero de Documento
                 </label>
                 <input
                   type="text"
-                  id="descripcion"
-                  name="descripcion"
+                  id="numeroDocumento"
+                  name="numeroDocumento"
                   placeholder="Descripción"
-                  onChange={FiltradoDescripcion}
+                  onChange={ValidarData}
                   autoComplete="off"
                   className={Global.InputBoton}
                 />
                 <button
                   id="consultar"
-                  onClick={FiltradoButton}
+                  onClick={Filtro}
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }

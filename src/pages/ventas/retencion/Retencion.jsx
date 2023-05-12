@@ -11,7 +11,7 @@ import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import { faPlus, faBan  } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
@@ -23,22 +23,26 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(3){
+  & th:nth-child(2) {
+    width: 70px;
+    text-align: center;
+  }
+  & th:nth-child(3) {
+    width: 50px;
+  }
+  & th:nth-child(4) {
     width: 135px;
   }
-  & th:nth-child(6),
-  & th:nth-child(8),
-  & th:nth-child(9),
-  & th:nth-child(10) {
-    text-align: center;
-    width: 40px;
-  }
-  & th:nth-child(7) {
+  & th:nth-child(8){
     text-align: right;
-    width: 70px;
+    width: 65px;
   }
+  & th:nth-child(7),
+  & th:nth-child(9),
+  & th:nth-child(10),
   & th:nth-child(11) {
-    width: 80px;
+    text-align: center;
+    width: 35px;
   }
   & th:last-child {
     text-align: center;
@@ -48,9 +52,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-//#endregion
-
-const Cotizaciones = () => {
+const Retencion = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
@@ -75,6 +77,9 @@ const Cotizaciones = () => {
   //#endregion
 
   //#region useEffect;
+  useEffect(() => {
+    objeto;
+  }, [objeto]);
   useEffect(() => {
     setCadena(
       `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -114,43 +119,8 @@ const Cotizaciones = () => {
     }
   }, [permisos]);
   useEffect(() => {
-    GetPermisos("Cotizacion", setPermisos);
+    GetPermisos("Retencion", setPermisos);
   }, []);
-  //#endregion
-
-  //#region Funciones API
-  const Listar = async (filtro = "", pagina = 1) => {
-    const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/Listar?pagina=${pagina}${filtro}`
-    );
-    setDatos(result.data.data.data);
-    setTotal(result.data.data.total);
-  };
-  const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
-    setObjeto(result.data.data);
-  };
-
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -174,53 +144,61 @@ const Cotizaciones = () => {
   };
   //#endregion
 
+  //#region Funciones API
+  const Listar = async (filtro = "", pagina = 1) => {
+    const result = await ApiMasy.get(
+      `api/Venta/Retencion/Listar?pagina=${pagina}${filtro}`
+    );
+    setDatos(result.data.data.data);
+    setTotal(result.data.data.total);
+  };
+  const GetPorId = async (id) => {
+    const result = await ApiMasy.get(`api/Venta/Retencion/${id}`);
+    setObjeto(result.data.data);
+  };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Venta/Retencion/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
+  //#endregion
+
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
     setModo(modo);
     switch (accion) {
       case 0: {
         setObjeto({
-          empresaId: "",
-          tipoDocumentoId: "CO",
+          empresaId: "01",
+          tipoDocumentoId: "RE",
           serie: "",
           numero: "",
           fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
-          fechaVencimiento: moment(new Date()).format("YYYY-MM-DD"),
           clienteId: "",
-          clienteNombre: "",
           clienteNumeroDocumentoIdentidad: "",
-          clienteDireccionId: 0,
+          clienteNombre: "",
           clienteDireccion: "",
-          clienteTelefono: "",
-          departamentoId: null,
-          provinciaId: null,
-          distritoId: null,
-          contactoId: "",
-          contactoNombre: "",
-          contactoTelefono: "",
-          contactoCorreoElectronico: "",
-          contactoCargoId: null,
-          contactoCargoDescripcion: "",
-          contactoCelular: "",
-          personalId: "",
+          tipoVentaId: "CO",
+          tipoCobroId: "DE",
           monedaId: "S",
           tipoCambio: 0,
-          tipoVentaId: "CO",
-          tipoCobroId: "EF",
-          numeroOperacion: "",
-          cuentaCorrienteDescripcion: "",
-          validez: "",
           observacion: "",
-          subTotal: 0,
-          montoIGV: 0,
-          totalNeto: 0,
-          montoRetencion: 0,
-          montoPercepcion: 0,
           total: 0,
-          porcentajeIGV: 0,
-          porcentajeRetencion: 0,
-          porcentajePercepcion: 0,
-          incluyeIGV: true,
           detalles: [],
         });
         setModal(true);
@@ -243,85 +221,6 @@ const Cotizaciones = () => {
         break;
     }
   };
-  const Anular = async () => {
-    let tabla = document
-      .querySelector("table > tbody")
-      .querySelector("tr.selected-row");
-    if (tabla != null) {
-      if (tabla.classList.contains("selected-row")) {
-        let id =
-          document.querySelector("tr.selected-row").children[0].innerHTML;
-        let documento =
-          document.querySelector("tr.selected-row").children[2].innerHTML;
-        Swal.fire({
-          title: "¿Desea Anular el documento?",
-          text: documento,
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then(async (res) => {
-          if (res.isConfirmed) {
-            const result = await ApiMasy.put(
-              `api/Venta/GuiaRemision/Anular/${id}`
-            );
-            if (result.name == "AxiosError") {
-              if (Object.entries(result.response.data).length > 0) {
-                toast.error(String(result.response.data.messages[0].textos), {
-                  position: "bottom-right",
-                  autoClose: 4000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              } else {
-                toast.error([result.message], {
-                  position: "bottom-right",
-                  autoClose: 4000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              }
-            } else {
-              toast.success(result.data.messages[0].textos[0], {
-                position: "bottom-right",
-                autoClose: 4000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-            }
-          }
-        });
-      }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 4000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
   //#endregion
 
   //#region Columnas
@@ -339,6 +238,10 @@ const Cotizaciones = () => {
         },
       },
       {
+        Header: "Hora",
+        accessor: "horaEmision",
+      },
+      {
         Header: "N° Documento",
         accessor: "numeroDocumento",
       },
@@ -347,7 +250,7 @@ const Cotizaciones = () => {
         accessor: "clienteNombre",
       },
       {
-        Header: "RUC/DNI",
+        Header: "Número",
         accessor: "clienteNumero",
       },
       {
@@ -365,11 +268,22 @@ const Cotizaciones = () => {
         },
       },
       {
+        Header: "C",
+        accessor: "isCancelado",
+        Cell: ({ value }) => {
+          return (
+            <div>
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
         Header: "A",
         accessor: "isAnulado",
         Cell: ({ value }) => {
           return (
-            <div className="flex justify-center">
+            <div>
               <Checkbox checked={value} />
             </div>
           );
@@ -380,34 +294,20 @@ const Cotizaciones = () => {
         accessor: "isBloqueado",
         Cell: ({ value }) => {
           return (
-            <div className="flex justify-center">
+            <div>
               <Checkbox checked={value} />
             </div>
           );
         },
       },
-      {
-        Header: "F",
-        accessor: "isFacturado",
-        Cell: ({ value }) => {
-          return (
-            <div className="flex justify-center">
-              <Checkbox checked={value} />
-            </div>
-          );
-        },
-      },
-      {
-        Header: "Doc. Ref.",
-        accessor: "documentoReferencia",
-      },
+
       {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
             setRespuestaAlert={setRespuestaAlert}
             permisos={permisos}
-            menu={["Venta", "Cotizacion"]}
+            menu={["Venta", "Retencion"]}
             id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
@@ -425,19 +325,19 @@ const Cotizaciones = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Cotización</h2>
+            <h2 className={Global.TituloH2}>Retenciones</h2>
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
                 <label name="clienteNombre" className={Global.LabelStyle}>
-                  Cliente
+                  Razón Social
                 </label>
                 <input
                   type="text"
                   id="clienteNombre"
                   name="clienteNombre"
-                  placeholder="Cliente"
+                  placeholder="Razón Social"
                   autoComplete="off"
                   value={filtro.clienteNombre ?? ""}
                   onChange={ValidarData}
@@ -483,25 +383,14 @@ const Cotizaciones = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
-              {permisos[0] && (
-                <BotonBasico
-                  botonText="Registrar"
-                  botonClass={Global.BotonRegistrar}
-                  botonIcon={faPlus}
-                  click={() => AbrirModal()}
-                />
-              )}
-              {permisos[4] && (
-                <BotonBasico
-                  botonText="Anular"
-                  botonClass={Global.BotonEliminar}
-                  botonIcon={faBan}
-                  click={() => Anular()}
-                  containerClass=""
-                />
-              )}
-            </div>
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
             {/* Boton */}
 
             {/* Tabla */}
@@ -528,4 +417,4 @@ const Cotizaciones = () => {
   //#endregion
 };
 
-export default Cotizaciones;
+export default Retencion;

@@ -691,7 +691,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDetalleId(i);
     } else {
       //Asgina directamente a 1
-      setDetalleId(dataDetalle.length + 1);
+      setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
     setRefrescar(true);

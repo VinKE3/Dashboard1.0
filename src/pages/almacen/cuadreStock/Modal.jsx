@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ModalBasic from "../../../components/ModalBasic";
 import * as Global from "../../../components/Global";
 import { Fieldset } from "primereact/fieldset";
@@ -23,7 +23,7 @@ const TablaStyle = styled.div`
   }
 `;
 
-const Modal = ({ setModal, modo, objeto, detalle }) => {
+const Modal = ({ setModal, setRespuestaModal, modo, objeto, detalle }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [datos, setDatos] = useState(detalle);
@@ -203,6 +203,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   return (
     <ModalCrud
       setModal={setModal}
+      setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
       menu={["Almacen", "CuadreStock"]}

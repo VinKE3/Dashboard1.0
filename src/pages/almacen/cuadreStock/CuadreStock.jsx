@@ -16,6 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import Swal from "sweetalert2";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -69,6 +70,7 @@ const CuadreStock = () => {
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
   const [respuestaAlert, setRespuestaAlert] = useState(false);
+
   //#endregion
 
   //#region useEffect;
@@ -143,9 +145,6 @@ const CuadreStock = () => {
       return true;
     }
   };
-  const GetAbrirCerrar = async (id) => {
-    const result = await ApiMasy.put(`api/Almacen/CuadreStock/AbrirCerrar`, objeto);
-  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -198,6 +197,7 @@ const CuadreStock = () => {
         break;
     }
   };
+
   const AbrirCerrar = async () => {
     let tabla = document
       .querySelector("table > tbody")
@@ -205,11 +205,11 @@ const CuadreStock = () => {
     if (tabla != null) {
       if (tabla.classList.contains("selected-row")) {
         let id = document.querySelector("tr.selected-row").firstChild.innerHTML;
-        console.log(id)
-        const title = estado
-          ? "Bloquear Registros de Compras (50 registros mostrados)"
-          : "Desbloquear Registros de Compras (50 registros mostrados)";
-
+        const cerrado = datos.find((item) => item.id == id);
+        const title = cerrado.estado
+          ? "Abrir Cuadre De Stock"
+          : "Cerrar Cuadre De Stock";
+        const estado = !cerrado.estado;
         Swal.fire({
           title: title,
           icon: "warning",
@@ -223,7 +223,10 @@ const CuadreStock = () => {
           cancelButtonText: "Cancelar",
         }).then((result) => {
           if (result.isConfirmed) {
-            ApiMasy.put(`api/Compra/BloquearCompra`, model).then((response) => {
+            ApiMasy.put(
+              `api/Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`
+            ).then((response) => {
+              console.log(response);
               if (response.name == "AxiosError") {
                 let err = "";
                 if (response.response.data == "") {
@@ -245,7 +248,7 @@ const CuadreStock = () => {
                 Listar(cadena, index + 1);
                 toast.success(String(response.data.messages[0].textos), {
                   position: "bottom-right",
-                  autoClose: 5000,
+                  autoClose: 2000,
                   hideProgressBar: true,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -255,16 +258,13 @@ const CuadreStock = () => {
                 });
               }
             });
-            setChecked(isBloqueado);
-          } else {
-            setChecked(!isBloqueado);
           }
         });
       }
     } else {
       toast.info("Seleccione una Fila", {
         position: "bottom-right",
-        autoClose: 4000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -274,7 +274,7 @@ const CuadreStock = () => {
       });
     }
   };
-  //#endregion
+  //endregion
 
   //#region Columnas y Selects
   const columnas = useMemo(
@@ -324,16 +324,20 @@ const CuadreStock = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+          return <p className="text-center">{value}</p>;
         },
       },
       {
         Header: "Cerrado",
         accessor: "estado",
         Cell: ({ value }) => {
-          return (
+          return value ? (
             <div className="flex justify-center">
-              <Checkbox checked={value} />
+              <Checkbox checked={true} />
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <Checkbox checked={false} />
             </div>
           );
         },

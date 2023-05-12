@@ -58,7 +58,7 @@ export const useAuthProvider = () => {
           ];
         const personalId = tokenDecodificado["PersonalId"];
         const afectarStock = tokenDecodificado["HabilitarAfectarStock"];
-        
+
         setUsuario(usuario);
         setUsuarioId(usuarioId);
         setPersonalId(personalId);
@@ -71,8 +71,10 @@ export const useAuthProvider = () => {
         authHelper.afectarStockGuardar({ afectarStock: afectarStock });
 
         //Datos Global
-        const res = await ApiMasy.get(`api/Empresa/Configuracion/GetSimplificado`);
-        setGlobal(res.data.data)
+        const res = await ApiMasy.get(
+          `api/Empresa/Configuracion/GetSimplificado`
+        );
+        setGlobal(res.data.data);
         authHelper.globalGuardar({ global: res.data.data });
         // Datos Global
       }
@@ -91,6 +93,6 @@ export const useAuthProvider = () => {
     usuario,
     personalId,
     afectarStock,
-    global
+    global,
   };
 };

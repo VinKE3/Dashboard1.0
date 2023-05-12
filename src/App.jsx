@@ -9,18 +9,15 @@ import Login from "./pages/auth/Login";
 //?Pages admin
 import Home from "./pages/admin/Home";
 import Error404 from "./pages/Error404";
-//Pages ventas
+//*Pages ventas
 import Clientes from "./pages/ventas/cliente/Cliente";
 import ConductoresTransportistas from "./pages/ventas/conductoresTransportistas/ConductoresTransportistas";
 import DocumentosDeVenta from "./pages/ventas/documentosVenta/DocumentosVenta";
 import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
 import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
-import SalidasDeArticulos from "./pages/ventas/salidaDeArticulos/SalidaDeArticulos";
-import RegistroVentaArticulo from "./pages/ventas/registroVentaArituculo/RegistroVentaArticulo";
 import BloquearVenta from "./pages/ventas/bloquearVenta/BloquearVenta";
-//Pages ventas
-
-//Pages compras
+import Retencion from "./pages/ventas/retencion/Retencion";
+//*Pages compras
 import Proveedores from "./pages/compras/proveedores/Proveedores";
 import FacturaNegociable from "./pages/compras/facturaNegociable/FacturaNegociable";
 import LetraCambioCompra from "./pages/compras/letraCambioCompra/LetraCambioCompra";
@@ -29,9 +26,7 @@ import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
 import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
 import BloquearCompra from "./pages/compras/bloquearCompra/BloquearCompra";
-//Pages compras
-
-//Pages mantenimiento
+//*Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
 import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
 import Lineas from "./pages/mantenimiento/lineas/Lineas";
@@ -49,27 +44,18 @@ import CajaChicaConfiguracion from "./pages/mantenimiento/cajaChicaConfiguracion
 import Empresa from "./pages/mantenimiento/empresa/Empresa";
 import Correlativos from "./pages/mantenimiento/correlativos/Correlativos";
 import EmpresaDeTransporte from "./pages/mantenimiento/empresaDeTransporte/EmpresaDeTransporte";
-//Pages mantenimiento
-
-//Pages almacen
+//*Pages almacen
 import MovimientosArticulos from "./pages/almacen/movimientoArticulos/MovimientosArticulos";
 import CuadreStock from "./pages/almacen/cuadreStock/CuadreStock";
 import EntradaArticulos from "./pages/almacen/entradaArticulos/EntradaArticulos";
 import SalidaArticulos from "./pages/almacen/salidaArticulos/SalidaArticulos";
 import EntradaCilindros from "./pages/almacen/entradaCilindros/EntradaCilindros";
 import SalidaCilindros from "./pages/almacen/salidaCilindros/SalidaCilindros";
-//Pages almacen
-
-
-//Pages Finanzas
+//*Pages Finanzas
 import BloquearMovimientoBancario from "./pages/finanzas/bloquearMovimientoBancario/BloquearMovimientoBancario";
-//Pages Finanzas
-
-//Pages personal
+//*Pages personal
 import Personal from "./pages/personal/Personal";
-//Pages personal
-
-//pages tesoreria
+//*pages tesoreria
 import CajaChica from "./pages/tesoreria/cajaChica/CajaChica";
 import CobrosCuentaBancaria from "./pages/tesoreria/cobrosCuentasBancaria/CobrosCuentaBancaria";
 import LetrasCambioCobro from "./pages/tesoreria/letrasCambioCobro/LetrasCambioCobro";
@@ -84,9 +70,21 @@ import Cef from "./pages/compras/cef/Cef";
 import Cheque from "./pages/compras/cheque/Cheque";
 import Articulo from "./pages/mantenimiento/articulo/Articulo";
 import CuentasPorPagar from "./pages/finanzas/cuentasPorPagar/CuentasPorPagar";
-//pages tesoreria
+//*pages Herramientas
+import InformeArticulo from "./pages/informes/articulos/InformeArticulo";
+import InformeCompra from "./pages/informes/compras/InformeCompra";
+import InformeVenta from "./pages/informes/ventas/InformeVenta";
+import InformeTesoreria from "./pages/informes/tesoreria/InformeTesoreria";
+
+import { useConfiguracion } from "./context/ContextConfiguracion";
+import { useEffect } from "react";
 
 function App() {
+  const { getConfiguracion, configuracion } = useConfiguracion();
+
+  useEffect(() => {
+    if (null) getConfiguracion();
+  }, [configuracion]);
   return (
     <BrowserRouter>
       <Routes>
@@ -108,19 +106,9 @@ function App() {
             element={<GuiasDeRemision />}
           />
           <Route path="/ventas/cotizaciones" element={<Cotizaciones />} />
-          <Route
-            path="/ventas/salidas-de-articulos"
-            element={<SalidasDeArticulos />}
-          />
-          <Route
-            path="/ventas/registro-de-venta-articulo"
-            element={<RegistroVentaArticulo />}
-          />
           <Route path="/ventas/bloquear-venta" element={<BloquearVenta />} />
-          <Route
-            path="/compras/factura-negociable"
-            element={<FacturaNegociable />}
-          />
+
+          <Route path="/ventas/retenciones" element={<Retencion />} />
           {/** //!COMPRAS */}
           <Route path="/compras/provedores" element={<Proveedores />} />
           <Route
@@ -147,7 +135,10 @@ function App() {
             path="/compras/registro-de-compra-articulo"
             element={<RegistroCompraArticulo />}
           />
-
+          <Route
+            path="/compras/factura-negociable"
+            element={<FacturaNegociable />}
+          />
           {/** //!MANTENIMIENTO */}
           <Route path="/mantenimiento/usuarios" element={<Usuarios />} />
           <Route
@@ -225,7 +216,6 @@ function App() {
           {/** //!PERSONAL */}
           <Route path="personal" element={<Personal />} />
           {/** //!TESORERIA */}
-
           <Route
             path="/tesoreria/cobros-cuentas-bancarias"
             element={<CobrosCuentaBancaria />}
@@ -260,7 +250,13 @@ function App() {
             path="/tesoreria/bloquear-recibo-de-egreso"
             element={<BloquearReciboEgreso />}
           />
+          {/** //!INFORMES */}
+          <Route path="/informes/articulos" element={<InformeArticulo />} />
+          <Route path="/informes/compras" element={<InformeCompra />} />
+          <Route path="/informes/tesoreria" element={<InformeTesoreria />} />
+          <Route path="/informes/ventas" element={<InformeVenta />} />
         </Route>
+
         {/** //!ERROR */}
         <Route path="*" element={<Error404 />} />
       </Routes>

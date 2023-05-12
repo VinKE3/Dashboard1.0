@@ -195,10 +195,21 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteId: "",
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
-        clienteDireccionId: "",
+        clienteDireccionId: 0,
+        clienteDireccion: "",
         personalId: dataGlobal.personalId,
       }));
       setDataClienteDirec([]);
+    }
+  };
+  const CambioDireccion = async (id) => {
+    if (modo != "Consultar") {
+      let model = dataClienteDirec.find((map) => map.id == id);
+      setData((prevState) => ({
+        ...prevState,
+        clienteDireccionId: model.id,
+        clienteDireccion: model.direccion,
+      }));
     }
   };
   const Factura = async () => {
@@ -228,7 +239,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           ...data.documentosRelacionados,
           dataFactura.documentosRelacionados,
         ],
-        numeroFactura: facturas.map((map) => map.numeroDocumento),
+        numeroFactura: facturas.map((map) => map.numeroDocumento).toString(),
         // Facturas
       });
       GetDireccion(dataFactura.clienteId);
@@ -298,16 +309,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           data.monedaId,
           tipoCambio
         );
-        console.log(model);
         if (model != null) {
           setDataArt({
             ...dataArt,
-            precioCompra: precio.precioCompra,
-            precioVenta1: precio.precioVenta1,
-            precioVenta2: precio.precioVenta2,
-            precioVenta3: precio.precioVenta3,
-            precioVenta4: precio.precioVenta4,
-            precioUnitario: precio.precioVenta1,
+            precioCompra: model.precioCompra,
+            precioVenta1: model.precioVenta1,
+            precioVenta2: model.precioVenta2,
+            precioVenta3: model.precioVenta3,
+            precioVenta4: model.precioVenta4,
+            precioUnitario: model.precioVenta1,
           });
         }
       } else {
@@ -593,7 +603,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDetalleId(i);
     } else {
       //Asgina directamente a 1
-      setDetalleId(dataDetalle.length + 1);
+      setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
     setRefrescar(true);
@@ -1240,7 +1250,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="clienteDireccionId"
                     name="clienteDireccionId"
                     value={data.clienteDireccionId ?? ""}
-                    onChange={ValidarData}
+                    onChange={(e) => CambioDireccion(e.target.value)}
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >

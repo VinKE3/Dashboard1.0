@@ -263,7 +263,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       <div
         className={Global.ContenedorBasico + " mb-3 " + Global.FondoContenedor}
       >
-        <p className={"my-0 py-0 font-bold text-base text-light"}>
+        <p className={Global.Subtitulo}>
           Precio Compra
         </p>
         <div className={Global.ContenedorInputs}>

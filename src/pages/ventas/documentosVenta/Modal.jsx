@@ -121,9 +121,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteNombre: dataCliente.clienteNombre,
         clienteDireccionId: dataCliente.clienteDireccionId,
         clienteDireccion: dataCliente.clienteDireccion,
-        personalId: dataCliente.personalId,
         tipoVentaId: dataCliente.tipoVentaId,
         tipoCobroId: dataCliente.tipoCobroId,
+        personalId:
+          dataCliente.personalId == ""
+            ? dataGlobal.personalId
+            : dataCliente.personalId,
       });
 
       //Consulta los Documentos de Referencia
@@ -342,6 +345,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
         clienteDireccionId: 0,
+        clienteDireccion: "",
         personalId: dataGlobal.personalId,
       }));
       setDataClienteDirec([]);
@@ -362,6 +366,16 @@ const Modal = ({ setModal, modo, objeto }) => {
           theme: "colored",
         }
       );
+    }
+  };
+  const CambioDireccion = async (id) => {
+    if (modo != "Consultar") {
+      let model = dataClienteDirec.find((map) => map.id == id);
+      setData((prevState) => ({
+        ...prevState,
+        clienteDireccionId: model.id,
+        clienteDireccion: model.direccion,
+      }));
     }
   };
   const DetalleDocReferencia = async (id) => {
@@ -440,12 +454,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         if (model != null) {
           setDataArt({
             ...dataArt,
-            precioCompra: precio.precioCompra,
-            precioVenta1: precio.precioVenta1,
-            precioVenta2: precio.precioVenta2,
-            precioVenta3: precio.precioVenta3,
-            precioVenta4: precio.precioVenta4,
-            precioUnitario: precio.precioVenta1,
+            precioCompra: model.precioCompra,
+            precioVenta1: model.precioVenta1,
+            precioVenta2: model.precioVenta2,
+            precioVenta3: model.precioVenta3,
+            precioVenta4: model.precioVenta4,
+            precioUnitario: model.precioVenta1,
           });
         }
       } else {
@@ -734,7 +748,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDetalleId(i);
     } else {
       //Asgina directamente a 1
-      setDetalleId(dataDetalle.length + 1);
+      setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
     setRefrescar(true);
@@ -1083,7 +1097,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             objeto={data}
             modo={modo}
             menu={["Venta", "DocumentoVenta"]}
-            titulo="Documentos de Venta"
+            titulo="Documento de Venta"
             tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
           >
@@ -1324,7 +1338,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="clienteDireccionId"
                     name="clienteDireccionId"
                     value={data.clienteDireccionId ?? ""}
-                    onChange={ValidarData}
+                    onChange={(e) => CambioDireccion(e.target.value)}
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >

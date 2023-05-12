@@ -1,7 +1,7 @@
 import React from "react";
 
-const Tesoreria = () => {
+const InformeVenta = () => {
   return <div>Tesoreria</div>;
 };
 
-export default Tesoreria;
+export default InformeVenta;

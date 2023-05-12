@@ -66,6 +66,7 @@ export var Disabled = "!bg-gray-800/90 ";
 export var TituloH2 = "mb-2 py-2 text-2xl font-bold text-light ";
 export var TituloH4 = "mb-1 py-2 text-xl font-bold text-light ";
 export var TituloModal = "text-3xl md:text-2xl font-semibold text-light ";
+export var Subtitulo = "my-0 py-0 font-bold text-base text-light ";
 //#endregion
 
 //#region Botones

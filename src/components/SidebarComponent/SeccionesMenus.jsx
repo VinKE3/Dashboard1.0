@@ -38,14 +38,17 @@ function seccionesList() {
           title: "Cotizaciones",
         },
         {
-          path: "/ventas/salidas-de-articulos",
-          title: "Salidas de Articulos",
+          path: "/ventas/retenciones",
+          title: "Retencion",
         },
-
-        {
-          path: "/ventas/registro-de-venta-articulo",
-          title: "Registro de Venta - Articulo",
-        },
+        // {
+        //   path: "/ventas/salidas-de-articulos",
+        //   title: "Salidas de Articulos",
+        // },
+        // {
+        //   path: "/ventas/registro-de-venta-articulo",
+        //   title: "Registro de Venta - Articulo",
+        // },
         {
           path: "/ventas/bloquear-venta",
           title: "Bloquear Venta",
@@ -89,14 +92,14 @@ function seccionesList() {
           path: "/compras/bloquear-compra",
           title: "Bloquear Compra",
         },
-        {
-          path: "/compras/entrada-de-articulos",
-          title: "Entrada de Articulos",
-        },
-        {
-          path: "/compras/registro-de-compra-articulo",
-          title: "Registro de Compra - Articulo",
-        },
+        // {
+        //   path: "/compras/entrada-de-articulos",
+        //   title: "Entrada de Articulos",
+        // },
+        // {
+        //   path: "/compras/registro-de-compra-articulo",
+        //   title: "Registro de Compra - Articulo",
+        // },
       ],
     },
     {
@@ -228,50 +231,50 @@ function seccionesList() {
       id: "tesoreria",
       icon: <FaMoneyCheck className="text-primary" />,
       items: [
-        {
-          path: "/tesoreria/cuentas-por-cobrar",
-          title: "Cuentas por Cobrar",
-        },
-        {
-          path: "/tesoreria/cobros-cuentas-bancarias",
-          title: "Cobros - Cuentas Bancarias",
-        },
-        {
-          path: "/tesoreria/retenciones",
-          title: "Retenciones",
-        },
-        {
-          path: "/tesoreria/letras-de-cambio-cobro",
-          title: "Letras de Cambio - Cobro",
-        },
-        {
-          path: "/tesoreria/cuentas-por-pagar",
-          title: "Cuentas por Pagar",
-        },
-        {
-          path: "/tesoreria/pagos-en-efectivo",
-          title: "Pagos en Efectivo",
-        },
-        {
-          path: "/tesoreria/pagos-cuenta-bancaria",
-          title: "Pagos - Cuenta Bancaria",
-        },
-        {
-          path: "/tesoreria/letras-de-cambio-pago",
-          title: "Letras de Cambio - Pago",
-        },
-        {
-          path: "/tesoreria/caja-chica",
-          title: "Caja Chica",
-        },
-        {
-          path: "/tesoreria/recibo-de-ingreso",
-          title: "recibo de Ingreso",
-        },
-        {
-          path: "/tesoreria/recibo-de-egreso",
-          title: "Recibo de Egreso",
-        },
+        // {
+        //   path: "/tesoreria/cuentas-por-cobrar",
+        //   title: "Cuentas por Cobrar",
+        // },
+        // {
+        //   path: "/tesoreria/cobros-cuentas-bancarias",
+        //   title: "Cobros - Cuentas Bancarias",
+        // },
+        // {
+        //   path: "/tesoreria/retenciones",
+        //   title: "Retenciones",
+        // },
+        // {
+        //   path: "/tesoreria/letras-de-cambio-cobro",
+        //   title: "Letras de Cambio - Cobro",
+        // },
+        // {
+        //   path: "/tesoreria/cuentas-por-pagar",
+        //   title: "Cuentas por Pagar",
+        // },
+        // {
+        //   path: "/tesoreria/pagos-en-efectivo",
+        //   title: "Pagos en Efectivo",
+        // },
+        // {
+        //   path: "/tesoreria/pagos-cuenta-bancaria",
+        //   title: "Pagos - Cuenta Bancaria",
+        // },
+        // {
+        //   path: "/tesoreria/letras-de-cambio-pago",
+        //   title: "Letras de Cambio - Pago",
+        // },
+        // {
+        //   path: "/tesoreria/caja-chica",
+        //   title: "Caja Chica",
+        // },
+        // {
+        //   path: "/tesoreria/recibo-de-ingreso",
+        //   title: "recibo de Ingreso",
+        // },
+        // {
+        //   path: "/tesoreria/recibo-de-egreso",
+        //   title: "Recibo de Egreso",
+        // },
         {
           path: "/tesoreria/bloquear-recibo-de-egreso",
           title: "Bloquear Recibo de Egreso",
@@ -307,10 +310,6 @@ function seccionesList() {
       icon: <FaToolbox className="text-primary" />,
 
       items: [
-        {
-          path: "/herramientas/movimientos-de-articulos",
-          title: "Movimientos de Articulos",
-        },
         {
           path: "/herramientas/cambiar-contraseña",
           title: "Cambiar Contraseña",
