@@ -89,7 +89,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Modales de Ayuda
 
   const [checkVarios, setCheckVarios] = useState(false);
-  const [usedIds, setUsedIds] = useState([]);
   const [habilitarCampos, setDataHabilitarCampos] = useState(true);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -211,6 +210,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
+
+    if (target.name == "porcentaje" && target.value > 0) {
+      if (dataArt.total != undefined) {
+        await CalcularImporte(target.value);
+      }
+    }
   };
   const ValidarConsulta = async (origen) => {
     if (origen == "ConsultarDocumento") {
@@ -230,20 +235,6 @@ const Modal = ({ setModal, modo, objeto }) => {
           "Retención: No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
         ];
       }
-
-      if (data.monedaId != moneda) {
-        Swal.fire({
-          title: "Aviso del sistema",
-          text: "La moneda del documento es diferente a la moneda de la venta, se realizará la conversión de moneda de acuerdo al Tipo de cambio.",
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: false,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-        });
-      }
     }
     return [true, ""];
   };
@@ -251,12 +242,39 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (Object.entries(dataArt).length > 0) {
       let respuesta = await ValidarConsulta("precio");
       if (respuesta[0]) {
-        if (moneda == "D") {
-          total = Funciones.RedondearNumero(total / data.tipoCambio, 2);
+        if (data.monedaId != moneda) {
+          toast.info(
+            "Retención: Se realizó la conversión al tipo de cambio actual",
+            {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            }
+          );
+          if (moneda == "D") {
+            total = Funciones.RedondearNumero(total / data.tipoCambio, 2);
+          } else {
+            total = Funciones.RedondearNumero(total * data.tipoCambio, 2);
+          }
+          return total;
         } else {
-          total = Funciones.RedondearNumero(total * data.tipoCambio, 2);
+          toast.info("Retención: Documento consultado exitósamente", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+          return total;
         }
-        return total;
       } else {
         toast.error(respuesta[1], {
           position: "bottom-right",
@@ -269,119 +287,88 @@ const Modal = ({ setModal, modo, objeto }) => {
           theme: "colored",
         });
       }
-    } else {
-      //Si no tiene datos retorna el mismo total
-      return total;
     }
   };
-  const ObtenerDocumentoDeVenta = async () => {
-    let respuesta = await ValidarConsulta();
-    if (respuesta[0]) {
-      const result = await ApiMasy.get(
-        `api/Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataArt.tipoDocumento}&serie=${dataArt.serie}&numero=${dataArt.numero}&incluirReferencias=true`
-      );
-
-      if (result.status == 200) {
-        let nuevoTotal = await ConvertirPrecio(
-          result.data.data.total,
-          result.data.data.monedaId
-        );
-        if (nuevoTotal != null) {
-          const calcular = nuevoTotal * (dataArt.porcentaje / 100);
-          setDataArt({
-            ...dataArt,
-            fechaEmision: result.data.data.fechaEmision,
-            total: Funciones.RedondearNumero(nuevoTotal, 2),
-            monto: Funciones.RedondearNumero(calcular, 2),
-            documentoVentaId: result.data.data.id,
-          });
-        }
-      } else if (result.name == "AxiosError") {
-        Swal.fire({
-          title: "Aviso del sistema",
-          text: result.response.data.messages[0].textos,
-          icon: "warning",
-        });
-      }
-    } else {
-      toast.error(respuesta[1], {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
+  const CalcularImporte = async (porcentaje) => {
+    let monto = dataArt.total * (porcentaje / 100);
+    setDataArt((prevState) => ({
+      ...prevState,
+      monto: Funciones.RedondearNumero(monto, 2),
+    }));
   };
   //Artículos
   //#endregion
 
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
-    //valida precio de venta
+    if (Object.entries(dataArt).length == 0) {
+      return [false, "Retención: Seleccione un documento"];
+    }
+
+    //valida total de venta
     if (dataArt.total == undefined) {
-      return [false, "El precio de venta no puede ser cero (0.00)"];
+      return [false, "Retención: Seleccione un documento"];
     }
     return [true, ""];
   };
   const AgregarDetalleArticulo = async () => {
+    //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
+
     if (resultado[0]) {
-      if (dataArt.detalleId > -1) {
-        let dataDetalleModificado = dataDetalle.map((map) => {
-          if (map.detalleId == dataArt.detalleId) {
+      //Si tiene detalleId entonces modifica registro
+      if (dataArt.detalleId != undefined) {
+        let dataDetalleMod = dataDetalle.map((map) => {
+          if (map.documentoVentaId == dataArt.documentoVentaId) {
             return {
               detalleId: dataArt.detalleId,
-              abonar: true,
               documentoVentaId: dataArt.documentoVentaId,
-              fechaEmision: dataArt.fechaEmision,
-              total: dataArt.total,
-              porcentaje: dataArt.porcentaje,
-              monto: dataArt.monto,
               tipoDocumento: dataArt.tipoDocumento,
               serie: dataArt.serie,
               numero: dataArt.numero,
+              fechaEmision: dataArt.fechaEmision,
+              porcentaje: dataArt.porcentaje,
+              total: dataArt.total,
+              monto: dataArt.monto,
+              abonar: true,
             };
           } else {
             return map;
           }
         });
-        setDataDetalle(dataDetalleModificado);
+        setDataDetalle(dataDetalleMod);
         setRefrescar(true);
       } else {
         let model = dataDetalle.find((map) => {
           return map.documentoVentaId == dataArt.documentoVentaId;
         });
         if (model == undefined) {
-          const newId = getNextAvailableId();
           setDataDetalle((prevState) => [
             ...prevState,
             {
-              detalleId: newId,
-              abonar: true,
+              detalleId: detalleId,
               documentoVentaId: dataArt.documentoVentaId,
-              fechaEmision: dataArt.fechaEmision,
-              total: dataArt.total,
-              porcentaje: dataArt.porcentaje,
-              monto: dataArt.monto,
               tipoDocumento: dataArt.tipoDocumento,
               serie: dataArt.serie,
               numero: dataArt.numero,
+              fechaEmision: dataArt.fechaEmision,
+              porcentaje: dataArt.porcentaje,
+              total: dataArt.total,
+              monto: dataArt.monto,
+              abonar: true,
             },
           ]);
-          setUsedIds([...usedIds, newId]);
-          // setDetalleId(detalleId + 1);
+          setDetalleId(detalleId + 1);
           setDataHabilitarCampos(true);
           setRefrescar(true);
         } else {
           Swal.fire({
             title: "Aviso del sistema",
             text:
-              "El Tipo de venta " +
-              model.documentoVentaId +
+              "El Documento " +
+              model.serie +
+              "-" +
+              model.numero +
               " ya está registrado en el detalle, ¿Desea modificar los datos de venta del artículo?",
             icon: "error",
             iconColor: "#F7BF3A",
@@ -394,7 +381,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             cancelButtonText: "Cancelar",
           }).then((res) => {
             if (res.isConfirmed) {
-              CargarDetalle(model.detalleId);
+              CargarDetalle(model.documentoVentaId);
             }
           });
         }
@@ -422,50 +409,55 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
   };
-  const getNextAvailableId = () => {
-    let newId = 1;
-    const usedIds = dataDetalle.map((detalle) => detalle.detalleId);
-    while (usedIds.includes(newId)) {
-      newId++;
-    }
-    return newId;
+  const SepararDetalle = async (detalle) => {
+    const SepararDocumentoVentaId = detalle.map((detalle) => {
+      return {
+        ...detalle,
+        empresaId: detalle.documentoVentaId.substr(0, 2),
+        tipoDocumento: detalle.documentoVentaId.substr(2, 2),
+        serie: detalle.documentoVentaId.substr(4, 4),
+        numero: detalle.documentoVentaId.substr(8),
+      };
+    });
+    setDataDetalle(SepararDocumentoVentaId);
   };
   const CargarDetalle = async (id) => {
     setDataHabilitarCampos(false);
-    setDataArt(dataDetalle.find((map) => map.detalleId === id));
+    setDataArt(dataDetalle.find((map) => map.documentoVentaId === id));
   };
   const EliminarDetalle = async (id) => {
-    if (id != "") {
-      setDataDetalle(dataDetalle.filter((map) => map.detalleId !== id));
-      // setUsedIds(usedIds.filter((usedId) => usedId !== id));
-      resetDetalleIds();
-      // setDetalleId(detalleId + 1);
-      ActualizarImportesTotales();
-      setRefrescar(true);
+    let i = 1;
+    let nuevoDetalle = dataDetalle.filter((map) => map.documentoVentaId !== id);
+    if (nuevoDetalle.length > 0) {
+      setDataDetalle(
+        nuevoDetalle.map((map) => {
+          return {
+            ...map,
+            detalleId: i++,
+          };
+        })
+      );
+      setDetalleId(i);
+    } else {
+      //Asgina directamente a 1
+      setDetalleId(nuevoDetalle.length + 1);
+      setDataDetalle(nuevoDetalle);
     }
+    setRefrescar(true);
   };
-  const resetDetalleIds = () => {
-    setDataDetalle((prevState) =>
-      prevState.map((detalle, index) => ({
-        ...detalle,
-        detalleId: index + 1,
-      }))
-    );
-    setDetalleId(1);
-  };
+  //Calculos
   const ActualizarImportesTotales = async () => {
-    let total = 0;
-    if (dataDetalle.length === 1) {
-      total = dataDetalle[0].monto;
-    } else if (dataDetalle.length > 1) {
-      total = dataDetalle.reduce((sum, detalle) => sum + detalle.monto, 0);
-    }
+    //Suma los importes de los detalles
+    let importeTotal = dataDetalle.reduce((i, map) => {
+      return i + map.monto;
+    }, 0);
+
     setData((prevState) => ({
       ...prevState,
-      total: Funciones.FormatoNumero(total.toFixed(2)),
+      total: Funciones.FormatoNumero(importeTotal.toFixed(2)),
     }));
   };
-
+  //Calculos
   //#endregion
 
   //#region API
@@ -516,6 +508,55 @@ const Modal = ({ setModal, modo, objeto }) => {
       OcultarMensajes();
     }
   };
+  const ConsultarDocumento = async () => {
+    let respuesta = await ValidarConsulta("ConsultarDocumento");
+    if (respuesta[0]) {
+      const result = await ApiMasy.get(
+        `api/Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataArt.tipoDocumento}&serie=${dataArt.serie}&numero=${dataArt.numero}&incluirReferencias=true`
+      );
+      if (result.name == "AxiosError") {
+        toast.error(String(result.data.data.messages[0].textos), {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        let nuevoTotal = await ConvertirPrecio(
+          result.data.data.total,
+          result.data.data.monedaId
+        );
+        if (nuevoTotal != undefined) {
+          let monto = nuevoTotal * (dataArt.porcentaje / 100);
+          setDataArt({
+            ...dataArt,
+            documentoVentaId: result.data.data.id,
+            numero: result.data.data.numero,
+            fechaEmision: result.data.data.fechaEmision,
+            total: Funciones.RedondearNumero(nuevoTotal, 2),
+            monto: Funciones.RedondearNumero(monto, 2),
+          });
+        }
+      }
+    } else {
+      if (respuesta[1] != "") {
+        toast.error(respuesta[1], {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    }
+  };
   //#endregion
 
   //#region Funciones Modal
@@ -523,19 +564,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     setModalCliente(true);
   };
   //#endregion
-
-  const SepararDetalle = async (detalle) => {
-    const SepararDocumentoVentaId = detalle.map((detalle) => {
-      return {
-        ...detalle,
-        empresaId: detalle.documentoVentaId.substr(0, 2),
-        tipoDocumento: detalle.documentoVentaId.substr(2, 2),
-        serie: detalle.documentoVentaId.substr(4, 4),
-        numero: detalle.documentoVentaId.substr(8),
-      };
-    });
-    setDataDetalle(SepararDocumentoVentaId);
-  };
 
   //#region Columnas
   const columnas = [
@@ -574,12 +602,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           default:
             comprobante = value;
         }
-        return <p className="text-center">{comprobante}</p>;
+        return <p>{comprobante}</p>;
       },
     },
     {
       Header: "Serie",
       accessor: "serie",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Número",
@@ -589,7 +620,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Emisión",
       accessor: "fechaEmision",
       Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YY");
+        return (
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+        );
       },
     },
     {
@@ -597,7 +630,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "total",
       Cell: ({ value }) => {
         return (
-          <p className="text-center pr-2.5">
+          <p className="text-right font-semibold pr-2.5">
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -608,7 +641,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "porcentaje",
       Cell: ({ value }) => {
         return (
-          <p className="text-center pr-2.5">
+          <p className="text-right font-semibold pr-2.5">
             {Funciones.RedondearNumero(value, 2) + "%"}
           </p>
         );
@@ -619,7 +652,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "monto",
       Cell: ({ value }) => {
         return (
-          <p className="text-center pr-2.5">
+          <p className="text-right font-semibold pr-5">
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -637,7 +670,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={() => CargarDetalle(row.values.detalleId)}
+                  onClick={() => CargarDetalle(row.values.documentoVentaId)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -649,7 +682,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={() => {
-                    EliminarDetalle(row.values.detalleId);
+                    EliminarDetalle(row.values.documentoVentaId);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -1035,14 +1068,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="consultar"
                 className={Global.BotonBuscar + Global.BotonPrimary}
                 hidden={modo == "Consultar" ? true : false}
-                onClick={() => ObtenerDocumentoDeVenta()}
+                onClick={async () => await ConsultarDocumento()}
               >
                 <FaSearch></FaSearch>
               </button>
             </div>
           </div>
           <div className={Global.ContenedorInputs}>
-            <div className={Global.Input + "w-3/4"}>
+            <div className={Global.InputTercio}>
               <label htmlFor="fechaEmision" className={Global.LabelStyle}>
                 Emisión
               </label>
@@ -1057,7 +1090,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle + Global.Disabled}
               />
             </div>
-            <div className={Global.Input + "w-3/4"}>
+            <div className={Global.InputMitad}>
               <label htmlFor="total" className={Global.LabelStyle}>
                 Total Vta.
               </label>
@@ -1073,7 +1106,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle + Global.Disabled}
               />
             </div>
-            <div className={Global.Input + "w-3/4"}>
+            <div className={Global.InputTercio}>
               <label htmlFor="porcentaje" className={Global.LabelStyle}>
                 % Reten.
               </label>
@@ -1089,7 +1122,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputStyle}
               />
             </div>
-            <div className={Global.Input + "w-3/4"}>
+            <div className={Global.InputMitad}>
               <label htmlFor="monto" className={Global.LabelStyle}>
                 Retención
               </label>

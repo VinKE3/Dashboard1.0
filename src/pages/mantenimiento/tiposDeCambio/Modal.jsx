@@ -43,7 +43,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (resultado.status == 200) {
       toast.success("Tipo de Cambio extraído exitosamente", {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -54,7 +54,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       toast.error(String(resultado.response.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

@@ -178,7 +178,7 @@ const BloquearCompra = () => {
       Listar(cadena, index + 1);
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -232,7 +232,7 @@ const BloquearCompra = () => {
             Listar(cadena, index + 1);
             toast.success(String(response.data.messages[0].textos), {
               position: "bottom-right",
-              autoClose: 5000,
+              autoClose: 2000,
               hideProgressBar: true,
               closeOnClick: true,
               pauseOnHover: true,
