@@ -239,7 +239,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (tipoMen == 0) {
       toast.success(men, {
         position: "bottom-right",
-        autoClose: 4000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -291,7 +291,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         distritoId:
           model.distritoId == "" ? dataGeneral.distritoId : model.distritoId,
       });
-      toast.success("Datos extraídos exitosamente", {
+      toast.info("Datos extraídos exitosamente", {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,

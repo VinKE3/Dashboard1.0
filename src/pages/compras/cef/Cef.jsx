@@ -13,6 +13,7 @@ import { FaSearch } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import { set } from "date-fns";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -112,6 +113,26 @@ const Cef = () => {
     const result = await ApiMasy.get(`api/Compra/CEF/${id}`);
     setObjeto(result.data.data);
   };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Compra/CEF/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -136,45 +157,51 @@ const Cef = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
+  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
     setModo(modo);
-    if (modo == "Registrar") {
-      setObjeto({
-        empresaId: "string",
-        proveedorId: "string",
-        tipoDocumentoId: "string",
-        serie: "string",
-        numero: "string",
-        clienteId: "string",
-        numeroLetra: "string",
-        fechaRegistro: "2023-04-27T13:44:06.544Z",
-        fechaEmision: "2023-04-27T13:44:06.544Z",
-        fechaVencimiento: "2023-04-27T13:44:06.544Z",
-        proveedorNumeroDocumentoIdentidad: "string",
-        lugarGiro: "string",
-        plazo: 0,
-        tipoCompraId: "string",
-        tipoPagoId: "string",
-        monedaId: "string",
-        tipoCambio: 2147483647,
-        total: 2147483647,
-        documentoReferencia: "string",
-        detalles: [
-          {
-            detalleId: 0,
-            documentoCompraId: "string",
-            documentoCompraFechaEmision: "2023-04-27T13:44:06.544Z",
-            concepto: "string",
-            abono: 0,
-            saldo: 0,
-            ordenCompraRelacionada: "string",
-          },
-        ],
-      });
-    } else {
-      await GetPorId(id);
+    switch (accion) {
+      case 0: {
+        setObjeto({
+          empresaId: "01",
+          proveedorId: "",
+          tipoDocumentoId: "",
+          serie: "",
+          numero: "",
+          clienteId: "",
+          numeroLetra: "",
+          fechaRegistro: moment(new Date()).format("yyyy-MM-DD"),
+          fechaEmision: moment(new Date()).format("yyyy-MM-DD"),
+          fechaVencimiento: moment(new Date()).format("yyyy-MM-DD"),
+          proveedorNumeroDocumentoIdentidad: "",
+          lugarGiro: "",
+          plazo: 0,
+          tipoCompraId: "CR",
+          tipoPagoId: "EI",
+          monedaId: "S",
+          tipoCambio: 0,
+          total: 0,
+          documentoReferencia: "",
+          detalles: [],
+        });
+        setModal(true);
+        break;
+      }
+      case 1: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          await GetPorId(id);
+          setModal(true);
+        }
+        break;
+      }
+      case 3: {
+        await GetPorId(id);
+        setModal(true);
+        break;
+      }
+      default:
+        break;
     }
-    setModal(true);
   };
   //#endregion
 
@@ -219,21 +246,15 @@ const Cef = () => {
         accessor: "proveedorNumero",
       },
       {
-        Header: "Moneda",
+        Header: "M",
         accessor: "monedaId",
-        Cell: ({ value }) => {
-          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
-        },
       },
       {
         Header: "Total",
         accessor: "total",
-        Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
-        },
       },
       {
-        Header: "Cancelado",
+        Header: "C",
         accessor: "isCancelado",
         Cell: ({ value }) => {
           return value ? (
@@ -244,7 +265,7 @@ const Cef = () => {
         },
       },
       {
-        Header: "Bloqueado",
+        Header: "B",
         accessor: "isBloqueado",
         Cell: ({ value }) => {
           return value ? (
@@ -270,8 +291,8 @@ const Cef = () => {
             permisos={permisos}
             menu={["Compra", "CEF"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
           />
         ),
       },

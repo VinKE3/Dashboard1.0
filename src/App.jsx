@@ -23,8 +23,6 @@ import FacturaNegociable from "./pages/compras/facturaNegociable/FacturaNegociab
 import LetraCambioCompra from "./pages/compras/letraCambioCompra/LetraCambioCompra";
 import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
 import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
-import EntradaDeArticulos from "./pages/compras/entradaDeArticulos/EntradaDeArticulos";
-import RegistroCompraArticulo from "./pages/compras/registroCompraArticulo/RegistroCompraArticulo";
 import BloquearCompra from "./pages/compras/bloquearCompra/BloquearCompra";
 //*Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
@@ -127,14 +125,6 @@ function App() {
           <Route path="/compras/cheque" element={<Cheque />} />
 
           <Route path="/compras/bloquear-compra" element={<BloquearCompra />} />
-          <Route
-            path="/compras/entrada-de-articulos"
-            element={<EntradaDeArticulos />}
-          />
-          <Route
-            path="/compras/registro-de-compra-articulo"
-            element={<RegistroCompraArticulo />}
-          />
           <Route
             path="/compras/factura-negociable"
             element={<FacturaNegociable />}

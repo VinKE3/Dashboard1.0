@@ -13,6 +13,7 @@ import { FaSearch } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import { set } from "date-fns";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -29,8 +30,7 @@ const TablaStyle = styled.div`
     width: 40px;
   }
   & th:nth-child(9) {
-    width: 80px;
-    text-align: right;
+    text-align: center;
   }
   & th:last-child {
     text-align: center;
@@ -123,6 +123,26 @@ const LetraCambioCompra = () => {
     const result = await ApiMasy.get(`api/Compra/LetraCambioCompra/${id}`);
     setObjeto(result.data.data);
   };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Compra/LetraCambioCompra/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -147,41 +167,57 @@ const LetraCambioCompra = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
+  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
     setModo(modo);
-    if (modo == "Registrar") {
-      setObjeto({
-        empresaId: "",
-        proveedorId: "",
-        tipoDocumentoId: "",
-        serie: "",
-        numero: "",
-        clienteId: "000000",
-        numeroLetra: "",
-        fechaRegistro: moment().format("YYYY-MM-DD"),
-        fechaEmision: moment().format("YYYY-MM-DD"),
-        fechaVencimiento: moment().format("YYYY-MM-DD"),
-        plazo: 0,
-        proveedorNombre: "",
-        proveedorNumeroDocumentoIdentidad: "",
-        lugarGiro: "",
-        tipoCompraId: "CR",
-        tipoPagoId: "EI",
-        monedaId: "S",
-        tipoCambio: 0,
-        total: 0,
-        documentoReferencia: "",
-        avalNombre: "",
-        avalNumeroDocumentoIdentidad: "",
-        avalDomicilio: "",
-        avalTelefono: "",
-        observacion: "",
-        detalles: [],
-      });
-    } else {
-      await GetPorId(id);
+    switch (accion) {
+      case 0: {
+        setObjeto({
+          empresaId: "",
+          proveedorId: "",
+          tipoDocumentoId: "",
+          serie: "",
+          numero: "",
+          clienteId: "000000",
+          numeroLetra: "",
+          fechaRegistro: moment().format("YYYY-MM-DD"),
+          fechaEmision: moment().format("YYYY-MM-DD"),
+          fechaVencimiento: moment().format("YYYY-MM-DD"),
+          plazo: 0,
+          proveedorNombre: "",
+          proveedorNumeroDocumentoIdentidad: "",
+          lugarGiro: "",
+          tipoCompraId: "CR",
+          tipoPagoId: "EI",
+          monedaId: "S",
+          tipoCambio: 0,
+          total: 0,
+          documentoReferencia: "",
+          avalNombre: "",
+          avalNumeroDocumentoIdentidad: "",
+          avalDomicilio: "",
+          avalTelefono: "",
+          observacion: "",
+          detalles: [],
+        });
+        setModal(true);
+        break;
+      }
+      case 1: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          await GetPorId(id);
+          setModal(true);
+        }
+        break;
+      }
+      case 3: {
+        await GetPorId(id);
+        setModal(true);
+        break;
+      }
+      default:
+        break;
     }
-    setModal(true);
   };
   //#endregion
 
@@ -229,14 +265,14 @@ const LetraCambioCompra = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+          return <p className="text-center">{value}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
+          return <p className="text-right">{value}</p>;
         },
       },
       {
@@ -273,8 +309,8 @@ const LetraCambioCompra = () => {
             permisos={permisos}
             menu={["Compra", "FacturaNegociable"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
           />
         ),
       },

@@ -877,7 +877,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setTipoCambio(0);
     } else {
       setTipoCambio(result.data.data.precioVenta);
-      toast.success(
+      toast.info(
         "El tipo de cambio del día " +
           moment(data.fechaEmision).format("DD/MM/YYYY") +
           " es: " +

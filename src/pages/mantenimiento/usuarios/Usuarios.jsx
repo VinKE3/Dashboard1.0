@@ -210,7 +210,7 @@ const Usuarios = () => {
     } else {
       toast.info("Seleccione una Fila", {
         position: "bottom-right",
-        autoClose: 4000,
+        autoClose: 300,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -235,7 +235,7 @@ const Usuarios = () => {
     } else {
       toast.info("Seleccione una Fila", {
         position: "bottom-right",
-        autoClose: 4000,
+        autoClose: 300,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

@@ -122,7 +122,9 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo != "Registrar") {
+    if (modo == "Registrar") {
+      GetPorIdTipoCambio(data.fechaEmision)
+    }else{
       SepararDetalle(data.detalles);
     }
     Tablas();
@@ -222,17 +224,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (dataArt.serie == undefined || dataArt.numero == undefined) {
         return [
           false,
-          "Retención: La serie y número del documento son requeridos.",
+          "La serie y número del documento son requeridos.",
         ];
       }
       if (dataArt.serie.length < 4) {
-        return [false, "Retención: Formato de Serie incorrecto"];
+        return [false, "Formato de Serie incorrecto"];
       }
     } else {
       if (data.tipoCambio == 0) {
         return [
           false,
-          "Retención: No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
+          "No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
         ];
       }
     }
@@ -244,7 +246,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (respuesta[0]) {
         if (data.monedaId != moneda) {
           toast.info(
-            "Retención: Se realizó la conversión al tipo de cambio actual",
+            "Se realizó la conversión al tipo de cambio actual",
             {
               position: "bottom-right",
               autoClose: 3000,
@@ -263,7 +265,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           }
           return total;
         } else {
-          toast.info("Retención: Documento consultado exitósamente", {
+          toast.info("Documento consultado exitósamente", {
             position: "bottom-right",
             autoClose: 3000,
             hideProgressBar: true,
@@ -302,12 +304,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
     if (Object.entries(dataArt).length == 0) {
-      return [false, "Retención: Seleccione un documento"];
+      return [false, "Seleccione un documento"];
     }
 
     //valida total de venta
     if (dataArt.total == undefined) {
-      return [false, "Retención: Seleccione un documento"];
+      return [false, "Seleccione un documento"];
     }
     return [true, ""];
   };
@@ -488,7 +490,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...data,
         tipoCambio: result.data.data.precioCompra,
       });
-      toast.success(
+      toast.info(
         "El tipo de cambio del día " +
           moment(data.fechaEmision).format("DD/MM/YYYY") +
           " es: " +

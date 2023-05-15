@@ -34,7 +34,7 @@ const ModalCrud = ({
     if (tipoMensaje == 0) {
       toast.success(mensaje, {
         position: "bottom-right",
-        autoClose: 4000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

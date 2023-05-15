@@ -163,7 +163,7 @@ const Retencion = () => {
     if (!result.data.data) {
       toast.error(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

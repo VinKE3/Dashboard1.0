@@ -1,7 +1,7 @@
-import React from "react";
+import Error405 from "../../Error405";
 
 const OrdenesDeCompra = () => {
-  return <div>OrdenesDeCompra</div>;
+  return <Error405 />;
 };
 
 export default OrdenesDeCompra;

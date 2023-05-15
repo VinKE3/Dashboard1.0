@@ -297,14 +297,13 @@ const Empresa = ({ modo }) => {
     setPorcentajesDetraccion(detraccion);
     setPorcentajesPercepcion(percepcion);
   };
-  const GuardarTodo = async (e) => {
-    e.preventDefault();
+  const GuardarTodo = async () => {
     const result = await ApiMasy.put(`api/Empresa/Configuracion`, dataGeneral);
     if (result.name == "AxiosError") {
       if (Object.entries(result.response.data).length > 0) {
         toast.error(result.response.data.messages[0].textos[0], {
           position: "bottom-right",
-          autoClose: 4000,
+          autoClose: 300,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
@@ -315,7 +314,7 @@ const Empresa = ({ modo }) => {
       } else {
         toast.error(result.message, {
           position: "bottom-right",
-          autoClose: 4000,
+          autoClose: 300,
           hideProgressBar: true,
           closeOnClick: true,
           pauseOnHover: true,
@@ -327,7 +326,7 @@ const Empresa = ({ modo }) => {
     } else {
       toast.success(result.data.messages[0].textos[0], {
         position: "bottom-right",
-        autoClose: 4000,
+        autoClose: 300,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -388,8 +387,7 @@ const Empresa = ({ modo }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     EliminarIgv(row.values.id);
                   }}
                   className="p-0 px-1"
@@ -415,7 +413,6 @@ const Empresa = ({ modo }) => {
     }
   };
   const AgregarIgv = async (e, id = "") => {
-    e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
       setObjetoIgv({
         id: -1,
@@ -522,8 +519,7 @@ const Empresa = ({ modo }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     EliminarRetencion(row.values.id);
                   }}
                   className="p-0 px-1"
@@ -549,7 +545,6 @@ const Empresa = ({ modo }) => {
     }
   };
   const AgregarRetencion = async (e, id = "") => {
-    e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
       setObjetoRetencion({
         id: -1,
@@ -656,8 +651,7 @@ const Empresa = ({ modo }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     EliminarDetraccion(row.values.id);
                   }}
                   className="p-0 px-1"
@@ -686,7 +680,6 @@ const Empresa = ({ modo }) => {
     }
   };
   const AgregarDetraccion = async (e, id = "") => {
-    e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
       setObjetoDetraccion({
         id: -1,
@@ -793,8 +786,7 @@ const Empresa = ({ modo }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     EliminarPercepcion(row.values.id);
                   }}
                   className="p-0 px-1"
@@ -823,7 +815,6 @@ const Empresa = ({ modo }) => {
     }
   };
   const AgregarPercepcion = async (e, id = "") => {
-    e.preventDefault();
     if (e.target.innerText == "AGREGAR") {
       setObjetoPercepcion({
         id: -1,

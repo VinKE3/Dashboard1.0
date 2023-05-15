@@ -22,7 +22,6 @@ import {
 } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/Funciones";
 
@@ -251,7 +250,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     toast(
       "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
       {
-        position: "bottom-right",
+        position: "bottom-left",
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
@@ -1004,7 +1003,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...data,
         tipoCambio: result.data.data.precioCompra,
       });
-      toast.success(
+      toast.info(
         "El tipo de cambio del día " +
           moment(data.fechaEmision).format("DD/MM/YYYY") +
           " es: " +
@@ -1018,7 +1017,6 @@ const Modal = ({ setModal, modo, objeto }) => {
           draggable: true,
           progress: undefined,
           theme: "colored",
-          toastId: "toastTipoCambio",
         }
       );
       OcultarMensajes();

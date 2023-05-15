@@ -111,7 +111,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto }) => {
       //Si existe manda la alerta
       toast.error("Ya existe el elemento seleccionado", {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

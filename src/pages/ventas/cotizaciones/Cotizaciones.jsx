@@ -138,7 +138,7 @@ const Cotizaciones = () => {
     if (!result.data.data) {
       toast.error(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -274,7 +274,7 @@ const Cotizaciones = () => {
               if (Object.entries(result.response.data).length > 0) {
                 toast.error(String(result.response.data.messages[0].textos), {
                   position: "bottom-right",
-                  autoClose: 4000,
+                  autoClose: 3000,
                   hideProgressBar: true,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -285,7 +285,7 @@ const Cotizaciones = () => {
               } else {
                 toast.error([result.message], {
                   position: "bottom-right",
-                  autoClose: 4000,
+                  autoClose: 3000,
                   hideProgressBar: true,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -297,7 +297,7 @@ const Cotizaciones = () => {
             } else {
               toast.success(result.data.messages[0].textos[0], {
                 position: "bottom-right",
-                autoClose: 4000,
+                autoClose: 3000,
                 hideProgressBar: true,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -312,7 +312,7 @@ const Cotizaciones = () => {
     } else {
       toast.info("Seleccione una Fila", {
         position: "bottom-right",
-        autoClose: 4000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

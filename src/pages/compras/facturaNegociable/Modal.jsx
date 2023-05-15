@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
-import moment from "moment";
-import { Checkbox } from "primereact/checkbox";
-import {
-  FaPlus,
-  FaSearch,
-  FaUndoAlt,
-  FaPen,
-  FaTrashAlt,
-  FaPaste,
-} from "react-icons/fa";
-import styled from "styled-components";
-import "primeicons/primeicons.css";
-import * as Global from "../../../components/Global";
+import FiltroConcepto from "../../../components/filtros/FiltroConcepto";
 import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
 import Swal from "sweetalert2";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { Checkbox } from "primereact/checkbox";
+import moment from "moment";
+import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
+import styled from "styled-components";
+import "primeicons/primeicons.css";
+import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/Funciones";
-import FiltroConcepto from "../../../components/filtros/FiltroConcepto";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -31,77 +25,59 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 100px;
-  }
-  & th:nth-child(4),
-  & th:nth-child(5) {
+    width: 40px;
     text-align: center;
-    width: 110px;
+  }
+  & th:nth-child(3) {
+    width: 90px;
+    text-align: center;
+  }
+  & th:nth-child(5),
+  & th:nth-child(6) {
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
+    text-align: center;
   }
   & th:last-child {
+    width: 75px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
-    width: 100px;
-    max-width: 100px;
   }
 `;
 //#endregion
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
+  //Data General
   const [data, setData] = useState(objeto);
-  const [plazos, setPlazos] = useState([]);
-  const [tiposCompra, setTiposCompra] = useState([]);
-  const [tiposPago, setTiposPago] = useState([]);
-  const [monedas, setMonedas] = useState([]);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
+  const [dataGlobal] = useState(store.session.get("global"));
+  //Data General
+  //Tablas
+  const [dataMoneda, setDataMoneda] = useState([]);
+  const [dataPlazos, setDataPlazos] = useState([]);
+  const [dataTipoComp, setDataTipoComp] = useState([]);
+  const [dataTipoPag, setDataTipoPag] = useState([]);
+  //Tablas
+  //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
-  const [checkVarios, setCheckVarios] = useState(false);
+  const [dataConcepto, setDataConcepto] = useState([]);
+  //Data Modales Ayuda
+  //Modales de Ayuda
   const [modalProv, setModalProv] = useState(false);
+  const [modalConcepto, setModalConcepto] = useState(false);
+  //Modales de Ayuda
+
+  const [checkVarios, setCheckVarios] = useState(false);
+  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
-  const [plazoSeleccionado, setPlazoSeleccionado] = useState(0);
-  const [fechaVencimientoOriginal, setFechaVencimientoOriginal] = useState(
-    moment(new Date()).format("yyyy-MM-DD")
-  );
-  const [modalConcepto, setModalConcepto] = useState(false);
-  const [dataConcepto, setDataConcepto] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
-  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-  }, [data]);
-
-  useEffect(() => {
-    detalleId;
-  }, [detalleId]);
-
-  useEffect(() => {
-    if (Object.entries(plazos).length >= 0) {
-      if (document.getElementById("plazosId"))
-        document.getElementById("plazosId").value = data.plazo;
-    }
-  }, [plazos]);
-
-  useEffect(() => {
-    if (Object.entries(tiposCompra).length > 0) {
-      document.getElementById("tipoCompraId").value = data.tipoCompraId;
-    }
-  }, [tiposCompra]);
-
-  useEffect(() => {
-    if (Object.entries(tiposPago).length > 0) {
-      document.getElementById("tipoPagoId").value = data.tipoPagoId;
-    }
-  }, [tiposPago]);
-
-  useEffect(() => {
-    if (Object.entries(monedas).length > 0) {
-      document.getElementById("monedaId").value = data.monedaId;
-    }
-  }, [monedas]);
   useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
@@ -109,195 +85,254 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorId: dataProveedor.proveedorId,
         proveedorNumeroDocumentoIdentidad:
           dataProveedor.proveedorNumeroDocumentoIdentidad,
-        proveedorDireccion: dataProveedor.proveedorDireccion ?? "",
+        proveedorNombre: dataProveedor.proveedorNombre,
       });
     }
   }, [dataProveedor]);
-  useEffect(() => {
-    if (modo != "Registrar") {
-      GetPorId(data.proveedorId);
-    } else {
-      GetPorIdTipoCambio(data.fechaEmision);
-    }
-    GetTablas();
-  }, []);
-  useEffect(() => {
-    if (plazoSeleccionado > 0) {
-      const fechaVencimientoNueva = moment(fechaVencimientoOriginal)
-        .add(plazoSeleccionado, "days")
-        .format("yyyy-MM-DD");
-      setData({ ...data, fechaVencimiento: fechaVencimientoNueva });
-    } else {
-      setData({ ...data, fechaVencimiento: fechaVencimientoOriginal });
-    }
-  }, [plazoSeleccionado]);
-  useEffect(() => {
-    if (Object.entries(dataDetalle).length > 0) {
-      setData({ ...data, detalles: dataDetalle });
-    }
-  }, [dataDetalle]);
-
   useEffect(() => {
     if (Object.entries(dataConcepto).length > 0) {
       setModalConcepto(false);
     }
   }, [dataConcepto]);
-
+  useEffect(() => {
+    setData({ ...data, detalles: dataDetalle });
+  }, [dataDetalle]);
+  useEffect(() => {
+    if (!modalConcepto) {
+      //Calculos de precios según la moneda al cerrar el modal
+      ConvertirPrecio();
+    }
+  }, [modalConcepto]);
   useEffect(() => {
     if (refrescar) {
-      dataDetalle;
-      setDataConcepto([]);
+      ActualizarImportesTotales();
       setRefrescar(false);
     }
   }, [refrescar]);
-
   useEffect(() => {
-    if (!modalConcepto) {
-      if (Object.entries(dataConcepto).length > 0) {
-        if (
-          data.monedaId != dataConcepto.monedaId &&
-          dataConcepto.Id != "000000"
-        ) {
-          ConvertirPreciosAMoneda(dataConcepto, data.monedaId, data.tipoCambio);
-        }
-      }
+    if (modo == "Registrar") {
+      GetPorIdTipoCambio(data.fechaEmision);
     }
-  }, [modalConcepto]);
-
+    Tablas();
+  }, []);
   //#endregion
 
   //#region Funciones
+  //Data General
   const ValidarData = async ({ target }) => {
-    if (target.name != "varios") {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+
+    if (target.name == "plazo") {
+      let fecha = await FechaVencimiento(target.value);
       setData((prevState) => ({
         ...prevState,
-        [target.name]: target.value.toUpperCase(),
+        fechaVencimiento: fecha,
       }));
-    } else {
-      if (target.checked) {
-        setDataProveedor((prevState) => ({
-          ...prevState,
-          proveedorId: "000000",
-          proveedorNumeroDocumentoIdentidad: "00000000000",
-          proveedorDireccion: null,
-          proveedorNombre: "CLIENTES VARIOS",
-        }));
-      } else {
-        setDataProveedor((prevState) => ({
-          ...prevState,
-          proveedorId: "",
-          proveedorNumeroDocumentoIdentidad: "",
-          proveedorDireccion: "",
-          proveedorNombre: "",
-        }));
-      }
     }
   };
+  const ProveedorVarios = async ({ target }) => {
+    if (target.checked) {
+      setDataProveedor((prevState) => ({
+        ...prevState,
+        proveedorId: dataGlobal.proveedor.id,
+        proveedorNumeroDocumentoIdentidad:
+          dataGlobal.proveedor.numeroDocumentoIdentidad,
+        proveedorNombre: dataGlobal.proveedor.nombre,
+        proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
+      }));
+    } else {
+      setDataProveedor((prevState) => ({
+        ...prevState,
+        proveedorId: "",
+        proveedorNumeroDocumentoIdentidad: "",
+        proveedorNombre: "",
+        proveedorDireccion: "",
+        ordenesCompraRelacionadas: [],
+      }));
+    }
+  };
+  const FechaEmision = async () => {
+    toast(
+      "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+      {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
+  };
+  const FechaVencimiento = async (valor) => {
+    let model = dataPlazos.find((map) => map.valor == valor);
+    let fecha = moment(moment().format("YYYY-MM-DD"))
+      .add(model.valor, "days")
+      .format("YYYY-MM-DD");
+    return fecha;
+  };
+  const OcultarMensajes = () => {
+    setMensaje([]);
+    setTipoMensaje(-1);
+  };
+  //Data General
 
+  //Concepto
   const ValidarDataConcepto = async ({ target }) => {
     setDataConcepto((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
-
-  const handlePlazoChange = (event) => {
-    const plazo = parseInt(event.target.value);
-
-    setData((prevData) => ({
-      ...prevData,
-      plazo: plazo,
-    }));
-    const today = moment().format("YYYY-MM-DD");
-    const newFechaVencimiento = moment(today)
-      .add(plazo, "days")
-      .format("YYYY-MM-DD");
-    setData((prevData) => ({
-      ...prevData,
-      fechaVencimiento: newFechaVencimiento,
-    }));
+  const ConvertirPrecio = async () => {
+    if (Object.entries(dataConcepto).length > 0) {
+      if (data.monedaId != dataConcepto.monedaId) {
+        const model = await Funciones.ConvertirPreciosAMoneda(
+          "compra",
+          {
+            precioCompra: dataConcepto.saldo,
+            precioVenta1: dataConcepto.abono,
+            precioVenta2: dataConcepto.abono,
+            precioVenta3: dataConcepto.abono,
+            precioVenta4: dataConcepto.abono,
+          },
+          data.monedaId,
+          data.tipoCambio
+        );
+        if (model != null) {
+          setDataConcepto({
+            ...dataConcepto,
+            saldo: model.precioCompra,
+            abono: model.precioVenta1,
+          });
+        }
+      } else {
+        setDataConcepto({
+          ...dataConcepto,
+          saldo: dataConcepto.saldo,
+          abono: dataConcepto.abono,
+        });
+      }
+    }
   };
+  //Concepto
+  //#endregion
 
-  const AbrirFiltroConcepto = async (e) => {
-    e.preventDefault();
-    setModalConcepto(true);
-  };
+  //#region Funciones Detalles
   const ValidarDetalle = async () => {
     if (Object.entries(dataConcepto).length == 0) {
-      return [false, "Seleccione un concepto"];
-    } else {
-      return [true, ""];
+      return [false, "Seleccione un Producto"];
     }
+    //Valida montos
+    if (Funciones.IsNumeroValido(dataConcepto.abono, false) != "") {
+      document.getElementById("abono").focus();
+      return [
+        false,
+        "Abono: " + Funciones.IsNumeroValido(dataConcepto.abono, false),
+      ];
+    }
+    //Valida montos
+
+    return [true, ""];
   };
-  const AgregarDetalle = async (e, id) => {
-    e.preventDefault();
-    let model = dataDetalle.find((map) => map.detalleId === id);
-    setDataConcepto(model);
-  };
-  const EnviarDetalle = async (e) => {
-    e.preventDefault();
+  const AgregarDetalleArticulo = async () => {
+    //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
+
     if (resultado[0] > 0) {
-      //Valida si tiene un dalleId
-      if (dataConcepto.detalleId > -1) {
-        //Si entra aquí es porque ya tiene un detalleID
-        //El índice es 1 valor menos que el detalleId porque el índice inicia en 0 y el detalle en 1 por eso se le resta
-        dataDetalle[dataConcepto.detalleId - 1] = {
-          ...dataDetalle[dataConcepto.detalleId - 1],
-          documentoCompraId: dataConcepto.documentoCompraId,
-          concepto: dataConcepto.concepto,
-          documentoCompraFechaEmision: dataConcepto.documentoCompraFechaEmision,
-          abono: dataConcepto.abono,
-          saldo: dataConcepto.saldo,
-          ordenCompraRelacionada: dataConcepto.ordenCompraRelacionada,
-        };
-        //Refrescar para que actualice la tabla
+      //Si tiene detalleId entonces modifica registro
+      if (dataConcepto.detalleId != undefined) {
+        let dataDetalleMod = dataDetalle.map((map) => {
+          if (map.documentoCompraId == dataConcepto.documentoCompraId) {
+            return {
+              detalleId: dataConcepto.detalleId,
+              documentoCompraId: dataConcepto.documentoCompraId,
+              concepto: dataConcepto.concepto,
+              documentoCompraFechaEmision:
+                dataConcepto.documentoCompraFechaEmision,
+              abono: dataConcepto.abono,
+              saldo: dataConcepto.saldo,
+              ordenCompraRelacionada: dataConcepto.ordenCompraRelacionada,
+            };
+          } else {
+            return map;
+          }
+        });
+        setDataDetalle(dataDetalleMod);
         setRefrescar(true);
       } else {
-        //Caso contrario, si no tiene Id es porque es un registro nuevo, hay que pushear al array
-
-        //Valida si en caso no tiene detalleId, pero puede ser la misma descripción, hace el find para verificar
         let model = dataDetalle.find((map) => {
-          return map.concepto === dataConcepto.concepto;
+          return map.documentoCompraId === dataConcepto.id;
         });
-        //Si model es undefined es que no encontró nada el find
         if (model == undefined) {
-          //entonces hace el push directamente
-          dataDetalle.push({
-            detalleId: detalleId,
-            documentoCompraId: dataConcepto.id,
-            concepto: dataConcepto.concepto,
-            documentoCompraFechaEmision: dataConcepto.fechaEmision,
-            abono: dataConcepto.abono,
-            saldo: dataConcepto.saldo,
-            ordenCompraRelacionada: dataConcepto.numeroDocumento,
-          });
-          //Suma 1 al detalle para que continúe el correlativo
+          setDataDetalle((prevState) => [
+            ...prevState,
+            {
+              detalleId: detalleId,
+              documentoCompraId: dataConcepto.id,
+              concepto: dataConcepto.concepto,
+              documentoCompraFechaEmision: dataConcepto.fechaEmision,
+              abono: dataConcepto.abono,
+              saldo: dataConcepto.saldo,
+              ordenCompraRelacionada: dataConcepto.numeroDocumento,
+            },
+          ]);
+          //Anidar Documento de referencia
+          let conceptos = "";
+          //Valida si contiene datos para mapearlo
+          if (data.documentoReferencia == "") {
+            conceptos = [
+              ...data.documentoReferencia,
+              dataConcepto.numeroDocumento,
+            ];
+          } else {
+            conceptos = [
+              ...[data.documentoReferencia],
+              dataConcepto.numeroDocumento,
+            ];
+          }
+          setData((prevState) => ({
+            ...prevState,
+            documentoReferencia: conceptos.toString(),
+          }));
+          //Anidar Documento de referencia
+
           setDetalleId(detalleId + 1);
-          //refresca para que actualice la tabla
           setRefrescar(true);
         } else {
-          toast.error("El detalle ya se encuentra agregado", {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
+          Swal.fire({
+            title: "Aviso del sistema",
+            text:
+              "El Concepto " +
+              model.concepto +
+              " ya está registrado en el detalle, ¿Desea modificar los datos de venta del artículo?",
+            icon: "error",
+            iconColor: "#F7BF3A",
+            showCancelButton: true,
+            color: "#fff",
+            background: "#1a1a2e",
+            confirmButtonColor: "#eea508",
+            confirmButtonText: "Aceptar",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+          }).then((res) => {
+            if (res.isConfirmed) {
+              CargarDetalle(model.documentoCompraId);
+            }
           });
         }
       }
-      //Aquí iría, independientemente de si actualiza o pushea el total a pagar va a cambiar
-      setData({
-        ...data,
-        total: dataConcepto.abono,
-      });
+      //Luego de añadir el artículo se limpia
+      setDataConcepto([]);
     } else {
-      //Aquí entrará cuando falte completar algún campo en ValidarDetalle
       toast.error(resultado[1], {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -307,106 +342,64 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   };
-
-  const EliminarDetalle = async (e, id) => {
-    e.preventDefault();
-    if (id != "") {
-      let model = dataDetalle.filter((map) => map.detalleId !== id);
-      setDataDetalle(model);
-      setDetalleId(detalleId - 1);
-      setRefrescar(true);
-    }
+  const CargarDetalle = async (id) => {
+    setDataConcepto(dataDetalle.find((map) => map.documentoCompraId === id));
   };
-
-  const ConvertirPreciosAMoneda = async (
-    data,
-    monedaId,
-    tipoCambio,
-    precisionRedondeo = 2
-  ) => {
-    if (monedaId != "D" && monedaId != "S") {
-      toast.error("No es posible hacer la conversión a la moneda ingresada", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return null;
-    }
-    if (tipoCambio == 0) {
-      toast.error(
-        "No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
-        {
-          position: "bottom-right",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      return null;
-    }
-    Swal.fire({
-      title:
-        "La deuda esta en una moneda distinta a la letra de cambio, El sistema calculara el monto de la deuda de acuerdo al tipo de cambio",
-      icon: "warning",
-    }).then(() => {
-      let saldo = 0;
-      let abono = 0;
-      if (monedaId == "D") {
-        saldo = Funciones.RedondearNumero(
-          data.saldo / tipoCambio,
-          precisionRedondeo
-        );
-        abono = Funciones.RedondearNumero(
-          data.abono / tipoCambio,
-          precisionRedondeo
-        );
-      } else {
-        saldo = Funciones.RedondearNumero(
-          data.saldo * tipoCambio,
-          precisionRedondeo
-        );
-        abono = Funciones.RedondearNumero(
-          data.abono * tipoCambio,
-          precisionRedondeo
-        );
-      }
-      setDataConcepto({ ...dataConcepto, saldo: saldo, abono: abono });
+  const EliminarDetalle = async (id) => {
+    let i = 1;
+    let nuevoDetalle = dataDetalle.filter(
+      (map) => map.documentoCompraId !== id
+    );
+    let nuevoOrdenCompra = nuevoDetalle.map((map) => {
+      return map.ordenCompraRelacionada;
     });
+    if (nuevoDetalle.length > 0) {
+      setDataDetalle(
+        nuevoDetalle.map((map) => {
+          return {
+            ...map,
+            detalleId: i++,
+          };
+        })
+      );
+      setDetalleId(i);
+      setData((prevState) => ({
+        ...prevState,
+        documentoReferencia: nuevoOrdenCompra.toString(),
+      }));
+    } else {
+      //Asgina directamente a 1
+      setDetalleId(nuevoDetalle.length + 1);
+      setDataDetalle(nuevoDetalle);
+      setData((prevState) => ({
+        ...prevState,
+        documentoReferencia: "",
+      }));
+    }
+    setRefrescar(true);
   };
+  const ActualizarImportesTotales = async () => {
+    //Suma los importes de los detalles
+    let importeTotal = dataDetalle.reduce((i, map) => {
+      return i + map.monto;
+    }, 0);
 
-  const GetTablas = async () => {
+    setData((prevState) => ({
+      ...prevState,
+      total: Funciones.FormatoNumero(importeTotal.toFixed(2)),
+    }));
+  };
+  //#endregion
+
+  //#region API
+  const Tablas = async () => {
     const result = await ApiMasy(
       `/api/Compra/FacturaNegociable/FormularioTablas`
     );
-    setPlazos(result.data.data.plazos);
-    setTiposCompra(result.data.data.tiposCompra);
-    setTiposPago(result.data.data.tiposPago);
-    setMonedas(result.data.data.monedas);
-  };
-
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
-
-  const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
-    setDataProveedor({
-      proveedorId: result.data.data.id,
-      proveedorNumeroDocumentoIdentidad:
-        result.data.data.numeroDocumentoIdentidad,
-      proveedorDireccion: result.data.data.direccionPrincipal,
-      proveedorNombre: result.data.data.nombre,
-    });
+    setDataPlazos(result.data.data.plazos);
+    setDataTipoComp(result.data.data.tiposCompra);
+    setDataTipoPag(result.data.data.tiposPago);
+    setDataMoneda(result.data.data.monedas);
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
@@ -427,23 +420,57 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...data,
         tipoCambio: result.data.data.precioCompra,
       });
-      setTipoMensaje(-1);
-      setMensaje([]);
+      toast.info(
+        "El tipo de cambio del día " +
+          moment(data.fechaEmision).format("DD/MM/YYYY") +
+          " es: " +
+          result.data.data.precioCompra,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      OcultarMensajes();
     }
+  };
+  //#endregion
+
+  //#region Funciones Modal
+  const AbrirFiltroProveedor = async () => {
+    setModalProv(true);
+  };
+  const AbrirFiltroConcepto = async () => {
+    setModalConcepto(true);
   };
   //#endregion
 
   //#region Columnas
   const columnas = [
     {
-      Header: "id",
+      Header: "documentoCompraId",
+      accessor: "documentoCompraId",
+    },
+    {
+      Header: "Item",
       accessor: "detalleId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Emisión",
       accessor: "documentoCompraFechaEmision",
-      Cell: ({ row }) =>
-        moment(row.values.documentoCompraFechaEmision).format("DD/MM/YYYY"),
+      Cell: ({ value }) => {
+        return (
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+        );
+      },
     },
     {
       Header: "Concepto",
@@ -453,14 +480,22 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Saldo",
       accessor: "saldo",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return (
+          <p className="text-right font-semibold pr-1.5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
       },
     },
     {
       Header: "Importe",
       accessor: "abono",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return (
+          <p className="text-right font-semibold pr-2.5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
       },
     },
     {
@@ -474,7 +509,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={(e) => AgregarDetalle(e, row.values.detalleId)}
+                  onClick={() => CargarDetalle(row.values.documentoCompraId)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -485,8 +520,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    EliminarDetalle(e, row.values.detalleId);
+                  onClick={() => {
+                    EliminarDetalle(row.values.documentoCompraId);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -502,16 +537,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   ];
   //#endregion
 
-  //#region Funciones Modal
-  const AbrirFiltroProveedor = async (e) => {
-    e.preventDefault();
-    setModalProv(true);
-  };
-
-  //#endregion
+  //#region Render
   return (
     <>
-      {Object.entries(monedas).length > 0 && (
+      {Object.entries(dataMoneda).length > 0 && (
         <>
           <ModalCrud
             setModal={setModal}
@@ -519,7 +548,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             modo={modo}
             menu={["Compra", "FacturaNegociable"]}
             titulo="Factura Negociable"
-            tamañoModal={[Global.ModalFull, Global.Form]}
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
           >
             {tipoMensaje > 0 && (
@@ -529,9 +558,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 Click={() => OcultarMensajes()}
               />
             )}
+            {/* Cabecera */}
             <div
               className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-3"
+                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
               }
             >
               <div className={Global.ContenedorInputs}>
@@ -550,6 +580,25 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   />
+                </div>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="plazo" className={Global.LabelStyle}>
+                    Plazo
+                  </label>
+                  <select
+                    id="plazo"
+                    name="plazo"
+                    disabled={modo == "Consultar" ? true : false}
+                    value={data.plazo ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  >
+                    {dataPlazos.map((item, index) => (
+                      <option key={index} value={item.valor}>
+                        {item.texto}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
@@ -584,6 +633,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision).format("yyyy-MM-DD") ?? ""}
                     onChange={ValidarData}
+                    onBlur={FechaEmision}
                     className={Global.InputStyle}
                   />
                 </div>
@@ -609,14 +659,26 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
               </div>
-            </div>
-
-            <div
-              className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-3"
-              }
-            >
               <div className={Global.ContenedorInputs}>
+                <div className={Global.InputMitad}>
+                  <label
+                    htmlFor="proveedorNumeroDocumentoIdentidad"
+                    className={Global.LabelStyle}
+                  >
+                    RUC/DNI:
+                  </label>
+                  <input
+                    type="text"
+                    id="proveedorNumeroDocumentoIdentidad"
+                    name="proveedorNumeroDocumentoIdentidad"
+                    placeholder="N° Documento Identidad"
+                    autoComplete="off"
+                    readOnly={true}
+                    value={data.proveedorNumeroDocumentoIdentidad ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle + Global.Disabled}
+                  />
+                </div>
                 <div className={Global.InputFull}>
                   <label
                     htmlFor="proveedorNombre"
@@ -631,7 +693,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Proveedor"
                     autoComplete="off"
                     readOnly={true}
-                    value={dataProveedor.proveedorNombre ?? ""}
+                    value={data.proveedorNombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton + Global.Disabled}
                   />
@@ -643,7 +705,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       " !rounded-none"
                     }
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => AbrirFiltroProveedor(e)}
+                    disabled={checkVarios ? true : false}
+                    onClick={() => AbrirFiltroProveedor()}
                   >
                     <FaSearch></FaSearch>
                   </button>
@@ -655,7 +718,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         readOnly={modo == "Consultar" ? true : false}
                         onChange={(e) => {
                           setCheckVarios(e.checked);
-                          ValidarData(e);
+                          ProveedorVarios(e);
                         }}
                         checked={checkVarios ? true : ""}
                       ></Checkbox>
@@ -664,25 +727,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Varios
                     </label>
                   </div>
-                </div>
-                <div className={Global.Input25pct}>
-                  <label htmlFor="plazoId" className={Global.LabelStyle}>
-                    Plazo
-                  </label>
-                  <select
-                    id="plazoId"
-                    name="plazoId"
-                    disabled={modo == "Consultar" ? true : false}
-                    value={data.plazoId ?? ""}
-                    onChange={handlePlazoChange}
-                    className={Global.InputStyle}
-                  >
-                    {plazos.map((item, index) => (
-                      <option key={index} value={item.valor}>
-                        {item.texto}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
@@ -702,7 +746,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                   />
                 </div>
-                <div className={Global.Input25pct}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="tipoCompraId" className={Global.LabelStyle}>
                     T. Compra
                   </label>
@@ -714,7 +758,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   >
-                    {tiposCompra.map((map) => (
+                    {dataTipoComp.map((map) => (
                       <option key={map.id} value={map.id}>
                         {map.descripcion}
                       </option>
@@ -723,7 +767,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="tipoPagoId" className={Global.LabelStyle}>
                     Tipo Pago
                   </label>
@@ -733,14 +777,36 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={true}
                     onChange={ValidarData}
                     className={Global.InputStyle}
+                    value={data.tipoPagoId ?? ""}
                   >
-                    {tiposPago.map((item, index) => (
+                    {dataTipoPag.map((item, index) => (
                       <option key={index} value={item.id}>
                         {item.descripcion}
                       </option>
                     ))}
                   </select>
                 </div>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="documentoReferencia"
+                    className={Global.LabelStyle}
+                  >
+                    Documento Referencia
+                  </label>
+                  <input
+                    type="text"
+                    id="documentoReferencia"
+                    name="documentoReferencia"
+                    autoComplete="off"
+                    placeholder="Documento Referencia"
+                    readOnly={modo == "Consultar" ? true : false}
+                    value={data.documentoReferencia ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="monedaId" className={Global.LabelStyle}>
                     Moneda
@@ -751,8 +817,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     onChange={ValidarData}
                     className={Global.InputStyle}
+                    value={data.monedaId ?? ""}
                   >
-                    {monedas.map((item, index) => (
+                    {dataMoneda.map((item, index) => (
                       <option key={index} value={item.id}>
                         {item.descripcion}
                       </option>
@@ -804,30 +871,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
               </div>
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label
-                    htmlFor="documentoReferencia"
-                    className={Global.LabelStyle}
-                  >
-                    Documento Referencia
-                  </label>
-                  <input
-                    type="text"
-                    id="documentoReferencia"
-                    name="documentoReferencia"
-                    autoComplete="off"
-                    placeholder="Documento Referencia"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.documentoReferencia ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-              </div>
             </div>
+            {/* Cabecera */}
 
-            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+            {/* Detalles */}
+            <div
+              className={
+                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+              }
+            >
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="concepto" className={Global.LabelStyle}>
@@ -838,10 +890,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="concepto"
                     name="concepto"
                     autoComplete="off"
-                    placeholder="Concepto"
+                    readOnly={true}
+                    placeholder="Busar Concepto"
                     value={dataConcepto.concepto ?? ""}
                     onChange={ValidarDataConcepto}
-                    className={Global.InputBoton}
+                    className={Global.InputBoton + Global.Disabled}
                   />
                   <button
                     id="consultar"
@@ -855,7 +908,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <FaSearch></FaSearch>
                   </button>
                 </div>
-                <div className={Global.Input25pct}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="saldo" className={Global.LabelStyle}>
                     Saldo
                   </label>
@@ -871,7 +924,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
-                <div className={Global.Input25pct}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="abono" className={Global.LabelStyle}>
                     Abonar
                   </label>
@@ -890,31 +943,32 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="enviarDetalle"
                     className={Global.BotonBuscar + Global.BotonPrimary}
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => EnviarDetalle(e)}
+                    onClick={(e) => AgregarDetalleArticulo(e)}
                   >
                     <FaPlus></FaPlus>
                   </button>
                 </div>
               </div>
-
-              {/* Tabla */}
-              <TablaStyle>
-                <TableBasic
-                  columnas={columnas}
-                  datos={dataDetalle}
-                  estilos={[
-                    "",
-                    "",
-                    "",
-                    "border",
-                    "",
-                    "border border-b-0",
-                    "border",
-                  ]}
-                />
-              </TablaStyle>
-              {/* Tabla */}
             </div>
+            {/* Detalles */}
+
+            {/* Tabla Detalle */}
+            <TablaStyle>
+              <TableBasic
+                columnas={columnas}
+                datos={dataDetalle}
+                estilos={[
+                  "",
+                  "",
+                  "",
+                  "border",
+                  "",
+                  "border border-b-0",
+                  "border",
+                ]}
+              />
+            </TablaStyle>
+            {/* Tabla Detalle */}
           </ModalCrud>
         </>
       )}
@@ -927,9 +981,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           setObjeto={setDataConcepto}
         />
       )}
-      <ToastContainer />
     </>
   );
+  //#endregion
 };
 
 export default Modal;

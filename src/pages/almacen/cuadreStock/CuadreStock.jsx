@@ -132,7 +132,7 @@ const CuadreStock = () => {
     if (!result.data.data) {
       toast.error(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -236,7 +236,7 @@ const CuadreStock = () => {
                 }
                 toast.error(err, {
                   position: "bottom-right",
-                  autoClose: 2000,
+                  autoClose: 3000,
                   hideProgressBar: true,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -248,7 +248,7 @@ const CuadreStock = () => {
                 Listar(cadena, index + 1);
                 toast.success(String(response.data.messages[0].textos), {
                   position: "bottom-right",
-                  autoClose: 2000,
+                  autoClose: 3000,
                   hideProgressBar: true,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -264,7 +264,7 @@ const CuadreStock = () => {
     } else {
       toast.info("Seleccione una Fila", {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,

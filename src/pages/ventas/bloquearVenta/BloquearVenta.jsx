@@ -163,7 +163,7 @@ const BloquearVenta = () => {
       }
       toast.error(err, {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -175,7 +175,7 @@ const BloquearVenta = () => {
       Listar(cadena, index + 1);
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -217,7 +217,7 @@ const BloquearVenta = () => {
             }
             toast.error(err, {
               position: "bottom-right",
-              autoClose: 2000,
+              autoClose: 3000,
               hideProgressBar: true,
               closeOnClick: true,
               pauseOnHover: true,
@@ -227,9 +227,9 @@ const BloquearVenta = () => {
             });
           } else {
             Listar(cadena, index + 1);
-            toast.success(String(response.data.messages[0].textos), {
+            toast.info(String(response.data.messages[0].textos), {
               position: "bottom-right",
-              autoClose: 2000,
+              autoClose: 3000,
               hideProgressBar: true,
               closeOnClick: true,
               pauseOnHover: true,

@@ -13,6 +13,7 @@ import { FaSearch } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import { set } from "date-fns";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -41,13 +42,13 @@ const TablaStyle = styled.div`
     width: 40px;
   }
   & th:nth-child(9) {
+    text-align: center;
     width: 80px;
-    text-align: right;
   }
   & th:last-child {
+    text-align: center;
     width: 100px;
     max-width: 100px;
-    text-align: center;
   }
 `;
 //#endregion
@@ -134,6 +135,26 @@ const Cheque = () => {
     const result = await ApiMasy.get(`api/Compra/Cheque/${id}`);
     setObjeto(result.data.data);
   };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Compra/Cheque/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -158,36 +179,52 @@ const Cheque = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
+  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
     setModo(modo);
-    if (modo == "Registrar") {
-      setObjeto({
-        empresaId: "",
-        proveedorId: "",
-        tipoDocumentoId: "",
-        serie: "",
-        numero: "",
-        clienteId: "",
-        numeroFactura: "",
-        fechaRegistro: moment(new Date()).format("yyyy-MM-DD"),
-        fechaEmision: moment(new Date()).format("yyyy-MM-DD"),
-        fechaVencimiento: moment(new Date()).format("yyyy-MM-DD"),
-        proveedorNombre: "",
-        proveedorNumeroDocumentoIdentidad: "",
-        lugarGiro: "",
-        plazo: 0,
-        tipoCompraId: "CR",
-        tipoPagoId: "EI",
-        monedaId: "",
-        tipoCambio: 0,
-        total: 0,
-        documentoReferencia: "",
-        detalles: [],
-      });
-    } else {
-      await GetPorId(id);
+    switch (accion) {
+      case 0: {
+        setObjeto({
+          empresaId: "",
+          proveedorId: "",
+          tipoDocumentoId: "",
+          serie: "",
+          numero: "",
+          clienteId: "",
+          numeroFactura: "",
+          fechaRegistro: moment(new Date()).format("yyyy-MM-DD"),
+          fechaEmision: moment(new Date()).format("yyyy-MM-DD"),
+          fechaVencimiento: moment(new Date()).format("yyyy-MM-DD"),
+          proveedorNombre: "",
+          proveedorNumeroDocumentoIdentidad: "",
+          lugarGiro: "",
+          plazo: 0,
+          tipoCompraId: "CR",
+          tipoPagoId: "EI",
+          monedaId: "",
+          tipoCambio: 0,
+          total: 0,
+          documentoReferencia: "",
+          detalles: [],
+        });
+        setModal(true);
+        break;
+      }
+      case 1: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          await GetPorId(id);
+          setModal(true);
+        }
+        break;
+      }
+      case 3: {
+        await GetPorId(id);
+        setModal(true);
+        break;
+      }
+      default:
+        break;
     }
-    setModal(true);
   };
   //#endregion
 
@@ -235,14 +272,14 @@ const Cheque = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+          return <p className="text-center">{value}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
+          return <p className="text-right">{value}</p>;
         },
       },
       {
@@ -279,8 +316,8 @@ const Cheque = () => {
             permisos={permisos}
             menu={["Compra", "Cheque"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
           /> //?Se envia el id de la fila
         ),
       },
