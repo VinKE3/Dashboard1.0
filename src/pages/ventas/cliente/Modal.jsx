@@ -153,8 +153,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const ValidarConsultarDocumento = (e) => {
-    e.preventDefault();
+  const ValidarConsultarDocumento = () => {
     let documento = document.getElementById("numeroDocumentoIdentidad").value;
     let tipo = document.getElementById("tipoDocumentoIdentidadId").value;
     if (tipo == 1) {
@@ -193,10 +192,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     setEstadoPersonal(true);
   };
-  const Limpiar = async (e) => {
-    if (e != null) {
-      e.preventDefault();
-    }
+  const Limpiar = async () => {
     setMen([]);
     setTipoMen(-1);
     setRespuesta(false);
@@ -237,7 +233,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const RetornarMensaje = async () => {
     if (tipoMen == 0) {
-      toast.success(men, {
+      toast.info(men, {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,
@@ -245,7 +241,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "colored",
       });
     }
     await ListarDireccion();
@@ -504,8 +500,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     Delete(
                       ["Mantenimiento", "ClienteDireccion"],
                       row.values.id,
@@ -559,8 +554,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     Delete(
                       ["Mantenimiento", "ClienteContacto"],
                       row.values.id,
@@ -830,8 +824,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Mensajes
                         tipoMensaje={tipoMen}
                         mensaje={men}
-                        Click={(e) => {
-                          e.preventDefault();
+                        Click={() => {
                           setMen([]);
                           setTipoMen(-1);
                         }}
@@ -945,8 +938,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Mensajes
                         tipoMensaje={tipoMen}
                         mensaje={men}
-                        Click={(e) => {
-                          e.preventDefault();
+                        Click={() => {
                           setMen([]);
                           setTipoMen(-1);
                         }}

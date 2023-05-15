@@ -213,6 +213,10 @@ function seccionesList() {
           path: "/finanzas/cuentas-por-pagar",
           title: "Cuentas por Pagar",
         },
+        {
+          path: "/finanzas/movimiento-bancario",
+          title: "Movimiento Bancario",
+        },
       ],
     },
     {

@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
@@ -13,7 +14,6 @@ import { FaSearch } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import { set } from "date-fns";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -27,23 +27,21 @@ const TablaStyle = styled.div`
   & th:nth-child(3),
   & th:nth-child(4) {
     width: 65px;
+    text-align: center;
   }
   & th:nth-child(5),
   & th:nth-child(12) {
-    width: 120px;
-  }
-  & th:nth-child(7) {
-    width: 90px;
+    width: 135px;
   }
   & th:nth-child(8),
   & th:nth-child(10),
   & th:nth-child(11) {
+    width: 30px;
     text-align: center;
-    width: 40px;
   }
   & th:nth-child(9) {
-    text-align: center;
     width: 80px;
+    text-align: right;
   }
   & th:last-child {
     text-align: center;
@@ -57,17 +55,15 @@ const Cheque = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
+  const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     proveedorNombre: "",
-    fechaInicio: moment()
-      .subtract(2, "years")
-      .startOf("year")
-      .format("yyyy-MM-DD"),
-    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -123,6 +119,27 @@ const Cheque = () => {
   }, []);
   //#endregion
 
+  //#region Funciones Filtrado
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const Filtro = async () => {
+    clearTimeout(timer);
+    setIndex(0);
+    const newTimer = setTimeout(() => {
+      Listar(cadena, 1);
+    }, 200);
+    setTimer(newTimer);
+  };
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
+  };
+  //#endregion
+
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
@@ -157,27 +174,6 @@ const Cheque = () => {
   };
   //#endregion
 
-  //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
-      [target.name]: target.value,
-    }));
-  };
-  const Filtro = async () => {
-    clearTimeout(timer);
-    setIndex(0);
-    const newTimer = setTimeout(() => {
-      Listar(cadena, 1);
-    }, 200);
-    setTimer(newTimer);
-  };
-  const FiltradoPaginado = (e) => {
-    setIndex(e.selected);
-    Listar(cadena, e.selected + 1);
-  };
-  //#endregion
-
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
     setModo(modo);
@@ -189,18 +185,18 @@ const Cheque = () => {
           tipoDocumentoId: "",
           serie: "",
           numero: "",
-          clienteId: "",
+          clienteId: "000000",
           numeroFactura: "",
-          fechaRegistro: moment(new Date()).format("yyyy-MM-DD"),
-          fechaEmision: moment(new Date()).format("yyyy-MM-DD"),
-          fechaVencimiento: moment(new Date()).format("yyyy-MM-DD"),
+          fechaRegistro: moment().format("yyyy-MM-DD"),
+          fechaEmision: moment().format("yyyy-MM-DD"),
+          fechaVencimiento: moment().format("yyyy-MM-DD"),
           proveedorNombre: "",
           proveedorNumeroDocumentoIdentidad: "",
           lugarGiro: "",
           plazo: 0,
           tipoCompraId: "CR",
           tipoPagoId: "EI",
-          monedaId: "",
+          monedaId: "S",
           tipoCambio: 0,
           total: 0,
           documentoReferencia: "",
@@ -239,21 +235,27 @@ const Cheque = () => {
         Header: "Registro",
         accessor: "fechaRegistro",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
         Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
         Header: "Vcmto.",
         accessor: "fechaVencimiento",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
@@ -272,14 +274,14 @@ const Cheque = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Total",
         accessor: "total",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
@@ -305,7 +307,7 @@ const Cheque = () => {
         },
       },
       {
-        Header: "D. Referencia",
+        Header: "Documento Ref.",
         accessor: "documentosReferencia",
       },
       {
@@ -318,7 +320,7 @@ const Cheque = () => {
             id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-          /> //?Se envia el id de la fila
+          />
         ),
       },
     ],
@@ -332,7 +334,7 @@ const Cheque = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Cheque</h2>
+            <h2 className={Global.TituloH2}>Programación de Cheques</h2>
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
@@ -388,6 +390,7 @@ const Cheque = () => {
               </div>
             </div>
             {/* Filtro*/}
+
             {/* Boton */}
             {permisos[0] && (
               <BotonBasico

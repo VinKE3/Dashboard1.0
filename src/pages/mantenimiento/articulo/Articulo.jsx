@@ -24,28 +24,28 @@ const TablaStyle = styled.div`
   & th:nth-child(2) {
     width: 80px;
   }
-
   & th:nth-child(4) {
     text-align: center;
     width: 60px;
   }
   & th:nth-child(5) {
-    text-align: center;
-    width: 70px;
+    text-align: right;
+    width: 40px;
   }
   & th:nth-child(6) {
     text-align: center;
-    width: 45px;
+    width: 40px;
   }
   & th:nth-child(7),
   & th:nth-child(8) {
-    text-align: center;
-    width: 100px;
+    text-align: right;
+    width: 90px;
   }
   & th:nth-child(9),
   & th:nth-child(10),
   & th:nth-child(11) {
     text-align: center;
+    width: 35px;
   }
   & th:last-child {
     text-align: center;
@@ -217,7 +217,7 @@ const Articulo = () => {
         Header: "Stock",
         accessor: "stock",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
@@ -231,29 +231,23 @@ const Articulo = () => {
         Header: "P. Compra",
         accessor: "precioCompra",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
         Header: "P. Venta",
         accessor: "precioVenta",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
         Header: "S",
         accessor: "controlarStock",
         Cell: ({ value }) => {
-          return value ? (
+          return (
             <div className="flex justify-center">
-              {" "}
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              {" "}
-              <Checkbox checked={false} />
+              <Checkbox checked={value} />
             </div>
           );
         },
@@ -262,15 +256,9 @@ const Articulo = () => {
         Header: "A.P",
         accessor: "actualizarPrecio",
         Cell: ({ value }) => {
-          return value ? (
+          return (
             <div className="flex justify-center">
-              {" "}
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              {" "}
-              <Checkbox checked={false} />
+              <Checkbox checked={value} />
             </div>
           );
         },
@@ -279,15 +267,9 @@ const Articulo = () => {
         Header: "A",
         accessor: "isActivo",
         Cell: ({ value }) => {
-          return value ? (
+          return (
             <div className="flex justify-center">
-              {" "}
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              {" "}
-              <Checkbox checked={false} />
+              <Checkbox checked={value} />
             </div>
           );
         },

@@ -381,12 +381,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   const ActualizarImportesTotales = async () => {
     //Suma los importes de los detalles
     let importeTotal = dataDetalle.reduce((i, map) => {
-      return i + map.monto;
+      return i + map.abono;
     }, 0);
 
     setData((prevState) => ({
       ...prevState,
-      total: Funciones.FormatoNumero(importeTotal.toFixed(2)),
+      total: Funciones.RedondearNumero(importeTotal, 2),
     }));
   };
   //#endregion
@@ -835,11 +835,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoCambio"
                     name="tipoCambio"
                     maxLength="8"
+                    placeholder="Tipo de Cambio"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
                   />
                   <button
                     id="consultarTipoCambio"
@@ -847,8 +852,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
                   >
@@ -937,7 +941,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataConcepto.abono ?? ""}
                     onChange={ValidarDataConcepto}
-                    className={Global.InputBoton}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
                   />
                   <button
                     id="enviarDetalle"

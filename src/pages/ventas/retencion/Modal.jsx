@@ -123,8 +123,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Registrar") {
-      GetPorIdTipoCambio(data.fechaEmision)
-    }else{
+      GetPorIdTipoCambio(data.fechaEmision);
+    } else {
       SepararDetalle(data.detalles);
     }
     Tablas();
@@ -222,10 +222,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const ValidarConsulta = async (origen) => {
     if (origen == "ConsultarDocumento") {
       if (dataArt.serie == undefined || dataArt.numero == undefined) {
-        return [
-          false,
-          "La serie y número del documento son requeridos.",
-        ];
+        return [false, "La serie y número del documento son requeridos."];
       }
       if (dataArt.serie.length < 4) {
         return [false, "Formato de Serie incorrecto"];
@@ -245,19 +242,16 @@ const Modal = ({ setModal, modo, objeto }) => {
       let respuesta = await ValidarConsulta("precio");
       if (respuesta[0]) {
         if (data.monedaId != moneda) {
-          toast.info(
-            "Se realizó la conversión al tipo de cambio actual",
-            {
-              position: "bottom-right",
-              autoClose: 3000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            }
-          );
+          toast.info("Se realizó la conversión al tipo de cambio actual", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
           if (moneda == "D") {
             total = Funciones.RedondearNumero(total / data.tipoCambio, 2);
           } else {
@@ -456,7 +450,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     setData((prevState) => ({
       ...prevState,
-      total: Funciones.FormatoNumero(importeTotal.toFixed(2)),
+      total: Funciones.RedondearNumero(importeTotal, 2),
     }));
   };
   //Calculos

@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../ModalBasic";
 import TableBasic from "../tablas/TableBasic";
-import { FaSearch } from "react-icons/fa";
+import { RadioButton } from "primereact/radiobutton";
+import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import moment from "moment";
 import * as Global from "../Global";
-import { RadioButton } from "primereact/radiobutton";
 import * as Funciones from "../Funciones";
-import { useMemo } from "react";
-import { da } from "date-fns/locale";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -19,6 +17,20 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
+  & th:nth-child(2),
+  & th:nth-child(3) {
+    width: 90px;
+    text-align: center;
+  }
+  & th:nth-child(5) {
+    width: 35px;
+    text-align: center;
+  }
+  & th:nth-child(6) {
+    width: 85px;
+    text-align: right;
+  }
+
   & th:last-child {
     width: 60px;
     text-align: center;
@@ -56,7 +68,6 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  //#region Funciones Filtrado
   const ValidarData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
@@ -78,7 +89,6 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
     setTimer(newTimer);
   };
   //#endregion
-  //#endregion
 
   //#region API
   const Listar = async (f = "", pagina = 1) => {
@@ -87,16 +97,14 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
     );
     setDatos(result.data.data.data);
   };
-
-  const GetConcepto = async (id, e) => {
-    e.preventDefault();
+  const GetPorId = async (id) => {
     const model = datos.find((registro) => registro.id == id);
     setObjeto({
+      id: model.id,
       concepto: model.descripcion,
       fechaContable: model.fechaContable,
       fechaEmision: model.fechaEmision,
       fechaVencimiento: model.fechaVencimiento,
-      id: model.id,
       monedaId: model.monedaId,
       numeroDocumento: model.numeroDocumento,
       saldo: model.saldo,
@@ -104,7 +112,9 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
     });
     setModal(false);
   };
+  //#endregion
 
+  //#region Columnas
   const columnas = useMemo(
     () => [
       {
@@ -112,17 +122,21 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
         accessor: "id",
       },
       {
-        Header: "Fecha Emisión",
+        Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YYYY")}</p>
+          );
         },
       },
       {
-        Header: "Fecha Vencimiento",
+        Header: "Vcmto.",
         accessor: "fechaVencimiento",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YYYY")}</p>
+          );
         },
       },
       {
@@ -130,24 +144,34 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
         accessor: "descripcion",
       },
       {
-        Header: "Moneda",
+        Header: "M",
         accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+        },
       },
       {
         Header: "Saldo",
         accessor: "saldo",
+        Cell: ({ value }) => {
+          return (
+            <p className="text-right font-bold">
+              {Funciones.RedondearNumero(value, 4)}
+            </p>
+          );
+        },
       },
       {
         Header: "-",
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
-              onClick={(e) => GetConcepto(row.values.id, e)}
+              onClick={(e) => GetPorId(row.values.id, e)}
               className={
-                Global.BotonBasic + Global.BotonRegistrar + " !px-3 !py-1.5"
+                Global.BotonModalBase + Global.BotonAgregar + "border-none"
               }
             >
-              <FaSearch></FaSearch>
+              <FaCheck></FaCheck>
             </button>
           </div>
         ),
@@ -168,7 +192,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
         childrenFooter={
           <>
             <button
-              className={Global.BotonCancelarModal}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -181,72 +205,86 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
-                <div className={Global.LabelStyle}>
-                  <RadioButton
-                    inputId="todos"
-                    name="tipoDocumentoId"
-                    value=""
-                    onChange={ValidarTipo}
-                    checked={tipo === ""}
-                  />
+                <div className={Global.InputFull}>
+                  <div className={Global.CheckStyle}>
+                    <RadioButton
+                      inputId="todos"
+                      name="tipoDocumentoId"
+                      value=""
+                      onChange={ValidarTipo}
+                      checked={tipo === ""}
+                    />
+                  </div>
+                  <label
+                    htmlFor="todos"
+                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                  >
+                    Todos
+                  </label>
                 </div>
-                <label htmlFor="todos" className={Global.InputStyle}>
-                  Todos
-                </label>
-              </div>
-              <div className={Global.InputFull}>
-                <div className={Global.LabelStyle}>
-                  <RadioButton
-                    inputId="factura"
-                    name="tipoDocumentoId"
-                    value="01"
-                    onChange={ValidarTipo}
-                    checked={tipo === "01"}
-                  />
+                <div className={Global.InputFull}>
+                  <div className={Global.CheckStyle + Global.Anidado}>
+                    <RadioButton
+                      inputId="factura"
+                      name="tipoDocumentoId"
+                      value="01"
+                      onChange={ValidarTipo}
+                      checked={tipo === "01"}
+                    />
+                  </div>
+                  <label
+                    htmlFor="factura"
+                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                  >
+                    Factura
+                  </label>
                 </div>
-                <label htmlFor="factura" className={Global.InputStyle}>
-                  Factura
-                </label>
-              </div>
-              <div className={Global.InputFull}>
-                <div className={Global.LabelStyle}>
-                  <RadioButton
-                    inputId="notaCredito"
-                    name="tipoDocumentoId"
-                    value="07"
-                    onChange={ValidarTipo}
-                    checked={tipo === "07"}
-                  />
+                <div className={Global.InputFull}>
+                  <div className={Global.CheckStyle + Global.Anidado}>
+                    <RadioButton
+                      inputId="notaCredito"
+                      name="tipoDocumentoId"
+                      value="07"
+                      onChange={ValidarTipo}
+                      checked={tipo === "07"}
+                    />
+                  </div>
+                  <label
+                    htmlFor="notaCredito"
+                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                  >
+                    Nota Credito
+                  </label>
                 </div>
-                <label htmlFor="notaCredito" className={Global.InputStyle}>
-                  Nota Credito
-                </label>
-              </div>
-              <div className={Global.InputFull}>
-                <div className={Global.LabelStyle}>
-                  <RadioButton
-                    inputId="letraCambio"
-                    name="tipoDocumentoId"
-                    value="LC"
-                    onChange={ValidarTipo}
-                    checked={tipo === "LC"}
-                  />
+                <div className={Global.InputFull}>
+                  <div className={Global.CheckStyle + Global.Anidado}>
+                    <RadioButton
+                      inputId="letraCambio"
+                      name="tipoDocumentoId"
+                      value="LC"
+                      onChange={ValidarTipo}
+                      checked={tipo === "LC"}
+                    />
+                  </div>
+                  <label
+                    htmlFor="letraCambio"
+                    className={Global.LabelCheckStyle}
+                  >
+                    Letra de Cambio
+                  </label>
                 </div>
-                <label htmlFor="letraCambio" className={Global.InputStyle}>
-                  Letra de Cambio
-                </label>
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
                 <label htmlFor="numeroDocumento" className={Global.LabelStyle}>
-                  Numero de Documento
+                  Número de Documento
                 </label>
                 <input
                   type="text"
                   id="numeroDocumento"
                   name="numeroDocumento"
-                  placeholder="Descripción"
+                  placeholder="Número de Documento"
                   onChange={ValidarData}
                   autoComplete="off"
                   className={Global.InputBoton}

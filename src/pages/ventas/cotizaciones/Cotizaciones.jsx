@@ -8,10 +8,11 @@ import Table from "../../../components/tablas/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import { faPlus, faBan  } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
@@ -335,7 +336,9 @@ const Cotizaciones = () => {
         Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {

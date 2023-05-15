@@ -235,21 +235,27 @@ const FacturaNegociable = () => {
         Header: "Registro",
         accessor: "fechaRegistro",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
         Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
         Header: "Vcmto.",
         accessor: "fechaVencimiento",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {

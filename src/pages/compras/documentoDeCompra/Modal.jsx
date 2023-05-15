@@ -1429,6 +1429,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoCambio"
                     name="tipoCambio"
                     maxLength="8"
+                    placeholder="Tipo de Cambio"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
@@ -1445,8 +1446,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
                   >

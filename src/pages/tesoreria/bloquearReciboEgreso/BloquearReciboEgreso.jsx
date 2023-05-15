@@ -209,7 +209,7 @@ const BloquearReciboEgreso = () => {
       }
       toast.error(err, {
         position: "bottom-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -222,7 +222,7 @@ const BloquearReciboEgreso = () => {
       setRespuestaAlert(true);
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 3000,
+        autoClose: 5000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -265,7 +265,7 @@ const BloquearReciboEgreso = () => {
               }
               toast.error(err, {
                 position: "bottom-right",
-                autoClose: 3000,
+                autoClose: 2000,
                 hideProgressBar: true,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -278,7 +278,7 @@ const BloquearReciboEgreso = () => {
               setRespuestaAlert(true);
               toast.success(String(response.data.messages[0].textos), {
                 position: "bottom-right",
-                autoClose: 3000,
+                autoClose: 5000,
                 hideProgressBar: true,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -335,16 +335,10 @@ const BloquearReciboEgreso = () => {
     {
       Header: "Moneda",
       accessor: "monedaId",
-      Cell: ({ value }) => {
-        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
-      },
     },
     {
       Header: "Total",
       accessor: "total",
-      Cell: ({ value }) => {
-        return <p className="text-right font-semibold">{value}</p>;
-      },
     },
     {
       Header: "Bloqueado",

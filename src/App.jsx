@@ -76,6 +76,7 @@ import InformeTesoreria from "./pages/informes/tesoreria/InformeTesoreria";
 
 import { useConfiguracion } from "./context/ContextConfiguracion";
 import { useEffect } from "react";
+import MovimientoBancario from "./pages/finanzas/movimientoBancario/MovimientoBancario";
 
 function App() {
   const { getConfiguracion, configuracion } = useConfiguracion();
@@ -202,6 +203,10 @@ function App() {
           <Route
             path="/finanzas/cuentas-por-pagar"
             element={<CuentasPorPagar />}
+          />
+           <Route
+            path="/finanzas/movimiento-bancario"
+            element={<MovimientoBancario />}
           />
           {/** //!PERSONAL */}
           <Route path="personal" element={<Personal />} />

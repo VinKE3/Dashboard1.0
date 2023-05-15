@@ -196,7 +196,7 @@ const BloquearMovimientoBancario = () => {
       }
       toast.error(err, {
         position: "bottom-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -209,7 +209,7 @@ const BloquearMovimientoBancario = () => {
       setRespuestaAlert(true);
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 3000,
+        autoClose: 5000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -252,7 +252,7 @@ const BloquearMovimientoBancario = () => {
               }
               toast.error(err, {
                 position: "bottom-right",
-                autoClose: 3000,
+                autoClose: 2000,
                 hideProgressBar: true,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -265,7 +265,7 @@ const BloquearMovimientoBancario = () => {
               setRespuestaAlert(true);
               toast.success(String(response.data.messages[0].textos), {
                 position: "bottom-right",
-                autoClose: 3000,
+                autoClose: 5000,
                 hideProgressBar: true,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -316,9 +316,6 @@ const BloquearMovimientoBancario = () => {
     {
       Header: "Moneda",
       accessor: "monedaId",
-      Cell: ({ value }) => {
-        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
-      },
     },
     {
       Header: "Monto",

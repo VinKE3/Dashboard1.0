@@ -44,9 +44,9 @@ const CuentasPorPagar = () => {
   const [filtro, setFiltro] = useState("");
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Consultar");
   const [respuestaAlert, setRespuestaAlert] = useState(false);
-  const [tipo, setTipo] = useState("todos");
+  const [tipo, setTipo] = useState("soloDeuda");
   const filtroInicial =
     "&fechaInicio=" +
     moment().subtract(1, "year").startOf("year").format("yyyy-MM-DD") +
@@ -58,7 +58,7 @@ const CuentasPorPagar = () => {
   //#region useEffect
   useEffect(() => {
     if (store.session.get("usuario") == "AD") {
-      setPermisos([true, true, true, true, true]);
+      setPermisos([false, false, true, false, true]);
       Listar(filtroInicial, 1);
     } else {
       //?Consulta a la Api para traer los permisos
@@ -89,7 +89,6 @@ const CuentasPorPagar = () => {
       `api/Finanzas/CuentaPorPagar/Listar?pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
-    console.log(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
@@ -119,10 +118,10 @@ const CuentasPorPagar = () => {
         moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
       fechaFin == moment(new Date()).format("yyyy-MM-DD")
     ) {
-      Listar(`&clienteNombre=${filtro}`, boton);
+      Listar(`&proveedorNombre=${filtro}`, boton);
     } else {
       Listar(
-        `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+        `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
         boton
       );
     }
@@ -133,14 +132,14 @@ const CuentasPorPagar = () => {
     let fechaInicio = document.getElementById("fechaInicio").value;
     let fechaFin = document.getElementById("fechaFin").value;
     setFiltro(
-      `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
+      `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
     );
     const newTimer = setTimeout(() => {
       if (filtro == "") {
         Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
       } else {
         Listar(
-          `&clienteNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
+          `&proveedorNombre=${filtro}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`,
           index + 1
         );
       }
@@ -202,16 +201,8 @@ const CuentasPorPagar = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
-    setModo(modo);
-    if (modo == "Registrar") {
-      let model = {
-        id: id,
-      };
-      setObjeto(model);
-    } else {
-      await GetPorId(id);
-    }
+  const AbrirModal = async (id) => {
+    await GetPorId(id);
     setModal(true);
   };
   //#endregion
@@ -253,16 +244,10 @@ const CuentasPorPagar = () => {
     {
       Header: "Moneda",
       accessor: "monedaId",
-      Cell: ({ value }) => {
-        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
-      },
     },
     {
       Header: "Total",
       accessor: "total",
-      Cell: ({ value }) => {
-        return <p className="text-right font-semibold">{value}</p>;
-      },
     },
     {
       Header: "Abonado",
@@ -395,16 +380,17 @@ const CuentasPorPagar = () => {
             </button>
           </div>
         </div>
-        <FiltroBasico
+
+        {/* <FiltroBasico
           textLabel={"Proveedor"}
           inputPlaceHolder={"Proveedor"}
-          inputId={"clienteNombre"}
-          inputName={"clienteNombre"}
+          inputId={"proveedorNombre"}
+          inputName={"proveedorNombre"}
           inputMax={"200"}
           botonId={"buscar"}
           FiltradoButton={FiltradoButton}
           FiltradoKeyPress={FiltradoKeyPress}
-        />
+        /> */}
         {/* Filtro*/}
 
         {/* Boton */}

@@ -34,7 +34,7 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:nth-child(6) {
-    width: 70px;
+    width: 40px;
     text-align: center;
   }
   & th:last-child {
@@ -263,14 +263,14 @@ const Usuarios = () => {
         accessor: "tipoUsuarioDescripcion",
       },
       {
-        Header: "F. Inicio",
+        Header: "Fecha Inicio",
         accessor: "fechaInicio",
         Cell: ({ value }) => {
           return value == null ? (
-            <p className="flex justify-center">--/--/----</p>
+            <p className="flex justify-center">--/--/--</p>
           ) : (
             <p className="flex justify-center">
-              {moment(value).format("DD/MM/YYYY")}
+              {moment(value).format("DD/MM/YY")}
             </p>
           );
         },
@@ -280,10 +280,10 @@ const Usuarios = () => {
         accessor: "fechaModificacion",
         Cell: ({ value }) => {
           return value == null ? (
-            <p className="flex justify-center">--/--/----</p>
+            <p className="flex justify-center">--/--/--</p>
           ) : (
             <p className="flex justify-center">
-              {moment(value).format("DD/MM/YYYY")}
+              {moment(value).format("DD/MM/YY")}
             </p>
           );
         },

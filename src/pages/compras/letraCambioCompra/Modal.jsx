@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
-import moment from "moment";
+import FiltroConcepto from "../../../components/filtros/FiltroConcepto";
+import Mensajes from "../../../components/Mensajes";
+import TableBasic from "../../../components/tablas/TableBasic";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 import { Checkbox } from "primereact/checkbox";
+import moment from "moment";
 import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
-import Mensajes from "../../../components/Mensajes";
-import TableBasic from "../../../components/tablas/TableBasic";
-import Swal from "sweetalert2";
-import { toast, ToastContainer } from "react-toastify";
 import * as Funciones from "../../../components/Funciones";
-import FiltroConcepto from "../../../components/filtros/FiltroConcepto";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -24,55 +25,59 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 100px;
-  }
-  & th:nth-child(4),
-  & th:nth-child(5) {
+    width: 40px;
     text-align: center;
-    width: 110px;
+  }
+  & th:nth-child(3) {
+    width: 90px;
+    text-align: center;
+  }
+  & th:nth-child(5),
+  & th:nth-child(6) {
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
+    text-align: center;
   }
   & th:last-child {
+    width: 75px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
-    width: 100px;
-    max-width: 100px;
   }
 `;
 //#endregion
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
+  //Data General
   const [data, setData] = useState(objeto);
-  const [plazos, setPlazos] = useState([]);
-  const [tiposCompra, setTiposCompra] = useState([]);
-  const [tiposPago, setTiposPago] = useState([]);
-  const [monedas, setMonedas] = useState([]);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
+  const [dataGlobal] = useState(store.session.get("global"));
+  //Data General
+  //Tablas
+  const [dataMoneda, setDataMoneda] = useState([]);
+  const [dataPlazos, setDataPlazos] = useState([]);
+  const [dataTipoComp, setDataTipoComp] = useState([]);
+  const [dataTipoPag, setDataTipoPag] = useState([]);
+  //Tablas
+  //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
-  const [checkVarios, setCheckVarios] = useState(false);
+  const [dataConcepto, setDataConcepto] = useState([]);
+  //Data Modales Ayuda
+  //Modales de Ayuda
   const [modalProv, setModalProv] = useState(false);
+  const [modalConcepto, setModalConcepto] = useState(false);
+  //Modales de Ayuda
+
+  const [checkVarios, setCheckVarios] = useState(false);
+  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
-  const [plazoSeleccionado, setPlazoSeleccionado] = useState(0);
-  const [fechaVencimientoOriginal, setFechaVencimientoOriginal] = useState(
-    moment(new Date()).format("yyyy-MM-DD")
-  );
-  const [modalConcepto, setModalConcepto] = useState(false);
-  const [dataConcepto, setDataConcepto] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
-  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
-  const [usedIds, setUsedIds] = useState([]);
   //#endregion
 
   //#region useEffect
-
-  useEffect(() => {
-    data, console.log("data", data);
-  }, [data]);
-
-  useEffect(() => {
-    dataDetalle, console.log("dataDetalle", dataDetalle);
-  }, [dataDetalle]);
-
   useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
       setData({
@@ -80,129 +85,80 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorId: dataProveedor.proveedorId,
         proveedorNumeroDocumentoIdentidad:
           dataProveedor.proveedorNumeroDocumentoIdentidad,
-        proveedorDireccion: dataProveedor.proveedorDireccion ?? "",
+        proveedorNombre: dataProveedor.proveedorNombre,
       });
     }
   }, [dataProveedor]);
-
-  useEffect(() => {
-    if (modo != "Registrar") {
-      GetPorId(data.proveedorId);
-    } else {
-      GetPorIdTipoCambio(data.fechaEmision);
-    }
-    GetTablas();
-  }, []);
-
-  useEffect(() => {
-    if (plazoSeleccionado > 0) {
-      const fechaVencimientoNueva = moment(fechaVencimientoOriginal)
-        .add(plazoSeleccionado, "days")
-        .format("yyyy-MM-DD");
-      setData({ ...data, fechaVencimiento: fechaVencimientoNueva });
-    } else {
-      setData({ ...data, fechaVencimiento: fechaVencimientoOriginal });
-    }
-  }, [plazoSeleccionado]);
-
-  useEffect(() => {
-    setData({ ...data, detalles: dataDetalle });
-  }, [dataDetalle]);
-
   useEffect(() => {
     if (Object.entries(dataConcepto).length > 0) {
       setModalConcepto(false);
     }
   }, [dataConcepto]);
-
+  useEffect(() => {
+    setData({ ...data, detalles: dataDetalle });
+  }, [dataDetalle]);
+  useEffect(() => {
+    if (!modalConcepto) {
+      //Calculos de precios según la moneda al cerrar el modal
+      ConvertirPrecio();
+    }
+  }, [modalConcepto]);
   useEffect(() => {
     if (refrescar) {
-      setDataConcepto([]);
-      SumarDetalles();
+      ActualizarImportesTotales();
       setRefrescar(false);
     }
   }, [refrescar]);
-
   useEffect(() => {
-    if (!modalConcepto) {
-      if (Object.entries(dataConcepto).length > 0) {
-        if (
-          data.monedaId != dataConcepto.monedaId &&
-          dataConcepto.Id != "000000"
-        ) {
-          ConvertirPreciosAMoneda(dataConcepto, data.monedaId, data.tipoCambio);
-        }
-      }
+    if (modo == "Registrar") {
+      GetPorIdTipoCambio(data.fechaEmision);
     }
-  }, [modalConcepto]);
-
+    Tablas();
+  }, []);
   //#endregion
 
   //#region Funciones
-  //?Data General
+  //Data General
   const ValidarData = async ({ target }) => {
-    if (target.name != "varios") {
-      setData((prevState) => ({
-        ...prevState,
-        [target.name]: target.value.toUpperCase(),
-      }));
-    } else {
-      if (target.checked) {
-        setDataProveedor((prevState) => ({
-          ...prevState,
-          proveedorId: "000000",
-          proveedorNumeroDocumentoIdentidad: "00000000000",
-          proveedorDireccion: null,
-          proveedorNombre: "CLIENTES VARIOS",
-        }));
-      } else {
-        setDataProveedor((prevState) => ({
-          ...prevState,
-          proveedorId: "",
-          proveedorNumeroDocumentoIdentidad: "",
-          proveedorDireccion: "",
-          proveedorNombre: "",
-        }));
-      }
-    }
-  };
-  const handlePlazoChange = (event) => {
-    const plazo = parseInt(event.target.value);
-
-    setData((prevData) => ({
-      ...prevData,
-      plazo: plazo,
-    }));
-    const today = moment().format("YYYY-MM-DD");
-    const newFechaVencimiento = moment(today)
-      .add(plazo, "days")
-      .format("YYYY-MM-DD");
-    setData((prevData) => ({
-      ...prevData,
-      fechaVencimiento: newFechaVencimiento,
-    }));
-  };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
-
-  //?Concepto
-  const ValidarDataConcepto = async ({ target }) => {
-    setDataConcepto((prevState) => ({
+    setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
+
+    if (target.name == "plazo") {
+      let fecha = await FechaVencimiento(target.value);
+      setData((prevState) => ({
+        ...prevState,
+        fechaVencimiento: fecha,
+      }));
+    }
   };
-  const ConvertirPreciosAMoneda = async (
-    data,
-    monedaId,
-    tipoCambio,
-    precisionRedondeo = 2
-  ) => {
-    if (monedaId != "D" && monedaId != "S") {
-      toast.error("No es posible hacer la conversión a la moneda ingresada", {
-        position: "bottom-right",
+  const ProveedorVarios = async ({ target }) => {
+    if (target.checked) {
+      setDataProveedor((prevState) => ({
+        ...prevState,
+        proveedorId: dataGlobal.proveedor.id,
+        proveedorNumeroDocumentoIdentidad:
+          dataGlobal.proveedor.numeroDocumentoIdentidad,
+        proveedorNombre: dataGlobal.proveedor.nombre,
+        proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
+      }));
+    } else {
+      setDataProveedor((prevState) => ({
+        ...prevState,
+        proveedorId: "",
+        proveedorNumeroDocumentoIdentidad: "",
+        proveedorNombre: "",
+        proveedorDireccion: "",
+        ordenesCompraRelacionadas: [],
+      }));
+    }
+  };
+  const FechaEmision = async () => {
+    toast(
+      "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+      {
+        position: "bottom-left",
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
@@ -210,69 +166,89 @@ const Modal = ({ setModal, modo, objeto }) => {
         draggable: true,
         progress: undefined,
         theme: "colored",
-      });
-      return null;
-    }
-    if (tipoCambio == 0) {
-      toast.error(
-        "No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      return null;
-    }
-    Swal.fire({
-      title:
-        "La deuda esta en una moneda distinta a la letra de cambio, El sistema calculara el monto de la deuda de acuerdo al tipo de cambio",
-      icon: "warning",
-    }).then(() => {
-      let saldo = 0;
-      let abono = 0;
-      if (monedaId == "D") {
-        saldo = Funciones.RedondearNumero(
-          data.saldo / tipoCambio,
-          precisionRedondeo
-        );
-        abono = Funciones.RedondearNumero(
-          data.abono / tipoCambio,
-          precisionRedondeo
-        );
-      } else {
-        saldo = Funciones.RedondearNumero(
-          data.saldo * tipoCambio,
-          precisionRedondeo
-        );
-        abono = Funciones.RedondearNumero(
-          data.abono * tipoCambio,
-          precisionRedondeo
-        );
       }
-      setDataConcepto({ ...dataConcepto, saldo: saldo, abono: abono });
-    });
+    );
   };
+  const FechaVencimiento = async (valor) => {
+    let model = dataPlazos.find((map) => map.valor == valor);
+    let fecha = moment(moment().format("YYYY-MM-DD"))
+      .add(model.valor, "days")
+      .format("YYYY-MM-DD");
+    return fecha;
+  };
+  const OcultarMensajes = () => {
+    setMensaje([]);
+    setTipoMensaje(-1);
+  };
+  //Data General
 
-  //?Detalles
+  //Concepto
+  const ValidarDataConcepto = async ({ target }) => {
+    setDataConcepto((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+  };
+  const ConvertirPrecio = async () => {
+    if (Object.entries(dataConcepto).length > 0) {
+      if (data.monedaId != dataConcepto.monedaId) {
+        const model = await Funciones.ConvertirPreciosAMoneda(
+          "compra",
+          {
+            precioCompra: dataConcepto.saldo,
+            precioVenta1: dataConcepto.abono,
+            precioVenta2: dataConcepto.abono,
+            precioVenta3: dataConcepto.abono,
+            precioVenta4: dataConcepto.abono,
+          },
+          data.monedaId,
+          data.tipoCambio
+        );
+        if (model != null) {
+          setDataConcepto({
+            ...dataConcepto,
+            saldo: model.precioCompra,
+            abono: model.precioVenta1,
+          });
+        }
+      } else {
+        setDataConcepto({
+          ...dataConcepto,
+          saldo: dataConcepto.saldo,
+          abono: dataConcepto.abono,
+        });
+      }
+    }
+  };
+  //Concepto
+  //#endregion
+
+  //#region Funciones Detalles
   const ValidarDetalle = async () => {
     if (Object.entries(dataConcepto).length == 0) {
-      return [false, "Seleccione un concepto"];
-    } else {
-      return [true, ""];
+      return [false, "Seleccione un Producto"];
     }
+    //Valida montos
+    if (Funciones.IsNumeroValido(dataConcepto.abono, false) != "") {
+      document.getElementById("abono").focus();
+      return [
+        false,
+        "Abono: " + Funciones.IsNumeroValido(dataConcepto.abono, false),
+      ];
+    }
+    //Valida montos
+
+    return [true, ""];
   };
-  const EnviarDetalle = async () => {
+  const AgregarDetalleArticulo = async () => {
+    //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
+
     if (resultado[0] > 0) {
-      if (dataConcepto.detalleId > -1) {
-        let dataDetalleModificado = dataDetalle.map((map) => {
-          if (map.detalleId == dataConcepto.detalleId) {
+      //Si tiene detalleId entonces modifica registro
+      if (dataConcepto.detalleId != undefined) {
+        let dataDetalleMod = dataDetalle.map((map) => {
+          if (map.documentoCompraId == dataConcepto.documentoCompraId) {
             return {
               detalleId: dataConcepto.detalleId,
               documentoCompraId: dataConcepto.documentoCompraId,
@@ -287,18 +263,17 @@ const Modal = ({ setModal, modo, objeto }) => {
             return map;
           }
         });
-        setDataDetalle(dataDetalleModificado);
+        setDataDetalle(dataDetalleMod);
         setRefrescar(true);
       } else {
         let model = dataDetalle.find((map) => {
-          return map.concepto === dataConcepto.concepto;
+          return map.documentoCompraId === dataConcepto.id;
         });
         if (model == undefined) {
-          const newId = getNextAvailableId();
           setDataDetalle((prevState) => [
             ...prevState,
             {
-              detalleId: newId,
+              detalleId: detalleId,
               documentoCompraId: dataConcepto.id,
               concepto: dataConcepto.concepto,
               documentoCompraFechaEmision: dataConcepto.fechaEmision,
@@ -307,10 +282,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               ordenCompraRelacionada: dataConcepto.numeroDocumento,
             },
           ]);
-          setUsedIds([...usedIds, newId]);
-          // //?anidar Documento de referencia
-          //Anidar Facturas
+          //Anidar Documento de referencia
           let conceptos = "";
+          //Valida si contiene datos para mapearlo
           if (data.documentoReferencia == "") {
             conceptos = [
               ...data.documentoReferencia,
@@ -322,11 +296,13 @@ const Modal = ({ setModal, modo, objeto }) => {
               dataConcepto.numeroDocumento,
             ];
           }
-          //Anidar Facturas
           setData((prevState) => ({
             ...prevState,
             documentoReferencia: conceptos.toString(),
           }));
+          //Anidar Documento de referencia
+
+          setDetalleId(detalleId + 1);
           setRefrescar(true);
         } else {
           Swal.fire({
@@ -346,13 +322,13 @@ const Modal = ({ setModal, modo, objeto }) => {
             cancelButtonText: "Cancelar",
           }).then((res) => {
             if (res.isConfirmed) {
-              CargarDetalle(model.detalleId);
+              CargarDetalle(model.documentoCompraId);
             }
           });
         }
       }
-      setDataConcepto({});
-      setRefrescar(true);
+      //Luego de añadir el artículo se limpia
+      setDataConcepto([]);
     } else {
       toast.error(resultado[1], {
         position: "bottom-right",
@@ -367,72 +343,63 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (id) => {
-    setDataConcepto(dataDetalle.find((map) => map.detalleId === id));
+    setDataConcepto(dataDetalle.find((map) => map.documentoCompraId === id));
   };
   const EliminarDetalle = async (id) => {
-    if (id != "") {
-      setDataDetalle(dataDetalle.filter((map) => map.detalleId !== id));
-      resetDetalleIds();
-      SumarDetalles();
-      const Eliminar = dataDetalle.filter((map) => map.detalleId !== id);
-      const NuevoDocumento = Eliminar.map((map) => {
-        return map.ordenCompraRelacionada;
-      });
+    let i = 1;
+    let nuevoDetalle = dataDetalle.filter(
+      (map) => map.documentoCompraId !== id
+    );
+    let nuevoOrdenCompra = nuevoDetalle.map((map) => {
+      return map.ordenCompraRelacionada;
+    });
+    if (nuevoDetalle.length > 0) {
+      setDataDetalle(
+        nuevoDetalle.map((map) => {
+          return {
+            ...map,
+            detalleId: i++,
+          };
+        })
+      );
+      setDetalleId(i);
       setData((prevState) => ({
         ...prevState,
-        documentoReferencia: NuevoDocumento.toString(),
+        documentoReferencia: nuevoOrdenCompra.toString(),
+      }));
+    } else {
+      //Asgina directamente a 1
+      setDetalleId(nuevoDetalle.length + 1);
+      setDataDetalle(nuevoDetalle);
+      setData((prevState) => ({
+        ...prevState,
+        documentoReferencia: "",
       }));
     }
+    setRefrescar(true);
   };
-  const getNextAvailableId = () => {
-    let newId = 1;
-    const usedIds = dataDetalle.map((detalle) => detalle.detalleId);
-    while (usedIds.includes(newId)) {
-      newId++;
-    }
-    return newId;
-  };
-  const resetDetalleIds = () => {
-    setDataDetalle((prevState) =>
-      prevState.map((detalle, index) => ({
-        ...detalle,
-        detalleId: index + 1,
-      }))
-    );
-    setDetalleId(1);
-  };
-  const SumarDetalles = async () => {
-    let total = 0;
-    if (dataDetalle.length === 1) {
-      total = dataDetalle[0].abono;
-    } else if (dataDetalle.length > 1) {
-      total = dataDetalle.reduce((sum, detalle) => sum + detalle.abono, 0);
-    }
+  const ActualizarImportesTotales = async () => {
+    //Suma los importes de los detalles
+    let importeTotal = dataDetalle.reduce((i, map) => {
+      return i + map.abono;
+    }, 0);
+
     setData((prevState) => ({
       ...prevState,
-      total: Funciones.RedondearNumero(total, 2),
+      total: Funciones.RedondearNumero(importeTotal, 2),
     }));
   };
+  //#endregion
 
-  //?Tablas
-  const GetTablas = async () => {
+  //#region API
+  const Tablas = async () => {
     const result = await ApiMasy(
       `/api/Compra/LetraCambioCompra/FormularioTablas`
     );
-    setPlazos(result.data.data.plazos);
-    setTiposCompra(result.data.data.tiposCompra);
-    setTiposPago(result.data.data.tiposPago);
-    setMonedas(result.data.data.monedas);
-  };
-  const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
-    setDataProveedor({
-      proveedorId: result.data.data.id,
-      proveedorNumeroDocumentoIdentidad:
-        result.data.data.numeroDocumentoIdentidad,
-      proveedorDireccion: result.data.data.direccionPrincipal,
-      proveedorNombre: result.data.data.nombre,
-    });
+    setDataPlazos(result.data.data.plazos);
+    setDataTipoComp(result.data.data.tiposCompra);
+    setDataTipoPag(result.data.data.tiposPago);
+    setDataMoneda(result.data.data.monedas);
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
@@ -453,14 +420,32 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...data,
         tipoCambio: result.data.data.precioCompra,
       });
-      setTipoMensaje(-1);
-      setMensaje([]);
+      toast.info(
+        "El tipo de cambio del día " +
+          moment(data.fechaEmision).format("DD/MM/YYYY") +
+          " es: " +
+          result.data.data.precioCompra,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      OcultarMensajes();
     }
   };
+  //#endregion
 
-  //?Modales
-  const AbrirFiltroConcepto = async (e) => {
-    e.preventDefault();
+  //#region Funciones Modal
+  const AbrirFiltroProveedor = async () => {
+    setModalProv(true);
+  };
+  const AbrirFiltroConcepto = async () => {
     setModalConcepto(true);
   };
   //#endregion
@@ -468,14 +453,24 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Columnas
   const columnas = [
     {
-      Header: "id",
+      Header: "documentoCompraId",
+      accessor: "documentoCompraId",
+    },
+    {
+      Header: "Item",
       accessor: "detalleId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Emisión",
       accessor: "documentoCompraFechaEmision",
-      Cell: ({ row }) =>
-        moment(row.values.documentoCompraFechaEmision).format("DD/MM/YYYY"),
+      Cell: ({ value }) => {
+        return (
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+        );
+      },
     },
     {
       Header: "Concepto",
@@ -485,14 +480,22 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Saldo",
       accessor: "saldo",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return (
+          <p className="text-right font-semibold pr-1.5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
       },
     },
     {
       Header: "Importe",
       accessor: "abono",
       Cell: ({ value }) => {
-        return <p className="text-right">{value}</p>;
+        return (
+          <p className="text-right font-semibold pr-2.5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
       },
     },
     {
@@ -506,7 +509,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={() => CargarDetalle(row.values.detalleId)}
+                  onClick={() => CargarDetalle(row.values.documentoCompraId)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -518,7 +521,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={() => {
-                    EliminarDetalle(row.values.detalleId);
+                    EliminarDetalle(row.values.documentoCompraId);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -534,16 +537,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   ];
   //#endregion
 
-  //#region Funciones Modal
-  const AbrirFiltroProveedor = async (e) => {
-    e.preventDefault();
-    setModalProv(true);
-  };
-
-  //#endregion
+  //#region Render
   return (
     <>
-      {Object.entries(monedas).length > 0 && (
+      {Object.entries(dataMoneda).length > 0 && (
         <>
           <ModalCrud
             setModal={setModal}
@@ -561,29 +558,50 @@ const Modal = ({ setModal, modo, objeto }) => {
                 Click={() => OcultarMensajes()}
               />
             )}
+            {/* Cabecera */}
             <div
               className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-3"
+                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
               }
             >
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="numeroLetra" className={Global.LabelStyle}>
-                    N° De Letra
+                    N° Letra
                   </label>
                   <input
                     type="text"
                     id="numeroLetra"
                     name="numeroLetra"
                     autoComplete="off"
-                    placeholder="N° De Letra"
+                    placeholder="N° Letra"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.numeroLetra ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   />
                 </div>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="plazo" className={Global.LabelStyle}>
+                    Plazo
+                  </label>
+                  <select
+                    id="plazo"
+                    name="plazo"
+                    disabled={modo == "Consultar" ? true : false}
+                    value={data.plazo ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  >
+                    {dataPlazos.map((item, index) => (
+                      <option key={index} value={item.valor}>
+                        {item.texto}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputTercio}>
                   <label htmlFor="fechaRegistro" className={Global.LabelStyle}>
@@ -616,6 +634,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision).format("yyyy-MM-DD") ?? ""}
                     onChange={ValidarData}
+                    onBlur={FechaEmision}
                     className={Global.InputStyle}
                   />
                 </div>
@@ -641,14 +660,27 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
               </div>
-            </div>
 
-            <div
-              className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-3"
-              }
-            >
               <div className={Global.ContenedorInputs}>
+                <div className={Global.InputMitad}>
+                  <label
+                    htmlFor="proveedorNumeroDocumentoIdentidad"
+                    className={Global.LabelStyle}
+                  >
+                    RUC/DNI:
+                  </label>
+                  <input
+                    type="text"
+                    id="proveedorNumeroDocumentoIdentidad"
+                    name="proveedorNumeroDocumentoIdentidad"
+                    placeholder="N° Documento Identidad"
+                    autoComplete="off"
+                    readOnly={true}
+                    value={data.proveedorNumeroDocumentoIdentidad ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle + Global.Disabled}
+                  />
+                </div>
                 <div className={Global.InputFull}>
                   <label
                     htmlFor="proveedorNombre"
@@ -663,7 +695,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Proveedor"
                     autoComplete="off"
                     readOnly={true}
-                    value={dataProveedor.proveedorNombre ?? ""}
+                    value={data.proveedorNombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton + Global.Disabled}
                   />
@@ -675,7 +707,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       " !rounded-none"
                     }
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => AbrirFiltroProveedor(e)}
+                    disabled={checkVarios ? true : false}
+                    onClick={() => AbrirFiltroProveedor()}
                   >
                     <FaSearch></FaSearch>
                   </button>
@@ -687,7 +720,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         readOnly={modo == "Consultar" ? true : false}
                         onChange={(e) => {
                           setCheckVarios(e.checked);
-                          ValidarData(e);
+                          ProveedorVarios(e);
                         }}
                         checked={checkVarios ? true : ""}
                       ></Checkbox>
@@ -697,26 +730,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </label>
                   </div>
                 </div>
-                <div className={Global.Input25pct}>
-                  <label htmlFor="plazo" className={Global.LabelStyle}>
-                    Plazo
-                  </label>
-                  <select
-                    id="plazo"
-                    name="plazo"
-                    disabled={modo == "Consultar" ? true : false}
-                    value={data.plazo ?? ""}
-                    onChange={handlePlazoChange}
-                    className={Global.InputStyle}
-                  >
-                    {plazos.map((item, index) => (
-                      <option key={index} value={item.valor}>
-                        {item.texto}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
+
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="lugarGiro" className={Global.LabelStyle}>
@@ -734,7 +749,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                   />
                 </div>
-                <div className={Global.Input25pct}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="tipoCompraId" className={Global.LabelStyle}>
                     T. Compra
                   </label>
@@ -746,7 +761,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   >
-                    {tiposCompra.map((map) => (
+                    {dataTipoComp.map((map) => (
                       <option key={map.id} value={map.id}>
                         {map.descripcion}
                       </option>
@@ -755,7 +770,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="tipoPagoId" className={Global.LabelStyle}>
                     Tipo Pago
                   </label>
@@ -767,13 +782,34 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                     value={data.tipoPagoId ?? ""}
                   >
-                    {tiposPago.map((item, index) => (
+                    {dataTipoPag.map((item, index) => (
                       <option key={index} value={item.id}>
                         {item.descripcion}
                       </option>
                     ))}
                   </select>
                 </div>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="documentoReferencia"
+                    className={Global.LabelStyle}
+                  >
+                    Documento Referencia
+                  </label>
+                  <input
+                    type="text"
+                    id="documentoReferencia"
+                    name="documentoReferencia"
+                    autoComplete="off"
+                    placeholder="Documento Referencia"
+                    readOnly={modo == "Consultar" ? true : false}
+                    value={data.documentoReferencia ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="monedaId" className={Global.LabelStyle}>
                     Moneda
@@ -786,7 +822,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                     value={data.monedaId ?? ""}
                   >
-                    {monedas.map((item, index) => (
+                    {dataMoneda.map((item, index) => (
                       <option key={index} value={item.id}>
                         {item.descripcion}
                       </option>
@@ -802,11 +838,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoCambio"
                     name="tipoCambio"
                     maxLength="8"
+                    placeholder="Tipo de Cambio"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
                   />
                   <button
                     id="consultarTipoCambio"
@@ -814,8 +855,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
                   >
@@ -838,118 +878,113 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
               </div>
-              <div className={Global.ContenedorInputs}>
+
+              <div className={Global.ContenedorBasico}>
+                <p className={Global.Subtitulo}>
+                  Aval Permanente
+                </p>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="avalNombre" className={Global.LabelStyle}>
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      id="avalNombre"
+                      name="avalNombre"
+                      placeholder="Nombre Aval"
+                      autoComplete="off"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.avalNombre ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="avalNumeroDocumentoIdentidad"
+                      className={Global.LabelStyle}
+                    >
+                      D.N.I
+                    </label>
+                    <input
+                      type="text"
+                      id="avalNumeroDocumentoIdentidad"
+                      name="avalNumeroDocumentoIdentidad"
+                      maxLength={14}
+                      placeholder="N° Documento Aval"
+                      autoComplete="off"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.avalNumeroDocumentoIdentidad ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label
+                      htmlFor="avalDomicilio"
+                      className={Global.LabelStyle}
+                    >
+                      Domicilio
+                    </label>
+                    <input
+                      type="text"
+                      id="avalDomicilio"
+                      name="avalDomicilio"
+                      placeholder="Domicilio Aval"
+                      autoComplete="off"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.avalDomicilio ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="avalTelefono" className={Global.LabelStyle}>
+                      Teléfono
+                    </label>
+                    <input
+                      type="text"
+                      id="avalTelefono"
+                      name="avalTelefono"
+                      maxLength={15}
+                      placeholder="Teléfono Aval"
+                      autoComplete="off"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.avalTelefono ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
                 <div className={Global.InputFull}>
-                  <label
-                    htmlFor="documentoReferencia"
-                    className={Global.LabelStyle}
-                  >
-                    Documento Referencia
+                  <label htmlFor="observacion" className={Global.LabelStyle}>
+                    Observación
                   </label>
                   <input
                     type="text"
-                    id="documentoReferencia"
-                    name="documentoReferencia"
+                    id="observacion"
+                    name="observacion"
+                    placeholder="Observación"
                     autoComplete="off"
-                    placeholder="Documento Referencia"
+                    value={data.observacion ?? ""}
                     readOnly={modo == "Consultar" ? true : false}
-                    value={data.documentoReferencia ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   />
                 </div>
               </div>
             </div>
-            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
-              <p className={"my-0 py-0 font-bold text-base text-light"}>
-                Aval Permanente
-              </p>
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="avalNombre" className={Global.LabelStyle}>
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    id="avalNombre"
-                    name="avalNombre"
-                    autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.avalNombre ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <div className={Global.InputMitad}>
-                  <label
-                    htmlFor="avalNumeroDocumentoIdentidad"
-                    className={Global.LabelStyle}
-                  >
-                    D.N.I
-                  </label>
-                  <input
-                    type="text"
-                    id="avalNumeroDocumentoIdentidad"
-                    name="avalNumeroDocumentoIdentidad"
-                    autoComplete="off"
-                    maxLength={14}
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.avalNumeroDocumentoIdentidad ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-              </div>
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="avalDomicilio" className={Global.LabelStyle}>
-                    Domicilio
-                  </label>
-                  <input
-                    type="text"
-                    id="avalDomicilio"
-                    name="avalDomicilio"
-                    autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.avalDomicilio ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="avalTelefono" className={Global.LabelStyle}>
-                    Teléfono
-                  </label>
-                  <input
-                    type="text"
-                    id="avalTelefono"
-                    name="avalTelefono"
-                    maxLength={15}
-                    autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.avalTelefono ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
-                </div>
-              </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="observacion" className={Global.LabelStyle}>
-                  Observación
-                </label>
-                <input
-                  type="text"
-                  id="observacion"
-                  name="observacion"
-                  autoComplete="off"
-                  value={data.observacion ?? ""}
-                  readOnly={modo == "Consultar" ? true : false}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+            {/* Cabecera */}
+
+            {/* Detalles */}
+            <div
+              className={
+                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+              }
+            >
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="concepto" className={Global.LabelStyle}>
@@ -960,10 +995,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="concepto"
                     name="concepto"
                     autoComplete="off"
-                    placeholder="Concepto"
+                    readOnly={true}
+                    placeholder="Busar Concepto"
                     value={dataConcepto.concepto ?? ""}
                     onChange={ValidarDataConcepto}
-                    className={Global.InputBoton}
+                    className={Global.InputBoton + Global.Disabled}
                   />
                   <button
                     id="consultar"
@@ -977,7 +1013,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <FaSearch></FaSearch>
                   </button>
                 </div>
-                <div className={Global.Input25pct}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="saldo" className={Global.LabelStyle}>
                     Saldo
                   </label>
@@ -993,7 +1029,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
-                <div className={Global.Input25pct}>
+                <div className={Global.InputMitad}>
                   <label htmlFor="abono" className={Global.LabelStyle}>
                     Abonar
                   </label>
@@ -1006,37 +1042,42 @@ const Modal = ({ setModal, modo, objeto }) => {
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataConcepto.abono ?? ""}
                     onChange={ValidarDataConcepto}
-                    className={Global.InputBoton}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
                   />
                   <button
                     id="enviarDetalle"
                     className={Global.BotonBuscar + Global.BotonPrimary}
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => EnviarDetalle(e)}
+                    onClick={(e) => AgregarDetalleArticulo(e)}
                   >
                     <FaPlus></FaPlus>
                   </button>
                 </div>
               </div>
-
-              {/* Tabla */}
-              <TablaStyle>
-                <TableBasic
-                  columnas={columnas}
-                  datos={dataDetalle}
-                  estilos={[
-                    "",
-                    "",
-                    "",
-                    "border",
-                    "",
-                    "border border-b-0",
-                    "border",
-                  ]}
-                />
-              </TablaStyle>
-              {/* Tabla */}
             </div>
+            {/* Detalles */}
+
+            {/* Tabla Detalle */}
+            <TablaStyle>
+              <TableBasic
+                columnas={columnas}
+                datos={dataDetalle}
+                estilos={[
+                  "",
+                  "",
+                  "",
+                  "border",
+                  "",
+                  "border border-b-0",
+                  "border",
+                ]}
+              />
+            </TablaStyle>
+            {/* Tabla Detalle */}
           </ModalCrud>
         </>
       )}
@@ -1049,9 +1090,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           setObjeto={setDataConcepto}
         />
       )}
-      <ToastContainer />
     </>
   );
+  //#endregion
 };
 
 export default Modal;

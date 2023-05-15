@@ -1449,8 +1449,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => {
-                      e.preventDefault();
+                    onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
                   >

@@ -8,10 +8,11 @@ import Table from "../../../components/tablas/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
@@ -33,7 +34,7 @@ const TablaStyle = styled.div`
   & th:nth-child(4) {
     width: 135px;
   }
-  & th:nth-child(8){
+  & th:nth-child(8) {
     text-align: right;
     width: 65px;
   }
@@ -221,6 +222,83 @@ const Retencion = () => {
         break;
     }
   };
+  const Anular = async () => {
+    let tabla = document
+      .querySelector("table > tbody")
+      .querySelector("tr.selected-row");
+    if (tabla != null) {
+      if (tabla.classList.contains("selected-row")) {
+        let id = document.querySelector("tr.selected-row").children[0].innerHTML;
+        let documento = document.querySelector("tr.selected-row").children[3].innerHTML;
+        Swal.fire({
+          title: "¿Desea Anular el documento?",
+          text: documento,
+          icon: "warning",
+          iconColor: "#F7BF3A",
+          showCancelButton: true,
+          color: "#fff",
+          background: "#1a1a2e",
+          confirmButtonColor: "#eea508",
+          confirmButtonText: "Aceptar",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Cancelar",
+        }).then(async (res) => {
+          if (res.isConfirmed) {
+            const result = await ApiMasy.put(
+              `api/Venta/Retencion/Anular/${id}`
+            );
+            if (result.name == "AxiosError") {
+              if (Object.entries(result.response.data).length > 0) {
+                toast.error(String(result.response.data.messages[0].textos), {
+                  position: "bottom-right",
+                  autoClose: 3000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                });
+              } else {
+                toast.error([result.message], {
+                  position: "bottom-right",
+                  autoClose: 3000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                });
+              }
+            } else {
+              toast.success(result.data.messages[0].textos[0], {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
+            }
+          }
+        });
+      }
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
   //#endregion
 
   //#region Columnas
@@ -234,12 +312,17 @@ const Retencion = () => {
         Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
         Header: "Hora",
         accessor: "horaEmision",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
       },
       {
         Header: "N° Documento",
@@ -272,7 +355,7 @@ const Retencion = () => {
         accessor: "isCancelado",
         Cell: ({ value }) => {
           return (
-            <div>
+            <div className="flex justify-center">
               <Checkbox checked={value} />
             </div>
           );
@@ -283,7 +366,7 @@ const Retencion = () => {
         accessor: "isAnulado",
         Cell: ({ value }) => {
           return (
-            <div>
+            <div className="flex justify-center">
               <Checkbox checked={value} />
             </div>
           );
@@ -294,7 +377,7 @@ const Retencion = () => {
         accessor: "isBloqueado",
         Cell: ({ value }) => {
           return (
-            <div>
+            <div className="flex justify-center">
               <Checkbox checked={value} />
             </div>
           );
@@ -383,14 +466,25 @@ const Retencion = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            {permisos[0] && (
-              <BotonBasico
-                botonText="Registrar"
-                botonClass={Global.BotonRegistrar}
-                botonIcon={faPlus}
-                click={() => AbrirModal()}
-              />
-            )}
+            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Registrar"
+                  botonClass={Global.BotonRegistrar}
+                  botonIcon={faPlus}
+                  click={() => AbrirModal()}
+                />
+              )}
+              {permisos[4] && (
+                <BotonBasico
+                  botonText="Anular"
+                  botonClass={Global.BotonEliminar}
+                  botonIcon={faBan}
+                  click={() => Anular()}
+                  containerClass=""
+                />
+              )}
+            </div>
             {/* Boton */}
 
             {/* Tabla */}
