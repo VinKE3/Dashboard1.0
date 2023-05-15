@@ -53,8 +53,10 @@ const TablaPersonal = styled.div`
 //#endregion
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
-  const [dataGeneral, setDataGeneral] = useState(objeto);
+  const [data, setData] = useState(objeto);
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
+  const [dataTipoVenta, setDataTipoVenta] = useState([]);
+  const [dataTipoCobro, setDataTipoCobro] = useState([]);
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [tipoMen, setTipoMen] = useState(-1);
   const [men, setMen] = useState([]);
@@ -89,8 +91,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [respuesta]);
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setDataGeneral({
-        ...dataGeneral,
+      setData({
+        ...data,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
@@ -124,16 +126,27 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   const ValidarData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setDataGeneral((prevState) => ({
+      setData((prevState) => ({
         ...prevState,
         [target.name]: target.value,
       }));
-    } else {
-      setDataGeneral((prevState) => ({
-        ...prevState,
-        [target.name]: target.value.toUpperCase(),
+      return;
+    }
+
+    if (target.name == "tipoVentaId") {
+      let model = dataTipoCobro.find(
+        (map) => map.tipoVentaCompraId == target.value
+      );
+      setData((prevData) => ({
+        ...prevData,
+        tipoCobroId: model.id,
       }));
     }
+
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
   const ValidarDataDireccion = async ({ target }) => {
     setObjetoDireccion((prevState) => ({
@@ -200,7 +213,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const LimpiarDireccion = async () => {
     setObjetoDireccion({
       id: 0,
-      clienteId: dataGeneral.id,
+      clienteId: data.id,
       direccion: "",
       departamentoId: "15",
       provinciaId: "01",
@@ -212,7 +225,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const LimpiarContacto = async () => {
     setObjetoContacto({
       id: "",
-      clienteId: dataGeneral.id,
+      clienteId: data.id,
       contactoId: 0,
       nombres: "",
       numeroDocumentoIdentidad: "",
@@ -226,7 +239,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const LimpiarPersonal = async () => {
     setObjetoPersonal({
       id: "",
-      clienteId: dataGeneral.id,
+      clienteId: data.id,
       personalId: "<<NI>>01",
       default: true,
     });
@@ -260,6 +273,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       `api/Mantenimiento/Cliente/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
+    setDataTipoVenta(result.data.data.tiposVenta);
+    setDataTipoCobro(result.data.data.tiposCobro);
   };
   const ConsultarDocumento = async (filtroApi = "") => {
     document.getElementById("consultarApi").hidden = true;
@@ -273,19 +288,18 @@ const Modal = ({ setModal, modo, objeto }) => {
         provinciaId: res.data.data.ubigeo[1],
         distritoId: res.data.data.ubigeo[2],
       };
-      setDataGeneral({
-        ...dataGeneral,
+      setData({
+        ...data,
         numeroDocumentoIdentidad: model.numeroDocumentoIdentidad,
         nombre: model.nombre,
         direccionPrincipal: model.direccionPrincipal,
         departamentoId:
           model.departamentoId == ""
-            ? dataGeneral.departamentoId
+            ? data.departamentoId
             : model.departamentoId,
         provinciaId:
-          model.provinciaId == "" ? dataGeneral.provinciaId : model.provinciaId,
-        distritoId:
-          model.distritoId == "" ? dataGeneral.distritoId : model.distritoId,
+          model.provinciaId == "" ? data.provinciaId : model.provinciaId,
+        distritoId: model.distritoId == "" ? data.distritoId : model.distritoId,
       });
       toast.info("Datos extraídos exitosamente", {
         position: "bottom-right",
@@ -315,7 +329,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   const ListarDireccion = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${dataGeneral.id}`
+      `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${data.id}`
     );
     setDataDireccion(result.data.data);
   };
@@ -367,7 +381,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ListarContacto = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteContacto/ListarPorCliente?clienteId=${dataGeneral.id}`
+      `api/Mantenimiento/ClienteContacto/ListarPorCliente?clienteId=${data.id}`
     );
     setDataContacto(result.data.data);
   };
@@ -423,7 +437,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ListarPersonal = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClientePersonal/ListarPorCliente?clienteId=${dataGeneral.id}`
+      `api/Mantenimiento/ClientePersonal/ListarPorCliente?clienteId=${data.id}`
     );
     setDataPersonal(
       result.data.data.map((res) => ({
@@ -628,7 +642,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       {Object.entries(dataTipoDoc).length > 0 && (
         <ModalCrud
           setModal={setModal}
-          objeto={dataGeneral}
+          objeto={data}
           modo={modo}
           menu={["Mantenimiento", "Cliente"]}
           titulo="Cliente"
@@ -652,7 +666,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <select
                       id="tipoDocumentoIdentidadId"
                       name="tipoDocumentoIdentidadId"
-                      value={dataGeneral.tipoDocumentoIdentidadId ?? ""}
+                      value={data.tipoDocumentoIdentidadId ?? ""}
                       onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
                       className={Global.InputStyle}
@@ -678,7 +692,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       placeholder="Número Documento Identidad"
                       readOnly={modo == "Consultar" ? true : false}
-                      value={dataGeneral.numeroDocumentoIdentidad ?? ""}
+                      value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
                       className={Global.InputBoton}
                     />
@@ -707,7 +721,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     placeholder="Nombre"
                     readOnly={modo == "Consultar" ? true : false}
-                    value={dataGeneral.nombre ?? ""}
+                    value={data.nombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   />
@@ -724,7 +738,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       placeholder="Teléfono"
                       readOnly={modo == "Consultar" ? true : false}
-                      value={dataGeneral.telefono ?? ""}
+                      value={data.telefono ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
                     />
@@ -743,7 +757,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       placeholder="Correo"
                       readOnly={modo == "Consultar" ? true : false}
-                      value={dataGeneral.correoElectronico ?? ""}
+                      value={data.correoElectronico ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
                     />
@@ -763,7 +777,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     placeholder="Dirección Principal"
                     readOnly={modo == "Consultar" ? true : false}
-                    value={dataGeneral.direccionPrincipal ?? ""}
+                    value={data.direccionPrincipal ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   />
@@ -773,11 +787,154 @@ const Modal = ({ setModal, modo, objeto }) => {
                   setDataUbigeo={setDataUbigeo}
                   id={["departamentoId", "provinciaId", "distritoId"]}
                   dato={{
-                    departamentoId: dataGeneral.departamentoId,
-                    provinciaId: dataGeneral.provinciaId,
-                    distritoId: dataGeneral.distritoId,
+                    departamentoId: data.departamentoId,
+                    provinciaId: data.provinciaId,
+                    distritoId: data.distritoId,
                   }}
                 ></Ubigeo>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="tipoVentaId" className={Global.LabelStyle}>
+                      Tipo Venta
+                    </label>
+                    <select
+                      id="tipoVentaId"
+                      name="tipoVentaId"
+                      value={data.tipoVentaId ?? ""}
+                      onChange={ValidarData}
+                      disabled={modo == "Consultar" ? true : false}
+                      className={Global.InputStyle}
+                    >
+                      {dataTipoVenta.map((map) => (
+                        <option key={map.id} value={map.id}>
+                          {map.descripcion}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="tipoCobroId" className={Global.LabelStyle}>
+                      Tipo Cobro
+                    </label>
+                    <select
+                      id="tipoCobroId"
+                      name="tipoCobroId"
+                      value={data.tipoCobroId ?? ""}
+                      onChange={ValidarData}
+                      disabled={modo == "Consultar" ? true : false}
+                      className={Global.InputStyle}
+                    >
+                      {dataTipoCobro
+                        .filter(
+                          (model) => model.tipoVentaCompraId == data.tipoVentaId
+                        )
+                        .map((map) => (
+                          <option key={map.id} value={map.id}>
+                            {map.descripcion}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="flex">
+                  <label htmlFor="observacion" className={Global.LabelStyle}>
+                    Observación
+                  </label>
+                  <input
+                    type="text"
+                    id="observacion"
+                    name="observacion"
+                    autoComplete="off"
+                    placeholder="Observación"
+                    readOnly={modo == "Consultar" ? true : false}
+                    value={data.observacion ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+
+                <div className={Global.ContenedorBasico}>
+                  <div className={Global.ContenedorInputs}>
+                    <div className={Global.InputMitad}>
+                      <label
+                        htmlFor="maximoCreditoUSD"
+                        className={Global.LabelStyle}
+                      >
+                        Máximo US$
+                      </label>
+                      <input
+                        type="number"
+                        id="maximoCreditoUSD"
+                        name="maximoCreditoUSD"
+                        autoComplete="off"
+                        placeholder="Máximo US$"
+                        readOnly={modo == "Consultar" ? true : false}
+                        value={data.maximoCreditoUSD ?? ""}
+                        onChange={ValidarData}
+                        className={Global.InputStyle}
+                      />
+                    </div>
+                    <div className={Global.InputMitad}>
+                      <label
+                        htmlFor="creditoUSD"
+                        className={Global.LabelStyle}
+                      >
+                        Crédito US$
+                      </label>
+                      <input
+                        type="number"
+                        id="creditoUSD"
+                        name="creditoUSD"
+                        autoComplete="off"
+                        placeholder="Crédito US$"
+                        readOnly={true}
+                        value={data.creditoUSD ?? ""}
+                        onChange={ValidarData}
+                        className={Global.InputStyle + Global.Disabled}
+                      />
+                    </div>
+                  </div>
+                  <div className={Global.ContenedorInputs}>
+                    <div className={Global.InputMitad}>
+                      <label
+                        htmlFor="maximoCreditoPEN"
+                        className={Global.LabelStyle}
+                      >
+                        Máximo S/
+                      </label>
+                      <input
+                        type="number"
+                        id="maximoCreditoPEN"
+                        name="maximoCreditoPEN"
+                        autoComplete="off"
+                        placeholder="Máximo S/"
+                        readOnly={modo == "Consultar" ? true : false}
+                        value={data.maximoCreditoPEN ?? ""}
+                        onChange={ValidarData}
+                        className={Global.InputStyle}
+                      />
+                    </div>
+                    <div className={Global.InputMitad}>
+                      <label
+                        htmlFor="creditoPEN"
+                        className={Global.LabelStyle}
+                      >
+                        Crédito S/
+                      </label>
+                      <input
+                        type="number"
+                        id="creditoPEN"
+                        name="creditoPEN"
+                        autoComplete="off"
+                        placeholder="Crédito S/"
+                        readOnly={true}
+                        value={data.credicreditoPENtoUSD ?? ""}
+                        onChange={ValidarData}
+                        className={Global.InputStyle + Global.Disabled}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </TabPanel>
             {modo != "Registrar" ? (

@@ -26,7 +26,8 @@ const TablaStyle = styled.div`
     width: 140px;
   }
   & th:nth-child(3) {
-    width: 90px;
+    width: 70px;
+    text-align: center;
   }
   & th:nth-child(6),
   & th:nth-child(8) {
@@ -34,7 +35,7 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:nth-child(7) {
-    width: 90px;
+    width: 80px;
     text-align: right;
   }
   & th:last-child {

@@ -151,7 +151,6 @@ const Clientes = () => {
         maximoCreditoUSD: 0,
         maximoCreditoPEN: 0,
         observacion: "",
-        direccionPrincipalId: 0,
       });
     } else {
       await GetPorId(id);

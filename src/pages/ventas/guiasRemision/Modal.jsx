@@ -398,7 +398,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     //Valida montos
 
     //Valida Stock
-    if (data.afectarStock) {
+    if (data.afectarStock && dataArt.id != "00000000") {
       if (dataArt.stock < dataArt.cantidad) {
         return [
           false,

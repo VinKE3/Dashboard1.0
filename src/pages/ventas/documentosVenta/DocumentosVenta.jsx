@@ -333,7 +333,7 @@ const DocumentosVenta = () => {
         accessor: "id",
       },
       {
-        Header: "Fecha",
+        Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
           return (

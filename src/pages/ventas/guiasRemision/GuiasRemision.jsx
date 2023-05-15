@@ -8,12 +8,14 @@ import Table from "../../../components/tablas/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -314,7 +316,7 @@ const GuiasRemision = () => {
         accessor: "id",
       },
       {
-        Header: "Fecha",
+        Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
           return (

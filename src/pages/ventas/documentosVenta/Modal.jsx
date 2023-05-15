@@ -145,6 +145,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData({
         ...data,
         clienteId: dataCotizacion.clienteId,
+        clienteTipoDocumentoIdentidadId:
+          dataCotizacion.clienteTipoDocumentoIdentidadId,
         clienteNumeroDocumentoIdentidad:
           dataCotizacion.clienteNumeroDocumentoIdentidad,
         clienteNombre: dataCotizacion.clienteNombre,
@@ -279,17 +281,13 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "tipoVentaId") {
-      if (target.value == "CO") {
-        setData((prevData) => ({
-          ...prevData,
-          tipoCobroId: ".0",
-        }));
-      } else {
-        setData((prevData) => ({
-          ...prevData,
-          tipoCobroId: ".1",
-        }));
-      }
+      let model = dataTipoCobro.find(
+        (map) => map.tipoVentaCompraId == target.value
+      );
+      setData((prevData) => ({
+        ...prevData,
+        tipoCobroId: model.id,
+      }));
     }
 
     if (target.name == "tipoCobroId") {
@@ -351,7 +349,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDataClienteDirec([]);
     }
   };
-  const CambioEmision = async () => {
+  const FechaEmision = async () => {
     if (modo != "Consultar") {
       toast(
         "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
@@ -380,7 +378,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const DetalleDocReferencia = async (id) => {
     if (id != "") {
-      const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${id}`);
+      const result = await ApiMasy.get(`api/Venta/DocumentoVenta/${id}`);
       Swal.fire({
         title: "¿Desea copiar los detalles del documento?",
         text: result.data.data.numeroDocumento,
@@ -1199,7 +1197,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     onBlur={() => {
-                      CambioEmision();
+                      FechaEmision();
                       ImpuestoBolsa();
                     }}
                     className={Global.InputStyle}
@@ -1287,7 +1285,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="clienteNombre"
                     name="clienteNombre"
-                    placeholder="Cliente"
+                    placeholder="Buscar Cliente"
                     autoComplete="off"
                     readOnly={true}
                     value={data.clienteNombre ?? ""}

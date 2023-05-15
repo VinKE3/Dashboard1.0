@@ -14,6 +14,7 @@ import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -26,19 +27,17 @@ const TablaStyle = styled.div`
     width: 140px;
   }
   & th:nth-child(3) {
-    width: 90px;
+    width: 70px;
+    text-align: center;
   }
-  & th:nth-child(6) {
+  & th:nth-child(6),
+  & th:nth-child(8) {
     width: 40px;
     text-align: center;
   }
   & th:nth-child(7) {
-    width: 90px;
+    width: 80px;
     text-align: right;
-  }
-  & th:nth-child(8) {
-    width: 50px;
-    text-align: center;
   }
   & th:last-child {
     text-align: center;

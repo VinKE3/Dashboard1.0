@@ -250,9 +250,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       setRefrescar(true);
     }
     if (target.name == "tipoVentaId") {
+      let model = dataTipoCobro.find(
+        (map) => map.tipoVentaCompraId == target.value
+      );
       setData((prevData) => ({
         ...prevData,
-        tipoCobroId: "",
+        tipoCobroId: model.id,
       }));
     }
 
@@ -353,7 +356,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
-  const CambioEmision = async () => {
+  const FechaEmision = async () => {
     if (modo != "Consultar") {
       toast(
         "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
@@ -1111,7 +1114,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     onBlur={() => {
-                      CambioEmision();
+                      FechaEmision();
                     }}
                     className={Global.InputStyle}
                   />
@@ -1500,8 +1503,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       .filter(
                         (model) => model.tipoVentaCompraId == data.tipoVentaId
                       )
-                      .map((map, index) => (
-                        <option key={index} value={map.id}>
+                      .map((map) => (
+                        <option key={map.id} value={map.id}>
                           {map.descripcion}
                         </option>
                       ))}

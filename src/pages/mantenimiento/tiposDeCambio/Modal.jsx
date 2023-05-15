@@ -25,34 +25,39 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones API
   const ConsultarTipoCambio = async (filtro = "") => {
-    const resultado = await ApiMasy.get(`api/Servicio/ConsultarTipoCambio${filtro}`);
+    const result = await ApiMasy.get(
+      `api/Servicio/ConsultarTipoCambio${filtro}`
+    );
     if (modo == "Modificar") {
       setData({
         ...data,
-        precioCompra: resultado.data.data.precioCompra,
-        precioVenta: resultado.data.data.precioVenta,
+        precioCompra: result.data.data.precioCompra,
+        precioVenta: result.data.data.precioVenta,
       });
     } else {
       setData({
-        id: resultado.data.data.fecha,
-        precioCompra: resultado.data.data.precioCompra,
-        precioVenta: resultado.data.data.precioVenta,
+        ...data,
+        precioCompra: result.data.data.precioCompra,
+        precioVenta: result.data.data.precioVenta,
       });
     }
 
-    if (resultado.status == 200) {
-      toast.info("Tipo de Cambio extraído exitosamente", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    if (result.status == 200) {
+      toast.info(
+        "Tipo de Cambio extraído exitosamente. Día: " + moment(result.data.data.fecha).format("DD/MM/YYYY"),
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     } else {
-      toast.error(String(resultado.response.data.messages[0].textos), {
+      toast.error(String(result.response.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,

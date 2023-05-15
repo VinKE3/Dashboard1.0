@@ -89,7 +89,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Modales de Ayuda
 
   const [checkVarios, setCheckVarios] = useState(false);
-  const [habilitarCampos, setDataHabilitarCampos] = useState(true);
+  const [habilitarCampos, setHabilitarCampos] = useState(true);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
@@ -126,6 +126,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       GetPorIdTipoCambio(data.fechaEmision);
     } else {
       SepararDetalle(data.detalles);
+      setHabilitarCampos(false);
     }
     Tablas();
   }, []);
@@ -355,7 +356,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             },
           ]);
           setDetalleId(detalleId + 1);
-          setDataHabilitarCampos(true);
+          setHabilitarCampos(true);
           setRefrescar(true);
         } else {
           Swal.fire({
@@ -388,7 +389,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         abonar: true,
         porcentaje: 3,
       });
-      setDataHabilitarCampos(true);
+      setHabilitarCampos(true);
     } else {
       //NO cumple validación
       if (resultado[1] != "") {
@@ -418,7 +419,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataDetalle(SepararDocumentoVentaId);
   };
   const CargarDetalle = async (id) => {
-    setDataHabilitarCampos(false);
+    setHabilitarCampos(false);
     setDataArt(dataDetalle.find((map) => map.documentoVentaId === id));
   };
   const EliminarDetalle = async (id) => {
@@ -823,7 +824,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="text"
                 id="clienteNombre"
                 name="clienteNombre"
-                placeholder="Cliente"
+                placeholder="Buscar Cliente"
                 autoComplete="off"
                 readOnly={true}
                 value={data.clienteNombre ?? ""}
@@ -953,7 +954,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 readOnly={modo == "Consultar" ? true : false}
                 value={data.tipoCambio ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton}
+                className={
+                  modo != "Consultar" ? Global.InputBoton : Global.InputStyle
+                }
               />
               <button
                 id="consultarTipoCambio"
@@ -1131,7 +1134,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 readOnly={true}
                 value={dataArt.monto ?? ""}
                 onChange={ValidarDataArt}
-                className={Global.InputBoton + Global.Disabled}
+                className={
+                  modo != "Consultar"
+                    ? Global.InputBoton + Global.Disabled
+                    : Global.InputStyle + Global.Disabled
+                }
               />
               <button
                 id="enviarDetalle"

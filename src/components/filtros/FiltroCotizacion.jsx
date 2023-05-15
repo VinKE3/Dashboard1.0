@@ -88,7 +88,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
     setDatos(result.data.data.data);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
+    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}?incluirReferencias=${true}`);
     setObjeto({
       personalId: result.data.data.personalId,
       monedaId: result.data.data.monedaId,
@@ -98,8 +98,8 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
       porcentajePercepcion: result.data.data.porcentajePercepcion,
       observacion: result.data.data.observacion ?? "",
       clienteId: result.data.data.clienteId,
-      clienteNumeroDocumentoIdentidad:
-        result.data.data.clienteNumeroDocumentoIdentidad,
+      clienteTipoDocumentoIdentidadId: result.data.data.cliente.tipoDocumentoIdentidadId,
+      clienteNumeroDocumentoIdentidad: result.data.data.clienteNumeroDocumentoIdentidad,
       clienteNombre: result.data.data.clienteNombre,
       clienteDireccionId: result.data.data.clienteDireccionId,
       cotizacionId: result.data.data.id,

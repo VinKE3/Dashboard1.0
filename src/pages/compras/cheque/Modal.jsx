@@ -593,9 +593,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   >
-                    {dataPlazos.map((item, index) => (
-                      <option key={index} value={item.valor}>
-                        {item.texto}
+                    {dataPlazos.map((map) => (
+                      <option key={map.valor} value={map.valor}>
+                        {map.texto}
                       </option>
                     ))}
                   </select>
@@ -779,9 +779,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                     value={data.tipoPagoId ?? ""}
                   >
-                    {dataTipoPag.map((item, index) => (
-                      <option key={index} value={item.id}>
-                        {item.descripcion}
+                    {dataTipoPag.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
                       </option>
                     ))}
                   </select>
@@ -799,10 +799,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="documentoReferencia"
                     autoComplete="off"
                     placeholder="Documento Referencia"
-                    readOnly={modo == "Consultar" ? true : false}
+                    readOnly={true}
                     value={data.documentoReferencia ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={Global.InputStyle + Global.Disabled}
                   />
                 </div>
               </div>
@@ -819,9 +819,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                     value={data.monedaId ?? ""}
                   >
-                    {dataMoneda.map((item, index) => (
-                      <option key={index} value={item.id}>
-                        {item.descripcion}
+                    {dataMoneda.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
                       </option>
                     ))}
                   </select>
