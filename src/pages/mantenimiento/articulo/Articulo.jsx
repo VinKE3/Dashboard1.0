@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
-import FiltroBasico from "../../../components/filtros/FiltroBasico";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import { Checkbox } from "primereact/checkbox";
@@ -9,9 +8,11 @@ import Table from "../../../components/tablas/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
+import { FaSearch, FaCheck } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import * as Funciones from "../../../components/Funciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -63,9 +64,12 @@ const Articulo = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
+    codigoBarras: "",
     descripcion: "",
   });
-  const [cadena, setCadena] = useState(`&descripcion=${filtro.descripcion}`);
+  const [cadena, setCadena] = useState(
+    `&codigoBarras=${filtro.codigoBarras}&descripcion=${filtro.descripcion}`
+  );
   //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
@@ -75,7 +79,9 @@ const Articulo = () => {
 
   //#region useEffect;
   useEffect(() => {
-    setCadena(`&descripcion=${filtro.descripcion}`);
+    setCadena(
+      `&codigoBarras=${filtro.codigoBarras}&descripcion=${filtro.descripcion}`
+    );
   }, [filtro]);
   useEffect(() => {
     Filtro();
@@ -217,7 +223,17 @@ const Articulo = () => {
         Header: "Stock",
         accessor: "stock",
         Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
+          return (
+            <p
+              className={
+                value <= 0
+                  ? "text-right font-bold text-red-400"
+                  : "text-right font-bold text-green-500"
+              }
+            >
+              {value}
+            </p>
+          );
         },
       },
       {
@@ -231,14 +247,22 @@ const Articulo = () => {
         Header: "P. Compra",
         accessor: "precioCompra",
         Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
+          return (
+            <p className="text-right font-bold text-yellow-400">
+              {Funciones.RedondearNumero(value, 4)}
+            </p>
+          );
         },
       },
       {
         Header: "P. Venta",
         accessor: "precioVenta",
         Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
+          return (
+            <p className="text-right font-bold text-orange-400">
+              {Funciones.RedondearNumero(value, 4)}
+            </p>
+          );
         },
       },
       {
@@ -300,16 +324,47 @@ const Articulo = () => {
         <h2 className={Global.TituloH2}>Artículos</h2>
 
         {/* Filtro*/}
-        <FiltroBasico
-          textLabel={"Descripción"}
-          placeHolder={"Descripción"}
-          name={"descripcion"}
-          maxLength={"200"}
-          value={filtro.descripcion}
-          onChange={ValidarData}
-          botonId={"buscar"}
-          onClick={Filtro}
-        />
+        <div className={Global.ContenedorInputs + "mb-2"}>
+          <div className={Global.Input60pct}>
+            <label htmlFor="codigoBarras" className={Global.LabelStyle}>
+              Cod. Barras
+            </label>
+            <input
+              type="text"
+              id="codigoBarras"
+              name="codigoBarras"
+              placeholder="Código Barras"
+              autoComplete="off"
+              value={filtro.codigoBarras}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            />
+          </div>
+          <div className={Global.InputFull}>
+            <label htmlFor="descripcion" className={Global.LabelStyle}>
+              Descripción
+            </label>
+            <input
+              type="text"
+              id="descripcion"
+              name="descripcion"
+              placeholder="Descripción"
+              autoComplete="off"
+              value={filtro.descripcion}
+              onChange={ValidarData}
+              className={Global.InputBoton}
+            />
+            <button
+              id="consultar"
+              onClick={Filtro}
+              className={
+                Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+              }
+            >
+              <FaSearch></FaSearch>
+            </button>
+          </div>
+        </div>
         {/* Filtro*/}
 
         {/* Boton */}

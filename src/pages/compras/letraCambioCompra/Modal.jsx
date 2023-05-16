@@ -86,6 +86,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorNumeroDocumentoIdentidad:
           dataProveedor.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: dataProveedor.proveedorNombre,
+        lugarGiro: dataProveedor.proveedorDireccion,
       });
     }
   }, [dataProveedor]);
@@ -255,7 +256,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               concepto: dataConcepto.concepto,
               documentoCompraFechaEmision:
                 dataConcepto.documentoCompraFechaEmision,
-              abono: dataConcepto.abono,
+              abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
               ordenCompraRelacionada: dataConcepto.ordenCompraRelacionada,
             };
@@ -277,7 +278,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               documentoCompraId: dataConcepto.id,
               concepto: dataConcepto.concepto,
               documentoCompraFechaEmision: dataConcepto.fechaEmision,
-              abono: dataConcepto.abono,
+              abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
               ordenCompraRelacionada: dataConcepto.numeroDocumento,
             },
@@ -575,10 +576,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="numeroLetra"
                     autoComplete="off"
                     placeholder="N° Letra"
-                    readOnly={modo == "Consultar" ? true : false}
+                    readOnly={modo == "Registrar" ? false : true}
                     value={data.numeroLetra ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={
+                      modo == "Registrar"
+                        ? Global.InputStyle
+                        : Global.InputStyle + Global.Disabled
+                    }
                   />
                 </div>
                 <div className={Global.InputMitad}>
@@ -880,9 +885,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
 
               <div className={Global.ContenedorBasico}>
-                <p className={Global.Subtitulo}>
-                  Aval Permanente
-                </p>
+                <p className={Global.Subtitulo}>Aval Permanente</p>
                 <div className={Global.ContenedorInputs}>
                   <div className={Global.InputFull}>
                     <label htmlFor="avalNombre" className={Global.LabelStyle}>

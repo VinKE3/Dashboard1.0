@@ -185,8 +185,8 @@ const Cotizaciones = () => {
           tipoDocumentoId: "CO",
           serie: "",
           numero: "",
-          fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
-          fechaVencimiento: moment(new Date()).format("YYYY-MM-DD"),
+          fechaEmision: moment().format("YYYY-MM-DD"),
+          fechaVencimiento: moment().format("YYYY-MM-DD"),
           clienteId: "",
           clienteNombre: "",
           clienteNumeroDocumentoIdentidad: "",
@@ -221,7 +221,7 @@ const Cotizaciones = () => {
           porcentajeIGV: 0,
           porcentajeRetencion: 0,
           porcentajePercepcion: 0,
-          incluyeIGV: true,
+          incluyeIGV: false,
           detalles: [],
         });
         setModal(true);

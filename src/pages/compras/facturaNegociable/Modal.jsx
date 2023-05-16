@@ -86,6 +86,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorNumeroDocumentoIdentidad:
           dataProveedor.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: dataProveedor.proveedorNombre,
+        lugarGiro: dataProveedor.proveedorDireccion,
       });
     }
   }, [dataProveedor]);
@@ -255,7 +256,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               concepto: dataConcepto.concepto,
               documentoCompraFechaEmision:
                 dataConcepto.documentoCompraFechaEmision,
-              abono: dataConcepto.abono,
+              abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
               ordenCompraRelacionada: dataConcepto.ordenCompraRelacionada,
             };
@@ -277,7 +278,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               documentoCompraId: dataConcepto.id,
               concepto: dataConcepto.concepto,
               documentoCompraFechaEmision: dataConcepto.fechaEmision,
-              abono: dataConcepto.abono,
+              abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
               ordenCompraRelacionada: dataConcepto.numeroDocumento,
             },
@@ -383,7 +384,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     let importeTotal = dataDetalle.reduce((i, map) => {
       return i + map.abono;
     }, 0);
-
     setData((prevState) => ({
       ...prevState,
       total: Funciones.RedondearNumero(importeTotal, 2),
@@ -575,10 +575,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="numeroFactura"
                     autoComplete="off"
                     placeholder="N° Factura"
-                    readOnly={modo == "Consultar" ? true : false}
+                    readOnly={modo == "Registrar" ? false : true}
                     value={data.numeroFactura ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={modo == "Registrar" ? Global.InputStyle : Global.InputStyle + Global.Disabled}
                   />
                 </div>
                 <div className={Global.InputMitad}>

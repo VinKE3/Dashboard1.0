@@ -347,22 +347,6 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
 
-            <div className="flex">
-              <label htmlFor="observacion" className={Global.LabelStyle}>
-                Observación
-              </label>
-              <input
-                type="text"
-                id="observacion"
-                name="observacion"
-                placeholder="Observación"
-                autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
-                value={data.observacion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
                 <label
@@ -440,6 +424,22 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 readOnly={modo == "Consultar" ? true : false}
                 value={data.cuentaCorriente ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className="flex">
+              <label htmlFor="observacion" className={Global.LabelStyle}>
+                Observación
+              </label>
+              <input
+                type="text"
+                id="observacion"
+                name="observacion"
+                placeholder="Observación"
+                autoComplete="off"
+                readOnly={modo == "Consultar" ? true : false}
+                value={data.observacion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />

@@ -3,6 +3,7 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import TableBasic from "../../../components/tablas/TableBasic";
+import { Checkbox } from "primereact/checkbox";
 import { TabView, TabPanel } from "primereact/tabview";
 import Ubigeo from "../../../components/filtros/Ubigeo";
 import Insert from "../../../components/CRUD/Insert";
@@ -24,11 +25,13 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(3) {
+  & th:nth-child(4) {
     width: 90px;
+    text-align: center;
   }
   & th:last-child {
-    width: 130px;
+    width: 90px;
+    max-width: 90px;
     text-align: center;
   }
 `;
@@ -45,6 +48,10 @@ const TablaPersonal = styled.div`
   & tbody td:nth-child(2) {
     display: none;
   }
+  & th:nth-child(5) {
+    width: 100px;
+    text-align: center;
+  }
   & th:last-child {
     width: 100px;
     text-align: center;
@@ -55,6 +62,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
+  const [dataZona, setDataZona] = useState([]);
   const [dataTipoVenta, setDataTipoVenta] = useState([]);
   const [dataTipoCobro, setDataTipoCobro] = useState([]);
   const [dataUbigeo, setDataUbigeo] = useState([]);
@@ -149,10 +157,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     }));
   };
   const ValidarDataDireccion = async ({ target }) => {
-    setObjetoDireccion((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
+    if (target.name == "isActivo") {
+      setObjetoDireccion((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
+    } else {
+      setObjetoDireccion((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
   };
   const ValidarDataContacto = async ({ target }) => {
     setObjetoContacto((prevState) => ({
@@ -161,10 +176,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     }));
   };
   const ValidarDataPersonal = async ({ target }) => {
-    setObjetoPersonal((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
+    if (target.name == "default") {
+      setObjetoPersonal((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
+    } else {
+      setObjetoPersonal((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
   };
   const ValidarConsultarDocumento = () => {
     let documento = document.getElementById("numeroDocumentoIdentidad").value;
@@ -273,6 +295,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       `api/Mantenimiento/Cliente/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
+    setDataZona(result.data.data.zonas);
     setDataTipoVenta(result.data.data.tiposVenta);
     setDataTipoCobro(result.data.data.tiposCobro);
   };
@@ -457,27 +480,36 @@ const Modal = ({ setModal, modo, objeto }) => {
     setObjetoPersonal(result.data.data);
   };
   const EnviarClientePersonal = async () => {
-    let existe = dataPersonal.find(
-      (map) => map.personalId == objetoPersonal.personalId
-    );
-    if (existe == undefined) {
-      await Insert(
+    if (objetoPersonal.id == 0) {
+      let existe = dataPersonal.find(
+        (map) => map.personalId == objetoPersonal.personalId
+      );
+      if (existe == undefined) {
+        await Insert(
+          ["Mantenimiento", "ClientePersonal"],
+          objetoPersonal,
+          setTipoMen,
+          setMen
+        );
+      } else {
+        toast.error("Cliente Personal: Ya existe el registro ingresado", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    } else {
+      await Update(
         ["Mantenimiento", "ClientePersonal"],
         objetoPersonal,
         setTipoMen,
         setMen
       );
-    } else {
-      toast.error("Cliente Personal: Ya existe el registro ingresado", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
     }
   };
   //#endregion
@@ -547,6 +579,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "numeroDocumentoIdentidad",
     },
     {
+      Header: "Default",
+      accessor: "default",
+      Cell: ({ value }) => {
+        return (
+          <div className="flex justify-center">
+            <Checkbox checked={value} />
+          </div>
+        );
+      },
+    },
+    {
       Header: "Acciones",
       Cell: ({ row }) => (
         <div className="flex item-center justify-center">
@@ -605,6 +648,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "numeroDocumentoIdentidad",
     },
     {
+      Header: "Default",
+      accessor: "default",
+      Cell: ({ value }) => {
+        return (
+          <div className="flex justify-center">
+            <Checkbox checked={value} />
+          </div>
+        );
+      },
+    },
+    {
       Header: "Acciones",
       Cell: ({ row }) => (
         <div className="flex item-center justify-center">
@@ -612,6 +666,16 @@ const Modal = ({ setModal, modo, objeto }) => {
             ""
           ) : (
             <>
+              {/* <div className={Global.TablaBotonModificar}>
+                <button
+                  id="boton-modificar"
+                  onClick={(e) => AgregarPersonal(e, row.values.id)}
+                  className="p-0 px-1"
+                  title="Click para modificar registro"
+                >
+                  <FaPen></FaPen>
+                </button>
+              </div> */}
               <div className={Global.TablaBotonEliminar}>
                 <button
                   id="boton-eliminar"
@@ -656,6 +720,22 @@ const Modal = ({ setModal, modo, objeto }) => {
             >
               <div className={Global.ContenedorBasico + " mt-4"}>
                 <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputTercio}>
+                    <label htmlFor="id" className={Global.LabelStyle}>
+                      Código
+                    </label>
+                    <input
+                      type="text"
+                      id="id"
+                      name="id"
+                      autoComplete="off"
+                      placeholder="Código"
+                      readOnly={true}
+                      value={data.id ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle + Global.Disabled}
+                    />
+                  </div>
                   <div className={Global.InputMitad}>
                     <label
                       htmlFor="tipoDocumentoIdentidadId"
@@ -710,9 +790,30 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </button>
                   </div>
                 </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="zonaId" className={Global.LabelStyle}>
+                      Zona
+                    </label>
+                    <select
+                      id="zonaId"
+                      name="zonaId"
+                      value={data.zonaId ?? ""}
+                      onChange={ValidarData}
+                      disabled={modo == "Consultar" ? true : false}
+                      className={Global.InputStyle}
+                    >
+                      {dataZona.map((map) => (
+                        <option key={map.id} value={map.id}>
+                          {map.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
                 <div className="flex">
                   <label htmlFor="nombre" className={Global.LabelStyle}>
-                    Nombre
+                    Razón Social
                   </label>
                   <input
                     type="text"
@@ -875,10 +976,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     </div>
                     <div className={Global.InputMitad}>
-                      <label
-                        htmlFor="creditoUSD"
-                        className={Global.LabelStyle}
-                      >
+                      <label htmlFor="creditoUSD" className={Global.LabelStyle}>
                         Crédito US$
                       </label>
                       <input
@@ -915,10 +1013,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     </div>
                     <div className={Global.InputMitad}>
-                      <label
-                        htmlFor="creditoPEN"
-                        className={Global.LabelStyle}
-                      >
+                      <label htmlFor="creditoPEN" className={Global.LabelStyle}>
                         Crédito S/
                       </label>
                       <input
@@ -987,21 +1082,46 @@ const Modal = ({ setModal, modo, objeto }) => {
                         }}
                       />
                     )}
-                    <div className="flex">
-                      <label htmlFor="direccion" className={Global.LabelStyle}>
-                        Dirección
-                      </label>
-                      <input
-                        type="text"
-                        id="direccion"
-                        name="direccion"
-                        autoComplete="off"
-                        placeholder="Dirección secundaria"
-                        readOnly={modo == "Consultar" ? true : false}
-                        value={objetoDireccion.direccion ?? ""}
-                        onChange={ValidarDataDireccion}
-                        className={Global.InputStyle}
-                      />
+                    <div className={Global.ContenedorInputs}>
+                      <div className={Global.InputFull}>
+                        <div className={Global.InputFull}>
+                          <label
+                            htmlFor="direccion"
+                            className={Global.LabelStyle}
+                          >
+                            Dirección
+                          </label>
+                          <input
+                            type="text"
+                            id="direccion"
+                            name="direccion"
+                            autoComplete="off"
+                            placeholder="Dirección secundaria"
+                            readOnly={modo == "Consultar" ? true : false}
+                            value={objetoDireccion.direccion ?? ""}
+                            onChange={ValidarDataDireccion}
+                            className={Global.InputBoton}
+                          />
+                        </div>
+                        <div className={Global.Input + "w-36"}>
+                          <div className={Global.CheckStyle + Global.Anidado}>
+                            <Checkbox
+                              inputId="isActivo"
+                              name="isActivo"
+                              readOnly={modo == "Consultar" ? true : false}
+                              value={objetoDireccion.isActivo}
+                              onChange={ValidarDataDireccion}
+                              checked={objetoDireccion.isActivo ? true : ""}
+                            ></Checkbox>
+                          </div>
+                          <label
+                            htmlFor="isActivo"
+                            className={Global.LabelCheckStyle}
+                          >
+                            Activo
+                          </label>
+                        </div>
+                      </div>
                     </div>
                     <Ubigeo
                       modo={modo}
@@ -1013,6 +1133,27 @@ const Modal = ({ setModal, modo, objeto }) => {
                         distritoId: objetoDireccion.distritoId,
                       }}
                     ></Ubigeo>
+                    <div className={Global.ContenedorInputs}>
+                      <div className={Global.InputFull}>
+                        <label
+                          htmlFor="comentario"
+                          className={Global.LabelStyle}
+                        >
+                          Comentario
+                        </label>
+                        <input
+                          type="text"
+                          id="comentario"
+                          name="comentario"
+                          autoComplete="off"
+                          placeholder="Comentario"
+                          readOnly={modo == "Consultar" ? true : false}
+                          value={objetoDireccion.comentario ?? ""}
+                          onChange={ValidarDataDireccion}
+                          className={Global.InputStyle}
+                        />
+                      </div>
+                    </div>
                     {/*footer*/}
                     <div className="flex items-center justify-start">
                       {modo == "Consultar" ? (
@@ -1326,26 +1467,46 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                     <div className={Global.ContenedorInputs}>
                       <div className={Global.InputFull}>
-                        <label
-                          htmlFor="personalId"
-                          className={Global.LabelStyle}
-                        >
-                          Personal
-                        </label>
-                        <select
-                          id="personalId"
-                          name="personalId"
-                          value={objetoPersonal.personalId ?? ""}
-                          onChange={ValidarDataPersonal}
-                          disabled={modo == "Consultar" ? true : false}
-                          className={Global.InputStyle}
-                        >
-                          {dataPersonalCombo.map((personal) => (
-                            <option key={personal.id} value={personal.id}>
-                              {personal.personal}
-                            </option>
-                          ))}
-                        </select>
+                        <div className={Global.InputFull}>
+                          <label
+                            htmlFor="personalId"
+                            className={Global.LabelStyle}
+                          >
+                            Personal
+                          </label>
+                          <select
+                            id="personalId"
+                            name="personalId"
+                            value={objetoPersonal.personalId ?? ""}
+                            onChange={ValidarDataPersonal}
+                            disabled={modo == "Consultar" ? true : false}
+                            className={Global.InputBoton}
+                          >
+                            {dataPersonalCombo.map((personal) => (
+                              <option key={personal.id} value={personal.id}>
+                                {personal.personal}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className={Global.Input + "w-32"}>
+                          <div className={Global.CheckStyle + Global.Anidado}>
+                            <Checkbox
+                              inputId="default"
+                              name="default"
+                              readOnly={modo == "Consultar" ? true : false}
+                              value={objetoPersonal.default}
+                              onChange={ValidarDataPersonal}
+                              checked={objetoPersonal.default ? true : ""}
+                            ></Checkbox>
+                          </div>
+                          <label
+                            htmlFor="default"
+                            className={Global.LabelCheckStyle}
+                          >
+                            Default
+                          </label>
+                        </div>
                       </div>
                     </div>
                     {/*footer*/}

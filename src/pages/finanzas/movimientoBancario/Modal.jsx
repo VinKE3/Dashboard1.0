@@ -3,6 +3,7 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroCliente from "../../../components/filtros/FiltroCliente";
+import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
 import FiltroConcepto from "../../../components/filtros/FiltroConcepto";
 import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
@@ -65,10 +66,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Tablas
   //Data Modales Ayuda
   const [dataCliente, setDataCliente] = useState([]);
+  const [dataProveedor, setDataProveedor] = useState([]);
   const [dataConcepto, setDataConcepto] = useState([]);
   //Data Modales Ayuda
   //Modales de Ayuda
   const [modalCliente, setModalCliente] = useState(false);
+  const [modalProveedor, setModalProveedor] = useState(false);
   const [modalConcepto, setModalConcepto] = useState(false);
   //Modales de Ayuda
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
@@ -87,6 +90,15 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   }, [dataCliente]);
+  useEffect(() => {
+    if (Object.keys(dataProveedor).length > 0) {
+      setData({
+        ...data,
+        clienteProveedorId: dataProveedor.proveedorId,
+        clienteProveedorNombre: dataProveedor.proveedorNombre,
+      });
+    }
+  }, [dataProveedor]);
   useEffect(() => {
     if (Object.entries(dataConcepto).length > 0) {
       setModalConcepto(false);
@@ -139,12 +151,20 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "tipoMovimientoId") {
-      let model = dataTipoOperacion.find(
-        (map) => map.tipoVentaCompraId == target.value
+      let model = dataTipoBenef.find(
+        (map) => map.tipoMovimientoId == target.value
       );
       setData((prevData) => ({
         ...prevData,
-        tipoCobroId: model.id,
+        tipoBeneficiarioId: model.tipoBeneficiarioId,
+      }));
+    }
+
+    if (target.name == "tipoBeneficiarioId") {
+      setData((prevData) => ({
+        ...prevData,
+        clienteProveedorId: null,
+        clienteProveedorNombre: "",
       }));
     }
   };
@@ -178,6 +198,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
+
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(-1);
@@ -257,7 +278,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               concepto: dataConcepto.concepto,
               documentoCompraFechaEmision:
                 dataConcepto.documentoCompraFechaEmision,
-              abono: dataConcepto.abono,
+              abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
               ordenCompraRelacionada: dataConcepto.ordenCompraRelacionada,
             };
@@ -279,7 +300,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               documentoCompraId: dataConcepto.id,
               concepto: dataConcepto.concepto,
               documentoCompraFechaEmision: dataConcepto.fechaEmision,
-              abono: dataConcepto.abono,
+              abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
               ordenCompraRelacionada: dataConcepto.numeroDocumento,
             },
@@ -380,15 +401,45 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     setRefrescar(true);
   };
-  const ActualizarImportesTotales = async () => {
-    //Suma los importes de los detalles
-    let importeTotal = dataDetalle.reduce((i, map) => {
-      return i + map.abono;
-    }, 0);
+  const ActualizarImportesTotales = async (foco = "") => {
+    //Obtiene los values
+    let monto = 0;
+    if (foco != "") {
+      monto = Number(document.getElementById("monto").value);
+    } else {
+      monto = dataDetalle.reduce((i, map) => {
+        return i + map.abono;
+      }, 0);
+    }
+
+    let porcentajeITF = Number(document.getElementById("porcentajeITF").value);
+    let montoInteres = Number(document.getElementById("montoInteres").value);
+    let montoITF = Number(document.getElementById("montoITF").value);
+    let total = Number(document.getElementById("total").value);
+    //Obtiene los values
+    console.log(total, montoITF, montoInteres, monto);
+
+    if (foco == "porcentajeITF" || foco == "") {
+      if (!isNaN(porcentajeITF) && !isNaN(montoITF) && !isNaN(monto)) {
+        montoITF = Funciones.RedondearNumero(monto * (porcentajeITF / 100), 2);
+        total = Funciones.RedondearNumero(montoITF + montoInteres + monto, 2);
+      }
+    }
+
+    if (foco == "montoInteres" || foco == "monto") {
+      if (!isNaN(montoITF) && !isNaN(montoInteres) && !isNaN(monto)) {
+        montoITF = Funciones.RedondearNumero(monto * (porcentajeITF / 100), 2);
+        total = Funciones.RedondearNumero(montoITF + montoInteres + monto, 2);
+      }
+    }
 
     setData((prevState) => ({
       ...prevState,
-      total: Funciones.RedondearNumero(importeTotal, 2),
+      porcentajeITF: porcentajeITF,
+      montoITF: Funciones.RedondearNumero(montoITF, 2),
+      montoInteres: Funciones.RedondearNumero(montoInteres, 2),
+      monto: Funciones.RedondearNumero(monto, 2),
+      total: Funciones.RedondearNumero(total, 2),
     }));
   };
   //#endregion
@@ -453,11 +504,14 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirFiltroConcepto = async () => {
-    setModalConcepto(true);
-  };
   const AbrirFiltroCliente = async () => {
     setModalCliente(true);
+  };
+  const AbrirFiltroProveedor = async () => {
+    setModalProveedor(true);
+  };
+  const AbrirFiltroConcepto = async () => {
+    setModalConcepto(true);
   };
   //#endregion
 
@@ -590,11 +644,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.cuentaCorrienteId ?? ""}
                       onChange={ValidarData}
                       disabled={true}
-                      className={
-                        data.tipoMovimientoId == "IN"
-                          ? Global.InputBoton + Global.Disabled
-                          : Global.InputStyle + Global.Disabled
-                      }
+                      className={Global.InputStyle + Global.Disabled}
+                      // className={
+                      //   data.tipoMovimientoId == "IN"
+                      //     ? Global.InputBoton + Global.Disabled
+                      //     : Global.InputStyle + Global.Disabled
+                      // }
                     >
                       {dataCtacte.map((map) => (
                         <option key={map.id} value={map.id}>
@@ -603,7 +658,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ))}
                     </select>
                   </div>
-                  {data.tipoMovimientoId == "IN" ? (
+                  {/* {data.tipoMovimientoId == "IN" ? (
                     <div className={Global.Input + "w-24"}>
                       <div className={Global.CheckStyle + Global.Anidado}>
                         <Checkbox
@@ -625,7 +680,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </div>
                   ) : (
                     <></>
-                  )}
+                  )} */}
                 </div>
               </div>
 
@@ -840,9 +895,24 @@ const Modal = ({ setModal, modo, objeto }) => {
                         ))}
                     </select>
                   </div>
-                  {data.tipoBeneficiarioId == "INC" || data.tipoBeneficiarioId == "EGC" ? (
+
+                  {data.tipoBeneficiarioId != "INC" &&
+                  data.tipoBeneficiarioId != "EGC" &&
+                  data.tipoBeneficiarioId != "EGP" &&
+                  data.tipoBeneficiarioId != "EGQ" ? (
+                    <input
+                      type="text"
+                      id="clienteProveedorNombre"
+                      name="clienteProveedorNombre"
+                      placeholder="Nombre"
+                      autoComplete="off"
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.clienteProveedorNombre ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle + Global.Anidado}
+                    />
+                  ) : (
                     <>
-                      {" "}
                       <input
                         type="text"
                         id="clienteProveedorNombre"
@@ -858,23 +928,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                         id="consultar"
                         className={Global.BotonBuscar + Global.BotonPrimary}
                         hidden={modo == "Consultar" ? true : false}
-                        onClick={() => AbrirFiltroCliente()}
+                        onClick={() =>
+                          data.tipoBeneficiarioId == "INC" &&
+                          data.tipoBeneficiarioId == "EGC"
+                            ? AbrirFiltroCliente()
+                            : AbrirFiltroProveedor()
+                        }
                       >
                         <FaSearch></FaSearch>
                       </button>
                     </>
-                  ) : (
-                    <input
-                      type="text"
-                      id="clienteProveedorNombre"
-                      name="clienteProveedorNombre"
-                      placeholder="Nombre"
-                      autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={data.clienteProveedorNombre ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle + Global.Anidado}
-                    />
                   )}
                 </div>
               </div>
@@ -923,6 +986,118 @@ const Modal = ({ setModal, modo, objeto }) => {
               ) : (
                 <></>
               )}
+
+              <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="porcentajeITF"
+                      className={Global.LabelStyle}
+                    >
+                      ITF %
+                    </label>
+                    <input
+                      type="number"
+                      id="porcentajeITF"
+                      name="porcentajeITF"
+                      autoComplete="off"
+                      placeholder="ITF %"
+                      min={0}
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.porcentajeITF ?? ""}
+                      onChange={(e) => {
+                        ValidarData(e);
+                        CalcularMontos(e.target.name);
+                      }}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="montoITF" className={Global.LabelStyle}>
+                      Monto ITF
+                    </label>
+                    <input
+                      type="number"
+                      id="montoITF"
+                      name="montoITF"
+                      autoComplete="off"
+                      placeholder="Monto ITF"
+                      min={0}
+                      readOnly={true}
+                      value={data.montoITF ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle + Global.Disabled}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="montoInteres" className={Global.LabelStyle}>
+                      Interes
+                    </label>
+                    <input
+                      type="number"
+                      id="montoInteres"
+                      name="montoInteres"
+                      autoComplete="off"
+                      placeholder="Interes"
+                      min={0}
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.montoInteres ?? ""}
+                      onChange={(e) => {
+                        ValidarData(e);
+                        CalcularMontos(e.target.name);
+                      }}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="monto" className={Global.LabelStyle}>
+                      Monto
+                    </label>
+                    <input
+                      type="number"
+                      id="monto"
+                      name="monto"
+                      autoComplete="off"
+                      placeholder="Monto"
+                      min={0}
+                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={
+                        Object.entries(dataDetalle).length > 0 ? true : ""
+                      }
+                      value={data.monto ?? ""}
+                      onChange={(e) => {
+                        ValidarData(e);
+                        CalcularMontos(e.target.name);
+                      }}
+                      className={
+                        Object.entries(dataDetalle).length > 0
+                          ? Global.InputStyle + Global.Disabled
+                          : Global.InputStyle
+                      }
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="total" className={Global.LabelStyle}>
+                      Total
+                    </label>
+                    <input
+                      type="number"
+                      id="total"
+                      name="total"
+                      autoComplete="off"
+                      placeholder="Total"
+                      min={0}
+                      readOnly={modo == "Consultar" ? true : false}
+                      value={data.total ?? ""}
+                      onChange={(e) => {
+                        ValidarData(e);
+                        CalcularImporte(e.target.name);
+                      }}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
             {/* Cabecera */}
 
@@ -1030,6 +1205,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       )}
       {modalCliente && (
         <FiltroCliente setModal={setModalCliente} setObjeto={setDataCliente} />
+      )}
+      {modalProveedor && (
+        <FiltroProveedor
+          setModal={setModalProveedor}
+          setObjeto={setDataProveedor}
+        />
       )}
       {modalConcepto && (
         <FiltroConcepto

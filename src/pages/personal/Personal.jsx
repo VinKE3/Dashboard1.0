@@ -5,6 +5,7 @@ import BotonBasico from "../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../components/BotonesComponent/BotonCRUD";
 import Table from "../../components/tablas/Table";
 import FiltroBasico from "../../components/filtros/FiltroBasico";
+import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import moment from "moment";
@@ -19,6 +20,10 @@ const TablaStyle = styled.div`
   }
   & tbody td:first-child {
     display: none;
+  }
+  & th:nth-child(5){
+    width: 35px;
+    text-align: center;
   }
   & th:last-child {
     text-align: center;
@@ -184,6 +189,17 @@ const Personal = () => {
       {
         Header: "Cargo",
         accessor: "cargoDescripcion",
+      },
+      {
+        Header: "A",
+        accessor: "isActivo",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
       },
       {
         Header: "Acciones",
