@@ -417,7 +417,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     let montoITF = Number(document.getElementById("montoITF").value);
     let total = Number(document.getElementById("total").value);
     //Obtiene los values
-    console.log(total, montoITF, montoInteres, monto);
 
     if (foco == "porcentajeITF" || foco == "") {
       if (!isNaN(porcentajeITF) && !isNaN(montoITF) && !isNaN(monto)) {
@@ -1007,7 +1006,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.porcentajeITF ?? ""}
                       onChange={(e) => {
                         ValidarData(e);
-                        CalcularMontos(e.target.name);
+                        ActualizarImportesTotales(e.target.name);
                       }}
                       className={Global.InputStyle}
                     />
@@ -1044,7 +1043,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.montoInteres ?? ""}
                       onChange={(e) => {
                         ValidarData(e);
-                        CalcularMontos(e.target.name);
+                        ActualizarImportesTotales(e.target.name);
                       }}
                       className={Global.InputStyle}
                     />
@@ -1067,7 +1066,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.monto ?? ""}
                       onChange={(e) => {
                         ValidarData(e);
-                        CalcularMontos(e.target.name);
+                        ActualizarImportesTotales(e.target.name);
                       }}
                       className={
                         Object.entries(dataDetalle).length > 0
