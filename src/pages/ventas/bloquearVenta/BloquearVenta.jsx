@@ -39,9 +39,9 @@ const TablaStyle = styled.div`
     text-align: right;
   }
   & th:last-child {
-    text-align: center;
     width: 80px;
     max-width: 80px;
+    text-align: center;
   }
 `;
 //#endregion

@@ -158,6 +158,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...prevData,
         tipoBeneficiarioId: model.tipoBeneficiarioId,
       }));
+      setDataDetalle([]);
     }
 
     if (target.name == "tipoBeneficiarioId") {
@@ -308,20 +309,23 @@ const Modal = ({ setModal, modo, objeto }) => {
           //Anidar Documento de referencia
           let conceptos = "";
           //Valida si contiene datos para mapearlo
-          if (data.documentoReferencia == "") {
+          if (data.concepto == "") {
             conceptos = [
-              ...data.documentoReferencia,
+              ...data.concepto,
               dataConcepto.numeroDocumento,
             ];
           } else {
             conceptos = [
-              ...[data.documentoReferencia],
+              ...[data.concepto],
               dataConcepto.numeroDocumento,
             ];
           }
           setData((prevState) => ({
             ...prevState,
-            documentoReferencia: conceptos.toString(),
+            concepto:
+              data.tipoMovimientoId == "EG"
+                ? "PAGO DE " + conceptos.toString()
+                : "COBRO DE " + conceptos.toString(),
           }));
           //Anidar Documento de referencia
 
@@ -386,9 +390,10 @@ const Modal = ({ setModal, modo, objeto }) => {
         })
       );
       setDetalleId(i);
+
       setData((prevState) => ({
         ...prevState,
-        documentoReferencia: nuevoOrdenCompra.toString(),
+        concepto: nuevoOrdenCompra.toString(),
       }));
     } else {
       //Asgina directamente a 1
@@ -698,7 +703,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={() => {
                       FechaEmision();
-                      ImpuestoBolsa();
                     }}
                     className={Global.InputStyle}
                   />
@@ -1117,7 +1121,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="concepto"
                     autoComplete="off"
                     readOnly={true}
-                    placeholder="Busar Concepto"
+                    placeholder="Buscar Concepto"
                     value={dataConcepto.concepto ?? ""}
                     onChange={ValidarDataConcepto}
                     className={Global.InputBoton + Global.Disabled}

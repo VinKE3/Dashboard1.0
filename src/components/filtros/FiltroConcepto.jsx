@@ -109,6 +109,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
       numeroDocumento: model.numeroDocumento,
       saldo: model.saldo,
       abono: model.saldo,
+      documentoRelacionado: model.documentoRelacionado,
     });
     setModal(false);
   };

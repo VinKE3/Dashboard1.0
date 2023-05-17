@@ -895,7 +895,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="concepto"
                     autoComplete="off"
                     readOnly={true}
-                    placeholder="Busar Concepto"
+                    placeholder="Buscar Concepto"
                     value={dataConcepto.concepto ?? ""}
                     onChange={ValidarDataConcepto}
                     className={Global.InputBoton + Global.Disabled}
