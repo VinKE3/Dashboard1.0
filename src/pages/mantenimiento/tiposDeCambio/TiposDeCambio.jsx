@@ -251,6 +251,7 @@ const TipodeCambio = () => {
                   name="anio"
                   id="anio"
                   autoFocus
+                  min={0}
                   value={filtro.anio}
                   onChange={ValidarData}
                   className={Global.InputStyle}

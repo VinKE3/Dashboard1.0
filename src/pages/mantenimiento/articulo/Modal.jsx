@@ -42,9 +42,10 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "lineaId") {
+      let model = subLineas.find((map) => map.lineaId == target.value);
       setData((prevData) => ({
         ...prevData,
-        subLineaId: "",
+        subLineaId: model.subLineaId,
       }));
     }
   };
@@ -126,7 +127,12 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="lineaId"
               value={data.lineaId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              disabled={modo != "Registrar" ? true : ""}
+              className={
+                modo != "Registrar"
+                  ? Global.InputStyle + Global.Disabled
+                  : Global.InputStyle
+              }
             >
               {lineas.map((map) => (
                 <option key={map.id} value={map.id}>
@@ -144,10 +150,16 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="subLineaId"
               value={data.subLineaId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              disabled={modo != "Registrar" ? true : ""}
+              className={
+                modo != "Registrar"
+                  ? Global.InputStyle + Global.Disabled
+                  : Global.InputStyle
+              }
             >
               <option value="">--SELECCIONAR--</option>
-              {subLineas.filter((model) => model.lineaId == data.lineaId)
+              {subLineas
+                .filter((model) => model.lineaId == data.lineaId)
                 .map((map) => (
                   <option key={map.subLineaId} value={map.subLineaId}>
                     {map.descripcion}
@@ -218,8 +230,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="number"
               id="peso"
               name="peso"
-              autoComplete="off"
               placeholder="Peso"
+              autoComplete="off"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.peso ?? ""}
               onChange={ValidarData}
@@ -236,10 +249,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="stock"
               autoComplete="off"
               placeholder="Stock"
-              readOnly={modo == "Consultar" ? true : false}
+              readOnly={true}
               value={data.stock ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
           <div className={Global.Input25pct}>
@@ -263,9 +276,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       <div
         className={Global.ContenedorBasico + " mb-3 " + Global.FondoContenedor}
       >
-        <p className={Global.Subtitulo}>
-          Precio Compra
-        </p>
+        <p className={Global.Subtitulo}>Precio Compra</p>
         <div className={Global.ContenedorInputs}>
           <div className={Global.Input36}>
             <div className={Global.LabelStyle}>
@@ -292,8 +303,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="number"
               id="precioCompra"
               name="precioCompra"
-              placeholder="Costo del Producto"
               autoComplete="off"
+              placeholder="Costo del Producto"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioCompra ?? ""}
               onChange={ValidarData}
@@ -331,8 +343,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="number"
               id="precioCompraDescuento"
               name="precioCompraDescuento"
-              placeholder="Costo con Descto"
               autoComplete="off"
+              placeholder="Costo con Descto"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioCompraDescuento ?? ""}
               onChange={ValidarData}
@@ -379,6 +392,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="porcentajeUtilidad1"
               autoComplete="off"
               placeholder="% Ganancia"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.porcentajeUtilidad1 ?? ""}
               onChange={ValidarData}
@@ -395,6 +409,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="porcentajeUtilidad2"
               autoComplete="off"
               placeholder="% Ganancia"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.porcentajeUtilidad2 ?? ""}
               onChange={ValidarData}
@@ -412,6 +427,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="porcentajeUtilidad3"
               autoComplete="off"
               placeholder="% Ganancia"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.porcentajeUtilidad3 ?? ""}
               onChange={ValidarData}
@@ -428,6 +444,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="porcentajeUtilidad4"
               autoComplete="off"
               placeholder="% Ganancia"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.porcentajeUtilidad4 ?? ""}
               onChange={ValidarData}
@@ -446,6 +463,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioVenta1"
               autoComplete="off"
               placeholder="Precio Venta"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioVenta1 ?? ""}
               onChange={ValidarData}
@@ -462,6 +480,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioVenta2"
               autoComplete="off"
               placeholder="Precio Venta"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioVenta2 ?? ""}
               onChange={ValidarData}
@@ -479,6 +498,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioVenta3"
               autoComplete="off"
               placeholder="Precio Venta"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioVenta3 ?? ""}
               onChange={ValidarData}
@@ -495,6 +515,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioVenta4"
               autoComplete="off"
               placeholder="Precio Venta"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioVenta4 ?? ""}
               onChange={ValidarData}

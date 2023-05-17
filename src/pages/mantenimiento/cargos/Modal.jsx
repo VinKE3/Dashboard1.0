@@ -55,6 +55,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="sueldo"
               autoComplete="off"
               placeholder="Sueldo"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               defaultValue={data.sueldo ?? ""}
               onChange={ValidarData}

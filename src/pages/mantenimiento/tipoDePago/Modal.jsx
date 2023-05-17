@@ -111,6 +111,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="number"
                   id="plazo"
                   name="plazo"
+                  min={0}
                   value={data.plazo ?? ""}
                   readOnly={modo == "Consultar" ? true : false}
                   onChange={ValidarData}

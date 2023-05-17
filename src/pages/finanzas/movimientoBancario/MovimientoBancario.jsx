@@ -212,7 +212,7 @@ const MovimientoBancario = () => {
           numeroOperacion: "",
           isCierreCaja: false,
           tipoBeneficiarioId: "",
-          clienteProveedorId: "",
+          clienteProveedorId: null,
           clienteProveedorNombre: "",
           concepto: "",
           documentoReferencia: "",

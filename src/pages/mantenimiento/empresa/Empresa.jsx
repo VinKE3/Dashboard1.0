@@ -1208,6 +1208,7 @@ const Empresa = ({ modo }) => {
                       name="anioHabilitado1"
                       autoComplete="off"
                       placeholder="año"
+                      min={0}
                       value={dataGeneral.anioHabilitado1}
                       onChange={ValidarData}
                       className={Global.InputBoton}
@@ -1527,6 +1528,7 @@ const Empresa = ({ modo }) => {
                       name="anioHabilitado2"
                       autoComplete="off"
                       placeholder="año"
+                      min={0}
                       value={dataGeneral.anioHabilitado2}
                       onChange={ValidarData}
                       className={Global.InputBoton}
@@ -1885,6 +1887,7 @@ const Empresa = ({ modo }) => {
                               name="porcentaje"
                               autoComplete="off"
                               placeholder="Porcentaje"
+                              min={0}
                               readOnly={modo == "Consultar" ? true : false}
                               value={objetoIgv.porcentaje}
                               onChange={ValidarDataIgv}
@@ -1984,6 +1987,7 @@ const Empresa = ({ modo }) => {
                               name="porcentaje"
                               autoComplete="off"
                               placeholder="Porcentaje"
+                              min={0}
                               readOnly={modo == "Consultar" ? true : false}
                               value={objetoRetencion.porcentaje}
                               onChange={ValidarDataRetencion}
@@ -2086,6 +2090,7 @@ const Empresa = ({ modo }) => {
                               name="porcentaje"
                               autoComplete="off"
                               placeholder="Porcentaje"
+                              min={0}
                               readOnly={modo == "Consultar" ? true : false}
                               value={objetoDetraccion.porcentaje}
                               onChange={ValidarDataDetraccion}
@@ -2188,6 +2193,7 @@ const Empresa = ({ modo }) => {
                               name="porcentaje"
                               autoComplete="off"
                               placeholder="Porcentaje"
+                              min={0}
                               readOnly={modo == "Consultar" ? true : false}
                               value={objetoPercepcion.porcentaje}
                               onChange={ValidarDataPercepcion}

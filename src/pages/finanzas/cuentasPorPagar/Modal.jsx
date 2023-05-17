@@ -333,8 +333,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="number"
               id="tipoCambio"
               name="tipoCambio"
-              maxLength="8"
               autoComplete="off"
+              min={0}
               // readOnly={modo == "Consultar" ? true : false}
               value={abono.tipoCambio ?? ""}
               onChange={ValidarData}

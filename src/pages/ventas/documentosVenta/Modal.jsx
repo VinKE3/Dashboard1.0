@@ -1478,9 +1478,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="tipoCambio"
                     name="tipoCambio"
-                    maxLength="8"
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
@@ -1985,6 +1985,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="cantidad"
                     placeholder="Cantidad"
                     autoComplete="off"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataArt.cantidad ?? ""}
                     onChange={(e) => {
@@ -2004,6 +2005,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="precioUnitario"
                     placeholder="Precio"
                     autoComplete="off"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataArt.precioUnitario ?? ""}
                     onChange={(e) => {
@@ -2037,8 +2039,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="importe"
                     name="importe"
-                    autoComplete="off"
                     placeholder="Importe"
+                    autoComplete="off"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataArt.importe ?? ""}
                     onChange={(e) => {
@@ -2274,6 +2277,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="factorImpuestoBolsa"
                     autoComplete="off"
                     placeholder="0.00"
+                    min={0}
                     readOnly={true}
                     value={data.factorImpuestoBolsa ?? ""}
                     onChange={() => {}}

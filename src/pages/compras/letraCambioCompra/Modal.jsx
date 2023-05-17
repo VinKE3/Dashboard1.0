@@ -241,6 +241,10 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     //Valida montos
 
+    if (dataConcepto.abono > dataConcepto.saldo) {
+      document.getElementById("abono").focus();
+      return [false, "Abono: El importe a abonar no puede ser mayor al saldo."];
+    }
     return [true, ""];
   };
   const AgregarDetalleArticulo = async () => {
@@ -844,9 +848,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="tipoCambio"
                     name="tipoCambio"
-                    maxLength="8"
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
@@ -1026,8 +1030,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="saldo"
                     name="saldo"
-                    autoComplete="off"
                     placeholder="Saldo"
+                    autoComplete="off"
+                    min={0}
                     readOnly={true}
                     value={dataConcepto.saldo ?? ""}
                     onChange={ValidarDataConcepto}
@@ -1042,8 +1047,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="abono"
                     name="abono"
-                    autoComplete="off"
                     placeholder="Abono"
+                    autoComplete="off"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataConcepto.abono ?? ""}
                     onChange={ValidarDataConcepto}

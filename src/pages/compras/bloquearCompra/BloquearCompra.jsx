@@ -14,7 +14,6 @@ import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
-
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -81,11 +80,6 @@ const BloquearCompra = () => {
   }, [cadena]);
 
   useEffect(() => {
-    if (respuestaAlert) {
-    }
-  }, [respuestaAlert]);
-
-  useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
         !permisos[0] &&
@@ -108,9 +102,9 @@ const BloquearCompra = () => {
   //#endregion
 
   //#region Funciones API
-  const Listar = async (filtro = "", pagina = 1) => {
+  const Listar = async (f = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Compra/BloquearCompra/Listar?pagina=${pagina}${filtro}`
+      `api/Compra/BloquearCompra/Listar?pagina=${pagina}${f}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
@@ -150,7 +144,7 @@ const BloquearCompra = () => {
   //#endregion
 
   //#region Funciones
-  const ModificarCheck = async (id, isBloqueado) => {
+  const Bloquear = async (id, isBloqueado) => {
     let model = {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
@@ -158,6 +152,7 @@ const BloquearCompra = () => {
     const result = await ApiMasy.put(`api/Compra/BloquearCompra`, model);
     if (result.name == "AxiosError") {
       let err = "";
+
       if (result.response.data == "") {
         err = response.message;
       } else {
@@ -174,7 +169,14 @@ const BloquearCompra = () => {
         theme: "colored",
       });
     } else {
-      Listar(cadena, index + 1);
+      Listar(
+        `&tipoDocumentoId=${
+          document.getElementById("tipoDocumentoId").value
+        }&fechaInicio=${
+          document.getElementById("fechaInicio").value
+        }&fechaFin=${document.getElementById("fechaFin").value}`,
+        index + 1
+      );
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 3000,
@@ -187,7 +189,7 @@ const BloquearCompra = () => {
       });
     }
   };
-  const ModificarCheckAll = async (ids, isBloqueado) => {
+  const BloquearTodo = async (ids, isBloqueado) => {
     let model = {
       ids: ids,
       isBloqueado: isBloqueado,
@@ -228,7 +230,14 @@ const BloquearCompra = () => {
               theme: "colored",
             });
           } else {
-            Listar(cadena, index + 1);
+            Listar(
+              `&tipoDocumentoId=${
+                document.getElementById("tipoDocumentoId").value
+              }&fechaInicio=${
+                document.getElementById("fechaInicio").value
+              }&fechaFin=${document.getElementById("fechaFin").value}`,
+              index + 1
+            );
             toast.info(String(response.data.messages[0].textos), {
               position: "bottom-right",
               autoClose: 3000,
@@ -315,7 +324,7 @@ const BloquearCompra = () => {
             menu={["Compra", "BloquearCompra"]}
             id={row.values.id}
             ClickModificar={() =>
-              ModificarCheck(row.values.id, row.values.isBloqueado)
+              Bloquear(row.values.id, row.values.isBloqueado)
             }
           />
         ),
@@ -339,7 +348,7 @@ const BloquearCompra = () => {
                     inputId="isBloqueado"
                     name="isBloqueado"
                     onChange={(e) => {
-                      ModificarCheckAll(
+                      BloquearTodo(
                         datos.map((d) => d.id),
                         e.checked
                       );
@@ -365,7 +374,7 @@ const BloquearCompra = () => {
                 <select
                   id="tipoDocumentoId"
                   name="tipoDocumentoId"
-                  value={filtro.tipoDocumentoId ?? ""}
+                  value={filtro.tipoDocumentoId}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 >

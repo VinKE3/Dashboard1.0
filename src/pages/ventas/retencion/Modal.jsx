@@ -948,9 +948,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="number"
                 id="tipoCambio"
                 name="tipoCambio"
-                maxLength="8"
                 placeholder="Tipo de Cambio"
                 autoComplete="off"
+                min={0}
                 readOnly={modo == "Consultar" ? true : false}
                 value={data.tipoCambio ?? ""}
                 onChange={ValidarData}
@@ -1053,6 +1053,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Número"
                 maxLength={10}
                 autoComplete="off"
+                min={0}
                 readOnly={modo == "Consultar" ? true : false}
                 disabled={habilitarCampos ? false : true}
                 value={dataArt.numero ?? ""}
@@ -1115,6 +1116,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="porcentaje"
                 placeholder={"% Retención"}
                 autoComplete="off"
+                min={0}
                 readOnly={modo == "Consultar" ? true : false}
                 value={dataArt.porcentaje ?? ""}
                 onChange={ValidarDataArt}
@@ -1131,6 +1133,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="monto"
                 placeholder="Retención"
                 autoComplete="off"
+                min={0}
                 readOnly={true}
                 value={dataArt.monto ?? ""}
                 onChange={ValidarDataArt}

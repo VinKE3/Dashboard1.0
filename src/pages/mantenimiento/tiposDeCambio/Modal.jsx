@@ -116,6 +116,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="precioCompra"
               name="precioCompra"
               autoComplete="off"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioCompra}
               onChange={ValidarData}
@@ -131,6 +132,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="precioVenta"
               name="precioVenta"
               autoComplete="off"
+              min={0}
               readOnly={modo == "Consultar" ? true : false}
               value={data.precioVenta}
               onChange={ValidarData}

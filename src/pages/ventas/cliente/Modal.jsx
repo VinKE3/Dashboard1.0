@@ -355,7 +355,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${data.id}`
     );
     //Filtrar comentario DIRECCION PRINCIPAL
-    setDataDireccion(result.data.data);
+    setDataDireccion(result.data.data.filter(
+      (map) => map.comentario != "DIRECCION PRINCIPAL"
+    ));
   };
   const GetDireccion = async (id) => {
     const result = await ApiMasy.get(
@@ -957,8 +959,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="number"
                         id="maximoCreditoUSD"
                         name="maximoCreditoUSD"
-                        autoComplete="off"
                         placeholder="Máximo US$"
+                        autoComplete="off"
+                        min={0}
                         readOnly={modo == "Consultar" ? true : false}
                         value={data.maximoCreditoUSD ?? ""}
                         onChange={ValidarData}
@@ -973,8 +976,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="number"
                         id="creditoUSD"
                         name="creditoUSD"
-                        autoComplete="off"
                         placeholder="Crédito US$"
+                        autoComplete="off"
+                        min={0}
                         readOnly={true}
                         value={data.creditoUSD ?? ""}
                         onChange={ValidarData}
@@ -994,8 +998,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="number"
                         id="maximoCreditoPEN"
                         name="maximoCreditoPEN"
-                        autoComplete="off"
                         placeholder="Máximo S/"
+                        autoComplete="off"
+                        min={0}
                         readOnly={modo == "Consultar" ? true : false}
                         value={data.maximoCreditoPEN ?? ""}
                         onChange={ValidarData}
@@ -1010,8 +1015,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="number"
                         id="creditoPEN"
                         name="creditoPEN"
-                        autoComplete="off"
                         placeholder="Crédito S/"
+                        autoComplete="off"
+                        min={0}
                         readOnly={true}
                         value={data.credicreditoPENtoUSD ?? ""}
                         onChange={ValidarData}

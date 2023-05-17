@@ -167,6 +167,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData((prevData) => ({
         ...prevData,
         tipoBeneficiarioId: model.tipoBeneficiarioId,
+        clienteProveedorId: null,
+        clienteProveedorNombre: "",
         concepto: "",
         documentoReferencia: "",
       }));
@@ -278,6 +280,10 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     //Valida montos
 
+    if (dataConcepto.abono > dataConcepto.saldo) {
+      document.getElementById("abono").focus();
+      return [false, "Abono: El importe a abonar no puede ser mayor al saldo."];
+    }
     return [true, ""];
   };
   const AgregarDetalleArticulo = async () => {
@@ -798,7 +804,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="tipoCambio"
                     name="tipoCambio"
-                    maxLength="8"
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
@@ -1087,8 +1092,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="number"
                       id="porcentajeITF"
                       name="porcentajeITF"
-                      autoComplete="off"
                       placeholder="ITF %"
+                      autoComplete="off"
                       min={0}
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.porcentajeITF ?? ""}
@@ -1107,8 +1112,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="number"
                       id="montoITF"
                       name="montoITF"
-                      autoComplete="off"
                       placeholder="Monto ITF"
+                      autoComplete="off"
                       min={0}
                       readOnly={true}
                       value={data.montoITF ?? ""}
@@ -1124,8 +1129,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="number"
                       id="montoInteres"
                       name="montoInteres"
-                      autoComplete="off"
                       placeholder="Interes"
+                      autoComplete="off"
                       min={0}
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.montoInteres ?? ""}
@@ -1144,8 +1149,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="number"
                       id="monto"
                       name="monto"
-                      autoComplete="off"
                       placeholder="Monto"
+                      autoComplete="off"
                       min={0}
                       readOnly={modo == "Consultar" ? true : false}
                       disabled={
@@ -1171,8 +1176,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="number"
                       id="total"
                       name="total"
-                      autoComplete="off"
                       placeholder="Total"
+                      autoComplete="off"
                       min={0}
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.total ?? ""}
@@ -1230,8 +1235,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="saldo"
                     name="saldo"
-                    autoComplete="off"
                     placeholder="Saldo"
+                    autoComplete="off"
+                    min={0}
                     readOnly={true}
                     value={dataConcepto.saldo ?? ""}
                     onChange={ValidarDataConcepto}
@@ -1246,8 +1252,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="abono"
                     name="abono"
-                    autoComplete="off"
                     placeholder="Abono"
+                    autoComplete="off"
                     min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataConcepto.abono ?? ""}

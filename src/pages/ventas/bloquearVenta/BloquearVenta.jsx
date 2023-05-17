@@ -149,7 +149,7 @@ const BloquearVenta = () => {
   //#endregion
 
   //#region Funciones Modal
-  const ModificarCheck = async (id, isBloqueado) => {
+  const Bloquear = async (id, isBloqueado) => {
     let model = {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
@@ -173,7 +173,14 @@ const BloquearVenta = () => {
         theme: "colored",
       });
     } else {
-      Listar(cadena, index + 1);
+      Listar(
+        `&tipoDocumentoId=${
+          document.getElementById("tipoDocumentoId").value
+        }&fechaInicio=${
+          document.getElementById("fechaInicio").value
+        }&fechaFin=${document.getElementById("fechaFin").value}`,
+        index + 1
+      );
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 3000,
@@ -186,7 +193,7 @@ const BloquearVenta = () => {
       });
     }
   };
-  const ModificarCheckAll = async (ids, isBloqueado) => {
+  const BloquearTodo = async (ids, isBloqueado) => {
     let model = {
       ids: ids,
       isBloqueado: isBloqueado,
@@ -227,7 +234,14 @@ const BloquearVenta = () => {
               theme: "colored",
             });
           } else {
-            Listar(cadena, index + 1);
+            Listar(
+              `&tipoDocumentoId=${
+                document.getElementById("tipoDocumentoId").value
+              }&fechaInicio=${
+                document.getElementById("fechaInicio").value
+              }&fechaFin=${document.getElementById("fechaFin").value}`,
+              index + 1
+            );
             toast.info(String(response.data.messages[0].textos), {
               position: "bottom-right",
               autoClose: 3000,
@@ -314,7 +328,7 @@ const BloquearVenta = () => {
             menu={["Venta", "BloquearVenta"]}
             id={row.values.id}
             ClickModificar={() =>
-              ModificarCheck(row.values.id, row.values.isBloqueado)
+              Bloquear(row.values.id, row.values.isBloqueado)
             }
           />
         ),
@@ -338,7 +352,7 @@ const BloquearVenta = () => {
                     inputId="isBloqueado"
                     name="isBloqueado"
                     onChange={(e) => {
-                      ModificarCheckAll(
+                      BloquearTodo(
                         datos.map((d) => d.id),
                         e.checked
                       );

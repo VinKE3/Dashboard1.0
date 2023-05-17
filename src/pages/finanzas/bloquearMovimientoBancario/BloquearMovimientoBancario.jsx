@@ -14,7 +14,6 @@ import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
-
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -32,7 +31,7 @@ const TablaStyle = styled.div`
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(6){
+  & th:nth-child(6) {
     text-align: right;
   }
   & th:last-child {
@@ -66,9 +65,7 @@ const BloquearMovimientoBancario = () => {
 
   //#region useEffect
   useEffect(() => {
-    setCadena(
-      `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
-    );
+    setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
   }, [filtro]);
   useEffect(() => {
     Filtro();
@@ -133,12 +130,15 @@ const BloquearMovimientoBancario = () => {
   //#endregion
 
   //#region Funciones Modal
-  const ModificarCheck = async (id, isBloqueado) => {
+  const Bloquear = async (id, isBloqueado) => {
     let model = {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
     };
-    const result = await ApiMasy.put(`api/Finanzas/BloquearMovimientoBancario`, model);
+    const result = await ApiMasy.put(
+      `api/Finanzas/BloquearMovimientoBancario`,
+      model
+    );
     if (result.name == "AxiosError") {
       let err = "";
       if (result.response.data == "") {
@@ -157,7 +157,12 @@ const BloquearMovimientoBancario = () => {
         theme: "colored",
       });
     } else {
-      Listar(cadena, index + 1);
+      Listar(
+        `&fechaInicio=${
+          document.getElementById("fechaInicio").value
+        }&fechaFin=${document.getElementById("fechaFin").value}`,
+        index + 1
+      );
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 3000,
@@ -170,7 +175,7 @@ const BloquearMovimientoBancario = () => {
       });
     }
   };
-  const ModificarCheckAll = async (ids, isBloqueado) => {
+  const BloquearTodo = async (ids, isBloqueado) => {
     let model = {
       ids: ids,
       isBloqueado: isBloqueado,
@@ -192,38 +197,45 @@ const BloquearMovimientoBancario = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        ApiMasy.put(`api/Finanzas/BloquearMovimientoBancario`, model).then((response) => {
-          if (response.name == "AxiosError") {
-            let err = "";
-            if (response.response.data == "") {
-              err = response.message;
+        ApiMasy.put(`api/Finanzas/BloquearMovimientoBancario`, model).then(
+          (response) => {
+            if (response.name == "AxiosError") {
+              let err = "";
+              if (response.response.data == "") {
+                err = response.message;
+              } else {
+                err = String(response.response.data.messages[0].textos);
+              }
+              toast.error(err, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
             } else {
-              err = String(response.response.data.messages[0].textos);
+              Listar(
+                `&fechaInicio=${
+                  document.getElementById("fechaInicio").value
+                }&fechaFin=${document.getElementById("fechaFin").value}`,
+                index + 1
+              );
+              toast.info(String(response.data.messages[0].textos), {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
             }
-            toast.error(err, {
-              position: "bottom-right",
-              autoClose: 3000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          } else {
-            Listar(cadena, index + 1);
-            toast.info(String(response.data.messages[0].textos), {
-              position: "bottom-right",
-              autoClose: 3000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
           }
-        });
+        );
         setChecked(isBloqueado);
       } else {
         setChecked(!isBloqueado);
@@ -294,7 +306,7 @@ const BloquearMovimientoBancario = () => {
             menu={["Finanzas", "BloquearMovimientoBancario"]}
             id={row.values.id}
             ClickModificar={() =>
-              ModificarCheck(row.values.id, row.values.isBloqueado)
+              Bloquear(row.values.id, row.values.isBloqueado)
             }
           />
         ),
@@ -311,14 +323,16 @@ const BloquearMovimientoBancario = () => {
         <>
           <div className="px-2">
             <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Bloquear Movimientos Bancarios</h2>
+              <h2 className={Global.TituloH2}>
+                Bloquear Movimientos Bancarios
+              </h2>
               <div className="flex">
                 <div className={Global.CheckStyle}>
                   <Checkbox
                     inputId="isBloqueado"
                     name="isBloqueado"
                     onChange={(e) => {
-                      ModificarCheckAll(
+                      BloquearTodo(
                         datos.map((d) => d.id),
                         e.checked
                       );
@@ -337,7 +351,6 @@ const BloquearMovimientoBancario = () => {
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
-
               <div className={Global.InputMitad}>
                 <label htmlFor="fechaInicio" className={Global.LabelStyle}>
                   Desde

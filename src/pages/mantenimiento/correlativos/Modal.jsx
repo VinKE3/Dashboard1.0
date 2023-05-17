@@ -114,6 +114,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="numero"
                   autoComplete="off"
                   placeholder="numero"
+                  min={0}
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.numero}
                   onChange={ValidarData}
