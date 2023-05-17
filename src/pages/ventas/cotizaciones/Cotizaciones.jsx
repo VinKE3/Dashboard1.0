@@ -218,7 +218,7 @@ const Cotizaciones = () => {
           montoRetencion: 0,
           montoPercepcion: 0,
           total: 0,
-          porcentajeIGV: 0,
+          porcentajeIGV: dataGlobal.porcentajeIGV,
           porcentajeRetencion: 0,
           porcentajePercepcion: 0,
           incluyeIGV: false,

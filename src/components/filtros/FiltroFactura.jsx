@@ -49,7 +49,7 @@ const TablaDetalle = styled.div`
 const FiltroFactura = ({ setModal, objeto, setObjeto }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [dataFacturaSeleccionada, setDataFacturaSeleccionada] =
+  const [dataFacturaSeleccionada] =
     useState(objeto);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({

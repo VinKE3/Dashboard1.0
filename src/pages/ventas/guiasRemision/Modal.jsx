@@ -187,8 +187,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteDireccionId: dataGlobal.cliente.direccionPrincipalId,
         clienteDireccion: dataGlobal.cliente.direccionPrincipal,
         personalId: personal.personalId,
+        direcciones: dataGlobal.cliente.direcciones,
       }));
-      setDataClienteDirec(dataGlobal.cliente.direcciones);
     } else {
       setDataCliente((prevState) => ({
         ...prevState,
@@ -198,6 +198,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteDireccionId: 0,
         clienteDireccion: "",
         personalId: dataGlobal.personalId,
+        direcciones: [],
       }));
       setDataClienteDirec([]);
     }

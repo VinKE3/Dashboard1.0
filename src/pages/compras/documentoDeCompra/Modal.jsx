@@ -204,17 +204,21 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "tipoCompraId") {
+      let model = dataTipoPag.find(
+        (map) => map.tipoVentaCompraId == target.value
+      );
       setData((prevData) => ({
         ...prevData,
-        tipoPagoId: "",
+        tipoPagoId: model.id,
+        fechaVencimiento: moment().format("YYYY-MM-DD"),
       }));
     }
 
     if (target.name == "tipoPagoId") {
-      let fecha = await FechaVencimiento(target.value);
+      let fecha = await FechaVencimiento(data.tipoCompraId, target.value);
       setData((prevState) => ({
         ...prevState,
-        fechaVencimiento: fecha,
+        fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
       }));
       if (target.value != "CH" || target.value != "DE") {
         setData((prevState) => ({
@@ -247,27 +251,34 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const FechaEmision = async () => {
-    toast(
-      "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
-      {
-        position: "bottom-left",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      }
-    );
+    if (modo != "Consultar") {
+      toast(
+        "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+        {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    }
   };
   const FechaVencimiento = async (tipoCompraId, tipoPagoId) => {
     if (tipoCompraId != "CO") {
       let model = dataTipoPag.find((map) => map.id === tipoPagoId);
+      let fechaHoy = moment().format("YYYY-MM-DD");
       let fecha = moment(moment().format("YYYY-MM-DD"))
         .add(model.plazo, "days")
         .format("YYYY-MM-DD");
-      return fecha;
+      let fechaRetorno = fecha == undefined ? fechaHoy : fecha;
+      return fechaRetorno;
+    } else {
+      let fechaHoy = moment().format("YYYY-MM-DD");
+      return fechaHoy;
     }
   };
   const Numeracion = async (e) => {

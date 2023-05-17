@@ -58,53 +58,59 @@ const Modal = ({ setModal, modo, objeto }) => {
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
-                <label htmlFor="id" className={Global.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  autoComplete="off"
-                  placeholder="Código"
-                  value={data.id ?? ""}
-                  onChange={ValidarData}
-                  readOnly={true}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputMitad}>
-                <div className={Global.LabelStyle}>
-                  <Checkbox
-                    inputId="isActivo"
-                    name="isActivo"
-                    readOnly={modo == "Consultar" ? true : false}
-                    checked={data.isActivo ? true : ""}
-                    onChange={(e) => ValidarData(e)}
+                <div className={Global.InputFull}>
+                  <label htmlFor="id" className={Global.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    autoComplete="off"
+                    placeholder="Código"
+                    value={data.id ?? ""}
+                    onChange={ValidarData}
+                    readOnly={true}
+                    className={Global.InputBoton + Global.Disabled}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <div className={Global.CheckStyle + Global.Anidado}>
+                    <Checkbox
+                      inputId="isActivo"
+                      name="isActivo"
+                      readOnly={modo == "Consultar" ? true : false}
+                      checked={data.isActivo ? true : ""}
+                      onChange={(e) => ValidarData(e)}
                     ></Checkbox>
+                  </div>
+                  <label
+                    htmlFor="isActivo"
+                    className={Global.LabelCheckStyle + " !rounded-r-none"}
+                  >
+                    Activo{" "}
+                  </label>
                 </div>
-                <label htmlFor="isActivo" className={Global.InputStyle}>
-                  Activo{" "}
-                </label>
-              </div>
-              <div className={Global.InputMitad}>
-                <div className={Global.LabelStyle}>
-                  <Checkbox
-                    inputId="habilitarAfectarStock"
-                    name="habilitarAfectarStock"
-                    readOnly={modo == "Consultar" ? true : false}
-                    checked={data.habilitarAfectarStock ? true : ""}
-                    onChange={(e) => ValidarData(e)}
-                  ></Checkbox>
+                <div className={Global.InputFull}>
+                  <div className={Global.CheckStyle + Global.Anidado}>
+                    <Checkbox
+                      inputId="habilitarAfectarStock"
+                      name="habilitarAfectarStock"
+                      readOnly={modo == "Consultar" ? true : false}
+                      checked={data.habilitarAfectarStock ? true : ""}
+                      onChange={(e) => ValidarData(e)}
+                    ></Checkbox>
+                  </div>
+                  <label
+                    htmlFor="habilitarAfectarStock"
+                    className={Global.LabelCheckStyle}
+                  >
+                    Afectar Stock
+                  </label>
                 </div>
-                <label
-                  htmlFor="habilitarAfectarStock"
-                  className={Global.InputStyle}
-                >
-                  Afectar Stock
-                </label>
               </div>
             </div>
+
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
                 <label htmlFor="nick" className={Global.LabelStyle}>
@@ -134,6 +140,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
                 >
+                  <option key={-1} value={""}>
+                    --SELECCIONAR--
+                  </option>
                   {dataModal.map((map) => (
                     <option key={map.id} value={map.id}>
                       {map.personal}
@@ -142,6 +151,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </select>
               </div>
             </div>
+
             {modo == "Registrar" && (
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
@@ -181,6 +191,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
             )}
+            
             <div className={Global.InputFull}>
               <label htmlFor="observacion" className={Global.LabelStyle}>
                 Observación

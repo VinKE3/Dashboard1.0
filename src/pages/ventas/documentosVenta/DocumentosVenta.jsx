@@ -217,7 +217,7 @@ const DocumentosVenta = () => {
           montoDetraccion: 0,
           montoImpuestoBolsa: 0,
           total: 0,
-          porcentajeIGV: 0,
+          porcentajeIGV: dataGlobal.porcentajeIGV,
           porcentajeRetencion: 0,
           porcentajeDetraccion: 0,
           factorImpuestoBolsa: 0.5,

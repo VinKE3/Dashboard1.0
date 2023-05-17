@@ -247,19 +247,21 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const FechaEmision = async () => {
-    toast(
-      "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
-      {
-        position: "bottom-left",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      }
-    );
+    if (modo != "Consultar") {
+      toast(
+        "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+        {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    }
   };
   const FechaVencimiento = async (tipoCompraId, tipoPagoId) => {
     if (tipoCompraId != "CO") {

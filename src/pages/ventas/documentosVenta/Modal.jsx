@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
+import FiltroLetraVenta from "../../../components/filtros/FiltroLetraVenta";
 import FiltroCotizacion from "../../../components/filtros/FiltroCotizacion";
 import FiltroCliente from "../../../components/filtros/FiltroCliente";
 import FiltroArticulo from "../../../components/filtros/FiltroArticulo";
@@ -89,12 +90,14 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataCotizacion, setDataCotizacion] = useState([]);
   const [dataArt, setDataArt] = useState([]);
   const [dataPrecio, setDataPrecio] = useState([]);
+  const [dataLetra, setDataLetra] = useState([]);
   //Data Modales Ayuda
   //Modales de Ayuda
   const [modalCliente, setModalCliente] = useState(false);
   const [modalCotizacion, setModalCotizacion] = useState(false);
   const [modalArt, setModalArt] = useState(false);
   const [modalPrecio, setModalPrecio] = useState(false);
+  const [modalLetra, setModalLetra] = useState(false);
   //Modales de Ayuda
   const [checkVarios, setCheckVarios] = useState(false);
   const [checkFiltro, setCheckFiltro] = useState("productos");
@@ -111,24 +114,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (dataCliente.direcciones != undefined) {
         setDataClienteDirec(dataCliente.direcciones);
       }
-      setData({
-        ...data,
-        clienteId: dataCliente.clienteId,
-        clienteTipoDocumentoIdentidadId:
-          dataCliente.clienteTipoDocumentoIdentidadId,
-        clienteNumeroDocumentoIdentidad:
-          dataCliente.clienteNumeroDocumentoIdentidad,
-        clienteNombre: dataCliente.clienteNombre,
-        clienteDireccionId: dataCliente.clienteDireccionId,
-        clienteDireccion: dataCliente.clienteDireccion,
-        tipoVentaId: dataCliente.tipoVentaId,
-        tipoCobroId: dataCliente.tipoCobroId,
-        personalId:
-          dataCliente.personalId == ""
-            ? dataGlobal.personalId
-            : dataCliente.personalId,
-      });
-
+      Cliente();
+      setDataLetra([]);
       //Consulta los Documentos de Referencia
       if (dataCliente.clienteId != "") {
         GetDocReferencia(dataCliente.clienteId);
@@ -174,6 +161,18 @@ const Modal = ({ setModal, modo, objeto }) => {
       setRefrescar(true);
     }
   }, [dataCotizacion]);
+  useEffect(() => {
+    if (Object.keys(dataLetra).length > 0) {
+      //Cabecera
+      setData({
+        ...data,
+        letraId: dataLetra.id,
+        letra: dataLetra.numeroDocumento,
+      });
+      //Cabecera
+      setRefrescar(true);
+    }
+  }, [dataLetra]);
   useEffect(() => {
     setData({ ...data, detalles: dataDetalle });
   }, [dataDetalle]);
@@ -287,21 +286,16 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData((prevData) => ({
         ...prevData,
         tipoCobroId: model.id,
+        fechaVencimiento: moment().format("YYYY-MM-DD"),
       }));
     }
 
     if (target.name == "tipoCobroId") {
-      if (data.tipoVentaId != "CO") {
-        let model = dataTipoCobro.find((map) => map.id === target.value);
-        let fechaHoy = moment().format("YYYY-MM-DD");
-        let nuevaFecha = moment(fechaHoy)
-          .add(model.plazo, "days")
-          .format("YYYY-MM-DD");
-        setData((prevData) => ({
-          ...prevData,
-          fechaVencimiento: nuevaFecha,
-        }));
-      }
+      let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
+      setData((prevState) => ({
+        ...prevState,
+        fechaVencimiento: fecha,
+      }));
 
       if (target.value != "CH" || target.value != "DE") {
         setData((prevState) => ({
@@ -333,8 +327,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteDireccionId: dataGlobal.cliente.direccionPrincipalId,
         clienteDireccion: dataGlobal.cliente.direccionPrincipal,
         personalId: personal.personalId,
+        direcciones: dataGlobal.cliente.direcciones,
       }));
-      setDataClienteDirec(dataGlobal.cliente.direcciones);
     } else {
       setDataCliente((prevState) => ({
         ...prevState,
@@ -345,6 +339,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteDireccionId: 0,
         clienteDireccion: "",
         personalId: dataGlobal.personalId,
+        direcciones: [],
       }));
       setDataClienteDirec([]);
     }
@@ -364,6 +359,20 @@ const Modal = ({ setModal, modo, objeto }) => {
           theme: "colored",
         }
       );
+    }
+  };
+  const FechaVencimiento = async (tipoVentaId, tipoCobroId) => {
+    if (tipoVentaId != "CO") {
+      let model = dataTipoCobro.find((map) => map.id === tipoCobroId);
+      let fecha = moment(moment().format("YYYY-MM-DD"))
+        .add(model.plazo, "days")
+        .format("YYYY-MM-DD");
+      let fechaHoy = moment().format("YYYY-MM-DD");
+      let fechaRetorno = fecha == undefined ? fechaHoy : fecha;
+      return fechaRetorno;
+    } else {
+      let fechaHoy = moment().format("YYYY-MM-DD");
+      return fechaHoy;
     }
   };
   const CambioDireccion = async (id) => {
@@ -398,6 +407,38 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
       });
     }
+  };
+  const Cliente = async () => {
+    //Consultar Fecha
+    let fecha = await FechaVencimiento(
+      dataCliente.tipoVentaId,
+      dataCliente.tipoCobroId
+    );
+    //Consultar Fecha
+
+    setData({
+      ...data,
+      clienteId: dataCliente.clienteId,
+      clienteTipoDocumentoIdentidadId:
+        dataCliente.clienteTipoDocumentoIdentidadId,
+      clienteNumeroDocumentoIdentidad:
+        dataCliente.clienteNumeroDocumentoIdentidad,
+      clienteNombre: dataCliente.clienteNombre,
+      clienteDireccionId: dataCliente.clienteDireccionId,
+      clienteDireccion: dataCliente.clienteDireccion,
+      tipoVentaId: dataCliente.tipoVentaId,
+      tipoCobroId: dataCliente.tipoCobroId,
+      fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
+      personalId:
+        dataCliente.personalId == ""
+          ? dataGlobal.personalId
+          : dataCliente.personalId,
+
+      //Limpia las letras
+      letraId: "",
+      letra: "",
+      //Limpia las letras
+    });
   };
   const OcultarMensajes = async () => {
     setMensaje([]);
@@ -987,6 +1028,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   };
+  const AbrirFiltroLetra = async () => {
+    if (data.clienteId != "") {
+      setModalLetra(true);
+    }
+  };
   //#endregion
 
   //#region Columnas
@@ -1340,12 +1386,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {Object.entries(dataClienteDirec).length > 0 &&
-                      dataClienteDirec.map((map) => (
-                        <option key={map.id} value={map.id}>
-                          {map.direccion}
-                        </option>
-                      ))}
+                    {dataClienteDirec.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.direccion}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -1378,29 +1423,25 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {data.tipoDocumentoId == "07" ||
                 data.tipoDocumentoId == "08" ? (
                   <div className={Global.InputMitad}>
-                    <label
-                      htmlFor="clienteNombre"
-                      className={Global.LabelStyle}
-                    >
+                    <label htmlFor="letra" className={Global.LabelStyle}>
                       Buscar Letra
                     </label>
                     <input
                       type="text"
-                      id="clienteNombre"
-                      name="clienteNombre"
-                      placeholder="Letra"
+                      id="letra"
+                      name="letra"
+                      placeholder="Buscar Letra"
                       autoComplete="off"
                       readOnly={true}
-                      value={data.clienteNombre ?? ""}
+                      value={data.letra ?? ""}
                       onChange={ValidarData}
                       className={Global.InputBoton + Global.Disabled}
                     />
                     <button
-                      id="consultar"
+                      id="consultarLetra"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar" ? true : false}
-                      disabled={checkVarios ? true : false}
-                      onClick={() => AbrirFiltroCliente()}
+                      onClick={() => AbrirFiltroLetra()}
                     >
                       <FaSearch></FaSearch>
                     </button>
@@ -2285,6 +2326,13 @@ const Modal = ({ setModal, modo, objeto }) => {
             precioVenta4: dataArt.precioVenta4,
           }}
           setObjeto={setDataPrecio}
+        />
+      )}
+      {modalLetra && (
+        <FiltroLetraVenta
+          setModal={setModalLetra}
+          id={data.clienteId}
+          setObjeto={setDataLetra}
         />
       )}
     </>

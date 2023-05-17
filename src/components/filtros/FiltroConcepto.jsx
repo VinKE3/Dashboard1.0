@@ -99,6 +99,14 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
   };
   const GetPorId = async (id) => {
     const model = datos.find((registro) => registro.id == id);
+    let documentoRelacionado = "";
+    if (
+      model.id.includes("LC") ||
+      model.id.includes("CF") ||
+      model.id.includes("CH")
+    ) {
+      documentoRelacionado = model.documentoRelacionado;
+    }
     setObjeto({
       id: model.id,
       concepto: model.descripcion,
@@ -109,7 +117,9 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
       numeroDocumento: model.numeroDocumento,
       saldo: model.saldo,
       abono: model.saldo,
-      documentoRelacionado: model.documentoRelacionado,
+      //Mov. Bancario
+      documentoRelacionado: documentoRelacionado,
+      //Mov. Bancario
     });
     setModal(false);
   };
@@ -181,6 +191,8 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
     [datos]
   );
   //#endregion
+  
+  //#region Render
   return (
     <>
       <ModalBasic
@@ -312,6 +324,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default FiltroConcepto;

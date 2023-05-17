@@ -197,7 +197,7 @@ const DocumentosdeCompra = () => {
           guiaRemision: "",
           observacion: "",
           subTotal: 0,
-          porcentajeIGV: 0,
+          porcentajeIGV: dataGlobal.porcentajeIGV,
           montoIGV: 0,
           totalNeto: 0,
           total: 0,

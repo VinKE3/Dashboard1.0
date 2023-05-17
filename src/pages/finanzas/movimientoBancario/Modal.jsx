@@ -29,14 +29,12 @@ const TablaStyle = styled.div`
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(4),
-  & th:nth-child(5) {
+  & th:nth-child(3) {
     width: 90px;
     text-align: center;
   }
-
-  & th:nth-child(6),
-  & th:nth-child(7) {
+  & th:nth-child(5),
+  & th:nth-child(6) {
     width: 130px;
     min-width: 130px;
     max-width: 130px;
@@ -105,7 +103,19 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataConcepto]);
   useEffect(() => {
-    setData({ ...data, detalles: dataDetalle });
+    setData({
+      ...data,
+      detalles: dataDetalle.map((map) => {
+        return {
+          detalleId: map.detalleId,
+          documentoVentaCompraId: map.id,
+          documentoVentaCompraFechaEmision: map.fechaEmision,
+          concepto: map.concepto,
+          abono: Number(map.abono),
+          saldo: map.saldo,
+        };
+      }),
+    });
   }, [dataDetalle]);
   useEffect(() => {
     if (!modalConcepto) {
@@ -157,8 +167,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData((prevData) => ({
         ...prevData,
         tipoBeneficiarioId: model.tipoBeneficiarioId,
+        concepto: "",
+        documentoReferencia: "",
       }));
       setDataDetalle([]);
+      setDataConcepto([]);
+      setRefrescar(true);
     }
 
     if (target.name == "tipoBeneficiarioId") {
@@ -170,19 +184,21 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const FechaEmision = async () => {
-    toast(
-      "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
-      {
-        position: "bottom-left",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      }
-    );
+    if (modo != "Consultar") {
+      toast(
+        "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+        {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    }
   };
   const FechaVencimiento = async (valor) => {
     let model = dataPlazos.find((map) => map.valor == valor);
@@ -272,16 +288,20 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Si tiene detalleId entonces modifica registro
       if (dataConcepto.detalleId != undefined) {
         let dataDetalleMod = dataDetalle.map((map) => {
-          if (map.documentoCompraId == dataConcepto.documentoCompraId) {
+          if (
+            map.documentoVentaCompraId == dataConcepto.documentoVentaCompraId
+          ) {
             return {
               detalleId: dataConcepto.detalleId,
-              documentoCompraId: dataConcepto.documentoCompraId,
+              documentoVentaCompraId: dataConcepto.id,
+              documentoVentaCompraFechaEmision: dataConcepto.fechaEmision,
               concepto: dataConcepto.concepto,
-              documentoCompraFechaEmision:
-                dataConcepto.documentoCompraFechaEmision,
               abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
-              ordenCompraRelacionada: dataConcepto.ordenCompraRelacionada,
+              //Para concatenaciones
+              documentoReferencia: dataConcepto.documentoRelacionado,
+              numeroDocumento: dataConcepto.numeroDocumento,
+              //Para concatenaciones
             };
           } else {
             return map;
@@ -291,43 +311,74 @@ const Modal = ({ setModal, modo, objeto }) => {
         setRefrescar(true);
       } else {
         let model = dataDetalle.find((map) => {
-          return map.documentoCompraId === dataConcepto.id;
+          return map.documentoVentaCompraId === dataConcepto.id;
         });
         if (model == undefined) {
           setDataDetalle((prevState) => [
             ...prevState,
             {
               detalleId: detalleId,
-              documentoCompraId: dataConcepto.id,
+              documentoVentaCompraId: dataConcepto.id,
+              documentoVentaCompraFechaEmision: dataConcepto.fechaEmision,
               concepto: dataConcepto.concepto,
-              documentoCompraFechaEmision: dataConcepto.fechaEmision,
               abono: Number(dataConcepto.abono),
               saldo: dataConcepto.saldo,
-              ordenCompraRelacionada: dataConcepto.numeroDocumento,
+              //Para concatenaciones
+              documentoReferencia: dataConcepto.documentoRelacionado,
+              numeroDocumento: dataConcepto.numeroDocumento,
+              //Para concatenaciones
             },
           ]);
-          //Anidar Documento de referencia
-          let conceptos = "";
+
+          //Concepto
+          let nuevoConcepto = "";
+          let texto =
+            data.tipoMovimientoId == "EG" ? ["PAGO DE "] : ["COBRO DE "];
+
           //Valida si contiene datos para mapearlo
           if (data.concepto == "") {
-            conceptos = [
-              ...data.concepto,
-              dataConcepto.numeroDocumento,
-            ];
+            nuevoConcepto = [...data.concepto, dataConcepto.numeroDocumento];
           } else {
-            conceptos = [
-              ...[data.concepto],
-              dataConcepto.numeroDocumento,
-            ];
+            nuevoConcepto = [...[data.concepto], dataConcepto.numeroDocumento];
           }
+          //Concepto
+
+          //Documento de referencia
+          let nuevoDocumentoReferencia = data.documentoReferencia;
+          //Valida si contiene datos para mapearlo
+          if (
+            dataConcepto.id.includes("LC") ||
+            dataConcepto.id.includes("CH") ||
+            dataConcepto.id.includes("CF")
+          ) {
+            if (nuevoDocumentoReferencia == "") {
+              nuevoDocumentoReferencia = [
+                ...data.documentoReferencia,
+                dataConcepto.documentoRelacionado,
+              ];
+            } else {
+              nuevoDocumentoReferencia = [
+                ...[data.documentoReferencia],
+                dataConcepto.documentoRelacionado,
+              ];
+            }
+          }
+          //Documento de referencia
+
+          //Concatena texto a los conceptos
+          let conceptoConcatenado =
+            data.concepto == "" || data.concepto.length == 1
+              ? texto + nuevoConcepto.toString()
+              : nuevoConcepto.toString();
+          //Concatena texto a los conceptos
+
+          //Concepto y Documento Referencia
           setData((prevState) => ({
             ...prevState,
-            concepto:
-              data.tipoMovimientoId == "EG"
-                ? "PAGO DE " + conceptos.toString()
-                : "COBRO DE " + conceptos.toString(),
+            concepto: conceptoConcatenado,
+            documentoReferencia: nuevoDocumentoReferencia.toString(),
           }));
-          //Anidar Documento de referencia
+          //Concepto y Documento Referencia
 
           setDetalleId(detalleId + 1);
           setRefrescar(true);
@@ -349,7 +400,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             cancelButtonText: "Cancelar",
           }).then((res) => {
             if (res.isConfirmed) {
-              CargarDetalle(model.documentoCompraId);
+              CargarDetalle(model.documentoVentaCompraId);
             }
           });
         }
@@ -370,17 +421,37 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (id) => {
-    setDataConcepto(dataDetalle.find((map) => map.documentoCompraId === id));
+    setDataConcepto(
+      dataDetalle.find((map) => map.documentoVentaCompraId === id)
+    );
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
+    //Filtra el detalle
     let nuevoDetalle = dataDetalle.filter(
-      (map) => map.documentoCompraId !== id
+      (map) => map.documentoVentaCompraId !== id
     );
-    let nuevoOrdenCompra = nuevoDetalle.map((map) => {
-      return map.ordenCompraRelacionada;
+    //Filtra el detalle
+
+    //Concepto
+    let nuevoConcepto = nuevoDetalle.map((map) => {
+      return map.numeroDocumento;
     });
+    let texto = data.tipoMovimientoId == "EG" ? ["PAGO DE "] : ["COBRO DE "];
+
+    //Concatena texto a los conceptos
+    let conceptoConcatenado = texto + nuevoConcepto.toString();
+    //Concatena texto a los conceptos
+    //Concepto
+
+    //Documento Referencia
+    let nuevoDocumentoReferencia = nuevoDetalle.map((map) => {
+      return map.documentoReferencia;
+    });
+    //Documento Referencia
+
     if (nuevoDetalle.length > 0) {
+      //Detalle
       setDataDetalle(
         nuevoDetalle.map((map) => {
           return {
@@ -390,19 +461,29 @@ const Modal = ({ setModal, modo, objeto }) => {
         })
       );
       setDetalleId(i);
+      //Detalle
 
+      //Concepto y Documento Referencia
       setData((prevState) => ({
         ...prevState,
-        concepto: nuevoOrdenCompra.toString(),
+        concepto: conceptoConcatenado,
+        documentoReferencia: nuevoDocumentoReferencia.toString(),
       }));
+      //Concepto y Documento Referencia
     } else {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
+      //Detalle
       setDataDetalle(nuevoDetalle);
+      //Detalle
+
+      //Concepto y Documento Referencia
       setData((prevState) => ({
         ...prevState,
+        concepto: "",
         documentoReferencia: "",
       }));
+      //Concepto y Documento Referencia
     }
     setRefrescar(true);
   };
@@ -522,8 +603,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Columnas
   const columnas = [
     {
-      Header: "documentoCompraId",
-      accessor: "documentoCompraId",
+      Header: "documentoVentaCompraId",
+      accessor: "documentoVentaCompraId",
     },
     {
       Header: "Item",
@@ -578,7 +659,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton-modificar"
-                  onClick={() => CargarDetalle(row.values.documentoCompraId)}
+                  onClick={() =>
+                    CargarDetalle(row.values.documentoVentaCompraId)
+                  }
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -590,7 +673,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={() => {
-                    EliminarDetalle(row.values.documentoCompraId);
+                    EliminarDetalle(row.values.documentoVentaCompraId);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -718,6 +801,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="8"
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
@@ -932,7 +1016,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         className={Global.BotonBuscar + Global.BotonPrimary}
                         hidden={modo == "Consultar" ? true : false}
                         onClick={() =>
-                          data.tipoBeneficiarioId == "INC" &&
+                          data.tipoBeneficiarioId == "INC" ||
                           data.tipoBeneficiarioId == "EGC"
                             ? AbrirFiltroCliente()
                             : AbrirFiltroProveedor()
@@ -1164,6 +1248,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="abono"
                     autoComplete="off"
                     placeholder="Abono"
+                    min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={dataConcepto.abono ?? ""}
                     onChange={ValidarDataConcepto}

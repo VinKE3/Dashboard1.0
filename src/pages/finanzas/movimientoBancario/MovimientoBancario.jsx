@@ -32,17 +32,14 @@ const TablaStyle = styled.div`
     width: 70px;
     text-align: center;
   }
-  & th:nth-child(5) {
-    width: 70px;
-  }
-  & th:nth-child(10),
-  & th:nth-child(11),
+  /* & th:nth-child(11),
   & th:nth-child(12),
-  & th:nth-child(13) {
-    width: 65px;
+  & th:nth-child(13) */
+  & th:nth-child(10) {
+    width: 60px;
     text-align: right;
   }
-  & th:nth-child(15) {
+  & th:nth-child(12) {
     width: 30px;
     text-align: center;
   }
@@ -185,6 +182,7 @@ const MovimientoBancario = () => {
     );
     setDataCtacte(
       result.data.data.data.map((res) => ({
+        ...res,
         id: res.cuentaCorrienteId,
         descripcion:
           res.monedaId == "D"
@@ -203,7 +201,10 @@ const MovimientoBancario = () => {
         setObjeto({
           id: "",
           empresaId: "",
-          cuentaCorrienteId: "",
+          cuentaCorrienteId:
+            filtro.cuentaCorrienteId == ""
+              ? dataCtacte[0].cuentaCorrienteId
+              : filtro.cuentaCorrienteId,
           fechaEmision: moment().format("YYYY-MM-DD"),
           tipoCambio: 0,
           tipoMovimientoId: "IN",
@@ -319,27 +320,27 @@ const MovimientoBancario = () => {
         Header: "Concepto",
         accessor: "concepto",
       },
-      {
-        Header: "Monto",
-        accessor: "monto",
-        Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
-        },
-      },
-      {
-        Header: "Interes",
-        accessor: "interes",
-        Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
-        },
-      },
-      {
-        Header: "ITF",
-        accessor: "itf",
-        Cell: ({ value }) => {
-          return <p className="text-right font-semibold">{value}</p>;
-        },
-      },
+      // {
+      //   Header: "Monto",
+      //   accessor: "monto",
+      //   Cell: ({ value }) => {
+      //     return <p className="text-right font-semibold">{value}</p>;
+      //   },
+      // },
+      // {
+      //   Header: "Interes",
+      //   accessor: "interes",
+      //   Cell: ({ value }) => {
+      //     return <p className="text-right font-semibold">{value}</p>;
+      //   },
+      // },
+      // {
+      //   Header: "ITF",
+      //   accessor: "itf",
+      //   Cell: ({ value }) => {
+      //     return <p className="text-right font-semibold">{value}</p>;
+      //   },
+      // },
       {
         Header: "Total",
         accessor: "total",

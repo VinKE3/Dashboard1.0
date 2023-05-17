@@ -111,41 +111,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         setDataClienteDirec(dataCliente.direcciones);
         setDataClienteContacto(dataCliente.contactos);
       }
-      setData({
-        ...data,
-        clienteId: dataCliente.clienteId,
-        clienteNumeroDocumentoIdentidad:
-          dataCliente.clienteNumeroDocumentoIdentidad,
-        clienteNombre: dataCliente.clienteNombre,
-        clienteDireccionId: dataCliente.clienteDireccionId,
-        clienteDireccion: dataCliente.clienteDireccion,
-        clienteTelefono: dataCliente.clienteTelefono,
-        departamentoId:
-          dataCliente.direcciones !== undefined
-            ? dataCliente.direcciones[0].departamentoId
-            : null,
-        provinciaId:
-          dataCliente.direcciones !== undefined
-            ? dataCliente.direcciones[0].provinciaId
-            : null,
-        distritoId:
-          dataCliente.direcciones !== undefined
-            ? dataCliente.direcciones[0].distritoId
-            : null,
-        personalId:
-          dataCliente.personalId == ""
-            ? dataGlobal.personalId
-            : dataCliente.personalId,
-        ...(dataCliente.contactos !== undefined && {
-          contactoId: dataCliente.contactos[0]?.id,
-          contactoNombre: dataCliente.contactos[0]?.nombres,
-          contactoTelefono: dataCliente.contactos[0]?.telefono,
-          contactoCorreoElectronico:
-            dataCliente.contactos[0]?.correoElectronico,
-          contactoCargoId: dataCliente.contactos[0]?.cargoId,
-          contactoCelular: dataCliente.contactos[0]?.celular,
-        }),
-      });
+      Cliente();
       setRefrescar(true);
     }
   }, [dataCliente]);
@@ -259,21 +225,16 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData((prevData) => ({
         ...prevData,
         tipoCobroId: model.id,
+        fechaVencimiento: moment().format("YYYY-MM-DD"),
       }));
     }
 
     if (target.name == "tipoCobroId") {
-      if (data.tipoVentaId != "CO") {
-        let model = dataTipoCobro.find((map) => map.id === target.value);
-        let fechaHoy = moment().format("YYYY-MM-DD");
-        let nuevaFecha = moment(fechaHoy)
-          .add(model.plazo, "days")
-          .format("YYYY-MM-DD");
-        setData((prevData) => ({
-          ...prevData,
-          fechaVencimiento: nuevaFecha,
-        }));
-      }
+      let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
+      setData((prevState) => ({
+        ...prevState,
+        fechaVencimiento: fecha,
+      }));
 
       if (target.value != "CH" || target.value != "DE") {
         setData((prevState) => ({
@@ -316,6 +277,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           dataGlobal.cliente.direcciones !== undefined
             ? dataGlobal.cliente.direcciones[0].distritoId
             : null,
+        direcciones: dataGlobal.cliente.direcciones,
       }));
       setDataClienteDirec(dataGlobal.cliente.direcciones);
       setDataClienteContacto(dataGlobal.cliente.contactos);
@@ -332,6 +294,13 @@ const Modal = ({ setModal, modo, objeto }) => {
         departamentoId: null,
         provinciaId: null,
         distritoId: null,
+        direcciones: [
+          {
+            departamentoId: null,
+            distritoId: null,
+            provinciaId: null,
+          },
+        ],
       }));
       setDataClienteDirec([]);
       setDataClienteContacto([]);
@@ -376,6 +345,20 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
     }
   };
+  const FechaVencimiento = async (tipoVentaId, tipoCobroId) => {
+    if (tipoVentaId != "CO") {
+      let model = dataTipoCobro.find((map) => map.id === tipoCobroId);
+      let fecha = moment(moment().format("YYYY-MM-DD"))
+        .add(model.plazo, "days")
+        .format("YYYY-MM-DD");
+      let fechaHoy = moment().format("YYYY-MM-DD");
+      let fechaRetorno = fecha == undefined ? fechaHoy : fecha;
+      return fechaRetorno;
+    } else {
+      let fechaHoy = moment().format("YYYY-MM-DD");
+      return fechaHoy;
+    }
+  };
   const CambioDireccion = async (id) => {
     if (modo != "Consultar") {
       let model = dataClienteDirec.find((map) => map.id == id);
@@ -388,6 +371,50 @@ const Modal = ({ setModal, modo, objeto }) => {
         distritoId: model.distritoId,
       }));
     }
+  };
+  const Cliente = async () => {
+    //Consultar Fecha
+    let fecha = await FechaVencimiento(
+      dataCliente.tipoVentaId,
+      dataCliente.tipoCobroId
+    );
+    //Consultar Fecha
+
+    setData({
+      ...data,
+      clienteId: dataCliente.clienteId,
+      clienteNumeroDocumentoIdentidad:
+        dataCliente.clienteNumeroDocumentoIdentidad,
+      clienteNombre: dataCliente.clienteNombre,
+      clienteDireccionId: dataCliente.clienteDireccionId,
+      clienteDireccion: dataCliente.clienteDireccion,
+      clienteTelefono: dataCliente.clienteTelefono,
+      fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
+      departamentoId:
+        dataCliente.direcciones !== undefined
+          ? dataCliente.direcciones[0].departamentoId
+          : null,
+      provinciaId:
+        dataCliente.direcciones !== undefined
+          ? dataCliente.direcciones[0].provinciaId
+          : null,
+      distritoId:
+        dataCliente.direcciones !== undefined
+          ? dataCliente.direcciones[0].distritoId
+          : null,
+      personalId:
+        dataCliente.personalId == ""
+          ? dataGlobal.personalId
+          : dataCliente.personalId,
+      ...(dataCliente.contactos !== undefined && {
+        contactoId: dataCliente.contactos[0]?.id,
+        contactoNombre: dataCliente.contactos[0]?.nombres,
+        contactoTelefono: dataCliente.contactos[0]?.telefono,
+        contactoCorreoElectronico: dataCliente.contactos[0]?.correoElectronico,
+        contactoCargoId: dataCliente.contactos[0]?.cargoId,
+        contactoCelular: dataCliente.contactos[0]?.celular,
+      }),
+    });
   };
   const OcultarMensajes = () => {
     setMensaje([]);

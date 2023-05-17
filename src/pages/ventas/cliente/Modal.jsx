@@ -354,6 +354,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${data.id}`
     );
+    //Filtrar comentario DIRECCION PRINCIPAL
     setDataDireccion(result.data.data);
   };
   const GetDireccion = async (id) => {
@@ -579,17 +580,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "numeroDocumentoIdentidad",
     },
     {
-      Header: "Default",
-      accessor: "default",
-      Cell: ({ value }) => {
-        return (
-          <div className="flex justify-center">
-            <Checkbox checked={value} />
-          </div>
-        );
-      },
-    },
-    {
       Header: "Acciones",
       Cell: ({ row }) => (
         <div className="flex item-center justify-center">
@@ -682,7 +672,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ClientePersonal"],
-                      row.values.id,
+                      row.values.id.substr(6),
                       setRespuesta
                     );
                   }}
