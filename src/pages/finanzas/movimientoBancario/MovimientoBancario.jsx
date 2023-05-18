@@ -404,6 +404,7 @@ const MovimientoBancario = () => {
                     id="cuentaCorrienteId"
                     name="cuentaCorrienteId"
                     value={filtro.cuentaCorrienteId ?? ""}
+                    autoFocus
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   >
