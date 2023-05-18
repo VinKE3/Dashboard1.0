@@ -19,7 +19,6 @@ const TablaStyle = styled.div`
     width: 120px;
   }
   & th:last-child {
-    color: transparent;
     width: 40px;
     text-align: center;
   }
@@ -133,9 +132,10 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
         accessor: "nombre",
       },
       {
-        Header: "-",
+        Header: " ",
         Cell: ({ row }) => (
           <button
+            id="boton"
             onClick={() => GetPorId(row.values.id)}
             className={
               Global.BotonModalBase + Global.BotonAgregar + "border-none"
@@ -197,6 +197,7 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
                   name="numeroDocumentoIdentidad"
                   placeholder="N° Documento"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.numeroDocumentoIdentidad}
                   onChange={ValidarData}
                   className={Global.InputStyle}

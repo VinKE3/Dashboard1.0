@@ -145,7 +145,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         accessor: "precioCompra",
         Cell: ({ value }) => {
           return (
-            <p className="text-right font-bold text-yellow-400">
+            <p className="text-right font-bold text-blue-500">
               {Funciones.RedondearNumero(value, 4)}
             </p>
           );
@@ -156,7 +156,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         accessor: "precioVenta",
         Cell: ({ value }) => {
           return (
-            <p className="text-right font-bold text-orange-400">
+            <p className="text-right font-bold text-purple-400">
               {Funciones.RedondearNumero(value, 4)}
             </p>
           );
@@ -184,6 +184,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
+              id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
               className={
                 Global.BotonModalBase + Global.BotonAgregar + "border-none"
@@ -212,9 +213,10 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         childrenFooter={
           <>
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
+              id="modalBotonCerrar"
               onClick={() => setModal(false)}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
             >
               CERRAR
             </button>
@@ -234,6 +236,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
                   name="codigoBarras"
                   placeholder="Código Barras"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.codigoBarras}
                   onChange={ValidarData}
                   className={Global.InputStyle}

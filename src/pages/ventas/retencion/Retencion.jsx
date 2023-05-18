@@ -422,6 +422,7 @@ const Retencion = () => {
                   name="clienteNombre"
                   placeholder="Razón Social"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.clienteNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

@@ -335,7 +335,7 @@ const Usuarios = () => {
               textLabel={"Nick"}
               maxLength={"200"}
               name={"nickFiltro"}
-              placeHolder={"Nick"}
+              placeHolder={"Buscar por Nick"}
               value={filtro.nickFiltro}
               onChange={ValidarData}
               botonId={"buscar"}

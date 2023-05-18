@@ -54,10 +54,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="id"
                   placeholder="id"
                   autoComplete="off"
-                  readOnly={true}
                   value={data.id ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  readOnly={true}
+                  className={Global.InputStyle + Global.Disabled}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -71,12 +71,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="numeroDocumentoIdentidad"
                   name="numeroDocumentoIdentidad"
+                  placeholder="N° Documento Identidad"
                   autoComplete="off"
                   maxLength={11}
-                  placeholder="N° Documento Identidad"
-                  readOnly={modo == "Consultar" ? true : false}
+                  autoFocus
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
+                  readOnly={modo == "Consultar" ? true : false}
                   className={Global.InputStyle}
                 />
               </div>

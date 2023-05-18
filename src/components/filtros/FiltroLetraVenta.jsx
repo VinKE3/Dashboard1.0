@@ -53,9 +53,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto }) => {
   const [filtro, setFiltro] = useState({
     numero: "",
   });
-  const [cadena, setCadena] = useState(
-    `&numero=${filtro.numero}`
-  );
+  const [cadena, setCadena] = useState(`&numero=${filtro.numero}`);
   //#endregion
 
   //#region useEffect;
@@ -142,6 +140,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto }) => {
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
+              id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
                 Global.BotonModalBase + Global.BotonAgregar + " border-none "
@@ -191,8 +190,9 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto }) => {
                   id="numero"
                   name="numero"
                   placeholder="Número de Documento"
-                  onChange={ValidarData}
                   autoComplete="off"
+                  autoFocus
+                  onChange={ValidarData}
                   className={Global.InputBoton}
                 />
                 <button

@@ -8,12 +8,12 @@ import {
 import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import styled from "styled-components";
-import * as Global from "../Global"
+import * as Global from "../Global";
 
 const Tabla = styled.div`
   & .selected-row {
-    background: linear-gradient(90deg, #d2ae11 0%, #d9ad22 100%);
-    color: #000;
+    /* background: linear-gradient(90deg, #d2ae11 0%, #d9ad22 100%); */
+    background: linear-gradient(90deg, #1a3e5f 0%, #25358d 100%);
   }
 `;
 
@@ -27,7 +27,23 @@ const Table = ({ columnas, datos, total, index, Click }) => {
   const paginado = parseInt(Math.ceil(totalPaginas / itemsPerPage));
   //#endregion
 
-  //#region Fila Seleccionable
+  //#region Obtiene props React Table
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    state,
+  } = useTable(
+    { columns, data, initialState: { pageSize: 50 } },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
+  );
+  //#endregion
+
+  //#region Funciones
   const Seleccionar = (e) => {
     if (e.target.tagName == "DIV") {
       let padre = e.target.parentNode.parentNode;
@@ -63,22 +79,29 @@ const Table = ({ columnas, datos, total, index, Click }) => {
       }
     }
   };
-  //#endregion
+  const MoverFlecha = async (e) => {
+    if (e.keyCode == 40 || e.keyCode == 38) {
+      let row = document
+        .querySelector("#tabla")
+        .querySelector("tr.selected-row");
 
-  //#region Obtiene props React Table
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    state,
-  } = useTable(
-    { columns, data, initialState: { pageSize: 50 } },
-    useGlobalFilter,
-    useSortBy,
-    usePagination
-  );
+      if (row != null) {
+        let filaAnterior = row.previousElementSibling;
+        let filaSiguiente = row.nextElementSibling;
+        if (e.keyCode == 40) {
+          if (filaSiguiente != null) {
+            row.classList.remove("selected-row");
+            filaSiguiente.classList.add("selected-row");
+          }
+        } else if (e.keyCode == 38) {
+          if (filaAnterior != null) {
+            row.classList.remove("selected-row");
+            filaAnterior.classList.add("selected-row");
+          }
+        }
+      }
+    }
+  };
   //#endregion
 
   //#region Paginacion
@@ -113,14 +136,20 @@ const Table = ({ columnas, datos, total, index, Click }) => {
 
       {/* Tabla */}
       <Tabla>
-        <table {...getTableProps()} id="tabla" className="w-full text-light">
+        <table
+          {...getTableProps()}
+          id="tabla"
+          className="w-full text-light focus:outline-none "
+          tabIndex={0}
+          onKeyDown={(e) => MoverFlecha(e)}
+        >
           <thead className={Global.THeader}>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="py-2 px-2"
+                    className={"p-2 "}
                   >
                     {column.render("Header")}
                   </th>
@@ -135,15 +164,12 @@ const Table = ({ columnas, datos, total, index, Click }) => {
               return (
                 <tr
                   {...row.getRowProps()}
-                  className="border-b border-secondary-900"
+                  className={Global.Tr}
                   onClick={(e) => Seleccionar(e)}
                 >
                   {row.cells.map((cell) => {
                     return (
-                      <td
-                        {...cell.getCellProps()}
-                        className="py-2 px-2 text-left "
-                      >
+                      <td {...cell.getCellProps()} className={Global.Td}>
                         {cell.render("Cell")}
                       </td>
                     );
@@ -195,7 +221,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
           breakLinkClassName={Global.BotonPaginacion}
           nextLinkClassName={Global.BotonPaginacionFlechas}
           previousLinkClassName={Global.BotonPaginacionFlechas}
-          activeLinkClassName= {Global.BotonPaginacionActivo}
+          activeLinkClassName={Global.BotonPaginacionActivo}
         />
       </div>
     </div>

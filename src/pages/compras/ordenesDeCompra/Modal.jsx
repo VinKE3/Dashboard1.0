@@ -3,7 +3,6 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
 import FiltroProveedor from "../../../components/filtros/FiltroProveedor";
-import FiltroOrdenCompra from "../../../components/filtros/FiltroOrdenCompra";
 import FiltroArticulo from "../../../components/filtros/FiltroArticulo";
 import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
@@ -69,21 +68,25 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Tablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  const [dataTipoComp, setDataTipoComp] = useState([]);
-  const [dataTipoPag, setDataTipoPag] = useState([]);
+  const [dataTipoCompra, setDataTipoCompra] = useState([]);
+  const [dataTipoPago, setDataTipoPago] = useState([]);
+  const [dataLugarEntrega, setDataLugarEntrega] = useState([]);
   const [dataIgv, setDataIgv] = useState([]);
+  const [dataRetencion, setDataRetencion] = useState([]);
+  const [dataPercepcion, setDataPercepcion] = useState([]);
+  const [dataResponsable, setDataResponsable] = useState([]);
   const [dataCtacte, setDataCtacte] = useState([]);
-  const [dataMotivoNota, setDataMotivoNota] = useState([]);
+  const [dataProveedorCta, setDataProveedorCta] = useState([]);
+  const [dataProveedorContacto, setDataProveedorContacto] = useState([]);
+
   const [dataDocRef, setDataDocRef] = useState([]);
   //Tablas
   //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
-  const [dataOrdenCompra, setDataOrdenCompra] = useState([]);
   const [dataArt, setDataArt] = useState([]);
   //Data Modales Ayuda
   //Modales de Ayuda
   const [modalProv, setModalProv] = useState(false);
-  const [modalOC, setModalOC] = useState(false);
   const [modalArt, setModalArt] = useState(false);
   //Modales de Ayuda
 
@@ -99,6 +102,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     if (Object.keys(dataProveedor).length > 0) {
+      if (dataProveedor.proveedorId != undefined) {
+        setDataProveedorContacto(dataProveedor.contactos);
+        setDataProveedorCta(dataProveedor.cuentasCorrientes);
+      }
       setData({
         ...data,
         proveedorId: dataProveedor.proveedorId,
@@ -109,27 +116,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         ordenesCompraRelacionadas: [],
         numeroOrdenesCompraRelacionadas: [],
       });
-      //Valida si hay algún proveedor seleccionado
-      if (dataProveedor.proveedorId != "") {
-        GetDocReferencia(dataProveedor.proveedorId);
-        setRefrescar(true);
-      } else {
-        setDataDocRef([]);
-        setRefrescar(true);
-      }
+      setRefrescar(true);
     }
   }, [dataProveedor]);
-  useEffect(() => {
-    if (Object.keys(dataOrdenCompra).length > 0) {
-      //Cabecera
-      OrdenDeCompra();
-      //Cabecera
-      //Detalles
-      DetallesOrdenCompra(dataOrdenCompra.accion);
-      //Detalles
-      OcultarMensajes();
-    }
-  }, [dataOrdenCompra]);
   useEffect(() => {
     setData({ ...data, detalles: dataDetalle });
   }, [dataDetalle]);
@@ -148,8 +137,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   useEffect(() => {
     if (modo == "Registrar") {
       GetPorIdTipoCambio(data.fechaEmision);
+    } else {
+      GetProveedorContacto(data.proveedorContactoId);
+      GetProveedorCuentaCorriente(data.proveedorCuentaCorriente1Id);
     }
-    GetCuentasCorrientes();
+    GetResponsable();
+    GetCuentaCorriente();
     Tablas();
   }, []);
   //#endregion
@@ -204,17 +197,21 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "tipoCompraId") {
+      let model = dataTipoPago.find(
+        (map) => map.tipoVentaCompraId == target.value
+      );
       setData((prevData) => ({
         ...prevData,
-        tipoPagoId: "",
+        tipoPagoId: model.id,
+        fechaVencimiento: moment().format("YYYY-MM-DD"),
       }));
     }
 
     if (target.name == "tipoPagoId") {
-      let fecha = await FechaVencimiento(target.value);
+      let fecha = await FechaVencimiento(data.tipoCompraId, target.value);
       setData((prevState) => ({
         ...prevState,
-        fechaVencimiento: fecha,
+        fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
       }));
       if (target.value != "CH" || target.value != "DE") {
         setData((prevState) => ({
@@ -234,6 +231,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           dataGlobal.proveedor.numeroDocumentoIdentidad,
         proveedorNombre: dataGlobal.proveedor.nombre,
         proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
+        contactos: dataGlobal.proveedor.contactos,
+        cuentasCorrientes: dataGlobal.proveedor.cuentasCorrientes,
       }));
     } else {
       setDataProveedor((prevState) => ({
@@ -242,8 +241,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorNumeroDocumentoIdentidad: "",
         proveedorNombre: "",
         proveedorDireccion: "",
-        ordenesCompraRelacionadas: [],
+        contactos: [],
+        cuentasCorrientes: [],
       }));
+      setDataProveedorContacto([]);
+      setDataProveedor([]);
     }
   };
   const FechaEmision = async () => {
@@ -265,11 +267,16 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const FechaVencimiento = async (tipoCompraId, tipoPagoId) => {
     if (tipoCompraId != "CO") {
-      let model = dataTipoPag.find((map) => map.id === tipoPagoId);
+      let model = dataTipoPago.find((map) => map.id === tipoPagoId);
+      let fechaHoy = moment().format("YYYY-MM-DD");
       let fecha = moment(moment().format("YYYY-MM-DD"))
         .add(model.plazo, "days")
         .format("YYYY-MM-DD");
-      return fecha;
+      let fechaRetorno = fecha == undefined ? fechaHoy : fecha;
+      return fechaRetorno;
+    } else {
+      let fechaHoy = moment().format("YYYY-MM-DD");
+      return fechaHoy;
     }
   };
   const Numeracion = async (e) => {
@@ -292,91 +299,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         ...prevState,
         serie: num,
       }));
-    }
-  };
-  const OrdenDeCompra = async () => {
-    if (dataOrdenCompra.accion == "agregar") {
-      //Consultar Fecha
-      let fecha = await FechaVencimiento(
-        dataOrdenCompra.tipoCompraId,
-        dataOrdenCompra.tipoPagoId
-      );
-      //Consultar Fecha
-
-      //Anidar Ordenes de Compra
-      let ordenes = [
-        ...data.ordenesCompraRelacionadas,
-        dataOrdenCompra.ordenesCompraRelacionadas,
-      ];
-      //Anidar Ordenes de Compra
-
-      setData({
-        ...data,
-        proveedorId: dataOrdenCompra.proveedorId,
-        proveedorNumeroDocumentoIdentidad:
-          dataOrdenCompra.proveedorNumeroDocumentoIdentidad,
-        proveedorNombre: dataOrdenCompra.proveedorNombre,
-        proveedorDireccion: dataOrdenCompra.proveedorDireccion ?? "",
-        cuentaCorrienteId: dataOrdenCompra.cuentaCorrienteId ?? "",
-        monedaId: dataOrdenCompra.monedaId,
-        tipoCambio: dataOrdenCompra.tipoCambio,
-        porcentajeIGV: dataOrdenCompra.porcentajeIGV,
-        incluyeIGV: dataOrdenCompra.incluyeIGV,
-        observacion: dataOrdenCompra.observacion,
-        tipoCompraId: dataOrdenCompra.tipoCompraId,
-        tipoPagoId: dataOrdenCompra.tipoPagoId,
-        afectarStock: true,
-        fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
-        //Ordenes de compra
-        ordenesCompraRelacionadas: [
-          ...data.ordenesCompraRelacionadas,
-          dataOrdenCompra.ordenesCompraRelacionadas,
-        ],
-        numeroOrdenesCompraRelacionadas: ordenes.map(
-          (map) => map.numeroDocumento
-        ),
-        // Ordenes de compra
-      });
-    } else {
-      //Anidar Ordenes de Compra
-      let ordenes = dataOrdenCompra.ordenesCompraRelacionadas;
-      //Anidar Ordenes de Compra
-      setData({
-        ...data,
-        ordenesCompraRelacionadas:
-          dataOrdenCompra.ordenesCompraRelacionadas || [],
-        numeroOrdenesCompraRelacionadas: ordenes.map(
-          (map) => map.numeroDocumento
-        ),
-      });
-      if (dataOrdenCompra.ordenesCompraRelacionadas == []) {
-        //Detalles
-        setDataDetalle([]);
-        //Detalles
-      }
-    }
-  };
-  const DetalleDocReferencia = async (id) => {
-    if (id != "") {
-      const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${id}`);
-      Swal.fire({
-        title: "¿Desea copiar los detalles del documento?",
-        text: result.data.data.numeroDocumento,
-        icon: "warning",
-        iconColor: "#F7BF3A",
-        showCancelButton: true,
-        color: "#fff",
-        background: "#1a1a2e",
-        confirmButtonColor: "#eea508",
-        confirmButtonText: "Aceptar",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-      }).then((res) => {
-        if (res.isConfirmed) {
-          setDataDetalle(result.data.data.detalles);
-          setRefrescar(true);
-        }
-      });
     }
   };
   const OcultarMensajes = async () => {
@@ -976,22 +898,15 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region API
   const Tablas = async () => {
-    const result = await ApiMasy.get(
-      `api/Compra/DocumentoCompra/FormularioTablas`
-    );
+    const result = await ApiMasy.get(`api/Compra/OrdenCompra/FormularioTablas`);
     setDataTipoDoc([{ id: "OC", descripcion: "Orden de Compra" }]);
     setDataMoneda(result.data.data.monedas);
-    setDataTipoComp(result.data.data.tiposCompra);
-    setDataTipoPag(result.data.data.tiposPago);
+    setDataTipoCompra(result.data.data.tiposCompra);
+    setDataTipoPago(result.data.data.tiposPago);
+    setDataLugarEntrega(result.data.data.lugaresEntrega);
     setDataIgv(result.data.data.porcentajesIGV);
-    setDataMotivoNota(result.data.data.motivosNota);
-    // setDataVendedor(
-    //   result.data.data.vendedores.map((res) => ({
-    //     id: res.id,
-    //     nombre:
-    //       res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-    //   }))
-    // );
+    setDataRetencion(result.data.data.porcentajesRetencion);
+    setDataPercepcion(result.data.data.porcentajesPercepcion);
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
@@ -1031,7 +946,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       OcultarMensajes();
     }
   };
-  const GetCuentasCorrientes = async () => {
+  const GetResponsable = async () => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
+    setDataResponsable(
+      result.data.data.data.map((res) => ({
+        id: res.id,
+        nombre:
+          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
+      }))
+    );
+  };
+  const GetCuentaCorriente = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/CuentaCorriente/Listar`
     );
@@ -1045,23 +970,27 @@ const Modal = ({ setModal, modo, objeto }) => {
       }))
     );
   };
-  const GetDocReferencia = async (id) => {
-    const result = await ApiMasy.get(
-      `api/Compra/DocumentoCompra/GetDocumentosReferencia?proveedorId=${id}`
-    );
-    setDataDocRef(result.data.data);
-    setRefrescar(true);
+  const GetProveedorCuentaCorriente = async (id) => {
+    if (dataProveedor.proveedorId != "") {
+      const result = await ApiMasy.get(
+        `api/Mantenimiento/ProveedorCuentaCorriente/ListarPorProveedor?proveedorId=${id}`
+      );
+      setDataProveedorCta(result.data.data);
+    }
+  };
+  const GetProveedorContacto = async (id) => {
+    if (dataProveedor.proveedorId != "") {
+      const result = await ApiMasy.get(
+        `api/Mantenimiento/ProveedorContacto/ListarPorProveedor?proveedorId=${id}`
+      );
+      setDataProveedorContacto(result.data.data);
+    }
   };
   //#endregion
 
   //#region Funciones Modal
   const AbrirFiltroProveedor = async () => {
     setModalProv(true);
-  };
-  const AbrirFiltroOC = async () => {
-    if (data.proveedorId != "") {
-      setModalOC(true);
-    }
   };
   const AbrirFiltroArticulo = async () => {
     setModalArt(true);
@@ -1135,7 +1064,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -1173,7 +1102,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Compra", "DocumentoCompra"]}
+            menu={["Compra", "OrdenCompra"]}
             titulo="Orden de Compra"
             tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
@@ -1418,15 +1347,97 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {/* {dataVendedor.map((map) => (
+                    {dataResponsable.map((map) => (
                       <option key={map.id} value={map.id}>
                         {map.nombre}
                       </option>
-                    ))} */}
+                    ))}
                   </select>
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="responsable2Id" className={Global.LabelStyle}>
+                    Responsable 2
+                  </label>
+                  <select
+                    id="responsable2Id"
+                    name="responsable2Id"
+                    value={data.responsable2Id ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataResponsable.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="responsable3Id" className={Global.LabelStyle}>
+                    Responsable 3
+                  </label>
+                  <select
+                    id="responsable3Id"
+                    name="responsable3Id"
+                    value={data.responsable3Id ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataResponsable.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="responsable3Id" className={Global.LabelStyle}>
+                    Contacto
+                  </label>
+                  <select
+                    id="responsable3Id"
+                    name="responsable3Id"
+                    value={data.responsable3Id ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataProveedorContacto.map((map) => (
+                      <option key={map.contactoId} value={map.contactoId}>
+                        {map.nombres}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="tipoCompraId" className={Global.LabelStyle}>
+                    T. Compra
+                  </label>
+                  <select
+                    id="tipoCompraId"
+                    name="tipoCompraId"
+                    value={data.tipoCompraId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataTipoCompra.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="monedaId" className={Global.LabelStyle}>
                     Moneda
@@ -1479,25 +1490,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <FaUndoAlt></FaUndoAlt>
                   </button>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="tipoCompraId" className={Global.LabelStyle}>
-                    T. Compra
-                  </label>
-                  <select
-                    id="tipoCompraId"
-                    name="tipoCompraId"
-                    value={data.tipoCompraId ?? ""}
-                    onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
-                    className={Global.InputStyle}
-                  >
-                    {dataTipoComp.map((map) => (
-                      <option key={map.id} value={map.id}>
-                        {map.descripcion}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
               <div className={Global.ContenedorInputs}>
                 <div
@@ -1518,7 +1510,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {dataTipoPag
+                    {dataTipoPago
                       .filter(
                         (model) => model.tipoVentaCompraId == data.tipoCompraId
                       )
@@ -1581,159 +1573,52 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <></>
                 )}
               </div>
-              {data.tipoDocumentoId == "07" || data.tipoDocumentoId == "08" ? (
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.Input66pct}>
-                    <label
-                      htmlFor="documentoReferenciaId"
-                      className={Global.LabelStyle}
-                    >
-                      Doc. Ref.
-                    </label>
-                    <select
-                      id="documentoReferenciaId"
-                      name="documentoReferenciaId"
-                      value={data.documentoReferenciaId ?? ""}
-                      onChange={ValidarData}
-                      disabled={modo == "Consultar" ? true : false}
-                      className={Global.InputBoton}
-                    >
-                      <option key={"-1"} value={""}>
-                        {"--SELECCIONAR--"}
-                      </option>
-                      {dataDocRef.map((map) => (
-                        <option key={map.id} value={map.id}>
-                          {map.numeroDocumento}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      id="detalleDocReferencia"
-                      className={
-                        Global.BotonBuscar +
-                        Global.BotonPrimary +
-                        " !rounded-none"
-                      }
-                      hidden={modo == "Consultar" ? true : false}
-                      onClick={(e) =>
-                        DetalleDocReferencia(data.documentoReferenciaId)
-                      }
-                    >
-                      <FaPaste></FaPaste>
-                    </button>
-                    <div className={Global.Input + " w-16"}>
-                      <div className={Global.CheckStyle + Global.Anidado}>
-                        <Checkbox
-                          inputId="abonar"
-                          name="abonar"
-                          readOnly={modo == "Consultar" ? true : false}
-                          onChange={(e) => {
-                            ValidarData(e);
-                          }}
-                          checked={data.abonar ? true : ""}
-                        ></Checkbox>
-                      </div>
-                      <label
-                        htmlFor="abonar"
-                        className={Global.LabelCheckStyle}
-                      >
-                        Abo.
-                      </label>
-                    </div>
-                  </div>
-                  <div className={Global.Input60pct}>
-                    <label htmlFor="motivoNotaId" className={Global.LabelStyle}>
-                      Motivo
-                    </label>
-                    <select
-                      id="motivoNotaId"
-                      name="motivoNotaId"
-                      value={data.motivoNotaId ?? ""}
-                      onChange={ValidarData}
-                      disabled={modo == "Consultar" ? true : false}
-                      className={Global.InputStyle}
-                    >
-                      <option key={"-1"} value={""}>
-                        {"--SELECCIONAR--"}
-                      </option>
-                      {dataMotivoNota
-                        .filter(
-                          (model) =>
-                            model.tipoDocumentoId == data.tipoDocumentoId
-                        )
-                        .map((map) => (
-                          <option key={map.id} value={map.id}>
-                            {map.descripcion}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <div className={Global.Input25pct}>
-                    <input
-                      type="text"
-                      id="motivoSustento"
-                      name="motivoSustento"
-                      autoComplete="off"
-                      placeholder="Sustento"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={data.motivoSustento ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle + " rounded-l-md"}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <></>
-              )}
               <div className={Global.ContenedorInputs}>
-                <div className={Global.Input66pct}>
-                  <label htmlFor="guiaRemision" className={Global.LabelStyle}>
-                    Guía Rem.
+                <div className={Global.InputFull}>
+                  <label htmlFor="tipoCompraId" className={Global.LabelStyle}>
+                    Lug. Entrega
                   </label>
-                  <input
-                    type="text"
-                    id="guiaRemision"
-                    name="guiaRemision"
-                    autoComplete="off"
-                    placeholder="Guía de Remisión"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.guiaRemision ?? ""}
+                  <select
+                    id="tipoCompraId"
+                    name="tipoCompraId"
+                    value={data.tipoCompraId ?? ""}
                     onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
-                  />
+                  >
+                    {dataLugarEntrega.map((map) => (
+                      <option key={map.direccion} value={map.direccion}>
+                        {map.direccion}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label
-                    htmlFor="numeroOrdenesCompraRelacionadas"
+                    htmlFor="proveedorCuentaCorriente1Id"
                     className={Global.LabelStyle}
                   >
-                    O.C
+                    Cta. Cte. Prov.
                   </label>
-                  <input
-                    type="text"
-                    id="numeroOrdenesCompraRelacionadas"
-                    name="numeroOrdenesCompraRelacionadas"
-                    placeholder="Orden de Compra"
-                    autoComplete="off"
-                    readOnly={true}
-                    value={data.numeroOrdenesCompraRelacionadas ?? ""}
+                  <select
+                    id="proveedorCuentaCorriente1Id"
+                    name="proveedorCuentaCorriente1Id"
+                    value={data.proveedorCuentaCorriente1Id ?? ""}
                     onChange={ValidarData}
-                    className={
-                      modo != "Consultar"
-                        ? Global.InputBoton + Global.Disabled
-                        : Global.InputStyle + Global.Disabled
-                    }
-                  />
-                  <button
-                    id="consultarOC"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
-                    hidden={modo == "Consultar" ? true : false}
-                    onClick={() => AbrirFiltroOC()}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
                   >
-                    <FaSearch></FaSearch>
-                  </button>
+                    {dataProveedorCta.map((map) => (
+                      <option
+                        key={map.cuentaCorrienteId}
+                        value={map.cuentaCorrienteId}
+                      >
+                        {map.numero}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
@@ -1767,28 +1652,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </div>
                     <label
                       htmlFor="incluyeIGV"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
-                    >
-                      Incluye IGV
-                    </label>
-                  </div>
-                  <div className={Global.Input36}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
-                      <Checkbox
-                        inputId="afectarStock"
-                        name="afectarStock"
-                        readOnly={modo == "Consultar" ? true : false}
-                        onChange={(e) => {
-                          ValidarData(e);
-                        }}
-                        checked={data.afectarStock ? true : ""}
-                      ></Checkbox>
-                    </div>
-                    <label
-                      htmlFor="afectarStock"
                       className={Global.LabelCheckStyle}
                     >
-                      Afectar Stock
+                      Incluye IGV
                     </label>
                   </div>
                 </div>
@@ -2079,14 +1945,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       )}
       {modalProv && (
         <FiltroProveedor setModal={setModalProv} setObjeto={setDataProveedor} />
-      )}
-      {modalOC && (
-        <FiltroOrdenCompra
-          setModal={setModalOC}
-          id={data.proveedorId}
-          objeto={data.ordenesCompraRelacionadas}
-          setObjeto={setDataOrdenCompra}
-        />
       )}
       {modalArt && (
         <FiltroArticulo setModal={setModalArt} setObjeto={setDataArt} />

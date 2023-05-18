@@ -58,8 +58,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Tablas
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataPlazos, setDataPlazos] = useState([]);
-  const [dataTipoComp, setDataTipoComp] = useState([]);
-  const [dataTipoPag, setDataTipoPag] = useState([]);
+  const [dataTipoCompra, setDataTipoCompra] = useState([]);
+  const [dataTipoPago, setDataTipoPago] = useState([]);
   //Tablas
   //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
@@ -404,8 +404,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       `/api/Compra/LetraCambioCompra/FormularioTablas`
     );
     setDataPlazos(result.data.data.plazos);
-    setDataTipoComp(result.data.data.tiposCompra);
-    setDataTipoPag(result.data.data.tiposPago);
+    setDataTipoCompra(result.data.data.tiposCompra);
+    setDataTipoPago(result.data.data.tiposPago);
     setDataMoneda(result.data.data.monedas);
   };
   const GetPorIdTipoCambio = async (id) => {
@@ -515,7 +515,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() => CargarDetalle(row.values.documentoCompraId)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -580,8 +580,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="numeroLetra"
                     name="numeroLetra"
-                    autoComplete="off"
                     placeholder="N° Letra"
+                    autoComplete="off"
+                    autoFocus
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.numeroLetra ?? ""}
                     onChange={ValidarData}
@@ -622,7 +623,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="date"
                     id="fechaRegistro"
                     name="fechaRegistro"
-                    maxLength="2"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={
@@ -640,7 +640,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="date"
                     id="fechaEmision"
                     name="fechaEmision"
-                    maxLength="2"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision).format("yyyy-MM-DD") ?? ""}
@@ -660,7 +659,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="date"
                     id="fechaVencimiento"
                     name="fechaVencimiento"
-                    maxLength="2"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={
@@ -752,8 +750,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="lugarGiro"
                     name="lugarGiro"
-                    autoComplete="off"
                     placeholder="Lugar Giro"
+                    autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.lugarGiro ?? ""}
                     onChange={ValidarData}
@@ -772,7 +770,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   >
-                    {dataTipoComp.map((map) => (
+                    {dataTipoCompra.map((map) => (
                       <option key={map.id} value={map.id}>
                         {map.descripcion}
                       </option>
@@ -793,7 +791,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputStyle}
                     value={data.tipoPagoId ?? ""}
                   >
-                    {dataTipoPag.map((map) => (
+                    {dataTipoPago.map((map) => (
                       <option key={map.id} value={map.id}>
                         {map.descripcion}
                       </option>
@@ -811,8 +809,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="documentoReferencia"
                     name="documentoReferencia"
-                    autoComplete="off"
                     placeholder="Documento Referencia"
+                    autoComplete="off"
                     readOnly={true}
                     value={data.documentoReferencia ?? ""}
                     onChange={ValidarData}
@@ -920,9 +918,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="avalNumeroDocumentoIdentidad"
                       name="avalNumeroDocumentoIdentidad"
-                      maxLength={14}
                       placeholder="N° Documento Aval"
                       autoComplete="off"
+                      maxLength={14}
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.avalNumeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
@@ -958,9 +956,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="avalTelefono"
                       name="avalTelefono"
-                      maxLength={15}
                       placeholder="Teléfono Aval"
                       autoComplete="off"
+                      maxLength={15}
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.avalTelefono ?? ""}
                       onChange={ValidarData}
@@ -1003,11 +1001,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="concepto"
                     name="concepto"
-                    autoComplete="off"
-                    readOnly={true}
                     placeholder="Buscar Concepto"
+                    autoComplete="off"
                     value={dataConcepto.concepto ?? ""}
                     onChange={ValidarDataConcepto}
+                    readOnly={true}
                     className={Global.InputBoton + Global.Disabled}
                   />
                   <button

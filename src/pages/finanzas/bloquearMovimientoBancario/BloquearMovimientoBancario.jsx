@@ -359,6 +359,7 @@ const BloquearMovimientoBancario = () => {
                   type="date"
                   id="fechaInicio"
                   name="fechaInicio"
+                  autoFocus
                   value={filtro.fechaInicio ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

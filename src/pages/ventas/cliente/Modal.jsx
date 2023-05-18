@@ -537,7 +537,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={(e) => AgregarDireccion(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -591,7 +591,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={(e) => AgregarContacto(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -660,7 +660,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               {/* <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={(e) => AgregarPersonal(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -720,8 +720,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="id"
                       name="id"
-                      autoComplete="off"
                       placeholder="Código"
+                      autoComplete="off"
                       readOnly={true}
                       value={data.id ?? ""}
                       onChange={ValidarData}
@@ -733,11 +733,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       htmlFor="tipoDocumentoIdentidadId"
                       className={Global.LabelStyle}
                     >
-                      Tipo Doc
+                      T. Documento
                     </label>
                     <select
                       id="tipoDocumentoIdentidadId"
                       name="tipoDocumentoIdentidadId"
+                      autoFocus
                       value={data.tipoDocumentoIdentidadId ?? ""}
                       onChange={ValidarData}
                       disabled={modo == "Consultar" ? true : false}
@@ -761,8 +762,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="numeroDocumentoIdentidad"
                       name="numeroDocumentoIdentidad"
+                      placeholder="N° Documento Identidad"
                       autoComplete="off"
-                      placeholder="Número Documento Identidad"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
@@ -811,8 +812,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="nombre"
                     name="nombre"
-                    autoComplete="off"
                     placeholder="Nombre"
+                    autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.nombre ?? ""}
                     onChange={ValidarData}
@@ -828,8 +829,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="telefono"
                       name="telefono"
-                      autoComplete="off"
                       placeholder="Teléfono"
+                      autoComplete="off"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.telefono ?? ""}
                       onChange={ValidarData}
@@ -847,8 +848,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="correoElectronico"
                       name="correoElectronico"
-                      autoComplete="off"
                       placeholder="Correo"
+                      autoComplete="off"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.correoElectronico ?? ""}
                       onChange={ValidarData}
@@ -867,8 +868,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="direccionPrincipal"
                     name="direccionPrincipal"
-                    autoComplete="off"
                     placeholder="Dirección Principal"
+                    autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.direccionPrincipal ?? ""}
                     onChange={ValidarData}
@@ -937,8 +938,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="observacion"
                     name="observacion"
-                    autoComplete="off"
                     placeholder="Observación"
+                    autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.observacion ?? ""}
                     onChange={ValidarData}
@@ -1091,8 +1092,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                             type="text"
                             id="direccion"
                             name="direccion"
-                            autoComplete="off"
                             placeholder="Dirección secundaria"
+                            autoComplete="off"
                             readOnly={modo == "Consultar" ? true : false}
                             value={objetoDireccion.direccion ?? ""}
                             onChange={ValidarDataDireccion}
@@ -1141,8 +1142,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           type="text"
                           id="comentario"
                           name="comentario"
-                          autoComplete="off"
                           placeholder="Comentario"
+                          autoComplete="off"
                           readOnly={modo == "Consultar" ? true : false}
                           value={objetoDireccion.comentario ?? ""}
                           onChange={ValidarDataDireccion}
@@ -1248,8 +1249,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           type="text"
                           id="nombres"
                           name="nombres"
-                          autoComplete="off"
                           placeholder="Nombres"
+                          autoComplete="off"
                           readOnly={modo == "Consultar" ? true : false}
                           value={objetoContacto.nombres ?? ""}
                           onChange={ValidarDataContacto}
@@ -1267,9 +1268,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                           type="text"
                           id="numeroDocumentoIdentidad"
                           name="numeroDocumentoIdentidad"
+                          placeholder="N° Documento Identidad"
                           autoComplete="off"
                           maxLength="15"
-                          placeholder="N° Documento Identidad"
                           readOnly={modo == "Consultar" ? true : false}
                           value={objetoContacto.numeroDocumentoIdentidad ?? ""}
                           onChange={ValidarDataContacto}
@@ -1306,9 +1307,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                           type="text"
                           id="celular"
                           name="celular"
+                          placeholder="Celular"
                           autoComplete="off"
                           maxLength="15"
-                          placeholder="Celular"
                           readOnly={modo == "Consultar" ? true : false}
                           value={objetoContacto.celular ?? ""}
                           onChange={ValidarDataContacto}
@@ -1326,9 +1327,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                           type="text"
                           id="telefono"
                           name="telefono"
+                          placeholder="Teléfono"
                           autoComplete="off"
                           maxLength="15"
-                          placeholder="Teléfono"
                           readOnly={modo == "Consultar" ? true : false}
                           value={objetoContacto.telefono ?? ""}
                           onChange={ValidarDataContacto}
@@ -1345,9 +1346,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <input
                           type="text"
                           id="correoElectronico"
+                          placeholder="Correo"
                           name="correoElectronico"
                           autoComplete="off"
-                          placeholder="Correo"
                           readOnly={modo == "Consultar" ? true : false}
                           value={objetoContacto.correoElectronico ?? ""}
                           onChange={ValidarDataContacto}
@@ -1364,8 +1365,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="text"
                         id="direccion"
                         name="direccion"
-                        autoComplete="off"
                         placeholder="Dirección"
+                        autoComplete="off"
                         readOnly={modo == "Consultar" ? true : false}
                         value={objetoContacto.direccion ?? ""}
                         onChange={ValidarDataContacto}

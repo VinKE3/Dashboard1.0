@@ -88,7 +88,9 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
     setDatos(result.data.data.data);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}?incluirReferencias=${true}`);
+    const result = await ApiMasy.get(
+      `api/Venta/Cotizacion/${id}?incluirReferencias=${true}`
+    );
     setObjeto({
       personalId: result.data.data.personalId,
       monedaId: result.data.data.monedaId,
@@ -98,13 +100,15 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
       porcentajePercepcion: result.data.data.porcentajePercepcion,
       observacion: result.data.data.observacion ?? "",
       clienteId: result.data.data.clienteId,
-      clienteTipoDocumentoIdentidadId: result.data.data.cliente.tipoDocumentoIdentidadId,
-      clienteNumeroDocumentoIdentidad: result.data.data.clienteNumeroDocumentoIdentidad,
+      clienteTipoDocumentoIdentidadId:
+        result.data.data.cliente.tipoDocumentoIdentidadId,
+      clienteNumeroDocumentoIdentidad:
+        result.data.data.clienteNumeroDocumentoIdentidad,
       clienteNombre: result.data.data.clienteNombre,
       clienteDireccionId: result.data.data.clienteDireccionId,
       cotizacionId: result.data.data.id,
       cotizacion: result.data.data.serie + "-" + result.data.data.numero,
-      detalles: result.data.data.detalles
+      detalles: result.data.data.detalles,
     });
     setModal(false);
   };
@@ -140,12 +144,15 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
         },
       },
       {
-        Header: "-",
+        Header: " ",
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
+              id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
+              className={
+                Global.BotonModalBase + Global.BotonAgregar + "border-none"
+              }
             >
               <FaCheck></FaCheck>
             </button>
@@ -201,6 +208,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
                   name="clienteNombre"
                   placeholder="Cliente"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.clienteNombre}
                   onChange={ValidarData}
                   className={Global.InputStyle}

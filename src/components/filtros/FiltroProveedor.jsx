@@ -18,7 +18,6 @@ const TablaStyle = styled.div`
     width: 120px;
   }
   & th:last-child {
-    color: transparent;
     width: 40px;
     text-align: center;
   }
@@ -76,12 +75,25 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
     setDatos(result.data.data.data.filter((res) => res.id !== "000000"));
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/${id}`);
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/Proveedor/${id}?incluirReferencias=true`
+    );
     setObjeto({
       proveedorId: result.data.data.id,
-      proveedorNumeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
+      proveedorNumeroDocumentoIdentidad:
+        result.data.data.numeroDocumentoIdentidad,
       proveedorNombre: result.data.data.nombre,
       proveedorDireccion: result.data.data.direccionPrincipal,
+      //Guia de Compra
+      departamentoId: result.data.data.departamentoId,
+      provinciaId: result.data.data.provinciaId,
+      distritoId: result.data.data.distritoId,
+      //Guia de Compra
+      
+      //Orden de Compra
+      contactos: result.data.data.contactos,
+      cuentasCorrientes: result.data.data.cuentasCorrientes,
+      //Orden de Compra
     });
     setModal(false);
   };
@@ -103,11 +115,14 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
         accessor: "nombre",
       },
       {
-        Header: "-",
+        Header: " ",
         Cell: ({ row }) => (
           <button
+            id="boton"
             onClick={() => GetPorId(row.values.id)}
-            className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
+            className={
+              Global.BotonModalBase + Global.BotonAgregar + "border-none"
+            }
           >
             <FaCheck></FaCheck>
           </button>
@@ -165,6 +180,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
                   name="numeroDocumentoIdentidad"
                   placeholder="N° Documento"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.numeroDocumentoIdentidad}
                   onChange={ValidarData}
                   className={Global.InputStyle}

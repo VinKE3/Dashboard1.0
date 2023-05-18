@@ -378,6 +378,7 @@ const BloquearVenta = () => {
                 <select
                   id="tipoDocumentoId"
                   name="tipoDocumentoId"
+                  autoFocus
                   value={filtro.tipoDocumentoId ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

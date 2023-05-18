@@ -69,8 +69,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Tablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  const [dataTipoComp, setDataTipoComp] = useState([]);
-  const [dataTipoPag, setDataTipoPag] = useState([]);
+  const [dataTipoCompra, setDataTipoCompra] = useState([]);
+  const [dataTipoPago, setDataTipoPago] = useState([]);
   const [dataIgv, setDataIgv] = useState([]);
   const [dataCtacte, setDataCtacte] = useState([]);
   const [dataMotivoNota, setDataMotivoNota] = useState([]);
@@ -204,7 +204,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "tipoCompraId") {
-      let model = dataTipoPag.find(
+      let model = dataTipoPago.find(
         (map) => map.tipoVentaCompraId == target.value
       );
       setData((prevData) => ({
@@ -269,7 +269,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const FechaVencimiento = async (tipoCompraId, tipoPagoId) => {
     if (tipoCompraId != "CO") {
-      let model = dataTipoPag.find((map) => map.id === tipoPagoId);
+      let model = dataTipoPago.find((map) => map.id === tipoPagoId);
       let fechaHoy = moment().format("YYYY-MM-DD");
       let fecha = moment(moment().format("YYYY-MM-DD"))
         .add(model.plazo, "days")
@@ -844,7 +844,6 @@ const Modal = ({ setModal, modo, objeto }) => {
             detalleEliminado = detalleEliminado.filter(
               (map) => map.id !== dataDetalleExiste.id
             );
-            console.log(detalleEliminado);
             //Si el resultado es 0 entonces se elimina por completo el registro
 
             //Toma el valor actual de contador para asignarlo
@@ -990,8 +989,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     );
     setDataTipoDoc(result.data.data.tiposDocumento);
     setDataMoneda(result.data.data.monedas);
-    setDataTipoComp(result.data.data.tiposCompra);
-    setDataTipoPag(result.data.data.tiposPago);
+    setDataTipoCompra(result.data.data.tiposCompra);
+    setDataTipoPago(result.data.data.tiposPago);
     setDataIgv(result.data.data.porcentajesIGV);
     setDataMotivoNota(result.data.data.motivosNota);
   };
@@ -1137,7 +1136,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -1205,6 +1204,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="tipoDocumentoId"
                     name="tipoDocumentoId"
+                    autoFocus
                     value={data.tipoDocumentoId ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Registrar" ? false : true}
@@ -1230,8 +1230,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="serie"
                     name="serie"
                     placeholder="Serie"
-                    maxLength="4"
                     autoComplete="off"
+                    maxLength="4"
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
@@ -1252,8 +1252,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="numero"
                     name="numero"
                     placeholder="Número"
-                    maxLength="10"
                     autoComplete="off"
+                    maxLength="10"
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
@@ -1439,8 +1439,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="number"
                     id="tipoCambio"
                     name="tipoCambio"
-                    autoComplete="off"
                     placeholder="Tipo de Cambio"
+                    autoComplete="off"
                     min={0}
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
@@ -1476,7 +1476,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {dataTipoComp.map((map) => (
+                    {dataTipoCompra.map((map) => (
                       <option key={map.id} value={map.id}>
                         {map.descripcion}
                       </option>
@@ -1503,7 +1503,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
                   >
-                    {dataTipoPag
+                    {dataTipoPago
                       .filter(
                         (model) => model.tipoVentaCompraId == data.tipoCompraId
                       )
@@ -1528,8 +1528,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="text"
                         id="numeroOperacion"
                         name="numeroOperacion"
-                        autoComplete="off"
                         placeholder="Número de Operación"
+                        autoComplete="off"
                         readOnly={modo == "Consultar" ? true : false}
                         value={data.numeroOperacion ?? ""}
                         onChange={ValidarData}
@@ -1658,8 +1658,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="motivoSustento"
                       name="motivoSustento"
-                      autoComplete="off"
                       placeholder="Sustento"
+                      autoComplete="off"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.motivoSustento ?? ""}
                       onChange={ValidarData}
@@ -1679,8 +1679,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="guiaRemision"
                     name="guiaRemision"
-                    autoComplete="off"
                     placeholder="Guía de Remisión"
+                    autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.guiaRemision ?? ""}
                     onChange={ValidarData}

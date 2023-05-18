@@ -132,10 +132,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData({
         ...data,
         clienteId: dataCotizacion.clienteId,
-        clienteTipoDocumentoIdentidadId:
-          dataCotizacion.clienteTipoDocumentoIdentidadId,
-        clienteNumeroDocumentoIdentidad:
-          dataCotizacion.clienteNumeroDocumentoIdentidad,
+        clienteTipoDocumentoIdentidadId: dataCotizacion.clienteTipoDocumentoIdentidadId,
+        clienteNumeroDocumentoIdentidad: dataCotizacion.clienteNumeroDocumentoIdentidad,
         clienteNombre: dataCotizacion.clienteNombre,
         clienteDireccionId: dataCotizacion.clienteDireccionId,
         cotizacionId: dataCotizacion.cotizacionId,
@@ -1102,7 +1100,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -1169,6 +1167,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="tipoDocumentoId"
                     name="tipoDocumentoId"
+                    autoFocus
                     value={data.tipoDocumentoId ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Registrar" ? false : true}
@@ -1221,8 +1220,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="numero"
                     name="numero"
                     placeholder="Número"
-                    maxLength="10"
                     autoComplete="off"
+                    maxLength="10"
                     readOnly={true}
                     value={data.numero ?? ""}
                     className={Global.InputStyle + Global.Disabled}
@@ -1567,8 +1566,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="text"
                         id="numeroOperacion"
                         name="numeroOperacion"
-                        autoComplete="off"
                         placeholder="Número de Operación"
+                        autoComplete="off"
                         readOnly={modo == "Consultar" ? true : false}
                         value={data.numeroOperacion ?? ""}
                         onChange={ValidarData}
@@ -1697,8 +1696,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="motivoSustento"
                       name="motivoSustento"
-                      autoComplete="off"
                       placeholder="Sustento"
+                      autoComplete="off"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.motivoSustento ?? ""}
                       onChange={ValidarData}
@@ -1718,8 +1717,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="guiaRemision"
                     name="guiaRemision"
-                    autoComplete="off"
                     placeholder="Guía de Remisión"
+                    autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.guiaRemision ?? ""}
                     onChange={ValidarData}

@@ -90,9 +90,10 @@ const Modal = ({ setModal, objeto, modo }) => {
                   type="text"
                   id="distritoId"
                   name="distritoId"
+                  placeholder="00"
                   autoComplete="off"
                   maxLength="2"
-                  placeholder="00"
+                  autoFocus
                   readOnly={modo == "Registrar" ? false : true}
                   value={data.distritoId ?? ""}
                   onChange={ValidarData}
@@ -146,8 +147,8 @@ const Modal = ({ setModal, objeto, modo }) => {
                 type="text"
                 id="nombre"
                 name="nombre"
-                autoComplete="off"
                 placeholder="Distrito"
+                autoComplete="off"
                 readOnly={modo == "Consultar" ? true : false}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}

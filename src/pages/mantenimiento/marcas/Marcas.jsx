@@ -129,7 +129,7 @@ const Marcas = () => {
     setModo(modo);
     if (modo == "Registrar") {
       setObjeto({
-        id: "00",
+        id: "",
         nombre: "",
       });
     } else {

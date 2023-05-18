@@ -8,12 +8,13 @@ import {
   useSortBy,
 } from "react-table";
 
+//#region Estilos
 const Tabla = styled.div`
   & .selected-row {
-    background: linear-gradient(90deg, #d2ae11 0%, #d9ad22 100%);
-    color: #000;
+    background: linear-gradient(90deg, #313130 0%, #2c2a28 100%);
   }
 `;
+//#endregion
 
 const TableBasic = ({
   columnas,
@@ -25,8 +26,24 @@ const TableBasic = ({
   const data = datos;
   //#endregion
 
-  //#region Fila Seleccionable
-  const Seleccionar = (e) => {
+  //#region Obtiene props React Table
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    state,
+  } = useTable(
+    { columns, data, initialState: { pageSize: 50 } },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
+  );
+  //#endregion
+
+  //#region Funciones
+  const SeleccionarFila = (e) => {
     if (e.target.tagName == "DIV") {
       let padre = e.target.parentNode.parentNode;
       if (padre.tagName == "TD") {
@@ -61,16 +78,34 @@ const TableBasic = ({
       }
     }
   };
-  //#endregion
-
-  //#region Obtiene props React Table
-  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow } =
-    useTable(
-      { columns, data, initialState: { pageSize: 50 } },
-      useGlobalFilter,
-      useSortBy,
-      usePagination
-    );
+  const MoverFlecha = async (e) => {
+    if (e.keyCode == 40 || e.keyCode == 38) {
+      let row = document.querySelector("#tablaBasic tr.selected-row");
+      if (row != null) {
+        let filaAnterior = row.previousElementSibling;
+        let filaSiguiente = row.nextElementSibling;
+        if (e.keyCode == 40) {
+          if (filaSiguiente != null) {
+            row.classList.remove("selected-row");
+            filaSiguiente.classList.add("selected-row");
+          }
+        } else if (e.keyCode == 38) {
+          if (filaAnterior != null) {
+            row.classList.remove("selected-row");
+            filaAnterior.classList.add("selected-row");
+          }
+        }
+      } else {
+        e.target.children[1].children[0].classList.add("selected-row");
+      }
+    } else if (e.keyCode == 13) {
+      let row = document.querySelector("#tablaBasic tr.selected-row");
+      if (row != null) {
+        row.classList.remove("selected-row");
+        row.querySelector("#boton").click();
+      }
+    }
+  };
   //#endregion
 
   //#region Render
@@ -80,8 +115,10 @@ const TableBasic = ({
       <Tabla>
         <table
           {...getTableProps()}
-          id="tabla"
-          className={"w-full text-light " + estilos[0]}
+          id="tablaBasic"
+          className={"w-full text-light focus:outline-none " + estilos[0]}
+          tabIndex={0}
+          onKeyDown={(e) => MoverFlecha(e)}
         >
           <thead className={Global.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (
@@ -105,7 +142,7 @@ const TableBasic = ({
                 <tr
                   {...row.getRowProps()}
                   className={Global.Tr + estilos[5]}
-                  onClick={(e) => Seleccionar(e)}
+                  onClick={(e) => SeleccionarFila(e)}
                 >
                   {row.cells.map((cell) => {
                     return (

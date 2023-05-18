@@ -375,7 +375,7 @@ const Empresa = ({ modo }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={(e) => AgregarIgv(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -507,7 +507,7 @@ const Empresa = ({ modo }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={(e) => AgregarRetencion(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -639,7 +639,7 @@ const Empresa = ({ modo }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={(e) => AgregarDetraccion(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -774,7 +774,7 @@ const Empresa = ({ modo }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={(e) => AgregarPercepcion(e, row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -898,8 +898,9 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="numeroDocumentoIdentidad"
                       name="numeroDocumentoIdentidad"
-                      autoComplete="off"
                       placeholder="Número Documento Identidad"
+                      autoComplete="off"
+                      autoFocus
                       value={dataGeneral.numeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -913,10 +914,9 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="nombre"
                       name="nombre"
-                      autoComplete="off"
                       placeholder="Nombre"
+                      autoComplete="off"
                       value={dataGeneral.nombre ?? ""}
-                      typeof="text"
                       onChange={ValidarData}
                       className={Global.InputStyle}
                     />
@@ -931,8 +931,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="telefono"
                       name="telefono"
-                      autoComplete="off"
                       placeholder="Teléfono"
+                      autoComplete="off"
                       value={dataGeneral.telefono ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -949,8 +949,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="correoElectronico"
                       name="correoElectronico"
-                      autoComplete="off"
                       placeholder="Correo"
+                      autoComplete="off"
                       value={dataGeneral.correoElectronico ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -966,8 +966,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="celular"
                       name="celular"
-                      autoComplete="off"
                       placeholder="Celular"
+                      autoComplete="off"
                       value={dataGeneral.celular ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -981,8 +981,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="observacion"
                       name="observacion"
-                      autoComplete="off"
                       placeholder="Observacion"
+                      autoComplete="off"
                       value={dataGeneral.observacion ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -997,8 +997,8 @@ const Empresa = ({ modo }) => {
                     type="text"
                     id="direccion"
                     name="direccion"
-                    autoComplete="off"
                     placeholder="Dirección"
+                    autoComplete="off"
                     value={dataGeneral.direccion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1025,8 +1025,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="concarEmpresaId"
                       name="concarEmpresaId"
-                      autoComplete="off"
                       placeholder="Número Concar Id"
+                      autoComplete="off"
                       value={dataGeneral.concarEmpresaId ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1043,8 +1043,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="concarEmpresaNombre"
                       name="concarEmpresaNombre"
-                      autoComplete="off"
                       placeholder="Empresa Concar"
+                      autoComplete="off"
                       value={dataGeneral.concarEmpresaNombre ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1063,8 +1063,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="concarUsuarioVenta"
                       name="concarUsuarioVenta"
-                      autoComplete="off"
                       placeholder="Usuario Venta"
+                      autoComplete="off"
                       value={dataGeneral.concarUsuarioVenta ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1081,8 +1081,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="concarUsuarioCompra"
                       name="concarUsuarioCompra"
-                      autoComplete="off"
                       placeholder="Usuario Compra"
+                      autoComplete="off"
                       value={dataGeneral.concarUsuarioCompra ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1101,8 +1101,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="concarUsuarioPago"
                       name="concarUsuarioPago"
-                      autoComplete="off"
                       placeholder="Usuario Pago"
+                      autoComplete="off"
                       value={dataGeneral.concarUsuarioPago ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1119,8 +1119,8 @@ const Empresa = ({ modo }) => {
                       type="text"
                       id="concarUsuarioCobro"
                       name="concarUsuarioCobro"
-                      autoComplete="off"
                       placeholder="Usuario Cobro"
+                      autoComplete="off"
                       value={dataGeneral.concarUsuarioCobro ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1206,9 +1206,10 @@ const Empresa = ({ modo }) => {
                       type="number"
                       id="anioHabilitado1"
                       name="anioHabilitado1"
-                      autoComplete="off"
                       placeholder="año"
+                      autoComplete="off"
                       min={0}
+                      autoFocus
                       value={dataGeneral.anioHabilitado1}
                       onChange={ValidarData}
                       className={Global.InputBoton}
@@ -1870,49 +1871,54 @@ const Empresa = ({ modo }) => {
                         className={
                           Global.ContenedorBasico +
                           Global.FondoContenedor +
-                          " pb-1 mb-2"
+                          " pb-2 mb-3"
                         }
                       >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
-                            <label
-                              htmlFor="porcentaje"
-                              className={Global.LabelStyle}
-                            >
-                              Porcentaje
-                            </label>
-                            <input
-                              type="number"
-                              id="porcentaje"
-                              name="porcentaje"
-                              autoComplete="off"
-                              placeholder="Porcentaje"
-                              min={0}
-                              readOnly={modo == "Consultar" ? true : false}
-                              value={objetoIgv.porcentaje}
-                              onChange={ValidarDataIgv}
-                              className={Global.InputStyle}
-                            />
-                          </div>
-                          <div className={Global.Input36}>
-                            <label
-                              htmlFor="defaultIgv"
-                              className={Global.LabelStyle}
-                            >
-                              Default
-                            </label>
-                            <div className={Global.InputStyle}>
-                              <Checkbox
-                                inputId="defaultIgv"
-                                id="default"
-                                name="default"
-                                value={objetoIgv.default}
-                                checked={objetoIgv.default}
-                                onChange={(e) => {
-                                  setCheckedIgv(e.checked);
-                                  ValidarDataIgv(e);
-                                }}
-                              ></Checkbox>
+                            <div className={Global.InputFull}>
+                              <label
+                                htmlFor="porcentaje"
+                                className={Global.LabelStyle}
+                              >
+                                Porcentaje
+                              </label>
+                              <input
+                                type="number"
+                                id="porcentaje"
+                                name="porcentaje"
+                                placeholder="Porcentaje"
+                                autoComplete="off"
+                                min={0}
+                                autoFocus
+                                readOnly={modo == "Consultar" ? true : false}
+                                value={objetoIgv.porcentaje}
+                                onChange={ValidarDataIgv}
+                                className={Global.InputBoton}
+                              />
+                            </div>
+                            <div className={Global.Input36}>
+                              <div
+                                className={Global.CheckStyle + Global.Anidado}
+                              >
+                                <Checkbox
+                                  inputId="defaultIgv"
+                                  id="default"
+                                  name="default"
+                                  value={objetoIgv.default}
+                                  checked={objetoIgv.default}
+                                  onChange={(e) => {
+                                    setCheckedIgv(e.checked);
+                                    ValidarDataIgv(e);
+                                  }}
+                                ></Checkbox>
+                              </div>
+                              <label
+                                htmlFor="defaultIgv"
+                                className={Global.LabelCheckStyle}
+                              >
+                                Default
+                              </label>
                             </div>
                           </div>
                         </div>
@@ -1970,49 +1976,54 @@ const Empresa = ({ modo }) => {
                         className={
                           Global.ContenedorBasico +
                           Global.FondoContenedor +
-                          " pb-1 mb-2"
+                          " pb-2 mb-3"
                         }
                       >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
-                            <label
-                              htmlFor="porcentaje"
-                              className={Global.LabelStyle}
-                            >
-                              Porcentaje
-                            </label>
-                            <input
-                              type="number"
-                              id="porcentaje"
-                              name="porcentaje"
-                              autoComplete="off"
-                              placeholder="Porcentaje"
-                              min={0}
-                              readOnly={modo == "Consultar" ? true : false}
-                              value={objetoRetencion.porcentaje}
-                              onChange={ValidarDataRetencion}
-                              className={Global.InputStyle}
-                            />
-                          </div>
-                          <div className={Global.Input36}>
-                            <label
-                              htmlFor="defaultRetencion"
-                              className={Global.LabelStyle}
-                            >
-                              Default
-                            </label>
-                            <div className={Global.InputStyle}>
-                              <Checkbox
-                                inputId="defaultRetencion"
-                                id="default"
-                                name="default"
-                                value={objetoRetencion.default}
-                                checked={objetoRetencion.default}
-                                onChange={(e) => {
-                                  setCheckedRetencion(e.checked);
-                                  ValidarDataRetencion(e);
-                                }}
-                              ></Checkbox>
+                            <div className={Global.InputFull}>
+                              <label
+                                htmlFor="porcentaje"
+                                className={Global.LabelStyle}
+                              >
+                                Porcentaje
+                              </label>
+                              <input
+                                type="number"
+                                id="porcentaje"
+                                name="porcentaje"
+                                placeholder="Porcentaje"
+                                autoComplete="off"
+                                autoFocus
+                                min={0}
+                                readOnly={modo == "Consultar" ? true : false}
+                                value={objetoRetencion.porcentaje}
+                                onChange={ValidarDataRetencion}
+                                className={Global.InputBoton}
+                              />
+                            </div>
+                            <div className={Global.Input36}>
+                              <div
+                                className={Global.CheckStyle + Global.Anidado}
+                              >
+                                <Checkbox
+                                  inputId="defaultRetencion"
+                                  id="default"
+                                  name="default"
+                                  value={objetoRetencion.default}
+                                  checked={objetoRetencion.default}
+                                  onChange={(e) => {
+                                    setCheckedRetencion(e.checked);
+                                    ValidarDataRetencion(e);
+                                  }}
+                                ></Checkbox>
+                              </div>
+                              <label
+                                htmlFor="defaultRetencion"
+                                className={Global.LabelCheckStyle}
+                              >
+                                Default
+                              </label>
                             </div>
                           </div>
                         </div>
@@ -2073,49 +2084,54 @@ const Empresa = ({ modo }) => {
                         className={
                           Global.ContenedorBasico +
                           Global.FondoContenedor +
-                          " pb-1 mb-2"
+                          " pb-2 mb-3"
                         }
                       >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
-                            <label
-                              htmlFor="porcentaje"
-                              className={Global.LabelStyle}
-                            >
-                              Porcentaje
-                            </label>
-                            <input
-                              type="number"
-                              id="porcentaje"
-                              name="porcentaje"
-                              autoComplete="off"
-                              placeholder="Porcentaje"
-                              min={0}
-                              readOnly={modo == "Consultar" ? true : false}
-                              value={objetoDetraccion.porcentaje}
-                              onChange={ValidarDataDetraccion}
-                              className={Global.InputStyle}
-                            />
-                          </div>
-                          <div className={Global.Input36}>
-                            <label
-                              htmlFor="defaultDetraccion"
-                              className={Global.LabelStyle}
-                            >
-                              Default
-                            </label>
-                            <div className={Global.InputStyle}>
-                              <Checkbox
-                                inputId="defaultDetraccion"
-                                id="default"
-                                name="default"
-                                value={objetoDetraccion.default}
-                                checked={objetoDetraccion.default}
-                                onChange={(e) => {
-                                  setCheckedDetraccion(e.checked);
-                                  ValidarDataDetraccion(e);
-                                }}
-                              ></Checkbox>
+                            <div className={Global.InputFull}>
+                              <label
+                                htmlFor="porcentaje"
+                                className={Global.LabelStyle}
+                              >
+                                Porcentaje
+                              </label>
+                              <input
+                                type="number"
+                                id="porcentaje"
+                                name="porcentaje"
+                                placeholder="Porcentaje"
+                                autoComplete="off"
+                                min={0}
+                                autoFocus
+                                readOnly={modo == "Consultar" ? true : false}
+                                value={objetoDetraccion.porcentaje}
+                                onChange={ValidarDataDetraccion}
+                                className={Global.InputBoton}
+                              />
+                            </div>
+                            <div className={Global.Input36}>
+                              <div
+                                className={Global.CheckStyle + Global.Anidado}
+                              >
+                                <Checkbox
+                                  inputId="defaultDetraccion"
+                                  id="default"
+                                  name="default"
+                                  value={objetoDetraccion.default}
+                                  checked={objetoDetraccion.default}
+                                  onChange={(e) => {
+                                    setCheckedDetraccion(e.checked);
+                                    ValidarDataDetraccion(e);
+                                  }}
+                                ></Checkbox>
+                              </div>
+                              <label
+                                htmlFor="defaultDetraccion"
+                                className={Global.LabelCheckStyle}
+                              >
+                                Default
+                              </label>
                             </div>
                           </div>
                         </div>
@@ -2176,49 +2192,54 @@ const Empresa = ({ modo }) => {
                         className={
                           Global.ContenedorBasico +
                           Global.FondoContenedor +
-                          " pb-1 mb-2"
+                          " pb-2 mb-3"
                         }
                       >
                         <div className={Global.ContenedorRow}>
                           <div className={Global.InputFull}>
-                            <label
-                              htmlFor="porcentaje"
-                              className={Global.LabelStyle}
-                            >
-                              Porcentaje
-                            </label>
-                            <input
-                              type="number"
-                              id="porcentaje"
-                              name="porcentaje"
-                              autoComplete="off"
-                              placeholder="Porcentaje"
-                              min={0}
-                              readOnly={modo == "Consultar" ? true : false}
-                              value={objetoPercepcion.porcentaje}
-                              onChange={ValidarDataPercepcion}
-                              className={Global.InputStyle}
-                            />
-                          </div>
-                          <div className={Global.Input36}>
-                            <label
-                              htmlFor="defaultPercepcion"
-                              className={Global.LabelStyle}
-                            >
-                              Default
-                            </label>
-                            <div className={Global.InputStyle}>
-                              <Checkbox
-                                inputId="defaultPercepcion"
-                                id="default"
-                                name="default"
-                                value={objetoPercepcion.default}
-                                checked={objetoPercepcion.default}
-                                onChange={(e) => {
-                                  setCheckedPercepcion(e.checked);
-                                  ValidarDataPercepcion(e);
-                                }}
-                              ></Checkbox>
+                            <div className={Global.InputFull}>
+                              <label
+                                htmlFor="porcentaje"
+                                className={Global.LabelStyle}
+                              >
+                                Porcentaje
+                              </label>
+                              <input
+                                type="number"
+                                id="porcentaje"
+                                name="porcentaje"
+                                placeholder="Porcentaje"
+                                autoComplete="off"
+                                min={0}
+                                autoFocus
+                                readOnly={modo == "Consultar" ? true : false}
+                                value={objetoPercepcion.porcentaje}
+                                onChange={ValidarDataPercepcion}
+                                className={Global.InputBoton}
+                              />
+                            </div>
+                            <div className={Global.Input36}>
+                              <div
+                                className={Global.CheckStyle + Global.Anidado}
+                              >
+                                <Checkbox
+                                  inputId="defaultPercepcion"
+                                  id="default"
+                                  name="default"
+                                  value={objetoPercepcion.default}
+                                  checked={objetoPercepcion.default}
+                                  onChange={(e) => {
+                                    setCheckedPercepcion(e.checked);
+                                    ValidarDataPercepcion(e);
+                                  }}
+                                ></Checkbox>
+                              </div>
+                              <label
+                                htmlFor="defaultPercepcion"
+                                className={Global.LabelCheckStyle}
+                              >
+                                Default
+                              </label>
                             </div>
                           </div>
                         </div>

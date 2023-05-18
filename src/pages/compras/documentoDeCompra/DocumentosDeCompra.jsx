@@ -344,7 +344,7 @@ const DocumentosdeCompra = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+          <div className="h-full px-2 ">
             <h2 className={Global.TituloH2}>Documentos de Compra</h2>
 
             {/* Filtro*/}
@@ -359,6 +359,7 @@ const DocumentosdeCompra = () => {
                   name="proveedorNombre"
                   placeholder="Proveedor"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.proveedorNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

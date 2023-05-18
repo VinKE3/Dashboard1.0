@@ -985,7 +985,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"

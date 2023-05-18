@@ -77,7 +77,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
+              <div className={Global.InputTercio}>
                 <label htmlFor="id" className={Global.LabelStyle}>
                   Código
                 </label>
@@ -90,10 +90,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                   readOnly={true}
                   value={data.id ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={Global.InputStyle + Global.Disabled}
                 />
               </div>
-              <div className={Global.InputFull}>
+              <div className={Global.InputTercio}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
                   className={Global.LabelStyle}
@@ -105,15 +105,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="numeroDocumentoIdentidad"
                   name="numeroDocumentoIdentidad"
                   placeholder="DNI"
-                  maxLength="8"
                   autoComplete="off"
+                  maxLength="8"
+                  autoFocus
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
+              <div className={Global.InputTercio}>
                 <div className={Global.LabelStyle}>
                   <Checkbox
                     inputId="isActivo"

@@ -95,8 +95,9 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
     if (existe == undefined) {
       const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
       setObjeto({
-        proveedorId:result.data.data.proveedorId,
-        proveedorNumeroDocumentoIdentidad:result.data.data.proveedorNumeroDocumentoIdentidad,
+        proveedorId: result.data.data.proveedorId,
+        proveedorNumeroDocumentoIdentidad:
+          result.data.data.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: result.data.data.proveedorNombre,
         proveedorDireccion: result.data.data.proveedorDireccion ?? "",
         cuentaCorrienteId: result.data.data.cuentaCorrienteId ?? "",
@@ -112,7 +113,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
           id: result.data.data.id,
           numeroDocumento: result.data.data.numeroDocumento,
         },
-        accion: "agregar"
+        accion: "agregar",
       });
       setModal(false);
     } else {
@@ -151,7 +152,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         setObjeto({
           detalles: res.data.data.detalles,
           ordenesCompraRelacionadas: model,
-          accion: "eliminar"
+          accion: "eliminar",
         });
         setModal(false);
       }
@@ -216,6 +217,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
+              id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
                 Global.BotonModalBase + Global.BotonAgregar + " border-none "
@@ -243,6 +245,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
       Cell: ({ row }) => (
         <div className="flex justify-center">
           <button
+            id="boton"
             onClick={() => EliminarFila(row.values.id)}
             className={
               Global.BotonModalBase + Global.BotonEliminar + "border-none"
@@ -293,6 +296,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
                     id="fechaInicio"
                     name="fechaInicio"
                     autoComplete="off"
+                    autoFocus
                     value={filtro.fechaInicio}
                     onChange={ValidarData}
                     className={Global.InputStyle}

@@ -108,8 +108,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       detalles: dataDetalle.map((map) => {
         return {
           detalleId: map.detalleId,
-          documentoVentaCompraId: map.id,
-          documentoVentaCompraFechaEmision: map.fechaEmision,
+          documentoVentaCompraId: map.documentoVentaCompraId,
+          documentoVentaCompraFechaEmision:
+            map.documentoVentaCompraFechaEmision,
           concepto: map.concepto,
           abono: Number(map.abono),
           saldo: map.saldo,
@@ -664,7 +665,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() =>
                     CargarDetalle(row.values.documentoVentaCompraId)
                   }
@@ -787,6 +788,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
+                    autoFocus
                     readOnly={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
@@ -1066,8 +1068,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="documentoReferencia"
                       name="documentoReferencia"
-                      autoComplete="off"
                       placeholder="Documento Referencia"
+                      autoComplete="off"
                       readOnly={true}
                       value={data.documentoReferencia ?? ""}
                       onChange={ValidarData}
@@ -1208,10 +1210,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="concepto"
                     name="concepto"
-                    autoComplete="off"
-                    readOnly={true}
                     placeholder="Buscar Concepto"
+                    autoComplete="off"
                     value={dataConcepto.concepto ?? ""}
+                    readOnly={true}
                     onChange={ValidarDataConcepto}
                     className={Global.InputBoton + Global.Disabled}
                   />
@@ -1310,6 +1312,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         <FiltroConcepto
           setModal={setModalConcepto}
           setObjeto={setDataConcepto}
+          modo={data.tipoMovimientoId}
         />
       )}
     </>

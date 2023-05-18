@@ -357,6 +357,7 @@ const Cef = () => {
               name="proveedorNombre"
               placeholder="Proveedor"
               autoComplete="off"
+              autoFocus
               value={filtro.proveedorNombre ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}

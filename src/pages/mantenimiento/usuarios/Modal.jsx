@@ -66,8 +66,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="id"
                     name="id"
-                    autoComplete="off"
                     placeholder="Código"
+                    autoComplete="off"
                     value={data.id ?? ""}
                     onChange={ValidarData}
                     readOnly={true}
@@ -120,8 +120,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="nick"
                   name="nick"
-                  autoComplete="off"
                   placeholder="Nick de Usuario"
+                  autoComplete="off"
+                  autoFocus
                   value={data.nick ?? ""}
                   onChange={ValidarData}
                   readOnly={modo == "Registrar" ? false : true}
@@ -162,8 +163,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="password"
                     id="clave"
                     name="clave"
-                    autoComplete="off"
                     placeholder="Clave"
+                    autoComplete="off"
                     value={data.clave ?? ""}
                     onChange={ValidarData}
                     readOnly={modo == "Consultar" ? true : false}
@@ -181,8 +182,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="password"
                     id="claveConfirmacion"
                     name="claveConfirmacion"
-                    autoComplete="off"
                     placeholder="Repetir Clave"
+                    autoComplete="off"
                     value={data.claveConfirmacion ?? ""}
                     onChange={ValidarData}
                     readOnly={modo == "Consultar" ? true : false}
@@ -200,8 +201,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="observacion"
                 id="observacion"
                 name="observacion"
-                autoComplete="off"
                 placeholder="Observación"
+                autoComplete="off"
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
                 readOnly={modo == "Consultar" ? true : false}

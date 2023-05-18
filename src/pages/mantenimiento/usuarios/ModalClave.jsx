@@ -38,8 +38,9 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             id="claveAnterior"
             name="claveAnterior"
             placeholder="Clave Anterior"
-            value={data.claveAnterior ?? ""}
             autoComplete="off"
+            autoFocus
+            value={data.claveAnterior ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}
           />
@@ -53,8 +54,8 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             id="claveNueva"
             name="claveNueva"
             placeholder="Clave Nueva"
-            value={data.claveNueva ?? ""}
             autoComplete="off"
+            value={data.claveNueva ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}
           />
@@ -68,8 +69,8 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             id="claveNuevaConfirmacion"
             name="claveNuevaConfirmacion"
             placeholder="Confirmar Clave Nueva"
-            value={data.claveNuevaConfirmacion ?? ""}
             autoComplete="off"
+            value={data.claveNuevaConfirmacion ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}
           />

@@ -214,8 +214,9 @@ const Clientes = () => {
                   type="text"
                   name="documento"
                   id="documento"
-                  autoComplete="off"
                   placeholder="Número Documento Identidad"
+                  autoComplete="off"
+                  autoFocus
                   value={filtro.documento}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -230,9 +231,8 @@ const Clientes = () => {
                   type="text"
                   name="nombre"
                   id="nombre"
-                  autoFocus
-                  autoComplete="off"
                   placeholder="Nombre"
+                  autoComplete="off"
                   value={filtro.nombre}
                   onChange={ValidarData}
                   className={Global.InputBoton}

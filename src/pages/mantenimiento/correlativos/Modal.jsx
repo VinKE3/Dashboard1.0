@@ -55,6 +55,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="tipoDocumentoId"
                   name="tipoDocumentoId"
+                  autoFocus
                   value={data.tipoDocumentoId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
@@ -75,8 +76,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="serie"
                   name="serie"
-                  autoComplete="off"
                   placeholder="Serie"
+                  autoComplete="off"
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.serie}
                   onChange={ValidarData}
@@ -96,8 +97,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="tipoDocumentoDescripcion"
                   name="tipoDocumentoDescripcion"
-                  autoComplete="off"
                   placeholder="Descripción"
+                  autoComplete="off"
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.tipoDocumentoDescripcion}
                   onChange={ValidarData}
@@ -112,8 +113,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="number"
                   id="numero"
                   name="numero"
-                  autoComplete="off"
                   placeholder="numero"
+                  autoComplete="off"
                   min={0}
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.numero}

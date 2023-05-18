@@ -55,8 +55,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="descripcion"
                   name="descripcion"
-                  autoComplete="off"
                   placeholder="Descripción"
+                  autoComplete="off"
+                  autoFocus
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.descripcion ?? ""}
                   onChange={ValidarData}
@@ -71,8 +72,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="abreviatura"
                   name="abreviatura"
-                  autoComplete="off"
                   placeholder="Abreviatura"
+                  autoComplete="off"
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.abreviatura ?? ""}
                   onChange={ValidarData}

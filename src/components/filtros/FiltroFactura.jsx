@@ -198,6 +198,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto }) => {
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
+            id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
                 Global.BotonModalBase + Global.BotonAgregar + " border-none "

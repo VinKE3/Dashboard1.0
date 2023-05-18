@@ -13,12 +13,6 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.entries(dataModal).length > 0) {
-      document.getElementById("empresaTransporteId").value =
-        data.empresaTransporteId;
-    }
-  }, [dataModal]);
-  useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
       setData({
         ...data,
@@ -89,7 +83,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   readOnly={true}
                   value={data.id ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={Global.InputStyle + Global.Disabled}
                 />
               </div>
               <div className={Global.Input33pct}>
@@ -119,9 +113,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="empresaTransporteId"
                   name="empresaTransporteId"
-                  disabled={modo != "Consultar" ? false : true}
+                  autoFocus
                   value={data.empresaTransporteId ?? ""} 
                   onChange={ValidarData}
+                  disabled={modo != "Consultar" ? false : true}
                   className={Global.InputStyle}
                 >
                   {dataModal.map((map) => (

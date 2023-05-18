@@ -166,6 +166,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   id="tipoUsuarioId"
                   name="tipoUsuarioId"
                   value={data.tipoUsuarioId ?? ""}
+                  autoFocus
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 >
@@ -186,7 +187,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   name="menus"
                   value={selectedMenu}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={Global.InputStyle + Global.Disabled}
                 />
               </div>
             </div>

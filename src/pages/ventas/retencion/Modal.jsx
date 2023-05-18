@@ -666,7 +666,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() => CargarDetalle(row.values.documentoVentaId)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -749,8 +749,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="serie"
                 name="serie"
                 placeholder="Serie"
-                maxLength="4"
                 autoComplete="off"
+                maxLength="4"
                 readOnly={modo == "Consultar" ? true : false}
                 value={data.serie ?? ""}
                 onChange={ValidarData}
@@ -767,11 +767,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="numero"
                 name="numero"
                 placeholder="Número"
+                autoComplete="off"
                 maxLength="10"
                 value={data.numero ?? ""}
                 onChange={ValidarData}
                 onBlur={(e) => Numeracion(e)}
-                autoComplete="off"
                 readOnly={modo == "Consultar" ? true : false}
                 className={Global.InputStyle}
               />
@@ -1029,8 +1029,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="serie"
                 name="serie"
                 placeholder="Serie"
-                maxLength={4}
                 autoComplete="off"
+                maxLength={4}
+                autoFocus
                 readOnly={modo == "Consultar" ? true : false}
                 disabled={habilitarCampos ? false : true}
                 value={dataArt.serie ?? ""}
@@ -1051,8 +1052,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="numero"
                 name="numero"
                 placeholder="Número"
-                maxLength={10}
                 autoComplete="off"
+                maxLength={10}
                 min={0}
                 readOnly={modo == "Consultar" ? true : false}
                 disabled={habilitarCampos ? false : true}

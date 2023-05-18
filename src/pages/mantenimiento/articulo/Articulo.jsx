@@ -335,6 +335,7 @@ const Articulo = () => {
               name="codigoBarras"
               placeholder="Código Barras"
               autoComplete="off"
+              autoFocus
               value={filtro.codigoBarras}
               onChange={ValidarData}
               className={Global.InputStyle}

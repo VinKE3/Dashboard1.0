@@ -53,13 +53,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="subLineaId"
                   name="subLineaId"
+                  placeholder="00"
                   autoComplete="off"
                   maxLength="2"
-                  placeholder="00"
-                  readOnly={modo == "Registrar" ? false : true}
-                  defaultValue={data.subLineaId ?? ""}
+                  value={data.subLineaId ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  readOnly={modo == "Registrar" ? false : true}
+                  className={Global.InputStyle + Global.Disabled}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -69,6 +69,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="lineaId"
                   name="lineaId"
+                  autoFocus
                   value={data.lineaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Registrar" ? false : true}
@@ -90,8 +91,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="text"
                 id="descripcion"
                 name="descripcion"
-                autoComplete="off"
                 placeholder="Descripción"
+                autoComplete="off"
                 readOnly={modo == "Consultar" ? true : false}
                 value={data.descripcion ?? ""}
                 onChange={ValidarData}

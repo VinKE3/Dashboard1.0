@@ -195,9 +195,9 @@ const OrdenesDeCompra = () => {
           proveedorNombre: "",
           proveedorNumeroDocumentoIdentidad: "",
           proveedorDireccion: "",
-          responsable1Id: "",
-          responsable2Id: "",
-          responsable3Id: "",
+          responsable1Id: "<<NI>>01",
+          responsable2Id: "<<NI>>01",
+          responsable3Id: "<<NI>>01",
           proveedorContactoId: "",
           tipoCompraId: "CO",
           monedaId: "S",
@@ -319,7 +319,7 @@ const OrdenesDeCompra = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+          <div className="h-full px-2">
             <h2 className={Global.TituloH2}>Ordenes de Compra</h2>
 
             {/* Filtro*/}
@@ -340,6 +340,7 @@ const OrdenesDeCompra = () => {
                     name="proveedorNombre"
                     placeholder="Proveedor"
                     autoComplete="off"
+                    autoFocus
                     value={filtro.proveedorNombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}

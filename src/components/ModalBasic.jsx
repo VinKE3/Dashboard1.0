@@ -12,7 +12,6 @@ const ModalBasic = ({
   tamañoModal = [Global.ModalPequeño, Global.Form],
   cerrar = true,
 }) => {
-
   //#region Funciones
   const CerrarModal = () => {
     setModal(false);
@@ -22,7 +21,7 @@ const ModalBasic = ({
   //#region Render
   return (
     <>
-      <div className={Global.FondoModal}>
+      <div id="modalBasic" className={Global.FondoModal}>
         <div className={tamañoModal[0]}>
           {/*content*/}
           <div className={Global.ModalContent}>

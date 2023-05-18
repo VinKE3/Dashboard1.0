@@ -38,15 +38,15 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="text"
               id="id"
               name="id"
-              autoComplete="off"
               placeholder="00"
-              readOnly
+              autoComplete="off"
               value={data.id ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              readOnly
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
-          <div className={Global.InputMitad}>
+          <div className={Global.InputFull}>
             <label htmlFor="codigoSunat" className={Global.LabelStyle}>
               Código SUNAT
             </label>
@@ -54,8 +54,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="text"
               id="codigoSunat"
               name="codigoSunat"
-              autoComplete="off"
               placeholder="Código SUNAT"
+              autoComplete="off"
+              autoFocus
               readOnly={modo == "Consultar" ? true : false}
               value={data.codigoSunat ?? ""}
               onChange={ValidarData}

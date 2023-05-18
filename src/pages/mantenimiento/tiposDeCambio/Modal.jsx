@@ -90,6 +90,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             type="date"
             id="id"
             name="id"
+            autoFocus
             readOnly={modo == "Consultar" ? true : false}
             value={moment(data.id).format("yyyy-MM-DD")}
             onChange={ValidarData}

@@ -37,8 +37,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="text"
               id="descripcion"
               name="descripcion"
-              autoComplete="off"
               placeholder="Descripción"
+              autoComplete="off"
+              autoFocus
               readOnly={modo == "Consultar" ? true : false}
               value={data.descripcion ?? ""}
               onChange={ValidarData}
@@ -53,8 +54,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="number"
               id="sueldo"
               name="sueldo"
-              autoComplete="off"
               placeholder="Sueldo"
+              autoComplete="off"
               min={0}
               readOnly={modo == "Consultar" ? true : false}
               defaultValue={data.sueldo ?? ""}

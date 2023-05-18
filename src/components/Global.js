@@ -48,15 +48,15 @@ export var InputsFiltro = "flex flex-1 overflow-hidden ";
 
 //#region Inputs
 export var LabelStyle =
-  "px-3 inline-flex items-center text-sm font-semibold border border-r-0 rounded-l-md bg-gray-800/70 border-gray-600 text-light  ";
+  "px-3 inline-flex items-center text-sm font-semibold border border-r-0 rounded-l-md bg-gray-800/70 border-gray-600 text-light focus:bg-slate-800 focus:outline-none focus:border-blue-500 ";
 export var LabelCheckStyle =
   "w-full flex-1 inline-flex items-center py-1.5 pr-2.5 pl-1 text-sm font-semibold leading-normal rounded-r-lg border border-l-0 border-gray-600 text-light cursor-pointer ";
 export var InputStyle =
-  "block w-full flex-1 py-1.5 px-2.5 text-sm border rounded-none rounded-r-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-light ";
+  "block w-full flex-1 py-1.5 px-2.5 text-sm border rounded-none rounded-r-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
 export var InputBoton =
-  "block w-full py-1.5 px-2.5 flex-1 text-sm border rounded-none bg-gray-700 border-gray-600 placeholder-gray-400 text-light  ";
+  "block w-full py-1.5 px-2.5 flex-1 text-sm border rounded-none bg-gray-700 border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800   focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
 export var CheckStyle =
-  "flex inline-flex items-center pl-3 pr-1 font-semibold rounded-l-md border border-r-0 border-gray-600 text-light  ";
+  "flex inline-flex items-center pl-3 pr-1 font-semibold rounded-l-md border border-r-0 border-gray-600 text-light ";
 export var Anidado = "!border-l-0 rounded-l-none ";
 export var SinBorde = "!border-none  ";
 export var Disabled = "!bg-gray-800/90 ";
@@ -73,11 +73,11 @@ export var Subtitulo = "my-0 py-0 font-bold text-base text-light ";
 export var BotonModalBase =
   "px-6 py-2 text-sm font-semibold border-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 uppercase ";
 export var BotonOkModal =
-  "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black text-light border-gray-800 ";
+  "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black text-light border-gray-800 focus:bg-gradient-to-b focus:from-primary focus:to-yellow-600 focus:text-black focus:border-blue-500 ";
 export var BotonCancelarModal =
-  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 ";
+  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 focus:bg-gradient-to-b focus:from-red-700 focus:to-red-600 focus:text-light focus:border-blue-500 ";
 export var BotonBasic =
-  "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 text-sm font-semibold uppercase rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 text-gray-100 ";
+  "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 text-sm font-semibold uppercase rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 text-gray-100 focus:border-blue-500 ";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
 export var BotonPrimary =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 ";

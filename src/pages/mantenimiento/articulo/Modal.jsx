@@ -87,6 +87,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="tipoExistenciaId"
               name="tipoExistenciaId"
+              autoFocus
               value={data.tipoExistenciaId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}

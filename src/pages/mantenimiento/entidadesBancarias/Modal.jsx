@@ -54,12 +54,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="id"
                   name="id"
-                  autoComplete="off"
                   placeholder="00"
-                  readOnly={true}
+                  autoComplete="off"
                   value={data.id ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  readOnly={true}
+                  className={Global.InputStyle + Global.Disabled}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -73,16 +73,17 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="numeroDocumentoIdentidad"
                   name="numeroDocumentoIdentidad"
+                  placeholder="00000000000"
                   autoComplete="off"
                   maxLength="11"
-                  placeholder="00000000000"
+                  autoFocus
                   readOnly={modo == "Consultar" ? true : false}
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="tipo" className={Global.LabelStyle}>
                   Tipo
                 </label>
@@ -110,8 +111,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="text"
                 id="nombre"
                 name="nombre"
-                autoComplete="off"
                 placeholder="Nombre"
+                autoComplete="off"
                 readOnly={modo == "Consultar" ? true : false}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}

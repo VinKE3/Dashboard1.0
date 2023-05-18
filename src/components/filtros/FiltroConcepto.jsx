@@ -34,12 +34,11 @@ const TablaStyle = styled.div`
   & th:last-child {
     width: 60px;
     text-align: center;
-    color: transparent;
   }
 `;
 //#endregion
 
-const FiltroConcepto = ({ setModal, setObjeto }) => {
+const FiltroConcepto = ({ setModal, setObjeto, modo = "EG" }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -92,8 +91,9 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
 
   //#region API
   const Listar = async (f = "", pagina = 1) => {
+    let consulta = modo == "EG" ? "CuentaPorPagar" : "CuentaPorCobrar";
     const result = await ApiMasy.get(
-      `api/Finanzas/CuentaPorPagar/ListarPendientes?pagina=${pagina}${f}`
+      `api/Finanzas/${consulta}/ListarPendientes?pagina=${pagina}${f}`
     );
     setDatos(result.data.data.data);
   };
@@ -173,10 +173,11 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
         },
       },
       {
-        Header: "-",
+        Header: " ",
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
+              id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
               className={
                 Global.BotonModalBase + Global.BotonAgregar + "border-none"
@@ -191,7 +192,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
     [datos]
   );
   //#endregion
-  
+
   //#region Render
   return (
     <>
@@ -200,7 +201,11 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Buscar Concepto"
+        titulo={
+          modo == "EG"
+            ? "Buscar Cuentas por Pagar"
+            : "Buscar Cuentas por Cobrar"
+        }
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
@@ -223,6 +228,7 @@ const FiltroConcepto = ({ setModal, setObjeto }) => {
                     <RadioButton
                       inputId="todos"
                       name="tipoDocumentoId"
+                      autoFocus
                       value=""
                       onChange={ValidarTipo}
                       checked={tipo === ""}

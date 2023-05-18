@@ -62,12 +62,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="cuentaCorrienteId"
                   name="cuentaCorrienteId"
-                  autoComplete="off"
                   placeholder="00"
-                  readOnly
+                  autoComplete="off"
                   value={data.cuentaCorrienteId ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  readOnly={true}
+                  className={Global.InputStyle + Global.Disabled}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -75,11 +75,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   htmlFor="tipoCuentaDescripcion"
                   className={Global.LabelStyle}
                 >
-                  T.Cuenta
+                  T. Cuenta
                 </label>
                 <select
                   id="tipoCuentaDescripcion"
                   name="tipoCuentaDescripcion"
+                  autoFocus
                   value={data.tipoCuentaDescripcion ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
@@ -92,7 +93,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.Input40pct}>
+              <div className={Global.InputMitad}>
                 <label htmlFor="monedaId" className={Global.LabelStyle}>
                   Moneda
                 </label>
@@ -143,9 +144,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="numero"
                   name="numero"
+                  placeholder="Número de cuenta"
                   autoComplete="off"
                   maxLength="25"
-                  placeholder="Número de cuenta"
                   readOnly={modo == "Consulta" ? true : false}
                   value={data.numero ?? ""}
                   onChange={ValidarData}
@@ -161,8 +162,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="text"
                 id="observacion"
                 name="observacion"
-                autoComplete="off"
                 placeholder="Observación"
+                autoComplete="off"
                 readOnly={modo == "Consulta" ? true : false}
                 value={data.observacion ?? ""}
                 onChange={ValidarData}

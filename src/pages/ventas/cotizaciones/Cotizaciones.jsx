@@ -442,6 +442,7 @@ const Cotizaciones = () => {
                   name="clienteNombre"
                   placeholder="Cliente"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.clienteNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

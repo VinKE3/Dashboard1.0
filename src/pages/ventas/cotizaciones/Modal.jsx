@@ -1008,7 +1008,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <>
               <div className={Global.TablaBotonModificar}>
                 <button
-                  id="boton-modificar"
+                  id="boton"
                   onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
@@ -1093,8 +1093,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="serie"
                     name="serie"
                     placeholder="Serie"
-                    maxLength="4"
                     autoComplete="off"
+                    autoFocus
+                    maxLength="4"
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
@@ -1115,8 +1116,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="numero"
                     name="numero"
                     placeholder="Número"
-                    maxLength="10"
                     autoComplete="off"
+                    maxLength="10"
                     readOnly={modo == "Registrar" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
@@ -1251,8 +1252,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="clienteTelefono"
                     name="clienteTelefono"
-                    autoComplete="off"
                     placeholder="Teléfono"
+                    autoComplete="off"
                     readOnly={true}
                     value={data.clienteTelefono ?? ""}
                     onChange={ValidarData}
@@ -1324,8 +1325,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="contactoTelefono"
                       name="contactoTelefono"
-                      autoComplete="off"
                       placeholder="Teléfono"
+                      autoComplete="off"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.contactoTelefono ?? ""}
                       onChange={ValidarData}
@@ -1390,8 +1391,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="contactoCorreoElectronico"
                       name="contactoCorreoElectronico"
-                      autoComplete="off"
                       placeholder="E-mail"
+                      autoComplete="off"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.contactoCorreoElectronico ?? ""}
                       onChange={ValidarData}
@@ -1409,8 +1410,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       type="text"
                       id="contactoCelular"
                       name="contactoCelular"
-                      autoComplete="off"
                       placeholder="Celular"
+                      autoComplete="off"
                       readOnly={modo == "Consultar" ? true : false}
                       value={data.contactoCelular ?? ""}
                       onChange={ValidarData}
@@ -1554,8 +1555,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="text"
                         id="numeroOperacion"
                         name="numeroOperacion"
-                        autoComplete="off"
                         placeholder="Número de Operación"
+                        autoComplete="off"
                         readOnly={modo == "Consultar" ? true : false}
                         value={data.numeroOperacion ?? ""}
                         onChange={ValidarData}
@@ -1605,8 +1606,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="validez"
                     name="validez"
-                    autoComplete="off"
                     placeholder="Validez de la cotización"
+                    autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.validez ?? ""}
                     onChange={ValidarData}

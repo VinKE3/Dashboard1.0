@@ -39,9 +39,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="text"
               id="id"
               name="id"
-              autoComplete="off"
               placeholder="00"
+              autoComplete="off"
               maxLength={2}
+              autoFocus
               readOnly={modo == "Registrar" ? false : true}
               value={data.id ?? ""}
               onChange={ValidarData}
