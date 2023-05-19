@@ -3,10 +3,9 @@ import Mensajes from "./Mensajes";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "./Global";
 import Insert from "./CRUD/Insert";
 import Update from "./CRUD/Update";
+import * as Global from "./Global";
 
 const ModalCrud = ({
   children,
@@ -71,7 +70,7 @@ const ModalCrud = ({
       <div className={Global.FondoModal}>
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div className={Global.ModalContent}>
+          <div id="modalCRUD" className={Global.ModalContent}>
             {/*header*/}
             <div className={Global.ModalHeader}>
               <h3 className={Global.TituloModal}>{modo + " " + titulo}</h3>

@@ -30,7 +30,7 @@ const BotonCRUD = ({
   //#region Render
   return (
     <div className="flex item-center justify-center">
-      {permisos[2] ? (
+      {permisos[3] ? (
         <div className={Global.TablaBotonConsultar}>
           <button
             id="boton-consultar"
@@ -58,7 +58,7 @@ const BotonCRUD = ({
       ) : (
         ""
       )}
-      {permisos[3] ? (
+      {permisos[2] ? (
         <div className={Global.TablaBotonEliminar}>
           <button
             id="boton-eliminar"

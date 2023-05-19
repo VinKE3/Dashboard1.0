@@ -132,8 +132,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData({
         ...data,
         clienteId: dataCotizacion.clienteId,
-        clienteTipoDocumentoIdentidadId: dataCotizacion.clienteTipoDocumentoIdentidadId,
-        clienteNumeroDocumentoIdentidad: dataCotizacion.clienteNumeroDocumentoIdentidad,
+        clienteTipoDocumentoIdentidadId:
+          dataCotizacion.clienteTipoDocumentoIdentidadId,
+        clienteNumeroDocumentoIdentidad:
+          dataCotizacion.clienteNumeroDocumentoIdentidad,
         clienteNombre: dataCotizacion.clienteNombre,
         clienteDireccionId: dataCotizacion.clienteDireccionId,
         cotizacionId: dataCotizacion.cotizacionId,
@@ -2306,7 +2308,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         </>
       )}
       {modalCliente && (
-        <FiltroCliente setModal={setModalCliente} setObjeto={setDataCliente} />
+        <FiltroCliente
+          setModal={setModalCliente}
+          setObjeto={setDataCliente}
+          foco={document.getElementById("clienteDireccionId")}
+        />
       )}
       {modalCotizacion && (
         <FiltroCotizacion
@@ -2314,10 +2320,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           id={data.clienteId}
           setObjeto={setDataCotizacion}
           objeto={data.cotizacionId}
+          foco={document.getElementById("clienteNumeroDocumentoIdentidad")}
         />
       )}
       {modalArt && (
-        <FiltroArticulo setModal={setModalArt} setObjeto={setDataArt} />
+        <FiltroArticulo
+          setModal={setModalArt}
+          setObjeto={setDataArt}
+          foco={document.getElementById("cantidad")}
+        />
       )}
       {modalPrecio && (
         <FiltroPrecio

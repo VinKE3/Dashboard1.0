@@ -1,21 +1,19 @@
 import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
+import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
-import { FaSearch } from "react-icons/fa";
-import GetPermisos from "../../../components/Funciones/GetPermisos";
-import styled from "styled-components";
+import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
+import { toast, ToastContainer } from "react-toastify";
+import moment from "moment";
+import styled from "styled-components";
+import { FaSearch } from "react-icons/fa";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
-import { Checkbox } from "primereact/checkbox";
-import { RadioButton } from "primereact/radiobutton";
-import moment from "moment";
-
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -24,14 +22,22 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:last-child {
-    width: 130px;
+
+  & th:nth-child(2),
+  & th:nth-child(3),
+  & th:nth-child(6),
+  & th:nth-child(7),
+  & th:nth-child(8) {
     text-align: center;
   }
+  & th:last-child {
+    text-align: center;
+    width: 80px;
+    max-width: 80px;
+  }
 `;
-//#endregion
 
-const CuentaPorPagar = () => {
+const GuiasDeCompra = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
@@ -40,7 +46,6 @@ const CuentaPorPagar = () => {
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [tipo, setTipo] = useState("soloDeuda");
   const [filtro, setFiltro] = useState({
     proveedorNombre: "",
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
@@ -51,10 +56,9 @@ const CuentaPorPagar = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo] = useState("Consultar");
+  const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [elimlinar, setEliminar] = useState(false);
-
+  const [respuestaAlert, setRespuestaAlert] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -75,10 +79,10 @@ const CuentaPorPagar = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (elimlinar) {
+    if (respuestaAlert) {
       Listar(cadena, index + 1);
     }
-  }, [elimlinar]);
+  }, [respuestaAlert]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -97,7 +101,7 @@ const CuentaPorPagar = () => {
     }
   }, [permisos]);
   useEffect(() => {
-    GetPermisos("CuentaPorPagar", setPermisos);
+    GetPermisos("GuiaCompra", setPermisos);
   }, []);
   //#endregion
 
@@ -125,29 +129,102 @@ const CuentaPorPagar = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Finanzas/CuentaPorPagar/Listar?pagina=${pagina}${filtro}`
+      `api/Compra/GuiaCompra/Listar?Pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Finanzas/CuentaPorPagar/${id}`);
+    const result = await ApiMasy.get(`api/Compra/GuiaCompra/${id}`);
     setObjeto(result.data.data);
+  };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Compra/GuiaCompra/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return false;
+    } else {
+      return true;
+    }
   };
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id) => {
-    await GetPorId(id);
-    setModal(true);
+  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
+    setModo(modo);
+    switch (accion) {
+      case 0: {
+        setObjeto({
+          empresaId: "",
+          proveedorId: "",
+          tipoDocumentoId: "01",
+          serie: "",
+          numero: "",
+          clienteId: "000000",
+          fechaEmision: moment().format("YYYY-MM-DD"),
+          direccionPartida: "",
+          departamentoPartidaId: "",
+          provinciaPartidaId: "",
+          distritoPartidaId: "",
+          departamentoPartidaNombre: "",
+          provinciaPartidaNombre: "",
+          distritoPartidaNombre: "",
+          direccionLlegada: dataGlobal.empresaDireccion,
+          departamentoLlegadaId: "15",
+          provinciaLlegadaId: "01",
+          distritoLlegadaId: "42",
+          departamentoLlegadaNombre: "",
+          provinciaLlegadaNombre: "",
+          distritoLlegadaNombre: "",
+          proveedorRUC: "",
+          proveedorNombre: "",
+          proveedorNumeroDocumentoIdentidad: "",
+          transportistaId: "",
+          transportistaNumeroDocumentoIdentidad: "",
+          transportistaCertificadoInscripcion: "",
+          transportistaLicenciaConducir: "",
+          marcaPlaca: "",
+          motivoTrasladoId: "02",
+          motivoTrasladoSustento: "",
+          ingresoEgresoStock: "",
+          observacion: "",
+          documentoReferencia: "",
+          monedaId: "S",
+          afectarStock: false,
+          detalles: [],
+        });
+        setModal(true);
+        break;
+      }
+      case 1: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          await GetPorId(id);
+          setModal(true);
+        }
+        break;
+      }
+      case 3: {
+        await GetPorId(id);
+        setModal(true);
+        break;
+      }
+      default:
+        break;
+    }
   };
   //#endregion
-  const datosFiltrados =
-    tipo === "todos"
-      ? datos
-      : tipo === "soloDeuda"
-      ? datos.filter((dato) => dato.saldo > 0 && dato.saldo <= dato.total)
-      : datos.filter((dato) => dato.abonado === dato.total);
 
   //#region Columnas
   const columnas = useMemo(
@@ -157,17 +234,21 @@ const CuentaPorPagar = () => {
         accessor: "id",
       },
       {
-        Header: "Fecha",
-        accessor: "fechaContable",
+        Header: "Emisión",
+        accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
-        Header: "Vencimiento",
-        accessor: "fechaVencimiento",
+        Header: "Traslado",
+        accessor: "fechaTraslado",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
@@ -178,46 +259,50 @@ const CuentaPorPagar = () => {
         Header: "Proveedor",
         accessor: "proveedorNombre",
       },
+
       {
-        Header: "Moneda",
-        accessor: "monedaId",
-      },
-      {
-        Header: "Total",
-        accessor: "total",
-      },
-      {
-        Header: "Abonado",
-        accessor: "abonado",
-      },
-      {
-        Header: "Saldo",
-        accessor: "saldo",
-      },
-      {
-        Header: "Cancelado",
-        accessor: "isCancelado",
+        Header: "B",
+        accessor: "isBloqueado",
         Cell: ({ value }) => {
-          return value ? (
+          return (
             <div className="flex justify-center">
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <Checkbox checked={false} />
+              <Checkbox checked={value} />
             </div>
           );
+        },
+      },
+      {
+        Header: "S",
+        accessor: "afectarStock",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "Marca/Placa",
+        accessor: "marcaPlaca",
+        Cell: ({ value }) => {
+          if (value) {
+            return <p className="text-center">{value}</p>;
+          } else {
+            return <p className="text-center">Sin Placa</p>;
+          }
         },
       },
       {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setRespuestaAlert={setRespuestaAlert}
             permisos={permisos}
-            menu={["Compras", "CuentaPorPagar"]}
+            menu={["Compra", "GuiaCompra"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
           />
         ),
       },
@@ -232,55 +317,8 @@ const CuentaPorPagar = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Cuentas Por Pagar</h2>
-              <div className="flex gap-3 items-center">
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <div className={Global.LabelStyle}>
-                      <RadioButton
-                        inputId="todos"
-                        name="todos"
-                        value="todos"
-                        onChange={(e) => setTipo(e.target.value)}
-                        checked={tipo === "todos"}
-                      />
-                    </div>
-                    <label htmlFor="todos" className={Global.InputStyle}>
-                      Todos
-                    </label>
-                  </div>
-                </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.LabelStyle}>
-                    <RadioButton
-                      inputId="soloDeuda"
-                      name="soloDeuda"
-                      value="soloDeuda"
-                      onChange={(e) => setTipo(e.target.value)}
-                      checked={tipo === "soloDeuda"}
-                    />
-                  </div>
-                  <label htmlFor="soloDeuda" className={Global.InputStyle}>
-                    Deudas
-                  </label>
-                </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.LabelStyle}>
-                    <RadioButton
-                      inputId="soloCancelado"
-                      name="soloCancelado"
-                      value="soloCancelado"
-                      onChange={(e) => setTipo(e.target.value)}
-                      checked={tipo === "soloCancelado"}
-                    />
-                  </div>
-                  <label htmlFor="soloCancelado" className={Global.InputStyle}>
-                    Cancelados
-                  </label>
-                </div>
-              </div>
-            </div>
+            <h2 className={Global.TituloH2}>Guias De Compra</h2>
+
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
@@ -334,11 +372,24 @@ const CuentaPorPagar = () => {
                 </button>
               </div>
             </div>
+            {/* Filtro*/}
+
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Registrar"
+                botonClass={Global.BotonRegistrar}
+                botonIcon={faPlus}
+                click={() => AbrirModal()}
+              />
+            )}
+            {/* Boton */}
+
             {/* Tabla */}
             <TablaStyle>
               <Table
                 columnas={columnas}
-                datos={datosFiltrados}
+                datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
@@ -350,11 +401,11 @@ const CuentaPorPagar = () => {
           <ToastContainer />
         </>
       ) : (
-        <div></div>
+        <span></span>
       )}
     </>
   );
   //#endregion
 };
 
-export default CuentaPorPagar;
+export default GuiasDeCompra;

@@ -25,7 +25,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const FiltroCliente = ({ setModal, setObjeto }) => {
+const FiltroCliente = ({ setModal, setObjeto, foco }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -112,6 +112,7 @@ const FiltroCliente = ({ setModal, setObjeto }) => {
 
       //Retencion
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion

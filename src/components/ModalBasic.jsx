@@ -21,10 +21,10 @@ const ModalBasic = ({
   //#region Render
   return (
     <>
-      <div id="modalBasic" className={Global.FondoModal}>
+      <div className={Global.FondoModal}>
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div className={Global.ModalContent}>
+          <div id="modalBasic" className={Global.ModalContent}>
             {/*header*/}
             <div className={Global.ModalHeader}>
               <h3 className={Global.TituloModal}>{titulo}</h3>

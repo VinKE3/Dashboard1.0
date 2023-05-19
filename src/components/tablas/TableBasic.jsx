@@ -96,9 +96,13 @@ const TableBasic = ({
           }
         }
       } else {
-        e.target.children[1].children[0].classList.add("selected-row");
+        //Valida si tiene al menos una fila para seleccionar
+        if (e.target.children[1].children[0] != undefined) {
+          e.target.children[1].children[0].classList.add("selected-row");
+        }
       }
     } else if (e.keyCode == 13) {
+      //Acciona el evento click al presionar enter
       let row = document.querySelector("#tablaBasic tr.selected-row");
       if (row != null) {
         row.classList.remove("selected-row");

@@ -36,7 +36,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const FiltroArticulo = ({ setModal, setObjeto }) => {
+const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -107,6 +107,7 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
       monedaId: result.data.data.monedaId,
       presentacion: result.data.data.presentacion ?? "",
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion
@@ -224,56 +225,58 @@ const FiltroArticulo = ({ setModal, setObjeto }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs + "mb-2"}>
-              <div className={Global.Input60pct}>
-                <label htmlFor="codigoBarras" className={Global.LabelStyle}>
-                  Cod. Barras
-                </label>
-                <input
-                  type="text"
-                  id="codigoBarras"
-                  name="codigoBarras"
-                  placeholder="Código Barras"
-                  autoComplete="off"
-                  autoFocus
-                  value={filtro.codigoBarras}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
+          <>
+            <div className={Global.ContenedorBasico}>
+              <div className={Global.ContenedorInputs + "mb-2"}>
+                <div className={Global.Input60pct}>
+                  <label htmlFor="codigoBarras" className={Global.LabelStyle}>
+                    Cod. Barras
+                  </label>
+                  <input
+                    type="text"
+                    id="codigoBarras"
+                    name="codigoBarras"
+                    placeholder="Código Barras"
+                    autoComplete="off"
+                    autoFocus
+                    value={filtro.codigoBarras}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="descripcion" className={Global.LabelStyle}>
+                    Descripción
+                  </label>
+                  <input
+                    type="text"
+                    id="descripcion"
+                    name="descripcion"
+                    placeholder="Descripción"
+                    autoComplete="off"
+                    value={filtro.descripcion}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="consultar"
+                    onClick={Filtro}
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                  >
+                    <FaSearch></FaSearch>
+                  </button>
+                </div>
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="descripcion" className={Global.LabelStyle}>
-                  Descripción
-                </label>
-                <input
-                  type="text"
-                  id="descripcion"
-                  name="descripcion"
-                  placeholder="Descripción"
-                  autoComplete="off"
-                  value={filtro.descripcion}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="consultar"
-                  onClick={Filtro}
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                >
-                  <FaSearch></FaSearch>
-                </button>
-              </div>
-            </div>
 
-            {/* Tabla */}
-            <TablaStyle>
-              <TableBasic columnas={columnas} datos={datos} />
-            </TablaStyle>
-            {/* Tabla */}
-          </div>
+              {/* Tabla */}
+              <TablaStyle>
+                <TableBasic columnas={columnas} datos={datos} />
+              </TablaStyle>
+              {/* Tabla */}
+            </div>
+          </>
         }
       </ModalBasic>
     </>

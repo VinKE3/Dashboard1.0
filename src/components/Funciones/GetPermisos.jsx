@@ -3,7 +3,11 @@ import store from "store2";
 
 const GetPermisos = async (menu, setPermisos) => {
   if (store.session.get("usuario") == "AD") {
-    if (menu == "BloquearCompra" || menu == "BloquearVenta" || menu == "BloquearMovimientoBancario") {
+    if (
+      menu == "BloquearCompra" ||
+      menu == "BloquearVenta" ||
+      menu == "BloquearMovimientoBancario"
+    ) {
       setPermisos([false, true, false, false, false]);
       return true;
     }
@@ -20,6 +24,34 @@ const GetPermisos = async (menu, setPermisos) => {
     return true;
   } else {
     const result = await GetUsuarioId(store.session.get("usuarioId"), menu);
+    if (
+      menu == "BloquearCompra" ||
+      menu == "BloquearVenta" ||
+      menu == "BloquearMovimientoBancario"
+    ) {
+      setPermisos([false, result.modificar, false, false, false]);
+      return false;
+    }
+    if (menu == "Correlativo") {
+      setPermisos([
+        result.registrar,
+        result.modificar,
+        result.eliminar,
+        false,
+        false,
+      ]);
+      return false;
+    }
+    if (menu == "Retencion") {
+      setPermisos([
+        result.registrar,
+        false,
+        result.eliminar,
+        result.consultar,
+        result.anular,
+      ]);
+      return false;
+    }
     setPermisos([
       result.registrar,
       result.modificar,
