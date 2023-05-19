@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
+import Delete from "../../../components/CRUD/Delete";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
@@ -72,7 +73,7 @@ const Cheque = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -93,10 +94,10 @@ const Cheque = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(cadena, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -213,6 +214,13 @@ const Cheque = () => {
         }
         break;
       }
+      case 2: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          Delete(["Compra", "Cheque"], id, setEliminar);
+        }
+        break;
+      }
       case 3: {
         await GetPorId(id);
         setModal(true);
@@ -314,12 +322,11 @@ const Cheque = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
-            menu={["Compra", "Cheque"]}
-            id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },

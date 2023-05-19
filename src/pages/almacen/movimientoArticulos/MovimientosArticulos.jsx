@@ -65,7 +65,7 @@ const MovimientosArticulos = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -79,9 +79,9 @@ const MovimientosArticulos = () => {
   }, [cadena]);
 
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -276,7 +276,7 @@ const MovimientosArticulos = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
             menu={["Almacen", "MovimientoArticulos"]}
             id={row.values.Id}

@@ -59,7 +59,7 @@ const BloquearMovimientoBancario = () => {
     `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   const [checked, setChecked] = useState(false);
   //#endregion
 
@@ -72,9 +72,9 @@ const BloquearMovimientoBancario = () => {
   }, [cadena]);
 
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -301,7 +301,7 @@ const BloquearMovimientoBancario = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
             menu={["Finanzas", "BloquearMovimientoBancario"]}
             id={row.values.id}

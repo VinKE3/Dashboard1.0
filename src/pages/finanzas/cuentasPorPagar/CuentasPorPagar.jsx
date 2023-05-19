@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Delete from "../../../components/CRUD/Delete";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import FiltroBasico from "../../../components/filtros/FiltroBasico";
@@ -45,7 +46,7 @@ const CuentasPorPagar = () => {
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Consultar");
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   const [tipo, setTipo] = useState("soloDeuda");
   const filtroInicial =
     "&fechaInicio=" +
@@ -76,10 +77,10 @@ const CuentasPorPagar = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(filtroInicial, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   //#endregion
 
@@ -276,7 +277,7 @@ const CuentasPorPagar = () => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
+          setEliminar={setEliminar}
           permisos={permisos}
           menu={["Compra", "CuentasPorPagar"]}
           id={row.values.id}

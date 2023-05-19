@@ -1,8 +1,8 @@
 import ApiMasy from "../../api/ApiMasy";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-const Delete = async (menu, id, setRespuesta) => {
-  setRespuesta(false);
+const Delete = async (menu, id, setEliminar) => {
+  setEliminar(false);
   const result = Swal.fire({
     title: "Eliminar registro",
     icon: "warning",
@@ -34,9 +34,9 @@ const Delete = async (menu, id, setRespuesta) => {
             progress: undefined,
             theme: "colored",
           });
-          setRespuesta(false);
+          setEliminar(false);
         } else {
-          setRespuesta(true);
+          setEliminar(true);
           toast.info(String(response.data.messages[0].textos), {
             position: "bottom-right",
             autoClose: 3000,

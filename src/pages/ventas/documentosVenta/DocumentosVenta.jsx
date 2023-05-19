@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
+import Delete from "../../../components/CRUD/Delete";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
@@ -24,7 +25,7 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(7){
+  & th:nth-child(7) {
     text-align: right;
   }
   & th:nth-child(8),
@@ -63,7 +64,7 @@ const DocumentosVenta = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -84,10 +85,10 @@ const DocumentosVenta = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(cadena, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -237,6 +238,13 @@ const DocumentosVenta = () => {
         }
         break;
       }
+      case 2: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          Delete(["Venta", "DocumentoVenta"], id, setEliminar);
+        }
+        break;
+      }
       case 3: {
         await GetPorId(id);
         setModal(true);
@@ -252,8 +260,10 @@ const DocumentosVenta = () => {
       .querySelector("tr.selected-row");
     if (tabla != null) {
       if (tabla.classList.contains("selected-row")) {
-        let id = document.querySelector("tr.selected-row").children[0].innerHTML;
-        let documento = document.querySelector("tr.selected-row").children[2].innerHTML;
+        let id =
+          document.querySelector("tr.selected-row").children[0].innerHTML;
+        let documento =
+          document.querySelector("tr.selected-row").children[2].innerHTML;
         Swal.fire({
           title: "¿Desea Anular el documento?",
           text: documento,
@@ -443,12 +453,11 @@ const DocumentosVenta = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
-            menu={["Venta", "DocumentoVenta"]}
-            id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },

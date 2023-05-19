@@ -138,8 +138,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (modo == "Registrar") {
       GetPorIdTipoCambio(data.fechaEmision);
     } else {
-      GetProveedorContacto(data.proveedorContactoId);
-      GetProveedorCuentaCorriente(data.proveedorCuentaCorriente1Id);
+      GetProveedorContacto(data.proveedorId);
+      GetProveedorCuentaCorriente(data.proveedorId);
     }
     GetResponsable();
     GetCuentaCorriente();
@@ -168,7 +168,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         [target.name]: target.value.toUpperCase(),
       }));
     }
-
+    if (target.name == "lugarEntrega") {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value,
+      }));
+    }
     if (target.name == "tipoDocumentoId") {
       if (target.value == "03") {
         setData((prevState) => ({
@@ -192,7 +197,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         }));
       }
     }
-    if (target.name == "porcentajeIGV") {
+    if (
+      target.name == "porcentajeIGV" ||
+      target.name == "porcentajeRetencion" ||
+      target.name == "porcentajePercepcion"
+    ) {
       setRefrescar(true);
     }
 
@@ -619,236 +628,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     setRefrescar(true);
   };
-  const DetallesOrdenCompra = async (accion) => {
-    //Recorre los detalles que nos retorna el Filtro Orden de Compra
-    let detalleEliminado = dataDetalle;
-    //Contador para asignar el detalleId
-    let contador = dataDetalle.length;
-
-    dataOrdenCompra.detalles.map((dataOCDetallemap) => {
-      contador++;
-
-      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
-      let dataDetalleExiste = dataDetalle.find((map) => {
-        return map.id == dataOCDetallemap.id;
-      });
-      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
-
-      //Validamos si la accion es Agregar o Eliminar
-      if (accion == "agregar") {
-        //Si dataDetalleExiste es undefined hace el PUSH
-        if (dataDetalleExiste == undefined) {
-          //Toma el valor actual de contador para asignarlo
-          let i = contador;
-          // dataDetalle.push({
-          //   detalleId: detalleId,
-          //   id: dataOCDetallemap.id,
-          //   lineaId: dataOCDetallemap.lineaId,
-          //   subLineaId: dataOCDetallemap.subLineaId,
-          //   articuloId: dataOCDetallemap.articuloId,
-          //   marcaId: dataOCDetallemap.marcaId,
-          //   codigoBarras: dataOCDetallemap.codigoBarras,
-          //   descripcion: dataOCDetallemap.descripcion,
-          //   stock: dataOCDetallemap.stock,
-          //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
-          //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-          //   cantidad: dataOCDetallemap.cantidad,
-          //   precioUnitario: dataOCDetallemap.precioUnitario,
-          //   montoIGV: dataOCDetallemap.montoIGV,
-          //   subTotal: dataOCDetallemap.subTotal,
-          //   importe: dataOCDetallemap.importe,
-          // });
-          // setDetalleId(detalleId + 1);
-          setDataDetalle((prev) => [
-            ...prev,
-            {
-              detalleId: i,
-              id: dataOCDetallemap.id,
-              lineaId: dataOCDetallemap.lineaId,
-              subLineaId: dataOCDetallemap.subLineaId,
-              articuloId: dataOCDetallemap.articuloId,
-              unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-              marcaId: dataOCDetallemap.marcaId,
-              descripcion: dataOCDetallemap.descripcion,
-              codigoBarras: dataOCDetallemap.codigoBarras,
-              cantidad: dataOCDetallemap.cantidad,
-              stock: dataOCDetallemap.stock,
-              precioUnitario: dataOCDetallemap.precioUnitario,
-              montoIGV: dataOCDetallemap.montoIGV,
-              subTotal: dataOCDetallemap.subTotal,
-              importe: dataOCDetallemap.importe,
-              presentacion: dataOCDetallemap.presentacion ?? "",
-              unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
-            },
-          ]);
-
-          //Asigna el valor final de contador y le agrega 1
-          setDetalleId(contador + 1);
-        } else {
-          //Modifica registro en base al id
-
-          //Calculos
-          // let can = dataDetalleExiste.cantidad + dataOCDetallemap.cantidad;
-          // let importe = can * dataDetalleExiste.precioUnitario;
-          // let subTotal = importe * (data.porcentajeIGV / 100);
-          // let montoIGV = importe - subTotal;
-          //Calculos
-          //Modifica a dataDetalle en el índice que corresponda
-          // dataDetalle[dataDetalleExiste.detalleId - 1] = {
-          //   detalleId: dataDetalleExiste.detalleId,
-          //   id: dataOCDetallemap.id,
-          //   lineaId: dataOCDetallemap.lineaId,
-          //   subLineaId: dataOCDetallemap.subLineaId,
-          //   articuloId: dataOCDetallemap.articuloId,
-          //   marcaId: dataOCDetallemap.marcaId,
-          //   codigoBarras: dataOCDetallemap.codigoBarras,
-          //   descripcion: dataOCDetallemap.descripcion,
-          //   stock: dataOCDetallemap.stock,
-          //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
-          //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-          //   cantidad: can,
-          //   precioUnitario: dataOCDetallemap.precioUnitario,
-          //   importe: importe,
-          //   subTotal: subTotal,
-          //   montoIGV: montoIGV,
-          // };
-
-          let dataDetalleMod = dataDetalle.map((map) => {
-            if (map.id == dataDetalleExiste.id) {
-              //Calculos
-              let cantidad =
-                dataDetalleExiste.cantidad + dataOCDetallemap.cantidad;
-              let importe = cantidad * dataOCDetallemap.precioUnitario;
-              let subTotal = importe * (data.porcentajeIGV / 100);
-              let montoIGV = importe - subTotal;
-              //Calculos
-              return {
-                detalleId: dataDetalleExiste.detalleId,
-                id: dataOCDetallemap.id,
-                lineaId: dataOCDetallemap.lineaId,
-                subLineaId: dataOCDetallemap.subLineaId,
-                articuloId: dataOCDetallemap.articuloId,
-                unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-                marcaId: dataOCDetallemap.marcaId,
-                descripcion: dataOCDetallemap.descripcion,
-                codigoBarras: dataOCDetallemap.codigoBarras,
-                cantidad: cantidad,
-                stock: dataOCDetallemap.stock,
-                precioUnitario: dataOCDetallemap.precioUnitario,
-                subTotal: subTotal,
-                montoIGV: montoIGV,
-                importe: importe,
-                presentacion: dataOCDetallemap.presentacion ?? "",
-                unidadMedidaDescripcion:
-                  dataOCDetallemap.unidadMedidaDescripcion,
-              };
-            } else {
-              return map;
-            }
-          });
-          setDataDetalle(dataDetalleMod);
-        }
-      } else {
-        //ELIMINAR
-        if (dataDetalleExiste != undefined) {
-          //Validamos por la cantidad
-          if (dataDetalleExiste.cantidad - dataOCDetallemap.cantidad == 0) {
-            //Si el resultado es 0 entonces se elimina por completo el registro
-            detalleEliminado = detalleEliminado.filter(
-              (map) => map.id !== dataDetalleExiste.id
-            );
-            console.log(detalleEliminado);
-            //Si el resultado es 0 entonces se elimina por completo el registro
-
-            //Toma el valor actual de contador para asignarlo
-            let i = 1;
-            if (detalleEliminado.length > 0) {
-              setDataDetalle(
-                detalleEliminado.map((map) => {
-                  return {
-                    ...map,
-                    detalleId: i++,
-                  };
-                })
-              );
-              setDetalleId(i);
-            } else {
-              //Asgina directamente a 1
-              setDetalleId(detalleEliminado.length + 1);
-              setDataDetalle(detalleEliminado);
-            }
-            setRefrescar(true);
-          } else {
-            //Si la resta es mayor a 0 entonces restamos al detalle encontrado
-
-            // //Calculos
-            // let cantidad =
-            //   dataDetalleExiste.cantidad - dataOCDetallemap.cantidad;
-            // let importe = cantidad * dataDetalleExiste.precioUnitario;
-            // let subTotal = importe * (data.porcentajeIGV / 100);
-            // let montoIGV = importe - subTotal;
-            // //Calculos
-            // //Modifica a dataDetalle en el índice que corresponda
-            // dataDetalle[dataDetalleExiste.detalleId - 1] = {
-            //   detalleId: dataDetalleExiste.detalleId,
-            //   id: dataOCDetallemap.id,
-            //   lineaId: dataOCDetallemap.lineaId,
-            //   subLineaId: dataOCDetallemap.subLineaId,
-            //   articuloId: dataOCDetallemap.articuloId,
-            //   marcaId: dataOCDetallemap.marcaId,
-            //   codigoBarras: dataOCDetallemap.codigoBarras,
-            //   descripcion: dataOCDetallemap.descripcion,
-            //   stock: dataOCDetallemap.stock,
-            //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
-            //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-            //   cantidad: cantidad,
-            //   precioUnitario: detalleActual.precioUnitario,
-            //   importe: importe,
-            //   subTotal: subTotal,
-            //   montoIGV: montoIGV,
-            // };
-
-            let dataDetalleEliminar = dataDetalle.map((map) => {
-              if (map.id == dataDetalleExiste.id) {
-                //Calculos
-                let can =
-                  dataDetalleExiste.cantidad - dataOCDetallemap.cantidad;
-                let importe = can * dataDetalleExiste.precioUnitario;
-                let subTotal = importe * (data.porcentajeIGV / 100);
-                let montoIGV = importe - subTotal;
-                //Calculos
-
-                return {
-                  detalleId: dataDetalleExiste.detalleId,
-                  id: dataOCDetallemap.id,
-                  lineaId: dataOCDetallemap.lineaId,
-                  subLineaId: dataOCDetallemap.subLineaId,
-                  articuloId: dataOCDetallemap.articuloId,
-                  unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-                  marcaId: dataOCDetallemap.marcaId,
-                  descripcion: dataOCDetallemap.descripcion,
-                  codigoBarras: dataOCDetallemap.codigoBarras,
-                  cantidad: can,
-                  stock: dataOCDetallemap.stock,
-                  precioUnitario: dataDetalleExiste.precioUnitario,
-                  subTotal: subTotal,
-                  montoIGV: montoIGV,
-                  importe: importe,
-                  presentacion: dataOCDetallemap.presentacion ?? "",
-                  unidadMedidaDescripcion:
-                    dataOCDetallemap.unidadMedidaDescripcion,
-                };
-              } else {
-                return map;
-              }
-            });
-            setDataDetalle(dataDetalleEliminar);
-          }
-        }
-      }
-      setRefrescar(true);
-    });
-  };
   //Calculos
   const ActualizarImportesTotales = async () => {
     //Suma los importes de los detalles
@@ -858,39 +637,57 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     //Porcentajes
     let porcentajeIgvSeleccionado = data.porcentajeIGV;
+    let porcentajeRetencionSelect = data.porcentajeRetencion;
+    let porcentajePercepcionSelect = data.porcentajePercepcion;
     let incluyeIgv = data.incluyeIGV;
     //Porcentajes
-
     //Montos
     let total = 0,
+      totalNeto = 0,
       subTotal = 0,
-      montoIGV = 0;
+      montoIGV = 0,
+      percepcion = 0,
+      retencion = 0;
     //Montos
 
     //Calculo Check IncluyeIGV
     if (incluyeIgv) {
-      total = Funciones.RedondearNumero(importeTotal, 2);
+      totalNeto = Funciones.RedondearNumero(importeTotal, 2);
       subTotal = Funciones.RedondearNumero(
-        total / (1 + porcentajeIgvSeleccionado / 100),
+        totalNeto / (1 + porcentajeIgvSeleccionado / 100),
         2
       );
-      montoIGV = Funciones.RedondearNumero(total - subTotal, 2);
+      montoIGV = Funciones.RedondearNumero(totalNeto - subTotal, 2);
     } else {
       subTotal = Funciones.RedondearNumero(importeTotal, 2);
       montoIGV = Funciones.RedondearNumero(
         subTotal * (porcentajeIgvSeleccionado / 100),
         2
       );
-      total = Funciones.RedondearNumero(subTotal + montoIGV, 2);
+      totalNeto = Funciones.RedondearNumero(subTotal + montoIGV, 2);
     }
     //Calculo Check IncluyeIGV
+
+    //Calculos
+    retencion = Funciones.RedondearNumero(
+      totalNeto * (porcentajeRetencionSelect / 100),
+      2
+    );
+    percepcion = Funciones.RedondearNumero(
+      totalNeto * (porcentajePercepcionSelect / 100),
+      2
+    );
+    total = totalNeto + percepcion + retencion;
+    //Calculos
 
     setData((prevState) => ({
       ...prevState,
       subTotal: Funciones.RedondearNumero(subTotal, 2),
       montoIGV: Funciones.RedondearNumero(montoIGV, 2),
       totalNeto: Funciones.RedondearNumero(total, 2),
-      total: Funciones.RedondearNumero(total, 2),
+      montoRetencion: Funciones.RedondearNumero(retencion, 2),
+      montoPercepcion: Funciones.RedondearNumero(percepcion, 2),
+      total: Funciones.RedondearNumero(totalNeto, 2),
     }));
   };
   //Calculos
@@ -1275,7 +1072,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="proveedorNombre"
                     name="proveedorNombre"
-                    placeholder="Proveedor"
+                    placeholder="Buscar Proveedor"
                     autoComplete="off"
                     readOnly={true}
                     value={data.proveedorNombre ?? ""}
@@ -1326,6 +1123,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="proveedorDireccion"
                     name="proveedorDireccion"
+                    placeholder="Dirección"
                     autoComplete="off"
                     readOnly={modo == "Consultar" ? true : false}
                     value={data.proveedorDireccion}
@@ -1575,13 +1373,13 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
-                  <label htmlFor="tipoCompraId" className={Global.LabelStyle}>
+                  <label htmlFor="lugarEntrega" className={Global.LabelStyle}>
                     Lug. Entrega
                   </label>
                   <select
-                    id="tipoCompraId"
-                    name="tipoCompraId"
-                    value={data.tipoCompraId ?? ""}
+                    id="lugarEntrega"
+                    name="lugarEntrega"
+                    value={data.lugarEntrega ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Consultar" ? true : false}
                     className={Global.InputStyle}
@@ -1879,55 +1677,50 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             {/*Tabla Footer*/}
             <div className={Global.ContenedorFooter}>
-              {data.tipoDocumentoId != "03" ? (
-                <>
-                  <div className="flex">
-                    <div className={Global.FilaVacia}></div>
-                    <div className={Global.FilaPrecio}>
-                      <p className={Global.FilaContenido}>SubTotal</p>
-                    </div>
-                    <div className={Global.FilaImporte}>
-                      <p className={Global.FilaContenido}>
-                        {data.subTotal ?? "0.00"}
-                      </p>
-                    </div>
-                    <div className={Global.UltimaFila}></div>
-                  </div>
-                  <div className="flex">
-                    <div className={Global.FilaVacia}></div>
-                    <div className={Global.FilaImporte}>
-                      <label
-                        htmlFor="porcentajeIGV"
-                        className={Global.FilaContenido + " !px-0"}
-                      >
-                        IGV
-                      </label>
-                      <select
-                        id="porcentajeIGV"
-                        name="porcentajeIGV"
-                        value={data.porcentajeIGV ?? ""}
-                        onChange={(e) => ValidarData(e)}
-                        disabled={modo == "Consultar" ? true : false}
-                        className={Global.FilaContenidoSelect + " !mr-1.5"}
-                      >
-                        {dataIgv.map((map) => (
-                          <option key={map.porcentaje} value={map.porcentaje}>
-                            {map.porcentaje}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className={Global.FilaImporte}>
-                      <p className={Global.FilaContenido}>
-                        {data.montoIGV ?? "0.00"}
-                      </p>
-                    </div>
-                    <div className={Global.UltimaFila}></div>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>SubTotal</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.subTotal ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaImporte}>
+                  <label
+                    htmlFor="porcentajeIGV"
+                    className={Global.FilaContenido + " !px-0"}
+                  >
+                    IGV
+                  </label>
+                  <select
+                    id="porcentajeIGV"
+                    name="porcentajeIGV"
+                    value={data.porcentajeIGV ?? ""}
+                    onChange={(e) => ValidarData(e)}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.FilaContenidoSelect}
+                  >
+                    {dataIgv.map((map) => (
+                      <option key={map.porcentaje} value={map.porcentaje}>
+                        {map.porcentaje}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.montoIGV ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+
               <div className="flex">
                 <div className={Global.FilaVacia}></div>
                 <div className={Global.FilaPrecio}>
@@ -1935,6 +1728,81 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.FilaImporte}>
                   <p className={Global.FilaContenido}>{data.total ?? "0.00"}</p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaImporte}>
+                  <label
+                    htmlFor="porcentajeRetencion"
+                    className={Global.FilaContenido + " !px-0"}
+                  >
+                    Reten.
+                  </label>
+                  <select
+                    id="porcentajeRetencion"
+                    name="porcentajeRetencion"
+                    value={data.porcentajeRetencion ?? ""}
+                    onChange={(e) => ValidarData(e)}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.FilaContenidoSelect}
+                  >
+                    {dataRetencion.map((map) => (
+                      <option key={map.porcentaje} value={map.porcentaje}>
+                        {map.porcentaje}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.montoRetencion ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaImporte}>
+                  <label
+                    htmlFor="porcentajePercepcion"
+                    className={Global.FilaContenido + " !px-0"}
+                  >
+                    Percep.
+                  </label>
+                  <select
+                    id="porcentajePercepcion"
+                    name="porcentajePercepcion"
+                    value={data.porcentajePercepcion ?? ""}
+                    onChange={(e) => ValidarData(e)}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.FilaContenidoSelect}
+                  >
+                    {dataPercepcion.map((map) => (
+                      <option key={map.porcentaje} value={map.porcentaje}>
+                        {map.porcentaje}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.montoPercepcion ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>Total a pagar</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.totalNeto ?? "0.00"}
+                  </p>
                 </div>
                 <div className={Global.UltimaFila}></div>
               </div>

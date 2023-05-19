@@ -5,18 +5,27 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../Global";
 
 const BotonCRUD = ({
-  setRespuestaAlert,
+  setEliminar,
   permisos,
-  menu,
-  id,
+  menu = ["", ""],
+  id = "",
   ClickConsultar,
   ClickModificar,
+  ClickEliminar,
 }) => {
   //#region useEffect
   useEffect(() => {
-    setRespuestaAlert(false);
-  }, [setRespuestaAlert]);
+    setEliminar(false);
+  }, [setEliminar]);
   //#endregion
+
+  const ValidarEliminar = async () => {
+    if (id != "") {
+      Delete([menu[0], menu[1]], id, setEliminar);
+    } else {
+      ClickEliminar();
+    }
+  };
 
   //#region Render
   return (
@@ -53,7 +62,7 @@ const BotonCRUD = ({
         <div className={Global.TablaBotonEliminar}>
           <button
             id="boton-eliminar"
-            onClick={() => Delete([menu[0], menu[1]], id, setRespuestaAlert)}
+            onClick={ValidarEliminar}
             className="p-0 px-1"
             title="Click para eliminar registro"
           >

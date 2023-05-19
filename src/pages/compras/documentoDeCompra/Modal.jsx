@@ -1352,7 +1352,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="proveedorNombre"
                     name="proveedorNombre"
-                    placeholder="Proveedor"
+                    placeholder="Buscar Proveedor"
                     autoComplete="off"
                     readOnly={true}
                     value={data.proveedorNombre ?? ""}

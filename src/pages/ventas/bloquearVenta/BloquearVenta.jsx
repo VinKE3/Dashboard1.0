@@ -64,7 +64,7 @@ const BloquearVenta = () => {
     `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
   const [checked, setChecked] = useState(false);
   //#endregion
@@ -80,9 +80,9 @@ const BloquearVenta = () => {
   }, [cadena]);
 
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -323,7 +323,7 @@ const BloquearVenta = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
             menu={["Venta", "BloquearVenta"]}
             id={row.values.id}

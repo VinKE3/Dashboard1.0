@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
+import Delete from "../../../components/CRUD/Delete";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
@@ -24,7 +25,7 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(3){
+  & th:nth-child(3) {
     width: 135px;
   }
   & th:nth-child(6),
@@ -72,7 +73,7 @@ const Cotizaciones = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -93,10 +94,10 @@ const Cotizaciones = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(cadena, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -232,6 +233,13 @@ const Cotizaciones = () => {
         if (valor) {
           await GetPorId(id);
           setModal(true);
+        }
+        break;
+      }
+      case 2: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          Delete(["Venta", "Cotizacion"], id, setEliminar);
         }
         break;
       }
@@ -408,12 +416,11 @@ const Cotizaciones = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
-            menu={["Venta", "Cotizacion"]}
-            id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },

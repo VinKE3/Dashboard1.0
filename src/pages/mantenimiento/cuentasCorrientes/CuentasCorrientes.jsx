@@ -51,7 +51,7 @@ const CuentasCorrientes = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -70,10 +70,10 @@ const CuentasCorrientes = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(cadena, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -194,7 +194,7 @@ const CuentasCorrientes = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
             menu={["Mantenimiento", "CuentaCorriente"]}
             id={row.values.id}

@@ -49,7 +49,7 @@ const BloquearReciboEgreso = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState("");
   const [permisos, setPermisos] = useState([false, false, false, false]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   // const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
   const [checked, setChecked] = useState(false);
   //#endregion
@@ -86,10 +86,10 @@ const BloquearReciboEgreso = () => {
   }, [index]);
 
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(filtro, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     // TipoDeDocumentos();
@@ -217,9 +217,9 @@ const BloquearReciboEgreso = () => {
         progress: undefined,
         theme: "colored",
       });
-      setRespuestaAlert(false);
+      setEliminar(false);
     } else {
-      setRespuestaAlert(true);
+      setEliminar(true);
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 5000,
@@ -273,9 +273,9 @@ const BloquearReciboEgreso = () => {
                 progress: undefined,
                 theme: "colored",
               });
-              setRespuestaAlert(false);
+              setEliminar(false);
             } else {
-              setRespuestaAlert(true);
+              setEliminar(true);
               toast.success(String(response.data.messages[0].textos), {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -293,7 +293,7 @@ const BloquearReciboEgreso = () => {
     });
     console.log(result);
 
-    setRespuestaAlert(true);
+    setEliminar(true);
   };
 
   const handleChange = (e, ids) => {
@@ -361,7 +361,7 @@ const BloquearReciboEgreso = () => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <BotonCRUD
-          setRespuestaAlert={setRespuestaAlert}
+          setEliminar={setEliminar}
           permisos={permisos}
           menu={["Tesoreria", "BloquearReciboEgreso"]}
           id={row.values.id}

@@ -68,7 +68,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [tipoMen, setTipoMen] = useState(-1);
   const [men, setMen] = useState([]);
-  const [respuesta, setRespuesta] = useState(false);
+  const [respuesta, setEliminar] = useState(false);
 
   const [dataDireccion, setDataDireccion] = useState([]);
   const [objetoDireccion, setObjetoDireccion] = useState([]);
@@ -89,7 +89,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     if (tipoMen == 0) {
-      setRespuesta(true);
+      setEliminar(true);
     }
   }, [tipoMen]);
   useEffect(() => {
@@ -230,7 +230,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const Limpiar = async () => {
     setMen([]);
     setTipoMen(-1);
-    setRespuesta(false);
+    setEliminar(false);
   };
   const LimpiarDireccion = async () => {
     setObjetoDireccion({
@@ -553,7 +553,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     Delete(
                       ["Mantenimiento", "ClienteDireccion"],
                       row.values.id,
-                      setRespuesta
+                      setEliminar
                     );
                   }}
                   className="p-0 px-1"
@@ -607,7 +607,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     Delete(
                       ["Mantenimiento", "ClienteContacto"],
                       row.values.id,
-                      setRespuesta
+                      setEliminar
                     );
                   }}
                   className="p-0 px-1"
@@ -675,7 +675,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     Delete(
                       ["Mantenimiento", "ClientePersonal"],
                       row.values.id.substr(6),
-                      setRespuesta
+                      setEliminar
                     );
                   }}
                   className="p-0 px-1"

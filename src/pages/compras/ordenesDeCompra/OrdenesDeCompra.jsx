@@ -2,10 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
+import Delete from "../../../components/CRUD/Delete";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
-import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
@@ -75,7 +75,7 @@ const OrdenesDeCompra = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -96,10 +96,10 @@ const OrdenesDeCompra = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(cadena, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -210,7 +210,7 @@ const OrdenesDeCompra = () => {
           proveedorCuentaCorriente2Id: "",
           observacion: "",
           subTotal: 0,
-          porcentajeIGV: 0,
+          porcentajeIGV: dataGlobal.porcentajeIGV,
           montoIGV: 0,
           totalNeto: 0,
           porcentajeRetencion: 0,
@@ -229,6 +229,13 @@ const OrdenesDeCompra = () => {
         if (valor) {
           await GetPorId(id);
           setModal(true);
+        }
+        break;
+      }
+      case 2: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          Delete(["Compra", "OrdenCompra"], id, setEliminar);
         }
         break;
       }
@@ -300,12 +307,11 @@ const OrdenesDeCompra = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
-            permisos={permisos}
-            menu={["Compra", "OrdenCompra"]}
-            id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+          setEliminar={setEliminar}
+          permisos={permisos}
+          ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+          ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+          ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },
