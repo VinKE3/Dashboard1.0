@@ -187,7 +187,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   name="menus"
                   value={selectedMenu}
                   onChange={ValidarData}
-                  className={Global.InputStyle + Global.Disabled}
+                  className={Global.InputStyle}
                 />
               </div>
             </div>

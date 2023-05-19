@@ -46,7 +46,7 @@ const TablaDetalle = styled.div`
 `;
 //#endregion
 
-const FiltroLetraVenta = ({ setModal, id, setObjeto }) => {
+const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
   //#region useState
   const [data, setData] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -81,6 +81,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto }) => {
       id: model.id,
       numeroDocumento: model.numeroDocumento,
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion

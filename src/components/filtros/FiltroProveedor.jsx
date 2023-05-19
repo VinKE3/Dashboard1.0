@@ -24,7 +24,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const FiltroProveedor = ({ setModal, setObjeto }) => {
+const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -95,6 +95,7 @@ const FiltroProveedor = ({ setModal, setObjeto }) => {
       cuentasCorrientes: result.data.data.cuentasCorrientes,
       //Orden de Compra
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion

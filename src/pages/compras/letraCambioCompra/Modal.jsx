@@ -583,13 +583,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="N° Letra"
                     autoComplete="off"
                     autoFocus
-                    readOnly={modo == "Registrar" ? false : true}
+                    disabled={modo == "Registrar" ? false : true}
                     value={data.numeroLetra ?? ""}
                     onChange={ValidarData}
                     className={
                       modo == "Registrar"
                         ? Global.InputStyle
-                        : Global.InputStyle + Global.Disabled
+                        : Global.InputStyle
                     }
                   />
                 </div>
@@ -624,7 +624,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaRegistro"
                     name="fechaRegistro"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={
                       moment(data.fechaRegistro).format("yyyy-MM-DD") ?? ""
                     }
@@ -641,7 +641,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision).format("yyyy-MM-DD") ?? ""}
                     onChange={ValidarData}
                     onBlur={FechaEmision}
@@ -660,7 +660,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaVencimiento"
                     name="fechaVencimiento"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={
                       moment(data.fechaVencimiento).format("yyyy-MM-DD") ?? ""
                     }
@@ -684,10 +684,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="proveedorNumeroDocumentoIdentidad"
                     placeholder="N° Documento Identidad"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={data.proveedorNumeroDocumentoIdentidad ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle + Global.Disabled}
+                    className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.InputFull}>
@@ -703,10 +703,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="proveedorNombre"
                     placeholder="Proveedor"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={data.proveedorNombre ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton + Global.Disabled}
+                    className={Global.InputBoton}
                   />
                   <button
                     id="consultar"
@@ -726,7 +726,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Checkbox
                         inputId="varios"
                         name="varios"
-                        readOnly={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" ? true : false}
                         onChange={(e) => {
                           setCheckVarios(e.checked);
                           ProveedorVarios(e);
@@ -752,7 +752,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="lugarGiro"
                     placeholder="Lugar Giro"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.lugarGiro ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -811,10 +811,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="documentoReferencia"
                     placeholder="Documento Referencia"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={data.documentoReferencia ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle + Global.Disabled}
+                    className={Global.InputStyle}
                   />
                 </div>
               </div>
@@ -849,7 +849,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
                     className={
@@ -881,7 +881,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="total"
                     autoComplete="off"
                     value={data.total ?? ""}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   />
@@ -901,7 +901,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="avalNombre"
                       placeholder="Nombre Aval"
                       autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.avalNombre ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -921,7 +921,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="N° Documento Aval"
                       autoComplete="off"
                       maxLength={14}
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.avalNumeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -942,7 +942,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="avalDomicilio"
                       placeholder="Domicilio Aval"
                       autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.avalDomicilio ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -959,7 +959,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="Teléfono Aval"
                       autoComplete="off"
                       maxLength={15}
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.avalTelefono ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -977,7 +977,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Observación"
                     autoComplete="off"
                     value={data.observacion ?? ""}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   />
@@ -1005,8 +1005,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     value={dataConcepto.concepto ?? ""}
                     onChange={ValidarDataConcepto}
-                    readOnly={true}
-                    className={Global.InputBoton + Global.Disabled}
+                    disabled={true}
+                    className={Global.InputBoton}
                   />
                   <button
                     id="consultar"
@@ -1031,10 +1031,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Saldo"
                     autoComplete="off"
                     min={0}
-                    readOnly={true}
+                    disabled={true}
                     value={dataConcepto.saldo ?? ""}
                     onChange={ValidarDataConcepto}
-                    className={Global.InputStyle + Global.Disabled}
+                    className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.InputMitad}>
@@ -1048,7 +1048,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Abono"
                     autoComplete="off"
                     min={0}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={dataConcepto.abono ?? ""}
                     onChange={ValidarDataConcepto}
                     className={
@@ -1091,12 +1091,17 @@ const Modal = ({ setModal, modo, objeto }) => {
         </>
       )}
       {modalProv && (
-        <FiltroProveedor setModal={setModalProv} setObjeto={setDataProveedor} />
+        <FiltroProveedor
+          setModal={setModalProv}
+          setObjeto={setDataProveedor}
+          foco={document.getElementById("lugarGiro")}
+        />
       )}
       {modalConcepto && (
         <FiltroConcepto
           setModal={setModalConcepto}
           setObjeto={setDataConcepto}
+          foco={document.getElementById("abono")}
         />
       )}
     </>

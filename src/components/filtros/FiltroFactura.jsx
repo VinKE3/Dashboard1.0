@@ -46,11 +46,10 @@ const TablaDetalle = styled.div`
 `;
 //#endregion
 
-const FiltroFactura = ({ setModal, objeto, setObjeto }) => {
+const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [dataFacturaSeleccionada] =
-    useState(objeto);
+  const [dataFacturaSeleccionada] = useState(objeto);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     numeroDocumento: "",
@@ -106,6 +105,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto }) => {
         },
         accion: "agregar",
       });
+      foco.focus();
       setModal(false);
     } else {
       //Si existe manda la alerta
@@ -198,7 +198,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto }) => {
         Cell: ({ row }) => (
           <div className="flex justify-center">
             <button
-            id="boton"
+              id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
                 Global.BotonModalBase + Global.BotonAgregar + " border-none "

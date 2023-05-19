@@ -442,12 +442,12 @@ const MovimientoBancario = () => {
 
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
-                  <label name="concepto" className={Global.LabelStyle}>
+                  <label name="conceptoPadre" className={Global.LabelStyle}>
                     Concepto
                   </label>
                   <input
                     type="text"
-                    id="concepto"
+                    id="conceptoPadre"
                     name="concepto"
                     placeholder="Concepto"
                     autoComplete="off"

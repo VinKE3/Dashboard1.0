@@ -1056,7 +1056,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={
                       modo == "Registrar"
                         ? Global.InputStyle
-                        : Global.InputStyle + Global.Disabled
+                        : Global.InputStyle
                     }
                   >
                     {dataSerie.map((map) => (
@@ -1077,9 +1077,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Número"
                     maxLength="10"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={data.numero ?? ""}
-                    className={Global.InputStyle + Global.Disabled}
+                    className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.InputTercio}>
@@ -1091,7 +1091,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1109,7 +1109,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaTraslado"
                     name="fechaTraslado"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={moment(data.fechaTraslado ?? "").format(
                       "yyyy-MM-DD"
                     )}
@@ -1127,13 +1127,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="numeroFactura "
                     placeholder="Buscar Factura"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={data.numeroFactura ?? ""}
                     onChange={ValidarData}
                     className={
                       modo != "Consultar"
-                        ? Global.InputBoton + Global.Disabled
-                        : Global.InputStyle + Global.Disabled
+                        ? Global.InputBoton
+                        : Global.InputStyle
                     }
                   />
                   <button
@@ -1163,10 +1163,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="clienteNumeroDocumentoIdentidad"
                     placeholder="N° Documento Identidad"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={data.clienteNumeroDocumentoIdentidad ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle + Global.Disabled}
+                    className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.InputFull}>
@@ -1179,10 +1179,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="clienteNombre"
                     placeholder="Buscar Cliente"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={data.clienteNombre ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton + Global.Disabled}
+                    className={Global.InputBoton}
                   />
                   <button
                     id="consultar"
@@ -1202,7 +1202,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Checkbox
                         inputId="varios"
                         name="varios"
-                        readOnly={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" ? true : false}
                         onChange={(e) => {
                           setCheckVarios(e.checked);
                           ClientesVarios(e);
@@ -1231,7 +1231,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="direccionPartida"
                     placeholder="Dirección de Partida"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.direccionPartida ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1324,7 +1324,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Costo Mínimo"
                     autoComplete="off"
                     min={0}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.costoMinimo ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1365,7 +1365,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="licenciaConducir"
                     placeholder="Licencia de Conducir"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.licenciaConducir ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1406,7 +1406,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="constanciaInscripcion"
                     placeholder="Constancia Inscripción"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.constanciaInscripcion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1445,7 +1445,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="motivoSustento"
                       autoComplete="off"
                       placeholder="Sustento"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.motivoSustento ?? ""}
                       onChange={ValidarData}
                       className={Global.InputBoton + " rounded-l-md"}
@@ -1489,7 +1489,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="numeroPedido"
                     placeholder="Orden Pedido"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.numeroPedido ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1528,7 +1528,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="observacion"
                       placeholder="Observación"
                       autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.observacion ?? ""}
                       onChange={ValidarData}
                       className={Global.InputBoton}
@@ -1624,13 +1624,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="descripcion"
                     placeholder="Descripción"
                     autoComplete="off"
-                    readOnly={!habilitarFiltro ? true : false}
+                    disabled={!habilitarFiltro ? true : false}
                     value={dataArt.descripcion ?? ""}
                     onChange={ValidarDataArt}
                     className={
-                      !habilitarFiltro
-                        ? Global.InputBoton + Global.Disabled
-                        : Global.InputBoton
+                      !habilitarFiltro ? Global.InputBoton : Global.InputBoton
                     }
                   />
                   <button
@@ -1656,10 +1654,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="stock"
                     placeholder="Stock"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={dataArt.stock ?? ""}
                     onChange={ValidarDataArt}
-                    className={Global.InputStyle + Global.Disabled}
+                    className={Global.InputStyle}
                   />
                 </div>
               </div>
@@ -1677,10 +1675,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="unidadMedidaDescripcion"
                     placeholder="Unidad Medida"
                     autoComplete="off"
-                    readOnly={true}
+                    disabled={true}
                     value={dataArt.unidadMedidaDescripcion ?? ""}
                     onChange={ValidarDataArt}
-                    className={Global.InputStyle + Global.Disabled}
+                    className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.Input25pct}>
@@ -1694,7 +1692,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Cantidad"
                     autoComplete="off"
                     min={0}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={dataArt.cantidad ?? ""}
                     onChange={(e) => {
                       ValidarDataArt(e);
@@ -1714,7 +1712,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Precio"
                     autoComplete="off"
                     min={0}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={dataArt.precioUnitario ?? ""}
                     onChange={(e) => {
                       ValidarDataArt(e);
@@ -1734,7 +1732,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Importe"
                     autoComplete="off"
                     min={0}
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={dataArt.importe ?? ""}
                     onChange={(e) => {
                       ValidarDataArt(e);
@@ -1781,17 +1779,26 @@ const Modal = ({ setModal, modo, objeto }) => {
       )}
       {/* Modales */}
       {modalCliente && (
-        <FiltroCliente setModal={setModalCliente} setObjeto={setDataCliente} />
+        <FiltroCliente
+          setModal={setModalCliente}
+          setObjeto={setDataCliente}
+          foco={document.getElementById("direccionPartida")}
+        />
       )}
       {modalFactura && (
         <FiltroFactura
           setModal={setModalFactura}
           setObjeto={setDataFactura}
           objeto={data.documentosRelacionados}
+          foco={document.getElementById("direccionPartida")}
         />
       )}
       {modalArt && (
-        <FiltroArticulo setModal={setModalArt} setObjeto={setDataArt} />
+        <FiltroArticulo
+          setModal={setModalArt}
+          setObjeto={setDataArt}
+          foco={document.getElementById("cantidad")}
+        />
       )}
       {/* Modales */}
     </>

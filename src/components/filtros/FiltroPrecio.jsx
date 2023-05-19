@@ -3,9 +3,9 @@ import ModalBasic from "../ModalBasic";
 import { FaCheck } from "react-icons/fa";
 import * as Global from "../Global";
 
-const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
+const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
   //#region useState
-  const [datos, setDatos] = useState(objeto);
+  const [datos] = useState(objeto);
   //#endregion
 
   //#region useEffect;
@@ -16,6 +16,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
     setObjeto({
       precioUnitario: precio,
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion
@@ -58,7 +59,11 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
                 <div className={Global.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta1)}
-                    className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
+                    className={
+                      Global.BotonModalBase +
+                      Global.BotonAgregar +
+                      "border-none"
+                    }
                   >
                     <FaCheck></FaCheck>
                   </button>
@@ -76,7 +81,11 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto }) => {
                 <div className={Global.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta2)}
-                    className={Global.BotonModalBase + Global.BotonAgregar + "border-none"}
+                    className={
+                      Global.BotonModalBase +
+                      Global.BotonAgregar +
+                      "border-none"
+                    }
                   >
                     <FaCheck></FaCheck>
                   </button>

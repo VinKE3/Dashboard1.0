@@ -11,7 +11,7 @@ import {
 //#region Estilos
 const Tabla = styled.div`
   & .selected-row {
-    background: linear-gradient(90deg, #313130 0%, #2c2a28 100%);
+    background: linear-gradient(90deg, #0a5d8d 10%, #093955 50%);
   }
 `;
 //#endregion

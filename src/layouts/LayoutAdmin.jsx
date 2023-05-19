@@ -7,7 +7,7 @@ import store from "store2";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { authHelper } from "../helpers/AuthHelper";
-
+import Enter from "../components/Enter";
 const LayoutAdmin = () => {
   const navigate = useNavigate();
   const { borrarTodosLosTokens } = authHelper;
@@ -27,9 +27,11 @@ const LayoutAdmin = () => {
       <Sidebar />
       <div className="xl:col-span-5">
         <Header />
-        <div className="h-[78vh] md:h-[84vh] overflow-y-scroll px-0 md:px-4">
-          <Outlet />
-        </div>
+        <Enter>
+          <div className="h-[78vh] md:h-[84vh] overflow-y-scroll px-0 md:px-4">
+            <Outlet />
+          </div>
+        </Enter>
         <div className="h-auto">
           <Footer />
         </div>

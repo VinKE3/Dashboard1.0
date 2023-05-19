@@ -58,7 +58,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Descripción"
                   autoComplete="off"
                   autoFocus
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={data.descripcion ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -74,7 +74,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="abreviatura"
                   placeholder="Abreviatura"
                   autoComplete="off"
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={data.abreviatura ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -114,7 +114,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="plazo"
                   min={0}
                   value={data.plazo ?? ""}
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />

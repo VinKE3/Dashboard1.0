@@ -225,7 +225,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 maxLength="2"
                 autoComplete="off"
                 placeholder="00"
-                readOnly={true}
+                disabled={true}
                 value={data.id}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -241,7 +241,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 name="numero"
                 autoComplete="off"
                 placeholder="Cuadre de Stock"
-                readOnly={true}
+                disabled={true}
                 value={data.numero}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -261,7 +261,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 name="fechaRegistro"
                 maxLength="2"
                 autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={moment(data.fechaRegistro).format("yyyy-MM-DD")}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -274,7 +274,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
               <select
                 id="moneda"
                 name="moneda"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={data.moneda}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -296,7 +296,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 name="tipoCambio"
                 autoComplete="off"
                 placeholder="Cuadre de Stock"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={data.tipoCambio}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -311,7 +311,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
               <select
                 id="responsableId"
                 name="responsableId"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={data.responsableId}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -333,7 +333,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 name="observacion"
                 autoComplete="off"
                 placeholder="Observacion"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={data.observacion}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -353,7 +353,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 name="totalSobra"
                 autoComplete="off"
                 placeholder="00"
-                readOnly={true}
+                disabled={true}
                 value={data.totalSobra}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -369,7 +369,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 name="totalFalta"
                 autoComplete="off"
                 placeholder="00"
-                readOnly={true}
+                disabled={true}
                 value={data.totalFalta}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -385,7 +385,7 @@ const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
                 name="saldoTotal"
                 autoComplete="off"
                 placeholder="00"
-                readOnly={true}
+                disabled={true}
                 value={data.saldoTotal}
                 onChange={ValidarData}
                 className={Global.InputStyle}

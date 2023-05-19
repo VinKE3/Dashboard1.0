@@ -91,7 +91,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             id="id"
             name="id"
             autoFocus
-            readOnly={modo == "Consultar" ? true : false}
+            disabled={modo == "Consultar" ? true : false}
             value={moment(data.id).format("yyyy-MM-DD")}
             onChange={ValidarData}
             className={Global.InputBoton}
@@ -118,7 +118,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioCompra"
               autoComplete="off"
               min={0}
-              readOnly={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" ? true : false}
               value={data.precioCompra}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -134,7 +134,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioVenta"
               autoComplete="off"
               min={0}
-              readOnly={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" ? true : false}
               value={data.precioVenta}
               onChange={ValidarData}
               className={Global.InputStyle}

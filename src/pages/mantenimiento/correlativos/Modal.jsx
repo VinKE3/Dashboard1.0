@@ -78,7 +78,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="serie"
                   placeholder="Serie"
                   autoComplete="off"
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={data.serie}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -99,7 +99,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoDocumentoDescripcion"
                   placeholder="Descripción"
                   autoComplete="off"
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={data.tipoDocumentoDescripcion}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -116,7 +116,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="numero"
                   autoComplete="off"
                   min={0}
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={data.numero}
                   onChange={ValidarData}
                   className={Global.InputStyle}

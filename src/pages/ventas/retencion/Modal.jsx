@@ -731,7 +731,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 onChange={ValidarData}
                 value={data.tipoDocumento ?? ""}
                 disabled={true}
-                className={Global.InputStyle + Global.Disabled}
+                className={Global.InputStyle}
               >
                 {dataTipoDocumento.map((map) => (
                   <option key={map.id} value={map.id}>
@@ -751,7 +751,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Serie"
                 autoComplete="off"
                 maxLength="4"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={data.serie ?? ""}
                 onChange={ValidarData}
                 onBlur={(e) => Numeracion(e)}
@@ -772,7 +772,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 value={data.numero ?? ""}
                 onChange={ValidarData}
                 onBlur={(e) => Numeracion(e)}
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 className={Global.InputStyle}
               />
             </div>
@@ -785,7 +785,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="fechaEmision"
                 name="fechaEmision"
                 autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                 onChange={ValidarData}
                 onBlur={() => {
@@ -810,10 +810,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="clienteNumeroDocumentoIdentidad"
                 placeholder="N° Documento Identidad"
                 autoComplete="off"
-                readOnly={true}
+                disabled={true}
                 value={data.clienteNumeroDocumentoIdentidad ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle + Global.Disabled}
+                className={Global.InputStyle}
               />
             </div>
             <div className={Global.InputFull}>
@@ -826,10 +826,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="clienteNombre"
                 placeholder="Buscar Cliente"
                 autoComplete="off"
-                readOnly={true}
+                disabled={true}
                 value={data.clienteNombre ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton + Global.Disabled}
+                className={Global.InputBoton}
               />
               <button
                 id="consultar"
@@ -847,7 +847,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <Checkbox
                     inputId="varios"
                     name="varios"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     onChange={(e) => {
                       setCheckVarios(e.checked);
                       ClientesVarios(e);
@@ -872,7 +872,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="clienteDireccion"
               placeholder="Dirección"
               autoComplete="off"
-              readOnly={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" ? true : false}
               value={data.clienteDireccion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -951,7 +951,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Tipo de Cambio"
                 autoComplete="off"
                 min={0}
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={data.tipoCambio ?? ""}
                 onChange={ValidarData}
                 className={
@@ -983,7 +983,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="observacion"
               placeholder="Observación"
               autoComplete="off"
-              readOnly={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" ? true : false}
               value={data.observacion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -1008,9 +1008,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={habilitarCampos ? false : true}
                 value={dataArt.tipoDocumento ?? ""}
                 className={
-                  modo == "Registrar"
-                    ? Global.InputStyle
-                    : Global.InputStyle + Global.Disabled
+                  modo == "Registrar" ? Global.InputStyle : Global.InputStyle
                 }
               >
                 {dataTipoDoc.map((map) => (
@@ -1032,14 +1030,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 maxLength={4}
                 autoFocus
-                readOnly={modo == "Consultar" ? true : false}
-                disabled={habilitarCampos ? false : true}
+                disabled={
+                  !habilitarCampos || modo == "Consultar" ? true : false
+                }
                 value={dataArt.serie ?? ""}
                 onChange={ValidarDataArt}
                 className={
-                  habilitarCampos
-                    ? Global.InputStyle
-                    : Global.InputStyle + Global.Disabled
+                  habilitarCampos ? Global.InputStyle : Global.InputStyle
                 }
               />
             </div>
@@ -1055,14 +1052,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 maxLength={10}
                 min={0}
-                readOnly={modo == "Consultar" ? true : false}
-                disabled={habilitarCampos ? false : true}
+                disabled={
+                  !habilitarCampos || modo == "Consultar" ? true : false
+                }
                 value={dataArt.numero ?? ""}
                 onChange={ValidarDataArt}
                 className={
-                  habilitarCampos
-                    ? Global.InputBoton
-                    : Global.InputBoton + Global.Disabled
+                  habilitarCampos ? Global.InputBoton : Global.InputBoton
                 }
               />
               <button
@@ -1085,10 +1081,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="fechaEmision"
                 name="fechaEmision"
                 autoComplete="off"
-                readOnly={true}
+                disabled={true}
                 value={moment(dataArt.fechaEmision ?? "").format("yyyy-MM-DD")}
                 onChange={ValidarDataArt}
-                className={Global.InputStyle + Global.Disabled}
+                className={Global.InputStyle}
               />
             </div>
             <div className={Global.InputMitad}>
@@ -1101,10 +1097,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="total"
                 placeholder="Total Venta"
                 autoComplete="off"
-                readOnly={true}
+                disabled={true}
                 value={dataArt.total ?? ""}
                 onChange={ValidarDataArt}
-                className={Global.InputStyle + Global.Disabled}
+                className={Global.InputStyle}
               />
             </div>
             <div className={Global.InputTercio}>
@@ -1118,7 +1114,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder={"% Retención"}
                 autoComplete="off"
                 min={0}
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={dataArt.porcentaje ?? ""}
                 onChange={ValidarDataArt}
                 className={Global.InputStyle}
@@ -1135,13 +1131,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Retención"
                 autoComplete="off"
                 min={0}
-                readOnly={true}
+                disabled={true}
                 value={dataArt.monto ?? ""}
                 onChange={ValidarDataArt}
                 className={
-                  modo != "Consultar"
-                    ? Global.InputBoton + Global.Disabled
-                    : Global.InputStyle + Global.Disabled
+                  modo != "Consultar" ? Global.InputBoton : Global.InputStyle
                 }
               />
               <button
@@ -1183,7 +1177,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         {/*Tabla Footer*/}
       </ModalCrud>
       {modalCliente && (
-        <FiltroCliente setModal={setModalCliente} setObjeto={setDataCliente} />
+        <FiltroCliente
+          setModal={setModalCliente}
+          setObjeto={setDataCliente}
+          foco={document.getElementById("clienteDireccion")}
+        />
       )}
     </>
   );

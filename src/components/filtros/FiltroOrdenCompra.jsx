@@ -49,7 +49,7 @@ const TablaDetalle = styled.div`
 `;
 //#endregion
 
-const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
+const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
   //#region useState
   const [data, setData] = useState([]);
   const [dataOrdenSeleccionada, setDataOrdenSeleccionada] = useState(objeto);
@@ -115,6 +115,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto }) => {
         },
         accion: "agregar",
       });
+      foco.focus();
       setModal(false);
     } else {
       //Si existe manda la alerta

@@ -190,7 +190,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="2"
                     autoComplete="off"
                     placeholder="00"
-                    readOnly={modo == "Registrar" ? false : true}
+                    disabled={modo == "Registrar" ? false : true}
                     value={data.serie}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -207,7 +207,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="2"
                     autoComplete="off"
                     placeholder="00"
-                    readOnly={modo == "Registrar" ? false : true}
+                    disabled={modo == "Registrar" ? false : true}
                     value={data.numero}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -218,7 +218,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <Checkbox
                       inputId="isSobrante"
                       name="isSobrante"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.isSobrante}
                       onChange={(e) => {
                         setChecked(e.checked);
@@ -236,7 +236,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <Checkbox
                       inputId="isVenta"
                       name="isVenta"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.isVenta}
                       onChange={(e) => {
                         setChecked2(e.checked);
@@ -263,7 +263,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="fechaEmision"
                     maxLength="2"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -278,7 +278,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="clienteNombre"
                     name="clienteNombre"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.clienteNombre}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -293,7 +293,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="personalId"
                     name="personalId"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.personalId}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -314,7 +314,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="observacion"
                     name="observacion"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.observacion}
                     onChange={ValidarData}
                     className={Global.InputStyle}

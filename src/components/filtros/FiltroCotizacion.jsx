@@ -33,7 +33,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const FiltroCotizacion = ({ setModal, setObjeto }) => {
+const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -110,6 +110,7 @@ const FiltroCotizacion = ({ setModal, setObjeto }) => {
       cotizacion: result.data.data.serie + "-" + result.data.data.numero,
       detalles: result.data.data.detalles,
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion

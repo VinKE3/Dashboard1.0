@@ -38,7 +38,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const FiltroConcepto = ({ setModal, setObjeto, modo = "EG" }) => {
+const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
   //#region useState
   const [datos, setDatos] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -121,6 +121,7 @@ const FiltroConcepto = ({ setModal, setObjeto, modo = "EG" }) => {
       documentoRelacionado: documentoRelacionado,
       //Mov. Bancario
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion

@@ -58,8 +58,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   value={data.id ?? ""}
                   onChange={ValidarData}
-                  readOnly={true}
-                  className={Global.InputStyle + Global.Disabled}
+                  disabled={true}
+                  className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -77,7 +77,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   maxLength="11"
                   autoFocus
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -113,7 +113,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Nombre"
                 autoComplete="off"
-                readOnly={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" ? true : false}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

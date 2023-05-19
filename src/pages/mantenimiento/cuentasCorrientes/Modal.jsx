@@ -66,8 +66,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   value={data.cuentaCorrienteId ?? ""}
                   onChange={ValidarData}
-                  readOnly={true}
-                  className={Global.InputStyle + Global.Disabled}
+                  disabled={true}
+                  className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -147,7 +147,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Número de cuenta"
                   autoComplete="off"
                   maxLength="25"
-                  readOnly={modo == "Consulta" ? true : false}
+                  disabled={modo == "Consulta" ? true : false}
                   value={data.numero ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -164,7 +164,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                readOnly={modo == "Consulta" ? true : false}
+                disabled={modo == "Consulta" ? true : false}
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

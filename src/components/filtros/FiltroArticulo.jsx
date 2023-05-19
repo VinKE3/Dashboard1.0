@@ -146,7 +146,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
         accessor: "precioCompra",
         Cell: ({ value }) => {
           return (
-            <p className="text-right font-bold text-blue-500">
+            <p className="text-right font-bold text-emerald-400">
               {Funciones.RedondearNumero(value, 4)}
             </p>
           );
@@ -157,7 +157,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
         accessor: "precioVenta",
         Cell: ({ value }) => {
           return (
-            <p className="text-right font-bold text-purple-400">
+            <p className="text-right font-bold text-pink-400">
               {Funciones.RedondearNumero(value, 4)}
             </p>
           );
@@ -171,7 +171,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
             <p
               className={
                 value <= 0
-                  ? "text-right font-bold text-red-400"
+                  ? "text-right font-bold text-red-500"
                   : "text-right font-bold text-green-500"
               }
             >

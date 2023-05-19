@@ -5,7 +5,6 @@ import GetPermisos from "../../../components/Funciones/GetPermisos";
 import Delete from "../../../components/CRUD/Delete";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import Enter from "../../../components/Enter";
 import Table from "../../../components/tablas/Table";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
@@ -471,7 +470,7 @@ const DocumentosVenta = () => {
   return (
     <>
       {visible ? (
-        <Enter>
+        <>
           <div className="px-2">
             <h2 className={Global.TituloH2}>Documentos de Venta</h2>
 
@@ -629,7 +628,7 @@ const DocumentosVenta = () => {
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
           <ToastContainer />
-        </Enter>
+        </>
       ) : (
         <span></span>
       )}

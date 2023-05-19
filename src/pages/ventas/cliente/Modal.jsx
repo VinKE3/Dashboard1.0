@@ -722,10 +722,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="id"
                       placeholder="Código"
                       autoComplete="off"
-                      readOnly={true}
+                      disabled={true}
                       value={data.id ?? ""}
                       onChange={ValidarData}
-                      className={Global.InputStyle + Global.Disabled}
+                      className={Global.InputStyle}
                     />
                   </div>
                   <div className={Global.InputMitad}>
@@ -764,7 +764,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="numeroDocumentoIdentidad"
                       placeholder="N° Documento Identidad"
                       autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
                       className={Global.InputBoton}
@@ -814,7 +814,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="nombre"
                     placeholder="Nombre"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.nombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -831,7 +831,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="telefono"
                       placeholder="Teléfono"
                       autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.telefono ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -850,7 +850,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="correoElectronico"
                       placeholder="Correo"
                       autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" ? true : false}
                       value={data.correoElectronico ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -870,7 +870,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="direccionPrincipal"
                     placeholder="Dirección Principal"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.direccionPrincipal ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -940,7 +940,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="observacion"
                     placeholder="Observación"
                     autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.observacion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -963,7 +963,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Máximo US$"
                         autoComplete="off"
                         min={0}
-                        readOnly={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" ? true : false}
                         value={data.maximoCreditoUSD ?? ""}
                         onChange={ValidarData}
                         className={Global.InputStyle}
@@ -980,10 +980,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Crédito US$"
                         autoComplete="off"
                         min={0}
-                        readOnly={true}
+                        disabled={true}
                         value={data.creditoUSD ?? ""}
                         onChange={ValidarData}
-                        className={Global.InputStyle + Global.Disabled}
+                        className={Global.InputStyle}
                       />
                     </div>
                   </div>
@@ -1002,7 +1002,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Máximo S/"
                         autoComplete="off"
                         min={0}
-                        readOnly={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" ? true : false}
                         value={data.maximoCreditoPEN ?? ""}
                         onChange={ValidarData}
                         className={Global.InputStyle}
@@ -1019,10 +1019,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Crédito S/"
                         autoComplete="off"
                         min={0}
-                        readOnly={true}
+                        disabled={true}
                         value={data.credicreditoPENtoUSD ?? ""}
                         onChange={ValidarData}
-                        className={Global.InputStyle + Global.Disabled}
+                        className={Global.InputStyle}
                       />
                     </div>
                   </div>
@@ -1094,7 +1094,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             name="direccion"
                             placeholder="Dirección secundaria"
                             autoComplete="off"
-                            readOnly={modo == "Consultar" ? true : false}
+                            disabled={modo == "Consultar" ? true : false}
                             value={objetoDireccion.direccion ?? ""}
                             onChange={ValidarDataDireccion}
                             className={Global.InputBoton}
@@ -1105,7 +1105,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             <Checkbox
                               inputId="isActivo"
                               name="isActivo"
-                              readOnly={modo == "Consultar" ? true : false}
+                              disabled={modo == "Consultar" ? true : false}
                               value={objetoDireccion.isActivo}
                               onChange={ValidarDataDireccion}
                               checked={objetoDireccion.isActivo ? true : ""}
@@ -1144,7 +1144,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="comentario"
                           placeholder="Comentario"
                           autoComplete="off"
-                          readOnly={modo == "Consultar" ? true : false}
+                          disabled={modo == "Consultar" ? true : false}
                           value={objetoDireccion.comentario ?? ""}
                           onChange={ValidarDataDireccion}
                           className={Global.InputStyle}
@@ -1251,7 +1251,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="nombres"
                           placeholder="Nombres"
                           autoComplete="off"
-                          readOnly={modo == "Consultar" ? true : false}
+                          disabled={modo == "Consultar" ? true : false}
                           value={objetoContacto.nombres ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
@@ -1271,7 +1271,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="N° Documento Identidad"
                           autoComplete="off"
                           maxLength="15"
-                          readOnly={modo == "Consultar" ? true : false}
+                          disabled={modo == "Consultar" ? true : false}
                           value={objetoContacto.numeroDocumentoIdentidad ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
@@ -1310,7 +1310,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="Celular"
                           autoComplete="off"
                           maxLength="15"
-                          readOnly={modo == "Consultar" ? true : false}
+                          disabled={modo == "Consultar" ? true : false}
                           value={objetoContacto.celular ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
@@ -1330,7 +1330,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="Teléfono"
                           autoComplete="off"
                           maxLength="15"
-                          readOnly={modo == "Consultar" ? true : false}
+                          disabled={modo == "Consultar" ? true : false}
                           value={objetoContacto.telefono ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
@@ -1349,7 +1349,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="Correo"
                           name="correoElectronico"
                           autoComplete="off"
-                          readOnly={modo == "Consultar" ? true : false}
+                          disabled={modo == "Consultar" ? true : false}
                           value={objetoContacto.correoElectronico ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
@@ -1367,7 +1367,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         name="direccion"
                         placeholder="Dirección"
                         autoComplete="off"
-                        readOnly={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" ? true : false}
                         value={objetoContacto.direccion ?? ""}
                         onChange={ValidarDataContacto}
                         className={Global.InputStyle}
@@ -1491,7 +1491,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             <Checkbox
                               inputId="default"
                               name="default"
-                              readOnly={modo == "Consultar" ? true : false}
+                              disabled={modo == "Consultar" ? true : false}
                               value={objetoPersonal.default}
                               onChange={ValidarDataPersonal}
                               checked={objetoPersonal.default ? true : ""}

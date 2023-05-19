@@ -462,9 +462,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="tipoDocumento"
               autoComplete="off"
               placeholder="00"
-              readOnly={true}
+              disabled={true}
               value={data.tipoDocumento.descripcion ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputFull}>
@@ -477,9 +477,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="serie"
               autoComplete="off"
               placeholder="Serie"
-              readOnly={true}
+              disabled={true}
               value={data.serie ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputFull}>
@@ -492,9 +492,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="numero"
               autoComplete="off"
               placeholder="numero"
-              readOnly={true}
+              disabled={true}
               value={data.numero ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
         </div>
@@ -511,9 +511,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="fechaContable"
               autoComplete="off"
               placeholder="fechaContable"
-              readOnly={true}
+              disabled={true}
               value={moment(data.fechaContable).format("DD/MM/YYYY") ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputFull}>
@@ -526,9 +526,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="monedaId"
               autoComplete="off"
               placeholder="monedaId"
-              readOnly={true}
+              disabled={true}
               value={data.monedaId ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
         </div>
@@ -544,9 +544,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="total"
               autoComplete="off"
               placeholder="total"
-              readOnly={true}
+              disabled={true}
               value={data.total ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputFull}>
@@ -559,9 +559,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="abonado"
               autoComplete="off"
               placeholder="abonado"
-              readOnly={true}
+              disabled={true}
               value={data.abonado ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
           <div className={Global.InputFull}>
@@ -574,9 +574,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="saldo"
               autoComplete="off"
               placeholder="saldo"
-              readOnly={true}
+              disabled={true}
               value={data.saldo ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+              className={Global.InputStyle}
             />
           </div>
         </div>
@@ -590,9 +590,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             name="observacion"
             autoComplete="off"
             placeholder="observacion"
-            readOnly={true}
+            disabled={true}
             value={data.observacion ?? ""}
-            className={Global.InputStyle + Global.Disabled}
+            className={Global.InputStyle}
           />
         </div>
       </div>
@@ -626,9 +626,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   onChange={ValidarData}
                   placeholder="abonoId"
-                  readOnly={true}
+                  disabled={true}
                   value={abono.abonoId ?? ""}
-                  className={Global.InputStyle + Global.Disabled}
+                  className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -768,10 +768,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="total"
                   autoComplete="off"
                   placeholder="Total"
-                  readOnly={true}
+                  disabled={true}
                   onChange={ValidarData}
                   value={totalAbono ?? ""}
-                  className={Global.InputStyle + Global.Disabled}
+                  className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -827,9 +827,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   onChange={ValidarData}
                   placeholder="abonoId"
-                  readOnly={true}
+                  disabled={true}
                   value={abono.abonoId ?? ""}
-                  className={Global.InputStyle + Global.Disabled}
+                  className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -842,12 +842,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="fecha"
                   maxLength="2"
                   autoComplete="off"
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={moment(abono.fecha).format("yyyy-MM-DD") ?? ""}
                   onChange={ValidarData}
                   className={
                     modo == "Consultar"
-                      ? Global.InputStyle + Global.Disabled
+                      ? Global.InputStyle
                       : Global.InputStyle
                   }
                 />
@@ -862,12 +862,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoCambio"
                   maxLength="8"
                   autoComplete="off"
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   value={abono.tipoCambio ?? ""}
                   onChange={ValidarData}
                   className={
                     modo == "Consultar"
-                      ? Global.InputBoton + Global.Disabled
+                      ? Global.InputBoton 
                       : Global.InputBoton
                   }
                 />
@@ -884,7 +884,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onChange={ValidarData}
                   className={
                     modo == "Consultar"
-                      ? Global.InputStyle + Global.Disabled
+                      ? Global.InputStyle
                       : Global.InputStyle
                   }
                   disabled={modo == "Consultar" ? true : false}
@@ -905,7 +905,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       htmlFor="cuentaCorrienteId"
                       className={
                         modo == "Consultar"
-                          ? Global.InputStyle + Global.Disabled
+                          ? Global.InputStyle
                           : Global.InputStyle
                       }
                     >
@@ -942,11 +942,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="numeroOperacion"
                   autoComplete="off"
                   value={abono.numeroOperacion ?? ""}
-                  readOnly={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" ? true : false}
                   onChange={ValidarData}
                   className={
                     modo == "Consultar"
-                      ? Global.InputStyle + Global.Disabled
+                      ? Global.InputStyle
                       : Global.InputStyle
                   }
                 />
@@ -964,7 +964,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" ? true : false}
                   className={
                     modo == "Consultar"
-                      ? Global.InputStyle + Global.Disabled
+                      ? Global.InputStyle
                       : Global.InputStyle
                   }
                   value={abono.monedaId ?? ""}
@@ -993,9 +993,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="totalAbono"
                   autoComplete="off"
                   placeholder="totalAbono"
-                  readOnly={true}
+                  disabled={true}
                   value={totalAbono ?? ""}
-                  className={Global.InputStyle + Global.Disabled}
+                  className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
@@ -1012,7 +1012,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onChange={ValidarData}
                   className={
                     modo == "Consultar"
-                      ? Global.InputStyle + Global.Disabled
+                      ? Global.InputStyle
                       : Global.InputStyle
                   }
                 />
@@ -1032,7 +1032,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 onChange={ValidarData}
                 className={
                   modo == "Consultar"
-                    ? Global.InputStyle + Global.Disabled
+                    ? Global.InputStyle
                     : Global.InputStyle
                 }
               />

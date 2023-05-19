@@ -1891,7 +1891,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                readOnly={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" ? true : false}
                                 value={objetoIgv.porcentaje}
                                 onChange={ValidarDataIgv}
                                 className={Global.InputBoton}
@@ -1996,7 +1996,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 autoFocus
                                 min={0}
-                                readOnly={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" ? true : false}
                                 value={objetoRetencion.porcentaje}
                                 onChange={ValidarDataRetencion}
                                 className={Global.InputBoton}
@@ -2104,7 +2104,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                readOnly={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" ? true : false}
                                 value={objetoDetraccion.porcentaje}
                                 onChange={ValidarDataDetraccion}
                                 className={Global.InputBoton}
@@ -2212,7 +2212,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                readOnly={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" ? true : false}
                                 value={objetoPercepcion.porcentaje}
                                 onChange={ValidarDataPercepcion}
                                 className={Global.InputBoton}

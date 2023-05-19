@@ -43,7 +43,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               maxLength={2}
               autoFocus
-              readOnly={modo == "Registrar" ? false : true}
+              disabled={modo == "Registrar" ? false : true}
               value={data.id ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -59,7 +59,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="nombre"
               autoComplete="off"
               placeholder="Nombre"
-              readOnly={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" ? true : false}
               value={data.nombre ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
