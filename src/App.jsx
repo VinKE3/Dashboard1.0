@@ -10,13 +10,13 @@ import Login from "./pages/auth/Login";
 import Home from "./pages/admin/Home";
 import Error404 from "./pages/Error404";
 //*Pages ventas
-import Clientes from "./pages/ventas/cliente/Cliente";
 import ConductoresTransportistas from "./pages/ventas/conductoresTransportistas/ConductoresTransportistas";
 import DocumentosDeVenta from "./pages/ventas/documentosVenta/DocumentosVenta";
 import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
 import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
 import BloquearVenta from "./pages/ventas/bloquearVenta/BloquearVenta";
 import Retencion from "./pages/ventas/retencion/Retencion";
+import Cliente from "./pages/ventas/cliente/Cliente";
 //*Pages compras
 import Proveedores from "./pages/compras/proveedores/Proveedores";
 import FacturaNegociable from "./pages/compras/facturaNegociable/FacturaNegociable";
@@ -24,6 +24,8 @@ import LetraCambioCompra from "./pages/compras/letraCambioCompra/LetraCambioComp
 import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
 import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import BloquearCompra from "./pages/compras/bloquearCompra/BloquearCompra";
+// import NuevaCompra from "./pages/compras/nuevaCompra/NuevaCompra";
+import GuiasDeCompra from "./pages/compras/guiasDeCompra/GuiasDeCompra";
 //*Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
 import TiposDeCambio from "./pages/mantenimiento/tiposDeCambio/TiposDeCambio";
@@ -42,6 +44,7 @@ import CajaChicaConfiguracion from "./pages/mantenimiento/cajaChicaConfiguracion
 import Empresa from "./pages/mantenimiento/empresa/Empresa";
 import Correlativos from "./pages/mantenimiento/correlativos/Correlativos";
 import EmpresaDeTransporte from "./pages/mantenimiento/empresaDeTransporte/EmpresaDeTransporte";
+import Vehiculos from "./pages/mantenimiento/vehiculos/Vehiculos";
 //*Pages almacen
 import MovimientosArticulos from "./pages/almacen/movimientoArticulos/MovimientosArticulos";
 import CuadreStock from "./pages/almacen/cuadreStock/CuadreStock";
@@ -51,6 +54,7 @@ import EntradaCilindros from "./pages/almacen/entradaCilindros/EntradaCilindros"
 import SalidaCilindros from "./pages/almacen/salidaCilindros/SalidaCilindros";
 //*Pages Finanzas
 import BloquearMovimientoBancario from "./pages/finanzas/bloquearMovimientoBancario/BloquearMovimientoBancario";
+import MovimientoBancario from "./pages/finanzas/movimientoBancario/MovimientoBancario";
 //*Pages personal
 import Personal from "./pages/personal/Personal";
 //*pages tesoreria
@@ -73,17 +77,11 @@ import InformeArticulo from "./pages/informes/articulos/InformeArticulo";
 import InformeCompra from "./pages/informes/compras/InformeCompra";
 import InformeVenta from "./pages/informes/ventas/InformeVenta";
 import InformeTesoreria from "./pages/informes/tesoreria/InformeTesoreria";
-
-import { useConfiguracion } from "./context/ContextConfiguracion";
-import { useEffect } from "react";
-import MovimientoBancario from "./pages/finanzas/movimientoBancario/MovimientoBancario";
+//*pages Cobranzas
+import CuentaPorCobrar from "./pages/cobranzas/cuentaPorCobrar/CuentaPorCobrar";
+import PLanillaCobro from "./pages/cobranzas/planillaCobro/PLanillaCobro";
 
 function App() {
-  const { getConfiguracion, configuracion } = useConfiguracion();
-
-  useEffect(() => {
-    if (null) getConfiguracion();
-  }, [configuracion]);
   return (
     <BrowserRouter>
       <Routes>
@@ -91,7 +89,7 @@ function App() {
         <Route path="/" element={<LayoutAdmin />}>
           <Route index element={<Home />} />
           {/** //!VENTAS */}
-          <Route path="/ventas/cliente" element={<Clientes />} />
+          <Route path="/ventas/clientes" element={<Cliente />} />
           <Route
             path="/ventas/conductores-transportistas"
             element={<ConductoresTransportistas />}
@@ -118,10 +116,12 @@ function App() {
             path="/compras/letra-cambio-compra"
             element={<LetraCambioCompra />}
           />
+          {/* <Route path="/compras/nueva-compra" element={<NuevaCompra />} /> */}
           <Route
             path="/compras/ordenes-de-compra"
             element={<OrdenesDeCompra />}
           />
+          <Route path="/compras/guias-de-compra" element={<GuiasDeCompra />} />
           <Route path="/compras/cef" element={<Cef />} />
           <Route path="/compras/cheque" element={<Cheque />} />
 
@@ -173,6 +173,7 @@ function App() {
             path="/mantenimiento/empresa-de-transporte"
             element={<EmpresaDeTransporte />}
           />
+          <Route path="/mantenimiento/vehiculos" element={<Vehiculos />} />
           {/** //!ALMACEN */}
           <Route
             path="almacen/movimientos-articulos"
@@ -204,12 +205,21 @@ function App() {
             path="/finanzas/cuentas-por-pagar"
             element={<CuentasPorPagar />}
           />
-           <Route
+          <Route
             path="/finanzas/movimiento-bancario"
             element={<MovimientoBancario />}
           />
           {/** //!PERSONAL */}
           <Route path="personal" element={<Personal />} />
+          {/** //!COBRANZAS */}
+          <Route
+            path="cobranzas/cuentas-por-cobrar"
+            element={<CuentaPorCobrar />}
+          />
+           <Route
+            path="cobranzas/planilla-cobro"
+            element={<PLanillaCobro />}
+          />
           {/** //!TESORERIA */}
           <Route
             path="/tesoreria/cobros-cuentas-bancarias"
@@ -247,9 +257,9 @@ function App() {
           />
           {/** //!INFORMES */}
           <Route path="/informes/articulos" element={<InformeArticulo />} />
+          <Route path="/informes/ventas" element={<InformeVenta />} />
           <Route path="/informes/compras" element={<InformeCompra />} />
           <Route path="/informes/tesoreria" element={<InformeTesoreria />} />
-          <Route path="/informes/ventas" element={<InformeVenta />} />
         </Route>
 
         {/** //!ERROR */}
