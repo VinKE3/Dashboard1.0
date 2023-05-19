@@ -12,14 +12,17 @@ const GetPermisos = async (menu, setPermisos) => {
       return true;
     }
     if (menu == "Correlativo") {
-      setPermisos([true, true, true, false, false]);
+      setPermisos([true, true, false, true, false]);
+      return true;
+    }
+    if (menu == "CuentaPorPagar" || menu == "CuentaPorCobrar") {
+      setPermisos([true, false, true, true, true]);
       return true;
     }
     if (menu == "Retencion") {
       setPermisos([true, false, true, true, true]);
       return true;
     }
-
     setPermisos([true, true, true, true, true]);
     return true;
   } else {
@@ -36,8 +39,8 @@ const GetPermisos = async (menu, setPermisos) => {
       setPermisos([
         result.registrar,
         result.modificar,
-        result.eliminar,
         false,
+        result.consultar,
         false,
       ]);
       return false;

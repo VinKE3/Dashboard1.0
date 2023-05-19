@@ -8,109 +8,37 @@ import {
   FaFileAlt,
   FaToolbox,
   FaDollarSign,
+  FaMoneyBillAlt,
 } from "react-icons/fa";
 
 function seccionesList() {
   const secciones = [
+    //?Archivo
     {
-      title: "Ventas",
-      id: "ventas",
-      icon: <FaBalanceScale className="text-primary" />,
+      title: "Archivo",
+      id: "archivo",
+      icon: <FaUsers className="text-primary" />,
       items: [
-        {
-          path: "/ventas/cliente",
-          title: "Clientes",
-        },
-        {
-          path: "/ventas/conductores-transportistas",
-          title: "Conductores - Transportistas",
-        },
-        {
-          path: "/ventas/documentos-de-venta",
-          title: "Documentos de Venta",
-        },
-        {
-          path: "/ventas/guias-de-remision",
-          title: "Guias de Remision",
-        },
-        {
-          path: "/ventas/cotizaciones",
-          title: "Cotizaciones",
-        },
-        {
-          path: "/ventas/retenciones",
-          title: "Retencion",
-        },
-        // {
-        //   path: "/ventas/salidas-de-articulos",
-        //   title: "Salidas de Articulos",
-        // },
-        // {
-        //   path: "/ventas/registro-de-venta-articulo",
-        //   title: "Registro de Venta - Articulo",
-        // },
-        {
-          path: "/ventas/bloquear-venta",
-          title: "Bloquear Venta",
-        },
-      ],
-    },
-    {
-      title: "Compras",
-      id: "compras",
-      icon: <FaClipboardCheck className="text-primary" />,
-      items: [
-        {
-          path: "/compras/provedores",
-          title: "Provedores",
-        },
-        {
-          path: "/compras/factura-negociable",
-          title: "Factura Negociable",
-        },
-        {
-          path: "/compras/letra-cambio-compra",
-          title: "Letra de Cambio",
-        },
-        {
-          path: "/compras/documentos-de-compra",
-          title: "Documentos de Compra",
-        },
-        {
-          path: "/compras/ordenes-de-compra",
-          title: "Ordenes de Compra",
-        },
-        {
-          path: "/compras/cef",
-          title: "C.E.F.",
-        },
-        {
-          path: "/compras/cheque",
-          title: "Programación Cheques",
-        },
         {
           path: "/compras/bloquear-compra",
           title: "Bloquear Compra",
         },
-        // {
-        //   path: "/compras/entrada-de-articulos",
-        //   title: "Entrada de Articulos",
-        // },
-        // {
-        //   path: "/compras/registro-de-compra-articulo",
-        //   title: "Registro de Compra - Articulo",
-        // },
+        {
+          path: "/ventas/bloquear-venta",
+          title: "Bloquear Venta",
+        },
+        {
+          path: "/finanzas/bloquear-movimiento-bancario",
+          title: "Bloquear Movimiento Bancario",
+        },
       ],
     },
+    //?Mantenimiento
     {
       title: "Mantenimiento",
       id: "mantenimiento",
       icon: <FaTools className="text-primary" />,
       items: [
-        {
-          path: "/mantenimiento/articulos",
-          title: "Articulos",
-        },
         {
           path: "/mantenimiento/tipos-de-cambio",
           title: "Tipos de Cambio",
@@ -148,10 +76,6 @@ function seccionesList() {
           title: "Cuentas Corrientes",
         },
         {
-          path: "/mantenimiento/empresa-de-transporte",
-          title: "Empresa de Transporte",
-        },
-        {
           path: "/mantenimiento/departamentos",
           title: "Departamentos",
         },
@@ -164,11 +88,36 @@ function seccionesList() {
           title: "Distritos",
         },
         {
-          path: "/mantenimiento/caja-chica-configuracion",
-          title: "Caja Chica - Configuracion",
+          path: "/ventas/clientes",
+          title: "Clientes",
+        },
+        {
+          path: "/compras/provedores",
+          title: "Provedores",
+        },
+        {
+          path: "/personal",
+          title: "Ver Personal",
+        },
+        {
+          path: "/mantenimiento/vehiculos",
+          title: "Vehiculos",
+        },
+        {
+          path: "/ventas/conductores-transportistas",
+          title: "Conductores - Transportistas",
+        },
+        {
+          path: "/mantenimiento/empresa-de-transporte",
+          title: "Empresa de Transporte",
+        },
+        {
+          path: "/mantenimiento/articulos",
+          title: "Articulos",
         },
       ],
     },
+    //?Almacen
     {
       title: "Almacen",
       id: "almacen",
@@ -200,91 +149,115 @@ function seccionesList() {
         },
       ],
     },
+    //?Finanzas
     {
       title: "Finanzas",
       id: "finanzas",
       icon: <FaDollarSign className="text-primary" />,
       items: [
         {
-          path: "/finanzas/bloquear-movimiento-bancario",
-          title: "Bloquear Movimiento Bancario",
-        },
-        {
-          path: "/finanzas/cuentas-por-pagar",
-          title: "Cuentas por Pagar",
-        },
-        {
           path: "/finanzas/movimiento-bancario",
           title: "Movimiento Bancario",
         },
       ],
     },
+    //?Compras
     {
-      title: "Personal",
-      id: "personal",
-      icon: <FaUsers className="text-primary" />,
+      title: "Compras",
+      id: "compras",
+      icon: <FaClipboardCheck className="text-primary" />,
       items: [
         {
-          path: "/personal",
-          title: "Ver Personal",
+          path: "/compras/ordenes-de-compra",
+          title: "Ordenes de Compra",
+        },
+        {
+          path: "/compras/nueva-compra",
+          title: "Compras",
+        },
+        {
+          path: "/compras/factura-negociable",
+          title: "Factura Negociable",
+        },
+        {
+          path: "/compras/letra-cambio-compra",
+          title: "Letra de Cambio",
+        },
+        {
+          path: "/compras/cef",
+          title: "C.E.F.",
+        },
+        {
+          path: "/compras/cheque",
+          title: "Programación Cheques",
+        },
+        {
+          path: "/compras/documentos-de-compra",
+          title: "Documentos de Compra",
+        },
+        {
+          path: "/compras/guias-de-compra",
+          title: "Guías De Compra",
+        },
+        {
+          path: "/finanzas/cuentas-por-pagar",
+          title: "Cuentas por Pagar",
         },
       ],
     },
+    //?Ventas
+    {
+      title: "Ventas",
+      id: "ventas",
+      icon: <FaBalanceScale className="text-primary" />,
+      items: [
+        {
+          path: "/ventas/documentos-de-venta",
+          title: "Documentos de Venta",
+        },
+        {
+          path: "/ventas/guias-de-remision",
+          title: "Guias de Remision",
+        },
+        {
+          path: "/ventas/cotizaciones",
+          title: "Cotizaciones",
+        },
+        {
+          path: "/ventas/retenciones",
+          title: "Retencion",
+        },
+      ],
+    },
+    //?Cobranzas
+    {
+      title: "Cobranzas",
+      id: "cobranzas",
+      icon: <FaMoneyBillAlt className="text-primary" />,
+      items: [
+        {
+          path: "/cobranzas/cuentas-por-cobrar",
+          title: "Cuentas Por Cobrar",
+        },
+        {
+          path: "/cobranzas/planilla-cobro",
+          title: "Planilla Cobro",
+        },
+      ],
+    },
+    //?Tesoreria
     {
       title: "Tesoreria",
       id: "tesoreria",
       icon: <FaMoneyCheck className="text-primary" />,
       items: [
-        // {
-        //   path: "/tesoreria/cuentas-por-cobrar",
-        //   title: "Cuentas por Cobrar",
-        // },
-        // {
-        //   path: "/tesoreria/cobros-cuentas-bancarias",
-        //   title: "Cobros - Cuentas Bancarias",
-        // },
-        // {
-        //   path: "/tesoreria/retenciones",
-        //   title: "Retenciones",
-        // },
-        // {
-        //   path: "/tesoreria/letras-de-cambio-cobro",
-        //   title: "Letras de Cambio - Cobro",
-        // },
-        // {
-        //   path: "/tesoreria/cuentas-por-pagar",
-        //   title: "Cuentas por Pagar",
-        // },
-        // {
-        //   path: "/tesoreria/pagos-en-efectivo",
-        //   title: "Pagos en Efectivo",
-        // },
-        // {
-        //   path: "/tesoreria/pagos-cuenta-bancaria",
-        //   title: "Pagos - Cuenta Bancaria",
-        // },
-        // {
-        //   path: "/tesoreria/letras-de-cambio-pago",
-        //   title: "Letras de Cambio - Pago",
-        // },
-        // {
-        //   path: "/tesoreria/caja-chica",
-        //   title: "Caja Chica",
-        // },
-        // {
-        //   path: "/tesoreria/recibo-de-ingreso",
-        //   title: "recibo de Ingreso",
-        // },
-        // {
-        //   path: "/tesoreria/recibo-de-egreso",
-        //   title: "Recibo de Egreso",
-        // },
         {
           path: "/tesoreria/bloquear-recibo-de-egreso",
           title: "Bloquear Recibo de Egreso",
         },
       ],
     },
+    //?Informes
     {
       title: "Informes",
       id: "informes",
@@ -308,6 +281,7 @@ function seccionesList() {
         },
       ],
     },
+    //?Herramientas
     {
       title: "Herramientas",
       id: "herramientas",

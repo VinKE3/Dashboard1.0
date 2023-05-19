@@ -1,20 +1,18 @@
 import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
-import { FaSearch } from "react-icons/fa";
-import GetPermisos from "../../../components/Funciones/GetPermisos";
-import styled from "styled-components";
-import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
-import store from "store2";
-import GetUsuarioId from "../../../components/CRUD/GetUsuarioId";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
+import Modal from "./Modal";
+import { ToastContainer } from "react-toastify";
 import moment from "moment";
+import styled from "styled-components";
+import { FaSearch } from "react-icons/fa";
+import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../components/Global";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -24,8 +22,31 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
+  & th:nth-child(2),
+  & th:nth-child(3) {
+    width: 65px;
+    text-align: center;
+  }
+  & th:nth-child(4) {
+    width: 135px;
+  }
+  & th:nth-child(7) {
+    text-align: right;
+  }
+  & th:nth-child(6),
+  & th:nth-child(10) {
+    width: 35px;
+    text-align: center;
+  }
+  & th:nth-child(7),
+  & th:nth-child(8),
+  & th:nth-child(9) {
+    width: 50px;
+    text-align: right;
+  }
   & th:last-child {
-    width: 130px;
+    width: 90px;
+    max-width: 90px;
     text-align: center;
   }
 `;
@@ -40,14 +61,14 @@ const CuentaPorPagar = () => {
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [tipo, setTipo] = useState("soloDeuda");
   const [filtro, setFiltro] = useState({
     proveedorNombre: "",
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    isCancelado: "",
   });
   const [cadena, setCadena] = useState(
-    `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isCancelado=${filtro.isCancelado}`
   );
   //Modal
   const [modal, setModal] = useState(false);
@@ -60,7 +81,7 @@ const CuentaPorPagar = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+      `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isCancelado=${filtro.isCancelado}`
     );
   }, [filtro]);
   useEffect(() => {
@@ -142,12 +163,6 @@ const CuentaPorPagar = () => {
     setModal(true);
   };
   //#endregion
-  const datosFiltrados =
-    tipo === "todos"
-      ? datos
-      : tipo === "soloDeuda"
-      ? datos.filter((dato) => dato.saldo > 0 && dato.saldo <= dato.total)
-      : datos.filter((dato) => dato.abonado === dato.total);
 
   //#region Columnas
   const columnas = useMemo(
@@ -160,14 +175,18 @@ const CuentaPorPagar = () => {
         Header: "Fecha",
         accessor: "fechaContable",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
-        Header: "Vencimiento",
+        Header: "Vcmto",
         accessor: "fechaVencimiento",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
@@ -179,32 +198,40 @@ const CuentaPorPagar = () => {
         accessor: "proveedorNombre",
       },
       {
-        Header: "Moneda",
+        Header: "M",
         accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+        },
       },
       {
         Header: "Total",
         accessor: "total",
+        Cell: ({ value }) => {
+          return <p className="text-right font-semibold">{value}</p>;
+        },
       },
       {
         Header: "Abonado",
         accessor: "abonado",
+        Cell: ({ value }) => {
+          return <p className="text-right font-semibold">{value}</p>;
+        },
       },
       {
         Header: "Saldo",
         accessor: "saldo",
+        Cell: ({ value }) => {
+          return <p className="text-right font-semibold">{value}</p>;
+        },
       },
       {
-        Header: "Cancelado",
+        Header: "C",
         accessor: "isCancelado",
         Cell: ({ value }) => {
-          return value ? (
+          return (
             <div className="flex justify-center">
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <Checkbox checked={false} />
+              <Checkbox checked={value} />
             </div>
           );
         },
@@ -218,6 +245,7 @@ const CuentaPorPagar = () => {
             menu={["Compras", "CuentaPorPagar"]}
             id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
           />
         ),
       },
@@ -232,113 +260,130 @@ const CuentaPorPagar = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Cuentas Por Pagar</h2>
-              <div className="flex gap-3 items-center">
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <div className={Global.LabelStyle}>
+            <h2 className={Global.TituloH2}>Cuentas por Pagar</h2>
+
+            {/* Filtro*/}
+            <div
+              className={
+                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+              }
+            >
+              <div className={Global.ContenedorFiltro + " !my-0"}>
+                <div className={Global.InputFull}>
+                  <label name="proveedorNombre" className={Global.LabelStyle}>
+                    Proveedor
+                  </label>
+                  <input
+                    type="text"
+                    id="proveedorNombre"
+                    name="proveedorNombre"
+                    placeholder="Proveedor"
+                    autoComplete="off"
+                    value={filtro.proveedorNombre ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.Input42pct}>
+                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                    Desde
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaInicio"
+                    name="fechaInicio"
+                    value={filtro.fechaInicio ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.Input42pct}>
+                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                    Hasta
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaFin"
+                    name="fechaFin"
+                    value={filtro.fechaFin ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="buscar"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    onClick={Filtro}
+                  >
+                    <FaSearch />
+                  </button>
+                </div>
+              </div>
+
+              <div className={Global.ContenedorFiltro + " !my-0"}>
+                <div className={Global.InputMitad}>
+                  <div className={Global.Input + "w-28"}>
+                    <div className={Global.CheckStyle}>
                       <RadioButton
                         inputId="todos"
-                        name="todos"
-                        value="todos"
-                        onChange={(e) => setTipo(e.target.value)}
-                        checked={tipo === "todos"}
+                        name="isCancelado"
+                        value={""}
+                        onChange={ValidarData}
+                        checked={filtro.isCancelado === ""}
                       />
                     </div>
-                    <label htmlFor="todos" className={Global.InputStyle}>
+                    <label
+                      htmlFor="todos"
+                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                    >
                       Todos
                     </label>
                   </div>
-                </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.LabelStyle}>
-                    <RadioButton
-                      inputId="soloDeuda"
-                      name="soloDeuda"
-                      value="soloDeuda"
-                      onChange={(e) => setTipo(e.target.value)}
-                      checked={tipo === "soloDeuda"}
-                    />
+                  <div className={Global.Input + "w-28"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <RadioButton
+                        inputId="soloDeuda"
+                        name="isCancelado"
+                        value={false}
+                        onChange={ValidarData}
+                        checked={filtro.isCancelado === false}
+                      />
+                    </div>
+                    <label
+                      htmlFor="soloDeuda"
+                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                    >
+                      Deúdas
+                    </label>
                   </div>
-                  <label htmlFor="soloDeuda" className={Global.InputStyle}>
-                    Deudas
-                  </label>
-                </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.LabelStyle}>
-                    <RadioButton
-                      inputId="soloCancelado"
-                      name="soloCancelado"
-                      value="soloCancelado"
-                      onChange={(e) => setTipo(e.target.value)}
-                      checked={tipo === "soloCancelado"}
-                    />
+                  <div className={Global.Input + "w-28"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <RadioButton
+                        inputId="soloCancelado"
+                        name="isCancelado"
+                        value={true}
+                        onChange={ValidarData}
+                        checked={filtro.isCancelado === true}
+                      />
+                    </div>
+                    <label
+                      htmlFor="soloCancelado"
+                      className={Global.LabelCheckStyle + "font-semibold"}
+                    >
+                      Cancelados
+                    </label>
                   </div>
-                  <label htmlFor="soloCancelado" className={Global.InputStyle}>
-                    Cancelados
-                  </label>
                 </div>
               </div>
             </div>
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputFull}>
-                <label name="proveedorNombre" className={Global.LabelStyle}>
-                  Proveedor
-                </label>
-                <input
-                  type="text"
-                  id="proveedorNombre"
-                  name="proveedorNombre"
-                  placeholder="Proveedor"
-                  autoComplete="off"
-                  value={filtro.proveedorNombre ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-                  Desde
-                </label>
-                <input
-                  type="date"
-                  id="fechaInicio"
-                  name="fechaInicio"
-                  value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
-                  Hasta
-                </label>
-                <input
-                  type="date"
-                  id="fechaFin"
-                  name="fechaFin"
-                  value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                  onClick={Filtro}
-                >
-                  <FaSearch />
-                </button>
-              </div>
-            </div>
+
             {/* Tabla */}
             <TablaStyle>
               <Table
                 columnas={columnas}
-                datos={datosFiltrados}
+                datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}

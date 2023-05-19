@@ -21,6 +21,23 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
+  & th:nth-child(2) {
+    width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(4),
+  & th:nth-child(5) {
+    width: 90px;
+    text-align: center;
+  }
+
+  & th:nth-child(6),
+  & th:nth-child(7) {
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
+    text-align: center;
+  }
   & th:last-child {
     width: 75px;
     min-width: 90px;
@@ -846,9 +863,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={moment(abono.fecha).format("yyyy-MM-DD") ?? ""}
                   onChange={ValidarData}
                   className={
-                    modo == "Consultar"
-                      ? Global.InputStyle
-                      : Global.InputStyle
+                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
                   }
                 />
               </div>
@@ -866,9 +881,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={abono.tipoCambio ?? ""}
                   onChange={ValidarData}
                   className={
-                    modo == "Consultar"
-                      ? Global.InputBoton 
-                      : Global.InputBoton
+                    modo == "Consultar" ? Global.InputBoton : Global.InputBoton
                   }
                 />
               </div>
@@ -883,9 +896,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoPagoId"
                   onChange={ValidarData}
                   className={
-                    modo == "Consultar"
-                      ? Global.InputStyle
-                      : Global.InputStyle
+                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
                   }
                   disabled={modo == "Consultar" ? true : false}
                   value={abono.tipoPagoId ?? ""}
@@ -945,9 +956,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" ? true : false}
                   onChange={ValidarData}
                   className={
-                    modo == "Consultar"
-                      ? Global.InputStyle
-                      : Global.InputStyle
+                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
                   }
                 />
               </div>
@@ -963,9 +972,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onChange={ValidarData}
                   disabled={modo == "Consultar" ? true : false}
                   className={
-                    modo == "Consultar"
-                      ? Global.InputStyle
-                      : Global.InputStyle
+                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
                   }
                   value={abono.monedaId ?? ""}
                 >
@@ -1011,9 +1018,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={abono.monto ?? ""}
                   onChange={ValidarData}
                   className={
-                    modo == "Consultar"
-                      ? Global.InputStyle
-                      : Global.InputStyle
+                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
                   }
                 />
               </div>
@@ -1031,9 +1036,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 value={abono.concepto ?? ""}
                 onChange={ValidarData}
                 className={
-                  modo == "Consultar"
-                    ? Global.InputStyle
-                    : Global.InputStyle
+                  modo == "Consultar" ? Global.InputStyle : Global.InputStyle
                 }
               />
             </div>
