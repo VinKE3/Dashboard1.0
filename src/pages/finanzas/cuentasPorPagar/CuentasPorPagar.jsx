@@ -354,7 +354,7 @@ const CuentaPorPagar = () => {
                       htmlFor="soloDeuda"
                       className={Global.LabelCheckStyle + " rounded-r-none"}
                     >
-                      Deúdas
+                      Deudas
                     </label>
                   </div>
                   <div className={Global.Input + "w-28"}>

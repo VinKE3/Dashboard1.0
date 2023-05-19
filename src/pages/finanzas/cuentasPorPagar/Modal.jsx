@@ -1,33 +1,36 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import ModalCrud from "../../../components/ModalCrud";
-import * as Global from "../../../components/Global";
-import { useEffect } from "react";
-import moment from "moment";
-import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaPlus, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
-import Mensajes from "../../../components/Mensajes";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import ModalCrud from "../../../components/ModalCrud";
+import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
 import { toast } from "react-toastify";
+import moment from "moment";
+import {
+  FaPlus,
+  FaUndoAlt,
+  FaPen,
+  FaTrashAlt,
+  FaSearch,
+  FaEye,
+} from "react-icons/fa";
+import styled from "styled-components";
+import "primeicons/primeicons.css";
+import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/Funciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
-  & th:first-child {
-    display: none;
-  }
-  & tbody td:first-child {
-    display: none;
-  }
+  & th:nth-child(1),
   & th:nth-child(2) {
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(4),
+  & th:nth-child(3) {
+    width: 120px;
+  }
   & th:nth-child(5) {
-    width: 90px;
+    width: 40px;
     text-align: center;
   }
 
@@ -49,38 +52,33 @@ const TablaStyle = styled.div`
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
+  //Data General
   const [data, setData] = useState(objeto);
-  const [totalAbono, setTotalAbono] = useState(objeto.saldo);
-  const [dataDetalle, setDetalle] = useState(objeto.abonos);
-  const [abono, setAbono] = useState([]);
-  const [monedas, setMonedas] = useState([]);
+  const [dataDetalle, setDataDetalle] = useState(objeto.abonos);
+  //Data General
+  //Tablas
+  const [dataTipoDoc, setDataTipoDoc] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
   const [tipoPagos, setTipoPagos] = useState([]);
   const [cuentasCorrientes, setCuentasCorrientes] = useState([]);
+  const [dataAbono, setDataAbono] = useState([]);
+  //Tablas
+
+  const [totalAbono, setTotalAbono] = useState(objeto.saldo);
+  const [nuevo, setNuevo] = useState(false);
+  const [habilitarCampo, setHabilitarCampo] = useState(false);
+  const [abonoId, setabonoId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
-  const [abonoId, setabonoId] = useState(dataDetalle.length + 1);
-  const [habilitarNuevo, setHabilitarNuevo] = useState(false);
-  const [habilitarCampo, setHabilitarCampo] = useState(false);
   const [refrescar, setRefrescar] = useState(false);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    GetTablas();
-    GetPorId(data.id);
-    BotonNuevo(0, data.id);
-  }, []);
-
-  useEffect(() => {
-    if (habilitarNuevo) {
-      NuevoAbono();
+    if (nuevo) {
+      Abono();
     }
   }, [data.saldo]);
-
-  useEffect(() => {
-    abono;
-    console.log(abono);
-  }, [abono]);
 
   useEffect(() => {
     if (refrescar) {
@@ -88,19 +86,24 @@ const Modal = ({ setModal, modo, objeto }) => {
       setRefrescar(false);
     }
   }, [refrescar]);
+
+  useEffect(() => {
+    GetIsPermitido(0, data.id, 0);
+    setDataTipoDoc([data.tipoDocumento]);
+    TablasAbono();
+  }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
-    setAbono((prevState) => ({
+  //Data General
+  const ValidarDataAbono = async ({ target }) => {
+    setDataAbono((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
-
-  const HandleConvertirPrecio = async ({ target }) => {
-    //?validaciones
-    if (abono.tipoCambio == 0) {
+  const CalcularTotal = async ({ target }) => {
+    if (dataAbono.tipoCambio == 0) {
       toast.error(
         "No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
         {
@@ -116,7 +119,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       return null;
     }
-    let tipoCambio = abono.tipoCambio;
+
+    let tipoCambio = dataAbono.tipoCambio;
     if (data.monedaId != target.value) {
       if (target.value == "D") {
         const total = totalAbono / tipoCambio;
@@ -138,30 +142,21 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
       setRefrescar(true);
     }
-    setAbono((prevState) => ({
+    setDataAbono((prevState) => ({
       ...prevState,
       monedaId: target.value,
     }));
   };
-
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(-1);
   };
-
-  const BotonNuevo = async (abonoId, accion = "0") => {
-    let permiso = await GetIsPermitido(accion, abonoId);
-    if (permiso) {
-      setHabilitarNuevo(permiso);
-    } else {
-      setHabilitarNuevo(false);
-    }
-  };
-
-  const NuevoAbono = async () => {
+  //Data General
+  //Abonos
+  const Abono = async () => {
     setHabilitarCampo(true);
-    await GetPorIdTipoCambio(moment().format("yyyy-MM-DD"));
-    setAbono({
+    let tipoCambio = await GetPorIdTipoCambio(moment().format("yyyy-MM-DD"));
+    setDataAbono({
       empresaId: data.empresaId,
       proveedorId: data.proveedorId,
       tipoDocumentoId: data.tipoDocumentoId,
@@ -171,7 +166,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       fecha: moment().format("yyyy-MM-DD"),
       concepto: "AMORTIZACION DE LA DEUDA",
       monedaId: data.monedaId,
-      tipoCambio: 0,
+      tipoCambio: tipoCambio,
       monto: data.saldo,
       montoPEN: 0,
       montoUSD: 0,
@@ -181,72 +176,37 @@ const Modal = ({ setModal, modo, objeto }) => {
       cuentaCorrienteId: null,
       numeroOperacion: "",
     });
+    setTotalAbono(data.saldo);
   };
+  //Abonos
+  //#endregion
 
+  //#region Funciones Detalles
   const ValidarDetalle = async () => {
-    if (abono.monto == 0) {
+    if (dataAbono.monto == 0) {
       return [false, "No se ha ingresado ningún monto"];
     }
-    if (abono.tipoCambio == 0) {
+    if (dataAbono.tipoCambio == 0) {
       return [false, "No se ha ingresado ningún tipo de cambio"];
     }
-    if (abono.monto > totalAbono) {
+    if (dataAbono.monto > totalAbono) {
       return [false, "El monto ingresado es mayor al saldo"];
     }
     return [true, ""];
   };
-
   const CargarDetalle = async (abonoId) => {
     const result = await ApiMasy.get(
       `/api/Finanzas/AbonoCompra/${data.id}/${abonoId}`
     );
-    setAbono(result.data.data);
+    setDataAbono(result.data.data);
   };
-
-  const EliminarDetalle = async (abonoId, accion = "2") => {
-    let permiso = await GetIsPermitido(accion, abonoId);
-    if (permiso) {
-      const result = await ApiMasy.delete(
-        `/api/Finanzas/AbonoCompra/${data.id}/${abonoId}`
-      );
-      toast.success(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      let i = 1;
-      let nuevoDetalle = dataDetalle.filter((item) => item.abonoId != abonoId);
-      if (nuevoDetalle.length > 0) {
-        setDetalle(
-          nuevoDetalle.map((item) => {
-            return {
-              ...item,
-              abonoId: i++,
-            };
-          })
-        );
-        setabonoId(i);
-      } else {
-        setabonoId(nuevoDetalle.length + 1);
-        setDetalle(nuevoDetalle);
-      }
-      setRefrescar(true);
-    }
-    await GetPorId(data.id);
-  };
-
   const AgregarAbonoDetalle = async () => {
     let resultado = await ValidarDetalle();
     if (resultado[0]) {
-      const montoPEN = abono.monedaId === "S" ? abono.monto : 0;
-      const montoUSD = abono.monedaId === "D" ? abono.monto : 0;
+      const montoPEN = dataAbono.monedaId === "S" ? dataAbono.monto : 0;
+      const montoUSD = dataAbono.monedaId === "D" ? dataAbono.monto : 0;
       const result = await ApiMasy.post(`/api/Finanzas/AbonoCompra/`, {
-        ...abono,
+        ...dataAbono,
         montoPEN: montoPEN,
         montoUSD: montoUSD,
       });
@@ -265,15 +225,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           ...prevState,
           {
             abonoId: abonoId,
-            fecha: abono.fecha,
-            concepto: abono.concepto,
-            monedaId: abono.monedaId,
-            tipoCambio: abono.tipoCambio,
-            monto: Funciones.RedondearNumero(abono.monto, 2),
-            montoPEN: abono.montoPEN,
-            montoUSD: abono.montoUSD,
-            tipoPagoId: abono.tipoPagoId,
-            documentoCompraId: abono.documentoCompraId,
+            fecha: dataAbono.fecha,
+            concepto: dataAbono.concepto,
+            monedaId: dataAbono.monedaId,
+            tipoCambio: dataAbono.tipoCambio,
+            monto: Funciones.RedondearNumero(dataAbono.monto, 2),
+            montoPEN: dataAbono.montoPEN,
+            montoUSD: dataAbono.montoUSD,
+            tipoPagoId: dataAbono.tipoPagoId,
+            documentoCompraId: dataAbono.documentoCompraId,
           },
         ]);
         setabonoId(abonoId + 1);
@@ -304,20 +264,15 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     await GetPorId(data.id);
   };
-
-  const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Finanzas/CuentaPorPagar/${id}`);
-    setData(result.data.data);
-  };
-
-  const GetIsPermitido = async (accion, abonoId) => {
-    const result = await ApiMasy.get(
-      `/api/Finanzas/AbonoCompra/IsPermitido?accion=${accion}&compraId=${data.id}&abonoId=${abonoId}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
+  const EliminarDetalle = async (abonoId) => {
+    let permiso = await GetIsPermitido(2, abonoId);
+    if (permiso) {
+      const result = await ApiMasy.delete(
+        `/api/Finanzas/AbonoCompra/${data.id}/${abonoId}`
+      );
+      toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 3000,
+        autoClose: 1500,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -325,13 +280,31 @@ const Modal = ({ setModal, modo, objeto }) => {
         progress: undefined,
         theme: "colored",
       });
-      return false;
-    } else {
-      return true;
+      let i = 1;
+      let nuevoDetalle = dataDetalle.filter((map) => map.abonoId != abonoId);
+      if (nuevoDetalle.length > 0) {
+        setDetalle(
+          nuevoDetalle.map((map) => {
+            return {
+              ...map,
+              abonoId: i++,
+            };
+          })
+        );
+        setabonoId(i);
+      } else {
+        setabonoId(nuevoDetalle.length + 1);
+        setDetalle(nuevoDetalle);
+      }
+      setRefrescar(true);
     }
+    await GetPorId(data.id);
   };
 
-  const GetTablas = async () => {
+  //#endregion
+
+  //#region API
+  const TablasAbono = async () => {
     const result = await ApiMasy(`/api/Finanzas/AbonoCompra/FormularioTablas`);
     let model = result.data.data.cuentasCorrientes.map((res) => ({
       cuentaCorrienteDescripcion:
@@ -344,11 +317,10 @@ const Modal = ({ setModal, modo, objeto }) => {
         "/.]",
       ...res,
     }));
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
     setCuentasCorrientes(model);
     setTipoPagos(result.data.data.tiposPago);
   };
-
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
     if (result.name == "AxiosError") {
@@ -359,26 +331,61 @@ const Modal = ({ setModal, modo, objeto }) => {
         setTipoMensaje(1);
         setMensaje([result.message]);
       }
-      setAbono({
-        ...abono,
-        tipoCambio: 0,
-      });
+      return 0;
     } else {
-      setAbono((prevState) => ({
-        ...prevState,
-        tipoCambio: result.data.data.precioCompra,
-      }));
-      setTipoMensaje(-1);
-      setMensaje([]);
+      toast.info(
+        "El tipo de cambio del día " +
+          moment(data.fechaEmision).format("DD/MM/YYYY") +
+          " es: " +
+          result.data.data.precioVenta,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          toastId: "toastTipoCambio",
+        }
+      );
+      OcultarMensajes();
+      return result.data.data.precioVenta;
     }
+  };
+  const GetIsPermitido = async (accion = 0, compraId, abonoId = 0) => {
+    const result = await ApiMasy.get(
+      `/api/Finanzas/AbonoCompra/IsPermitido?accion=${accion}&compraId=${compraId}&abonoId=${abonoId}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+    setNuevo(result.data.data);
+  };
+  const GetPorId = async (id) => {
+    const result = await ApiMasy.get(`api/Finanzas/CuentaPorPagar/${id}`);
+    setData(result.data.data);
   };
   //#endregion
 
   //#region Columnas
   const columnas = [
     {
-      Header: "id",
+      Header: "Item",
       accessor: "abonoId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Fecha",
@@ -390,22 +397,48 @@ const Modal = ({ setModal, modo, objeto }) => {
     {
       Header: "Tipo de Pago",
       accessor: "tipoPagoId",
+      Cell: ({ value }) => {
+        let comprobante = "";
+        switch (value) {
+          case "EF":
+            comprobante = "EFECTIVO";
+            break;
+          case "DE":
+            comprobante = "DEPÓSITO";
+            break;
+          case "TR":
+            comprobante = "TRANSFERENCIA";
+          default:
+            comprobante = value;
+        }
+        return <p>{comprobante}</p>;
+      },
     },
     {
       Header: "Concepto",
       accessor: "concepto",
     },
     {
-      Header: "Moneda",
+      Header: "M",
       accessor: "monedaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+      },
     },
     {
       Header: "Tipo Cambio",
       accessor: "tipoCambio",
+
+      Cell: ({ value }) => {
+        return <p className="text-right font-semibold pr-5">{value}</p>;
+      },
     },
     {
       Header: "Monto",
       accessor: "monto",
+      Cell: ({ value }) => {
+        return <p className="text-right font-semibold pr-5">{value}</p>;
+      },
     },
     {
       Header: "Acciones",
@@ -415,20 +448,16 @@ const Modal = ({ setModal, modo, objeto }) => {
             ""
           ) : (
             <>
-              {setHabilitarNuevo ? (
-                <></>
-              ) : (
-                <div className={Global.TablaBotonModificar}>
-                  <button
-                    id="boton-modificar"
-                    onClick={() => CargarDetalle(row.values.abonoId)}
-                    className="p-0 px-1"
-                    title="Click para modificar registro"
-                  >
-                    <FaPen></FaPen>
-                  </button>
-                </div>
-              )}
+              <div className={Global.TablaBotonModificar}>
+                <button
+                  id="boton-consultar"
+                  onClick={() => CargarDetalle(row.values.abonoId)}
+                  className="p-0 px-1"
+                  title="Click para consultar registro"
+                >
+                  <FaEye></FaEye>
+                </button>
+              </div>
 
               <div className={Global.TablaBotonEliminar}>
                 <button
@@ -452,310 +481,100 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region  Render
   return (
-    <ModalCrud
-      setModal={setModal}
-      objeto={data}
-      modo={modo}
-      menu={["Finanzas", "CuentaPorPagar"]}
-      titulo="Cuentas Por Pagar"
-      tamañoModal={[Global.ModalGrande, Global.Form]}
-    >
-      {tipoMensaje > 0 && (
-        <Mensajes
-          tipoMensaje={tipoMensaje}
-          mensaje={mensaje}
-          Click={() => OcultarMensajes()}
-        />
-      )}
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoDocumento" className={Global.LabelStyle}>
-              Tipo Documento
-            </label>
-            <input
-              type="text"
-              id="tipoDocumento"
-              name="tipoDocumento"
-              autoComplete="off"
-              placeholder="00"
-              disabled={true}
-              value={data.tipoDocumento.descripcion ?? ""}
-              className={Global.InputStyle}
+    <>
+      {Object.entries(dataTipoDoc).length > 0 && (
+        <ModalCrud
+          setModal={setModal}
+          objeto={data}
+          modo={modo}
+          menu={["Finanzas", "CuentaPorPagar"]}
+          titulo="Cuentas Por Pagar"
+          tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+          cerrar={false}
+        >
+          {tipoMensaje > 0 && (
+            <Mensajes
+              tipoMensaje={tipoMensaje}
+              mensaje={mensaje}
+              Click={() => OcultarMensajes()}
             />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="serie" className={Global.LabelStyle}>
-              Serie
-            </label>
-            <input
-              type="text"
-              id="serie"
-              name="serie"
-              autoComplete="off"
-              placeholder="Serie"
-              disabled={true}
-              value={data.serie ?? ""}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="numero" className={Global.LabelStyle}>
-              Número
-            </label>
-            <input
-              type="text"
-              id="numero"
-              name="numero"
-              autoComplete="off"
-              placeholder="numero"
-              disabled={true}
-              value={data.numero ?? ""}
-              className={Global.InputStyle}
-            />
-          </div>
-        </div>
-      </div>
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="fechaContable" className={Global.LabelStyle}>
-              Fecha
-            </label>
-            <input
-              type="text"
-              id="fechaContable"
-              name="fechaContable"
-              autoComplete="off"
-              placeholder="fechaContable"
-              disabled={true}
-              value={moment(data.fechaContable).format("DD/MM/YYYY") ?? ""}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
-              Moneda
-            </label>
-            <input
-              type="text"
-              id="monedaId"
-              name="monedaId"
-              autoComplete="off"
-              placeholder="monedaId"
-              disabled={true}
-              value={data.monedaId ?? ""}
-              className={Global.InputStyle}
-            />
-          </div>
-        </div>
-
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="total" className={Global.LabelStyle}>
-              Total a Pagar
-            </label>
-            <input
-              type="text"
-              id="total"
-              name="total"
-              autoComplete="off"
-              placeholder="total"
-              disabled={true}
-              value={data.total ?? ""}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="abonado" className={Global.LabelStyle}>
-              Abonado
-            </label>
-            <input
-              type="text"
-              id="abonado"
-              name="abonado"
-              autoComplete="off"
-              placeholder="abonado"
-              disabled={true}
-              value={data.abonado ?? ""}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="saldo" className={Global.LabelStyle}>
-              Saldo Total
-            </label>
-            <input
-              type="text"
-              id="saldo"
-              name="saldo"
-              autoComplete="off"
-              placeholder="saldo"
-              disabled={true}
-              value={data.saldo ?? ""}
-              className={Global.InputStyle}
-            />
-          </div>
-        </div>
-        <div className={Global.InputFull}>
-          <label htmlFor="observacion" className={Global.LabelStyle}>
-            Observación
-          </label>
-          <input
-            type="text"
-            id="observacion"
-            name="observacion"
-            autoComplete="off"
-            placeholder="observacion"
-            disabled={true}
-            value={data.observacion ?? ""}
-            className={Global.InputStyle}
-          />
-        </div>
-      </div>
-      <div
-        className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
-      >
-        <div className={Global.ContenedorInputs}>
-          {habilitarNuevo ? (
-            <BotonBasico
-              botonText="Nuevo"
-              botonClass={Global.BotonAgregar}
-              botonIcon={faPlus}
-              click={() => NuevoAbono()}
-              containerClass=""
-            />
-          ) : (
-            <></>
           )}
-        </div>
-        {habilitarCampo ? (
-          <>
+          <div
+            className={
+              Global.ContenedorBasico + Global.FondoContenedor + " mb-4"
+            }
+          >
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
-                <label htmlFor="abonoId" className={Global.LabelStyle}>
-                  Abono N°
-                </label>
-                <input
-                  type="text"
-                  id="abonoId"
-                  name="abonoId"
-                  autoComplete="off"
-                  onChange={ValidarData}
-                  placeholder="abonoId"
-                  disabled={true}
-                  value={abono.abonoId ?? ""}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="fecha" className={Global.LabelStyle}>
-                  Fecha
-                </label>
-                <input
-                  type="date"
-                  id="fecha"
-                  name="fecha"
-                  maxLength="2"
-                  autoComplete="off"
-                  value={moment(abono.fecha).format("yyyy-MM-DD") ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                  T. Cambio
-                </label>
-                <input
-                  type="number"
-                  id="tipoCambio"
-                  name="tipoCambio"
-                  maxLength="8"
-                  autoComplete="off"
-                  value={abono.tipoCambio ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="consultarTipoCambio"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                  onClick={(e) => {
-                    e.preventDefault();
-                    GetPorIdTipoCambio(abono.fecha);
-                  }}
-                >
-                  <FaUndoAlt></FaUndoAlt>
-                </button>
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="tipoPagoId" className={Global.LabelStyle}>
-                  Tipo Pago
+                <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
+                  Tipo Doc.
                 </label>
                 <select
-                  id="tipoPagoId"
-                  name="tipoPagoId"
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                  value={abono.tipoPagoId ?? ""}
+                  id="tipoDocumentoId"
+                  name="tipoDocumentoId"
+                  autoFocus
+                  value={data.tipoDocumentoId ?? ""}
+                  disabled={modo == "Registrar" ? false : true}
+                  className={
+                    modo == "Registrar" ? Global.InputStyle : Global.InputStyle
+                  }
                 >
-                  {tipoPagos.map((item, index) => (
-                    <option key={index} value={item.valor}>
-                      {item.texto}
+                  {dataTipoDoc.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
                     </option>
                   ))}
                 </select>
               </div>
-              {abono.tipoPagoId == "TR" || abono.tipoPagoId == "DE" ? (
-                <>
-                  <div className={Global.InputFull}>
-                    <label
-                      htmlFor="cuentaCorrienteId"
-                      className={Global.LabelStyle}
-                    >
-                      Cuenta Corriente
-                    </label>
-                    <select
-                      id="cuentaCorrienteId"
-                      name="cuentaCorrienteId"
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
-                      value={abono.cuentaCorrienteId ?? ""}
-                    >
-                      {cuentasCorrientes.map((item, index) => (
-                        <option
-                          key={index}
-                          value={item.cuentaCorrienteDescripcion}
-                        >
-                          {item.cuentaCorrienteDescripcion}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
-              <div className={Global.InputFull}>
-                <label htmlFor="numeroOperacion" className={Global.LabelStyle}>
-                  Numero Operacion
+              <div className={Global.InputTercio}>
+                <label htmlFor="serie" className={Global.LabelStyle}>
+                  Serie
                 </label>
                 <input
                   type="text"
-                  id="numeroOperacion"
-                  name="numeroOperacion"
+                  id="serie"
+                  name="serie"
+                  placeholder="Número"
                   autoComplete="off"
-                  value={abono.numeroOperacion ?? ""}
-                  onChange={ValidarData}
+                  maxLength="4"
+                  disabled={true}
+                  value={data.serie ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputMitad}>
+                <label htmlFor="numero" className={Global.LabelStyle}>
+                  Número
+                </label>
+                <input
+                  type="text"
+                  id="numero"
+                  name="numero"
+                  placeholder="Número"
+                  autoComplete="off"
+                  maxLength="10"
+                  disabled={true}
+                  value={data.numero ?? ""}
                   className={Global.InputStyle}
                 />
               </div>
             </div>
             <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="fechaContable" className={Global.LabelStyle}>
+                  Fecha
+                </label>
+                <input
+                  type="text"
+                  id="fechaContable"
+                  name="fechaContable"
+                  autoComplete="off"
+                  placeholder="fechaContable"
+                  disabled={true}
+                  value={moment(data.fechaContable).format("DD/MM/YYYY") ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
               <div className={Global.InputFull}>
                 <label htmlFor="monedaId" className={Global.LabelStyle}>
                   Moneda
@@ -763,296 +582,338 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="monedaId"
                   name="monedaId"
-                  onChange={HandleConvertirPrecio}
                   className={Global.InputStyle}
-                  disabled={abono.tipoCambio > 0 ? false : true}
-                  value={abono.monedaId ?? ""}
+                  disabled={true}
+                  value={data.monedaId ?? ""}
                 >
-                  {monedas.map((item, index) => (
-                    <option key={index} value={item.id}>
-                      {item.descripcion}
+                  {dataMoneda.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
                     </option>
                   ))}
                 </select>
               </div>
+            </div>
+            <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
                 <label htmlFor="total" className={Global.LabelStyle}>
-                  Total A Pagar
+                  Total a Pagar
                 </label>
                 <input
                   type="text"
                   id="total"
                   name="total"
                   autoComplete="off"
-                  placeholder="Total"
+                  placeholder="Total a Pagar"
                   disabled={true}
-                  onChange={ValidarData}
-                  value={totalAbono ?? ""}
+                  value={data.total ?? ""}
                   className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
-                <label htmlFor="monto" className={Global.LabelStyle}>
-                  Monto a Abonar
-                </label>
-                <input
-                  type="number"
-                  id="monto"
-                  name="monto"
-                  autoComplete="off"
-                  placeholder="Monto"
-                  value={abono.monto ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="concepto" className={Global.LabelStyle}>
-                Concepto
-              </label>
-              <input
-                type="text"
-                id="concepto"
-                name="concepto"
-                autoComplete="off"
-                placeholder="Concepto"
-                value={abono.concepto ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
-              />
-              <button
-                id="enviarDetalle"
-                className={Global.BotonBuscar + Global.BotonPrimary}
-                onClick={(e) => AgregarAbonoDetalle(e)}
-              >
-                <FaPlus></FaPlus>
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="abonoId" className={Global.LabelStyle}>
-                  Abono N°
+                <label htmlFor="abonado" className={Global.LabelStyle}>
+                  Abonado
                 </label>
                 <input
                   type="text"
-                  id="abonoId"
-                  name="abonoId"
+                  id="abonado"
+                  name="abonado"
                   autoComplete="off"
-                  onChange={ValidarData}
-                  placeholder="abonoId"
+                  placeholder="Abonado"
                   disabled={true}
-                  value={abono.abonoId ?? ""}
+                  value={data.abonado ?? ""}
                   className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>
-                <label htmlFor="fecha" className={Global.LabelStyle}>
-                  Fecha
-                </label>
-                <input
-                  type="date"
-                  id="fecha"
-                  name="fecha"
-                  maxLength="2"
-                  autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
-                  value={moment(abono.fecha).format("yyyy-MM-DD") ?? ""}
-                  onChange={ValidarData}
-                  className={
-                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
-                  }
-                />
-              </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                  T. Cambio
-                </label>
-                <input
-                  type="number"
-                  id="tipoCambio"
-                  name="tipoCambio"
-                  maxLength="8"
-                  autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
-                  value={abono.tipoCambio ?? ""}
-                  onChange={ValidarData}
-                  className={
-                    modo == "Consultar" ? Global.InputBoton : Global.InputBoton
-                  }
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="tipoPagoId" className={Global.LabelStyle}>
-                  Tipo Pago
-                </label>
-                <select
-                  id="tipoPagoId"
-                  name="tipoPagoId"
-                  onChange={ValidarData}
-                  className={
-                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
-                  }
-                  disabled={modo == "Consultar" ? true : false}
-                  value={abono.tipoPagoId ?? ""}
-                >
-                  {tipoPagos.map((item, index) => (
-                    <option key={index} value={item.valor}>
-                      {item.texto}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {abono.tipoPagoId == "TRANSFERENCIA" ||
-              abono.tipoPagoId == "DEPOSITO" ? (
-                <>
-                  <div className={Global.InputFull}>
-                    <label
-                      htmlFor="cuentaCorrienteId"
-                      className={
-                        modo == "Consultar"
-                          ? Global.InputStyle
-                          : Global.InputStyle
-                      }
-                    >
-                      Cuenta Corriente
-                    </label>
-                    <select
-                      id="cuentaCorrienteId"
-                      name="cuentaCorrienteId"
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
-                      value={abono.cuentaCorrienteId ?? ""}
-                    >
-                      {cuentasCorrientes.map((item, index) => (
-                        <option
-                          key={index}
-                          value={item.cuentaCorrienteDescripcion}
-                        >
-                          {item.cuentaCorrienteDescripcion}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
-              <div className={Global.InputFull}>
-                <label htmlFor="numeroOperacion" className={Global.LabelStyle}>
-                  Numero Operacion
+                <label htmlFor="saldo" className={Global.LabelStyle}>
+                  Saldo Total
                 </label>
                 <input
                   type="text"
-                  id="numeroOperacion"
-                  name="numeroOperacion"
+                  id="saldo"
+                  name="saldo"
                   autoComplete="off"
-                  value={abono.numeroOperacion ?? ""}
-                  disabled={modo == "Consultar" ? true : false}
-                  onChange={ValidarData}
-                  className={
-                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
-                  }
-                />
-              </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="monedaId" className={Global.LabelStyle}>
-                  Moneda
-                </label>
-                <select
-                  id="monedaId"
-                  name="monedaId"
-                  onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
-                  className={
-                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
-                  }
-                  value={abono.monedaId ?? ""}
-                >
-                  {monedas.map((item, index) => (
-                    <option key={index} value={item.id}>
-                      {item.descripcion}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className={Global.InputFull}>
-                <label
-                  htmlFor="totalAbono"
-                  className={
-                    modo == "Consultar"
-                      ? Global.LabelStyle + Global.Disabled
-                      : Global.LabelStyle
-                  }
-                >
-                  Total A Pagar
-                </label>
-                <input
-                  type="text"
-                  id="totalAbono"
-                  name="totalAbono"
-                  autoComplete="off"
-                  placeholder="totalAbono"
+                  placeholder="Saldo Total"
                   disabled={true}
-                  value={totalAbono ?? ""}
+                  value={data.saldo ?? ""}
                   className={Global.InputStyle}
                 />
               </div>
+            </div>
+
+            <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
-                <label htmlFor="monto" className={Global.LabelStyle}>
-                  Monto a Abonar
+                <label htmlFor="observacion" className={Global.LabelStyle}>
+                  Observación
                 </label>
                 <input
-                  type="number"
-                  id="monto"
-                  name="monto"
+                  type="text"
+                  id="observacion"
+                  name="observacion"
                   autoComplete="off"
-                  placeholder="Monto"
-                  value={abono.monto ?? ""}
-                  onChange={ValidarData}
-                  className={
-                    modo == "Consultar" ? Global.InputStyle : Global.InputStyle
-                  }
+                  placeholder="Observación"
+                  disabled={true}
+                  value={data.observacion ?? ""}
+                  className={!nuevo ? Global.InputStyle : Global.InputBoton}
                 />
+
+                <button
+                  id="consultar"
+                  hidden={!nuevo ? true : ""}
+                  onClick={() => Abono()}
+                  className={Global.BotonBuscar + Global.BotonAgregar}
+                >
+                  <FaPlus></FaPlus>
+                </button>
               </div>
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="concepto" className={Global.LabelStyle}>
-                Concepto
-              </label>
-              <input
-                type="text"
-                id="concepto"
-                name="concepto"
-                autoComplete="off"
-                placeholder="Concepto"
-                value={abono.concepto ?? ""}
-                onChange={ValidarData}
-                className={
-                  modo == "Consultar" ? Global.InputStyle : Global.InputStyle
-                }
-              />
+
+            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+              <p className={Global.Subtitulo}>Detalles de Abono</p>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="abonoId" className={Global.LabelStyle}>
+                    Abono N°
+                  </label>
+                  <input
+                    type="text"
+                    id="abonoId"
+                    name="abonoId"
+                    autoComplete="off"
+                    placeholder="Abono Número"
+                    disabled={true}
+                    value={dataAbono.abonoId ?? ""}
+                    onChange={ValidarDataAbono}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="fecha" className={Global.LabelStyle}>
+                    Fecha
+                  </label>
+                  <input
+                    type="date"
+                    id="fecha"
+                    name="fecha"
+                    autoComplete="off"
+                    disabled={!habilitarCampo ? true : ""}
+                    value={moment(dataAbono.fecha).format("yyyy-MM-DD") ?? ""}
+                    onChange={ValidarDataAbono}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                    T. Cambio
+                  </label>
+                  <input
+                    type="number"
+                    id="tipoCambio"
+                    name="tipoCambio"
+                    placeholder="Tipo de Cambio"
+                    autoComplete="off"
+                    min={0}
+                    disabled={!habilitarCampo ? true : ""}
+                    value={dataAbono.tipoCambio ?? ""}
+                    onChange={ValidarDataAbono}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="consultarTipoCambio"
+                    disabled={!habilitarCampo ? true : ""}
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    onClick={() => {
+                      GetPorIdTipoCambio(dataAbono.fecha);
+                    }}
+                  >
+                    <FaUndoAlt></FaUndoAlt>
+                  </button>
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="tipoPagoId" className={Global.LabelStyle}>
+                    Tipo Pago
+                  </label>
+                  <select
+                    id="tipoPagoId"
+                    name="tipoPagoId"
+                    disabled={!habilitarCampo ? true : ""}
+                    value={dataAbono.tipoPagoId ?? ""}
+                    onChange={ValidarDataAbono}
+                    className={Global.InputStyle}
+                  >
+                    {tipoPagos.map((map) => (
+                      <option key={map.valor} value={map.valor}>
+                        {map.texto}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {dataAbono.tipoPagoId == "TR" ||
+                dataAbono.tipoPagoId == "DE" ? (
+                  <>
+                    <div className={Global.InputFull}>
+                      <label
+                        htmlFor="cuentaCorrienteId"
+                        className={Global.LabelStyle}
+                      >
+                        Cta. Cte.
+                      </label>
+                      <select
+                        id="cuentaCorrienteId"
+                        name="cuentaCorrienteId"
+                        disabled={!habilitarCampo ? true : ""}
+                        value={dataAbono.cuentaCorrienteId ?? ""}
+                        onChange={ValidarDataAbono}
+                        className={Global.InputStyle}
+                      >
+                        {cuentasCorrientes.map((map) => (
+                          <option
+                            key={map.cuentaCorrienteDescripcion}
+                            value={map.cuentaCorrienteDescripcion}
+                          >
+                            {map.cuentaCorrienteDescripcion}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
+                <div
+                  className={
+                    dataAbono.tipoPagoId == "TR" || dataAbono.tipoPagoId == "DE"
+                      ? Global.InputMitad
+                      : Global.InputFull
+                  }
+                >
+                  <label
+                    htmlFor="numeroOperacion"
+                    className={Global.LabelStyle}
+                  >
+                    N° Operación
+                  </label>
+                  <input
+                    type="text"
+                    id="numeroOperacion"
+                    name="numeroOperacion"
+                    placeholder="N° Operación"
+                    autoComplete="off"
+                    disabled={!habilitarCampo ? true : ""}
+                    value={dataAbono.numeroOperacion ?? ""}
+                    onChange={ValidarDataAbono}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                    Moneda
+                  </label>
+                  <select
+                    id="monedaId"
+                    name="monedaId"
+                    onChange={CalcularTotal}
+                    className={Global.InputStyle}
+                    disabled={
+                      !habilitarCampo || dataAbono.tipoCambio == 0 ? true : ""
+                    }
+                    value={dataAbono.monedaId ?? ""}
+                  >
+                    {dataMoneda.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="total" className={Global.LabelStyle}>
+                    Total A Pagar
+                  </label>
+                  <input
+                    type="text"
+                    id="total"
+                    name="total"
+                    autoComplete="off"
+                    placeholder="Total A PAgar"
+                    disabled={true}
+                    value={totalAbono ?? ""}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="monto" className={Global.LabelStyle}>
+                    Monto a Abonar
+                  </label>
+                  <input
+                    type="number"
+                    id="monto"
+                    name="monto"
+                    autoComplete="off"
+                    placeholder="Monto"
+                    disabled={!habilitarCampo ? true : ""}
+                    value={dataAbono.monto ?? ""}
+                    onChange={ValidarDataAbono}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="concepto" className={Global.LabelStyle}>
+                  Concepto
+                </label>
+                <input
+                  type="text"
+                  id="concepto"
+                  name="concepto"
+                  autoComplete="off"
+                  placeholder="Concepto"
+                  disabled={!habilitarCampo ? true : ""}
+                  value={dataAbono.concepto ?? ""}
+                  onChange={ValidarDataAbono}
+                  className={
+                    !habilitarCampo ? Global.InputStyle : Global.InputBoton
+                  }
+                />
+                <button
+                  id="enviarDetalle"
+                  hidden={!habilitarCampo ? true : ""}
+                  className={Global.BotonBuscar + Global.BotonPrimary}
+                  onClick={(e) => AgregarAbonoDetalle(e)}
+                >
+                  <FaPlus></FaPlus>
+                </button>
+              </div>
             </div>
-          </>
-        )}
-      </div>
-      {/* Tabla Detalle */}
-      <TablaStyle>
-        <TableBasic
-          columnas={columnas}
-          datos={dataDetalle}
-          estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
-        />
-      </TablaStyle>
-      {/* Tabla Detalle */}
-    </ModalCrud>
+          </div>
+
+          {/* Tabla Detalle */}
+          <TablaStyle>
+            <TableBasic
+              columnas={columnas}
+              datos={dataDetalle}
+              estilos={[
+                "",
+                "",
+                "",
+                "border ",
+                "",
+                "border border-b-0",
+                "border",
+              ]}
+            />
+          </TablaStyle>
+          {/* Tabla Detalle */}
+        </ModalCrud>
+      )}
+    </>
   );
   //#endregion
 };

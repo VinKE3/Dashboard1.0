@@ -88,6 +88,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="tipoExistenciaId"
               name="tipoExistenciaId"
               autoFocus
+              disabled={modo == "Consultar" ? true : ""}
               value={data.tipoExistenciaId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -106,6 +107,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="marcaId"
               name="marcaId"
+              disabled={modo == "Consultar" ? true : ""}
               value={data.marcaId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -130,9 +132,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               onChange={ValidarData}
               disabled={modo != "Registrar" ? true : ""}
               className={
-                modo != "Registrar"
-                  ? Global.InputStyle
-                  : Global.InputStyle
+                modo != "Registrar" ? Global.InputStyle : Global.InputStyle
               }
             >
               {lineas.map((map) => (
@@ -153,9 +153,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               onChange={ValidarData}
               disabled={modo != "Registrar" ? true : ""}
               className={
-                modo != "Registrar"
-                  ? Global.InputStyle
-                  : Global.InputStyle
+                modo != "Registrar" ? Global.InputStyle : Global.InputStyle
               }
             >
               <option value="">--SELECCIONAR--</option>
@@ -196,7 +194,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="descripcion"
               autoComplete="off"
               placeholder="Descripción"
-              disabled={modo == "Registrar" ? false : true}
+              disabled={modo == "Consultar" ? true : ""}
               value={data.descripcion}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -528,7 +526,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       <div className={Global.ContenedorBasico + Global.FondoContenedor}>
         <div className={Global.InputFull}>
           <label htmlFor="observacion" className={Global.LabelStyle}>
-            Observacion
+            Observación
           </label>
           <input
             type="text"
@@ -536,7 +534,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             name="observacion"
             autoComplete="off"
             placeholder="Observacion"
-            disabled={modo == "Consultar" ? false : true}
+            disabled={modo == "Consultar" ? true : ""}
             value={data.observacion ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}

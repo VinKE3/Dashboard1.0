@@ -952,6 +952,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Serie"
                     maxLength="4"
                     autoComplete="off"
+                    autoFocus
                     disabled={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}

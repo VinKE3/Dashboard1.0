@@ -155,7 +155,7 @@ const UnidadesDeMedida = () => {
           <BotonCRUD
             setEliminar={setEliminar}
             permisos={permisos}
-            menu={["Mantenimiento", "Departamento"]}
+            menu={["Mantenimiento", "UnidadMedida"]}
             id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar")}

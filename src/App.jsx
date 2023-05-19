@@ -24,7 +24,6 @@ import LetraCambioCompra from "./pages/compras/letraCambioCompra/LetraCambioComp
 import DocumentosDeCompra from "./pages/compras/documentoDeCompra/DocumentosDeCompra";
 import OrdenesDeCompra from "./pages/compras/ordenesDeCompra/OrdenesDeCompra";
 import BloquearCompra from "./pages/compras/bloquearCompra/BloquearCompra";
-// import NuevaCompra from "./pages/compras/nuevaCompra/NuevaCompra";
 import GuiasDeCompra from "./pages/compras/guiasDeCompra/GuiasDeCompra";
 //*Pages mantenimiento
 import Usuarios from "./pages/mantenimiento/usuarios/Usuarios";
@@ -116,7 +115,6 @@ function App() {
             path="/compras/letra-cambio-compra"
             element={<LetraCambioCompra />}
           />
-          {/* <Route path="/compras/nueva-compra" element={<NuevaCompra />} /> */}
           <Route
             path="/compras/ordenes-de-compra"
             element={<OrdenesDeCompra />}

@@ -172,10 +172,6 @@ function seccionesList() {
           title: "Ordenes de Compra",
         },
         {
-          path: "/compras/nueva-compra",
-          title: "Compras",
-        },
-        {
           path: "/compras/factura-negociable",
           title: "Factura Negociable",
         },
