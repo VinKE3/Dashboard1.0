@@ -44,6 +44,7 @@ const Vehiculos = () => {
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
+
   //#region useEffect;
   useEffect(() => {
     setCadena(`&numeroPlaca=${filtro.numeroPlaca}`);
@@ -125,7 +126,7 @@ const Vehiculos = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         id: "00",
         empresaId: "01",
         empresaTransporteId: "0001",
@@ -134,8 +135,7 @@ const Vehiculos = () => {
         modelo: "",
         certificadoInscripcion: "",
         observacion: "",
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(id);
     }

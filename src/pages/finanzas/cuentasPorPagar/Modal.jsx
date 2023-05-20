@@ -29,7 +29,7 @@ const TablaStyle = styled.div`
     text-align: center;
   }
 
-  & th:nth-child(6){
+  & th:nth-child(6) {
     width: 100px;
     min-width: 100px;
     max-width: 100px;
@@ -70,20 +70,9 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
-  const [refrescar, setRefrescar] = useState(false);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    console.log(dataDetalle);
-  }, [dataDetalle]);
-  useEffect(() => {
-    if (refrescar) {
-      data;
-      setRefrescar(false);
-    }
-  }, [refrescar]);
-
   useEffect(() => {
     GetIsPermitido(data.id, 0, 0);
     setDataTipoDoc([data.tipoDocumento]);
@@ -144,7 +133,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         const total = totalSaldo * tipoCambio;
         setTotalSaldo(Funciones.RedondearNumero(total, 2));
       }
-      setRefrescar(true);
     } else {
       if (target.value == "S") {
         const total = totalSaldo * tipoCambio;
@@ -154,7 +142,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         const total = totalSaldo / tipoCambio;
         setTotalSaldo(Funciones.RedondearNumero(total, 2));
       }
-      setRefrescar(true);
     }
     setDataAbono((prevState) => ({
       ...prevState,
@@ -530,6 +517,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               Click={() => OcultarMensajes()}
             />
           )}
+
+          {/*Cabecera*/}
           <div
             className={
               Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
@@ -685,12 +674,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Observación"
                   disabled={true}
                   value={data.observacion ?? ""}
-                  className={!nuevo ? Global.InputStyle : Global.InputBoton}
+                  className={Global.InputStyle}
                 />
               </div>
             </div>
           </div>
+          {/*Cabecera*/}
 
+          {/*Detalle*/}
           <div
             className={
               Global.ContenedorBasico + Global.FondoContenedor + " mb-3"
@@ -940,6 +931,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </button>
             </div>
           </div>
+          {/*Detalle*/}
 
           {/* Tabla Detalle */}
           <TablaStyle>

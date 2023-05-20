@@ -1,25 +1,45 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import ModalCrud from "../../../components/ModalCrud";
-import * as Global from "../../../components/Global";
-import { useEffect } from "react";
-import moment from "moment";
-import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaPlus, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
-import Mensajes from "../../../components/Mensajes";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import ModalCrud from "../../../components/ModalCrud";
+import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
+import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import { toast } from "react-toastify";
+import moment from "moment";
+import { FaPlus, FaUndoAlt, FaTrashAlt, FaEye } from "react-icons/fa";
+import styled from "styled-components";
+import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
+import "primeicons/primeicons.css";
+import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/Funciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
-  & th:first-child {
-    display: none;
+  & th:nth-child(1),
+  & th:nth-child(2) {
+    width: 40px;
+    text-align: center;
   }
-  & tbody td:first-child {
-    display: none;
+  & th:nth-child(3) {
+    width: 120px;
+  }
+  & th:nth-child(5) {
+    width: 40px;
+    text-align: center;
+  }
+
+  & th:nth-child(6) {
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+    text-align: center;
+  }
+  & th:nth-child(7) {
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
+    text-align: center;
   }
   & th:last-child {
     width: 75px;
@@ -29,26 +49,27 @@ const TablaStyle = styled.div`
   }
 `;
 //#endregion
+
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
-  const [data, setData] = useState(objeto);
-  const [dataDetalle, setDetalle] = useState(objeto.abonos);
-  const [tipoMensaje, setTipoMensaje] = useState(-1);
-  const [mensaje, setMensaje] = useState([]);
-  const [abonoId, setabonoId] = useState(dataDetalle.length + 1);
-  const [refrescar, setRefrescar] = useState(false);
+  //Data General
+  const [data] = useState(objeto);
+  const [dataDetalle] = useState(objeto.abonos);
+  //Data General
+  //Tablas
+  const [dataTipoDoc] = useState([objeto.tipoDocumento]);
+  const [dataMoneda] = useState([objeto.moneda]);
+  //Tablas
   //#endregion
-
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
 
   //#region Columnas
   const columnas = [
     {
-      Header: "id",
+      Header: "Item",
       accessor: "abonoId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
     },
     {
       Header: "Fecha",
@@ -58,201 +79,260 @@ const Modal = ({ setModal, modo, objeto }) => {
       },
     },
     {
-      Header: "Tipo de Pago",
+      Header: "Tipo de Cobro",
       accessor: "tipoCobroDescripcion",
+      Cell: ({ value }) => {
+        let comprobante = "";
+        switch (value) {
+          case "EF":
+            comprobante = "EFECTIVO";
+            break;
+          case "DE":
+            comprobante = "DEPÓSITO";
+            break;
+          case "TR":
+            comprobante = "TRANSFERENCIA";
+          default:
+            comprobante = value;
+        }
+        return <p>{comprobante}</p>;
+      },
     },
     {
       Header: "Concepto",
       accessor: "concepto",
     },
     {
-      Header: "Moneda",
+      Header: "M",
       accessor: "monedaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+      },
     },
     {
-      Header: "Tipo Cambio",
+      Header: "T.C",
       accessor: "tipoCambio",
+
+      Cell: ({ value }) => {
+        return <p className="text-right font-semibold pr-5">{value}</p>;
+      },
     },
     {
       Header: "Monto",
       accessor: "monto",
+      Cell: ({ value }) => {
+        return <p className="text-right font-semibold pr-5">{value}</p>;
+      },
+    },
+    {
+      Header: " ",
+      Cell: () => (
+        <div className="flex item-center justify-center">
+          <></>
+        </div>
+      ),
     },
   ];
   //#endregion
 
+  //#region  Render
   return (
-    <ModalCrud
-      setModal={setModal}
-      objeto={data}
-      modo={modo}
-      menu={["Finanzas", "CuentaPorCobrar"]}
-      titulo="Cuentas Por Cobrar"
-      tamañoModal={[Global.ModalMediano, Global.Form]}
-    >
-      {tipoMensaje > 0 && (
-        <Mensajes
-          tipoMensaje={tipoMensaje}
-          mensaje={mensaje}
-          Click={() => OcultarMensajes()}
-        />
-      )}
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoDocumento" className={Global.LabelStyle}>
-              Tipo Documento
-            </label>
-            <input
-              type="text"
-              id="tipoDocumento"
-              name="tipoDocumento"
-              autoComplete="off"
-              placeholder="00"
-              readOnly={true}
-              value={data.tipoDocumento.descripcion ?? ""}
-              className={Global.InputStyle + Global.Disabled}
-            />
+    <>
+      {Object.entries(dataTipoDoc).length > 0 && (
+        <ModalCrud
+          setModal={setModal}
+          objeto={data}
+          modo={modo}
+          menu={["Finanzas", "CuentaPorCobrar"]}
+          titulo="Cuentas Por Cobrar"
+          tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+          cerrar={false}
+        >
+          {/*Cabecera*/}
+          <div
+            className={
+              Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+            }
+          >
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
+                  Tipo Doc.
+                </label>
+                <select
+                  id="tipoDocumentoId"
+                  name="tipoDocumentoId"
+                  autoFocus
+                  value={data.tipoDocumentoId ?? ""}
+                  disabled={modo == "Registrar" ? false : true}
+                  className={
+                    modo == "Registrar" ? Global.InputStyle : Global.InputStyle
+                  }
+                >
+                  {dataTipoDoc.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={Global.InputTercio}>
+                <label htmlFor="serie" className={Global.LabelStyle}>
+                  Serie
+                </label>
+                <input
+                  type="text"
+                  id="serie"
+                  name="serie"
+                  placeholder="Número"
+                  autoComplete="off"
+                  maxLength="4"
+                  disabled={true}
+                  value={data.serie ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputMitad}>
+                <label htmlFor="numero" className={Global.LabelStyle}>
+                  Número
+                </label>
+                <input
+                  type="text"
+                  id="numero"
+                  name="numero"
+                  placeholder="Número"
+                  autoComplete="off"
+                  maxLength="10"
+                  disabled={true}
+                  value={data.numero ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+            </div>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="fechaContable" className={Global.LabelStyle}>
+                  Fecha
+                </label>
+                <input
+                  type="text"
+                  id="fechaContable"
+                  name="fechaContable"
+                  autoComplete="off"
+                  placeholder="fechaContable"
+                  disabled={true}
+                  value={moment(data.fechaContable).format("DD/MM/YYYY") ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="monedaId" className={Global.LabelStyle}>
+                  Moneda
+                </label>
+                <select
+                  id="monedaId"
+                  name="monedaId"
+                  className={Global.InputStyle}
+                  disabled={true}
+                  value={data.monedaId ?? ""}
+                >
+                  {dataMoneda.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="total" className={Global.LabelStyle}>
+                  Total a Pagar
+                </label>
+                <input
+                  type="text"
+                  id="total"
+                  name="total"
+                  autoComplete="off"
+                  placeholder="Total a Pagar"
+                  disabled={true}
+                  value={data.total ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="abonado" className={Global.LabelStyle}>
+                  Abonado
+                </label>
+                <input
+                  type="text"
+                  id="abonado"
+                  name="abonado"
+                  autoComplete="off"
+                  placeholder="Abonado"
+                  disabled={true}
+                  value={data.abonado ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="saldo" className={Global.LabelStyle}>
+                  Saldo Total
+                </label>
+                <input
+                  type="text"
+                  id="saldo"
+                  name="saldo"
+                  autoComplete="off"
+                  placeholder="Saldo Total"
+                  disabled={true}
+                  value={data.saldo ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+            </div>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="observacion" className={Global.LabelStyle}>
+                  Observación
+                </label>
+                <input
+                  type="text"
+                  id="observacion"
+                  name="observacion"
+                  autoComplete="off"
+                  placeholder="Observación"
+                  disabled={true}
+                  value={data.observacion ?? ""}
+                  className={Global.InputStyle}
+                />
+              </div>
+            </div>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="serie" className={Global.LabelStyle}>
-              Serie
-            </label>
-            <input
-              type="text"
-              id="serie"
-              name="serie"
-              autoComplete="off"
-              placeholder="Serie"
-              readOnly={true}
-              value={data.serie ?? ""}
-              className={Global.InputStyle + Global.Disabled}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="numero" className={Global.LabelStyle}>
-              Número
-            </label>
-            <input
-              type="text"
-              id="numero"
-              name="numero"
-              autoComplete="off"
-              placeholder="numero"
-              readOnly={true}
-              value={data.numero ?? ""}
-              className={Global.InputStyle + Global.Disabled}
-            />
-          </div>
-        </div>
-      </div>
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="fechaContable" className={Global.LabelStyle}>
-              Fecha
-            </label>
-            <input
-              type="text"
-              id="fechaContable"
-              name="fechaContable"
-              autoComplete="off"
-              placeholder="fechaContable"
-              readOnly={true}
-              value={moment(data.fechaContable).format("DD/MM/YYYY") ?? ""}
-              className={Global.InputStyle + Global.Disabled}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
-              Moneda
-            </label>
-            <input
-              type="text"
-              id="monedaId"
-              name="monedaId"
-              autoComplete="off"
-              placeholder="monedaId"
-              readOnly={true}
-              value={data.monedaId ?? ""}
-              className={Global.InputStyle + Global.Disabled}
-            />
-          </div>
-        </div>
+          {/*Cabecera*/}
 
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="total" className={Global.LabelStyle}>
-              Total a Pagar
-            </label>
-            <input
-              type="text"
-              id="total"
-              name="total"
-              autoComplete="off"
-              placeholder="total"
-              readOnly={true}
-              value={data.total ?? ""}
-              className={Global.InputStyle + Global.Disabled}
+          {/* Tabla Detalle */}
+          <TablaStyle>
+            <TableBasic
+              columnas={columnas}
+              datos={dataDetalle}
+              estilos={[
+                "",
+                "",
+                "",
+                "border ",
+                "",
+                "border border-b-0",
+                "border",
+              ]}
             />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="abonado" className={Global.LabelStyle}>
-              Abonado
-            </label>
-            <input
-              type="text"
-              id="abonado"
-              name="abonado"
-              autoComplete="off"
-              placeholder="abonado"
-              readOnly={true}
-              value={data.abonado ?? ""}
-              className={Global.InputStyle + Global.Disabled}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="saldo" className={Global.LabelStyle}>
-              Saldo Total
-            </label>
-            <input
-              type="text"
-              id="saldo"
-              name="saldo"
-              autoComplete="off"
-              placeholder="saldo"
-              readOnly={true}
-              value={data.saldo ?? ""}
-              className={Global.InputStyle + Global.Disabled}
-            />
-          </div>
-        </div>
-        <div className={Global.InputFull}>
-          <label htmlFor="observacion" className={Global.LabelStyle}>
-            Observación
-          </label>
-          <input
-            type="text"
-            id="observacion"
-            name="observacion"
-            autoComplete="off"
-            placeholder="observacion"
-            readOnly={true}
-            value={data.observacion ?? ""}
-            className={Global.InputStyle + Global.Disabled}
-          />
-        </div>
-      </div>
-      {/* Tabla Detalle */}
-      <TablaStyle>
-        <TableBasic
-          columnas={columnas}
-          datos={dataDetalle}
-          estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
-        />
-      </TablaStyle>
-      {/* Tabla Detalle */}
-    </ModalCrud>
+          </TablaStyle>
+          {/* Tabla Detalle */}
+        </ModalCrud>
+      )}
+    </>
   );
+  //#endregion
 };
 
 export default Modal;

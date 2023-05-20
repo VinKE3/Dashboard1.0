@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
-import Table from "../../../components/tablas/Table";
+import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import moment from "moment";
+import Table from "../../../components/tablas/Table";
+import { Checkbox } from "primereact/checkbox";
+import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 import { FaSearch } from "react-icons/fa";
+import moment from "moment";
+import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
-import { useAuth } from "../../../context/ContextAuth";
 import * as Global from "../../../components/Global";
-import { Checkbox } from "primereact/checkbox";
-import store from "store2";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -23,185 +23,120 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 150px;
+    width: 140px;
   }
   & th:nth-child(3) {
-    width: 150px;
-  }
-  & th:nth-child(4) {
-    width: 250px;
-  }
-  & th:nth-child(8) {
-    width: 25px;
-  }
-  & th:last-child {
-    width: 130px;
+    width: 70px;
     text-align: center;
   }
+  & th:nth-child(6),
+  & th:nth-child(8) {
+    width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(7) {
+    width: 80px;
+    text-align: right;
+  }
+  & th:last-child {
+    text-align: center;
+    width: 80px;
+    max-width: 80px;
+  }
 `;
+//#endregion
 
 const BloquearReciboEgreso = () => {
   //#region UseState
-  const { usuario } = useAuth();
+  const [permisos, setPermisos] = useState([false, false, false, false, false]);
+  const [visible, setVisible] = useState(false);
+  const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
-  const [filtro, setFiltro] = useState("");
-  const [permisos, setPermisos] = useState([false, false, false, false]);
-  const [eliminar, setEliminar] = useState(false);
-  // const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
+  const [filtro, setFiltro] = useState({
+    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+  });
+  const [cadena, setCadena] = useState(
+    `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+  );
+  //Modal
+  const [setEliminar] = useState(false);
   const [checked, setChecked] = useState(false);
   //#endregion
 
-  //#region useEffect
+  //#region useEffect;
   useEffect(() => {
-    console.log(usuario == "AD");
-    if (store.session.get("usuario") == "AD") {
-      setPermisos([false, true, false, false]);
-      Listar(filtro, 1);
-    } else {
-      //Consulta a la Api para traer los permisos
-    }
-  }, [usuario]);
-
-  // useEffect(() => {
-  //   tipoDeDocumento;
-  //   document.getElementById("tipoDocumentoId").value = -1;
-  // }, [tipoDeDocumento]);
-
-  useEffect(() => {
-    datos;
-    console.log("datos", datos);
-  }, [datos]);
-
-  useEffect(() => {
-    filtro;
+    setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
   }, [filtro]);
   useEffect(() => {
-    total;
-  }, [total]);
-  useEffect(() => {
-    index;
-  }, [index]);
+    Filtro();
+  }, [cadena]);
 
   useEffect(() => {
-    if (eliminar) {
-      Listar(filtro, index + 1);
+    if (Object.entries(permisos).length > 0) {
+      if (
+        !permisos[0] &&
+        !permisos[1] &&
+        !permisos[2] &&
+        !permisos[3] &&
+        !permisos[4]
+      ) {
+        setVisible(false);
+      } else {
+        setVisible(true);
+        Listar(cadena, 1);
+      }
     }
-  }, [eliminar]);
-
+  }, [permisos]);
   useEffect(() => {
-    // TipoDeDocumentos();
-    Listar(filtro, 1);
+    GetPermisos("BloquearReciboEgreso", setPermisos);
   }, []);
   //#endregion
 
   //#region Funciones API
-  const Listar = async (filtro = "", pagina = 1) => {
+  const Listar = async (f = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Tesoreria/BloquearReciboEgreso/Listar?pagina=${pagina}${filtro}`
+      `api/Tesoreria/BloquearReciboEgreso/Listar?pagina=${pagina}${f}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
-
-  // const TipoDeDocumentos = async () => {
-  //   const result = await ApiMasy.get(
-  //     `api/Compra/BloquearCompra/FormularioTablas`
-  //   );
-  //   const tiposDocumento = result.data.data.tiposDocumento.map((tipo) => ({
-  //     id: tipo.id,
-  //     descripcion: tipo.descripcion,
-  //     abreviatura: tipo.abreviatura,
-  //   }));
-  //   tiposDocumento.unshift({ id: "-1", descripcion: "TODOS" });
-  //   setTipoDeDocumento(tiposDocumento);
-  // };
   //#endregion
 
   //#region Funciones Filtrado
-  const FiltradoPaginado = (e) => {
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    let boton = e.selected + 1;
-    setIndex(e.selected);
-    if (
-      fechaInicio ==
-        moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-      fechaFin == moment(new Date()).format("yyyy-MM-DD")
-    ) {
-      Listar("", boton);
-    } else {
-      Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
-    }
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
   };
-  const FiltradoFechaInicio = (e) => {
+  const Filtro = async () => {
     clearTimeout(timer);
-    let fechaInicio = e.target.value;
-    let fechaFin = document.getElementById("fechaFin").value;
-    setFiltro(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-    if (
-      fechaInicio !=
-      moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD")
-    )
-      setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD")
-      ) {
-        Listar("", index);
-      } else {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-
-  const FiltradoFechaFin = (e) => {
-    clearTimeout(timer);
-    let fechaInicio = document.getElementById("fechaInicio").value;
-    let fechaFin = e.target.value;
-    setFiltro(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-    if (fechaFin != moment(new Date()).format("yyyy-MM-DD")) setIndex(0);
-    const newTimer = setTimeout(() => {
-      if (
-        fechaInicio ==
-          moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-        fechaFin == moment(new Date()).format("yyyy-MM-DD")
-      ) {
-        Listar("", index);
-      } else {
-        Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, index + 1);
-      }
-    }, 1000);
-    setTimer(newTimer);
-  };
-
-  const FiltradoButton = () => {
     setIndex(0);
-    if (filtro == "") {
-      Listar("", 1);
-    } else {
-      Listar(filtro, 1);
-    }
+    const newTimer = setTimeout(() => {
+      Listar(cadena, 1);
+    }, 200);
+    setTimer(newTimer);
+  };
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
-  //#region Funciones Modal
-  const ModificarCheck = async (id, isBloqueado) => {
+  //#region Funciones
+  const Bloquear = async (id, isBloqueado) => {
     let model = {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
     };
-    const result = await ApiMasy.put(
-      `api/Tesoreria/BloquearReciboEgreso`,
-      model
-    );
+    const result = await ApiMasy.put(`api/Tesoreria/BloquearReciboEgreso`, model);
     if (result.name == "AxiosError") {
       let err = "";
+
       if (result.response.data == "") {
         err = response.message;
       } else {
@@ -209,7 +144,7 @@ const BloquearReciboEgreso = () => {
       }
       toast.error(err, {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -217,12 +152,16 @@ const BloquearReciboEgreso = () => {
         progress: undefined,
         theme: "colored",
       });
-      setEliminar(false);
     } else {
-      setEliminar(true);
+      Listar(
+        `&fechaInicio=${
+          document.getElementById("fechaInicio").value
+        }&fechaFin=${document.getElementById("fechaFin").value}`,
+        index + 1
+      );
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
@@ -232,245 +171,237 @@ const BloquearReciboEgreso = () => {
       });
     }
   };
-
-  const ModificarCheckAll = async (ids, isBloqueado) => {
+  const BloquearTodo = async (ids, isBloqueado) => {
     let model = {
       ids: ids,
       isBloqueado: isBloqueado,
     };
     const title = isBloqueado
-      ? "Bloquear 50 recibos de egreso"
-      : "Desbloquear 50 recibos de egreso";
-    const result = Swal.fire({
+      ? "Bloquear Registros de Recibos de Egreso (50 registros mostrados)"
+      : "Desbloquear Registros de Recibos de Egreso (50 registros mostrados)";
+
+    Swal.fire({
       title: title,
       icon: "warning",
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1E1F25",
+      background: "#1a1a2e",
       confirmButtonColor: "#EE8100",
       confirmButtonText: "Aceptar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        ApiMasy.put(`api/Tesoreria/BloquearReciboEgreso`, model).then(
-          (response) => {
-            if (response.name == "AxiosError") {
-              let err = "";
-              if (response.response.data == "") {
-                err = response.message;
-              } else {
-                err = String(response.response.data.messages[0].textos);
-              }
-              toast.error(err, {
-                position: "bottom-right",
-                autoClose: 2000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-              setEliminar(false);
+        ApiMasy.put(`api/Tesoreria/BloquearReciboEgreso`, model).then((response) => {
+          if (response.name == "AxiosError") {
+            let err = "";
+            if (response.response.data == "") {
+              err = response.message;
             } else {
-              setEliminar(true);
-              toast.success(String(response.data.messages[0].textos), {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
+              err = String(response.response.data.messages[0].textos);
             }
+            toast.error(err, {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          } else {
+            Listar(
+              `&fechaInicio=${
+                document.getElementById("fechaInicio").value
+              }&fechaFin=${document.getElementById("fechaFin").value}`,
+              index + 1
+            );
+            toast.info(String(response.data.messages[0].textos), {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
           }
-        );
+        });
+        setChecked(isBloqueado);
+      } else {
+        setChecked(!isBloqueado);
       }
     });
-    console.log(result);
-
-    setEliminar(true);
   };
-
-  const handleChange = (e, ids) => {
-    setChecked(e.checked);
-    if (e.checked) {
-      ModificarCheckAll(ids, true);
-    } else {
-      ModificarCheckAll(ids, false);
-    }
-  };
-
   //#endregion
 
-  //#region Columnas y Selects
-  const columnas = [
-    {
-      Header: "Id",
-      accessor: "id",
-    },
-    {
-      Header: "N° Documento",
-      accessor: "numeroDocumento",
-    },
-    {
-      Header: "Fecha Contable",
-      accessor: "fechaContable",
-      Cell: ({ value }) => {
-        return moment(value).format("DD/MM/YYYY");
+  //#region Columnas
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "Id",
+        accessor: "id",
       },
-    },
-    {
-      Header: "Proveedor",
-      accessor: "proveedorNombre",
-    },
-    {
-      Header: "Proveedor Numero",
-      accessor: "proveedorNumero",
-    },
-    {
-      Header: "Moneda",
-      accessor: "monedaId",
-    },
-    {
-      Header: "Total",
-      accessor: "total",
-    },
-    {
-      Header: "Bloqueado",
-      accessor: "isBloqueado",
-      Cell: ({ value }) => {
-        return value ? (
-          <div className="flex justify-center">
-            {" "}
-            <Checkbox checked={true} />
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            {" "}
-            <Checkbox checked={false} />
-          </div>
-        );
+      {
+        Header: "N° Documento",
+        accessor: "numeroDocumento",
       },
-    },
-    {
-      Header: "Acciones",
-      Cell: ({ row }) => (
-        <BotonCRUD
-          setEliminar={setEliminar}
-          permisos={permisos}
-          menu={["Tesoreria", "BloquearReciboEgreso"]}
-          id={row.values.id}
-          ClickModificar={() =>
-            ModificarCheck(row.values.id, row.values.isBloqueado)
-          }
-        />
-      ),
-    },
-  ];
+      {
+        Header: "Fecha",
+        accessor: "fechaContable",
+        Cell: ({ value }) => {
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
+        },
+      },
+      {
+        Header: "Proveedor",
+        accessor: "proveedorNombre",
+      },
+      {
+        Header: "RUC",
+        accessor: "proveedorNumero",
+      },
+      {
+        Header: "M",
+        accessor: "monedaId",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+        },
+      },
+      {
+        Header: "Total",
+        accessor: "total",
+        Cell: ({ value }) => {
+          return <p className="text-right font-semibold">{value}</p>;
+        },
+      },
+      {
+        Header: "B",
+        accessor: "isBloqueado",
+        Cell: ({ value }) => {
+          return value ? (
+            <div className="flex justify-center">
+              <Checkbox checked={true} />
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <Checkbox checked={false} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "Acciones",
+        Cell: ({ row }) => (
+          <BotonCRUD
+            setEliminar={setEliminar}
+            permisos={permisos}
+            menu={["Tesoreria", "BloquearReciboEgreso"]}
+            id={row.values.id}
+            ClickModificar={() =>
+              Bloquear(row.values.id, row.values.isBloqueado)
+            }
+          />
+        ),
+      },
+    ],
+    [permisos]
+  );
   //#endregion
 
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <div className="flex items-center justify-between">
-          <h2 className={Global.TituloH2}>Bloquear Recibo Egreso</h2>
-          <div className="flex  h-10">
-            <div className={Global.LabelStyle}>
-              <Checkbox
-                id="isBloqueado"
-                name="isBloqueado"
-                onChange={(e) => {
-                  handleChange(
-                    e,
-                    datos.map((d) => d.id)
-                  );
-                }}
-                checked={checked}
-              ></Checkbox>
+      {visible ? (
+        <>
+          <div className="px-2">
+            <div className="flex items-center justify-between">
+              <h2 className={Global.TituloH2}>Bloquear Recibos de Egreso</h2>
+              <div className="flex">
+                <div className={Global.CheckStyle}>
+                  <Checkbox
+                    inputId="isBloqueado"
+                    name="isBloqueado"
+                    onChange={(e) => {
+                      BloquearTodo(
+                        datos.map((d) => d.id),
+                        e.checked
+                      );
+                    }}
+                    checked={checked}
+                  ></Checkbox>
+                </div>
+                <label
+                  htmlFor="isBloqueado"
+                  className={Global.LabelCheckStyle + " font-semibold"}
+                >
+                  Bloquear Todos
+                </label>
+              </div>
             </div>
-            <label
-              htmlFor="todos"
-              className={
-                Global.InputStyle + " font-semibold !text-lg !p-1 !px-3"
-              }
-            >
-              Bloquear Todos
-            </label>
-          </div>
-        </div>
 
-        {/* Filtro*/}
-        <div className={Global.ContenedorFiltro}>
-          <div className={Global.InputFull}>
-            <label name="tipoDocumentoId" className={Global.LabelStyle}>
-              Tipo de Documento:
-            </label>
-            <select
-              id="tipoDocumentoId"
-              name="tipoDocumentoId"
-              className={Global.InputStyle}
-            >
-              <option value="0">TODOS</option>
-            </select>
-          </div>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-              Tipo
-            </label>
-            <input
-              type="date"
-              id="fechaInicio"
-              name="fechaInicio"
-              onChange={FiltradoFechaInicio}
-              defaultValue={moment()
-                .subtract(2, "years")
-                .startOf("year")
-                .format("yyyy-MM-DD")}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaFin" className={Global.LabelStyle}>
-              Tipo
-            </label>
-            <input
-              type="date"
-              id="fechaFin"
-              name="fechaFin"
-              onChange={FiltradoFechaFin}
-              defaultValue={moment(new Date()).format("yyyy-MM-DD")}
-              className={Global.InputBoton}
-            />
-            <button
-              id="buscar"
-              className={Global.BotonBuscar}
-              onClick={FiltradoButton}
-            >
-              <FaSearch />
-            </button>
-          </div>
-        </div>
-        {/* Filtro*/}
+            {/* Filtro*/}
+            <div className={Global.ContenedorFiltro}>
+              <div className={Global.InputMitad}>
+                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                  Desde
+                </label>
+                <input
+                  type="date"
+                  id="fechaInicio"
+                  name="fechaInicio"
+                  value={filtro.fechaInicio ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputMitad}>
+                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                  Hasta
+                </label>
+                <input
+                  type="date"
+                  id="fechaFin"
+                  name="fechaFin"
+                  value={filtro.fechaFin ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputBoton}
+                />
+                <button
+                  id="buscar"
+                  className={
+                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                  }
+                  onClick={Filtro}
+                >
+                  <FaSearch />
+                </button>
+              </div>
+            </div>
+            {/* Filtro*/}
 
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-      <ToastContainer />
+            {/* Tabla */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+              />
+            </TablaStyle>
+            {/* Tabla */}
+          </div>
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

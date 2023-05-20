@@ -593,25 +593,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
       if (dataArt.detalleId != undefined) {
-        // dataDetalle[dataArt.detalleId - 1] = {
-        //   detalleId: dataArt.detalleId,
-        //   id: dataArt.id,
-        //   lineaId: dataArt.lineaId,
-        //   subLineaId: dataArt.subLineaId,
-        //   articuloId: dataArt.articuloId,
-        //   marcaId: dataArt.marcaId,
-        //   codigoBarras: dataArt.codigoBarras,
-        //   descripcion: dataArt.descripcion,
-        //   stock: dataArt.stock,
-        //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-        //   unidadMedidaId: dataArt.unidadMedidaId,
-        //   cantidad: dataArt.cantidad,
-        //   precioUnitario: dataArt.precioUnitario,
-        //   montoIGV: dataArt.montoIGV,
-        //   subTotal: dataArt.subTotal,
-        //   importe: dataArt.importe,
-        // };
-        // setRefrescar(true);
+ 
         let dataDetalleMod = dataDetalle.map((map) => {
           if (map.id == dataArt.id) {
             return {
@@ -656,24 +638,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
 
         if (model == undefined) {
-          // dataDetalle.push({
-          //   detalleId: detalleId,
-          //   id: dataArt.id,
-          //   lineaId: dataArt.lineaId,
-          //   subLineaId: dataArt.subLineaId,
-          //   articuloId: dataArt.articuloId,
-          //   marcaId: dataArt.marcaId,
-          //   codigoBarras: dataArt.codigoBarras,
-          //   descripcion: dataArt.descripcion,
-          //   stock: dataArt.stock,
-          //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-          //   unidadMedidaId: dataArt.unidadMedidaId,
-          //   cantidad: dataArt.cantidad,
-          //   precioUnitario: dataArt.precioUnitario,
-          //   montoIGV: dataArt.montoIGV,
-          //   subTotal: dataArt.subTotal,
-          //   importe: dataArt.importe,
-          // });
           setDataDetalle((prev) => [
             ...prev,
             {

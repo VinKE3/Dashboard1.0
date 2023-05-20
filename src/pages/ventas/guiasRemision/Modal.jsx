@@ -434,25 +434,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
       if (dataArt.detalleId != undefined) {
-        // dataDetalle[dataArt.detalleId - 1] = {
-        //   detalleId: dataArt.detalleId,
-        //   id: dataArt.id,
-        //   lineaId: dataArt.lineaId,
-        //   subLineaId: dataArt.subLineaId,
-        //   articuloId: dataArt.articuloId,
-        //   marcaId: dataArt.marcaId,
-        //   codigoBarras: dataArt.codigoBarras,
-        //   descripcion: dataArt.descripcion,
-        //   stock: dataArt.stock,
-        //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-        //   unidadMedidaId: dataArt.unidadMedidaId,
-        //   cantidad: dataArt.cantidad,
-        //   precioCompra: dataArt.precioCompra,
-        //   precioUnitario: dataArt.precioUnitario,
-        //   montoIGV: dataArt.montoIGV,
-        //   subTotal: dataArt.subTotal,
-        //   importe: dataArt.importe,
-        // };
+
         let dataDetalleMod = dataDetalle.map((map) => {
           if (map.id == dataArt.id) {
             return {
@@ -497,25 +479,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
 
         if (model == undefined) {
-          // dataDetalle.push({
-          //   detalleId: detalleId,
-          //   id: dataArt.id,
-          //   lineaId: dataArt.lineaId,
-          //   subLineaId: dataArt.subLineaId,
-          //   articuloId: dataArt.articuloId,
-          //   marcaId: dataArt.marcaId,
-          //   codigoBarras: dataArt.codigoBarras,
-          //   descripcion: dataArt.descripcion,
-          //   stock: dataArt.stock,
-          //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-          //   unidadMedidaId: dataArt.unidadMedidaId,
-          //   cantidad: dataArt.cantidad,
-          //   precioCompra: dataArt.precioCompra,
-          //   precioUnitario: dataArt.precioUnitario,
-          //   montoIGV: dataArt.montoIGV,
-          //   subTotal: dataArt.subTotal,
-          //   importe: dataArt.importe,
-          // });
           setDataDetalle((prev) => [
             ...prev,
             {
@@ -631,26 +594,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         if (dataDetalleExiste == undefined) {
           //Toma el valor actual de contador para asignarlo
           let i = contador;
-          // dataDetalle.push({
-          //   detalleId: detalleId,
-          //   id: dataFacturaDetallemap.id,
-          //   lineaId: dataFacturaDetallemap.lineaId,
-          //   subLineaId: dataFacturaDetallemap.subLineaId,
-          //   articuloId: dataFacturaDetallemap.articuloId,
-          //   unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
-          //   marcaId: dataFacturaDetallemap.marcaId,
-          //   descripcion: dataFacturaDetallemap.descripcion,
-          //   codigoBarras: dataFacturaDetallemap.codigoBarras,
-          //   cantidad: dataFacturaDetallemap.cantidad,
-          //   stock: dataFacturaDetallemap.stock,
-          //   precioCompra: dataFacturaDetallemap.precioCompra,
-          //   precioUnitario: dataFacturaDetallemap.precioUnitario,
-          //   subTotal: dataFacturaDetallemap.subTotal,
-          //   montoIGV: dataFacturaDetallemap.montoIGV,
-          //   importe: dataFacturaDetallemap.importe,
-          //   presentacion: dataFacturaDetallemap.presentacion ?? "",
-          //   unidadMedidaDescripcion: dataFacturaDetallemap.unidadMedidaDescripcion,
-          // });
 
           setDataDetalle((prev) => [
             ...prev,
@@ -681,28 +624,6 @@ const Modal = ({ setModal, modo, objeto }) => {
           setDetalleId(contador + 1);
         } else {
           //Modifica registro en base al id
-
-          //Modifica a dataDetalle en el índice que corresponda
-          // dataDetalle[dataDetalleExiste.detalleId - 1] = {
-          //   detalleId: dataDetalleExiste.detalleId,
-          //   id: dataFacturaDetallemap.id,
-          //   lineaId: dataFacturaDetallemap.lineaId,
-          //   subLineaId: dataFacturaDetallemap.subLineaId,
-          //   articuloId: dataFacturaDetallemap.articuloId,
-          //   unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
-          //   marcaId: dataFacturaDetallemap.marcaId,
-          //   descripcion: dataFacturaDetallemap.descripcion,
-          //   codigoBarras: dataFacturaDetallemap.codigoBarras,
-          //   cantidad: cantidad,
-          //   stock: dataFacturaDetallemap.stock,
-          //   precioCompra: dataFacturaDetallemap.precioCompra,
-          //   precioUnitario: dataFacturaDetallemap.precioUnitario,
-          //   subTotal: subTotal,
-          //   montoIGV: montoIGV,
-          //   importe: importe,
-          //   presentacion: dataFacturaDetallemap.presentacion ?? "",
-          //   unidadMedidaDescripcion: dataFacturaDetallemap.unidadMedidaDescripcion,
-          // };
 
           let dataDetalleMod = dataDetalle.map((map) => {
             if (map.id == dataDetalleExiste.id) {
@@ -776,27 +697,6 @@ const Modal = ({ setModal, modo, objeto }) => {
             //Si la resta es mayor a 0 entonces restamos al detalle encontrado
 
             //Modifica a dataDetalle en el índice que corresponda
-            // dataDetalle[dataDetalleExiste.detalleId - 1] = {
-            //   detalleId: dataDetalleExiste.detalleId,
-            //   id: dataFacturaDetallemap.id,
-            //   lineaId: dataFacturaDetallemap.lineaId,
-            //   subLineaId: dataFacturaDetallemap.subLineaId,
-            //   articuloId: dataFacturaDetallemap.articuloId,
-            //   unidadMedidaId: dataFacturaDetallemap.unidadMedidaId,
-            //   marcaId: dataFacturaDetallemap.marcaId,
-            //   descripcion: dataFacturaDetallemap.descripcion,
-            //   codigoBarras: dataFacturaDetallemap.codigoBarras,
-            //   cantidad: cantidad,
-            //   stock: dataFacturaDetallemap.stock,
-            //   precioCompra: dataFacturaDetallemap.precioCompra,
-            //   precioUnitario: dataFacturaDetallemap.precioUnitario,
-            //   subTotal: subTotal,
-            //   montoIGV: montoIGV,
-            //   importe: importe,
-            //   presentacion: dataFacturaDetallemap.presentacion ?? "",
-            //   unidadMedidaDescripcion: dataFacturaDetallemap.unidadMedidaDescripcion,
-            // };
-
             let dataDetalleEliminar = dataDetalle.map((map) => {
               if (map.id == dataDetalleExiste.id) {
                 //Calculos
