@@ -533,24 +533,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
       if (dataArt.detalleId != undefined) {
-        // dataDetalle[dataArt.detalleId - 1] = {
-        //   detalleId: dataArt.detalleId,
-        //   id: dataArt.id,
-        //   lineaId: dataArt.lineaId,
-        //   subLineaId: dataArt.subLineaId,
-        //   articuloId: dataArt.articuloId,
-        //   marcaId: dataArt.marcaId,
-        //   codigoBarras: dataArt.codigoBarras,
-        //   descripcion: dataArt.descripcion,
-        //   stock: dataArt.stock,
-        //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-        //   unidadMedidaId: dataArt.unidadMedidaId,
-        //   cantidad: dataArt.cantidad,
-        //   precioUnitario: dataArt.precioUnitario,
-        //   montoIGV: dataArt.montoIGV,
-        //   subTotal: dataArt.subTotal,
-        //   importe: dataArt.importe,
-        // };
         let dataDetalleMod = dataDetalle.map((map) => {
           if (map.id == dataArt.id) {
             return {
@@ -595,24 +577,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
 
         if (model == undefined) {
-          // dataDetalle.push({
-          //   detalleId: detalleId,
-          //   id: dataArt.id,
-          //   lineaId: dataArt.lineaId,
-          //   subLineaId: dataArt.subLineaId,
-          //   articuloId: dataArt.articuloId,
-          //   marcaId: dataArt.marcaId,
-          //   codigoBarras: dataArt.codigoBarras,
-          //   descripcion: dataArt.descripcion,
-          //   stock: dataArt.stock,
-          //   unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-          //   unidadMedidaId: dataArt.unidadMedidaId,
-          //   cantidad: dataArt.cantidad,
-          //   precioUnitario: dataArt.precioUnitario,
-          //   montoIGV: dataArt.montoIGV,
-          //   subTotal: dataArt.subTotal,
-          //   importe: dataArt.importe,
-          // });
           setDataDetalle((prev) => [
             ...prev,
             {
@@ -727,25 +691,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         if (dataDetalleExiste == undefined) {
           //Toma el valor actual de contador para asignarlo
           let i = contador;
-          // dataDetalle.push({
-          //   detalleId: detalleId,
-          //   id: dataOCDetallemap.id,
-          //   lineaId: dataOCDetallemap.lineaId,
-          //   subLineaId: dataOCDetallemap.subLineaId,
-          //   articuloId: dataOCDetallemap.articuloId,
-          //   marcaId: dataOCDetallemap.marcaId,
-          //   codigoBarras: dataOCDetallemap.codigoBarras,
-          //   descripcion: dataOCDetallemap.descripcion,
-          //   stock: dataOCDetallemap.stock,
-          //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
-          //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-          //   cantidad: dataOCDetallemap.cantidad,
-          //   precioUnitario: dataOCDetallemap.precioUnitario,
-          //   montoIGV: dataOCDetallemap.montoIGV,
-          //   subTotal: dataOCDetallemap.subTotal,
-          //   importe: dataOCDetallemap.importe,
-          // });
-          // setDetalleId(detalleId + 1);
           setDataDetalle((prev) => [
             ...prev,
             {
@@ -773,32 +718,6 @@ const Modal = ({ setModal, modo, objeto }) => {
           setDetalleId(contador + 1);
         } else {
           //Modifica registro en base al id
-
-          //Calculos
-          // let can = dataDetalleExiste.cantidad + dataOCDetallemap.cantidad;
-          // let importe = can * dataDetalleExiste.precioUnitario;
-          // let subTotal = importe * (data.porcentajeIGV / 100);
-          // let montoIGV = importe - subTotal;
-          //Calculos
-          //Modifica a dataDetalle en el índice que corresponda
-          // dataDetalle[dataDetalleExiste.detalleId - 1] = {
-          //   detalleId: dataDetalleExiste.detalleId,
-          //   id: dataOCDetallemap.id,
-          //   lineaId: dataOCDetallemap.lineaId,
-          //   subLineaId: dataOCDetallemap.subLineaId,
-          //   articuloId: dataOCDetallemap.articuloId,
-          //   marcaId: dataOCDetallemap.marcaId,
-          //   codigoBarras: dataOCDetallemap.codigoBarras,
-          //   descripcion: dataOCDetallemap.descripcion,
-          //   stock: dataOCDetallemap.stock,
-          //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
-          //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-          //   cantidad: can,
-          //   precioUnitario: dataOCDetallemap.precioUnitario,
-          //   importe: importe,
-          //   subTotal: subTotal,
-          //   montoIGV: montoIGV,
-          // };
 
           let dataDetalleMod = dataDetalle.map((map) => {
             if (map.id == dataDetalleExiste.id) {
@@ -866,34 +785,6 @@ const Modal = ({ setModal, modo, objeto }) => {
             setRefrescar(true);
           } else {
             //Si la resta es mayor a 0 entonces restamos al detalle encontrado
-
-            // //Calculos
-            // let cantidad =
-            //   dataDetalleExiste.cantidad - dataOCDetallemap.cantidad;
-            // let importe = cantidad * dataDetalleExiste.precioUnitario;
-            // let subTotal = importe * (data.porcentajeIGV / 100);
-            // let montoIGV = importe - subTotal;
-            // //Calculos
-            // //Modifica a dataDetalle en el índice que corresponda
-            // dataDetalle[dataDetalleExiste.detalleId - 1] = {
-            //   detalleId: dataDetalleExiste.detalleId,
-            //   id: dataOCDetallemap.id,
-            //   lineaId: dataOCDetallemap.lineaId,
-            //   subLineaId: dataOCDetallemap.subLineaId,
-            //   articuloId: dataOCDetallemap.articuloId,
-            //   marcaId: dataOCDetallemap.marcaId,
-            //   codigoBarras: dataOCDetallemap.codigoBarras,
-            //   descripcion: dataOCDetallemap.descripcion,
-            //   stock: dataOCDetallemap.stock,
-            //   unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
-            //   unidadMedidaId: dataOCDetallemap.unidadMedidaId,
-            //   cantidad: cantidad,
-            //   precioUnitario: detalleActual.precioUnitario,
-            //   importe: importe,
-            //   subTotal: subTotal,
-            //   montoIGV: montoIGV,
-            // };
-
             let dataDetalleEliminar = dataDetalle.map((map) => {
               if (map.id == dataDetalleExiste.id) {
                 //Calculos

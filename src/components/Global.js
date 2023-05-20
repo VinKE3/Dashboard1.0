@@ -105,7 +105,7 @@ export var CerrarModal =
 export var THeader = "text-sm font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
 export var TBody = "text-sm bg-gradient-to-b from-gray-800 to-slate-800 ";
 export var Tr = "border-b border-gray-400 ";
-export var Td = " p-2 text-left ";
+export var Td = " p-2 text-left select-none ";
 
 //Footer
 export var ContenedorFooter = "bg-gradient-to-t from-gray-900 to-gray-800 ";
