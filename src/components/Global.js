@@ -11,16 +11,16 @@ export var ModalPequeño = "h-full w-full md:h-fit md:max-w-2xl lg:max-w-3xl ";
 //Tamaños de Modal
 
 export var ModalHeader = "flex pt-4 pb-2 px-5 rounded-tt ";
-export var ModalBody = "h-full w-full overflow-y-auto ";
+export var ModalBody = "h-full w-full overflow-y-auto overflow-x-hidden ";
 export var ModalFooter =
   "flex items-center justify-end gap-x-2 p-3.5 px-5 rounded-bt ";
-export var Form = "min-w-fit w-full h-full py-1.5 px-5 overflow-y-auto ";
+export var Form = "w-full h-full py-1.5 px-5 ";
 //#endregion
 
 //#region Contendores Inputs
 export var ContenedorBasico =
   "grid gap-y-2.5 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 ";
-export var FondoContenedor = "bg-gray-800/40 shadow-md shadow-gray-700/60 ";
+export var FondoContenedor = "bg-secondary-300 shadow-md shadow-gray-700/60 ";
 export var ContenedorInputs = "flex flex-col md:flex-row gap-y-3 md:gap-x-2 ";
 export var ContenedorFiltro =
   "flex flex-col sm:flex-row sm:justify-between my-2 gap-y-3 sm:gap-x-2 md:text-sm ";
@@ -48,15 +48,15 @@ export var InputsFiltro = "flex flex-1 overflow-hidden ";
 
 //#region Inputs
 export var LabelStyle =
-  "px-3 inline-flex items-center text-sm font-semibold border border-r-0 rounded-l-md bg-gray-800/70 border-gray-600 text-light focus:bg-slate-800 focus:outline-none focus:border-blue-500 ";
+  "px-3 inline-flex items-center text-sm font-semibold border border-r-0 rounded-l-md bg-label border-gray-600 text-light focus:bg-slate-800 focus:outline-none focus:border-blue-500 ";
 export var LabelCheckStyle =
-  "w-full flex-1 inline-flex items-center py-1.5 pr-2.5 pl-1 text-sm font-semibold leading-normal rounded-r-lg border border-l-0 border-gray-600 text-light cursor-pointer ";
+  "w-full flex-1 inline-flex items-center py-1.5 pr-2.5 pl-1 text-sm font-semibold leading-normal rounded-r-lg border border-l-0 border-gray-600 bg-disabled text-light cursor-pointer ";
 export var InputStyle =
-  "block w-full flex-1 py-1.5 px-2.5 text-sm border rounded-none rounded-r-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
+  "block w-full flex-1 py-1.5 px-2.5 text-sm border rounded-none rounded-r-lg bg-input border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
 export var InputBoton =
-  "block w-full py-1.5 px-2.5 flex-1 text-sm border rounded-none bg-gray-700 border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
+  "block w-full py-1.5 px-2.5 flex-1 text-sm border rounded-none bg-input border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
 export var CheckStyle =
-  "flex inline-flex items-center pl-3 pr-1 font-semibold rounded-l-md border border-r-0 border-gray-600 text-light ";
+  "flex inline-flex items-center pl-3 pr-1 font-semibold rounded-l-md border border-r-0 bg-disabled border-gray-600 text-light ";
 export var Anidado = "!border-l-0 rounded-l-none ";
 export var SinBorde = "!border-none  ";
 export var Disabled = "!bg-gray-800/90 ";

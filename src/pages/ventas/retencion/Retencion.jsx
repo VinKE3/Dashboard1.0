@@ -190,7 +190,7 @@ const Retencion = () => {
           tipoDocumentoId: "RE",
           serie: "",
           numero: "",
-          fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
+          fechaEmision: moment().format("YYYY-MM-DD"),
           clienteId: "",
           clienteNumeroDocumentoIdentidad: "",
           clienteNombre: "",

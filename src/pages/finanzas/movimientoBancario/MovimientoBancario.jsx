@@ -201,7 +201,7 @@ const MovimientoBancario = () => {
       case 0: {
         setObjeto({
           id: "",
-          empresaId: "",
+          empresaId: "01",
           cuentaCorrienteId:
             filtro.cuentaCorrienteId == ""
               ? dataCtacte[0].cuentaCorrienteId

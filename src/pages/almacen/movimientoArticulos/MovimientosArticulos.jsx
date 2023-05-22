@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
@@ -24,19 +25,19 @@ const TablaStyle = styled.div`
   & th:nth-child(6),
   & th:nth-child(7) {
     text-align: center;
-    width: 35px;
+    width: 40px;
   }
   & th:nth-child(8),
   & th:nth-child(9),
   & th:nth-child(10),
   & th:nth-child(11) {
-    text-align: center;
-    width: 25px;
+    text-align: right;
+    width: 80px;
   }
   & th:last-child {
     text-align: center;
-    width: 100px;
-    max-width: 100px;
+    width: 80px;
+    max-width: 80px;
   }
 `;
 
@@ -44,26 +45,24 @@ const MovimientosArticulos = () => {
   //#region UseState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
+  const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
+  const [dataLocal, setDataLocal] = useState([]);
   const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
-  const [conStock, setConStock] = useState(false);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     tipoDocumentoId: "",
-    fechaInicio: moment()
-      .subtract(2, "years")
-      .startOf("year")
-      .format("yyyy-MM-DD"),
-    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    conStock: false,
   });
   const [cadena, setCadena] = useState(
-    `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&conStock=${filtro.conStock}`
   );
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -71,18 +70,19 @@ const MovimientosArticulos = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+      `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&conStock=${filtro.conStock}`
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    FiltroLocal();
   }, [cadena]);
-
+  useEffect(() => {
+    setDataLocal(datos);
+  }, [datos]);
   useEffect(() => {
     if (eliminar) {
     }
   }, [eliminar]);
-
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -106,44 +106,41 @@ const MovimientosArticulos = () => {
   //#endregion
 
   //#region Funciones API
-  const Listar = async (filtro = "") => {
+  const Listar = async (f = "") => {
     const result = await ApiMasy.get(
-      `api/Almacen/MovimientoArticulo/Listar?${filtro}`
+      `api/Almacen/MovimientoArticulo/Listar?${f}`
     );
     let model = result.data.data.map((res) => ({
       Id: res.lineaId + res.subLineaId + res.articuloId,
       ...res,
     }));
-    if (conStock) {
-      model = model.filter((registro) => registro.saldoFinal > 0);
+    if (filtro.conStock) {
+      model = model.filter((map) => map.saldoFinal > 0);
     }
     setDatos(model);
-    setTotal(model.length);
+    setTotal(result.data.data.length);
   };
-
-  const handleCheckboxChange = (e) => {
-    setConStock(e.target.checked);
-    Listar();
-  };
-
   const TipoDeDocumentos = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );
-    const tiposDocumento = result.data.data.tiposExistencia.map((tipo) => ({
-      id: tipo.id,
-      descripcion: tipo.descripcion,
-    }));
-    setTipoDeDocumento(tiposDocumento);
+    setTipoDeDocumento(result.data.data.tiposExistencia);
   };
   //#endregion
 
   //#region Funciones Filtrado
   const ValidarData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
-      [target.name]: target.value,
-    }));
+    if (target.name == "conStock") {
+      setFiltro((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
+    } else {
+      setFiltro((prevState) => ({
+        ...prevState,
+        [target.name]: target.value,
+      }));
+    }
   };
   const Filtro = async () => {
     clearTimeout(timer);
@@ -153,20 +150,32 @@ const MovimientosArticulos = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroLocal = async () => {
+    setIndex(0);
+    let model = datos;
+    if (filtro.tipoDocumentoId != "") {
+      model = datos.filter(
+        (map) => map.tipoExistenciaId == filtro.tipoDocumentoId
+      );
+      if (filtro.conStock) {
+        model = model.filter((map) => map.saldoFinal > 0);
+      }
+    }
+    setDataLocal(model);
+    setTotal(model.length);
+  };
   const FiltradoPaginado = (e) => {
+    console.log(e.selected);
     setIndex(e.selected);
-    Listar(cadena, e.selected + 1);
   };
   //#endregion
 
   //#region
   const AbrirModal = async (id) => {
-    let model = {
+    setObjeto({
       Id: id,
-    };
-    setObjeto(model);
+    });
     setModal(true);
-    console.log(model);
   };
   //#endregion
 
@@ -205,15 +214,15 @@ const MovimientosArticulos = () => {
         accessor: "unidadMedidaAbreviatura",
       },
       {
-        Header: "S.Inicial",
+        Header: "Stock Ini.",
         accessor: "stockInicial",
         Cell: ({ row }) => {
           return (
             <p
               className={
                 row.values.saldoFinal > 0
-                  ? "text-right text-green-500"
-                  : "text-right  text-red-500"
+                  ? "text-right font-semibold text-green-600"
+                  : "text-right font-semibold text-red-600"
               }
             >
               {row.values.stockInicial}
@@ -229,8 +238,8 @@ const MovimientosArticulos = () => {
             <p
               className={
                 row.values.saldoFinal > 0
-                  ? "text-right text-green-500"
-                  : "text-right  text-red-500"
+                  ? "text-right font-semibold text-green-600"
+                  : "text-right font-semibold text-red-600"
               }
             >
               {row.values.cantidadEntrada}
@@ -246,8 +255,8 @@ const MovimientosArticulos = () => {
             <p
               className={
                 row.values.saldoFinal > 0
-                  ? "text-right text-green-500"
-                  : "text-right  text-red-500"
+                  ? "text-right font-semibold text-green-600"
+                  : "text-right font-semibold text-red-600"
               }
             >
               {row.values.cantidadSalida}
@@ -256,15 +265,15 @@ const MovimientosArticulos = () => {
         },
       },
       {
-        Header: "S.Final",
+        Header: "Saldo Fin.",
         accessor: "saldoFinal",
         Cell: ({ row }) => {
           return (
             <p
               className={
                 row.values.saldoFinal > 0
-                  ? "text-right text-green-500"
-                  : "text-right  text-red-500"
+                  ? "text-right font-semibold text-green-600"
+                  : "text-right font-semibold text-red-600"
               }
             >
               {row.values.saldoFinal}
@@ -295,84 +304,91 @@ const MovimientosArticulos = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Movimiento de Artículos</h2>
-              <div className="flex  h-10">
-                <div className={Global.CheckStyle}>
-                  <Checkbox
-                    id="conStock"
-                    name="conStock"
-                    checked={conStock}
-                    onChange={handleCheckboxChange}
-                  ></Checkbox>
-                </div>
-                <label
-                  htmlFor="conStock"
-                  className={Global.LabelCheckStyle + " font-semibold"}
-                >
-                  Con Stock
-                </label>
-              </div>
-            </div>
+            <h2 className={Global.TituloH2}>Movimiento de Artículos</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputFull}>
-                <label name="tipoDocumentoId" className={Global.LabelStyle}>
-                  Tipo de Documento:
-                </label>
-                <select
-                  id="tipoDocumentoId"
-                  name="tipoDocumentoId"
-                  value={filtro.tipoDocumentoId ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                >
-                  <option key={-1} value={""}>
-                    {"--TODOS--"}
-                  </option>
-                  {tipoDeDocumento.map((tipo) => (
-                    <option key={tipo.id} value={tipo.id}>
-                      {" "}
-                      {tipo.descripcion}
+            <div
+              className={
+                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+              }
+            >
+              <div className={Global.ContenedorFiltro + " !my-0"}>
+                <div className={Global.InputFull}>
+                  <label name="tipoDocumentoId" className={Global.LabelStyle}>
+                    Tipo de Documento:
+                  </label>
+                  <select
+                    id="tipoDocumentoId"
+                    name="tipoDocumentoId"
+                    autoFocus
+                    value={filtro.tipoDocumentoId ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  >
+                    <option key={-1} value={""}>
+                      {"--TODOS--"}
                     </option>
-                  ))}
-                </select>
+                    {tipoDeDocumento.map((tipo) => (
+                      <option key={tipo.id} value={tipo.id}>
+                        {" "}
+                        {tipo.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.Input42pct}>
+                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                    Desde
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaInicio"
+                    name="fechaInicio"
+                    value={filtro.fechaInicio ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.Input42pct}>
+                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                    Hasta
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaFin"
+                    name="fechaFin"
+                    value={filtro.fechaFin ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="buscar"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    onClick={Filtro}
+                  >
+                    <FaSearch />
+                  </button>
+                </div>
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-                  Desde
-                </label>
-                <input
-                  type="date"
-                  id="fechaInicio"
-                  name="fechaInicio"
-                  value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
-                  Hasta
-                </label>
-                <input
-                  type="date"
-                  id="fechaFin"
-                  name="fechaFin"
-                  value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                  onClick={Filtro}
-                >
-                  <FaSearch />
-                </button>
+
+              <div className={Global.ContenedorFiltro + " !my-0"}>
+                <div className={Global.Input + "w-32"}>
+                  <div className={Global.CheckStyle}>
+                    <Checkbox
+                      inputId="conStock"
+                      name="conStock"
+                      onChange={(e) => {
+                        ValidarData(e);
+                      }}
+                      checked={filtro.conStock ? true : ""}
+                    ></Checkbox>
+                  </div>
+                  <label htmlFor="conStock" className={Global.LabelCheckStyle}>
+                    Con Stock
+                  </label>
+                </div>
               </div>
             </div>
             {/* Filtro*/}
@@ -381,7 +397,7 @@ const MovimientosArticulos = () => {
             <TablaStyle>
               <Table
                 columnas={columnas}
-                datos={datos}
+                datos={dataLocal}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}

@@ -888,87 +888,90 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Cabecera */}
 
             {/* Detalles */}
-            <div
-              className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
-              }
-            >
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="concepto" className={Global.LabelStyle}>
-                    Concepto
-                  </label>
-                  <input
-                    type="text"
-                    id="concepto"
-                    name="concepto"
-                    autoComplete="off"
-                    disabled={true}
-                    placeholder="Buscar Concepto"
-                    value={dataConcepto.concepto ?? ""}
-                    onChange={ValidarDataConcepto}
-                    className={Global.InputBoton}
-                  />
-                  <button
-                    id="consultar"
-                    className={Global.BotonBuscar + Global.BotonPrimary}
-                    hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => {
-                      setDataConcepto([]);
-                      AbrirFiltroConcepto(e);
-                    }}
-                  >
-                    <FaSearch></FaSearch>
-                  </button>
-                </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="saldo" className={Global.LabelStyle}>
-                    Saldo
-                  </label>
-                  <input
-                    type="number"
-                    id="saldo"
-                    name="saldo"
-                    placeholder="Saldo"
-                    autoComplete="off"
-                    min={0}
-                    disabled={true}
-                    value={dataConcepto.saldo ?? ""}
-                    onChange={ValidarDataConcepto}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="abono" className={Global.LabelStyle}>
-                    Abonar
-                  </label>
-                  <input
-                    type="number"
-                    id="abono"
-                    name="abono"
-                    placeholder="Abono"
-                    autoComplete="off"
-                    min={0}
-                    disabled={modo == "Consultar" ? true : false}
-                    value={dataConcepto.abono ?? ""}
-                    onChange={ValidarDataConcepto}
-                    className={
-                      modo != "Consultar"
-                        ? Global.InputBoton
-                        : Global.InputStyle
-                    }
-                  />
-                  <button
-                    id="enviarDetalle"
-                    className={Global.BotonBuscar + Global.BotonPrimary}
-                    hidden={modo == "Consultar" ? true : false}
-                    onClick={(e) => AgregarDetalleArticulo(e)}
-                  >
-                    <FaPlus></FaPlus>
-                  </button>
+            {modo != "Consultar" && (
+              <div
+                className={
+                  Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                }
+              >
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="concepto" className={Global.LabelStyle}>
+                      Concepto
+                    </label>
+                    <input
+                      type="text"
+                      id="concepto"
+                      name="concepto"
+                      autoComplete="off"
+                      disabled={true}
+                      placeholder="Buscar Concepto"
+                      value={dataConcepto.concepto ?? ""}
+                      onChange={ValidarDataConcepto}
+                      className={Global.InputBoton}
+                    />
+                    <button
+                      id="consultar"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      hidden={modo == "Consultar" ? true : false}
+                      onClick={(e) => {
+                        setDataConcepto([]);
+                        AbrirFiltroConcepto(e);
+                      }}
+                    >
+                      <FaSearch></FaSearch>
+                    </button>
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="saldo" className={Global.LabelStyle}>
+                      Saldo
+                    </label>
+                    <input
+                      type="number"
+                      id="saldo"
+                      name="saldo"
+                      placeholder="Saldo"
+                      autoComplete="off"
+                      min={0}
+                      disabled={true}
+                      value={dataConcepto.saldo ?? ""}
+                      onChange={ValidarDataConcepto}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="abono" className={Global.LabelStyle}>
+                      Abonar
+                    </label>
+                    <input
+                      type="number"
+                      id="abono"
+                      name="abono"
+                      placeholder="Abono"
+                      autoComplete="off"
+                      min={0}
+                      disabled={modo == "Consultar" ? true : false}
+                      value={dataConcepto.abono ?? ""}
+                      onChange={ValidarDataConcepto}
+                      className={
+                        modo != "Consultar"
+                          ? Global.InputBoton
+                          : Global.InputStyle
+                      }
+                    />
+                    <button
+                      id="enviarDetalle"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      hidden={modo == "Consultar" ? true : false}
+                      onClick={(e) => AgregarDetalleArticulo(e)}
+                    >
+                      <FaPlus></FaPlus>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
             {/* Detalles */}
 
             {/* Tabla Detalle */}

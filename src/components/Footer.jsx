@@ -4,13 +4,11 @@ import "@szhsin/react-menu/dist/transitions/slide.css";
 
 const Footer = () => {
   return (
-    <footer className="p-3 border-t items-center">
-      <nav className="flex items-center justify-between">
-        <h1 className="font-bold just">
-          © 2023 -{" "}
-          <span className="text-primary">MASY DATA SERVICE E.I.R.L.</span>
-        </h1>
-      </nav>
+    <footer className="p-3 px-6 items-center !bg-secondary-900">
+      <div className="flex items-center font-semibold">
+        <span>© 2023 - </span>
+        <span className="text-primary">MASY DATA SERVICE E.I.R.L.</span>
+      </div>
     </footer>
   );
 };

@@ -10,6 +10,8 @@ import {
 
 //#region Estilos
 const Tabla = styled.div`
+  overflow: auto;
+  border-radius: 5px;
   & .selected-row {
     background: linear-gradient(90deg, #0a5d8d 10%, #093955 50%);
   }
@@ -114,7 +116,7 @@ const TableBasic = ({
 
   //#region Render
   return (
-    <div className="flex flex-col overflow-x-auto shadow-md rounded md:text-sm">
+    <>
       {/* Tabla */}
       <Tabla>
         <table
@@ -164,7 +166,7 @@ const TableBasic = ({
           </tbody>
         </table>
       </Tabla>
-    </div>
+    </>
   );
   //#endregion
 };

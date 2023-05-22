@@ -17,6 +17,7 @@ import { FaSearch } from "react-icons/fa";
 import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -171,11 +172,16 @@ const PlanillaCobro = () => {
     setModo(modo);
     switch (accion) {
       case 0: {
+        //Consulta Correlativo
+        const result = await ApiMasy.get(
+          `api/Mantenimiento/Correlativo/PL/0001`
+        );
+        //Consulta Correlativo
         setObjeto({
-          empresaId: "",
+          empresaId: "01",
           tipoDocumentoId: "PL",
           serie: "0001",
-          numero: "",
+          numero: result.data.data.numero,
           fechaRegistro: moment().format("YYYY-MM-DD"),
           fechaVenta: moment().format("YYYY-MM-DD"),
           clienteId: "",
@@ -190,7 +196,7 @@ const PlanillaCobro = () => {
           documentosReferencia: "",
           observacion: "",
           total: 0,
-          detalles: [],         
+          detalles: [],
         });
         setModal(true);
         break;
@@ -217,85 +223,6 @@ const PlanillaCobro = () => {
       }
       default:
         break;
-    }
-  };
-  const Anular = async () => {
-    let tabla = document
-      .querySelector("table > tbody")
-      .querySelector("tr.selected-row");
-    if (tabla != null) {
-      if (tabla.classList.contains("selected-row")) {
-        let id =
-          document.querySelector("tr.selected-row").children[0].innerHTML;
-        let documento =
-          document.querySelector("tr.selected-row").children[2].innerHTML;
-        Swal.fire({
-          title: "¿Desea Anular el documento?",
-          text: documento,
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then(async (res) => {
-          if (res.isConfirmed) {
-            const result = await ApiMasy.put(
-              `api/Finanzas/PlanillaCobro/Anular/${id}`
-            );
-            if (result.name == "AxiosError") {
-              if (Object.entries(result.response.data).length > 0) {
-                toast.error(String(result.response.data.messages[0].textos), {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              } else {
-                toast.error([result.message], {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              }
-            } else {
-              toast.success(result.data.messages[0].textos[0], {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-            }
-          }
-        });
-      }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
     }
   };
   //#endregion
@@ -545,15 +472,6 @@ const PlanillaCobro = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AbrirModal()}
-                />
-              )}
-              {permisos[4] && (
-                <BotonBasico
-                  botonText="Anular"
-                  botonClass={Global.BotonEliminar}
-                  botonIcon={faBan}
-                  click={() => Anular()}
-                  containerClass=""
                 />
               )}
             </div>

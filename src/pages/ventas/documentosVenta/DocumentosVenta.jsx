@@ -171,11 +171,16 @@ const DocumentosVenta = () => {
     setModo(modo);
     switch (accion) {
       case 0: {
+        //Consulta Correlativo
+        const result = await ApiMasy.get(
+          `api/Mantenimiento/Correlativo/01/F001`
+        );
+        //Consulta Correlativo
         setObjeto({
-          empresaId: "",
+          empresaId: "01",
           tipoDocumentoId: "01",
           serie: "F001",
-          numero: "",
+          numero: result.data.data.numero,
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaVencimiento: moment().format("YYYY-MM-DD"),
           cotizacion: "",

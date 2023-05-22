@@ -42,7 +42,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
       .subtract(2, "years")
       .startOf("year")
       .format("yyyy-MM-DD"),
-    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    fechaFin: moment().format("yyyy-MM-DD"),
     clienteNombre: "",
   });
   const [cadena, setCadena] = useState(

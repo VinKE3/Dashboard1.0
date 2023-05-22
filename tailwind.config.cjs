@@ -7,13 +7,14 @@ module.exports = {
         primary: "#FDE047",
         secondary: {
           100: "#1E1F25",
+          200: "#0A090B",
+          300: "#171B23",
           900: "#131517",
         },
-        gris: {
-          700: "#131517",
-          800: "#1F2937",
-        },
         light: "#FFF",
+        label: "#1F2836",
+        input: "#343E4F",
+        disabled: "#192331",
       },
     },
   },

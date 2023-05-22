@@ -172,8 +172,10 @@ const DocumentosdeCompra = () => {
     setModo(modo);
     switch (accion) {
       case 0: {
+        //Consulta Correlativo
+        //Consulta Correlativo
         setObjeto({
-          empresaId: "",
+          empresaId: "01",
           proveedorId: "",
           proveedorNombre: "",
           tipoDocumentoId: "01",

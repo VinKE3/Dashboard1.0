@@ -57,7 +57,7 @@ const EntradaCilindros = () => {
       .subtract(2, "years")
       .startOf("year")
       .format("yyyy-MM-DD"),
-    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    fechaFin: moment().format("yyyy-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -153,7 +153,7 @@ const EntradaCilindros = () => {
     setModo(modo);
     if (modo == "Registrar") {
       setObjeto({
-        empresaId: "",
+        empresaId: "01",
         proveedorId: "",
         tipoDocumentoId: "",
         serie: "",

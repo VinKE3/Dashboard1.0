@@ -33,7 +33,7 @@ const TablaStyle = styled.div`
   }
 `;
 //#endregion
-const FiltroFacturaCompra = ({ setModal, id, setObjeto }) => {
+const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
   //#region useState
   const [data, setData] = useState([]);
   const [timer, setTimer] = useState(null);
@@ -65,12 +65,12 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto }) => {
     setData(result.data.data.data);
   };
   const GetPorId = async (id) => {
-    const model = data.find((registro) => registro.id === id);
-    const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${model.id}`);
+    const result = await ApiMasy.get(`api/Compra/DocumentoCompra/${id}`);
     setObjeto({
       ...result.data.data,
       accion: "agregar",
     });
+    foco.focus();
     setModal(false);
   };
   //#endregion

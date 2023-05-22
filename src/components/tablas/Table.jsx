@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useTable,
   useGlobalFilter,
@@ -18,29 +18,23 @@ const Tabla = styled.div`
 `;
 
 const Table = ({ columnas, datos, total, index, Click }) => {
-  //#region Columnas y Datos
+  //#region useState
   const columns = columnas;
   const data = datos;
   const totalPaginas = total;
-  const indexPaginas = index;
+  // const indexPaginas = index;
   const itemsPerPage = 50;
   const paginado = parseInt(Math.ceil(totalPaginas / itemsPerPage));
   //#endregion
 
   //#region Obtiene props React Table
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    state,
-  } = useTable(
-    { columns, data, initialState: { pageSize: 50 } },
-    useGlobalFilter,
-    useSortBy,
-    usePagination
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow } =
+    useTable(
+      { columns, data, initialState: { pageSize: 50 } },
+      useGlobalFilter,
+      useSortBy,
+      usePagination
+    );
   //#endregion
 
   //#region Funciones
@@ -104,36 +98,9 @@ const Table = ({ columnas, datos, total, index, Click }) => {
   };
   //#endregion
 
-  //#region Paginacion
-  const { pageIndex, pageSize } = state;
-  //#endregion
-
   //#region Render
   return (
     <div className="flex flex-col overflow-x-auto shadow-md rounded md:text-sm">
-      {/* Div Mostrar filas */}
-      {/* <div className="flex align-items-center justify-between"> */}
-      {/* Div Mostrar Filas */}
-      {/* <div className="flex overflow-hidden rounded-t-lg">
-          <label className="inline-flex items-center px-3 text-gray-900 bg-gray-200 dark:bg-gray-800 dark:text-gray-300 font-bold">
-            Mostrar:
-          </label>
-          <select
-            value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
-            className="rounded-none bg-gray-50 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            {[10, 25, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                {" "}
-                {pageSize}
-                {" filas"}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div> */}
-
       {/* Tabla */}
       <Tabla>
         <table
@@ -181,19 +148,19 @@ const Table = ({ columnas, datos, total, index, Click }) => {
         </table>
       </Tabla>
       {/* Footer */}
-      <div className="py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-base sm:text-sm">
+      <div className="py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-base">
         {/* Total de registros */}
         <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start">
-          <span className="text-center align-text-bottom text-base md:text-sm">
+          <span className="text-center align-text-bottom ">
             {"Total de registros: "}
             <span className="font-bold text-primary">{totalPaginas}</span>
           </span>
         </div>
         {/* Pagina 1 de total */}
         <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex align-items-center justify-center">
-          <span className="text-center align-text-bottom text-base md:text-sm">
+          <span className="text-center align-text-bottom">
             {"Página "}
-            <span className="font-bold text-primary">{indexPaginas + 1}</span>
+            <span className="font-bold text-primary">{index + 1}</span>
             {" de "}
             <span className="font-bold text-primary">{paginado} </span>
           </span>

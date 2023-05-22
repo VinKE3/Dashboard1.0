@@ -175,11 +175,16 @@ const GuiasRemision = () => {
     setModo(modo);
     switch (accion) {
       case 0: {
+        //Consulta Correlativo
+        const result = await ApiMasy.get(
+          `api/Mantenimiento/Correlativo/09/0002`
+        );
+        //Consulta Correlativo
         setObjeto({
-          // empresaId: "",
+          empresaId: "01",
           tipoDocumentoId: "09",
           serie: "0002",
-          numero: "",
+          numero: result.data.data.numero,
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaTraslado: moment().format("YYYY-MM-DD"),
           clienteId: "",

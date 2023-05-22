@@ -62,7 +62,7 @@ const SalidaCilindros = () => {
       .subtract(2, "years")
       .startOf("year")
       .format("yyyy-MM-DD"),
-    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    fechaFin: moment().format("yyyy-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`

@@ -184,10 +184,10 @@ const LetraCambioCompra = () => {
     switch (accion) {
       case 0: {
         setObjeto({
-          empresaId: "",
+          empresaId: "01",
           proveedorId: "",
-          tipoDocumentoId: "",
-          serie: "",
+          tipoDocumentoId: "LC",
+          serie: "0001",
           numero: "",
           clienteId: "000000",
           numeroLetra: "",

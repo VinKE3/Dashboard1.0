@@ -14,6 +14,7 @@ import { FaSearch } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -22,12 +23,18 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-
   & th:nth-child(2),
-  & th:nth-child(3),
-  & th:nth-child(6),
+  & th:nth-child(3) {
+    width: 70px;
+    text-align: center;
+  }
+
+  & th:nth-child(4) {
+    width: 150px;
+  }
   & th:nth-child(7),
   & th:nth-child(8) {
+    width: 40px;
     text-align: center;
   }
   & th:last-child {
@@ -36,6 +43,7 @@ const TablaStyle = styled.div`
     max-width: 80px;
   }
 `;
+//#endregion
 
 const GuiasDeCompra = () => {
   //#region useState
@@ -58,7 +66,7 @@ const GuiasDeCompra = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
-  const [respuestaAlert, setRespuestaAlert] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -79,10 +87,10 @@ const GuiasDeCompra = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (respuestaAlert) {
+    if (eliminar) {
       Listar(cadena, index + 1);
     }
-  }, [respuestaAlert]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -166,20 +174,21 @@ const GuiasDeCompra = () => {
     switch (accion) {
       case 0: {
         setObjeto({
-          empresaId: "",
+          empresaId: "01",
           proveedorId: "",
-          tipoDocumentoId: "01",
+          tipoDocumentoId: "09",
           serie: "",
           numero: "",
           clienteId: "000000",
           fechaEmision: moment().format("YYYY-MM-DD"),
           direccionPartida: "",
-          departamentoPartidaId: "",
-          provinciaPartidaId: "",
-          distritoPartidaId: "",
+          departamentoPartidaId: null,
+          provinciaPartidaId: null,
+          distritoPartidaId: null,
           departamentoPartidaNombre: "",
           provinciaPartidaNombre: "",
           distritoPartidaNombre: "",
+
           direccionLlegada: dataGlobal.empresaDireccion,
           departamentoLlegadaId: "15",
           provinciaLlegadaId: "01",
@@ -187,6 +196,7 @@ const GuiasDeCompra = () => {
           departamentoLlegadaNombre: "",
           provinciaLlegadaNombre: "",
           distritoLlegadaNombre: "",
+          
           proveedorRUC: "",
           proveedorNombre: "",
           proveedorNumeroDocumentoIdentidad: "",
@@ -259,7 +269,13 @@ const GuiasDeCompra = () => {
         Header: "Proveedor",
         accessor: "proveedorNombre",
       },
-
+      {
+        Header: "Marca/Placa",
+        accessor: "marcaPlaca",
+        Cell: ({ value }) => {
+          return <p className="text-center">{value}</p>;
+        },
+      },
       {
         Header: "B",
         accessor: "isBloqueado",
@@ -282,22 +298,12 @@ const GuiasDeCompra = () => {
           );
         },
       },
-      {
-        Header: "Marca/Placa",
-        accessor: "marcaPlaca",
-        Cell: ({ value }) => {
-          if (value) {
-            return <p className="text-center">{value}</p>;
-          } else {
-            return <p className="text-center">Sin Placa</p>;
-          }
-        },
-      },
+
       {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setRespuestaAlert={setRespuestaAlert}
+            setEliminar={setEliminar}
             permisos={permisos}
             menu={["Compra", "GuiaCompra"]}
             id={row.values.id}
@@ -331,6 +337,7 @@ const GuiasDeCompra = () => {
                   name="proveedorNombre"
                   placeholder="Proveedor"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.proveedorNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

@@ -15,6 +15,7 @@ import { FaSearch } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -182,12 +183,17 @@ const OrdenesDeCompra = () => {
     setModo(modo);
     switch (accion) {
       case 0: {
+        //Consulta Correlativo
+        const result = await ApiMasy.get(
+          `api/Mantenimiento/Correlativo/OC/0001`
+        );
+        //Consulta Correlativo
         setObjeto({
-          empresaId: "",
+          empresaId: "01",
           proveedorId: "",
           tipoDocumentoId: "OC",
-          serie: "",
-          numero: "",
+          serie: "0001",
+          numero: result.data.data.numero,
           clienteId: "000000",
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaContable: moment().format("YYYY-MM-DD"),
@@ -307,11 +313,11 @@ const OrdenesDeCompra = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-          setEliminar={setEliminar}
-          permisos={permisos}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-          ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
+            setEliminar={setEliminar}
+            permisos={permisos}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },

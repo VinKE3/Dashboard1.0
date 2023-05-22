@@ -185,11 +185,12 @@ const Cef = () => {
     setModo(modo);
     switch (accion) {
       case 0: {
+
         setObjeto({
           empresaId: "01",
           proveedorId: "",
-          tipoDocumentoId: "",
-          serie: "",
+          tipoDocumentoId: "CF",
+          serie: "0001",
           numero: "",
           clienteId: "000000",
           numeroLetra: "",

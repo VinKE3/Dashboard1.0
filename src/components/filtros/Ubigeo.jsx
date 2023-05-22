@@ -44,16 +44,31 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
     } else if (target.name == id[1]) {
       await ConsultarDistrito();
       document.getElementById(id[2]).selectedIndex = 0;
+      //Obtenemos el texto del opcion seleccionado
+      let departamento = document.getElementById(id[0]);
+      let provincia = document.getElementById(id[1]);
+      let distrito = document.getElementById(id[2]);
+      //Obtenemos el texto del opcion seleccionado
       setDataUbigeo({
         departamentoId: document.getElementById(id[0]).value,
         provinciaId: document.getElementById(id[1]).value,
         distritoId: document.getElementById(id[2]).value,
+        //Obtenemos el texto del opcion seleccionado
+        departamento: departamento.options[departamento.selectedIndex].text,
+        provincia: provincia.options[provincia.selectedIndex].text,
+        distrito: distrito.options[distrito.selectedIndex].text,
+        //Obtenemos el texto del opcion seleccionado
       });
     } else {
       setDataUbigeo({
         departamentoId: document.getElementById(id[0]).value,
         provinciaId: document.getElementById(id[1]).value,
         distritoId: document.getElementById(id[2]).value,
+        //Obtenemos el texto del opcion seleccionado
+        departamento: departamento.options[departamento.selectedIndex].text,
+        provincia: provincia.options[provincia.selectedIndex].text,
+        distrito: distrito.options[distrito.selectedIndex].text,
+        //Obtenemos el texto del opcion seleccionado
       });
     }
   };

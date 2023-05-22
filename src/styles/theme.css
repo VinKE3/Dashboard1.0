@@ -93,9 +93,12 @@
 
 input:disabled,
 select:disabled {
-  color: #e4e4e4 !important;
-  background: #1F2836 !important;
+  color: #f8f6f6 !important;
+  background: #192331 !important;
   opacity: 100% !important;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 .p-disabled,

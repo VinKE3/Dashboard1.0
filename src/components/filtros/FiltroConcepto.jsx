@@ -152,7 +152,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
         },
       },
       {
-        Header: "Proveedor",
+        Header: "Documento / Razón Social",
         accessor: "descripcion",
       },
       {

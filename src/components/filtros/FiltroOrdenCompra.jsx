@@ -59,7 +59,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
       .subtract(2, "years")
       .startOf("year")
       .format("yyyy-MM-DD"),
-    fechaFin: moment(new Date()).format("yyyy-MM-DD"),
+    fechaFin: moment().format("yyyy-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`

@@ -182,7 +182,7 @@ const Cotizaciones = () => {
     switch (accion) {
       case 0: {
         setObjeto({
-          empresaId: "",
+          empresaId: "01",
           tipoDocumentoId: "CO",
           serie: "",
           numero: "",

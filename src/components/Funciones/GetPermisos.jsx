@@ -23,6 +23,10 @@ const GetPermisos = async (menu, setPermisos) => {
       setPermisos([true, false, true, true, true]);
       return true;
     }
+    if (menu == "MovimientoArticulo") {
+      setPermisos([false, false, false, true, false]);
+      return true;
+    }
     setPermisos([true, true, true, true, true]);
     return true;
   } else {

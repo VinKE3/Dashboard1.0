@@ -36,18 +36,17 @@ const SidebarMenus = ({
 
   return (
     <div
-      className={`h-[100vh] overflow-y-scroll fixed xl:static w-full md:w-[50%] lg:w-[35%] xl:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-100
-       ${showMenu ? "left-0" : "-left-full"}
+      className={`h-[100vh] overflow-y-scroll fixed xl:static w-full md:w-[50%] lg:w-[35%] xl:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-200 scrollbar-hide ${showMenu ? "left-0" : "-left-full"}
        transition-all`}
     >
-      <div className="h-[8vh]  ">
+      <div className="h-[8vh] scrollbar-hide">
         <h1 className="h-[6vh] text-center text-2xl font-bold text-ligth">
           <Link to={"/"}>
             CYKRON<span className="text-primary text-4xl">.</span>
           </Link>
         </h1>
       </div>
-      <div className="h-[90vh] overflow-y-scroll">
+      <div className="h-[90vh] overflow-y-auto scrollbar-hide">
         {secciones.map((seccion) => (
           <div key={seccion.id} enabled={seccion.enabled}>
             <ul>
