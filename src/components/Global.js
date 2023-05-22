@@ -87,7 +87,7 @@ export var BotonConfigurar =
   "bg-gradient-to-b from-gray-500 to-gray-800 hover:bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 ";
 export var BotonAgregar =
   "bg-gradient-to-b from-green-700 to-green-800 hover:bg-gradient-to-b hover:from-green-500 hover:to-green-700 ";
-  export var BotonEliminar =
+export var BotonEliminar =
   "bg-gradient-to-b from-red-700 to-red-800 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-700 ";
 export var BotonHeader =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-700 !text-black ";
@@ -102,23 +102,32 @@ export var CerrarModal =
 //#endregion
 
 //#region Tablas
-export var THeader = "text-sm font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
+export var THeader =
+  "text-sm font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
 export var TBody = "text-sm bg-gradient-to-b from-gray-800 to-slate-800 ";
 export var Tr = "border-b border-gray-400 ";
 export var Td = " p-2 text-left select-none ";
 
 //Footer
+export var TFooter =
+  "py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-sm ";
+  export var TotalRegistros = "min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start ";
+//Footers
+
+//Footer Detalle
 export var ContenedorFooter = "bg-gradient-to-t from-gray-900 to-gray-800 ";
-export var FilaVacia = "w-full px-5 flex items-center justify-start border border-gray-400 ";
+export var FilaVacia =
+  "w-full px-5 flex items-center justify-start border border-gray-400 ";
 export var FilaImporte =
   "min-w-[130px] py-1 px-2 flex justify-end border border-gray-400 ";
 export var FilaPrecio =
   "min-w-[130px] flex items-center justify-end border border-gray-400 ";
-export var UltimaFila = "min-w-[91px] flex items-center justify-center border border-gray-400 ";
+export var UltimaFila =
+  "min-w-[91px] flex items-center justify-center border border-gray-400 ";
 export var FilaContenido = "pr-4 text-p-align-right font-bold text-light ";
 export var FilaContenidoSelect =
   "min-w-[45px] ml-2 bg-gray-700 rounded-md font-semibold ";
-//Footer
+//Footer Detalle
 
 export var TablaBotonConsultar =
   "w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125";

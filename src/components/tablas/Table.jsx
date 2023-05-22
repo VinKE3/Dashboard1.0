@@ -1,10 +1,5 @@
-import React, { useState } from "react";
-import {
-  useTable,
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-} from "react-table";
+import React from "react";
+import { useTable, usePagination, useSortBy } from "react-table";
 import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import styled from "styled-components";
@@ -27,17 +22,13 @@ const Table = ({ columnas, datos, total, index, Click }) => {
   const paginado = parseInt(Math.ceil(totalPaginas / itemsPerPage));
   //#endregion
 
-  //#region Obtiene props React Table
+  //#region Funciones
   const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow } =
     useTable(
       { columns, data, initialState: { pageSize: 50 } },
-      useGlobalFilter,
       useSortBy,
       usePagination
     );
-  //#endregion
-
-  //#region Funciones
   const Seleccionar = (e) => {
     if (e.target.tagName == "DIV") {
       let padre = e.target.parentNode.parentNode;
@@ -100,7 +91,8 @@ const Table = ({ columnas, datos, total, index, Click }) => {
 
   //#region Render
   return (
-    <div className="flex flex-col overflow-x-auto shadow-md rounded md:text-sm">
+    <div className="flex flex-col overflow-x-auto rounded md:text-sm">
+
       {/* Tabla */}
       <Tabla>
         <table
@@ -147,15 +139,19 @@ const Table = ({ columnas, datos, total, index, Click }) => {
           </tbody>
         </table>
       </Tabla>
+      {/* Tabla */}
+
       {/* Footer */}
-      <div className="py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-base">
+      <div className={Global.TFooter}>
         {/* Total de registros */}
-        <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start">
+        <div className={Global.TotalRegistros}>
           <span className="text-center align-text-bottom ">
             {"Total de registros: "}
             <span className="font-bold text-primary">{totalPaginas}</span>
           </span>
         </div>
+        {/* Total de registros */}
+
         {/* Pagina 1 de total */}
         <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex align-items-center justify-center">
           <span className="text-center align-text-bottom">
@@ -165,6 +161,8 @@ const Table = ({ columnas, datos, total, index, Click }) => {
             <span className="font-bold text-primary">{paginado} </span>
           </span>
         </div>
+        {/* Pagina 1 de total */}
+
         {/* Paginado */}
         <ReactPaginate
           pageRangeDisplayed={2}
@@ -190,7 +188,9 @@ const Table = ({ columnas, datos, total, index, Click }) => {
           previousLinkClassName={Global.BotonPaginacionFlechas}
           activeLinkClassName={Global.BotonPaginacionActivo}
         />
+        {/* Paginado */}
       </div>
+      {/* Footer */}
     </div>
   );
   //#endregion
