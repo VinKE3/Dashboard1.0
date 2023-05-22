@@ -1,264 +1,294 @@
-import React from "react";
-import ModalCrud from "../../../components/ModalCrud";
-import * as Global from "../../../components/Global";
+import React, { useEffect, useState } from "react";
+import ModalBasic from "../../../components/ModalBasic";
 import TableBasic from "../../../components/tablas/TableBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useState, useEffect } from "react";
 import styled from "styled-components";
+import moment from "moment";
+import * as Global from "../../../components/Global";
+import * as Funciones from "../../../components/Funciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
-  & tbody td:first-child {
-    width: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+  & th:nth-child(1) {
+    width: 40px;
+    text-align: center;
   }
   & th:nth-child(2) {
-    width: 150px;
+    width: 70px;
+    text-align: center;
   }
   & th:nth-child(3) {
-    width: 150px;
+    width: 110px;
+    text-align: left;
   }
   & th:nth-child(4) {
-    width: 250px;
-  }
-  & th:nth-child(5) {
     width: 200px;
+    text-align: left;
   }
-  & th:nth-child(6) {
-    width: 150px;
-  }
-  & th:nth-child(7) {
-    width: 150px;
-  }
-  & th:nth-child(8) {
+  & th:nth-child(5),
+  & th:nth-child(6),
+  & th:nth-child(7),
+  & th:nth-child(8),
+  & th:nth-child(9),
+  & th:nth-child(10),
+  & th:nth-child(11),
+  & th:nth-child(12),
+  & th:nth-child(13) {
     width: 100px;
-  }
-  & th:nth-child(9) {
-    width: 100px;
-  }
-  & th:nth-child(10) {
-    width: 100px;
-  }
-  & th:nth-child(11) {
-    width: 100px;
-  }
-  & th:nth-child(12) {
-    width: 100px;
-  }
-  & th:last-child {
-    width: 130px;
+    min-width:100px;
+    max-width: 100px;
+    text-align: center;
   }
 `;
-
-const TablaStyleOculto = styled.div`
-  & thead th:first-child {
-    visibility: hidden;
-  }
-  & tbody td:first-child {
-    width: 20px;
-  }
-  & thead th:nth-child(2) {
-    visibility: hidden;
-  }
-  & th:nth-child(2) {
-    width: 150px;
-  }
-  & thead th:nth-child(3) {
-    visibility: hidden;
-  }
-  & th:nth-child(3) {
-    width: 150px;
-  }
-  & thead th:nth-child(4) {
-    visibility: hidden;
-  }
-  & th:nth-child(4) {
-    width: 250px;
-  }
-  & th:nth-child(5) {
-    width: 200px;
-  }
-  & th:nth-child(6) {
-    width: 150px;
-  }
-  & th:nth-child(7) {
-    width: 150px;
-  }
-  & th:nth-child(8) {
-    width: 100px;
-  }
-  & th:nth-child(9) {
-    width: 100px;
-  }
-  & th:nth-child(10) {
-    width: 100px;
-  }
-  & th:nth-child(11) {
-    width: 100px;
-  }
-  & th:nth-child(12) {
-    width: 100px;
-  }
-  & th:last-child {
-    width: 130px;
-  }
-`;
+//#endregion
 
 const Modal = ({ setModal, objeto }) => {
-  const [data, setData] = useState(objeto);
-  const [articulos, setArticulos] = useState([]);
-  const [detalles, setDetalles] = useState([]);
+  //#region useState
+  const [data] = useState([objeto]);
+  const [detalles] = useState(objeto.detalles);
+  //#endregion
 
-  useEffect(() => {
-    data;
-  }, [data]);
-
-  useEffect(() => {
-    detalles;
-  }, [detalles]);
-
-  useEffect(() => {
-    articulos;
-    console.log(articulos);
-  }, [articulos]);
-
-  useEffect(() => {
-    ListarArticulos();
-  }, []);
-
-  const ListarArticulos = async () => {
-    const result = await ApiMasy.get(
-      `api/Almacen/MovimientoArticulo/GetKardexArticulo?id=${data.Id}`
-    );
-    setArticulos([result.data.data]);
-    setDetalles(result.data.data.detalles);
-  };
-
-  const colArticulos = [
+  //#region Columnas
+  const columnasDetalles = [
     {
       Header: "N°",
       accessor: "numero",
+      Cell: ({ value }) => {
+        return <p className="text-center font-bold">{value}</p>;
+      },
     },
     {
-      Header: "Fecha",
+      Header: "Emisión",
       accessor: "fechaEmision",
+      Cell: ({ value }) => {
+        return (
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+        );
+      },
     },
     {
       Header: "Documento",
       accessor: "numeroDocumento",
     },
     {
-      Header: "Razon Social",
+      Header: "Cliente",
       accessor: "clienteNombre",
     },
     {
       Header: "Entradas",
       accessor: "entradaCantidad",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-orange-400">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Costo",
       accessor: "entradaCosto",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-orange-400">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Total",
       accessor: "entradaImporte",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-orange-400">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Salidas",
       accessor: "salidaCantidad",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-violet-400">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Precio",
       accessor: "salidaCosto",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-violet-400">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Total",
       accessor: "salidaImporte",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-violet-400">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Saldo",
       accessor: "saldoCantidad",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-green-500">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Costo",
       accessor: "saldoCosto",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-green-500">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
     {
       Header: "Total",
       accessor: "saldoImporte",
+      Cell: ({ value }) => {
+        return (
+          <p className="pr-5 text-right font-bold text-green-500">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
+      },
     },
   ];
-  const colArticulosTotal = [
-    {
-      Header: "N°",
-      accessor: "",
-    },
-    {
-      Header: "Fecha",
-      accessor: "",
-    },
-    {
-      Header: "Documento",
-      accessor: "",
-    },
-    {
-      Header: "Razon Social",
-      accessor: "",
-    },
-    {
-      Header: "Entradas",
-      accessor: "entradaCantidadTotal",
-    },
-    {
-      Header: "Costo",
-      accessor: "entradaCostoTotal",
-    },
-    {
-      Header: "Total",
-      accessor: "entradaImporteTotal",
-    },
-    {
-      Header: "Salidas",
-      accessor: "salidaCantidadTotal",
-    },
-    {
-      Header: "Precio",
-      accessor: "salidaCostoTotal",
-    },
-    {
-      Header: "Total",
-      accessor: "salidaImporteTotal",
-    },
-    {
-      Header: "Saldo",
-      accessor: "saldoCantidadTotal",
-    },
-    {
-      Header: "Costo",
-      accessor: "saldoCostoTotal",
-    },
-    {
-      Header: "Total",
-      accessor: "saldoImporteTotal",
-    },
-  ];
+  const divStyle = {
+    minWidth: "275px",
+    maxWidth: "100%",
+    width: "100%",
+  };
+  //#endregion
 
+  //#region Render
   return (
-    <ModalCrud
+    <ModalBasic
       setModal={setModal}
-      objeto={objeto}
+      objeto={[]}
       modo={""}
-      menu={["Almacen", "MovimientoArticulos"]}
+      menu={["", ""]}
+      titulo="Movimiento de Articulos"
       tamañoModal={[Global.ModalFull, Global.Form]}
-      titulo={["Movimiento de Articulos"]}
+      childrenFooter={
+        <>
+          <button
+            className={Global.BotonModalBase + Global.BotonCancelarModal}
+            type="button"
+            onClick={() => setModal(false)}
+          >
+            CERRAR
+          </button>
+        </>
+      }
     >
-      <TablaStyle>
-        <TableBasic columnas={colArticulos} datos={detalles} />
-      </TablaStyle>
-      <TablaStyleOculto>
-        <TableBasic columnas={colArticulosTotal} datos={articulos} />
-      </TablaStyleOculto>
-    </ModalCrud>
+      {/*Tabla Detalle*/}
+
+      <div
+        className={Global.ContenedorBasico + Global.FondoContenedor + "!gap-0"}
+      >
+        <TablaStyle>
+          <TableBasic
+            columnas={columnasDetalles}
+            datos={detalles}
+            estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
+          />
+        </TablaStyle>
+
+        {/*Tabla Footer*/}
+        <div className={Global.ContenedorFooter + "overflow-auto"}>
+          <div className="flex">
+            <div className={Global.FilaVacia} style={divStyle}></div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Costo</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Total</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Salidas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Precio</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Total</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Saldo</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Costo</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Total</p>
+            </div>
+          </div>
+          <div className="flex">
+            <div className={Global.FilaVacia} style={divStyle}></div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>
+                {data.entradaCantidadTotal ?? "0.00"}
+              </p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>
+                {data.entradaCantidadTotal ?? "0.00"}
+              </p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+            <div className={Global.FilaMovArticulo}>
+              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            </div>
+          </div>
+        </div>
+        {/*Tabla Footer*/}
+      </div>
+      {/*Tabla Detalle*/}
+    </ModalBasic>
   );
+  //#endregion
 };
 
 export default Modal;

@@ -120,6 +120,12 @@ const MovimientosArticulos = () => {
     setDatos(model);
     setTotal(result.data.data.length);
   };
+  const GetPorId = async (id) => {
+    const result = await ApiMasy.get(
+      `api/Almacen/MovimientoArticulo/GetKardexArticulo?id=${id}`
+    );
+    setObjeto(result.data.data);
+  };
   const TipoDeDocumentos = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
@@ -165,16 +171,13 @@ const MovimientosArticulos = () => {
     setTotal(model.length);
   };
   const FiltradoPaginado = (e) => {
-    console.log(e.selected);
     setIndex(e.selected);
   };
   //#endregion
 
-  //#region
+  //#region Funciones Modal
   const AbrirModal = async (id) => {
-    setObjeto({
-      Id: id,
-    });
+    await GetPorId(id);
     setModal(true);
   };
   //#endregion
@@ -287,9 +290,9 @@ const MovimientosArticulos = () => {
           <BotonCRUD
             setEliminar={setEliminar}
             permisos={permisos}
-            menu={["Almacen", "MovimientoArticulos"]}
-            id={row.values.Id}
-            ClickModificar={() => AbrirModal(row.values.Id)}
+            ClickModificar={() => console.log("")}
+            ClickConsultar={() => AbrirModal(row.values.Id)}
+            ClickEliminar={() => console.log("")}
           />
         ),
       },

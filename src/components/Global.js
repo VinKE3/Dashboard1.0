@@ -111,7 +111,8 @@ export var Td = " p-2 text-left select-none ";
 //Footer
 export var TFooter =
   "py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-sm ";
-  export var TotalRegistros = "min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start ";
+export var TotalRegistros =
+  "min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start ";
 //Footers
 
 //Footer Detalle
@@ -127,6 +128,10 @@ export var UltimaFila =
 export var FilaContenido = "pr-4 text-p-align-right font-bold text-light ";
 export var FilaContenidoSelect =
   "min-w-[45px] ml-2 bg-gray-700 rounded-md font-semibold ";
+export var FilaMovArticulo =
+  "min-w-[114px] flex items-center justify-end border border-gray-400 ";
+export var FilaContenidoMovArt =
+  "pr-4 text-p-align-right font-bold text-light ";
 //Footer Detalle
 
 export var TablaBotonConsultar =
