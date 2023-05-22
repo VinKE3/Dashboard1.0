@@ -12,20 +12,19 @@ const Tabla = styled.div`
   }
 `;
 
-const Table = ({ columnas, datos, total, index, Click }) => {
+const Table = ({ columnas, datos, total, index, Click, paginas = 50 }) => {
   //#region useState
   const columns = columnas;
   const data = datos;
   const totalPaginas = total;
-  // const indexPaginas = index;
-  const itemsPerPage = 50;
-  const paginado = parseInt(Math.ceil(totalPaginas / itemsPerPage));
+  const cantidadRegistros = paginas;
+  const numeroPaginas = parseInt(Math.ceil(totalPaginas / cantidadRegistros));
   //#endregion
 
   //#region Funciones
   const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow } =
     useTable(
-      { columns, data, initialState: { pageSize: 50 } },
+      { columns, data, initialState: { pageSize: paginas } },
       useSortBy,
       usePagination
     );
@@ -92,7 +91,6 @@ const Table = ({ columnas, datos, total, index, Click }) => {
   //#region Render
   return (
     <div className="flex flex-col overflow-x-auto rounded md:text-sm">
-
       {/* Tabla */}
       <Tabla>
         <table
@@ -158,7 +156,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
             {"Página "}
             <span className="font-bold text-primary">{index + 1}</span>
             {" de "}
-            <span className="font-bold text-primary">{paginado} </span>
+            <span className="font-bold text-primary">{numeroPaginas} </span>
           </span>
         </div>
         {/* Pagina 1 de total */}
@@ -168,9 +166,7 @@ const Table = ({ columnas, datos, total, index, Click }) => {
           pageRangeDisplayed={2}
           onPageChange={Click}
           pageCount={
-            totalPaginas == 0
-              ? 1
-              : parseInt(Math.ceil(totalPaginas / itemsPerPage))
+            totalPaginas == 0 ? 1 : parseInt(Math.ceil(totalPaginas / cantidadRegistros))
           }
           forcePage={index}
           nextLabel={<FaAngleDoubleRight className="text-lg" />}

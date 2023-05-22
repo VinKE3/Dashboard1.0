@@ -171,6 +171,8 @@ const MovimientosArticulos = () => {
     setTotal(model.length);
   };
   const FiltradoPaginado = (e) => {
+    const filtrado = datos.slice(e.selected * 50, total);
+    setDataLocal(filtrado);
     setIndex(e.selected);
   };
   //#endregion

@@ -129,7 +129,7 @@ export var FilaContenido = "pr-4 text-p-align-right font-bold text-light ";
 export var FilaContenidoSelect =
   "min-w-[45px] ml-2 bg-gray-700 rounded-md font-semibold ";
 export var FilaMovArticulo =
-  "min-w-[114px] flex items-center justify-end border border-gray-400 ";
+  "min-w-[100px] flex items-center justify-end border border-gray-400 ";
 export var FilaContenidoMovArt =
   "pr-4 text-p-align-right font-bold text-light ";
 //Footer Detalle

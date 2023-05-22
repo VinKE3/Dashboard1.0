@@ -934,6 +934,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Destino
                     </label>
                   </div>
+                  
                   {data.tieneCuentaDestino ? (
                     <div className={Global.InputFull}>
                       <select

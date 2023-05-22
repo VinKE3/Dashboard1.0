@@ -19,13 +19,14 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:nth-child(3) {
-    width: 110px;
+    min-width: 125px;
     text-align: left;
   }
   & th:nth-child(4) {
-    width: 200px;
+    width: 100%;
     text-align: left;
   }
+
   & th:nth-child(5),
   & th:nth-child(6),
   & th:nth-child(7),
@@ -35,17 +36,42 @@ const TablaStyle = styled.div`
   & th:nth-child(11),
   & th:nth-child(12),
   & th:nth-child(13) {
-    width: 100px;
-    min-width:100px;
+    min-width: 100px;
+    max-width: 10px;
+    width: 100px !important;
+    text-align: center;
+  }
+
+  & tbody td:nth-child(5),
+  & tbody td:nth-child(6),
+  & tbody td:nth-child(7),
+  & tbody td:nth-child(8),
+  & tbody td:nth-child(9),
+  & tbody td:nth-child(10),
+  & tbody td:nth-child(11),
+  & tbody td:nth-child(12),
+  & tbody td:nth-child(13) {
+    min-width: 100px;
     max-width: 100px;
+    width: 100px;
     text-align: center;
   }
 `;
+const divStyle = {
+  minWidth: "275px",
+  maxWidth: "100%",
+  width: "100%",
+};
+const tdStyle = {
+  minWidth: "100px",
+  maxWidth: "100px",
+  width: "100px",
+};
 //#endregion
 
 const Modal = ({ setModal, objeto }) => {
   //#region useState
-  const [data] = useState([objeto]);
+  const [data] = useState(objeto);
   const [detalles] = useState(objeto.detalles);
   //#endregion
 
@@ -80,7 +106,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "entradaCantidad",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-orange-400">
+          <p
+            className="pr-5 text-right font-bold text-orange-400"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -91,7 +120,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "entradaCosto",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-orange-400">
+          <p
+            className="pr-5 text-right font-bold text-orange-400"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -102,7 +134,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "entradaImporte",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-orange-400">
+          <p
+            className="pr-5 text-right font-bold text-orange-400"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -113,7 +148,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "salidaCantidad",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-violet-400">
+          <p
+            className="pr-5 text-right font-bold text-violet-400"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -124,7 +162,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "salidaCosto",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-violet-400">
+          <p
+            className="pr-5 text-right font-bold text-violet-400"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -135,7 +176,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "salidaImporte",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-violet-400">
+          <p
+            className="pr-5 text-right font-bold text-violet-400"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -146,7 +190,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "saldoCantidad",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-green-500">
+          <p
+            className="pr-5 text-right font-bold text-green-500"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -157,7 +204,10 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "saldoCosto",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-green-500">
+          <p
+            className="pr-5 text-right font-bold text-green-500"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
@@ -168,18 +218,16 @@ const Modal = ({ setModal, objeto }) => {
       accessor: "saldoImporte",
       Cell: ({ value }) => {
         return (
-          <p className="pr-5 text-right font-bold text-green-500">
+          <p
+            className="pr-5 text-right font-bold text-green-500"
+            style={tdStyle}
+          >
             {Funciones.RedondearNumero(value, 2)}
           </p>
         );
       },
     },
   ];
-  const divStyle = {
-    minWidth: "275px",
-    maxWidth: "100%",
-    width: "100%",
-  };
   //#endregion
 
   //#region Render
@@ -204,7 +252,6 @@ const Modal = ({ setModal, objeto }) => {
       }
     >
       {/*Tabla Detalle*/}
-
       <div
         className={Global.ContenedorBasico + Global.FondoContenedor + "!gap-0"}
       >
@@ -252,34 +299,53 @@ const Modal = ({ setModal, objeto }) => {
             <div className={Global.FilaVacia} style={divStyle}></div>
             <div className={Global.FilaMovArticulo}>
               <p className={Global.FilaContenidoMovArt}>
-                {data.entradaCantidadTotal ?? "0.00"}
+                {Funciones.RedondearNumero(data.entradaCantidadTotal, 2) ??
+                  "0.00"}
               </p>
             </div>
             <div className={Global.FilaMovArticulo}>
               <p className={Global.FilaContenidoMovArt}>
-                {data.entradaCantidadTotal ?? "0.00"}
+                {Funciones.RedondearNumero(data.entradaCostoTotal, 2) ?? "0.00"}
               </p>
             </div>
             <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+              <p className={Global.FilaContenidoMovArt}>
+                {Funciones.RedondearNumero(data.entradaImporteTotal, 2) ??
+                  "0.00"}
+              </p>
             </div>
             <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+              <p className={Global.FilaContenidoMovArt}>
+                {Funciones.RedondearNumero(data.salidaCantidadTotal, 2) ??
+                  "0.00"}
+              </p>
             </div>
             <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+              <p className={Global.FilaContenidoMovArt}>
+                {Funciones.RedondearNumero(data.salidaCostoTotal, 2) ?? "0.00"}
+              </p>
             </div>
             <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+              <p className={Global.FilaContenidoMovArt}>
+                {Funciones.RedondearNumero(data.salidaImporteTotal, 2) ??
+                  "0.00"}
+              </p>
             </div>
             <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+              <p className={Global.FilaContenidoMovArt}>
+                {Funciones.RedondearNumero(data.saldoCantidadTotal, 2) ??
+                  "0.00"}
+              </p>
             </div>
             <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+              <p className={Global.FilaContenidoMovArt}>
+                {Funciones.RedondearNumero(data.saldoCostoTotal, 2) ?? "0.00"}
+              </p>
             </div>
             <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+              <p className={Global.FilaContenidoMovArt}>
+                {Funciones.RedondearNumero(data.saldoImporteTotal, 2) ?? "0.00"}
+              </p>
             </div>
           </div>
         </div>

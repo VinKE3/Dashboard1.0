@@ -190,13 +190,13 @@ const GuiasDeCompra = () => {
           distritoPartidaNombre: "",
 
           direccionLlegada: dataGlobal.empresaDireccion,
-          departamentoLlegadaId: "15",
-          provinciaLlegadaId: "01",
-          distritoLlegadaId: "42",
+          departamentoLlegadaId: dataGlobal.empresaDepartamentoId,
+          provinciaLlegadaId: dataGlobal.empresaProvinciaId,
+          distritoLlegadaId: dataGlobal.empresaDistritoId,
           departamentoLlegadaNombre: "",
           provinciaLlegadaNombre: "",
           distritoLlegadaNombre: "",
-          
+
           proveedorRUC: "",
           proveedorNombre: "",
           proveedorNumeroDocumentoIdentidad: "",

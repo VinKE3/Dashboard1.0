@@ -49,6 +49,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
   const [cadena, setCadena] = useState(
     `&numeroDocumento=${filtro.numeroDocumento}&tipoDocumentoId=${filtro.tipoDocumentoId}`
   );
+  const modoConsulta = modo == "EG" ? "CuentaPorPagar" : "CuentaPorCobrar";
   const [tipo, setTipo] = useState("");
   //#endregion
 
@@ -91,32 +92,40 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
 
   //#region API
   const Listar = async (f = "", pagina = 1) => {
-    let consulta = modo == "EG" ? "CuentaPorPagar" : "CuentaPorCobrar";
     const result = await ApiMasy.get(
-      `api/Finanzas/${consulta}/ListarPendientes?pagina=${pagina}${f}`
+      `api/Finanzas/${modoConsulta}/ListarPendientes?pagina=${pagina}${f}`
     );
     setDatos(result.data.data.data);
   };
   const GetPorId = async (id) => {
-    const model = datos.find((registro) => registro.id == id);
+    const result = await ApiMasy.get(`api/Finanzas/${modoConsulta}/${id}`);
+    const fila = datos.find((map) => map.id == id);
     let documentoRelacionado = "";
-    if (
-      model.id.includes("LC") ||
-      model.id.includes("CF") ||
-      model.id.includes("CH")
-    ) {
-      documentoRelacionado = model.documentoRelacionado;
+
+    if (modo == "EG") {
+      if (
+        fila.id.includes("LC") ||
+        fila.id.includes("CF") ||
+        fila.id.includes("CH")
+      ) {
+        documentoRelacionado = fila.documentoRelacionado;
+      }
     }
+
     setObjeto({
-      id: model.id,
-      concepto: model.descripcion,
-      fechaContable: model.fechaContable,
-      fechaEmision: model.fechaEmision,
-      fechaVencimiento: model.fechaVencimiento,
-      monedaId: model.monedaId,
-      numeroDocumento: model.numeroDocumento,
-      saldo: model.saldo,
-      abono: model.saldo,
+      id: result.data.data.id,
+      fechaEmision: result.data.data.fechaEmision,
+      fechaVencimiento: result.data.data.fechaVencimiento,
+      fechaContable: result.data.data.fechaContable,
+      numeroDocumento: result.data.data.numero,
+      concepto: fila.descripcion,
+      clienteId: result.data.data.clienteId,
+      clienteNombre: result.data.data.clienteNombre,
+      monedaId: result.data.data.monedaId,
+      saldo: result.data.data.saldo,
+      abono: result.data.data.saldo,
+      total: result.data.data.total,
+
       //Mov. Bancario
       documentoRelacionado: documentoRelacionado,
       //Mov. Bancario
