@@ -7,14 +7,12 @@ import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
 import { Checkbox } from "primereact/checkbox";
-import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
@@ -56,10 +54,9 @@ const PlanillaCobro = () => {
     clienteNombre: "",
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
-    isEnviado: "",
   });
   const [cadena, setCadena] = useState(
-    `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isenviado=${filtro.isEnviado}`
+    `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
@@ -71,7 +68,7 @@ const PlanillaCobro = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isenviado=${filtro.isEnviado}`
+      `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
     );
   }, [filtro]);
   useEffect(() => {
@@ -403,62 +400,6 @@ const PlanillaCobro = () => {
                   >
                     <FaSearch />
                   </button>
-                </div>
-              </div>
-
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle}>
-                      <RadioButton
-                        inputId="isEnviadoTodos"
-                        name="isEnviado"
-                        value={""}
-                        onChange={ValidarData}
-                        checked={filtro.isEnviado === ""}
-                      />
-                    </div>
-                    <label
-                      htmlFor="isEnviadoTodos"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
-                    >
-                      Todos
-                    </label>
-                  </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
-                      <RadioButton
-                        inputId="isEnviadoPendiente"
-                        name="isEnviado"
-                        value={false}
-                        onChange={ValidarData}
-                        checked={filtro.isEnviado === false}
-                      />
-                    </div>
-                    <label
-                      htmlFor="isEnviadoPendiente"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
-                    >
-                      Pendientes
-                    </label>
-                  </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
-                      <RadioButton
-                        inputId="isEnviado"
-                        name="isEnviado"
-                        value={true}
-                        onChange={ValidarData}
-                        checked={filtro.isEnviado === true}
-                      />
-                    </div>
-                    <label
-                      htmlFor="isEnviado"
-                      className={Global.LabelCheckStyle + "font-semibold"}
-                    >
-                      Enviados
-                    </label>
-                  </div>
                 </div>
               </div>
             </div>

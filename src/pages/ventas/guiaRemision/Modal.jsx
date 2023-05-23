@@ -88,7 +88,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [tipoCambio, setTipoCambio] = useState(0);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
-  const [refrescar, setRefrescar] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -132,11 +131,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       ConvertirPrecio();
     }
   }, [modalArt]);
-  useEffect(() => {
-    if (refrescar) {
-      setRefrescar(false);
-    }
-  }, [refrescar]);
   useEffect(() => {
     if (modo != "Registrar") {
       GetDireccion(data.clienteId);
@@ -562,6 +556,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         });
       }
     }
+    document.getElementById("consultarArticulo").focus();
   };
   const CargarDetalle = async (id) => {
     setDataCabecera(dataDetalle.find((map) => map.id === id));
@@ -584,13 +579,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
-    setRefrescar(true);
   };
   const DetallesFactura = async (accion) => {
     //Recorre los detalles que nos retorna el Filtro Orden de Compra
     let detalleEliminado = dataDetalle;
     //Contador para asignar el detalleId
     let contador = dataDetalle.length;
+    //Almacena el detalle modificado sumando o restando
+    let dataDetalleMod = Object.assign([], dataDetalle);
+    let dataDetalleEliminar = dataDetalle;
+    //Almacena el detalle modificado sumando o restando
+
     //Mapeado de los detalles que trae dataFactura
     dataFactura.detalles.map((dataFacturaDetallemap) => {
       contador++;
@@ -599,7 +598,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       let dataDetalleExiste = dataDetalle.find((map) => {
         return map.id == dataFacturaDetallemap.id;
       });
-
       //Verifica con los detalles ya seleccionados si coincide algún registro por el id
 
       //Validamos si la accion es Agregar o Eliminar
@@ -608,7 +606,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         if (dataDetalleExiste == undefined) {
           //Toma el valor actual de contador para asignarlo
           let i = contador;
+          //Toma el valor actual de contador para asignarlo
 
+          //Agrega nuevo
           setDataDetalle((prev) => [
             ...prev,
             {
@@ -633,13 +633,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 dataFacturaDetallemap.unidadMedidaDescripcion,
             },
           ]);
+          //Agrega nuevo
 
           //Asigna el valor final de contador y le agrega 1
           setDetalleId(contador + 1);
+          //Asigna el valor final de contador y le agrega 1
         } else {
           //Modifica registro en base al id
-
-          let dataDetalleMod = dataDetalle.map((map) => {
+          dataDetalleMod = dataDetalleMod.map((map) => {
             if (map.id == dataDetalleExiste.id) {
               //Calculos
               let cantidad =
@@ -673,6 +674,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               return map;
             }
           });
+          //Modifica registro en base al id
+
           setDataDetalle(dataDetalleMod);
         }
       } else {
@@ -691,7 +694,10 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             //Toma el valor actual de contador para asignarlo
             let i = 1;
+            //Toma el valor actual de contador para asignarlo
+
             if (detalleEliminado.length > 0) {
+              //Asigna el detalle Filtrado
               setDataDetalle(
                 detalleEliminado.map((map) => {
                   return {
@@ -700,18 +706,21 @@ const Modal = ({ setModal, modo, objeto }) => {
                   };
                 })
               );
+              //Asigna el detalle Filtrado
+
               setDetalleId(i);
             } else {
               //Asgina directamente a 1
               setDetalleId(detalleEliminado.length + 1);
+              //Asgina directamente a 1
+
               setDataDetalle(detalleEliminado);
             }
-            setRefrescar(true);
           } else {
             //Si la resta es mayor a 0 entonces restamos al detalle encontrado
 
-            //Modifica a dataDetalle en el índice que corresponda
-            let dataDetalleEliminar = dataDetalle.map((map) => {
+            //Modifica registro en base al id
+            dataDetalleEliminar = dataDetalleEliminar.map((map) => {
               if (map.id == dataDetalleExiste.id) {
                 //Calculos
                 let cantidad =
@@ -746,11 +755,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                 return map;
               }
             });
+            //Modifica registro en base al id
+
             setDataDetalle(dataDetalleEliminar);
           }
         }
       }
-      setRefrescar(true);
+      //Validamos si la accion es Agregar o Eliminar
     });
   };
   //#endregion
@@ -1112,7 +1123,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultar"
+                    id="consultarCliente"
                     className={
                       Global.BotonBuscar +
                       Global.BotonPrimary +
@@ -1588,7 +1599,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       }
                     />
                     <button
-                      id="consultar"
+                      id="consultarArticulo"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       disabled={!habilitarFiltro ? false : true}
                       hidden={modo == "Consultar" ? true : false}

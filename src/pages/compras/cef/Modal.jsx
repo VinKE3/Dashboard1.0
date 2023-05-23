@@ -358,9 +358,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     let nuevoDetalle = dataDetalle.filter(
       (map) => map.documentoCompraId !== id
     );
-    let nuevoOrdenCompra = nuevoDetalle.map((map) => {
-      return map.ordenCompraRelacionada;
-    });
     if (nuevoDetalle.length > 0) {
       setDataDetalle(
         nuevoDetalle.map((map) => {
@@ -371,14 +368,22 @@ const Modal = ({ setModal, modo, objeto }) => {
         })
       );
       setDetalleId(i);
+
+      let nuevoOrdenCompra = nuevoDetalle.map((map) => {
+        return map.ordenCompraRelacionada;
+      });
       setData((prevState) => ({
         ...prevState,
         documentoReferencia: nuevoOrdenCompra.toString(),
       }));
+
     } else {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
+      //Asgina directamente a 1
+
       setDataDetalle(nuevoDetalle);
+
       setData((prevState) => ({
         ...prevState,
         documentoReferencia: "",

@@ -147,6 +147,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         total: dataConcepto.total,
         saldo: dataConcepto.saldo,
       });
+      GetPorIdTipoCambio(dataCabecera.fechaAbono, "cabecera");
       //Cabecera
     }
   }, [dataConcepto]);
@@ -257,9 +258,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (!target.checked) {
         setDataCabecera((prevState) => ({
           ...prevState,
-          porcentajeInteres: "",
-          montoInteres: "",
+          porcentajeInteres: 0,
+          montoInteres: 0,
         }));
+        ActualizarTotales();
       }
       return;
     }
@@ -280,7 +282,18 @@ const Modal = ({ setModal, modo, objeto }) => {
     let banco = dataCtacte.find((map) => {
       return map;
     });
+    let vendedor = dataVendedor.find((map) => {
+      return map;
+    });
     //Valores iniciales
+    
+    setData((prev) => ({
+      ...prev,
+      monedaId: moneda.id,
+      tipoCobroId: tipoCobro.id,
+      personalId: vendedor.id,
+    }));
+
     setDataCabecera({
       monedaId: moneda.id,
       monedaAbonoId: moneda.id,
@@ -311,7 +324,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }));
   };
   const MontoAbonado = async ({ target }) => {
-    console.log(target);
     //Valores
     //Cabecera
     let saldoCabecera = Number(document.getElementById("saldo").value);
@@ -560,7 +572,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           //Anidar Documento de referencia
           let documentos = "";
           //Valida si contiene datos para mapearlo
-          if (data.documentoReferencia == "") {
+          if (data.documentosReferencia == "") {
             documentos = [
               ...data.documentosReferencia,
               dataCabecera.numeroDocumento,
@@ -622,6 +634,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         });
       }
     }
+    document.getElementById("consultarDocumento").focus();
   };
   const CargarDetalle = async (id) => {
     let model = dataDetalle.find((map) => map.documentoReferenciaId === id);
@@ -645,10 +658,23 @@ const Modal = ({ setModal, modo, objeto }) => {
         })
       );
       setDetalleId(i);
+
+      let nuevoDocumentoReferencia = nuevoDetalle.map((map) => {
+        return map.numeroDocumento;
+      });
+      setData((prevState) => ({
+        ...prevState,
+        documentosReferencia: nuevoDocumentoReferencia.toString(),
+      }));
     } else {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
+
+      setData((prevState) => ({
+        ...prevState,
+        documentosReferencia: "",
+      }));
     }
     setRefrescar(true);
   };
@@ -714,7 +740,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           tipoCambio: 0,
         });
       } else {
-        setDataCabecera({ ...dataCabecera, tipoCambio: 0 });
+        setDataCabecera((prevState) => ({ ...prevState, tipoCambio: 0 }));
         //Recalculamos el tipo de cambio
         MontoAbonado({ target: { name: "tipoCambio", value: 0 } });
         //Recalculamos el tipo de cambio
@@ -726,10 +752,11 @@ const Modal = ({ setModal, modo, objeto }) => {
           tipoCambio: result.data.data.precioVenta,
         });
       } else {
-        setDataCabecera({
-          ...dataCabecera,
+        setDataCabecera((prevState) => ({
+          ...prevState,
           tipoCambio: result.data.data.precioVenta,
-        });
+        }));
+
         //Recalculamos el tipo de cambio
         MontoAbonado({
           target: { name: "tipoCambio", value: result.data.data.precioVenta },
@@ -928,7 +955,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Finanzas", "PlanilllaCobro"]}
+            menu={["Finanzas", "PlanillaCobro"]}
             titulo="Planilla de Cobro"
             tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}

@@ -180,7 +180,7 @@ const DocumentosVenta = () => {
           empresaId: "01",
           tipoDocumentoId: "01",
           serie: "F001",
-          numero: result.data.data.numero,
+          numero: String(result.data.data.numero),
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaVencimiento: moment().format("YYYY-MM-DD"),
           cotizacion: "",

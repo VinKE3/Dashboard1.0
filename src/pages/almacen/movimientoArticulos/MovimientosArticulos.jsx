@@ -48,18 +48,18 @@ const MovimientosArticulos = () => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
-  const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
+  const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    tipoDocumentoId: "",
+    tipoExistenciaId: "",
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
     conStock: false,
   });
   const [cadena, setCadena] = useState(
-    `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&conStock=${filtro.conStock}`
+    `&tipoExistenciaId=${filtro.tipoExistenciaId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&conStock=${filtro.conStock}`
   );
   //Modal
   const [modal, setModal] = useState(false);
@@ -70,7 +70,7 @@ const MovimientosArticulos = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&conStock=${filtro.conStock}`
+      `&tipoExistenciaId=${filtro.tipoExistenciaId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&conStock=${filtro.conStock}`
     );
   }, [filtro]);
   useEffect(() => {
@@ -130,7 +130,7 @@ const MovimientosArticulos = () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );
-    setTipoDeDocumento(result.data.data.tiposExistencia);
+    setTipoDeExistencia(result.data.data.tiposExistencia);
   };
   //#endregion
 
@@ -151,17 +151,21 @@ const MovimientosArticulos = () => {
   const Filtro = async () => {
     clearTimeout(timer);
     setIndex(0);
+    setFiltro((prevState) => ({ ...prevState, tipoExistenciaId: "" }));
     const newTimer = setTimeout(() => {
-      Listar(cadena, 1);
+      Listar(
+        `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&conStock=${filtro.conStock}`,
+        1
+      );
     }, 200);
     setTimer(newTimer);
   };
   const FiltroLocal = async () => {
     setIndex(0);
     let model = datos;
-    if (filtro.tipoDocumentoId != "") {
+    if (filtro.tipoExistenciaId != "") {
       model = datos.filter(
-        (map) => map.tipoExistenciaId == filtro.tipoDocumentoId
+        (map) => map.tipoExistenciaId == filtro.tipoExistenciaId
       );
       if (filtro.conStock) {
         model = model.filter((map) => map.saldoFinal > 0);
@@ -319,21 +323,21 @@ const MovimientosArticulos = () => {
             >
               <div className={Global.ContenedorFiltro + " !my-0"}>
                 <div className={Global.InputFull}>
-                  <label name="tipoDocumentoId" className={Global.LabelStyle}>
-                    Tipo de Documento:
+                  <label name="tipoExistenciaId" className={Global.LabelStyle}>
+                    Tipo de Existencia
                   </label>
                   <select
-                    id="tipoDocumentoId"
-                    name="tipoDocumentoId"
+                    id="tipoExistenciaId"
+                    name="tipoExistenciaId"
                     autoFocus
-                    value={filtro.tipoDocumentoId ?? ""}
+                    value={filtro.tipoExistenciaId ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
                   >
                     <option key={-1} value={""}>
                       {"--TODOS--"}
                     </option>
-                    {tipoDeDocumento.map((tipo) => (
+                    {tipoDeExistencia.map((tipo) => (
                       <option key={tipo.id} value={tipo.id}>
                         {" "}
                         {tipo.descripcion}

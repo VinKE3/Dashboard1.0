@@ -131,7 +131,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataOrdenCompra]);
   useEffect(() => {
-    setData({ ...data, detalles: dataDetalle });
+    // console.log(dataDetalle);
+    setData((prev) => ({ ...prev, detalles: dataDetalle }));
   }, [dataDetalle]);
   useEffect(() => {
     if (!modalArt) {
@@ -650,6 +651,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         });
       }
     }
+    document.getElementById("consultarArticulo").focus();
   };
   const CargarDetalle = async (id) => {
     setDataCabecera(dataDetalle.find((map) => map.id === id));
@@ -679,6 +681,12 @@ const Modal = ({ setModal, modo, objeto }) => {
     let detalleEliminado = dataDetalle;
     //Contador para asignar el detalleId
     let contador = dataDetalle.length;
+    //Almacena el detalle modificado sumando o restando
+    let dataDetalleMod = Object.assign([], dataDetalle);
+    let dataDetalleEliminar = dataDetalle;
+    //Almacena el detalle modificado sumando o restando
+
+    //Mapea los detalles
     dataOrdenCompra.detalles.map((dataOCDetallemap) => {
       contador++;
 
@@ -694,6 +702,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         if (dataDetalleExiste == undefined) {
           //Toma el valor actual de contador para asignarlo
           let i = contador;
+          //Toma el valor actual de contador para asignarlo
+
+          //Agrega nuevo
           setDataDetalle((prev) => [
             ...prev,
             {
@@ -716,13 +727,35 @@ const Modal = ({ setModal, modo, objeto }) => {
               unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
             },
           ]);
+          //Agrega nuevo
+          //Variable Local para evitar reemplazo de datos
+          dataDetalleMod.push({
+            detalleId: i,
+            id: dataOCDetallemap.id,
+            lineaId: dataOCDetallemap.lineaId,
+            subLineaId: dataOCDetallemap.subLineaId,
+            articuloId: dataOCDetallemap.articuloId,
+            unidadMedidaId: dataOCDetallemap.unidadMedidaId,
+            marcaId: dataOCDetallemap.marcaId,
+            descripcion: dataOCDetallemap.descripcion,
+            codigoBarras: dataOCDetallemap.codigoBarras,
+            cantidad: dataOCDetallemap.cantidad,
+            stock: dataOCDetallemap.stock,
+            precioUnitario: dataOCDetallemap.precioUnitario,
+            montoIGV: dataOCDetallemap.montoIGV,
+            subTotal: dataOCDetallemap.subTotal,
+            importe: dataOCDetallemap.importe,
+            presentacion: dataOCDetallemap.presentacion ?? "",
+            unidadMedidaDescripcion: dataOCDetallemap.unidadMedidaDescripcion,
+          });
+          //Variable Local para evitar reemplazo de datos
 
           //Asigna el valor final de contador y le agrega 1
           setDetalleId(contador + 1);
+          //Asigna el valor final de contador y le agrega 1
         } else {
           //Modifica registro en base al id
-
-          let dataDetalleMod = dataDetalle.map((map) => {
+          dataDetalleMod = dataDetalleMod.map((map) => {
             if (map.id == dataDetalleExiste.id) {
               //Calculos
               let cantidad =
@@ -770,7 +803,10 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             //Toma el valor actual de contador para asignarlo
             let i = 1;
+            //Toma el valor actual de contador para asignarlo
+
             if (detalleEliminado.length > 0) {
+              //Asigna el detalle Filtrado
               setDataDetalle(
                 detalleEliminado.map((map) => {
                   return {
@@ -779,16 +815,22 @@ const Modal = ({ setModal, modo, objeto }) => {
                   };
                 })
               );
+              //Asigna el detalle Filtrado
+
               setDetalleId(i);
             } else {
               //Asgina directamente a 1
               setDetalleId(detalleEliminado.length + 1);
+              //Asgina directamente a 1
+
               setDataDetalle(detalleEliminado);
             }
             setRefrescar(true);
           } else {
             //Si la resta es mayor a 0 entonces restamos al detalle encontrado
-            let dataDetalleEliminar = dataDetalle.map((map) => {
+
+            //Modifica registro en base al id
+            dataDetalleEliminar = dataDetalle.map((map) => {
               if (map.id == dataDetalleExiste.id) {
                 //Calculos
                 let can =
@@ -822,12 +864,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                 return map;
               }
             });
+            //Modifica registro en base al id
+
             setDataDetalle(dataDetalleEliminar);
           }
         }
       }
+      //asdasdasd
       setRefrescar(true);
     });
+    //Mapea los detalles
   };
   //Calculos
   const ActualizarTotales = async () => {
@@ -1254,7 +1300,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultar"
+                    id="consultarProveedor"
                     className={
                       Global.BotonBuscar +
                       Global.BotonPrimary +
@@ -1749,7 +1795,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       }
                     />
                     <button
-                      id="consultar"
+                      id="consultarArticulo"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       disabled={!habilitarFiltro ? false : true}
                       hidden={modo == "Consultar" ? true : false}

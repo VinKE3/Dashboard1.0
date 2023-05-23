@@ -499,6 +499,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         });
       }
     }
+    document.getElementById("consultarArticulo").focus();
   };
   const CargarDetalle = async (id) => {
     setDataCabecera(dataDetalle.find((map) => map.id === id));
@@ -857,7 +858,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultar"
+                    id="consultarProveedor"
                     className={
                       Global.BotonBuscar +
                       Global.BotonPrimary +
@@ -1286,7 +1287,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       }
                     />
                     <button
-                      id="consultar"
+                      id="consultarArticulo"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar" ? true : false}
                       onClick={() => {

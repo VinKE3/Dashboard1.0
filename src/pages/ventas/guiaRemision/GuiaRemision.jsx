@@ -47,7 +47,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const GuiasRemision = () => {
+const GuiaRemision = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
@@ -521,4 +521,4 @@ const GuiasRemision = () => {
   //#endregion
 };
 
-export default GuiasRemision;
+export default GuiaRemision;

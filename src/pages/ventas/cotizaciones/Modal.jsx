@@ -706,6 +706,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         });
       }
     }
+    document.getElementById("consultarArticulo").focus();
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -1171,7 +1172,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultar"
+                    id="consultarCliente"
                     className={
                       Global.BotonBuscar +
                       Global.BotonPrimary +
@@ -1693,7 +1694,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       }
                     />
                     <button
-                      id="consultar"
+                      id="consultarArticulo"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       disabled={!habilitarFiltro ? false : true}
                       hidden={modo == "Consultar" ? true : false}

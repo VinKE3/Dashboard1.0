@@ -12,7 +12,7 @@ import Error404 from "./pages/Error404";
 //*Pages ventas
 import ConductoresTransportistas from "./pages/ventas/conductoresTransportistas/ConductoresTransportistas";
 import DocumentosDeVenta from "./pages/ventas/documentosVenta/DocumentosVenta";
-import GuiasDeRemision from "./pages/ventas/guiasRemision/GuiasRemision";
+import GuiasDeRemision from "./pages/ventas/guiaRemision/GuiaRemision";
 import Cotizaciones from "./pages/ventas/cotizaciones/Cotizaciones";
 import BloquearVenta from "./pages/ventas/bloquearVenta/BloquearVenta";
 import Retencion from "./pages/ventas/retencion/Retencion";

@@ -348,6 +348,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         theme: "colored",
       });
     }
+    document.getElementById("consultarConcepto").focus();
   };
   const CargarDetalle = async (id) => {
     setDataCabecera(dataDetalle.find((map) => map.documentoCompraId === id));
@@ -709,7 +710,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultar"
+                    id="consultarProveedor"
                     className={
                       Global.BotonBuscar +
                       Global.BotonPrimary +
@@ -1009,7 +1010,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultar"
+                    id="consultarConcepto"
                     className={Global.BotonBuscar + Global.BotonPrimary}
                     hidden={modo == "Consultar" ? true : false}
                     onClick={(e) => {

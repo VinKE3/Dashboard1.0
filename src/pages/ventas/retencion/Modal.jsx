@@ -405,6 +405,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         });
       }
     }
+    document.getElementById("consultarDocumento").focus();
   };
   const SepararDetalle = async (detalle) => {
     const SepararDocumentoVentaId = detalle.map((detalle) => {
@@ -832,7 +833,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 className={Global.InputBoton}
               />
               <button
-                id="consultar"
+                id="consultarCliente"
                 className={
                   Global.BotonBuscar + Global.BotonPrimary + " !rounded-none"
                 }
@@ -1062,7 +1063,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 }
               />
               <button
-                id="consultar"
+                id="consultarDocumento"
                 className={Global.BotonBuscar + Global.BotonPrimary}
                 hidden={modo == "Consultar" ? true : false}
                 onClick={async () => await ConsultarDocumento()}

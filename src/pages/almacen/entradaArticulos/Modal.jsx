@@ -88,7 +88,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData({
         ...data,
         proveedorId: dataProveedor.proveedorId,
-        proveedorRUC: dataProveedor.proveedorNumeroDocumentoIdentidad,
+        proveedorNumeroDocumentoIdentidad: dataProveedor.proveedorNumeroDocumentoIdentidad,
         proveedorNombre: dataProveedor.proveedorNombre,
         proveedorDireccion: dataProveedor.proveedorDireccion ?? "",
       });
@@ -790,17 +790,17 @@ const Modal = ({ setModal, modo, objeto }) => {
 
           <div className={Global.ContenedorInputs}>
             <div className={Global.InputMitad}>
-              <label htmlFor="proveedorRUC" className={Global.LabelStyle}>
+              <label htmlFor="proveedorNumeroDocumentoIdentidad" className={Global.LabelStyle}>
                 RUC/DNI:
               </label>
               <input
                 type="text"
-                id="proveedorRUC"
-                name="proveedorRUC"
+                id="proveedorNumeroDocumentoIdentidad"
+                name="proveedorNumeroDocumentoIdentidad"
                 placeholder="N° Documento Identidad"
                 autoComplete="off"
                 disabled={true}
-                value={data.proveedorRUC ?? ""}
+                value={data.proveedorNumeroDocumentoIdentidad ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
               />
