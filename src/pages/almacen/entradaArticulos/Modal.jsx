@@ -117,6 +117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (modo == "Registrar") {
       GetPorIdTipoCambio(data.fechaEmision);
     }
+    ActualizarTotales();
     Tablas();
   }, []);
 

@@ -74,6 +74,9 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
+    data;
+  }, [data]);
+  useEffect(() => {
     GetIsPermitido(data.id, 0, 0);
     setDataTipoDoc([data.tipoDocumento]);
     TablasAbono();
@@ -122,7 +125,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       return null;
     }
-
     let tipoCambio = dataAbono.tipoCambio;
     if (data.monedaId != target.value) {
       if (target.value == "D") {
@@ -158,13 +160,15 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (modo == "agregar") {
       setHabilitarCampo(true);
       let tipoCambio = await GetPorIdTipoCambio(moment().format("yyyy-MM-DD"));
+      let ultimoId = dataDetalle[dataDetalle.length - 1];
+      setDetalleId(ultimoId.abonoId);
       setDataAbono({
+        abonoId: ultimoId.abonoId + 1,
         empresaId: data.empresaId,
         proveedorId: data.proveedorId,
         tipoDocumentoId: data.tipoDocumentoId,
         serie: data.serie,
         numero: data.numero,
-        abonoId: detalleId,
         fecha: moment().format("yyyy-MM-DD"),
         concepto: "AMORTIZACION DE LA DEUDA",
         monedaId: data.monedaId,
@@ -183,7 +187,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       setHabilitarCampo(false);
       setDataAbono([]);
-      setTotalSaldo([]);
+      setTotalSaldo(0);
     }
   };
   //Abonos
@@ -214,7 +218,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (resultado[0]) {
       const montoPEN = dataAbono.monedaId === "S" ? dataAbono.monto : 0;
       const montoUSD = dataAbono.monedaId === "D" ? dataAbono.monto : 0;
-
       const result = await ApiMasy.post(`/api/Finanzas/AbonoCompra/`, {
         ...dataAbono,
         montoPEN: montoPEN,
@@ -231,21 +234,6 @@ const Modal = ({ setModal, modo, objeto }) => {
           progress: undefined,
           theme: "colored",
         });
-        // setDataDetalle((prevState) => [
-        //   ...prevState,
-        //   {
-        //     abonoId: detalleId,
-        //     fecha: dataAbono.fecha,
-        //     concepto: dataAbono.concepto,
-        //     monedaId: dataAbono.monedaId,
-        //     tipoCambio: dataAbono.tipoCambio,
-        //     monto: Funciones.RedondearNumero(dataAbono.monto, 2),
-        //     montoPEN: dataAbono.montoPEN,
-        //     montoUSD: dataAbono.montoUSD,
-        //     tipoPagoId: dataAbono.tipoPagoId,
-        //     documentoCompraId: dataAbono.documentoCompraId,
-        //   },
-        // ]);
         setDetalleId(detalleId + 1);
         Abono("cancelar");
       } else {
@@ -280,7 +268,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       const result = await ApiMasy.delete(
         `/api/Finanzas/AbonoCompra/${data.id}/${abonoId}`
       );
-
       toast.success(String(result.data.messages[0].textos), {
         position: "bottom-right",
         autoClose: 1500,
@@ -291,28 +278,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         progress: undefined,
         theme: "colored",
       });
-
-      let i = 1;
-      let nuevoDetalle = dataDetalle.filter((map) => map.abonoId != abonoId);
-      if (nuevoDetalle.length > 0) {
-        // setDataDetalle(
-        //   nuevoDetalle.map((map) => {
-        //     return {
-        //       ...map,
-        //       abonoId: i++,
-        //     };
-        //   })
-        // );
-        setDetalleId(i);
-      } else {
-        setDetalleId(nuevoDetalle.length + 1);
-        // setDataDetalle(nuevoDetalle);
-      }
-
       await GetPorId(data.id);
     }
   };
-
   //#endregion
 
   //#region API
@@ -616,12 +584,12 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
             <div className={Global.ContenedorInputs}>
               <div className={Global.InputFull}>
-                <label htmlFor="total" className={Global.LabelStyle}>
+                <label htmlFor="totalSaldo" className={Global.LabelStyle}>
                   Total a Pagar
                 </label>
                 <input
                   type="text"
-                  id="total"
+                  id="totalSaldo"
                   name="total"
                   autoComplete="off"
                   placeholder="Total a Pagar"
@@ -897,6 +865,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="monto"
                   autoComplete="off"
                   placeholder="Monto"
+                  min={0}
                   disabled={!habilitarCampo ? true : ""}
                   value={dataAbono.monto ?? ""}
                   onChange={ValidarDataAbono}

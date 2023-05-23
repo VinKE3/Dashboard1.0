@@ -430,7 +430,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ConvertirPrecio = async () => {
     if (Object.entries(dataCabecera).length > 0) {
-      if (data.monedaId != dataCabecera.monedaId && dataCabecera.Id != "000000") {
+      if (
+        data.monedaId != dataCabecera.monedaId &&
+        dataCabecera.Id != "000000"
+      ) {
         const model = await Funciones.ConvertirPreciosAMoneda(
           "compra",
           dataCabecera,
@@ -566,7 +569,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           //Valida por id y descripción de artículo
           model = dataDetalle.find((map) => {
             return (
-              map.id == dataCabecera.id && map.descripcion == dataCabecera.descripcion
+              map.id == dataCabecera.id &&
+              map.descripcion == dataCabecera.descripcion
             );
           });
         } else {
@@ -675,7 +679,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     let detalleEliminado = dataDetalle;
     //Contador para asignar el detalleId
     let contador = dataDetalle.length;
-
     dataOrdenCompra.detalles.map((dataOCDetallemap) => {
       contador++;
 

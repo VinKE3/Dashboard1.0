@@ -121,7 +121,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalles
       DetallesFactura(dataFactura.accion);
       //Detalles
-      setRefrescar(true);
+      OcultarMensajes();
     }
   }, [dataFactura]);
   useEffect(() => {
@@ -314,7 +314,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ConvertirPrecio = async () => {
     if (Object.entries(dataCabecera).length > 0) {
-      if (data.monedaId != dataCabecera.monedaId && dataCabecera.Id != "000000") {
+      if (
+        data.monedaId != dataCabecera.monedaId &&
+        dataCabecera.Id != "000000"
+      ) {
         const model = await Funciones.ConvertirPreciosAMoneda(
           "venta",
           dataCabecera,
@@ -478,7 +481,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           //Valida por id y descripción de artículo
           model = dataDetalle.find((map) => {
             return (
-              map.id == dataCabecera.id && map.descripcion == dataCabecera.descripcion
+              map.id == dataCabecera.id &&
+              map.descripcion == dataCabecera.descripcion
             );
           });
         } else {
@@ -587,7 +591,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     let detalleEliminado = dataDetalle;
     //Contador para asignar el detalleId
     let contador = dataDetalle.length;
-
     //Mapeado de los detalles que trae dataFactura
     dataFactura.detalles.map((dataFacturaDetallemap) => {
       contador++;
@@ -596,6 +599,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       let dataDetalleExiste = dataDetalle.find((map) => {
         return map.id == dataFacturaDetallemap.id;
       });
+
       //Verifica con los detalles ya seleccionados si coincide algún registro por el id
 
       //Validamos si la accion es Agregar o Eliminar
@@ -640,7 +644,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               //Calculos
               let cantidad =
                 dataDetalleExiste.cantidad + dataFacturaDetallemap.cantidad;
-              let importe = cantidad * dataDetalleExiste.precioUnitario;
+              let importe = cantidad * dataFacturaDetallemap.precioUnitario;
               let subTotal = importe * (data.porcentajeIGV / 100);
               let montoIGV = importe - subTotal;
               //Calculos
@@ -972,6 +976,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="serie"
                     name="serie"
+                    autoFocus
                     value={data.serie ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Registrar" ? false : true}

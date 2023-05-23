@@ -60,12 +60,12 @@ const EntradaArticulos = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    clienteNombre: "",
+    proveedorNombre: "",
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
   const [cadena, setCadena] = useState(
-    `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
@@ -77,7 +77,7 @@ const EntradaArticulos = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+      `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
     );
   }, [filtro]);
   useEffect(() => {
@@ -405,7 +405,7 @@ const EntradaArticulos = () => {
         accessor: "numeroDocumento",
       },
       {
-        Header: "Observación",
+        Header: "Detalle",
         accessor: "observacion",
       },
       {
@@ -466,17 +466,17 @@ const EntradaArticulos = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
-                <label name="clienteNombre" className={Global.LabelStyle}>
-                  Razón Social
+                <label name="proveedorNombre" className={Global.LabelStyle}>
+                  Proveedor
                 </label>
                 <input
                   type="text"
-                  id="clienteNombre"
-                  name="clienteNombre"
-                  placeholder="Razón Social"
+                  id="proveedorNombre"
+                  name="proveedorNombre"
+                  placeholder="Proveedor"
                   autoComplete="off"
                   autoFocus
-                  value={filtro.clienteNombre ?? ""}
+                  value={filtro.proveedorNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />

@@ -184,7 +184,7 @@ const GuiasRemision = () => {
           empresaId: "01",
           tipoDocumentoId: "09",
           serie: "0002",
-          numero: result.data.data.numero,
+          numero: String(result.data.data.numero),
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaTraslado: moment().format("YYYY-MM-DD"),
           clienteId: "",

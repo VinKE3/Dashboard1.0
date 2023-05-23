@@ -58,6 +58,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
   //Tablas
   const [dataCtacte, setDataCtacte] = useState([]);
+  const [dataMoneda, setdataMoneda] = useState([]);
   const [dataTipoMovimiento, setDataTipoMovimiento] = useState([]);
   const [dataTipoOperacion, setDataTipoOperacion] = useState([]);
   const [dataTipoBenef, setDataTipoBenef] = useState([]);
@@ -252,6 +253,16 @@ const Modal = ({ setModal, modo, objeto }) => {
             ...dataCabecera,
             saldo: model.precioCompra,
             abono: model.precioVenta1,
+          });
+          toast.info("Abonar ha sido convertido al tipo de cambio actual", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
           });
         }
       } else {
@@ -553,6 +564,14 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoMovimiento(result.data.data.tiposMovimiento);
     setDataTipoBenef(result.data.data.tiposBeneficiario);
     setDataTipoOperacion(result.data.data.tiposOperacion);
+    setdataMoneda([
+      { abreviatura: "S/", descripcion: "SOLES", id: "S" },
+      {
+        abreviatura: "US$",
+        descripcion: "DÓLARES AMERICANOS",
+        id: "D",
+      },
+    ]);
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
@@ -776,6 +795,26 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <></>
                   )} */}
                 </div>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                    Moneda
+                  </label>
+                  <select
+                    id="monedaId"
+                    name="monedaId"
+                    autoFocus
+                    value={data.monedaId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataMoneda.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className={Global.ContenedorInputs}>
@@ -788,7 +827,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
-                    autoFocus
                     disabled={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
@@ -934,7 +972,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Destino
                     </label>
                   </div>
-                  
+
                   {data.tieneCuentaDestino ? (
                     <div className={Global.InputFull}>
                       <select

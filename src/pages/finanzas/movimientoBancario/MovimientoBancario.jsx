@@ -199,6 +199,11 @@ const MovimientoBancario = () => {
     setModo(modo);
     switch (accion) {
       case 0: {
+        let model = dataCtacte.find((map) => map);
+        if(filtro.cuentaCorrienteId != ""){
+          model = dataCtacte.find((map) => map.cuentaCorrienteId == filtro.cuentaCorrienteId)
+        }
+        console.log(model)
         setObjeto({
           id: "",
           empresaId: "01",
@@ -225,7 +230,7 @@ const MovimientoBancario = () => {
           total: 0,
           tieneCuentaDestino: false,
           cuentaDestinoId: null,
-          monedaId: "S",
+          monedaId: model.monedaId,
           detalles: [],
         });
         setModal(true);
