@@ -74,11 +74,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    data;
-    console.log(data, "DATADATADATA");
-  }, [data]);
-
-  useEffect(() => {
     if (Object.keys(dataPersonal).length > 0) {
       //Cabecera
       GuiaRelacionada();
@@ -104,7 +99,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   useEffect(() => {
     GetTablas();
   }, []);
-
   //#endregion
 
   //#region Funciones
@@ -192,7 +186,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       personalId: e.target.value,
     });
   };
-
   const OcultarMensajes = () => {
     setMensaje([]);
     setTipoMensaje(-1);

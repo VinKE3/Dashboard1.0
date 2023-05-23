@@ -177,16 +177,16 @@ const EntradaCilindros = () => {
           empresaId: "01",
           proveedorId: "000000",
           tipoDocumentoId: "EC",
-          serie: "0001",
-          numero: "000000001",
-          clienteId: "000000",
-          fechaEmision: moment().format("YYYY-MM-DD"),
+          serie: "",
+          numero: "",
+          clienteId: "",
           clienteNombre: "",
+          fechaEmision: moment().format("YYYY-MM-DD"),
           personalId: "<<NI>>01",
-          observacion: "",
           isSobrante: true,
           isVenta: true,
           totalCilindros: 0,
+          observacion: "",
           detalles: [],
           guiasRelacionadas: [],
         });
@@ -230,11 +230,11 @@ const EntradaCilindros = () => {
         Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return <p className="text-center">{moment(value).format("DD/MM/YY")}</p>;
         },
       },
       {
-        Header: "H. Emisión",
+        Header: "Hora",
         accessor: "horaEmision",
         Cell: ({ value }) => {
           return <p className="text-center">{value}</p>;
@@ -256,7 +256,7 @@ const EntradaCilindros = () => {
         Header: "Cilindros",
         accessor: "cilindros",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center font-bold">{value}</p>;
         },
       },
       {
@@ -270,7 +270,6 @@ const EntradaCilindros = () => {
           );
         },
       },
-
       {
         Header: "Acciones",
         Cell: ({ row }) => (
@@ -309,6 +308,7 @@ const EntradaCilindros = () => {
                   name="clienteNombre"
                   placeholder="Cliente"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.clienteNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

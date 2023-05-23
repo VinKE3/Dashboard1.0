@@ -18,9 +18,14 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    width: 90px;
+    width: 70px;
+    text-align: center;
+  }
+  & th:nth-child(3) {
+    width: 140px;
   }
   & th:nth-child(5) {
+    width: 140px;
     text-align: center;
   }
   & th:last-child {
@@ -69,10 +74,6 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
   useEffect(() => {
     Listar(cadena, 1);
   }, []);
-  useEffect(() => {
-    objeto;
-    console.log(objeto);
-  }, []);
   //#endregion
 
   //#region Funciones Filtrado
@@ -81,7 +82,6 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
       ...prevState,
       [target.name]: target.value,
     }));
-    console.log(filtro);
   };
   const Filtro = async () => {
     clearTimeout(timer);
@@ -139,7 +139,6 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
   //#region Funciones
   const EliminarFila = async (id) => {
     let model = dataGuiasSeleccionada.filter((map) => map.id != id);
-    console.log(model, "Guia seleccionada");
     const res = await ApiMasy.get(`api/Almacen/SalidaCilindros/${id}`);
     Swal.fire({
       title: "Eliminar selección",
@@ -176,7 +175,8 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
         Header: "Fecha",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return <p className="text-center">{moment(value).format("DD/MM/YY")}</p>;
+
         },
       },
       {
@@ -240,6 +240,8 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
     },
   ];
   //#endregion
+  
+  //#region Render
   return (
     <>
       <ModalBasic
@@ -247,7 +249,7 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Consultar Salida De Ciliindros"
+        titulo="Consultar Salida De Cilindros"
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <>
@@ -278,6 +280,7 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
                     id="fechaInicio"
                     name="fechaInicio"
                     autoComplete="off"
+                    autoFocus
                     value={filtro.fechaInicio}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -335,6 +338,7 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default FiltroSalidaCilindros;
