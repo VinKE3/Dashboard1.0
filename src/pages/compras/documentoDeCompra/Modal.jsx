@@ -829,6 +829,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           } else {
             //Si la resta es mayor a 0 entonces restamos al detalle encontrado
 
+            //AQUI
             //Modifica registro en base al id
             dataDetalleEliminar = dataDetalle.map((map) => {
               if (map.id == dataDetalleExiste.id) {

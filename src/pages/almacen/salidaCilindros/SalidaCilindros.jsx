@@ -1,16 +1,17 @@
 import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
+import Delete from "../../../components/CRUD/Delete";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
 import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
 import Table from "../../../components/tablas/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
@@ -52,29 +53,32 @@ const SalidaCilindros = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
+  const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment()
-      .subtract(2, "years")
-      .startOf("year")
-      .format("yyyy-MM-DD"),
-    fechaFin: moment().format("yyyy-MM-DD"),
+    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Modificar");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
 
   //#region useEffect;
+
+  useEffect(() => {
+    objeto;
+    console.log(objeto);
+  }, [objeto]);
   useEffect(() => {
     setCadena(
       `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -151,44 +155,55 @@ const SalidaCilindros = () => {
     const result = await ApiMasy.get(`api/Almacen/SalidaCilindros/${id}`);
     setObjeto(result.data.data);
   };
+  const GetIsPermitido = async (accion, id) => {
+    const result = await ApiMasy.get(
+      `api/Almacen/SalidaCilindros/IsPermitido?accion=${accion}&id=${id}`
+    );
+    if (!result.data.data) {
+      toast.error(String(result.data.messages[0].textos), {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      return false;
+    } else {
+      return true;
+    }
+  };
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
+  const AbrirModal = async (id, modo = "Modificar", accion = 1) => {
     setModo(modo);
-    if (modo == "Registrar") {
-      setObjeto({
-        empresaId: "string",
-        tipoDocumentoId: "string",
-        serie: "string",
-        numero: "string",
-        fechaEmision: "2023-04-25T14:24:16.350Z",
-        clienteId: "string",
-        personalId: "string",
-        observacion: "string",
-        numeroFactura: "string",
-        numeroGuia: "string",
-        tipoSalidaId: "string",
-        totalCilindros: 0,
-        afectarStock: true,
-        detalles: [
-          {
-            detalleId: 0,
-            lineaId: "string",
-            subLineaId: "string",
-            articuloId: "string",
-            unidadMedidaId: "string",
-            marcaId: 0,
-            descripcion: "string",
-            cantidad: 0,
-            unidadMedidaDescripcion: "string",
-          },
-        ],
-      });
-    } else {
-      await GetPorId(id);
+    switch (accion) {
+      case 1: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          await GetPorId(id);
+          setModal(true);
+        }
+        break;
+      }
+      case 2: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          Delete(["Almacen", "EntradaCilindros"], id, setEliminar);
+        }
+        break;
+      }
+      case 3: {
+        await GetPorId(id);
+        setModal(true);
+        break;
+      }
+      default:
+        break;
     }
-    setModal(true);
   };
   //#endregion
 
@@ -278,8 +293,8 @@ const SalidaCilindros = () => {
             permisos={permisos}
             menu={["Almacen", "SalidaCilindros"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
           />
         ),
       },
@@ -350,17 +365,6 @@ const SalidaCilindros = () => {
               </div>
             </div>
             {/* Filtro*/}
-
-            {/* Boton */}
-            {permisos[0] && (
-              <BotonBasico
-                botonText="Registrar"
-                botonClass={Global.BotonRegistrar}
-                botonIcon={faPlus}
-                click={() => AbrirModal()}
-              />
-            )}
-            {/* Boton */}
 
             {/* Tabla */}
             <TablaStyle>

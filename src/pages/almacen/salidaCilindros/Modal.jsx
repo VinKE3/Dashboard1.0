@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import ModalCrud from "../../../components/ModalCrud";
-import * as Global from "../../../components/Global";
-import moment from "moment";
 import ApiMasy from "../../../api/ApiMasy";
-import styled from "styled-components";
+import ModalCrud from "../../../components/ModalCrud";
+import FiltroSalidaCilindros from "../../../components/filtros/FiltroSalidaCilindros";
+import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import { Checkbox } from "primereact/checkbox";
+import moment from "moment";
+import { FaPlus, FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
+import styled from "styled-components";
+import "primeicons/primeicons.css";
+import * as Global from "../../../components/Global";
+import * as Funciones from "../../../components/Funciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -21,12 +29,20 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const Modal = ({ setModal, modo, objeto }) => {
+const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
+  //?Data General
   const [data, setData] = useState(objeto);
+  const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
+  //?Tablas
   const [personal, setPersonal] = useState([]);
   const [tipoSalida, setTipoSalida] = useState([]);
-  const [detalles, setDetalles] = useState([]);
+  //?Data Ayuda
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
+  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
+  const [mensaje, setMensaje] = useState([]);
+  const [refrescar, setRefrescar] = useState(false);
+
   //#endregion
   //#region useEffect
   useEffect(() => {
@@ -59,18 +75,58 @@ const Modal = ({ setModal, modo, objeto }) => {
     setPersonal(model);
     setTipoSalida(result.data.data.tiposSalida);
   };
+  //#endregion
 
+  //#region Columnas
+  const columnas = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "Item",
+      accessor: "detalleId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
+    {
+      Header: "Descripción",
+      accessor: "descripcion",
+    },
+    {
+      Header: "Unidad",
+      accessor: "unidadMedidaDescripcion",
+      Cell: ({ value }) => {
+        return <p className="text-center font-semibold">{value}</p>;
+      },
+    },
+    {
+      Header: "Cantidad",
+      accessor: "cantidad",
+      Cell: ({ value }) => {
+        return (
+          <p className="text-center font-semibold pr-1.5">
+            {Funciones.RedondearNumero(value, 4)}
+          </p>
+        );
+      },
+    },
+  ];
   //#endregion
   return (
     <ModalCrud
       setModal={setModal}
+      setRespuestaModal={setRespuestaModal}
       objeto={data}
       modo={modo}
       menu={["Almacen", "SalidaCilindros"]}
       titulo="Salida de Cilindros"
       tamañoModal={[Global.ModalGrande, Global.Form]}
     >
-      <div className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}>
+      <div
+        className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+      >
         <div className={Global.ContenedorInputs}>
           <div className={Global.Input60pct}>
             <label htmlFor="serie" className={Global.LabelStyle}>
@@ -83,10 +139,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               maxLength="2"
               autoComplete="off"
               placeholder="00"
-              disabled={modo == "Registrar" ? false : true}
+              readOnly={true}
               value={data.serie ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
           <div className={Global.Input60pct}>
@@ -100,10 +156,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               maxLength="2"
               autoComplete="off"
               placeholder="00"
-              disabled={modo == "Registrar" ? false : true}
+              readOnly={true}
               value={data.numero ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
           <div className={Global.Input40pct}>
@@ -116,10 +172,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="fechaEmision"
               maxLength="2"
               autoComplete="off"
-              disabled={modo == "Consultar" ? true : false}
+              readOnly={true}
               value={moment(data.fechaEmision).format("yyyy-MM-DD") ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
         </div>
@@ -135,10 +191,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="clienteId"
               name="clienteId"
               autoComplete="off"
-              disabled={modo == "Consultar" ? true : false}
+              readOnly={true}
               value={data.clienteId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
           <div className={Global.InputFull}>
@@ -150,10 +206,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="numeroFactura"
               name="numeroFactura"
               autoComplete="off"
-              disabled={modo == "Consultar" ? true : false}
+              readOnly={true}
               value={data.numeroFactura ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
         </div>
@@ -165,7 +221,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="personalId"
               name="personalId"
-              disabled={modo == "Consultar" ? true : false}
+              disabled={true}
               value={data.personalId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -187,9 +243,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="numeroGuia"
               autoComplete="off"
               value={data.numeroGuia ?? ""}
-              disabled={modo == "Consultar" ? true : false}
+              readOnly={true}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={Global.InputStyle + Global.Disabled}
             />
           </div>
         </div>
@@ -203,23 +259,32 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="observacion"
               name="observacion"
               autoComplete="off"
-              disabled={modo == "Consultar" ? true : false}
+              readOnly={modo == "Consultar" ? true : false}
               value={data.observacion ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={
+                modo == "Consultar"
+                  ? Global.InputStyle + Global.Disabled
+                  : Global.InputStyle
+              }
             />
           </div>
           <div className={Global.InputFull}>
-            <label htmlFor="descripcion" className={Global.LabelStyle}>
-              Descripcion
+            <label htmlFor="tipoSalidaId" className={Global.LabelStyle}>
+              Tipo Salida
             </label>
 
             <select
-              id="descripcion"
-              name="descripcion"
+              id="tipoSalidaId"
+              name="tipoSalidaId"
               disabled={modo == "Consultar" ? true : false}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              value={data.tipoSalidaId ?? ""}
+              className={
+                modo == "Consultar"
+                  ? Global.InputStyle + Global.Disabled
+                  : Global.InputStyle
+              }
             >
               {tipoSalida.map((item, index) => (
                 <option key={index} value={item.id}>
@@ -230,6 +295,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           </div>
         </div>
       </div>
+      {/* Tabla Detalle */}
+      <TablaStyle>
+        <TableBasic
+          columnas={columnas}
+          datos={dataDetalle}
+          estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
+        />
+      </TablaStyle>
+      {/* Tabla Detalle */}
     </ModalCrud>
   );
 };
