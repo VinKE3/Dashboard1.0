@@ -83,7 +83,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataClienteDirec, setDataClienteDirec] = useState([]);
   const [dataClienteContacto, setDataClienteContacto] = useState([]);
   const [dataContactoCargo, setDataContactoCargo] = useState([]);
-  const [dataArt, setDataArt] = useState([]);
+  const [dataCabecera, setDataCabecera] = useState([]);
   const [dataPrecio, setDataPrecio] = useState([]);
   //Data Modales Ayuda
   //Modales de Ayuda
@@ -158,17 +158,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataDetalle]);
   useEffect(() => {
     if (Object.keys(dataPrecio).length > 0) {
-      setDataArt({
-        ...dataArt,
+      setDataCabecera({
+        ...dataCabecera,
         precioUnitario: dataPrecio.precioUnitario,
       });
     }
   }, [dataPrecio]);
   useEffect(() => {
-    if (Object.entries(dataArt).length > 0) {
+    if (Object.entries(dataCabecera).length > 0) {
       CalcularImporte();
     }
-  }, [dataArt.precioUnitario]);
+  }, [dataCabecera.precioUnitario]);
   useEffect(() => {
     if (!modalArt) {
       ConvertirPrecio();
@@ -177,7 +177,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   useEffect(() => {
     if (refrescar) {
       dataClienteContacto;
-      ActualizarImportesTotales();
+      ActualizarTotales();
       setRefrescar(false);
     }
   }, [refrescar]);
@@ -428,11 +428,11 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (target.name == "productos") {
       setCheckFiltro(target.name);
       setHabilitarFiltro(false);
-      setDataArt([]);
+      setDataCabecera([]);
     } else if (target.name == "variosFiltro") {
       setCheckFiltro(target.name);
       setHabilitarFiltro(true);
-      setDataArt({
+      setDataCabecera({
         id: dataGlobal.articulo.id,
         lineaId: dataGlobal.articulo.lineaId,
         subLineaId: dataGlobal.articulo.subLineaId,
@@ -451,24 +451,24 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataArt((prevState) => ({
+      setDataCabecera((prevState) => ({
         ...prevState,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const ConvertirPrecio = async () => {
-    if (Object.entries(dataArt).length > 0) {
-      if (data.monedaId != dataArt.monedaId && dataArt.Id != "000000") {
+    if (Object.entries(dataCabecera).length > 0) {
+      if (data.monedaId != dataCabecera.monedaId && dataCabecera.Id != "000000") {
         const model = await Funciones.ConvertirPreciosAMoneda(
           "venta",
-          dataArt,
+          dataCabecera,
           data.monedaId,
           data.tipoCambio
         );
         if (model != null) {
-          setDataArt({
-            ...dataArt,
+          setDataCabecera({
+            ...dataCabecera,
             precioCompra: model.precioCompra,
             precioVenta1: model.precioVenta1,
             precioVenta2: model.precioVenta2,
@@ -478,9 +478,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           });
         }
       } else {
-        setDataArt({
-          ...dataArt,
-          precioUnitario: dataArt.precioVenta1,
+        setDataCabecera({
+          ...dataCabecera,
+          precioUnitario: dataCabecera.precioVenta1,
         });
       }
     }
@@ -504,8 +504,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (!isNaN(precio)) {
       let subTotal = Funciones.RedondearNumero(importe / 1.18, 2);
       let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
-      setDataArt({
-        ...dataArt,
+      setDataCabecera({
+        ...dataCabecera,
         cantidad: cantidad,
         precioUnitario: precio,
         importe: importe,
@@ -520,43 +520,43 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funcion Detalles
   const ValidarDetalle = async () => {
-    if (Object.entries(dataArt).length == 0) {
+    if (Object.entries(dataCabecera).length == 0) {
       return [false, "Seleccione un Producto"];
     }
 
     //Valida Descripción
-    if (dataArt.descripcion == undefined) {
+    if (dataCabecera.descripcion == undefined) {
       return [false, "La descripción no puede estar vacía"];
     }
 
     //Valida montos
-    if (Funciones.IsNumeroValido(dataArt.cantidad, false) != "") {
+    if (Funciones.IsNumeroValido(dataCabecera.cantidad, false) != "") {
       document.getElementById("cantidad").focus();
       return [
         false,
-        "Cantidad: " + Funciones.IsNumeroValido(dataArt.cantidad, false),
+        "Cantidad: " + Funciones.IsNumeroValido(dataCabecera.cantidad, false),
       ];
     }
-    if (Funciones.IsNumeroValido(dataArt.precioUnitario, false) != "") {
+    if (Funciones.IsNumeroValido(dataCabecera.precioUnitario, false) != "") {
       document.getElementById("precioUnitario").focus();
       return [
         false,
         "Precio Unitario: " +
-          Funciones.IsNumeroValido(dataArt.precioUnitario, false),
+          Funciones.IsNumeroValido(dataCabecera.precioUnitario, false),
       ];
     }
-    if (Funciones.IsNumeroValido(dataArt.importe, false) != "") {
+    if (Funciones.IsNumeroValido(dataCabecera.importe, false) != "") {
       document.getElementById("importe").focus();
       return [
         false,
-        "Importe: " + Funciones.IsNumeroValido(dataArt.importe, false),
+        "Importe: " + Funciones.IsNumeroValido(dataCabecera.importe, false),
       ];
     }
     //Valida montos
 
     //Valida Stock
     if (data.afectarStock) {
-      if (dataArt.stock < dataArt.cantidad) {
+      if (dataCabecera.stock < dataCabecera.cantidad) {
         return [
           false,
           "Stock: El artículo no cuenta con el stock necesario para esta operación",
@@ -564,11 +564,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
     //Valia precio Venta debe ser mayor a precio Compra
-    if (dataArt.precioCompra != undefined) {
-      if (dataArt.precioCompra > dataArt.precioUnitario) {
+    if (dataCabecera.precioCompra != undefined) {
+      if (dataCabecera.precioCompra > dataCabecera.precioUnitario) {
         Swal.fire({
           title: "Aviso del sistema",
-          text: `Precio de Venta: ${dataArt.precioUnitario}  |  Precio de Compra: ${dataArt.precioCompra}.   
+          text: `Precio de Venta: ${dataCabecera.precioUnitario}  |  Precio de Compra: ${dataCabecera.precioCompra}.   
         El precio de Venta está por debajo del precio de Compra.`,
           icon: "error",
           iconColor: "#F7BF3A",
@@ -584,34 +584,34 @@ const Modal = ({ setModal, modo, objeto }) => {
     return [true, ""];
   };
   const CargarDetalle = async (id) => {
-    setDataArt(dataDetalle.find((map) => map.id === id));
+    setDataCabecera(dataDetalle.find((map) => map.id === id));
   };
-  const AgregarDetalleArticulo = async () => {
+  const AgregarDetalle = async () => {
     //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
 
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
-      if (dataArt.detalleId != undefined) {
+      if (dataCabecera.detalleId != undefined) {
         let dataDetalleMod = dataDetalle.map((map) => {
-          if (map.id == dataArt.id) {
+          if (map.id == dataCabecera.id) {
             return {
-              detalleId: dataArt.detalleId,
-              id: dataArt.id,
-              lineaId: dataArt.lineaId,
-              subLineaId: dataArt.subLineaId,
-              articuloId: dataArt.articuloId,
-              marcaId: dataArt.marcaId,
-              codigoBarras: dataArt.codigoBarras,
-              descripcion: dataArt.descripcion,
-              stock: dataArt.stock,
-              unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-              unidadMedidaId: dataArt.unidadMedidaId,
-              cantidad: dataArt.cantidad,
-              precioUnitario: dataArt.precioUnitario,
-              montoIGV: dataArt.montoIGV,
-              subTotal: dataArt.subTotal,
-              importe: dataArt.importe,
+              detalleId: dataCabecera.detalleId,
+              id: dataCabecera.id,
+              lineaId: dataCabecera.lineaId,
+              subLineaId: dataCabecera.subLineaId,
+              articuloId: dataCabecera.articuloId,
+              marcaId: dataCabecera.marcaId,
+              codigoBarras: dataCabecera.codigoBarras,
+              descripcion: dataCabecera.descripcion,
+              stock: dataCabecera.stock,
+              unidadMedidaDescripcion: dataCabecera.unidadMedidaDescripcion,
+              unidadMedidaId: dataCabecera.unidadMedidaId,
+              cantidad: dataCabecera.cantidad,
+              precioUnitario: dataCabecera.precioUnitario,
+              montoIGV: dataCabecera.montoIGV,
+              subTotal: dataCabecera.subTotal,
+              importe: dataCabecera.importe,
             };
           } else {
             return map;
@@ -622,17 +622,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       } else {
         let model = [];
         //Valida Artículos Varios
-        if (dataArt.id == "00000000") {
+        if (dataCabecera.id == "00000000") {
           //Valida por id y descripción de artículo
           model = dataDetalle.find((map) => {
             return (
-              map.id == dataArt.id && map.descripcion == dataArt.descripcion
+              map.id == dataCabecera.id && map.descripcion == dataCabecera.descripcion
             );
           });
         } else {
           //Valida solo por id
           model = dataDetalle.find((map) => {
-            return map.id == dataArt.id;
+            return map.id == dataCabecera.id;
           });
         }
 
@@ -641,21 +641,21 @@ const Modal = ({ setModal, modo, objeto }) => {
             ...prev,
             {
               detalleId: detalleId,
-              id: dataArt.id,
-              lineaId: dataArt.lineaId,
-              subLineaId: dataArt.subLineaId,
-              articuloId: dataArt.articuloId,
-              marcaId: dataArt.marcaId,
-              codigoBarras: dataArt.codigoBarras,
-              descripcion: dataArt.descripcion,
-              stock: dataArt.stock,
-              unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-              unidadMedidaId: dataArt.unidadMedidaId,
-              cantidad: dataArt.cantidad,
-              precioUnitario: dataArt.precioUnitario,
-              montoIGV: dataArt.montoIGV,
-              subTotal: dataArt.subTotal,
-              importe: dataArt.importe,
+              id: dataCabecera.id,
+              lineaId: dataCabecera.lineaId,
+              subLineaId: dataCabecera.subLineaId,
+              articuloId: dataCabecera.articuloId,
+              marcaId: dataCabecera.marcaId,
+              codigoBarras: dataCabecera.codigoBarras,
+              descripcion: dataCabecera.descripcion,
+              stock: dataCabecera.stock,
+              unidadMedidaDescripcion: dataCabecera.unidadMedidaDescripcion,
+              unidadMedidaId: dataCabecera.unidadMedidaId,
+              cantidad: dataCabecera.cantidad,
+              precioUnitario: dataCabecera.precioUnitario,
+              montoIGV: dataCabecera.montoIGV,
+              subTotal: dataCabecera.subTotal,
+              importe: dataCabecera.importe,
             },
           ]);
           setDetalleId(detalleId + 1);
@@ -684,7 +684,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
       }
       //Luego de añadir el artículo se limpia
-      setDataArt([]);
+      setDataCabecera([]);
       if (document.getElementById("productos")) {
         document.getElementById("productos").checked = true;
         document
@@ -729,7 +729,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
 
   //Calculos
-  const ActualizarImportesTotales = async () => {
+  const ActualizarTotales = async () => {
     //Suma los importes de los detalles
     let importeTotal = dataDetalle.reduce((i, map) => {
       return i + map.importe;
@@ -887,7 +887,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     setModalArt(true);
   };
   const AbrirFiltroPrecio = async () => {
-    if (dataArt.id != undefined && dataArt.id != "") {
+    if (dataCabecera.id != undefined && dataCabecera.id != "") {
       setModalPrecio(true);
     } else {
       toast.error("Seleccione un producto", {
@@ -1686,7 +1686,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="Descripción"
                       autoComplete="off"
                       disabled={!habilitarFiltro ? true : false}
-                      value={dataArt.descripcion ?? ""}
+                      value={dataCabecera.descripcion ?? ""}
                       onChange={ValidarDataArt}
                       className={
                         !habilitarFiltro ? Global.InputBoton : Global.InputBoton
@@ -1698,7 +1698,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={!habilitarFiltro ? false : true}
                       hidden={modo == "Consultar" ? true : false}
                       onClick={() => {
-                        setDataArt([]);
+                        setDataCabecera([]);
                         AbrirFiltroArticulo();
                       }}
                     >
@@ -1716,7 +1716,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="Stock"
                       autoComplete="off"
                       disabled={true}
-                      value={dataArt.stock ?? ""}
+                      value={dataCabecera.stock ?? ""}
                       onChange={ValidarDataArt}
                       className={Global.InputStyle}
                     />
@@ -1737,7 +1737,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="Unidad Medida"
                       autoComplete="off"
                       disabled={true}
-                      value={dataArt.unidadMedidaDescripcion ?? ""}
+                      value={dataCabecera.unidadMedidaDescripcion ?? ""}
                       onChange={ValidarDataArt}
                       className={Global.InputStyle}
                     />
@@ -1755,7 +1755,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       min={0}
                       disabled={modo == "Consultar" ? true : false}
-                      value={dataArt.cantidad ?? ""}
+                      value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
                         ValidarDataArt(e);
                         CalcularImporte(e.target.name);
@@ -1778,18 +1778,18 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       min={0}
                       disabled={modo == "Consultar" ? true : false}
-                      value={dataArt.precioUnitario ?? ""}
+                      value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
                         ValidarDataArt(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={
-                        dataArt.id != undefined && dataArt.id != ""
+                        dataCabecera.id != undefined && dataCabecera.id != ""
                           ? Global.InputBoton
                           : Global.InputStyle
                       }
                     />
-                    {dataArt.id != undefined && dataArt.id != "" ? (
+                    {dataCabecera.id != undefined && dataCabecera.id != "" ? (
                       <button
                         id="enviarDetalle"
                         className={Global.BotonBuscar + Global.BotonPrimary}
@@ -1814,7 +1814,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       min={0}
                       disabled={modo == "Consultar" ? true : false}
-                      value={dataArt.importe ?? ""}
+                      value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
                         ValidarDataArt(e);
                         CalcularImporte(e.target.name);
@@ -1829,7 +1829,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="enviarDetalle"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar" ? true : false}
-                      onClick={() => AgregarDetalleArticulo()}
+                      onClick={() => AgregarDetalle()}
                     >
                       <FaPlus></FaPlus>
                     </button>
@@ -2004,7 +2004,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       {modalArt && (
         <FiltroArticulo
           setModal={setModalArt}
-          setObjeto={setDataArt}
+          setObjeto={setDataCabecera}
           foco={document.getElementById("cantidad")}
         />
       )}
@@ -2012,10 +2012,10 @@ const Modal = ({ setModal, modo, objeto }) => {
         <FiltroPrecio
           setModal={setModalPrecio}
           objeto={{
-            precioVenta1: dataArt.precioVenta1,
-            precioVenta2: dataArt.precioVenta2,
-            precioVenta3: dataArt.precioVenta3,
-            precioVenta4: dataArt.precioVenta4,
+            precioVenta1: dataCabecera.precioVenta1,
+            precioVenta2: dataCabecera.precioVenta2,
+            precioVenta3: dataCabecera.precioVenta3,
+            precioVenta4: dataCabecera.precioVenta4,
           }}
           setObjeto={setDataPrecio}
           foco={document.getElementById("precioUnitario")}

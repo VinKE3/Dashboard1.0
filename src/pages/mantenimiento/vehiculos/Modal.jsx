@@ -61,7 +61,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.subLineaId ?? ""}
                   onChange={ValidarData}
                   disabled={true}
-                  className={Global.InputStyle + Global.Disabled}
+                  className={Global.InputStyle}
                 />
               </div>
               <div className={Global.InputFull}>

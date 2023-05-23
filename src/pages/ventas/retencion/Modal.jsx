@@ -77,7 +77,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Tablas
   //Data Modales Ayuda
   const [dataCliente, setDataCliente] = useState([]);
-  const [dataArt, setDataArt] = useState({
+  const [dataCabecera, setDataCabecera] = useState({
     tipoDocumento: "01",
     porcentaje: 3,
     abonado: true,
@@ -117,7 +117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataDetalle]);
   useEffect(() => {
     if (refrescar) {
-      ActualizarImportesTotales();
+      ActualizarTotales();
       setRefrescar(false);
     }
   }, [refrescar]);
@@ -209,23 +209,23 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Artículos
   const ValidarDataArt = async ({ target }) => {
-    setDataArt((prevState) => ({
+    setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
 
     if (target.name == "porcentaje" && target.value > 0) {
-      if (dataArt.total != undefined) {
+      if (dataCabecera.total != undefined) {
         await CalcularImporte(target.value);
       }
     }
   };
   const ValidarConsulta = async (origen) => {
     if (origen == "ConsultarDocumento") {
-      if (dataArt.serie == undefined || dataArt.numero == undefined) {
+      if (dataCabecera.serie == undefined || dataCabecera.numero == undefined) {
         return [false, "La serie y número del documento son requeridos."];
       }
-      if (dataArt.serie.length < 4) {
+      if (dataCabecera.serie.length < 4) {
         return [false, "Formato de Serie incorrecto"];
       }
     } else {
@@ -239,7 +239,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     return [true, ""];
   };
   const ConvertirPrecio = async (total, moneda) => {
-    if (Object.entries(dataArt).length > 0) {
+    if (Object.entries(dataCabecera).length > 0) {
       let respuesta = await ValidarConsulta("precio");
       if (respuesta[0]) {
         if (data.monedaId != moneda) {
@@ -287,8 +287,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CalcularImporte = async (porcentaje) => {
-    let monto = dataArt.total * (porcentaje / 100);
-    setDataArt((prevState) => ({
+    let monto = dataCabecera.total * (porcentaje / 100);
+    setDataCabecera((prevState) => ({
       ...prevState,
       monto: Funciones.RedondearNumero(monto, 2),
     }));
@@ -298,35 +298,35 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
-    if (Object.entries(dataArt).length == 0) {
+    if (Object.entries(dataCabecera).length == 0) {
       return [false, "Seleccione un documento"];
     }
 
     //valida total de venta
-    if (dataArt.total == undefined) {
+    if (dataCabecera.total == undefined) {
       return [false, "Seleccione un documento"];
     }
     return [true, ""];
   };
-  const AgregarDetalleArticulo = async () => {
+  const AgregarDetalle = async () => {
     //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
 
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
-      if (dataArt.detalleId != undefined) {
+      if (dataCabecera.detalleId != undefined) {
         let dataDetalleMod = dataDetalle.map((map) => {
-          if (map.documentoVentaId == dataArt.documentoVentaId) {
+          if (map.documentoVentaId == dataCabecera.documentoVentaId) {
             return {
-              detalleId: dataArt.detalleId,
-              documentoVentaId: dataArt.documentoVentaId,
-              tipoDocumento: dataArt.tipoDocumento,
-              serie: dataArt.serie,
-              numero: dataArt.numero,
-              fechaEmision: dataArt.fechaEmision,
-              porcentaje: dataArt.porcentaje,
-              total: dataArt.total,
-              monto: dataArt.monto,
+              detalleId: dataCabecera.detalleId,
+              documentoVentaId: dataCabecera.documentoVentaId,
+              tipoDocumento: dataCabecera.tipoDocumento,
+              serie: dataCabecera.serie,
+              numero: dataCabecera.numero,
+              fechaEmision: dataCabecera.fechaEmision,
+              porcentaje: dataCabecera.porcentaje,
+              total: dataCabecera.total,
+              monto: dataCabecera.monto,
               abonar: true,
             };
           } else {
@@ -337,21 +337,21 @@ const Modal = ({ setModal, modo, objeto }) => {
         setRefrescar(true);
       } else {
         let model = dataDetalle.find((map) => {
-          return map.documentoVentaId == dataArt.documentoVentaId;
+          return map.documentoVentaId == dataCabecera.documentoVentaId;
         });
         if (model == undefined) {
           setDataDetalle((prevState) => [
             ...prevState,
             {
               detalleId: detalleId,
-              documentoVentaId: dataArt.documentoVentaId,
-              tipoDocumento: dataArt.tipoDocumento,
-              serie: dataArt.serie,
-              numero: dataArt.numero,
-              fechaEmision: dataArt.fechaEmision,
-              porcentaje: dataArt.porcentaje,
-              total: dataArt.total,
-              monto: dataArt.monto,
+              documentoVentaId: dataCabecera.documentoVentaId,
+              tipoDocumento: dataCabecera.tipoDocumento,
+              serie: dataCabecera.serie,
+              numero: dataCabecera.numero,
+              fechaEmision: dataCabecera.fechaEmision,
+              porcentaje: dataCabecera.porcentaje,
+              total: dataCabecera.total,
+              monto: dataCabecera.monto,
               abonar: true,
             },
           ]);
@@ -384,7 +384,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
       }
       //Luego de añadir el artículo se limpia
-      setDataArt({
+      setDataCabecera({
         tipoDocumento: "01",
         abonar: true,
         porcentaje: 3,
@@ -420,7 +420,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const CargarDetalle = async (id) => {
     setHabilitarCampos(false);
-    setDataArt(dataDetalle.find((map) => map.documentoVentaId === id));
+    setDataCabecera(dataDetalle.find((map) => map.documentoVentaId === id));
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -443,7 +443,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     setRefrescar(true);
   };
   //Calculos
-  const ActualizarImportesTotales = async () => {
+  const ActualizarTotales = async () => {
     //Suma los importes de los detalles
     let importeTotal = dataDetalle.reduce((i, map) => {
       return i + map.monto;
@@ -509,7 +509,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     let respuesta = await ValidarConsulta("ConsultarDocumento");
     if (respuesta[0]) {
       const result = await ApiMasy.get(
-        `api/Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataArt.tipoDocumento}&serie=${dataArt.serie}&numero=${dataArt.numero}&incluirReferencias=true`
+        `api/Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`
       );
       if (result.name == "AxiosError") {
         toast.error(String(result.data.data.messages[0].textos), {
@@ -528,9 +528,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           result.data.data.monedaId
         );
         if (nuevoTotal != undefined) {
-          let monto = nuevoTotal * (dataArt.porcentaje / 100);
-          setDataArt({
-            ...dataArt,
+          let monto = nuevoTotal * (dataCabecera.porcentaje / 100);
+          setDataCabecera({
+            ...dataCabecera,
             documentoVentaId: result.data.data.id,
             numero: result.data.data.numero,
             fechaEmision: result.data.data.fechaEmision,
@@ -1006,7 +1006,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="tipoDocumento"
                 onChange={ValidarDataArt}
                 disabled={habilitarCampos ? false : true}
-                value={dataArt.tipoDocumento ?? ""}
+                value={dataCabecera.tipoDocumento ?? ""}
                 className={
                   modo == "Registrar" ? Global.InputStyle : Global.InputStyle
                 }
@@ -1033,7 +1033,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={
                   !habilitarCampos || modo == "Consultar" ? true : false
                 }
-                value={dataArt.serie ?? ""}
+                value={dataCabecera.serie ?? ""}
                 onChange={ValidarDataArt}
                 className={
                   habilitarCampos ? Global.InputStyle : Global.InputStyle
@@ -1055,7 +1055,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={
                   !habilitarCampos || modo == "Consultar" ? true : false
                 }
-                value={dataArt.numero ?? ""}
+                value={dataCabecera.numero ?? ""}
                 onChange={ValidarDataArt}
                 className={
                   habilitarCampos ? Global.InputBoton : Global.InputBoton
@@ -1082,7 +1082,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="fechaEmision"
                 autoComplete="off"
                 disabled={true}
-                value={moment(dataArt.fechaEmision ?? "").format("yyyy-MM-DD")}
+                value={moment(dataCabecera.fechaEmision ?? "").format("yyyy-MM-DD")}
                 onChange={ValidarDataArt}
                 className={Global.InputStyle}
               />
@@ -1098,7 +1098,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Total Venta"
                 autoComplete="off"
                 disabled={true}
-                value={dataArt.total ?? ""}
+                value={dataCabecera.total ?? ""}
                 onChange={ValidarDataArt}
                 className={Global.InputStyle}
               />
@@ -1115,7 +1115,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 min={0}
                 disabled={modo == "Consultar" ? true : false}
-                value={dataArt.porcentaje ?? ""}
+                value={dataCabecera.porcentaje ?? ""}
                 onChange={ValidarDataArt}
                 className={Global.InputStyle}
               />
@@ -1132,7 +1132,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 min={0}
                 disabled={true}
-                value={dataArt.monto ?? ""}
+                value={dataCabecera.monto ?? ""}
                 onChange={ValidarDataArt}
                 className={
                   modo != "Consultar" ? Global.InputBoton : Global.InputStyle
@@ -1142,7 +1142,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="enviarDetalle"
                 className={Global.BotonBuscar + Global.BotonPrimary}
                 hidden={modo == "Consultar" ? true : false}
-                onClick={() => AgregarDetalleArticulo()}
+                onClick={() => AgregarDetalle()}
               >
                 <FaPlus></FaPlus>
               </button>

@@ -117,7 +117,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
       fechaEmision: result.data.data.fechaEmision,
       fechaVencimiento: result.data.data.fechaVencimiento,
       fechaContable: result.data.data.fechaContable,
-      numeroDocumento: result.data.data.numero,
+      numeroDocumento: fila.numeroDocumento,
       concepto: fila.descripcion,
       clienteId: result.data.data.clienteId,
       clienteNombre: result.data.data.clienteNombre,

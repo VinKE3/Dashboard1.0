@@ -88,7 +88,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="tipoExistenciaId"
               name="tipoExistenciaId"
               autoFocus
-              disabled={modo == "Consultar" ? true : ""}
+              disabled={modo == "Consultar" ? true : false}
               value={data.tipoExistenciaId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -107,7 +107,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="marcaId"
               name="marcaId"
-              disabled={modo == "Consultar" ? true : ""}
+              disabled={modo == "Consultar" ? true : false}
               value={data.marcaId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -194,7 +194,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="descripcion"
               autoComplete="off"
               placeholder="Descripción"
-              disabled={modo == "Consultar" ? true : ""}
+              disabled={modo == "Consultar" ? true : false}
               value={data.descripcion}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -534,7 +534,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             name="observacion"
             autoComplete="off"
             placeholder="Observacion"
-            disabled={modo == "Consultar" ? true : ""}
+            disabled={modo == "Consultar" ? true : false}
             value={data.observacion ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}

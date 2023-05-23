@@ -65,7 +65,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data Modales Ayuda
   const [dataCliente, setDataCliente] = useState([]);
   const [dataProveedor, setDataProveedor] = useState([]);
-  const [dataConcepto, setDataConcepto] = useState([]);
+  const [dataCabecera, setDataCabecera] = useState([]);
   //Data Modales Ayuda
   //Modales de Ayuda
   const [modalCliente, setModalCliente] = useState(false);
@@ -98,10 +98,10 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataProveedor]);
   useEffect(() => {
-    if (Object.entries(dataConcepto).length > 0) {
+    if (Object.entries(dataCabecera).length > 0) {
       setModalConcepto(false);
     }
-  }, [dataConcepto]);
+  }, [dataCabecera]);
   useEffect(() => {
     setData({
       ...data,
@@ -126,7 +126,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [modalConcepto]);
   useEffect(() => {
     if (refrescar) {
-      ActualizarImportesTotales();
+      ActualizarTotales();
       setRefrescar(false);
     }
   }, [refrescar]);
@@ -174,7 +174,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         documentoReferencia: "",
       }));
       setDataDetalle([]);
-      setDataConcepto([]);
+      setDataCabecera([]);
       setRefrescar(true);
     }
 
@@ -227,38 +227,38 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Concepto
   const ValidarDataConcepto = async ({ target }) => {
-    setDataConcepto((prevState) => ({
+    setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
   const ConvertirPrecio = async () => {
-    if (Object.entries(dataConcepto).length > 0) {
-      if (data.monedaId != dataConcepto.monedaId) {
+    if (Object.entries(dataCabecera).length > 0) {
+      if (data.monedaId != dataCabecera.monedaId) {
         const model = await Funciones.ConvertirPreciosAMoneda(
           "compra",
           {
-            precioCompra: dataConcepto.saldo,
-            precioVenta1: dataConcepto.abono,
-            precioVenta2: dataConcepto.abono,
-            precioVenta3: dataConcepto.abono,
-            precioVenta4: dataConcepto.abono,
+            precioCompra: dataCabecera.saldo,
+            precioVenta1: dataCabecera.abono,
+            precioVenta2: dataCabecera.abono,
+            precioVenta3: dataCabecera.abono,
+            precioVenta4: dataCabecera.abono,
           },
           data.monedaId,
           data.tipoCambio
         );
         if (model != null) {
-          setDataConcepto({
-            ...dataConcepto,
+          setDataCabecera({
+            ...dataCabecera,
             saldo: model.precioCompra,
             abono: model.precioVenta1,
           });
         }
       } else {
-        setDataConcepto({
-          ...dataConcepto,
-          saldo: dataConcepto.saldo,
-          abono: dataConcepto.abono,
+        setDataCabecera({
+          ...dataCabecera,
+          saldo: dataCabecera.saldo,
+          abono: dataCabecera.abono,
         });
       }
     }
@@ -268,46 +268,46 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
-    if (Object.entries(dataConcepto).length == 0) {
+    if (Object.entries(dataCabecera).length == 0) {
       return [false, "Seleccione un Producto"];
     }
     //Valida montos
-    if (Funciones.IsNumeroValido(dataConcepto.abono, false) != "") {
+    if (Funciones.IsNumeroValido(dataCabecera.abono, false) != "") {
       document.getElementById("abono").focus();
       return [
         false,
-        "Abono: " + Funciones.IsNumeroValido(dataConcepto.abono, false),
+        "Abono: " + Funciones.IsNumeroValido(dataCabecera.abono, false),
       ];
     }
     //Valida montos
 
-    if (dataConcepto.abono > dataConcepto.saldo) {
+    if (dataCabecera.abono > dataCabecera.saldo) {
       document.getElementById("abono").focus();
       return [false, "Abono: El importe a abonar no puede ser mayor al saldo."];
     }
     return [true, ""];
   };
-  const AgregarDetalleArticulo = async () => {
+  const AgregarDetalle = async () => {
     //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
 
     if (resultado[0] > 0) {
       //Si tiene detalleId entonces modifica registro
-      if (dataConcepto.detalleId != undefined) {
+      if (dataCabecera.detalleId != undefined) {
         let dataDetalleMod = dataDetalle.map((map) => {
           if (
-            map.documentoVentaCompraId == dataConcepto.documentoVentaCompraId
+            map.documentoVentaCompraId == dataCabecera.documentoVentaCompraId
           ) {
             return {
-              detalleId: dataConcepto.detalleId,
-              documentoVentaCompraId: dataConcepto.id,
-              documentoVentaCompraFechaEmision: dataConcepto.fechaEmision,
-              concepto: dataConcepto.concepto,
-              abono: Number(dataConcepto.abono),
-              saldo: dataConcepto.saldo,
+              detalleId: dataCabecera.detalleId,
+              documentoVentaCompraId: dataCabecera.id,
+              documentoVentaCompraFechaEmision: dataCabecera.fechaEmision,
+              concepto: dataCabecera.concepto,
+              abono: Number(dataCabecera.abono),
+              saldo: dataCabecera.saldo,
               //Para concatenaciones
-              documentoReferencia: dataConcepto.documentoRelacionado,
-              numeroDocumento: dataConcepto.numeroDocumento,
+              documentoReferencia: dataCabecera.documentoRelacionado,
+              numeroDocumento: dataCabecera.numeroDocumento,
               //Para concatenaciones
             };
           } else {
@@ -318,21 +318,21 @@ const Modal = ({ setModal, modo, objeto }) => {
         setRefrescar(true);
       } else {
         let model = dataDetalle.find((map) => {
-          return map.documentoVentaCompraId === dataConcepto.id;
+          return map.documentoVentaCompraId === dataCabecera.id;
         });
         if (model == undefined) {
           setDataDetalle((prevState) => [
             ...prevState,
             {
               detalleId: detalleId,
-              documentoVentaCompraId: dataConcepto.id,
-              documentoVentaCompraFechaEmision: dataConcepto.fechaEmision,
-              concepto: dataConcepto.concepto,
-              abono: Number(dataConcepto.abono),
-              saldo: dataConcepto.saldo,
+              documentoVentaCompraId: dataCabecera.id,
+              documentoVentaCompraFechaEmision: dataCabecera.fechaEmision,
+              concepto: dataCabecera.concepto,
+              abono: Number(dataCabecera.abono),
+              saldo: dataCabecera.saldo,
               //Para concatenaciones
-              documentoReferencia: dataConcepto.documentoRelacionado,
-              numeroDocumento: dataConcepto.numeroDocumento,
+              documentoReferencia: dataCabecera.documentoRelacionado,
+              numeroDocumento: dataCabecera.numeroDocumento,
               //Para concatenaciones
             },
           ]);
@@ -344,9 +344,9 @@ const Modal = ({ setModal, modo, objeto }) => {
 
           //Valida si contiene datos para mapearlo
           if (data.concepto == "") {
-            nuevoConcepto = [...data.concepto, dataConcepto.numeroDocumento];
+            nuevoConcepto = [...data.concepto, dataCabecera.numeroDocumento];
           } else {
-            nuevoConcepto = [...[data.concepto], dataConcepto.numeroDocumento];
+            nuevoConcepto = [...[data.concepto], dataCabecera.numeroDocumento];
           }
           //Concepto
 
@@ -354,19 +354,19 @@ const Modal = ({ setModal, modo, objeto }) => {
           let nuevoDocumentoReferencia = data.documentoReferencia;
           //Valida si contiene datos para mapearlo
           if (
-            dataConcepto.id.includes("LC") ||
-            dataConcepto.id.includes("CH") ||
-            dataConcepto.id.includes("CF")
+            dataCabecera.id.includes("LC") ||
+            dataCabecera.id.includes("CH") ||
+            dataCabecera.id.includes("CF")
           ) {
             if (nuevoDocumentoReferencia == "") {
               nuevoDocumentoReferencia = [
                 ...data.documentoReferencia,
-                dataConcepto.documentoRelacionado,
+                dataCabecera.documentoRelacionado,
               ];
             } else {
               nuevoDocumentoReferencia = [
                 ...[data.documentoReferencia],
-                dataConcepto.documentoRelacionado,
+                dataCabecera.documentoRelacionado,
               ];
             }
           }
@@ -413,7 +413,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         }
       }
       //Luego de añadir el artículo se limpia
-      setDataConcepto([]);
+      setDataCabecera([]);
     } else {
       toast.error(resultado[1], {
         position: "bottom-right",
@@ -428,7 +428,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (id) => {
-    setDataConcepto(
+    setDataCabecera(
       dataDetalle.find((map) => map.documentoVentaCompraId === id)
     );
   };
@@ -494,7 +494,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     setRefrescar(true);
   };
-  const ActualizarImportesTotales = async (foco = "") => {
+  const ActualizarTotales = async (foco = "") => {
     //Obtiene los values
     let monto = 0;
     if (foco != "") {
@@ -1102,7 +1102,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.porcentajeITF ?? ""}
                       onChange={(e) => {
                         ValidarData(e);
-                        ActualizarImportesTotales(e.target.name);
+                        ActualizarTotales(e.target.name);
                       }}
                       className={Global.InputStyle}
                     />
@@ -1139,7 +1139,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.montoInteres ?? ""}
                       onChange={(e) => {
                         ValidarData(e);
-                        ActualizarImportesTotales(e.target.name);
+                        ActualizarTotales(e.target.name);
                       }}
                       className={Global.InputStyle}
                     />
@@ -1164,7 +1164,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.monto ?? ""}
                       onChange={(e) => {
                         ValidarData(e);
-                        ActualizarImportesTotales(e.target.name);
+                        ActualizarTotales(e.target.name);
                       }}
                       className={
                         Object.entries(dataDetalle).length > 0
@@ -1216,7 +1216,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="concepto"
                       placeholder="Buscar Concepto"
                       autoComplete="off"
-                      value={dataConcepto.concepto ?? ""}
+                      value={dataCabecera.concepto ?? ""}
                       disabled={true}
                       onChange={ValidarDataConcepto}
                       className={Global.InputBoton}
@@ -1226,7 +1226,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar" ? true : false}
                       onClick={(e) => {
-                        setDataConcepto([]);
+                        setDataCabecera([]);
                         AbrirFiltroConcepto(e);
                       }}
                     >
@@ -1245,7 +1245,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       min={0}
                       disabled={true}
-                      value={dataConcepto.saldo ?? ""}
+                      value={dataCabecera.saldo ?? ""}
                       onChange={ValidarDataConcepto}
                       className={Global.InputStyle}
                     />
@@ -1262,7 +1262,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       min={0}
                       disabled={modo == "Consultar" ? true : false}
-                      value={dataConcepto.abono ?? ""}
+                      value={dataCabecera.abono ?? ""}
                       onChange={ValidarDataConcepto}
                       className={
                         modo != "Consultar"
@@ -1274,7 +1274,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="enviarDetalle"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar" ? true : false}
-                      onClick={(e) => AgregarDetalleArticulo(e)}
+                      onClick={(e) => AgregarDetalle(e)}
                     >
                       <FaPlus></FaPlus>
                     </button>
@@ -1321,7 +1321,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       {modalConcepto && (
         <FiltroConcepto
           setModal={setModalConcepto}
-          setObjeto={setDataConcepto}
+          setObjeto={setDataCabecera}
           modo={data.tipoMovimientoId}
           foco={document.getElementById("abono")}
         />

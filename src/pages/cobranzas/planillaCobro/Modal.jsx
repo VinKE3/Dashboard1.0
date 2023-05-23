@@ -153,7 +153,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [modalConcepto]);
   useEffect(() => {
     if (refrescar) {
-      ActualizarImportesTotales();
+      ActualizarTotales();
       setRefrescar(false);
     }
   }, [refrescar]);
@@ -245,7 +245,6 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Artículos
   const ValidarDataCabecera = async ({ target }) => {
-    //Valida Articulos Varios
     if (target.name == "interes") {
       setCheckInteres(target.checked);
       if (!target.checked) {
@@ -257,6 +256,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
       return;
     }
+
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -285,50 +285,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       cuentaCorrienteId: banco.id,
     }));
   };
-  const ConvertirPrecio = async ({ target }) => {
-    let monedaId = document.getElementById("monedaIdDocumento").value;
-    let tipoCambio = Number(
-      document.getElementById("tipoCambioCabecera").value
-    );
-    let monedaAbonoId = document.getElementById("monedaAbonoId").value;
-    let montoAbonado = Number(document.getElementById("montoAbonado").value);
-
-    if (target.name == "monedaAbonoId") {
-      monedaAbonoId = target.value;
-    } else {
-      montoAbonado = Number(target.value);
-    }
-
-    if (monedaId != monedaAbonoId) {
-      const model = await Funciones.ConvertirPreciosAMoneda(
-        "compra",
-        {
-          precioCompra: montoAbonado,
-          precioVenta1: montoAbonado,
-          precioVenta2: montoAbonado,
-          precioVenta3: montoAbonado,
-          precioVenta4: montoAbonado,
-        },
-        monedaId,
-        tipoCambio
-      );
-      if (model != null) {
-        setDataCabecera((prevState) => ({
-          ...prevState,
-          montoAbonado: montoAbonado,
-          monedaAbonoId: monedaAbonoId,
-          abono: model.precioCompra,
-        }));
-      }
-    } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
-        montoAbonado: montoAbonado,
-        monedaAbonoId: monedaAbonoId,
-        abono: dataCabecera.montoAbonado,
-      }));
-    }
-  };
   const Banco = async ({ target }) => {
     let banco = dataCtacte.find((map) => map.id == target.value);
     setDataCabecera((prevState) => ({
@@ -345,20 +301,58 @@ const Modal = ({ setModal, modo, objeto }) => {
     }));
   };
   const MontoAbonado = async ({ target }) => {
-    let montoAbonado = Number(target.value);
-    let importeAbonado = Number(document.getElementById("abono").value);
     let saldo = Number(document.getElementById("saldo").value);
-    let nuevoSaldo = document.getElementById("nuevoSaldo").value || 0;
-
-    //Valida si hay un documento anidado
+    //Valida si hay un documento
     if (saldo > 0) {
-      importeAbonado = Funciones.RedondearNumero(montoAbonado, 2);
-      nuevoSaldo = Funciones.RedondearNumero(saldo - montoAbonado, 2);
+      //Valores
+      //Cabecera
+      let monedaId = document.getElementById("monedaIdDocumento").value;
+      //Cabecera
+      let tipoCambio = Number(document.getElementById("tipoCambioCabecera").value);
+      let monedaAbonoId = document.getElementById("monedaAbonoId").value;
+
+      let montoAbonado = Number(document.getElementById("montoAbonado").value);
+      let abono = Number(document.getElementById("abono").value);
+      let nuevoSaldo = Number(document.getElementById("nuevoSaldo").value);
+      //Valores
+
+      //Valida el target
+      if (target.name == "monedaAbonoId") {
+        monedaAbonoId = target.value;
+      } else {
+        montoAbonado = Number(target.value);
+      }
+      //Valida el target
+
+      //Conversion
+      if (monedaId != monedaAbonoId) {
+        const model = await Funciones.ConvertirPreciosAMoneda(
+          "compra",
+          {
+            precioCompra: montoAbonado,
+            precioVenta1: montoAbonado,
+            precioVenta2: montoAbonado,
+            precioVenta3: montoAbonado,
+            precioVenta4: montoAbonado,
+          },
+          monedaId,
+          tipoCambio
+        );
+
+        if (model != null) {
+          abono = Funciones.RedondearNumero(model.precioCompra, 2);
+        }
+      }
+      //Conversion
+
+      nuevoSaldo = Funciones.RedondearNumero(saldo - abono, 2);
 
       setDataCabecera((prevState) => ({
         ...prevState,
+        monedaAbonoId: monedaAbonoId,
+        tipoCambio: Funciones.RedondearNumero(tipoCambio, 2),
         montoAbonado: Funciones.RedondearNumero(montoAbonado, 2),
-        abono: Funciones.RedondearNumero(importeAbonado, 2),
+        abono: Funciones.RedondearNumero(abono, 2),
         nuevoSaldo: Funciones.RedondearNumero(nuevoSaldo, 2),
       }));
     } else {
@@ -372,6 +366,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         progress: undefined,
         theme: "colored",
       });
+      return;
     }
   };
   const Interes = async ({ target }) => {
@@ -654,7 +649,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
 
   //Calculos
-  const ActualizarImportesTotales = async () => {
+  const ActualizarTotales = async () => {
     //Suma los montoAbonado de los detalles
     let montoAbonado = dataDetalle.reduce((i, map) => {
       return i + map.montoAbonado;
@@ -1129,7 +1124,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="nombreBanco"
                     placeholder="Banco"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : ""}
+                    disabled={modo == "Consultar" ? true : false}
                     value={data.nombreBanco ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1384,9 +1379,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </div>
                 </div>
 
-                <div
-                  className={Global.ContenedorBasico + Global.FondoContenedor}
-                >
+                <div className={Global.ContenedorBasico + Global.FondoContenedor}>
                   <div className={Global.ContenedorInputs}>
                     <div className={Global.InputTercio}>
                       <label htmlFor="fechaAbono" className={Global.LabelStyle}>
@@ -1416,7 +1409,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         id="monedaAbonoId"
                         name="monedaAbonoId"
                         value={dataCabecera.monedaAbonoId ?? ""}
-                        onChange={ValidarDataCabecera}
+                        onChange={MontoAbonado}
                         disabled={modo == "Consultar" ? true : false}
                         className={Global.InputStyle}
                       >
@@ -1440,7 +1433,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         min={0}
                         disabled={modo == "Consultar" ? true : false}
                         value={dataCabecera.tipoCambio ?? ""}
-                        onChange={ValidarDataCabecera}
+                        onChange={MontoAbonado}
                         className={
                           modo != "Consultar"
                             ? Global.InputBoton
@@ -1515,6 +1508,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </select>
                     </div>
                   </div>
+
                   <div className={Global.ContenedorInputs}>
                     <div className={Global.InputMitad}>
                       <label
@@ -1593,6 +1587,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     </div>
                   </div>
+
                   <div className={Global.ContenedorInputs}>
                     <div className={Global.InputTercio}>
                       <label
