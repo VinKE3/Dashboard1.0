@@ -39,9 +39,7 @@ const Conductor = () => {
   const [filtro, setFiltro] = useState({
     nombre: "",
   });
-  const [cadena, setCadena] = useState(
-    `&nombre=${filtro.nombre}`
-  );
+  const [cadena, setCadena] = useState(`&nombre=${filtro.nombre}`);
   //Modal
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Registrar");
@@ -51,9 +49,7 @@ const Conductor = () => {
 
   //#region useEffect;
   useEffect(() => {
-    setCadena(
-      `&nombre=${filtro.nombre}`
-    );
+    setCadena(`&nombre=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
     Filtro();
@@ -132,7 +128,7 @@ const Conductor = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         id: "00",
         empresaId: "01",
         empresaTransporteId: "0001  ",
@@ -148,8 +144,7 @@ const Conductor = () => {
         distritoId: "01",
         observacion: "",
         isActivo: true,
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(id);
     }

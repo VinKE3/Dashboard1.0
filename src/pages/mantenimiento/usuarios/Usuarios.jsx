@@ -146,12 +146,11 @@ const Usuarios = () => {
   };
   const GetClaveId = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/Usuario/${id}`);
-    let model = {
+    setObjeto({
       claveAnterior: result.data.data.clave,
       claveNueva: "",
       claveNuevaConfirmacion: "",
-    };
-    setObjeto(model);
+    });
   };
   //#endregion
 

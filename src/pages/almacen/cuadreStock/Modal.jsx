@@ -1,530 +1,1120 @@
-import React, { useState, useEffect, useMemo } from "react";
-import ModalBasic from "../../../components/ModalBasic";
-import * as Global from "../../../components/Global";
-import { Fieldset } from "primereact/fieldset";
+import React, { useState, useEffect } from "react";
+import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalInventario from "./ModalInventario";
+import ModalCrud from "../../../components/ModalCrud";
+import Mensajes from "../../../components/Mensajes";
+import Table from "../../../components/tablas/Table";
+import { toast } from "react-toastify";
 import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
-import ApiMasy from "../../../api/ApiMasy";
-import Table from "../../../components/tablas/Table";
+import { FaSearch, FaUndoAlt, FaPen } from "react-icons/fa";
 import styled from "styled-components";
-import ModalCrud from "../../../components/ModalCrud";
+import "primeicons/primeicons.css";
+import "react-toastify/dist/ReactToastify.css";
+import * as Global from "../../../components/Global";
+import * as Funciones from "../../../components/Funciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
+  max-width: 100%;
+  overflow-x: auto;
   & th:first-child {
-    display: none;
-  }
-  & tbody td:first-child {
-    display: none;
-  }
-  & th:last-child {
-    width: 130px;
+    min-width: 30px;
+    width: 40px;
     text-align: center;
   }
+  & th:nth-child(2) {
+    min-width: 40px;
+    width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(3) {
+    min-width: 150px;
+    width: 100%;
+  }
+  & th:nth-child(4) {
+    width: 70px;
+    text-align: center;
+  }
+  & th:nth-child(5),
+  & th:nth-child(6),
+  & th:nth-child(7),
+  & th:nth-child(8),
+  & th:nth-child(9),
+  & th:nth-child(10),
+  & th:nth-child(11) {
+    min-width: 90px;
+    width: 90px;
+    text-align: right;
+  }
+  & th:last-child {
+    display: none;
+  }
+  & tbody td:last-child {
+    display: none;
+  }
 `;
+//#endregion
 
-const Modal = ({ setModal, setEliminarModal, modo, objeto, detalle }) => {
+const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#region useState
+  //Data General
   const [data, setData] = useState(objeto);
-  const [datos, setDatos] = useState(detalle);
-  const [moneda, setMoneda] = useState([]);
-  const [vendedor, setVendedor] = useState([]);
-  const [tipo, setTipo] = useState("todos");
-  const [total, setTotal] = useState(0);
+  const [dataDetalle, setDataDetalle] = useState(detalle);
+  const [dataLocal, setDataLocal] = useState(detalle);
+  const [dataGlobal] = useState(store.session.get("global"));
+  //Data General
+  //Tablas
+  const [dataVendedor, setDataVendedor] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  //Tablas
+  //Data Modales Ayuda
+  const [dataCabecera, setDataCabecera] = useState([]);
+  //Data Modales Ayuda
+  //Modales de Ayuda
+  const [modalInventario, setModalInventario] = useState(false);
+  const [modoInventario, setModoInventario] = useState("Registrar");
+  const [dataInventario, setDataInventario] = useState([]);
+  //Modales de Ayuda
+  //Filtro
+  const [filtro, setFiltro] = useState({
+    marca: "",
+    descripcion: "",
+    tipoExistenciaId: "",
+  });
+  const [total, setTotal] = useState(detalle.length);
+  const [index, setIndex] = useState(0);
+  //Filtro
 
+  const [detalleId, setDetalleId] = useState(1);
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
+  const [mensaje, setMensaje] = useState([]);
+  const [refrescar, setRefrescar] = useState(false);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    data;
-    datos;
-  }, [data, datos]);
-
+    FiltroLocal();
+  }, [filtro]);
   useEffect(() => {
-    GetTablas();
+    if (Object.entries(dataInventario).length > 0) {
+      Inventario();
+    }
+  }, [dataInventario]);
+  useEffect(() => {
+    setData({ ...data, detalles: dataDetalle });
+    setDataLocal(dataDetalle);
+    FiltroLocal();
+  }, [dataDetalle]);
+  useEffect(() => {
+    if (refrescar) {
+      ActualizarTotales();
+      setRefrescar(false);
+    }
+  }, [refrescar]);
+  useEffect(() => {
+    if (modo == "Registrar") {
+      GetPorIdTipoCambio(data.fechaRegistro);
+    }
+    Tablas();
   }, []);
-
   //#endregion
 
-  //#region Funciones
-  const ValidarData = async ({ target }) => {
-    setData((prevState) => ({
+  //#region Funciones Filtrado
+  const ValidarDataFiltro = async ({ target }) => {
+    setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  const FiltroLocal = async () => {
+    setIndex(0);
+    //Detalle completo
+    let model = dataDetalle;
+    //Detalle completo
 
-  const GetTablas = async () => {
-    const result = await ApiMasy(`/api/almacen/cuadreStock/FormularioTablas`);
-    setMoneda(result.data.data.monedas);
-    let model = result.data.data.vendedores.map((res) => ({
-      responsableId: res.apellidoPaterno + res.apellidoMaterno + res.nombres,
-      ...res,
-    }));
-    setVendedor(model);
-    setTotal(datos.length);
+    //Expresiones a filtrar
+    let marca = new RegExp(`${filtro.marca}.*`, "i");
+    let descripcion = new RegExp(`${filtro.descripcion}.*`, "i");
+    //Expresiones a filtrar
+
+    //Tipo Existencia
+    if (filtro.tipoExistenciaId != "") {
+      model = dataDetalle.filter(
+        (map) => map.tipoExistenciaId == filtro.tipoExistenciaId
+      );
+    }
+    //Tipo Existencia
+
+    //Filtra en base a las expresiones
+    model = model.filter(
+      (map) => marca.test(map.marcaNombre) && descripcion.test(map.descripcion)
+    );
+    //Filtra en base a las expresiones
+
+    setDataLocal(model);
+    setTotal(model.length);
   };
-
-  //#endregion
-
-  //#region Funciones Filtrado
   const FiltradoPaginado = (e) => {
-    // let fechaInicio = document.getElementById("fechaInicio").value;
-    // let fechaFin = document.getElementById("fechaFin").value;
-    // let boton = e.selected + 1;
-    // setIndex(e.selected);
-    // if (
-    //   fechaInicio ==
-    //     moment().subtract(2, "years").startOf("year").format("yyyy-MM-DD") &&
-    //   fechaFin == moment().format("yyyy-MM-DD")
-    // ) {
-    //   Listar("", boton);
-    // } else {
-    //   Listar(`&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`, boton);
-    // }
-    console.log(e);
+    let filtrado = dataDetalle.slice(e.selected * 50, total);
+    setDataLocal(filtrado);
+    setIndex(e.selected);
   };
-
   //#endregion
 
-  //#region Columnas y Selects
+  //#region Funciones
+  //Data General
+  const ValidarData = async ({ target }) => {
+    if (
+      target.name == "incluyeIGV" ||
+      target.name == "afectarStock" ||
+      target.name == "abonar" ||
+      target.name == "isAnticipo" ||
+      target.name == "isOperacionGratuita"
+    ) {
+      if (target.name == "incluyeIGV" || target.name == "isOperacionGratuita") {
+        setRefrescar(true);
+      }
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
+    } else {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
+
+    if (
+      target.name == "porcentajeIGV" ||
+      target.name == "porcentajeRetencion" ||
+      target.name == "porcentajeDetraccion" ||
+      target.name == "factorImpuestoBolsa"
+    ) {
+      setRefrescar(true);
+    }
+
+    if (target.name == "tipoCobroId") {
+      let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
+      setData((prevState) => ({
+        ...prevState,
+        fechaVencimiento: fecha,
+      }));
+
+      if (target.value != "CH" || target.value != "DE") {
+        setData((prevState) => ({
+          ...prevState,
+          numeroOperacion: "",
+          cuentaCorrienteId: "",
+        }));
+      }
+    }
+  };
+  const FechaEmision = async () => {
+    if (modo != "Consultar") {
+      toast(
+        "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+        {
+          position: "bottom-left",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    }
+  };
+  const OcultarMensajes = async () => {
+    setMensaje([]);
+    setTipoMensaje(-1);
+  };
+  //Data General
+  //#endregion
+
+  //#region Funciones Detalles
+  const Inventario = async () => {
+    let detalleMod = dataDetalle.map((map) => {
+      if (map.detalleId == dataInventario.detalleId) {
+        //Calculos
+        let cantidad = map.stockFinal - Number(dataInventario.inventario);
+        let precioUnitario = map.precioUnitario;
+        let cantidadSobra = 0;
+        let cantidadFalta = 0;
+        if (cantidad < 0) {
+          cantidadSobra = cantidad;
+        } else {
+          cantidadFalta = cantidad;
+        }
+        let totalSobra = cantidadSobra * precioUnitario;
+        let totalFalta = cantidadFalta * precioUnitario;
+        //Calculos
+        return {
+          ...map,
+          inventario: Funciones.RedondearNumero(dataInventario.inventario, 2),
+          cantidadSobra: Funciones.RedondearNumero(cantidadSobra, 2),
+          cantidadFalta: Funciones.RedondearNumero(cantidadFalta, 2),
+          totalSobra: Funciones.RedondearNumero(totalSobra, 2),
+          totalFalta: Funciones.RedondearNumero(totalFalta, 2),
+        };
+      } else {
+        return map;
+      }
+    });
+    setDataDetalle(detalleMod);
+  };
+  //Calculos
+  const ActualizarTotales = async () => {
+    //Suma los importes de los detalles
+    let importeTotal = dataDetalle.reduce((i, map) => {
+      return i + map.importe;
+    }, 0);
+
+    //Valida si es operación gratuita
+    if (!data.isOperacionGratuita) {
+      //Porcentajes
+      let porcentajeIgvSeleccionado = data.porcentajeIGV;
+      let porcentajeRetencionSelect = data.porcentajeRetencion;
+      let porcentajeDetraccionSelect = data.porcentajeDetraccion;
+      let porcentajeImpuestoBolsa = data.factorImpuestoBolsa;
+      let incluyeIgv = data.incluyeIGV;
+      //Porcentajes
+      //Montos
+      let subTotal = 0,
+        montoIGV = 0,
+        total = 0,
+        totalNeto = 0,
+        retencion = 0,
+        detraccion = 0,
+        bolsa = 0;
+      //Montos
+
+      //Calculo Check IncluyeIGV
+      if (incluyeIgv) {
+        totalNeto = Funciones.RedondearNumero(importeTotal, 2);
+        subTotal = Funciones.RedondearNumero(
+          totalNeto / (1 + porcentajeIgvSeleccionado / 100),
+          2
+        );
+        montoIGV = Funciones.RedondearNumero(totalNeto - subTotal, 2);
+      } else {
+        subTotal = Funciones.RedondearNumero(importeTotal, 2);
+        montoIGV = Funciones.RedondearNumero(
+          subTotal * (porcentajeIgvSeleccionado / 100),
+          2
+        );
+        totalNeto = Funciones.RedondearNumero(subTotal + montoIGV, 2);
+      }
+      //Calculo Check IncluyeIGV
+
+      //Calculo Impuesto Bolsa
+      dataDetalle.map((map) => {
+        if (map.codigoBarras == "ICBPER") {
+          bolsa = bolsa + map.cantidad * porcentajeImpuestoBolsa;
+        }
+      });
+      //Calculo Impuesto Bolsa
+
+      //Calculos
+      retencion = Funciones.RedondearNumero(
+        totalNeto * (porcentajeRetencionSelect / 100),
+        2
+      );
+      detraccion = Funciones.RedondearNumero(
+        totalNeto * (porcentajeDetraccionSelect / 100),
+        2
+      );
+      total = totalNeto + detraccion + bolsa;
+      //Calculos
+      setData((prevState) => ({
+        ...prevState,
+        subTotal: Funciones.RedondearNumero(subTotal, 2),
+        montoIGV: Funciones.RedondearNumero(montoIGV, 2),
+        totalNeto: Funciones.RedondearNumero(totalNeto, 2),
+        montoImpuestoBolsa: Funciones.RedondearNumero(bolsa, 2),
+        montoRetencion: Funciones.RedondearNumero(retencion, 2),
+        montoDetraccion: Funciones.RedondearNumero(detraccion, 2),
+        totalOperacionesGratuitas: 0,
+        total: Funciones.RedondearNumero(total, 2),
+      }));
+    } else {
+      //Asigna a todo 0 y la suma de importes pasa a totalOperacionesGratuitas
+      setData((prevState) => ({
+        ...prevState,
+        incluyeIGV: false,
+        totalOperacionesGratuitas: importeTotal,
+        porcentajeIGV: 0,
+        porcentajeDetraccion: 0,
+        porcentajeRetencion: 0,
+        subTotal: 0,
+        montoIGV: 0,
+        totalNeto: 0,
+        montoImpuestoBolsa: 0,
+        montoRetencion: 0,
+        montoDetraccion: 0,
+        total: 0,
+      }));
+    }
+  };
+  //Calculos
+  //#endregion
+
+  //#region API
+  const Tablas = async () => {
+    const result = await ApiMasy.get(
+      `api/Almacen/CuadreStock/FormularioTablas`
+    );
+    setDataVendedor(
+      result.data.data.vendedores.map((res) => ({
+        id: res.id,
+        nombre:
+          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
+      }))
+    );
+    setDataMoneda(result.data.data.monedas);
+  };
+  const GetPorIdTipoCambio = async (id) => {
+    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
+    if (result.name == "AxiosError") {
+      if (Object.entries(result.response.data).length > 0) {
+        setTipoMensaje(result.response.data.messages[0].tipo);
+        setMensaje(result.response.data.messages[0].textos);
+      } else {
+        setTipoMensaje(1);
+        setMensaje([result.message]);
+      }
+      setData({
+        ...data,
+        tipoCambio: 0,
+      });
+    } else {
+      setData({
+        ...data,
+        tipoCambio: result.data.data.precioVenta,
+      });
+      toast.info(
+        "El tipo de cambio del día " +
+          moment(data.fechaRegistro).format("DD/MM/YYYY") +
+          " es: " +
+          result.data.data.precioVenta,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          toastId: "toastTipoCambio",
+        }
+      );
+      OcultarMensajes();
+    }
+  };
+  //#endregion
+
+  //#region Funciones Modal
+  const AbrirModal = async (obj) => {
+    setDataInventario({
+      detalleId: obj.detalleId,
+      inventario: obj.inventario,
+      descripcion: obj.descripcion,
+    });
+    setModalInventario(true);
+  };
+  //#endregion
+
+  //#region Columnas
   const columnas = [
     {
-      Header: "id",
+      Header: "Item",
       accessor: "articuloId",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-center text-yellow-400 font-semibold">{value}</p>
+          );
+        } else {
+          return <p className="text-center">{value}</p>;
+        }
+      },
     },
     {
       Header: "Marca",
       accessor: "marcaNombre",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-center text-yellow-400 font-semibold">{value}</p>
+          );
+        } else {
+          return <p className="text-center">{value}</p>;
+        }
+      },
     },
     {
       Header: "Descripcion",
       accessor: "descripcion",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return <p className="text-yellow-400 font-semibold">{value}</p>;
+        } else {
+          return <p className="">{value}</p>;
+        }
+      },
     },
     {
-      Header: "U.Medida",
+      Header: "Unidad",
       accessor: "unidadMedidaDescripcion",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-center text-yellow-400 font-semibold">{value}</p>
+          );
+        } else {
+          return <p className="text-center">{value}</p>;
+        }
+      },
     },
     {
       Header: "Stock Final",
       accessor: "stockFinal",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-right text-yellow-400 font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        } else {
+          return (
+            <p className="text-right font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        }
+      },
     },
     {
       Header: "Inventario",
       accessor: "inventario",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <div className="flex">
+              <p className="w-full text-right text-yellow-400 font-semibold">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+              {modo != "Consultar" && (
+                <button
+                  id={"botonInventario"}
+                  onClick={() =>
+                    AbrirModal({
+                      detalleId: row.values.detalleId,
+                      descripcion: row.values.descripcion,
+                      inventario: row.values.inventario,
+                    })
+                  }
+                  className={
+                    Global.BotonBuscar +
+                    Global.BotonRegistrar +
+                    " ml-2 !px-1.5 !rounded-sm"
+                  }
+                >
+                  <FaPen></FaPen>
+                </button>
+              )}
+            </div>
+          );
+        } else {
+          return (
+            <div className="flex">
+              <p className="text-right font-semibold w-full">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+              {modo != "Consultar" && (
+                <button
+                  id={"botonInventario"}
+                  onClick={() =>
+                    AbrirModal({
+                      detalleId: row.values.detalleId,
+                      descripcion: row.values.descripcion,
+                      inventario: row.values.inventario,
+                    })
+                  }
+                  className={
+                    Global.BotonBuscar +
+                    Global.BotonRegistrar +
+                    " ml-2 !px-1.5 !rounded-sm"
+                  }
+                >
+                  <FaPen></FaPen>
+                </button>
+              )}
+            </div>
+          );
+        }
+      },
     },
     {
-      Header: "P.Unitario",
+      Header: "P. Unitario",
       accessor: "precioUnitario",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-right text-yellow-400 font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        } else {
+          return (
+            <p className="text-right font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        }
+      },
     },
     {
-      Header: "Cant.Falta",
+      Header: "Can. Falta",
       accessor: "cantidadFalta",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-right text-yellow-400 font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        } else {
+          return (
+            <p className="text-right font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        }
+      },
     },
     {
-      Header: "Total Falta",
+      Header: "T. Falta",
       accessor: "totalFalta",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-right text-yellow-400 font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        } else {
+          return (
+            <p className="text-right font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        }
+      },
     },
     {
-      Header: "Cant.Sobra",
+      Header: "Can. Sobra",
       accessor: "cantidadSobra",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-right text-yellow-400 font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        } else {
+          return (
+            <p className="text-right font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        }
+      },
     },
     {
-      Header: "Total Sobra",
+      Header: "T. Sobra",
       accessor: "totalSobra",
+      Cell: ({ row, value }) => {
+        if (row.values.stockFinal != row.values.inventario) {
+          return (
+            <p className="text-right text-yellow-400 font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        } else {
+          return (
+            <p className="text-right font-semibold mr-2">
+              {Funciones.RedondearNumero(value, 2)}
+            </p>
+          );
+        }
+      },
     },
     {
-      Header: "Cant.Saldo",
-      accessor: "cantidadSaldo",
-    },
-    {
-      Header: "Total Saldo",
-      accessor: "totalSaldo",
+      Header: "Item",
+      accessor: "detalleId",
     },
   ];
-
-  const tiposExistencia = {
-    todos: "",
-    mercaderia: "01",
-    terminados: "02",
-    materia: "03",
-    envasesEmbalajes: "04",
-    otros: "05",
-  };
-
-  const filtrarDatos = (tipo) => {
-    if (tipo === "todos") {
-      setDatos(detalle);
-    } else {
-      const datosFiltrados = detalle.filter(
-        (dato) => dato.tipoExistenciaId === tiposExistencia[tipo]
-      );
-      setDatos(datosFiltrados);
-    }
-    setTipo(tipo);
-  };
-
-  // Función para manejar el cambio en el valor del radiobutton
-  const handleTipoChange = (e) => {
-    setTipo(e.value);
-
-    // Si el valor es "todos", mostramos todos los registros, sin aplicar filtro
-    if (e.value === "todos") {
-      setDatos(detalle);
-    } else {
-      // Aplicamos el filtro por tipoExistenciaId al estado actualizado de los datos (filtrados por marca)
-      const datosFiltrados = datos.filter(
-        (registro) => registro.tipoExistenciaId === e.value
-      );
-      setDatos(datosFiltrados);
-    }
-  };
-
-  // Función para manejar la búsqueda por marca
-  const handleMarcaChange = (e) => {
-    const valorBusqueda = e.target.value.toLowerCase();
-    const datosFiltrados = detalle.filter((registro) =>
-      registro.marcaNombre.toLowerCase().includes(valorBusqueda)
-    );
-    setDatos(datosFiltrados);
-  };
-
-  // Función para manejar la búsqueda por descripción
-  const handleDescripcionChange = (e) => {
-    const valorBusqueda = e.target.value.toLowerCase();
-    const datosFiltrados = detalle.filter((registro) =>
-      registro.descripcion.toLowerCase().includes(valorBusqueda)
-    );
-    setDatos(datosFiltrados);
-  };
   //#endregion
 
-  //#region  Render
+  //#region Render
   return (
-    <ModalCrud
-      setModal={setModal}
-      setEliminarModal={setEliminarModal}
-      objeto={data}
-      modo={modo}
-      menu={["Almacen", "CuadreStock"]}
-      tamañoModal={[Global.ModalFull, Global.Form]}
-      titulo={"Cuadre de Stock"}
-      cerrar={false}
-    >
-      <div className="gap-3 grid">
-        <div className={Global.ContenedorBasico}>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="id" className={Global.LabelStyle}>
-                Código De Registro
-              </label>
-              <input
-                type="text"
-                id="id"
-                name="id"
-                maxLength="2"
-                autoComplete="off"
-                placeholder="00"
-                disabled={true}
-                value={data.id}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+    <>
+      {Object.entries(dataMoneda).length > 0 && (
+        <>
+          <ModalCrud
+            setModal={setModal}
+            objeto={data}
+            modo={modo}
+            menu={["Almacen", "CuadreStock"]}
+            titulo="Cuadre de Stock"
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+            cerrar={false}
+          >
+            {tipoMensaje > 0 && (
+              <Mensajes
+                tipoMensaje={tipoMensaje}
+                mensaje={mensaje}
+                Click={() => OcultarMensajes()}
               />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="numero" className={Global.LabelStyle}>
-                Cuadre de Stock
-              </label>
-              <input
-                type="text"
-                id="numero"
-                name="numero"
-                autoComplete="off"
-                placeholder="Cuadre de Stock"
-                disabled={true}
-                value={data.numero}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-        </div>
-        <div className={Global.ContenedorBasico}>
-          <div className={Global.ContenedorInputs + " pb-3"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaRegistro" className={Global.LabelStyle}>
-                Fecha Registro
-              </label>
-              <input
-                type="date"
-                id="fechaRegistro"
-                name="fechaRegistro"
-                maxLength="2"
-                autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
-                value={moment(data.fechaRegistro).format("yyyy-MM-DD")}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="numero" className={Global.LabelStyle}>
-                Moneda
-              </label>
-              <select
-                id="moneda"
-                name="moneda"
-                disabled={modo == "Consultar" ? true : false}
-                value={data.moneda}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              >
-                {moneda.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.descripcion}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                Tipo De Cambio
-              </label>
-              <input
-                type="text"
-                id="tipoCambio"
-                name="tipoCambio"
-                autoComplete="off"
-                placeholder="Cuadre de Stock"
-                disabled={modo == "Consultar" ? true : false}
-                value={data.tipoCambio}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-          <div className={Global.ContenedorInputs + " pb-3"}>
-            <div className={Global.Input42pct}>
-              <label htmlFor="responsableId" className={Global.LabelStyle}>
-                Vendedores
-              </label>
-              <select
-                id="responsableId"
-                name="responsableId"
-                disabled={modo == "Consultar" ? true : false}
-                value={data.responsableId}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              >
-                {vendedor.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.responsableId}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="observacion" className={Global.LabelStyle}>
-                Observación
-              </label>
-              <input
-                type="text"
-                id="observacion"
-                name="observacion"
-                autoComplete="off"
-                placeholder="Observacion"
-                disabled={modo == "Consultar" ? true : false}
-                value={data.observacion}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              ></input>
-            </div>
-          </div>
-        </div>
-        <div className={Global.ContenedorBasico}>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="totalSobra" className={Global.LabelStyle}>
-                Total Sobra
-              </label>
-              <input
-                type="text"
-                id="totalSobra"
-                name="totalSobra"
-                autoComplete="off"
-                placeholder="00"
-                disabled={true}
-                value={data.totalSobra}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="totalFalta" className={Global.LabelStyle}>
-                Total Sobra
-              </label>
-              <input
-                type="text"
-                id="totalFalta"
-                name="totalFalta"
-                autoComplete="off"
-                placeholder="00"
-                disabled={true}
-                value={data.totalFalta}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="saldoTotal" className={Global.LabelStyle}>
-                Saldo Total
-              </label>
-              <input
-                type="text"
-                id="saldoTotal"
-                name="saldoTotal"
-                autoComplete="off"
-                placeholder="00"
-                disabled={true}
-                value={data.saldoTotal}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-        </div>
-        <div className={Global.ContenedorBasico}>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputMitad}>
-              <label htmlFor="marca" className={Global.LabelStyle}>
-                Marca
-              </label>
-              <input
-                type="text"
-                id="marca"
-                name="marca"
-                autoComplete="off"
-                placeholder="Marca"
-                onChange={handleMarcaChange}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputMitad}>
-              <label htmlFor="descripcion" className={Global.LabelStyle}>
-                Descripcion
-              </label>
-              <input
-                type="text"
-                id="descripcion"
-                name="descripcion"
-                autoComplete="off"
-                placeholder="Descripcion"
-                onChange={handleDescripcionChange}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-        </div>
-        <div className={Global.ContenedorBasico}>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.LabelStyle}>
-                <RadioButton
-                  inputId="todos"
-                  name="todos"
-                  value="todos"
-                  onChange={(e) => filtrarDatos(e.target.value)}
-                  checked={tipo === "todos"}
-                />
+            )}
+            {/* Cabecera */}
+            <div
+              className={
+                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
+              }
+            >
+              <div className={Global.ContenedorInputs}>
+                {data.id != undefined ? (
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="id" className={Global.LabelStyle}>
+                      Código de Registro
+                    </label>
+                    <input
+                      type="text"
+                      id="id"
+                      name="id"
+                      placeholder="Código"
+                      autoComplete="off"
+                      disabled={true}
+                      value={data.id ?? ""}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <div
+                  className={
+                    data.id != undefined ? Global.InputMitad : Global.InputFull
+                  }
+                >
+                  <label htmlFor="numero" className={Global.LabelStyle}>
+                    Cuadre de Stock N°
+                  </label>
+                  <input
+                    type="text"
+                    id="numero"
+                    name="numero"
+                    placeholder="Número"
+                    autoComplete="off"
+                    maxLength="10"
+                    disabled={true}
+                    value={data.numero ?? ""}
+                    className={Global.InputStyle}
+                  />
+                </div>
               </div>
-              <label htmlFor="todos" className={Global.InputStyle}>
-                Todos
-              </label>
-            </div>
-            <div className={Global.InputFull}>
-              <div className={Global.LabelStyle}>
-                <RadioButton
-                  inputId="mercaderia"
-                  name="mercaderia"
-                  value="mercaderia"
-                  onChange={(e) => filtrarDatos(e.target.value)}
-                  checked={tipo === "mercaderia"}
-                />
-              </div>
-              <label htmlFor="mercaderia" className={Global.InputStyle}>
-                Mercaderia
-              </label>
-            </div>
-            <div className={Global.InputFull}>
-              <div className={Global.LabelStyle}>
-                <RadioButton
-                  inputId="terminados"
-                  name="terminados"
-                  value="terminados"
-                  onChange={(e) => filtrarDatos(e.target.value)}
-                  checked={tipo === "terminados"}
-                />
-              </div>
-              <label htmlFor="terminados" className={Global.InputStyle}>
-                Productos Terminados
-              </label>
-            </div>
-            <div className={Global.InputFull}>
-              <div className={Global.LabelStyle}>
-                <RadioButton
-                  inputId="materia"
-                  name="materia"
-                  value="materia"
-                  onChange={(e) => filtrarDatos(e.target.value)}
-                  checked={tipo === "materia"}
-                />
-              </div>
-              <label htmlFor="materia" className={Global.InputStyle}>
-                Materia Prima
-              </label>
-            </div>
-            <div className={Global.InputFull}>
-              <div className={Global.LabelStyle}>
-                <RadioButton
-                  inputId="envasesEmbalajes"
-                  name="envasesEmbalajes"
-                  value="envasesEmbalajes"
-                  onChange={(e) => filtrarDatos(e.target.value)}
-                  checked={tipo === "envasesEmbalajes"}
-                />
-              </div>
-              <label htmlFor="envasesEmbalajes" className={Global.InputStyle}>
-                Envases y Embalajes
-              </label>
-            </div>
-            <div className={Global.InputFull}>
-              <div className={Global.LabelStyle}>
-                <RadioButton
-                  inputId="otros"
-                  name="otros"
-                  value="otros"
-                  onChange={(e) => filtrarDatos(e.target.value)}
-                  checked={tipo === "otros"}
-                />
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="fechaRegistro" className={Global.LabelStyle}>
+                    F. Registro
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaRegistro"
+                    name="fechaRegistro"
+                    autoComplete="off"
+                    disabled={modo == "Consultar" ? true : false}
+                    value={moment(data.fechaRegistro ?? "").format(
+                      "yyyy-MM-DD"
+                    )}
+                    onChange={ValidarData}
+                    onBlur={FechaEmision}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                    Moneda
+                  </label>
+                  <select
+                    id="monedaId"
+                    name="monedaId"
+                    value={data.monedaId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataMoneda.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                    T. Cambio
+                  </label>
+                  <input
+                    type="number"
+                    id="tipoCambio"
+                    name="tipoCambio"
+                    placeholder="Tipo de Cambio"
+                    autoComplete="off"
+                    min={0}
+                    disabled={modo == "Consultar" ? true : false}
+                    value={data.tipoCambio ?? ""}
+                    onChange={ValidarData}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
+                  />
+                  <button
+                    id="consultarTipoCambio"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    hidden={modo == "Consultar" ? true : false}
+                    onClick={() => {
+                      GetPorIdTipoCambio(data.fechaEmision);
+                    }}
+                  >
+                    <FaUndoAlt></FaUndoAlt>
+                  </button>
+                </div>
               </div>
 
-              <label htmlFor="otros" className={Global.InputStyle}>
-                Otros
-              </label>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="personalId" className={Global.LabelStyle}>
+                    Responsable
+                  </label>
+                  <select
+                    id="personalId"
+                    name="personalId"
+                    value={data.personalId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar" ? true : false}
+                    className={Global.InputStyle}
+                  >
+                    {dataVendedor.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                    Estado
+                  </label>
+                  <select
+                    id="monedaId"
+                    name="monedaId"
+                    value={data.monedaId ?? ""}
+                    disabled={true}
+                    className={Global.InputStyle}
+                  >
+                    {dataMoneda.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="observacion" className={Global.LabelStyle}>
+                    Observación
+                  </label>
+                  <input
+                    type="text"
+                    id="observacion"
+                    name="observacion"
+                    placeholder="Observación"
+                    autoComplete="off"
+                    disabled={modo == "Consultar" ? true : false}
+                    value={data.observacion ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <TablaStyle>
-        <Table
-          columnas={columnas}
-          datos={datos}
-          total={total}
-          //   index={index}
-          Click={(e) => FiltradoPaginado(e)}
-        ></Table>
-      </TablaStyle>
-    </ModalCrud>
+            {/* Cabecera */}
+
+            {/* Detalles */}
+            <div
+              className={
+                Global.ContenedorBasico +
+                Global.FondoContenedor +
+                " mb-2 overflow-x-auto"
+              }
+            >
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.Input60pct}>
+                  <label htmlFor="marca" className={Global.LabelStyle}>
+                    Marca
+                  </label>
+                  <input
+                    type="text"
+                    id="marca"
+                    name="marca"
+                    placeholder="Marca"
+                    autoComplete="off"
+                    autoFocus
+                    value={filtro.marca}
+                    onChange={ValidarDataFiltro}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="descripcion" className={Global.LabelStyle}>
+                    Descripción
+                  </label>
+                  <input
+                    type="text"
+                    id="descripcion"
+                    name="descripcion"
+                    placeholder="Descripción"
+                    autoComplete="off"
+                    value={filtro.descripcion}
+                    onChange={ValidarDataFiltro}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="consultarFiltro"
+                    onClick={FiltroLocal}
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                  >
+                    <FaSearch></FaSearch>
+                  </button>
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <div className={Global.Input + "w-32"}>
+                    <div className={Global.CheckStyle}>
+                      <RadioButton
+                        inputId="todos"
+                        name="tipoExistenciaId"
+                        value={""}
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataFiltro(e);
+                        }}
+                        checked={filtro.tipoExistenciaId === ""}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="todos"
+                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                    >
+                      Todos
+                    </label>
+                  </div>
+                  <div className={Global.Input + "w-44"}>
+                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                      <RadioButton
+                        inputId="mercaderia"
+                        name="tipoExistenciaId"
+                        value={"01"}
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataFiltro(e);
+                        }}
+                        checked={filtro.tipoExistenciaId === "01"}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="mercaderia"
+                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                    >
+                      Mercadería
+                    </label>
+                  </div>
+                  <div className={Global.InputTercio}>
+                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                      <RadioButton
+                        inputId="productoTerminado"
+                        name="tipoExistenciaId"
+                        value="02"
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataFiltro(e);
+                        }}
+                        checked={filtro.tipoExistenciaId === "02"}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="productoTerminado"
+                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                    >
+                      Producto Terminado
+                    </label>
+                  </div>
+                  <div className={Global.InputTercio}>
+                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                      <RadioButton
+                        inputId="materiaPrima"
+                        name="tipoExistenciaId"
+                        value="03"
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataFiltro(e);
+                        }}
+                        checked={filtro.tipoExistenciaId === "03"}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="materiaPrima"
+                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                    >
+                      Materia Prima
+                    </label>
+                  </div>
+                  <div className={Global.InputTercio}>
+                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                      <RadioButton
+                        inputId="envasesEmbalajes"
+                        name="tipoExistenciaId"
+                        value="04"
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataFiltro(e);
+                        }}
+                        checked={filtro.tipoExistenciaId === "04"}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="envasesEmbalajes"
+                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                    >
+                      Embases y Embalajes
+                    </label>
+                  </div>
+                  <div className={Global.Input + "w-32"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <RadioButton
+                        inputId="otros"
+                        name="tipoExistenciaId"
+                        value="99"
+                        disabled={modo == "Consultar" ? true : false}
+                        onChange={(e) => {
+                          ValidarDataFiltro(e);
+                        }}
+                        checked={filtro.tipoExistenciaId === "99"}
+                      ></RadioButton>
+                    </div>
+                    <label
+                      htmlFor="otros"
+                      className={Global.LabelCheckStyle + " !py-1 "}
+                    >
+                      Otros
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Detalles */}
+
+            {/* Tabla Detalle */}
+            <TablaStyle>
+              <Table
+                columnas={columnas}
+                datos={dataLocal}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+                estilos={[
+                  "",
+                  "",
+                  "",
+                  "border ",
+                  "",
+                  "border border-b-0",
+                  "border",
+                ]}
+              />
+            </TablaStyle>
+            {/* Tabla Detalle */}
+
+            {/*Tabla Footer*/}
+            <div className={Global.ContenedorFooter}>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>Total Sobra</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.totalSobra ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>Total Falta</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.totalFalta ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>Saldo Total</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.saldoTotal ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+            </div>
+            {/*Tabla Footer*/}
+          </ModalCrud>
+          {modalInventario && (
+            <ModalInventario
+              setModal={setModalInventario}
+              modo={modoInventario}
+              objeto={dataInventario}
+              setObjeto={setDataInventario}
+            />
+          )}
+        </>
+      )}
+    </>
   );
   //#endregion
 };

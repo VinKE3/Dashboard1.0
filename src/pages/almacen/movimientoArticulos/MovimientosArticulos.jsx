@@ -80,10 +80,6 @@ const MovimientosArticulos = () => {
     setDataLocal(datos);
   }, [datos]);
   useEffect(() => {
-    if (eliminar) {
-    }
-  }, [eliminar]);
-  useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
         !permisos[0] &&

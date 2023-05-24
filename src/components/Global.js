@@ -106,8 +106,7 @@ export var THeader =
   "text-sm font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
 export var TBody = "text-sm bg-gradient-to-b from-gray-800 to-slate-800 ";
 export var Tr = "border-b border-gray-400 ";
-export var Td = " p-2 text-left select-none ";
-
+export var Td = "p-2 text-left select-none ";
 //Footer
 export var TFooter =
   "py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-sm ";

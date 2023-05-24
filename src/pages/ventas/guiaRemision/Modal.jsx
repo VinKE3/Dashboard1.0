@@ -272,7 +272,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
 
   //Artículos
-  const ValidarDataArt = async ({ target }) => {
+  const ValidarDataCabecera = async ({ target }) => {
     //Valida Articulos Varios
     if (target.name == "productos") {
       setCheckFiltro(target.name);
@@ -373,12 +373,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
     if (Object.entries(dataCabecera).length == 0) {
-      return [false, "Seleccione un Producto"];
+      return [false, "Seleccione un Item"];
     }
 
     //Valida Descripción
     if (dataCabecera.descripcion == undefined) {
-      return [false, "La descripción no puede estar vacía"];
+      return [false, "La descripción es requerida"];
     }
 
     //Valida montos
@@ -1547,7 +1547,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value="productos"
                           disabled={modo == "Consultar" ? true : false}
                           onChange={(e) => {
-                            ValidarDataArt(e);
+                            ValidarDataCabecera(e);
                           }}
                           checked={checkFiltro === "productos"}
                         ></RadioButton>
@@ -1567,7 +1567,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value="variosFiltro"
                           disabled={modo == "Consultar" ? true : false}
                           onChange={(e) => {
-                            ValidarDataArt(e);
+                            ValidarDataCabecera(e);
                           }}
                           checked={checkFiltro === "variosFiltro"}
                         ></RadioButton>
@@ -1594,7 +1594,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={!habilitarFiltro ? true : false}
                       value={dataCabecera.descripcion ?? ""}
-                      onChange={ValidarDataArt}
+                      onChange={ValidarDataCabecera}
                       className={
                         !habilitarFiltro ? Global.InputBoton : Global.InputBoton
                       }
@@ -1624,7 +1624,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.stock ?? ""}
-                      onChange={ValidarDataArt}
+                      onChange={ValidarDataCabecera}
                       className={Global.InputStyle}
                     />
                   </div>
@@ -1645,7 +1645,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                      onChange={ValidarDataArt}
+                      onChange={ValidarDataCabecera}
                       className={Global.InputStyle}
                     />
                   </div>
@@ -1663,7 +1663,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
-                        ValidarDataArt(e);
+                        ValidarDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={Global.InputStyle}
@@ -1686,7 +1686,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
-                        ValidarDataArt(e);
+                        ValidarDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={Global.InputStyle}
@@ -1706,7 +1706,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
-                        ValidarDataArt(e);
+                        ValidarDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={

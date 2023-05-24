@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
 import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
@@ -26,17 +27,24 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
+  & th:nth-child(2) {
+    width: 70px;
+    text-align: center;
+  }
+  & th:nth-child(3) {
+    width: 100px;
+  }
   & th:nth-child(5),
   & th:nth-child(6),
   & th:nth-child(7) {
-    text-align: center;
+    text-align: right;
     width: 100px;
   }
   & th:nth-child(8),
   & th:nth-child(9),
   & th:nth-child(10) {
-    text-align: center;
     width: 40px;
+    text-align: center;
   }
   & th:last-child {
     text-align: center;
@@ -50,17 +58,15 @@ const CuadreStock = () => {
   //#region UseState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
+  const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
   const [detalle, setDetalle] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio: moment()
-      .subtract(2, "years")
-      .startOf("year")
-      .format("yyyy-MM-DD"),
-    fechaFin: moment().format("yyyy-MM-DD"),
+    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -70,7 +76,6 @@ const CuadreStock = () => {
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
-
   //#endregion
 
   //#region useEffect;
@@ -80,12 +85,18 @@ const CuadreStock = () => {
   useEffect(() => {
     Filtro();
   }, [cadena]);
-
+  useEffect(() => {
+    if (visible) {
+      if (!modal) {
+        Listar(cadena, index + 1);
+      }
+    }
+  }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      Listar(cadena, index + 1);
     }
   }, [eliminar]);
-
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -105,6 +116,27 @@ const CuadreStock = () => {
   useEffect(() => {
     GetPermisos("CuadreStock", setPermisos);
   }, []);
+  //#endregion
+
+  //#region Funciones Filtrado
+  const ValidarData = async ({ target }) => {
+    setFiltro((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
+  const Filtro = async () => {
+    clearTimeout(timer);
+    setIndex(0);
+    const newTimer = setTimeout(() => {
+      Listar(cadena, 1);
+    }, 200);
+    setTimer(newTimer);
+  };
+  const FiltradoPaginado = (e) => {
+    setIndex(e.selected);
+    Listar(cadena, e.selected + 1);
+  };
   //#endregion
 
   //#region Funciones API
@@ -147,34 +179,33 @@ const CuadreStock = () => {
   };
   //#endregion
 
-  //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
-      [target.name]: target.value,
-    }));
-  };
-  const Filtro = async () => {
-    clearTimeout(timer);
-    setIndex(0);
-    const newTimer = setTimeout(() => {
-      Listar(cadena, 1);
-    }, 200);
-    setTimer(newTimer);
-  };
-  const FiltradoPaginado = (e) => {
-    setIndex(e.selected);
-    Listar(cadena, e.selected + 1);
-  };
-  //#endregion
-
   //#region Funciones Modal
   const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
     setModo(modo);
     switch (accion) {
       case 0: {
-        setObjeto([]);
-        setDetalle([]);
+        //Consulta Correlativo
+        const result = await ApiMasy.get(
+          `api/Mantenimiento/Correlativo/CU/0001`
+        );
+        //Consulta Correlativo
+        setObjeto({
+          empresaId: "01",
+          tipoDocumentoId: "01",
+          serie: "0001",
+          numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
+          fechaRegistro: moment().format("YYYY-MM-DD"),
+          horaRegistro: "",
+          monedaId: "S",
+          tipoCambio: 0,
+          responsableId: "<<NI>>01",
+          observacion: "",
+          totalSobra: 0,
+          totalFalta: 0,
+          saldoTotal: 0,
+          detalles: null,
+        });
+        await GetDetalles("");
         setModal(true);
         break;
       }
@@ -184,6 +215,13 @@ const CuadreStock = () => {
           await GetPorId(id);
           await GetDetalles(id);
           setModal(true);
+        }
+        break;
+      }
+      case 2: {
+        let valor = await GetIsPermitido(accion, id);
+        if (valor) {
+          Delete(["Almacen", "CuadreStock"], id, setEliminar);
         }
         break;
       }
@@ -197,7 +235,6 @@ const CuadreStock = () => {
         break;
     }
   };
-
   const AbrirCerrar = async () => {
     let tabla = document
       .querySelector("table > tbody")
@@ -276,7 +313,7 @@ const CuadreStock = () => {
   };
   //endregion
 
-  //#region Columnas y Selects
+  //#region Columnas
   const columnas = useMemo(
     () => [
       {
@@ -287,7 +324,9 @@ const CuadreStock = () => {
         Header: "Registro",
         accessor: "fechaRegistro",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
@@ -302,21 +341,21 @@ const CuadreStock = () => {
         Header: "Total Sobra",
         accessor: "totalSobra",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
         Header: "Total Falta",
         accessor: "totalFalta",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
         Header: "Saldo Final",
         accessor: "saldoFinal",
         Cell: ({ value }) => {
-          return <p className="text-right">{value}</p>;
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
 
@@ -324,20 +363,16 @@ const CuadreStock = () => {
         Header: "M",
         accessor: "monedaId",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
         },
       },
       {
         Header: "Cerrado",
         accessor: "estado",
         Cell: ({ value }) => {
-          return value ? (
+          return (
             <div className="flex justify-center">
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <Checkbox checked={false} />
+              <Checkbox checked={value} />
             </div>
           );
         },
@@ -359,10 +394,9 @@ const CuadreStock = () => {
           <BotonCRUD
             setEliminar={setEliminar}
             permisos={permisos}
-            menu={["Mantenimiento", "CuadreStock"]}
-            id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },
@@ -382,41 +416,48 @@ const CuadreStock = () => {
             </div>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
-                  Desde
-                </label>
-                <input
-                  type="date"
-                  id="fechaInicio"
-                  name="fechaInicio"
-                  value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
-                  Hasta
-                </label>
-                <input
-                  type="date"
-                  id="fechaFin"
-                  name="fechaFin"
-                  value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                  onClick={Filtro}
-                >
-                  <FaSearch />
-                </button>
+            <div
+              className={
+                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+              }
+            >
+              <div className={Global.ContenedorFiltro}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                    Desde
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaInicio"
+                    name="fechaInicio"
+                    autoFocus
+                    value={filtro.fechaInicio ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                    Hasta
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaFin"
+                    name="fechaFin"
+                    value={filtro.fechaFin ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="buscar"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    onClick={Filtro}
+                  >
+                    <FaSearch />
+                  </button>
+                </div>
               </div>
             </div>
             {/* Filtro*/}

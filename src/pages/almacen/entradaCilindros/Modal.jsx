@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/ModalCrud";
-import FiltroSalidaCilindros from "../../../components/filtros/FiltroSalidaCilindros";
+import FiltroCilindro from "../../../components/filtros/FiltroCilindro";
 import Mensajes from "../../../components/Mensajes";
 import TableBasic from "../../../components/tablas/TableBasic";
 import Swal from "sweetalert2";
@@ -46,8 +46,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
   //Data General
   const [data, setData] = useState(objeto);
-  const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
-  //Data General
+  const [dataDetalle, setDataDetalle] = useState(objeto.detalles); //Data General
   //Tablas
   const [dataPersonal, setDataPersonal] = useState([]);
   //Tablas
@@ -68,7 +67,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //Data Modales Filtro
 
   //Modales Filtro
-  const [modalSalidaCilindros, setModalSalidaCilindros] = useState(false);
+  const [modalCilindro, setModalCilindro] = useState(false);
   //Modales Filtro
 
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -111,15 +110,43 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         [target.name]: target.checked,
       }));
     } else {
+      if (target.name == "personalId") {
+        let model = target.value;
+        if (dataDetalle.length > 0) {
+          Swal.fire({
+            title: "¿Confirma cambiar de Personal? Los detalles se perderán",
+            icon: "warning",
+            iconColor: "#F7BF3A",
+            showCancelButton: true,
+            color: "#fff",
+            background: "#1a1a2e",
+            confirmButtonColor: "#eea508",
+            confirmButtonText: "Aceptar",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Personal(model);
+            } else {
+              setData((prevState) => ({
+                ...prevState,
+                personalId: data.personalId,
+              }));
+            }
+          });
+          return;
+        }
+      }
+
       setData((prevState) => ({
         ...prevState,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
-  const Numeracion = async (e) => {
-    if (e.target.name == "numero") {
-      let num = e.target.value;
+  const Numeracion = async ({ target }) => {
+    if (target.name == "numero") {
+      let num = target.value;
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
@@ -128,8 +155,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         numero: num,
       }));
     }
-    if (e.target.name == "serie") {
-      let num = e.target.value;
+    if (target.name == "serie") {
+      let num = target.value;
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
@@ -140,58 +167,62 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     }
   };
   const GuiaRelacionada = async () => {
-    if (dataCilindro.cliente && dataCilindro.cliente.nombre) {
+    if (dataCilindro.accion == "agregar") {
       setData({
         ...data,
         clienteId: dataCilindro.clienteId,
         clienteNombre: dataCilindro.cliente.nombre,
+        //Anidar
         guiasRelacionadas: [
           ...data.guiasRelacionadas,
           dataCilindro.guiasRelacionadas,
         ],
+        //Anidar
       });
+    } else {
+      if (Object.entries(dataCilindro.guiasRelacionadas).length == 0) {
+        setData({
+          ...data,
+          clienteId: "",
+          clienteNombre: "",
+          //Anidar
+          guiasRelacionadas: dataCilindro.guiasRelacionadas || [],
+          //Anidar
+        });
+        //Detalles
+        setDataDetalle([]);
+        //Detalles
+      } else {
+        setData({
+          ...data,
+          //Anidar
+          guiasRelacionadas: dataCilindro.guiasRelacionadas || [],
+          //Anidar
+        });
+      }
     }
   };
-  const Personal = async (e) => {
-    if (dataDetalle.length > 0) {
-      Swal.fire({
-        title: "¿Confirma cambiar de dataPersonal? Los detalles se perderán",
-        icon: "warning",
-        iconColor: "#F7BF3A",
-        showCancelButton: true,
-        color: "#fff",
-        background: "#1a1a2e",
-        confirmButtonColor: "#eea508",
-        confirmButtonText: "Aceptar",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setDataDetalle([]);
-          setDataCabecera({
-            id: "00000006",
-            lineaId: "00",
-            subLineaId: "00",
-            articuloId: "0006",
-            unidadMedidaId: "1",
-            marcaId: 0,
-            descripcion: "CILINDROS",
-            cantidad: 0,
-            unidadMedidaDescripcion: "UND",
-          });
-        } else {
-          setData((prevState) => ({
-            ...prevState,
-            personalId: data.personalId,
-            personalNombre: data.personalNombre,
-          }));
-        }
-      });
-    }
-    setData({
-      ...data,
-      personalId: e.target.value,
+  const Personal = async (value) => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Articulo/00000006`);
+    setDataDetalle([]);
+    setDataCabecera({
+      id: result.data.data.id,
+      lineaId: result.data.data.lineaId,
+      subLineaId: result.data.data.subLineaId,
+      articuloId: result.data.data.articuloId,
+      unidadMedidaId: result.data.data.unidadMedidaId,
+      marcaId: result.data.data.marcaId,
+      descripcion: result.data.data.descripcion,
+      cantidad: 0,
+      unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion,
     });
+    setData((prevState) => ({
+      ...prevState,
+      personalId: value,
+      clienteId: "",
+      clienteNombre: "",
+      guiasRelacionadas: [],
+    }));
   };
   const OcultarMensajes = () => {
     setMensaje([]);
@@ -199,7 +230,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   };
   //#endregion
 
-  //#region Articulos
+  //#region Cabecera
   const ValidarCabecera = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
@@ -212,11 +243,15 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const ValidarDetalle = async () => {
     //valida Descripcion
     if (dataCabecera.descripcion == undefined) {
-      return [false, "La descripción no puede estar vacía"];
+      return [false, "Seleccione un Item"];
     }
     //Valida Cantidad
-    if (dataCabecera.cantidad <= 0) {
-      return [false, "La cantidad no puede ser 0"];
+    if (Funciones.IsNumeroValido(dataCabecera.cantidad, false) != "") {
+      document.getElementById("cantidad").focus();
+      return [
+        false,
+        "Cantidad: " + Funciones.IsNumeroValido(dataCabecera.cantidad, false),
+      ];
     }
     return [true, ""];
   };
@@ -229,8 +264,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         let dataDetalleMod = dataDetalle.map((map) => {
           if (map.id == dataCabecera.id) {
             return {
-              id: dataCabecera.id,
               detalleId: dataCabecera.detalleId,
+              salidaCilindrosId: dataCabecera.id,
               lineaId: dataCabecera.lineaId,
               subLineaId: dataCabecera.subLineaId,
               articuloId: dataCabecera.articuloId,
@@ -250,8 +285,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         setDataDetalle((prev) => [
           ...prev,
           {
-            id: dataCabecera.id,
             detalleId: detalleId,
+            salidaCilindrosId: dataCabecera.id,
             lineaId: dataCabecera.lineaId,
             subLineaId: dataCabecera.subLineaId,
             articuloId: dataCabecera.articuloId,
@@ -303,10 +338,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
       //Asgina directamente a 1
-
       setDataDetalle(nuevoDetalle);
     }
 
+    //Anidar Documentos
     let guiasRelacionadas = data.guiasRelacionadas.filter(
       (map) => map.id !== id
     );
@@ -314,6 +349,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       guiasRelacionadas: guiasRelacionadas,
     });
+    //Anidar Documentos
 
     setRefrescar(true);
   };
@@ -322,64 +358,77 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     let detalleEliminado = dataDetalle;
     //Contador para asignar el detalleId
     let contador = dataDetalle.length;
+    //Almacena el detalle modificado sumando o restando
+    let dataDetalleMod = Object.assign([], dataDetalle);
+    let dataDetalleEliminar = dataDetalle;
+    //Almacena el detalle modificado sumando o restando
+
+    //Mapea los detalles
     dataCilindro.detalles.map((dataPersonalDetalleMap) => {
       contador++;
       //Verifica con los detalles ya seleccionados si coincide algún registro por el id
       let dataDetalleExiste = dataDetalle.find((map) => {
-        return map.id == dataPersonalDetalleMap.id;
+        return map.salidaCilindrosId == dataCilindro.id;
       });
+      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
+
       //Validamos si la accion es Agregar o Eliminar
       if (accion == "agregar") {
         //Si dataDetalleExiste es undefined hace el PUSH
-        console.log(dataDetalleExiste == undefined, "1era condicion");
         if (dataDetalleExiste == undefined) {
           //Toma el valor actual de contador para asignarlo
           let i = contador;
+          //Toma el valor actual de contador para asignarlo
+
+          //Agrega nuevo
           setDataDetalle((prev) => [
             ...prev,
             {
               detalleId: i,
-              id: dataCilindro.id,
               lineaId: dataPersonalDetalleMap.lineaId,
+              salidaCilindrosId: dataCilindro.id,
               subLineaId: dataPersonalDetalleMap.subLineaId,
               articuloId: dataPersonalDetalleMap.articuloId,
               unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
               marcaId: dataPersonalDetalleMap.marcaId,
-              descripcion: "CILINDROS DE" + "  " + dataCilindro.numeroGuia,
+              descripcion: "CILINDRO DE" + "  " + dataCilindro.numeroGuia,
               cantidad: dataPersonalDetalleMap.cantidad,
               unidadMedidaDescripcion:
                 dataPersonalDetalleMap.unidadMedidaDescripcion,
-              salidaCilindrosId: dataCilindro.id,
             },
           ]);
+          //Agrega nuevo
+
           //Asigna el valor final de contador y le agrega 1
           setDetalleId(contador + 1);
+          //Asigna el valor final de contador y le agrega 1
         } else {
           //Modifica registro en base al id
-          let dataDetalleMod = dataDetalle.map((map) => {
-            if (map.id == dataDetalleExiste.id) {
+          dataDetalleMod = dataDetalleMod.map((map) => {
+            if (map.salidaCilindrosId == dataDetalleExiste.salidaCilindrosId) {
               //Calculos
               let cantidad =
                 dataDetalleExiste.cantidad + dataPersonalDetalleMap.cantidad;
               //Calculos
               return {
                 detalleId: dataDetalleExiste.detalleId,
-                id: dataCilindro.id,
+                salidaCilindrosId: dataPersonalDetalleMap.salidaCilindrosId,
                 lineaId: dataPersonalDetalleMap.lineaId,
                 subLineaId: dataPersonalDetalleMap.subLineaId,
                 articuloId: dataPersonalDetalleMap.articuloId,
                 unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
                 marcaId: dataPersonalDetalleMap.marcaId,
-                descripcion: "CILINDROS DE" + "  " + dataCilindro.numeroGuia,
+                descripcion: dataDetalleExiste.descripcion,
                 cantidad: cantidad,
                 unidadMedidaDescripcion:
                   dataPersonalDetalleMap.unidadMedidaDescripcion,
-                salidaCilindrosId: dataCilindro.id,
               };
             } else {
               return map;
             }
           });
+          //Modifica registro en base al id
+
           setDataDetalle(dataDetalleMod);
         }
       } else {
@@ -392,13 +441,17 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           ) {
             //Si el resultado es 0 entonces se elimina por completo el registro
             detalleEliminado = detalleEliminado.filter(
-              (map) => map.id !== dataDetalleExiste.id
+              (map) =>
+                map.salidaCilindrosId !== dataDetalleExiste.salidaCilindrosId
             );
             //Si el resultado es 0 entonces se elimina por completo el registro
 
             //Toma el valor actual de contador para asignarlo
             let i = 1;
+            //Toma el valor actual de contador para asignarlo
+
             if (detalleEliminado.length > 0) {
+              //Asigna el detalle Filtrado
               setDataDetalle(
                 detalleEliminado.map((map) => {
                   return {
@@ -407,56 +460,67 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   };
                 })
               );
+              //Asigna el detalle Filtrado
+
               setDetalleId(i);
             } else {
               //Asgina directamente a 1
               setDetalleId(detalleEliminado.length + 1);
+              //Asgina directamente a 1
               setDataDetalle(detalleEliminado);
             }
             setRefrescar(true);
           } else {
             //Si la resta es mayor a 0 entonces restamos al detalle encontrado
-            let dataDetalleEliminar = dataDetalle.map((map) => {
-              if (map.id == dataDetalleExiste.id) {
+
+            //Modifica registro en base al id
+            dataDetalleEliminar = dataDetalleEliminar.map((map) => {
+              if (
+                map.salidaCilindrosId == dataDetalleExiste.salidaCilindrosId
+              ) {
                 //Calculos
                 let cantidad =
                   dataDetalleExiste.cantidad - dataPersonalDetalleMap.cantidad;
                 //Calculos
                 return {
                   detalleId: dataDetalleExiste.detalleId,
-                  id: dataPersonalDetalleMap.id,
+                  salidaCilindrosId: dataPersonalDetalleMap.salidaCilindrosId,
                   lineaId: dataPersonalDetalleMap.lineaId,
                   subLineaId: dataPersonalDetalleMap.subLineaId,
                   articuloId: dataPersonalDetalleMap.articuloId,
                   unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
                   marcaId: dataPersonalDetalleMap.marcaId,
-                  descripcion: "CILINDROS DE" + "  " + dataCilindro.numeroGuia,
+                  descripcion: dataDetalleExiste.descripcion,
                   cantidad: cantidad,
                   unidadMedidaDescripcion:
                     dataPersonalDetalleMap.unidadMedidaDescripcion,
-                  salidaCilindrosId: dataPersonalDetalleMap.salidaCilindrosId,
                 };
               } else {
                 return map;
               }
             });
+            //Modifica registro en base al id
+
             setDataDetalle(dataDetalleEliminar);
           }
         }
+        //ELIMINAR
       }
+      //Validamos si la accion es Agregar o Eliminar
       setRefrescar(true);
     });
+    //Mapea los detalles
   };
   //Calculos de Cilindros
   const ActualizarTotales = async () => {
     //Suma de la cantidad de cilindros
-    let importeTotal = dataDetalle.reduce((i, map) => {
+    let total = dataDetalle.reduce((i, map) => {
       return i + map.cantidad;
     }, 0);
 
     setData((prevState) => ({
       ...prevState,
-      totalCilindros: Funciones.RedondearNumero(importeTotal, 2),
+      totalCilindros: Funciones.RedondearNumero(total, 2),
     }));
   };
   //Calculos
@@ -478,7 +542,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Funciones Modal
   const AbrirFiltroCilindro = async () => {
-    setModalSalidaCilindros(true);
+    setModalCilindro(true);
   };
   //#endregion
 
@@ -503,7 +567,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       Header: "Unidad",
       accessor: "unidadMedidaDescripcion",
       Cell: ({ value }) => {
-        return <p className="text-center font-semibold">{value}</p>;
+        return <p className="text-right pr-2.5 font-semibold">{value}</p>;
       },
     },
     {
@@ -511,7 +575,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       accessor: "cantidad",
       Cell: ({ value }) => {
         return (
-          <p className="text-center font-semibold pr-1.5">
+          <p className="text-right font-semibold pr-4">
             {Funciones.RedondearNumero(value, 4)}
           </p>
         );
@@ -692,7 +756,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     name="personalId"
                     disabled={modo == "Consultar" ? true : false}
                     value={data.personalId}
-                    onChange={Personal}
+                    onChange={ValidarData}
                     className={Global.InputStyle}
                   >
                     {dataPersonal.map((item) => (
@@ -864,9 +928,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           </ModalCrud>
         </>
       )}
-      {modalSalidaCilindros && (
-        <FiltroSalidaCilindros
-          setModal={setModalSalidaCilindros}
+      {modalCilindro && (
+        <FiltroCilindro
+          setModal={setModalCilindro}
           id={data.personalId}
           setObjeto={setDataCilindro}
           objeto={data.guiasRelacionadas}

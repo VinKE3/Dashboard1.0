@@ -229,7 +229,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
     if (Object.entries(dataCabecera).length == 0) {
-      return [false, "Seleccione un Producto"];
+      return [false, "Seleccione un Item"];
     }
     //Valida montos
     if (Funciones.IsNumeroValido(dataCabecera.abono, false) != "") {

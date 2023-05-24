@@ -275,7 +275,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
 
   //Artículos
-  const ValidarDataArt = async ({ target }) => {
+  const ValidarDataCabecera = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -344,12 +344,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
     if (Object.entries(dataCabecera).length == 0) {
-      return [false, "Seleccione un Producto"];
+      return [false, "Seleccione un Item"];
     }
 
     //Valida Descripción
     if (dataCabecera.descripcion == undefined) {
-      return [false, "La descripción no puede estar vacía"];
+      return [false, "La descripción es requerida"];
     }
 
     //Valida montos
@@ -1279,7 +1279,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.descripcion ?? ""}
-                      onChange={ValidarDataArt}
+                      onChange={ValidarDataCabecera}
                       className={
                         modo == "Consultar"
                           ? Global.InputStyle
@@ -1310,7 +1310,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.stock ?? ""}
-                      onChange={ValidarDataArt}
+                      onChange={ValidarDataCabecera}
                       className={Global.InputStyle}
                     />
                   </div>
@@ -1331,7 +1331,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                      onChange={ValidarDataArt}
+                      onChange={ValidarDataCabecera}
                       className={Global.InputStyle}
                     />
                   </div>
@@ -1349,7 +1349,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
-                        ValidarDataArt(e);
+                        ValidarDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={Global.InputStyle}
@@ -1372,7 +1372,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
-                        ValidarDataArt(e);
+                        ValidarDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={Global.InputStyle}
@@ -1392,7 +1392,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
-                        ValidarDataArt(e);
+                        ValidarDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={

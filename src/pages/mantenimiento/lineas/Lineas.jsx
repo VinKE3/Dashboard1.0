@@ -126,11 +126,10 @@ const Lineas = () => {
   const AbrirModal = async (id, modo = "Registrar") => {
     setModo(modo);
     if (modo == "Registrar") {
-      let model = {
+      setObjeto({
         id: "00",
         descripcion: "",
-      };
-      setObjeto(model);
+      });
     } else {
       await GetPorId(id);
     }

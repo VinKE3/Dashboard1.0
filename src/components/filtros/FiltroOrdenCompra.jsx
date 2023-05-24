@@ -8,6 +8,7 @@ import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
 import * as Global from "../Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -52,7 +53,7 @@ const TablaDetalle = styled.div`
 const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [dataOrdenSeleccionada, setDataOrdenSeleccionada] = useState(objeto);
+  const [dataOrdenSeleccionada] = useState(objeto);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     fechaInicio: moment()

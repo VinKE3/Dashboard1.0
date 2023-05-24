@@ -208,7 +208,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
 
   //Artículos
-  const ValidarDataArt = async ({ target }) => {
+  const ValidarDataCabecera = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -1005,7 +1005,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <select
                 id="tipoDocumento"
                 name="tipoDocumento"
-                onChange={ValidarDataArt}
+                onChange={ValidarDataCabecera}
                 disabled={habilitarCampos ? false : true}
                 value={dataCabecera.tipoDocumento ?? ""}
                 className={
@@ -1035,7 +1035,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   !habilitarCampos || modo == "Consultar" ? true : false
                 }
                 value={dataCabecera.serie ?? ""}
-                onChange={ValidarDataArt}
+                onChange={ValidarDataCabecera}
                 className={
                   habilitarCampos ? Global.InputStyle : Global.InputStyle
                 }
@@ -1057,7 +1057,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   !habilitarCampos || modo == "Consultar" ? true : false
                 }
                 value={dataCabecera.numero ?? ""}
-                onChange={ValidarDataArt}
+                onChange={ValidarDataCabecera}
                 className={
                   habilitarCampos ? Global.InputBoton : Global.InputBoton
                 }
@@ -1084,7 +1084,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 disabled={true}
                 value={moment(dataCabecera.fechaEmision ?? "").format("yyyy-MM-DD")}
-                onChange={ValidarDataArt}
+                onChange={ValidarDataCabecera}
                 className={Global.InputStyle}
               />
             </div>
@@ -1100,7 +1100,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 disabled={true}
                 value={dataCabecera.total ?? ""}
-                onChange={ValidarDataArt}
+                onChange={ValidarDataCabecera}
                 className={Global.InputStyle}
               />
             </div>
@@ -1117,7 +1117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 min={0}
                 disabled={modo == "Consultar" ? true : false}
                 value={dataCabecera.porcentaje ?? ""}
-                onChange={ValidarDataArt}
+                onChange={ValidarDataCabecera}
                 className={Global.InputStyle}
               />
             </div>
@@ -1134,7 +1134,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 min={0}
                 disabled={true}
                 value={dataCabecera.monto ?? ""}
-                onChange={ValidarDataArt}
+                onChange={ValidarDataCabecera}
                 className={
                   modo != "Consultar" ? Global.InputBoton : Global.InputStyle
                 }

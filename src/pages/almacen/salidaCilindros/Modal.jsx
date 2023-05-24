@@ -70,7 +70,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       `/api/almacen/SalidaCilindros/FormularioTablas`
     );
     setDataPersonal(
-      result.data.data.dataPersonal.map((res) => ({
+      result.data.data.personal.map((res) => ({
         personalId: res.apellidoPaterno + res.apellidoMaterno + res.nombres,
         ...res,
       }))

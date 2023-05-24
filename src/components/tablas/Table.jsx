@@ -166,7 +166,9 @@ const Table = ({ columnas, datos, total, index, Click, paginas = 50 }) => {
           pageRangeDisplayed={2}
           onPageChange={Click}
           pageCount={
-            totalPaginas == 0 ? 1 : parseInt(Math.ceil(totalPaginas / cantidadRegistros))
+            totalPaginas == 0
+              ? 1
+              : parseInt(Math.ceil(totalPaginas / cantidadRegistros))
           }
           forcePage={index}
           nextLabel={<FaAngleDoubleRight className="text-lg" />}

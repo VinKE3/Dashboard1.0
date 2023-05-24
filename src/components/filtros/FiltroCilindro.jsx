@@ -47,7 +47,7 @@ const TablaDetalle = styled.div`
 `;
 //#endregion
 
-const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
+const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
   //#region useState
   const [data, setData] = useState([]);
   const [dataGuiasSeleccionada] = useState(objeto);
@@ -108,7 +108,7 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
     //Si no existe entonces pasa los datos
     if (existe == undefined) {
       const result = await ApiMasy.get(
-        `api/Almacen/SalidaCilindros/${id}?incluirReferencias=${true}`
+        `api/Almacen/SalidaCilindros/${id}?incluirReferencias=true`
       );
       setObjeto({
         ...result.data.data,
@@ -154,6 +154,7 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         setObjeto({
+          id: res.data.data.id,
           detalles: res.data.data.detalles,
           guiasRelacionadas: model,
           accion: "eliminar",
@@ -341,4 +342,4 @@ const FiltroSalidaCilindros = ({ setModal, id, objeto, setObjeto, foco }) => {
   //#endregion
 };
 
-export default FiltroSalidaCilindros;
+export default FiltroCilindro;
