@@ -532,13 +532,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     //Calculo Check IncluyeIGV
 
-    // setData((prevState) => ({
-    //   ...prevState,
-    //   subTotal: Funciones.RedondearNumero(subTotal, 2),
-    //   montoIGV: Funciones.RedondearNumero(montoIGV, 2),
-    //   totalNeto: Funciones.RedondearNumero(total, 2),
-    //   total: Funciones.RedondearNumero(total, 2),
-    // }));
     setTotal(Funciones.RedondearNumero(total, 2));
   };
   //Calculos

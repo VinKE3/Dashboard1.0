@@ -13,6 +13,7 @@ import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/Funciones";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -22,19 +23,20 @@ const TablaStyle = styled.div`
     display: none;
   }
   & th:nth-child(2) {
-    align-items: center;
+    width: 40px;
     text-align: center;
   }
-  & th:nth-child(4) {
-    align-items: center;
-    text-align: center;
-  }
+  & th:nth-child(4),
   & th:nth-child(5) {
-    align-items: center;
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
     text-align: center;
   }
   & th:last-child {
-    width: 130px;
+    width: 75px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
 `;
@@ -42,17 +44,17 @@ const TablaStyle = styled.div`
 
 const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region useState
-  //?Data General
+  //Data General
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
-  //?checkboxes
-  const [checked, setChecked] = useState(true);
-  const [checked2, setChecked2] = useState(true);
-  //?Tablas
-  const [personal, setPersonal] = useState([]);
-  //?Data Modales Filtro
+  //Data General
+  //Tablas
   const [dataPersonal, setDataPersonal] = useState([]);
-  const [dataArt, setDataArt] = useState({
+  //Tablas
+
+  //Data Modales Filtro
+  const [dataCilindro, setDataCilindro] = useState([]);
+  const [dataCabecera, setDataCabecera] = useState({
     id: "00000006",
     lineaId: "00",
     subLineaId: "00",
@@ -63,9 +65,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     cantidad: 0,
     unidadMedidaDescripcion: "UND",
   });
-  //?Modales Filtro
+  //Data Modales Filtro
+
+  //Modales Filtro
   const [modalSalidaCilindros, setModalSalidaCilindros] = useState(false);
-  //?Data Ayuda
+  //Modales Filtro
+
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [mensaje, setMensaje] = useState([]);
@@ -74,30 +79,27 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.keys(dataPersonal).length > 0) {
+    if (Object.keys(dataCilindro).length > 0) {
       //Cabecera
       GuiaRelacionada();
       //Cabecera
       //Detalles
-      DetallesGuias(dataPersonal.accion);
+      DetallesGuias(dataCilindro.accion);
       //Detalles
       OcultarMensajes();
     }
-  }, [dataPersonal]);
-
+  }, [dataCilindro]);
   useEffect(() => {
     setData({ ...data, detalles: dataDetalle });
   }, [dataDetalle]);
-
   useEffect(() => {
     if (refrescar) {
-      ActualizarImportesTotales();
+      ActualizarTotales();
       setRefrescar(false);
     }
   }, [refrescar]);
-
   useEffect(() => {
-    GetTablas();
+    Tablas();
   }, []);
   //#endregion
 
@@ -138,30 +140,35 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     }
   };
   const GuiaRelacionada = async () => {
-    if (dataPersonal.cliente && dataPersonal.cliente.nombre) {
+    if (dataCilindro.cliente && dataCilindro.cliente.nombre) {
       setData({
         ...data,
-        clienteId: dataPersonal.clienteId,
-        clienteNombre: dataPersonal.cliente.nombre,
+        clienteId: dataCilindro.clienteId,
+        clienteNombre: dataCilindro.cliente.nombre,
         guiasRelacionadas: [
           ...data.guiasRelacionadas,
-          dataPersonal.guiasRelacionadas,
+          dataCilindro.guiasRelacionadas,
         ],
       });
     }
   };
-  const handlePersonalChange = async (e) => {
+  const Personal = async (e) => {
     if (dataDetalle.length > 0) {
       Swal.fire({
-        title: "¿Estas seguro de cambiar de personal? Los detalles se perderan",
+        title: "¿Confirma cambiar de dataPersonal? Los detalles se perderán",
         icon: "warning",
+        iconColor: "#F7BF3A",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        color: "#fff",
+        background: "#1a1a2e",
+        confirmButtonColor: "#eea508",
+        confirmButtonText: "Aceptar",
         cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
           setDataDetalle([]);
-          setDataArt({
+          setDataCabecera({
             id: "00000006",
             lineaId: "00",
             subLineaId: "00",
@@ -193,8 +200,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Articulos
-  const ValidarDataArt = async ({ target }) => {
-    setDataArt((prevState) => ({
+  const ValidarCabecera = async ({ target }) => {
+    setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
@@ -204,34 +211,34 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
     //valida Descripcion
-    if (dataArt.descripcion == undefined) {
+    if (dataCabecera.descripcion == undefined) {
       return [false, "La descripción no puede estar vacía"];
     }
     //Valida Cantidad
-    if (dataArt.cantidad <= 0) {
+    if (dataCabecera.cantidad <= 0) {
       return [false, "La cantidad no puede ser 0"];
     }
     return [true, ""];
   };
-  const AgregarDetalleArticulo = async () => {
+  const AgregarDetalle = async () => {
     //Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
     if (resultado[0]) {
       //Si tiene detalleId entonces modifica registro
-      if (dataArt.detalleId != undefined) {
+      if (dataCabecera.detalleId != undefined) {
         let dataDetalleMod = dataDetalle.map((map) => {
-          if (map.id == dataArt.id) {
+          if (map.id == dataCabecera.id) {
             return {
-              id: dataArt.id,
-              detalleId: dataArt.detalleId,
-              lineaId: dataArt.lineaId,
-              subLineaId: dataArt.subLineaId,
-              articuloId: dataArt.articuloId,
-              marcaId: dataArt.marcaId,
-              descripcion: dataArt.descripcion,
-              unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-              unidadMedidaId: dataArt.unidadMedidaId,
-              cantidad: Funciones.RedondearNumero(dataArt.cantidad, 2),
+              id: dataCabecera.id,
+              detalleId: dataCabecera.detalleId,
+              lineaId: dataCabecera.lineaId,
+              subLineaId: dataCabecera.subLineaId,
+              articuloId: dataCabecera.articuloId,
+              marcaId: dataCabecera.marcaId,
+              descripcion: dataCabecera.descripcion,
+              unidadMedidaDescripcion: dataCabecera.unidadMedidaDescripcion,
+              unidadMedidaId: dataCabecera.unidadMedidaId,
+              cantidad: Funciones.RedondearNumero(dataCabecera.cantidad, 2),
             };
           } else {
             return map;
@@ -243,23 +250,23 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         setDataDetalle((prev) => [
           ...prev,
           {
-            id: dataArt.id,
+            id: dataCabecera.id,
             detalleId: detalleId,
-            lineaId: dataArt.lineaId,
-            subLineaId: dataArt.subLineaId,
-            articuloId: dataArt.articuloId,
-            marcaId: dataArt.marcaId,
-            descripcion: dataArt.descripcion,
-            unidadMedidaDescripcion: dataArt.unidadMedidaDescripcion,
-            unidadMedidaId: dataArt.unidadMedidaId,
-            cantidad: Funciones.RedondearNumero(dataArt.cantidad, 2),
+            lineaId: dataCabecera.lineaId,
+            subLineaId: dataCabecera.subLineaId,
+            articuloId: dataCabecera.articuloId,
+            marcaId: dataCabecera.marcaId,
+            descripcion: dataCabecera.descripcion,
+            unidadMedidaDescripcion: dataCabecera.unidadMedidaDescripcion,
+            unidadMedidaId: dataCabecera.unidadMedidaId,
+            cantidad: Funciones.RedondearNumero(dataCabecera.cantidad, 2),
           },
         ]);
         setDetalleId(detalleId + 1);
         setRefrescar(true);
       }
       //Luego de añadir el artículo se limpia
-      setDataArt([]);
+      setDataCabecera([]);
     } else {
       //NO cumple validación
       if (resultado[1] != "") {
@@ -277,7 +284,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (id) => {
-    setDataArt(dataDetalle.find((map) => map.id === id));
+    setDataCabecera(dataDetalle.find((map) => map.id === id));
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -295,8 +302,11 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     } else {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
+      //Asgina directamente a 1
+
       setDataDetalle(nuevoDetalle);
     }
+
     let guiasRelacionadas = data.guiasRelacionadas.filter(
       (map) => map.id !== id
     );
@@ -304,6 +314,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       ...data,
       guiasRelacionadas: guiasRelacionadas,
     });
+
     setRefrescar(true);
   };
   const DetallesGuias = async (accion) => {
@@ -311,9 +322,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     let detalleEliminado = dataDetalle;
     //Contador para asignar el detalleId
     let contador = dataDetalle.length;
-    dataPersonal.detalles.map((dataPersonalDetalleMap) => {
+    dataCilindro.detalles.map((dataPersonalDetalleMap) => {
       contador++;
-      //?Verifica con los detalles ya seleccionados si coincide algún registro por el id
+      //Verifica con los detalles ya seleccionados si coincide algún registro por el id
       let dataDetalleExiste = dataDetalle.find((map) => {
         return map.id == dataPersonalDetalleMap.id;
       });
@@ -328,17 +339,17 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             ...prev,
             {
               detalleId: i,
-              id: dataPersonal.id,
+              id: dataCilindro.id,
               lineaId: dataPersonalDetalleMap.lineaId,
               subLineaId: dataPersonalDetalleMap.subLineaId,
               articuloId: dataPersonalDetalleMap.articuloId,
               unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
               marcaId: dataPersonalDetalleMap.marcaId,
-              descripcion: "CILINDROS DE" + "  " + dataPersonal.numeroGuia,
+              descripcion: "CILINDROS DE" + "  " + dataCilindro.numeroGuia,
               cantidad: dataPersonalDetalleMap.cantidad,
               unidadMedidaDescripcion:
                 dataPersonalDetalleMap.unidadMedidaDescripcion,
-              salidaCilindrosId: dataPersonal.id,
+              salidaCilindrosId: dataCilindro.id,
             },
           ]);
           //Asigna el valor final de contador y le agrega 1
@@ -353,17 +364,17 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               //Calculos
               return {
                 detalleId: dataDetalleExiste.detalleId,
-                id: dataPersonal.id,
+                id: dataCilindro.id,
                 lineaId: dataPersonalDetalleMap.lineaId,
                 subLineaId: dataPersonalDetalleMap.subLineaId,
                 articuloId: dataPersonalDetalleMap.articuloId,
                 unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
                 marcaId: dataPersonalDetalleMap.marcaId,
-                descripcion: "CILINDROS DE" + "  " + dataPersonal.numeroGuia,
+                descripcion: "CILINDROS DE" + "  " + dataCilindro.numeroGuia,
                 cantidad: cantidad,
                 unidadMedidaDescripcion:
                   dataPersonalDetalleMap.unidadMedidaDescripcion,
-                salidaCilindrosId: dataPersonal.id,
+                salidaCilindrosId: dataCilindro.id,
               };
             } else {
               return map;
@@ -419,7 +430,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   articuloId: dataPersonalDetalleMap.articuloId,
                   unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
                   marcaId: dataPersonalDetalleMap.marcaId,
-                  descripcion: "CILINDROS DE" + "  " + dataPersonal.numeroGuia,
+                  descripcion: "CILINDROS DE" + "  " + dataCilindro.numeroGuia,
                   cantidad: cantidad,
                   unidadMedidaDescripcion:
                     dataPersonalDetalleMap.unidadMedidaDescripcion,
@@ -436,31 +447,32 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       setRefrescar(true);
     });
   };
-  //?Calculos de Cilindros
-  const ActualizarImportesTotales = async () => {
-    //suma de la cantidad de cilindros
-    let cantidadCilindros = 0;
-    dataDetalle.map((map) => {
-      cantidadCilindros += map.cantidad;
-    });
+  //Calculos de Cilindros
+  const ActualizarTotales = async () => {
+    //Suma de la cantidad de cilindros
+    let importeTotal = dataDetalle.reduce((i, map) => {
+      return i + map.cantidad;
+    }, 0);
+
     setData((prevState) => ({
       ...prevState,
-      totalCilindros: cantidadCilindros,
+      totalCilindros: Funciones.RedondearNumero(importeTotal, 2),
     }));
   };
   //Calculos
   //#endregion
 
   //#region  API
-  const GetTablas = async () => {
+  const Tablas = async () => {
     const result = await ApiMasy(
       `/api/almacen/EntradaCilindros/FormularioTablas`
     );
-    let model = result.data.data.personal.map((res) => ({
-      personalId: res.apellidoPaterno + res.apellidoMaterno + res.nombres,
-      ...res,
-    }));
-    setPersonal(model);
+    setDataPersonal(
+      result.data.data.personal.map((res) => ({
+        personalId: res.apellidoPaterno + res.apellidoMaterno + res.nombres,
+        ...res,
+      }))
+    );
   };
   //#endregion
 
@@ -547,7 +559,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region  Render
   return (
     <>
-      {Object.entries(personal).length > 0 && (
+      {Object.entries(dataPersonal).length > 0 && (
         <>
           <ModalCrud
             setModal={setModal}
@@ -555,8 +567,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             objeto={data}
             modo={modo}
             menu={["Almacen", "EntradaCilindros"]}
-            tamañoModal={[Global.ModalGrande, Global.Form]}
+            tamañoModal={[Global.ModalFull, Global.Form]}
             titulo="Entrada de Cilindros"
+            cerrar={false}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -565,6 +578,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 Click={() => OcultarMensajes()}
               />
             )}
+
             {/* Cabecera */}
             <div
               className={
@@ -572,7 +586,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               }
             >
               <div className={Global.ContenedorInputs}>
-                <div className={Global.Input60pct}>
+                <div className={Global.InputTercio}>
                   <label htmlFor="serie" className={Global.LabelStyle}>
                     Serie
                   </label>
@@ -583,18 +597,15 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     placeholder="Serie"
                     autoComplete="off"
                     maxLength="4"
+                    autoFocus
                     disabled={modo == "Registrar" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
-                    className={
-                      modo == "Registrar"
-                        ? Global.InputStyle
-                        : Global.InputStyle
-                    }
+                    className={Global.InputStyle}
                   />
                 </div>
-                <div className={Global.Input60pct}>
+                <div className={Global.InputTercio}>
                   <label htmlFor="numero" className={Global.LabelStyle}>
                     Número
                   </label>
@@ -616,91 +627,62 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     }
                   />
                 </div>
-                <div className={Global.Input60pct}>
-                  <div className={Global.LabelStyle}>
-                    <Checkbox
-                      inputId="isSobrante"
-                      name="isSobrante"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={data.isSobrante}
-                      onChange={(e) => {
-                        setChecked(e.checked);
-                        ValidarData(e);
-                      }}
-                      checked={data.isSobrante ? checked : ""}
-                    />
+                <div className={Global.InputTercio}>
+                  <div className={Global.InputMitad}>
+                    <div className={Global.CheckStyle}>
+                      <Checkbox
+                        inputId="isSobrante"
+                        name="isSobrante"
+                        disabled={modo == "Consultar" ? true : false}
+                        value={data.isSobrante ?? ""}
+                        onChange={(e) => {
+                          ValidarData(e);
+                        }}
+                        checked={data.isSobrante ? true : ""}
+                      />
+                    </div>
+                    <label
+                      htmlFor="isSobrante"
+                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                    >
+                      Sobrante
+                    </label>
                   </div>
-                  <label htmlFor="isSobrante" className={Global.InputStyle}>
-                    <div className="text-red-500 font-bold"> Sobrante</div>
-                  </label>
-                </div>
-                <div className={Global.Input60pct}>
-                  <div className={Global.LabelStyle}>
-                    <Checkbox
-                      inputId="isVenta"
-                      name="isVenta"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={data.isVenta}
-                      onChange={(e) => {
-                        setChecked2(e.checked);
-                        ValidarData(e);
-                      }}
-                      checked={data.isVenta ? checked2 : ""}
-                    />
+                  <div className={Global.InputMitad}>
+                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                      <Checkbox
+                        inputId="isVenta"
+                        name="isVenta"
+                        disabled={modo == "Consultar" ? true : false}
+                        value={data.isVenta ?? ""}
+                        onChange={(e) => {
+                          ValidarData(e);
+                        }}
+                        checked={data.isVenta ? true : ""}
+                      />
+                    </div>
+                    <label htmlFor="isVenta" className={Global.LabelCheckStyle}>
+                      Venta
+                    </label>
                   </div>
-                  <label htmlFor="isVenta" className={Global.InputStyle}>
-                    <div className="text-green-500 font-bold"> Venta</div>
-                  </label>
                 </div>
               </div>
-              <div className={Global.ContenedorBasico + Global.FondoContenedor}>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.Input40pct}>
-                    <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                      Fecha Emisión
-                    </label>
-                    <input
-                      type="date"
-                      id="fechaEmision"
-                      name="fechaEmision"
-                      maxLength="2"
-                      autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={moment(data.fechaEmision ?? "").format(
-                        "yyyy-MM-DD"
-                      )}
-                      onChange={ValidarData}
-                      className={
-                        modo == "Consultar"
-                          ? Global.InputStyle + Global.Disabled
-                          : Global.InputStyle
-                      }
-                    />
-                  </div>
-                  <div className={Global.InputFull}>
-                    <label
-                      htmlFor="clienteNombre"
-                      className={Global.LabelStyle}
-                    >
-                      Cliente
-                    </label>
-                    <input
-                      type="text"
-                      id="clienteNombre"
-                      name="clienteNombre"
-                      autoComplete="off"
-                      readOnly={modo == "Consultar" ? true : false}
-                      value={data.clienteNombre}
-                      onChange={ValidarData}
-                      className={
-                        modo == "Consultar"
-                          ? Global.InputStyle + Global.Disabled
-                          : Global.InputStyle
-                      }
-                    />
-                  </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.Input40pct}>
+                  <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+                    Fecha Emisión
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaEmision"
+                    name="fechaEmision"
+                    autoComplete="off"
+                    disabled={modo == "Consultar" ? true : false}
+                    value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
                 </div>
-
                 <div className={Global.InputFull}>
                   <label htmlFor="personalId" className={Global.LabelStyle}>
                     Personal
@@ -710,21 +692,32 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     name="personalId"
                     disabled={modo == "Consultar" ? true : false}
                     value={data.personalId}
-                    onChange={handlePersonalChange}
-                    className={Global.InputBoton}
+                    onChange={Personal}
+                    className={Global.InputStyle}
                   >
-                    {personal.map((item) => (
+                    {dataPersonal.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.personalId}
                       </option>
                     ))}
                   </select>
-                  <label
-                    htmlFor="buscarCilindro"
-                    className={Global.LabelStyle + Global.Anidado}
-                  >
-                    Buscar Guia
+                </div>
+              </div>
+              <div className={Global.ContendorIn}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="clienteNombre" className={Global.LabelStyle}>
+                    Cliente
                   </label>
+                  <input
+                    type="text"
+                    id="clienteNombre"
+                    name="clienteNombre"
+                    placeholder="Cliente"
+                    autoComplete="off"
+                    disabled={true}
+                    value={data.clienteNombre ?? ""}
+                    className={Global.InputBoton}
+                  />
                   <button
                     id="consultarFactura"
                     className={
@@ -736,101 +729,104 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     <FaSearch></FaSearch>
                   </button>
                 </div>
-                <div className={Global.InputFull}>
-                  <label htmlFor="observacion" className={Global.LabelStyle}>
-                    Observación
-                  </label>
-                  <input
-                    type="text"
-                    id="observacion"
-                    name="observacion"
-                    autoComplete="off"
-                    readOnly={modo == "Consultar" ? true : false}
-                    value={data.observacion}
-                    onChange={ValidarData}
-                    className={
-                      modo == "Consultar"
-                        ? Global.InputStyle + Global.Disabled
-                        : Global.InputStyle
-                    }
-                  />
-                </div>
+              </div>
+
+              <div className={Global.InputFull}>
+                <label htmlFor="observacion" className={Global.LabelStyle}>
+                  Observación
+                </label>
+                <input
+                  type="text"
+                  id="observacion"
+                  name="observacion"
+                  placeholder="Observación"
+                  autoComplete="off"
+                  disabled={modo == "Consultar" ? true : false}
+                  value={data.observacion ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputStyle}
+                />
               </div>
             </div>
             {/* Cabecera */}
 
             {/* Detalles */}
-            <div
-              className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
-              }
-            >
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="descripcion" className={Global.LabelStyle}>
-                    Descripción
-                  </label>
-                  <input
-                    type="text"
-                    id="descripcion"
-                    name="descripcion"
-                    placeholder="Descripción"
-                    readOnly={true}
-                    autoComplete="off"
-                    value={dataArt.descripcion ?? ""}
-                    onChange={ValidarDataArt}
-                    className={Global.InputStyle + Global.Disabled}
-                  />
+            {modo != "Consultar" && (
+              <div
+                className={
+                  Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                }
+              >
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="descripcion" className={Global.LabelStyle}>
+                      Descripción
+                    </label>
+                    <input
+                      type="text"
+                      id="descripcion"
+                      name="descripcion"
+                      placeholder="Descripción"
+                      autoComplete="off"
+                      disabled={true}
+                      value={dataCabecera.descripcion ?? ""}
+                      onChange={ValidarCabecera}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputTercio}>
+                    <label
+                      htmlFor="unidadMedidaDescripcion"
+                      className={Global.LabelStyle}
+                    >
+                      Unidad
+                    </label>
+                    <input
+                      type="text"
+                      id="unidadMedidaDescripcion"
+                      name="unidadMedidaDescripcion"
+                      placeholder="Unidad Medida"
+                      autoComplete="off"
+                      disabled={true}
+                      value={dataCabecera.unidadMedidaDescripcion ?? ""}
+                      onChange={ValidarCabecera}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputTercio}>
+                    <label htmlFor="cantidad" className={Global.LabelStyle}>
+                      Cantidad
+                    </label>
+                    <input
+                      type="number"
+                      id="cantidad"
+                      name="cantidad"
+                      placeholder="Cantidad"
+                      autoComplete="off"
+                      min={0}
+                      disabled={modo == "Consultar" ? true : false}
+                      value={dataCabecera.cantidad ?? ""}
+                      onChange={ValidarCabecera}
+                      className={Global.InputBoton + Global.Anidado}
+                    />
+                    <button
+                      id="enviarDetalle"
+                      className={
+                        Global.BotonBuscar +
+                        Global.Anidado +
+                        Global.BotonPrimary
+                      }
+                      hidden={modo == "Consultar" ? true : false}
+                      onClick={() => AgregarDetalle()}
+                    >
+                      <FaPlus></FaPlus>
+                    </button>
+                  </div>
                 </div>
-                <div className={Global.Input25pct}>
-                  <label
-                    htmlFor="unidadMedidaDescripcion"
-                    className={Global.LabelStyle}
-                  >
-                    Unidad
-                  </label>
-                  <input
-                    type="text"
-                    id="unidadMedidaDescripcion"
-                    name="unidadMedidaDescripcion"
-                    placeholder="Unidad Medida"
-                    autoComplete="off"
-                    disabled={true}
-                    value={dataArt.unidadMedidaDescripcion ?? ""}
-                    onChange={ValidarDataArt}
-                    className={Global.InputStyle}
-                  />
-                </div>
-                <div className={Global.Input25pct}>
-                  <label htmlFor="cantidad" className={Global.LabelStyle}>
-                    Cantidad
-                  </label>
-                  <input
-                    type="number"
-                    id="cantidad"
-                    name="cantidad"
-                    placeholder="Cantidad"
-                    autoComplete="off"
-                    min={0}
-                    disabled={modo == "Consultar" ? true : false}
-                    value={dataArt.cantidad ?? ""}
-                    onChange={ValidarDataArt}
-                    className={Global.InputBoton + Global.Anidado}
-                  />
-                </div>
-                <button
-                  id="enviarDetalle"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
-                  hidden={modo == "Consultar" ? true : false}
-                  onClick={() => AgregarDetalleArticulo()}
-                >
-                  <FaPlus></FaPlus>
-                </button>
               </div>
-            </div>
+            )}
             {/* Detalles */}
+
             {/* Tabla Detalle */}
             <TablaStyle>
               <TableBasic
@@ -854,7 +850,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               <div className="flex">
                 <div className={Global.FilaVacia}></div>
                 <div className={Global.FilaPrecio}>
-                  <p className={Global.FilaContenido}>Total Cilindros</p>
+                  <p className={Global.FilaContenido}>Total</p>
                 </div>
                 <div className={Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
@@ -872,7 +868,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         <FiltroSalidaCilindros
           setModal={setModalSalidaCilindros}
           id={data.personalId}
-          setObjeto={setDataPersonal}
+          setObjeto={setDataCilindro}
           objeto={data.guiasRelacionadas}
           foco={document.getElementById("observacion")}
         />

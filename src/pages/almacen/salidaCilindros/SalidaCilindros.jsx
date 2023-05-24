@@ -74,11 +74,6 @@ const SalidaCilindros = () => {
   //#endregion
 
   //#region useEffect;
-
-  useEffect(() => {
-    objeto;
-    console.log(objeto);
-  }, [objeto]);
   useEffect(() => {
     setCadena(
       `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -87,7 +82,6 @@ const SalidaCilindros = () => {
   useEffect(() => {
     Filtro();
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -218,11 +212,13 @@ const SalidaCilindros = () => {
         Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YY");
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
         },
       },
       {
-        Header: "H. Emisión",
+        Header: "Hora",
         accessor: "horaEmision",
         Cell: ({ value }) => {
           return <p className="text-center">{value}</p>;
@@ -252,7 +248,7 @@ const SalidaCilindros = () => {
         Header: "Cilindros",
         accessor: "totalCilindros",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return <p className="text-center font-bold">{value}</p>;
         },
       },
       {
@@ -291,10 +287,9 @@ const SalidaCilindros = () => {
           <BotonCRUD
             setEliminar={setEliminar}
             permisos={permisos}
-            menu={["Almacen", "SalidaCilindros"]}
-            id={row.values.id}
             ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },
@@ -323,6 +318,7 @@ const SalidaCilindros = () => {
                   name="clienteNombre"
                   placeholder="Cliente"
                   autoComplete="off"
+                  autoFocus
                   value={filtro.clienteNombre ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
