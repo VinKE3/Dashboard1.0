@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import GetPermisos from "../../components/Funciones/GetPermisos";
-import BotonBasico from "../../components/BotonesComponent/BotonBasico";
-import BotonCRUD from "../../components/BotonesComponent/BotonCRUD";
-import Table from "../../components/tablas/Table";
-import FiltroBasico from "../../components/filtros/FiltroBasico";
+import BotonBasico from "../../components/Boton/BotonBasico";
+import BotonCRUD from "../../components/Boton/BotonCRUD";
+import Table from "../../components/Tabla/Table";
+import FiltroBasico from "../../components/Filtro/FiltroBasico";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/ModalCrud";
+import ModalCrud from "../../../components/Modal/ModalCrud";
 import { Checkbox } from "primereact/checkbox";
 import * as Global from "../../../components/Global";
 

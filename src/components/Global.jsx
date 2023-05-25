@@ -6,11 +6,11 @@ export var ModalContent =
 //Tamaños de Modal
 export var ModalFull = "h-full w-full ";
 export var ModalGrande = "h-full w-full lg:h-[85%] lg:max-w-7xl ";
-export var ModalMediano = "h-full w-full lg:h-[75%] max-h-full lg:max-w-5xl ";
+export var ModalMediano = "h-full w-full lg:h-[75%] max-h-full lg:max-w-4xl ";
 export var ModalPequeño = "h-full w-full md:h-fit md:max-w-2xl lg:max-w-3xl ";
 //Tamaños de Modal
 
-export var ModalHeader = "flex pt-4 pb-2 px-5 rounded-tt ";
+export var ModalHeader = "flex items-center justify-between pt-4 pb-2 px-5 rounded-tt ";
 export var ModalBody = "h-full w-full overflow-y-auto overflow-x-hidden ";
 export var ModalFooter =
   "flex items-center justify-end gap-x-2 p-3.5 px-5 rounded-bt ";
@@ -63,9 +63,9 @@ export var Disabled = "!bg-gray-800/90 ";
 //#endregion
 
 //#region Titulos H
-export var TituloH2 = "mb-2 py-2 text-2xl font-bold text-light ";
+export var TituloH2 = "mb-2 py-2 text-xl md:text-2xl font-bold text-light ";
 export var TituloH4 = "mb-1 py-2 text-xl font-bold text-light ";
-export var TituloModal = "text-3xl md:text-2xl font-semibold text-light ";
+export var TituloModal = "text-xl md:text-2xl font-semibold text-light ";
 export var Subtitulo = "my-0 py-0 font-bold text-base text-light ";
 //#endregion
 
@@ -98,7 +98,7 @@ export var BotonPaginacionFlechas =
 export var BotonPaginacionActivo =
   "bg-gradient-to-b from-gray-700 to-gray-600 text-light ";
 export var CerrarModal =
-  "p-1 ml-auto bg-transparent border-0 hover:text-red-500 text-light float-right text-3xl md:text-2xl leading-none font-semibold outline-none focus:outline-none ";
+  "p-1 ml-auto bg-transparent border-0 hover:text-red-500 text-light float-right text-xl md:text-2xl leading-none font-semibold outline-none focus:outline-none ";
 //#endregion
 
 //#region Tablas

@@ -20,15 +20,15 @@ function seccionesList() {
       icon: <FaUsers className="text-primary" />,
       items: [
         {
-          path: "/compras/bloquear-compra",
+          path: "/Compra/bloquearCompra",
           title: "Bloquear Compra",
         },
         {
-          path: "/ventas/bloquear-venta",
+          path: "/Venta/bloquearVenta",
           title: "Bloquear Venta",
         },
         {
-          path: "/finanzas/bloquear-movimiento-bancario",
+          path: "/Finanza/bloquearMovimientoBancario",
           title: "Bloquear Movimiento Bancario",
         },
       ],
@@ -36,115 +36,103 @@ function seccionesList() {
     //?Mantenimiento
     {
       title: "Mantenimiento",
-      id: "mantenimiento",
+      id: "Mantenimiento",
       icon: <FaTools className="text-primary" />,
       items: [
         {
-          path: "/mantenimiento/tipos-de-cambio",
+          path: "/Mantenimiento/tipoCambio",
           title: "Tipos de Cambio",
         },
         {
-          path: "/mantenimiento/lineas",
+          path: "/Mantenimiento/InformeArticulo",
+          title: "Artículos",
+        },
+        {
+          path: "/Mantenimiento/linea",
           title: "Lineas",
         },
         {
-          path: "/mantenimiento/sublineas",
-          title: "Sublineas",
+          path: "/Mantenimiento/subLinea",
+          title: "SubLineas",
         },
         {
-          path: "/mantenimiento/marcas",
+          path: "/Mantenimiento/marca",
           title: "Marcas",
         },
         {
-          path: "/mantenimiento/unidades-de-medida",
+          path: "/Mantenimiento/unidadMedida",
           title: "Unidades de Medida",
         },
         {
-          path: "/mantenimiento/tipos-de-pago",
+          path: "/Mantenimiento/tipoCobroPago",
           title: "Tipos de Pago",
         },
         {
-          path: "/mantenimiento/cargos",
+          path: "/Mantenimiento/cargo",
           title: "Cargos",
         },
         {
-          path: "/mantenimiento/entidades-bancarias",
-          title: "Entidades Bancarias",
+          path: "/Mantenimiento/entidadBancaria",
+          title: "Entidad Bancaria",
         },
         {
-          path: "/mantenimiento/cuentas-corrientes",
+          path: "/Mantenimiento/cuentaCorriente",
           title: "Cuentas Corrientes",
         },
         {
-          path: "/mantenimiento/departamentos",
+          path: "/Mantenimiento/departamento",
           title: "Departamentos",
         },
         {
-          path: "/mantenimiento/provincias",
+          path: "/Mantenimiento/provincia",
           title: "Provincias",
         },
         {
-          path: "/mantenimiento/distritos",
+          path: "/Mantenimiento/distrito",
           title: "Distritos",
         },
         {
-          path: "/ventas/clientes",
-          title: "Clientes",
-        },
-        {
-          path: "/compras/provedores",
-          title: "Provedores",
-        },
-        {
           path: "/personal",
-          title: "Ver Personal",
+          title: "Personal",
         },
         {
-          path: "/mantenimiento/vehiculos",
-          title: "Vehiculos",
+          path: "/Mantenimiento/vehiculo",
+          title: "Vehículos",
         },
         {
-          path: "/ventas/conductores-transportistas",
-          title: "Conductores - Transportistas",
-        },
-        {
-          path: "/mantenimiento/empresa-de-transporte",
-          title: "Empresa de Transporte",
-        },
-        {
-          path: "/mantenimiento/articulos",
-          title: "Articulos",
+          path: "/Mantenimiento/empresaTransporte",
+          title: "Empresas de Transporte",
         },
       ],
     },
     //?Almacen
     {
-      title: "Almacen",
-      id: "almacen",
+      title: "Almacén",
+      id: "Almacen",
       icon: <FaIndustry className="text-primary" />,
       items: [
         {
-          path: "/almacen/movimientos-articulos",
-          title: "Movimientos de Articulos",
+          path: "/Almacen/movimientoArticulo",
+          title: "Movimiento de Artículos",
         },
         {
-          path: "/almacen/cuadre-stock",
+          path: "/Almacen/cuadreStock",
           title: "Cuadre de Stock",
         },
         {
-          path: "/almacen/entrada-articulos",
-          title: "Entrada de Articulos",
+          path: "/Almacen/entradaAlmacen",
+          title: "Entrada de Almacén",
         },
         {
-          path: "/almacen/salida-articulos",
-          title: "Salida de Articulos",
+          path: "/Almacen/salidaAlmacen",
+          title: "Salida de Almacén",
         },
         {
-          path: "/almacen/entrada-cilindros",
+          path: "/Almacen/entradaCilindros",
           title: "Entrada de Cilindros",
         },
         {
-          path: "/almacen/salida-cilindros",
+          path: "/Almacen/salidaCilindro",
           title: "Salida de Cilindros",
         },
       ],
@@ -152,11 +140,11 @@ function seccionesList() {
     //?Finanzas
     {
       title: "Finanzas",
-      id: "finanzas",
+      id: "Finanza",
       icon: <FaDollarSign className="text-primary" />,
       items: [
         {
-          path: "/finanzas/movimiento-bancario",
+          path: "/Finanza/movimientoBancario",
           title: "Movimiento Bancario",
         },
       ],
@@ -164,39 +152,43 @@ function seccionesList() {
     //?Compras
     {
       title: "Compras",
-      id: "compras",
+      id: "Compra",
       icon: <FaClipboardCheck className="text-primary" />,
       items: [
         {
-          path: "/compras/ordenes-de-compra",
-          title: "Ordenes de Compra",
+          path: "/Compra/proveedor",
+          title: "Proveedores",
         },
         {
-          path: "/compras/factura-negociable",
+          path: "/Compra/ordenCompra",
+          title: "Órdenes de Compra",
+        },
+        {
+          path: "/Compra/facturaNegociable",
           title: "Factura Negociable",
         },
         {
-          path: "/compras/letra-cambio-compra",
+          path: "/Compra/letraCambioCompra",
           title: "Letra de Cambio",
         },
         {
-          path: "/compras/cef",
+          path: "/Compra/CEF",
           title: "C.E.F.",
         },
         {
-          path: "/compras/cheque",
-          title: "Programación Cheques",
+          path: "/Compra/Cheque",
+          title: "Cheques",
         },
         {
-          path: "/compras/documentos-de-compra",
+          path: "/Compra/documentoCompra",
           title: "Documentos de Compra",
         },
         {
-          path: "/compras/guias-de-compra",
+          path: "/Compra/guiaCompra",
           title: "Guías De Compra",
         },
         {
-          path: "/finanzas/cuentas-por-pagar",
+          path: "/Finanza/cuentaPorPagar",
           title: "Cuentas por Pagar",
         },
       ],
@@ -204,92 +196,100 @@ function seccionesList() {
     //?Ventas
     {
       title: "Ventas",
-      id: "ventas",
+      id: "Venta",
       icon: <FaBalanceScale className="text-primary" />,
       items: [
         {
-          path: "/ventas/documentos-de-venta",
+          path: "/Venta/clientes",
+          title: "Clientes",
+        },
+        {
+          path: "/Venta/conductorTransportista",
+          title: "Conductores - Transportistas",
+        },
+        {
+          path: "/Venta/documentoVenta",
           title: "Documentos de Venta",
         },
         {
-          path: "/ventas/guias-de-remision",
-          title: "Guias de Remision",
+          path: "/Venta/guiaRemision",
+          title: "Guías de Remision",
         },
         {
-          path: "/ventas/cotizaciones",
-          title: "Cotizaciones",
+          path: "/Venta/cotizacion",
+          title: "Cotización",
         },
         {
-          path: "/ventas/retenciones",
-          title: "Retencion",
+          path: "/Venta/retencion",
+          title: "Retención",
         },
       ],
     },
     //?Cobranzas
     {
       title: "Cobranzas",
-      id: "cobranzas",
+      id: "Cobranza",
       icon: <FaMoneyBillAlt className="text-primary" />,
       items: [
         {
-          path: "/cobranzas/cuentas-por-cobrar",
-          title: "Cuentas Por Cobrar",
+          path: "/Cobranza/cuentaPorCobrar",
+          title: "Cuentas por Cobrar",
         },
         {
-          path: "/cobranzas/planilla-cobro",
+          path: "/Cobranza/planillaCobro",
           title: "Planilla Cobro",
         },
       ],
     },
-    //?Tesoreria
-    {
-      title: "Tesoreria",
-      id: "tesoreria",
-      icon: <FaMoneyCheck className="text-primary" />,
-      items: [
-        {
-          path: "/tesoreria/bloquear-recibo-de-egreso",
-          title: "Bloquear Recibo de Egreso",
-        },
-      ],
-    },
+    //Tesoreria
+    // {
+    //   title: "Tesoreria",
+    //   id: "Tesoreria",
+    //   icon: <FaMoneyCheck className="text-primary" />,
+    //   items: [
+    //     {
+    //       path: "/Tesoreria/bloquear-recibo-de-egreso",
+    //       title: "Bloquear Recibo de Egreso",
+    //     },
+    //   ],
+    // },
     //?Informes
     {
       title: "Informes",
-      id: "informes",
+      id: "Informe",
       icon: <FaFileAlt className="text-primary" />,
       items: [
         {
-          path: "/informes/articulos",
-          title: "Articulos",
+          path: "/Informe/InformeArticulo",
+          title: "Artículos",
         },
         {
-          path: "/informes/ventas",
+          path: "/Informe/InformeVenta",
           title: "Ventas",
         },
         {
-          path: "/informes/compras",
+          path: "/Informe/InformeCompra",
           title: "Compras",
         },
         {
-          path: "/informes/tesoreria",
+          path: "/Informe/InformeTesoreria",
           title: "Tesoreria",
         },
       ],
     },
-    //?Herramientas
-    {
-      title: "Herramientas",
-      id: "herramientas",
-      icon: <FaToolbox className="text-primary" />,
+    //Herramientas
+    // {
+    //   title: "Herramientas",
+    //   id: "Herramienta",
+    //   icon: <FaToolbox className="text-primary" />,
 
-      items: [
-        {
-          path: "/herramientas/cambiar-contraseña",
-          title: "Cambiar Contraseña",
-        },
-      ],
-    },
+    //   items: [
+    //     {
+    //       path: "/Herramienta/cambiar-contraseña",
+    //       title: "Cambiar Contraseña",
+    //     },
+    //   ],
+    // },
   ];
 
   return secciones;

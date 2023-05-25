@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/ModalCrud";
-import FiltroCilindro from "../../../components/filtros/FiltroCilindro";
-import Mensajes from "../../../components/Mensajes";
-import TableBasic from "../../../components/tablas/TableBasic";
+import ModalCrud from "../../../components/Modal/ModalCrud";
+import FiltroCilindro from "../../../components/Filtro/FiltroCilindro";
+import Mensajes from "../../../components/Funciones/Mensajes";
+import TableBasic from "../../../components/Tabla/TableBasic";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { Checkbox } from "primereact/checkbox";
@@ -12,7 +12,7 @@ import { FaPlus, FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones";
+import * as Funciones from "../../../components/Funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -529,7 +529,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region  API
   const Tablas = async () => {
     const result = await ApiMasy(
-      `/api/almacen/EntradaCilindros/FormularioTablas`
+      `/api/Almacen/EntradaCilindros/FormularioTablas`
     );
     setDataPersonal(
       result.data.data.personal.map((res) => ({

@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 const Error404 = () => {
   return (
     <section>
-      <div class="bg-secondary-900 text-gray-300">
-        <div class="flex h-screen">
-          <div class="m-auto text-center">
+      <div className="bg-secondary-900 text-gray-300">
+        <div className="flex h-screen">
+          <div className="m-auto text-center">
             <div>
               <svg
                 width="631"
@@ -267,7 +267,7 @@ const Error404 = () => {
                 </defs>
               </svg>
             </div>
-            <p class="text-sm md:text-base text-gray-300 p-2 mb-4">
+            <p className="text-sm md:text-base text-gray-300 p-2 mb-4">
               La pagina solicitada no existe
             </p>
             <Link

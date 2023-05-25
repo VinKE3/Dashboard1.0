@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/ModalCrud";
-import TableBasic from "../../../components/tablas/TableBasic";
+import ModalCrud from "../../../components/Modal/ModalCrud";
+import TableBasic from "../../../components/Tabla/TableBasic";
 import moment from "moment";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones";
+import * as Funciones from "../../../components/Funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -67,7 +67,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region API
   const Tablas = async () => {
     const result = await ApiMasy(
-      `/api/almacen/SalidaCilindros/FormularioTablas`
+      `/api/Almacen/SalidaCilindros/FormularioTablas`
     );
     setDataPersonal(
       result.data.data.personal.map((res) => ({

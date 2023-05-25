@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
-import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
-import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
+import BotonBasico from "../../../components/Boton/BotonBasico";
+import BotonCRUD from "../../../components/Boton/BotonCRUD";
 import { Checkbox } from "primereact/checkbox";
-import Table from "../../../components/tablas/Table";
+import Table from "../../../components/Tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
@@ -12,7 +12,7 @@ import { FaSearch, FaCheck } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones";
+import * as Funciones from "../../../components/Funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`

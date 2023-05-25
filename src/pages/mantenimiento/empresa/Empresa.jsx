@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import * as Global from "../../../components/Global";
-import Ubigeo from "../../../components/filtros/Ubigeo";
+import Ubigeo from "../../../components/Filtro/Ubigeo";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import ApiMasy from "../../../api/ApiMasy";
 import styled from "styled-components";
-import TableBasic from "../../../components/tablas/TableBasic";
+import TableBasic from "../../../components/Tabla/TableBasic";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer, toast } from "react-toastify";
-import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
+import BotonBasico from "../../../components/Boton/BotonBasico";
 import Swal from "sweetalert2";
 
 //#region Estilos

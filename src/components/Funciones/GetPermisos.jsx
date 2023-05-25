@@ -1,4 +1,4 @@
-import GetUsuarioId from "../CRUD/GetUsuarioId";
+import GetUsuarioId from "../Funciones/GetUsuarioId";
 import store from "store2";
 
 const GetPermisos = async (menu, setPermisos) => {

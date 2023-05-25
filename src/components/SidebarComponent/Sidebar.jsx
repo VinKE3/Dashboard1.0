@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BotonCerrarMenu from "../BotonesComponent/BotonCerrarMenu";
+import BotonCerrarMenu from "../Boton/BotonCerrarMenu";
 import SidebarMenus from "./SidebarMenus";
 import seccionesList from "./SeccionesMenus";
 

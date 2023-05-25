@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import moment from "moment/moment";
-import ModalCrud from "../../components/ModalCrud";
+import ModalCrud from "../../components/Modal/ModalCrud";
 import * as Global from "../../components/Global";
 import { Checkbox } from "primereact/checkbox";
-import Ubigeo from "../../components/filtros/Ubigeo";
+import Ubigeo from "../../components/Filtro/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);

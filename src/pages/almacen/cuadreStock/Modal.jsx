@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalInventario from "./ModalInventario";
-import ModalCrud from "../../../components/ModalCrud";
-import Mensajes from "../../../components/Mensajes";
-import Table from "../../../components/tablas/Table";
+import ModalCrud from "../../../components/Modal/ModalCrud";
+import Mensajes from "../../../components/Funciones/Mensajes";
+import Table from "../../../components/Tabla/Table";
 import { toast } from "react-toastify";
 import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
@@ -13,7 +13,7 @@ import styled from "styled-components";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones";
+import * as Funciones from "../../../components/Funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -105,7 +105,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   useEffect(() => {
     setData({ ...data, detalles: dataDetalle });
     setDataLocal(dataDetalle);
-    FiltroLocal();
+    FiltradoPaginado({ selected: index });
   }, [dataDetalle]);
   useEffect(() => {
     if (refrescar) {
@@ -128,8 +128,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const FiltroLocal = async () => {
-    setIndex(0);
+  const FiltroLocal = async (index = 0) => {
+    setIndex(index);
     //Detalle completo
     let model = dataDetalle;
     //Detalle completo
@@ -256,109 +256,34 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
         return {
           ...map,
           inventario: Funciones.RedondearNumero(dataInventario.inventario, 2),
-          cantidadSobra: Funciones.RedondearNumero(cantidadSobra, 2),
-          cantidadFalta: Funciones.RedondearNumero(cantidadFalta, 2),
-          totalSobra: Funciones.RedondearNumero(totalSobra, 2),
-          totalFalta: Funciones.RedondearNumero(totalFalta, 2),
+          cantidadSobra: Math.abs(Funciones.RedondearNumero(cantidadSobra, 2)),
+          cantidadFalta: Math.abs(Funciones.RedondearNumero(cantidadFalta, 2)),
+          totalSobra: Math.abs(Funciones.RedondearNumero(totalSobra, 2)),
+          totalFalta: Math.abs(Funciones.RedondearNumero(totalFalta, 2)),
         };
       } else {
         return map;
       }
     });
     setDataDetalle(detalleMod);
+    setRefrescar(true);
   };
   //Calculos
   const ActualizarTotales = async () => {
     //Suma los importes de los detalles
-    let importeTotal = dataDetalle.reduce((i, map) => {
-      return i + map.importe;
+    let totalFalta = dataDetalle.reduce((i, map) => {
+      return i + map.cantidadFalta;
     }, 0);
-
-    //Valida si es operación gratuita
-    if (!data.isOperacionGratuita) {
-      //Porcentajes
-      let porcentajeIgvSeleccionado = data.porcentajeIGV;
-      let porcentajeRetencionSelect = data.porcentajeRetencion;
-      let porcentajeDetraccionSelect = data.porcentajeDetraccion;
-      let porcentajeImpuestoBolsa = data.factorImpuestoBolsa;
-      let incluyeIgv = data.incluyeIGV;
-      //Porcentajes
-      //Montos
-      let subTotal = 0,
-        montoIGV = 0,
-        total = 0,
-        totalNeto = 0,
-        retencion = 0,
-        detraccion = 0,
-        bolsa = 0;
-      //Montos
-
-      //Calculo Check IncluyeIGV
-      if (incluyeIgv) {
-        totalNeto = Funciones.RedondearNumero(importeTotal, 2);
-        subTotal = Funciones.RedondearNumero(
-          totalNeto / (1 + porcentajeIgvSeleccionado / 100),
-          2
-        );
-        montoIGV = Funciones.RedondearNumero(totalNeto - subTotal, 2);
-      } else {
-        subTotal = Funciones.RedondearNumero(importeTotal, 2);
-        montoIGV = Funciones.RedondearNumero(
-          subTotal * (porcentajeIgvSeleccionado / 100),
-          2
-        );
-        totalNeto = Funciones.RedondearNumero(subTotal + montoIGV, 2);
-      }
-      //Calculo Check IncluyeIGV
-
-      //Calculo Impuesto Bolsa
-      dataDetalle.map((map) => {
-        if (map.codigoBarras == "ICBPER") {
-          bolsa = bolsa + map.cantidad * porcentajeImpuestoBolsa;
-        }
-      });
-      //Calculo Impuesto Bolsa
-
-      //Calculos
-      retencion = Funciones.RedondearNumero(
-        totalNeto * (porcentajeRetencionSelect / 100),
-        2
-      );
-      detraccion = Funciones.RedondearNumero(
-        totalNeto * (porcentajeDetraccionSelect / 100),
-        2
-      );
-      total = totalNeto + detraccion + bolsa;
-      //Calculos
-      setData((prevState) => ({
-        ...prevState,
-        subTotal: Funciones.RedondearNumero(subTotal, 2),
-        montoIGV: Funciones.RedondearNumero(montoIGV, 2),
-        totalNeto: Funciones.RedondearNumero(totalNeto, 2),
-        montoImpuestoBolsa: Funciones.RedondearNumero(bolsa, 2),
-        montoRetencion: Funciones.RedondearNumero(retencion, 2),
-        montoDetraccion: Funciones.RedondearNumero(detraccion, 2),
-        totalOperacionesGratuitas: 0,
-        total: Funciones.RedondearNumero(total, 2),
-      }));
-    } else {
-      //Asigna a todo 0 y la suma de importes pasa a totalOperacionesGratuitas
-      setData((prevState) => ({
-        ...prevState,
-        incluyeIGV: false,
-        totalOperacionesGratuitas: importeTotal,
-        porcentajeIGV: 0,
-        porcentajeDetraccion: 0,
-        porcentajeRetencion: 0,
-        subTotal: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        montoImpuestoBolsa: 0,
-        montoRetencion: 0,
-        montoDetraccion: 0,
-        total: 0,
-      }));
-    }
+    let totalSobra = dataDetalle.reduce((i, map) => {
+      return i + map.cantidadSobra;
+    }, 0);
+    let saldoTotal = totalSobra - totalFalta;
+    setData((prevState) => ({
+      ...prevState,
+      totalFalta: Math.abs(Funciones.RedondearNumero(totalFalta, 2)),
+      totalSobra: Math.abs(Funciones.RedondearNumero(totalSobra, 2)),
+      saldoTotal: Math.abs(Funciones.RedondearNumero(saldoTotal, 2)),
+    }));
   };
   //Calculos
   //#endregion
@@ -419,13 +344,42 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (obj) => {
-    setDataInventario({
-      detalleId: obj.detalleId,
-      inventario: obj.inventario,
-      descripcion: obj.descripcion,
-    });
-    setModalInventario(true);
+  const AbrirModal = async (obj, click = false) => {
+    if (click) {
+      let row = obj.target.closest("tr");
+      let detalleId = row.lastChild.innerText;
+      let descripcion = row.children[2].innerText;
+      let inventario = row.children[5].innerText;
+      setDataInventario({
+        detalleId: detalleId,
+        inventario: inventario,
+        descripcion: descripcion,
+      });
+      setModalInventario(true);
+    } else {
+      setDataInventario({
+        detalleId: obj.detalleId,
+        inventario: obj.inventario,
+        descripcion: obj.descripcion,
+      });
+      setModalInventario(true);
+    }
+  };
+  const AbrirModalKey = async (e) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaCuadreStock")
+        .querySelector("tr.selected-row");
+      let detalleId = row.lastChild.innerText;
+      let descripcion = row.children[2].innerText;
+      let inventario = row.children[5].innerText;
+      setDataInventario({
+        detalleId: detalleId,
+        inventario: inventario,
+        descripcion: descripcion,
+      });
+      setModalInventario(true);
+    }
   };
   //#endregion
 
@@ -1050,7 +1004,6 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                 datos={dataLocal}
                 total={total}
                 index={index}
-                Click={(e) => FiltradoPaginado(e)}
                 estilos={[
                   "",
                   "",
@@ -1060,6 +1013,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                   "border border-b-0",
                   "border",
                 ]}
+                Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AbrirModal(e, true)}
               />
             </TablaStyle>
             {/* Tabla Detalle */}
@@ -1111,6 +1066,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
               modo={modoInventario}
               objeto={dataInventario}
               setObjeto={setDataInventario}
+              foco={document.getElementById("tablaCuadreStock")}
             />
           )}
         </>

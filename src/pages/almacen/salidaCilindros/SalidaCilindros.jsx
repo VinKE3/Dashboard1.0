@@ -2,10 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
-import Delete from "../../../components/CRUD/Delete";
-import BotonBasico from "../../../components/BotonesComponent/BotonBasico";
-import BotonCRUD from "../../../components/BotonesComponent/BotonCRUD";
-import Table from "../../../components/tablas/Table";
+import Delete from "../../../components/Funciones/Delete";
+import BotonBasico from "../../../components/Boton/BotonBasico";
+import BotonCRUD from "../../../components/Boton/BotonCRUD";
+import Table from "../../../components/Tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
@@ -186,7 +186,7 @@ const SalidaCilindros = () => {
       case 2: {
         let valor = await GetIsPermitido(accion, id);
         if (valor) {
-          Delete(["Almacen", "EntradaCilindros"], id, setEliminar);
+          Delete(["Almacen", "SalidaCilindros"], id, setEliminar);
         }
         break;
       }

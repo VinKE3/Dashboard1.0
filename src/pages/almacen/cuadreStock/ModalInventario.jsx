@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import ModalBasic from "../../../components/ModalBasic";
-import { FaSearch, FaUndoAlt, FaPen } from "react-icons/fa";
+import ModalBasic from "../../../components/Modal/ModalBasic";
 import * as Global from "../../../components/Global";
 
-const ModalInventario = ({ setModal, modo, objeto, setObjeto }) => {
+const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   //#endregion
@@ -19,9 +18,13 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto }) => {
     if (e.key === "Enter") {
       await PasarDatos();
     }
+    if (e.key == "Escape") {
+      setModal(false);
+    }
   };
   const PasarDatos = async () => {
     setObjeto((prev) => ({ ...prev, inventario: data.inventario }));
+    foco.focus();
     setModal(false);
   };
   //#endregion
@@ -34,6 +37,7 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto }) => {
       modo={"Registrar"}
       menu={["", ""]}
       titulo={data.descripcion}
+      cerrar={false}
       tamañoModal={[Global.ModalPequeño + " !w-auto !max-w-3xl", Global.Form]}
     >
       <div className={Global.ContenedorBasico}>
