@@ -1045,6 +1045,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             {/* Tabla Detalle */}
             <TablaStyle>
               <Table
+                id={"tablaCuadreStock"}
                 columnas={columnas}
                 datos={dataLocal}
                 total={total}

@@ -148,3 +148,37 @@ export const ConvertirPreciosAMoneda = async (
   //Retorno
   return model;
 };
+
+export const Seleccionar = (e) => {
+  let row = e.target.closest("tr");
+  if (row.classList.contains("selected-row")) {
+    row.classList.remove("selected-row");
+  } else {
+    document.querySelectorAll("*").forEach((map) => {
+      map.classList.remove("selected-row");
+    });
+    row.classList.add("selected-row");
+  }
+};
+export const MoverFlecha = async (e, id) => {
+  if (e.keyCode == 40 || e.keyCode == 38) {
+    let row = document.querySelector(id).querySelector("tr.selected-row");
+
+    if (row != null) {
+      let filaAnterior = row.previousElementSibling;
+      let filaSiguiente = row.nextElementSibling;
+      if (e.keyCode == 40) {
+        if (filaSiguiente != null) {
+          row.classList.remove("selected-row");
+          filaSiguiente.classList.add("selected-row");
+        }
+      } else if (e.keyCode == 38) {
+        if (filaAnterior != null) {
+          row.classList.remove("selected-row");
+          filaAnterior.classList.add("selected-row");
+        }
+      }
+    }
+  }
+};
+//#endregion

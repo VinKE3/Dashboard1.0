@@ -4,6 +4,7 @@ import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import styled from "styled-components";
 import * as Global from "../Global";
+import * as Funciones from "../Funciones";
 
 const Tabla = styled.div`
   & .selected-row {
@@ -12,7 +13,16 @@ const Tabla = styled.div`
   }
 `;
 
-const Table = ({ columnas, datos, total, index, Click, paginas = 50 }) => {
+const Table = ({
+  id = "tabla",
+  columnas,
+  datos,
+  total,
+  index,
+  paginas = 50,
+  estilos = ["", "", "", "", "", "", ""],
+  Click,
+}) => {
   //#region useState
   const columns = columnas;
   const data = datos;
@@ -28,65 +38,6 @@ const Table = ({ columnas, datos, total, index, Click, paginas = 50 }) => {
       useSortBy,
       usePagination
     );
-  const Seleccionar = (e) => {
-    if (e.target.tagName == "DIV") {
-      let padre = e.target.parentNode.parentNode;
-      if (padre.tagName == "TD") {
-        let hijo = padre.parentNode;
-        if (hijo.classList.contains("selected-row")) {
-          hijo.classList.remove("selected-row");
-        } else {
-          document.querySelectorAll("*").forEach((f) => {
-            f.classList.remove("selected-row");
-          });
-          hijo.classList.add("selected-row");
-        }
-      } else {
-        if (padre.classList.contains("selected-row")) {
-          padre.classList.remove("selected-row");
-        } else {
-          document.querySelectorAll("*").forEach((f) => {
-            f.classList.remove("selected-row");
-          });
-          padre.classList.add("selected-row");
-        }
-      }
-    }
-    if (e.target.tagName == "TD") {
-      if (e.target.parentNode.classList.contains("selected-row")) {
-        e.target.parentNode.classList.remove("selected-row");
-      } else {
-        document.querySelectorAll("*").forEach((f) => {
-          f.classList.remove("selected-row");
-        });
-        e.target.parentNode.classList.add("selected-row");
-      }
-    }
-  };
-  const MoverFlecha = async (e) => {
-    if (e.keyCode == 40 || e.keyCode == 38) {
-      let row = document
-        .querySelector("#tabla")
-        .querySelector("tr.selected-row");
-
-      if (row != null) {
-        let filaAnterior = row.previousElementSibling;
-        let filaSiguiente = row.nextElementSibling;
-        if (e.keyCode == 40) {
-          if (filaSiguiente != null) {
-            row.classList.remove("selected-row");
-            filaSiguiente.classList.add("selected-row");
-          }
-        } else if (e.keyCode == 38) {
-          if (filaAnterior != null) {
-            row.classList.remove("selected-row");
-            filaAnterior.classList.add("selected-row");
-          }
-        }
-      }
-    }
-  };
-  //#endregion
 
   //#region Render
   return (
@@ -95,10 +46,10 @@ const Table = ({ columnas, datos, total, index, Click, paginas = 50 }) => {
       <Tabla>
         <table
           {...getTableProps()}
-          id="tabla"
+          id={id}
           className="w-full text-light focus:outline-none "
           tabIndex={0}
-          onKeyDown={(e) => MoverFlecha(e)}
+          onKeyDown={(e) => Funciones.MoverFlecha(e, "#" + id)}
         >
           <thead className={Global.THeader}>
             {headerGroups.map((headerGroup) => (
@@ -122,7 +73,7 @@ const Table = ({ columnas, datos, total, index, Click, paginas = 50 }) => {
                 <tr
                   {...row.getRowProps()}
                   className={Global.Tr}
-                  onClick={(e) => Seleccionar(e)}
+                  onClick={(e) => Funciones.Seleccionar(e)}
                 >
                   {row.cells.map((cell) => {
                     return (
@@ -143,7 +94,7 @@ const Table = ({ columnas, datos, total, index, Click, paginas = 50 }) => {
       <div className={Global.TFooter}>
         {/* Total de registros */}
         <div className={Global.TotalRegistros}>
-          <span className="text-center align-text-bottom ">
+          <span className="text-center align-text-bottom font-semibold ">
             {"Total de registros: "}
             <span className="font-bold text-primary">{totalPaginas}</span>
           </span>
