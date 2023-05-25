@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
@@ -331,6 +331,46 @@ const Cotizacion = () => {
       });
     }
   };
+  const Imprimir = async () => {
+    let row = document.querySelector("#tabla").querySelector("tr.selected-row");
+    if (row != null) {
+      let id = row.children[0].innerHTML;
+      const result = await ApiMasy.get(
+        `api/Venta/DocumentoVenta/Imprimir/${id}`
+      );
+      if (result.name == "AxiosError") {
+        let err = "";
+        if (result.response.data == "") {
+          err = result.message;
+        } else {
+          err = String(result.response.data.messages[0].textos);
+        }
+        toast.error(err, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        console.log(result.data);
+      }
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
   //#endregion
 
   //#region Columnas
@@ -512,6 +552,13 @@ const Cotizacion = () => {
                   containerClass=""
                 />
               )}
+              <BotonBasico
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => Imprimir()}
+                containerClass=""
+              />
             </div>
             {/* Boton */}
 

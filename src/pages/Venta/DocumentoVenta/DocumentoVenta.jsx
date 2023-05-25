@@ -13,8 +13,8 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
-import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
+import { FaSearch, FaCheck } from "react-icons/fa";
+import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 //#region Estilos
@@ -28,15 +28,22 @@ const TablaStyle = styled.div`
   & th:nth-child(7) {
     text-align: right;
   }
+  & th:nth-child(6) {
+    text-align: center;
+    width: 40px;
+  }
   & th:nth-child(8),
   & th:nth-child(9),
   & th:nth-child(10),
   & th:nth-child(11) {
     text-align: center;
+    width: 40px;
+  }
+  th:nth-child(16) {
+    text-align: center;
   }
   & th:last-child {
     width: 90px;
-    max-width: 90px;
     text-align: center;
   }
 `;
@@ -65,6 +72,7 @@ const DocumentoVenta = () => {
   const [modo, setModo] = useState("Registrar");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
+  const [checked, setChecked] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -338,6 +346,132 @@ const DocumentoVenta = () => {
       });
     }
   };
+  const Imprimir = async () => {
+    let row = document.querySelector("#tabla").querySelector("tr.selected-row");
+    if (row != null) {
+      let id = row.children[0].innerHTML;
+      const result = await ApiMasy.get(
+        `api/Venta/DocumentoVenta/Imprimir/${id}`
+      );
+      if (result.name == "AxiosError") {
+        let err = "";
+        if (result.response.data == "") {
+          err = result.message;
+        } else {
+          err = String(result.response.data.messages[0].textos);
+        }
+        toast.error(err, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        console.log(result.data)
+      }
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
+  const Autorizar = async (id, estado) => {
+    if (estado != false) {
+      toast.error(
+        "Documento Venta: Solo se pueden autorizar documentos pendientes.",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    } else {
+      console.log(id);
+    }
+  };
+  const AutorizarTodo = async (ids, value) => {
+    let model = {
+      ids: ids,
+      isBloqueado: value,
+    };
+    const title = value
+      ? "Autorizar Registros de Ventas (50 registros mostrados)"
+      : "Desautorizar Registros de Ventas (50 registros mostrados)";
+
+    Swal.fire({
+      title: title,
+      icon: "warning",
+      iconColor: "#F7BF3A",
+      showCancelButton: true,
+      color: "#fff",
+      background: "#1a1a2e",
+      confirmButtonColor: "#EE8100",
+      confirmButtonText: "Aceptar",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // ApiMasy.put(`api/Venta/BloquearVenta`, model).then((response) => {
+        //   if (response.name == "AxiosError") {
+        //     let err = "";
+        //     if (response.response.data == "") {
+        //       err = response.message;
+        //     } else {
+        //       err = String(response.response.data.messages[0].textos);
+        //     }
+        //     toast.error(err, {
+        //       position: "bottom-right",
+        //       autoClose: 3000,
+        //       hideProgressBar: true,
+        //       closeOnClick: true,
+        //       pauseOnHover: true,
+        //       draggable: true,
+        //       progress: undefined,
+        //       theme: "colored",
+        //     });
+        //   } else {
+        //     Listar(
+        //       `&tipoDocumentoId=${
+        //         document.getElementById("tipoDocumentoId").value
+        //       }&fechaInicio=${
+        //         document.getElementById("fechaInicio").value
+        //       }&fechaFin=${document.getElementById("fechaFin").value}`,
+        //       index + 1
+        //     );
+        //     toast.info(String(response.data.messages[0].textos), {
+        //       position: "bottom-right",
+        //       autoClose: 3000,
+        //       hideProgressBar: true,
+        //       closeOnClick: true,
+        //       pauseOnHover: true,
+        //       draggable: true,
+        //       progress: undefined,
+        //       theme: "colored",
+        //     });
+        //   }
+        // });
+        setChecked(value);
+      } else {
+        setChecked(!value);
+      }
+    });
+  };
   //#endregion
 
   //#region Columnas
@@ -443,7 +577,7 @@ const DocumentoVenta = () => {
         accessor: "tiendaVendedor",
       },
       {
-        Header: "Enviado",
+        Header: "E",
         accessor: "isEnviado",
         Cell: ({ value }) => {
           return (
@@ -457,13 +591,25 @@ const DocumentoVenta = () => {
       {
         Header: "Acciones",
         Cell: ({ row }) => (
-          <BotonCRUD
-            setEliminar={setEliminar}
-            permisos={permisos}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
-          />
+          <div className="flex">
+            <div className={Global.TablaBotonConsultar}>
+              <button
+                id="boton-autorizar"
+                onClick={() => Autorizar(row.values.id, row.values.isEnviado)}
+                className="p-0 px-1"
+                title="Click para autorizar registro"
+              >
+                <FaCheck></FaCheck>
+              </button>
+            </div>
+            <BotonCRUD
+              setEliminar={setEliminar}
+              permisos={permisos}
+              ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
+              ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
+              ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
+            />
+          </div>
         ),
       },
     ],
@@ -477,8 +623,32 @@ const DocumentoVenta = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Documentos de Venta</h2>
-
+            <div className="flex items-center justify-between">
+              <h2 className={Global.TituloH2}>Documentos de Venta</h2>
+              {filtro.isEnviado === false && (
+                <div className="flex">
+                  <div className={Global.CheckStyle}>
+                    <Checkbox
+                      inputId="isAutorizado"
+                      name="isAutorizado"
+                      onChange={(e) => {
+                        AutorizarTodo(
+                          datos.map((d) => d.id),
+                          e.checked
+                        );
+                      }}
+                      checked={checked}
+                    ></Checkbox>
+                  </div>
+                  <label
+                    htmlFor="isAutorizado"
+                    className={Global.LabelCheckStyle + " font-semibold"}
+                  >
+                    Autorizar Todos
+                  </label>
+                </div>
+              )}
+            </div>
             {/* Filtro*/}
             <div
               className={
@@ -616,6 +786,13 @@ const DocumentoVenta = () => {
                   containerClass=""
                 />
               )}
+              <BotonBasico
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => Imprimir()}
+                containerClass=""
+              />
             </div>
             {/* Boton */}
 

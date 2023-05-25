@@ -4,32 +4,86 @@ import {
   FaTools,
   FaIndustry,
   FaUsers,
-  FaMoneyCheck,
   FaFileAlt,
-  FaToolbox,
   FaDollarSign,
   FaMoneyBillAlt,
 } from "react-icons/fa";
 
 function seccionesList() {
   const secciones = [
-    //?Archivo
+    //?Ventas
     {
-      title: "Archivo",
-      id: "archivo",
-      icon: <FaUsers className="text-primary" />,
+      title: "Ventas",
+      id: "Venta",
+      icon: <FaBalanceScale className="text-primary" />,
       items: [
         {
-          path: "/Compra/bloquearCompra",
-          title: "Bloquear Compra",
+          path: "/Venta/clientes",
+          title: "Clientes",
         },
         {
-          path: "/Venta/bloquearVenta",
-          title: "Bloquear Venta",
+          path: "/Venta/conductorTransportista",
+          title: "Conductores - Transportistas",
         },
         {
-          path: "/Finanza/bloquearMovimientoBancario",
-          title: "Bloquear Movimiento Bancario",
+          path: "/Venta/documentoVenta",
+          title: "Documentos de Venta",
+        },
+        {
+          path: "/Venta/guiaRemision",
+          title: "Guías de Remision",
+        },
+        {
+          path: "/Venta/cotizacion",
+          title: "Cotización",
+        },
+        {
+          path: "/Venta/retencion",
+          title: "Retención",
+        },
+      ],
+    },
+    //?Compras
+    {
+      title: "Compras",
+      id: "Compra",
+      icon: <FaClipboardCheck className="text-primary" />,
+      items: [
+        {
+          path: "/Compra/proveedor",
+          title: "Proveedores",
+        },
+        {
+          path: "/Compra/ordenCompra",
+          title: "Órdenes de Compra",
+        },
+        {
+          path: "/Compra/facturaNegociable",
+          title: "Factura Negociable",
+        },
+        {
+          path: "/Compra/letraCambioCompra",
+          title: "Letra de Cambio",
+        },
+        {
+          path: "/Compra/CEF",
+          title: "C.E.F.",
+        },
+        {
+          path: "/Compra/Cheque",
+          title: "Cheques",
+        },
+        {
+          path: "/Compra/documentoCompra",
+          title: "Documentos de Compra",
+        },
+        {
+          path: "/Compra/guiaCompra",
+          title: "Guías De Compra",
+        },
+        {
+          path: "/Finanza/cuentaPorPagar",
+          title: "Cuentas por Pagar",
         },
       ],
     },
@@ -96,12 +150,12 @@ function seccionesList() {
           title: "Personal",
         },
         {
-          path: "/Mantenimiento/vehiculo",
-          title: "Vehículos",
-        },
-        {
           path: "/Mantenimiento/empresaTransporte",
           title: "Empresas de Transporte",
+        },
+        {
+          path: "/Mantenimiento/vehiculo",
+          title: "Vehículos",
         },
       ],
     },
@@ -149,82 +203,6 @@ function seccionesList() {
         },
       ],
     },
-    //?Compras
-    {
-      title: "Compras",
-      id: "Compra",
-      icon: <FaClipboardCheck className="text-primary" />,
-      items: [
-        {
-          path: "/Compra/proveedor",
-          title: "Proveedores",
-        },
-        {
-          path: "/Compra/ordenCompra",
-          title: "Órdenes de Compra",
-        },
-        {
-          path: "/Compra/facturaNegociable",
-          title: "Factura Negociable",
-        },
-        {
-          path: "/Compra/letraCambioCompra",
-          title: "Letra de Cambio",
-        },
-        {
-          path: "/Compra/CEF",
-          title: "C.E.F.",
-        },
-        {
-          path: "/Compra/Cheque",
-          title: "Cheques",
-        },
-        {
-          path: "/Compra/documentoCompra",
-          title: "Documentos de Compra",
-        },
-        {
-          path: "/Compra/guiaCompra",
-          title: "Guías De Compra",
-        },
-        {
-          path: "/Finanza/cuentaPorPagar",
-          title: "Cuentas por Pagar",
-        },
-      ],
-    },
-    //?Ventas
-    {
-      title: "Ventas",
-      id: "Venta",
-      icon: <FaBalanceScale className="text-primary" />,
-      items: [
-        {
-          path: "/Venta/clientes",
-          title: "Clientes",
-        },
-        {
-          path: "/Venta/conductorTransportista",
-          title: "Conductores - Transportistas",
-        },
-        {
-          path: "/Venta/documentoVenta",
-          title: "Documentos de Venta",
-        },
-        {
-          path: "/Venta/guiaRemision",
-          title: "Guías de Remision",
-        },
-        {
-          path: "/Venta/cotizacion",
-          title: "Cotización",
-        },
-        {
-          path: "/Venta/retencion",
-          title: "Retención",
-        },
-      ],
-    },
     //?Cobranzas
     {
       title: "Cobranzas",
@@ -241,6 +219,27 @@ function seccionesList() {
         },
       ],
     },
+    //?Archivo
+    {
+      title: "Bloqueos",
+      id: "archivo",
+      icon: <FaUsers className="text-primary" />,
+      items: [
+        {
+          path: "/Compra/bloquearCompra",
+          title: "Bloquear Compra",
+        },
+        {
+          path: "/Venta/bloquearVenta",
+          title: "Bloquear Venta",
+        },
+        {
+          path: "/Finanza/bloquearMovimientoBancario",
+          title: "Bloquear Movimiento Bancario",
+        },
+      ],
+    },
+
     //Tesoreria
     // {
     //   title: "Tesoreria",
