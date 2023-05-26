@@ -86,7 +86,7 @@ function seccionesList() {
           title: "Guías De compra",
         },
         {
-          path: "/Finanza/cuentaPorPagar",
+          path: "/finanza/cuentaPorPagar",
           title: "Cuentas por Pagar",
         },
       ],
@@ -238,7 +238,7 @@ function seccionesList() {
           title: "Bloquear venta",
         },
         {
-          path: "/Finanza/bloquearMovimientoBancario",
+          path: "/finanza/bloquearMovimientoBancario",
           title: "Bloquear Movimiento Bancario",
         },
       ],
