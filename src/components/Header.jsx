@@ -20,21 +20,21 @@ const Header = () => {
           label: "Configuración",
           icon: "pi pi-cog",
           command: () => {
-            navigate("/Mantenimiento/Empresa");
+            navigate("/mantenimiento/empresa");
           },
         },
         {
           label: "Usuario",
           icon: "pi pi-users",
           command: () => {
-            navigate("/Mantenimiento/Usuario");
+            navigate("/mantenimiento/usuario");
           },
         },
         {
           label: "Correlativos",
           icon: "pi pi-list",
           command: () => {
-            navigate("/Mantenimiento/Correlativo");
+            navigate("/mantenimiento/correlativo");
           },
         },
       ],

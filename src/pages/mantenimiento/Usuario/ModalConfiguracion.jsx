@@ -246,6 +246,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "UsuarioPermiso"]}
           titulo="Configuración de Permisos"
           tamañoModal={[Global.ModalMediano, Global.Form]}
+          foco={document.getElementById("nickFiltro")}
         >
           <Mensajes
             tipoMensaje={2}
