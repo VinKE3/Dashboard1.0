@@ -258,7 +258,7 @@ function seccionesList() {
     // },
     //?Informes
     {
-      title: "Informes",
+      title: "Informe",
       id: "Informe",
       icon: <FaFileAlt className="text-primary" />,
       items: [
