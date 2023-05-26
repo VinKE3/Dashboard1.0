@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
-import ModalBasic from "../Modal/ModalBasic";
-import TableBasic from "../Tabla/TableBasic";
-import FiltroBasico from "../Filtro/FiltroBasico";
+import ModalBasic from "../modal/ModalBasic";
+import TableBasic from "../tabla/TableBasic";
+import FiltroBasico from "../filtro/FiltroBasico";
 import { FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";

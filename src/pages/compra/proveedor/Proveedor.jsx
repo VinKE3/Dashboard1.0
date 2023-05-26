@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
-import BotonBasico from "../../../components/Boton/BotonBasico";
-import BotonCRUD from "../../../components/Boton/BotonCRUD";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/Tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/Modal/ModalCrud";
+import ModalCrud from "../../../components/modal/ModalCrud";
 import TableBasic from "../../../components/tabla/TableBasic";
 import moment from "moment";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones/Validaciones";
+import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`

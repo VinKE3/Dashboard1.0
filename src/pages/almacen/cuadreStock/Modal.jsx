@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalInventario from "./ModalInventario";
-import ModalCrud from "../../../components/Modal/ModalCrud";
-import Mensajes from "../../../components/Funciones/Mensajes";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import Mensajes from "../../../components/funciones/Mensajes";
 import Table from "../../../components/Tabla/Table";
 import { toast } from "react-toastify";
 import { RadioButton } from "primereact/radiobutton";
@@ -13,7 +13,7 @@ import styled from "styled-components";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones/Validaciones";
+import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`

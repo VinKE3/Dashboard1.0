@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../modal/ModalBasic";
-import TableBasic from "../Tabla/TableBasic";
+import TableBasic from "../tabla/TableBasic";
 import { RadioButton } from "primereact/radiobutton";
 import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";

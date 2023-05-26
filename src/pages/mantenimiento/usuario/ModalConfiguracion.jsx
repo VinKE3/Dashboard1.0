@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import ModalCrud from "../../../components/Modal/ModalCrud";
+import ModalCrud from "../../../components/modal/ModalCrud";
 import ApiMasy from "../../../api/ApiMasy";
 import * as Global from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { SelectButton } from "primereact/selectbutton";
 import { useMenu } from "../../../context/ContextMenu";
-import Mensajes from "../../../components/Funciones/Mensajes";
+import Mensajes from "../../../components/funciones/Mensajes";
 import { useCallback } from "react";
 import { ScrollTop } from "primereact/scrolltop";
 const ModalConfiguracion = ({ setModal, modo, objeto }) => {

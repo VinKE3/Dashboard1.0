@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
-import ModalBasic from "../Modal/ModalBasic";
-import TableBasic from "../Tabla/TableBasic";
+import ModalBasic from "../modal/ModalBasic";
+import TableBasic from "../tabla/TableBasic";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";

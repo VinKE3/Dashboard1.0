@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/Modal/ModalCrud";
+import ModalCrud from "../../../components/modal/ModalCrud";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FaSearch } from "react-icons/fa";

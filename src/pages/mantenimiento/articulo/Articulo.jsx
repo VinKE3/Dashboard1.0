@@ -12,7 +12,7 @@ import { FaSearch, FaCheck } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones/Validaciones";
+import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`

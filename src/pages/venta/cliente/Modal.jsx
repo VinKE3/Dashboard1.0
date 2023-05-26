@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/Modal/ModalCrud";
+import ModalCrud from "../../../components/modal/ModalCrud";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import TableBasic from "../../../components/tabla/TableBasic";
 import { Checkbox } from "primereact/checkbox";
@@ -9,7 +9,7 @@ import Ubigeo from "../../../components/filtro/Ubigeo";
 import Insert from "../../../components/Funciones/Insert";
 import Update from "../../../components/Funciones/Update";
 import Delete from "../../../components/funciones/Delete";
-import Mensajes from "../../../components/Funciones/Mensajes";
+import Mensajes from "../../../components/funciones/Mensajes";
 import { toast } from "react-toastify";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/Modal/ModalCrud";
-import Mensajes from "../../../components/Funciones/Mensajes";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones/Validaciones";
+import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`

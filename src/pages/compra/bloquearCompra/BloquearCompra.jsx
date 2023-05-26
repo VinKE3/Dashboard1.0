@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
-import BotonCRUD from "../../../components/Boton/BotonCRUD";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/Tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { toast, ToastContainer } from "react-toastify";

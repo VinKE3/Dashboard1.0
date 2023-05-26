@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/Modal/ModalCrud";
+import ModalCrud from "../../../components/modal/ModalCrud";
 import * as Global from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {

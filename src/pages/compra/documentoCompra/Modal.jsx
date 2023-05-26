@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/Modal/ModalCrud";
-import FiltroProveedor from "../../../components/Filtro/FiltroProveedor";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
 import FiltroOrdenCompra from "../../../components/Filtro/FiltroOrdenCompra";
 import FiltroArticulo from "../../../components/Filtro/FiltroArticulo";
-import Mensajes from "../../../components/Funciones/Mensajes";
+import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
@@ -23,7 +23,7 @@ import {
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/Funciones/Validaciones";
+import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`

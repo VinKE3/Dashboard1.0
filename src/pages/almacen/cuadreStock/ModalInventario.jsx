@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModalBasic from "../../../components/Modal/ModalBasic";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import * as Global from "../../../components/Global";
 
 const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
