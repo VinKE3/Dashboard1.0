@@ -355,9 +355,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${data.id}`
     );
     //Filtrar comentario DIRECCION PRINCIPAL
-    setDataDireccion(result.data.data.filter(
-      (map) => map.comentario != "DIRECCION PRINCIPAL"
-    ));
+    setDataDireccion(
+      result.data.data.filter((map) => map.comentario != "DIRECCION PRINCIPAL")
+    );
   };
   const GetDireccion = async (id) => {
     const result = await ApiMasy.get(
@@ -702,6 +702,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Cliente"]}
           titulo="Cliente"
+          foco={document.getElementById("documento")}
           tamañoModal={[Global.ModalMediano, Global.Form + " pt-0"]}
         >
           <TabView>
@@ -722,7 +723,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="id"
                       placeholder="Código"
                       autoComplete="off"
-                      disabled={true}
+                      readOnly={true}
+                      autoFocus={modo == "Consultar"}
                       value={data.id ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -767,7 +769,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar" ? true : false}
                       value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
-                      className={Global.InputBoton}
+                      className={
+                        modo != "Consultar"
+                          ? Global.InputBoton
+                          : Global.InputStyle
+                      }
                     />
                     <button
                       id="consultarApi"

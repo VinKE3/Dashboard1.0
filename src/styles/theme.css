@@ -92,6 +92,7 @@
 }
 
 input:disabled,
+input:read-only,
 select:disabled {
   color: #f8f6f6 !important;
   background: #192331 !important;

@@ -125,30 +125,48 @@ const Conductor = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
-    setModo(modo);
-    if (modo == "Registrar") {
-      setObjeto({
-        id: "00",
-        empresaId: "01",
-        empresaTransporteId: "0001  ",
-        nombre: "",
-        numeroDocumentoIdentidad: "",
-        licenciaConducir: "",
-        telefono: "",
-        celular: "",
-        correoElectronico: "",
-        direccion: "",
-        departamentoId: "15",
-        provinciaId: "01",
-        distritoId: "01",
-        observacion: "",
-        isActivo: true,
-      });
-    } else {
+  const AbrirModal = async (value, modo = "Registrar", click = false) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      setModo(modo);
+      if (modo == "Registrar") {
+        setObjeto({
+          id: "00",
+          empresaId: "01",
+          empresaTransporteId: "0001  ",
+          nombre: "",
+          numeroDocumentoIdentidad: "",
+          licenciaConducir: "",
+          telefono: "",
+          celular: "",
+          correoElectronico: "",
+          direccion: "",
+          departamentoId: "15",
+          provinciaId: "01",
+          distritoId: "01",
+          observacion: "",
+          isActivo: true,
+        });
+      } else {
+        await GetPorId(id);
+      }
     }
     setModal(true);
+  };
+  const AbrirModalKey = async (e, modo) => {
+    if (e.key === "Enter") {
+      setModo(modo);
+      let row = document
+        .querySelector("#tablaTransportista")
+        .querySelector("tr.selected-row");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    }
   };
   //#endregion
 
@@ -229,11 +247,14 @@ const Conductor = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaTransportista"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AbrirModal(e, "Consultar", true)}
+                KeyDown={(e) => AbrirModalKey(e, "Modificar", true)}
               />
             </TablaStyle>
             {/* Tabla */}

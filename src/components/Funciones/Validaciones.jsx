@@ -163,7 +163,6 @@ export const Seleccionar = (e) => {
 export const MoverFlecha = async (e, id) => {
   if (e.keyCode == 40 || e.keyCode == 38) {
     let row = document.querySelector(id).querySelector("tr.selected-row");
-
     if (row != null) {
       let filaAnterior = row.previousElementSibling;
       let filaSiguiente = row.nextElementSibling;
@@ -178,7 +177,18 @@ export const MoverFlecha = async (e, id) => {
           filaAnterior.classList.add("selected-row");
         }
       }
+    } else {
+      if (e.target.tagName == "TABLE") {
+        let tr = document.getElementsByTagName("tr");
+        tr[1].classList.add("selected-row");
+      }
     }
+  }
+};
+
+export const CerrarModal = async (e) => {
+  if (e.key == "Escape") {
+    return false;
   }
 };
 //#endregion

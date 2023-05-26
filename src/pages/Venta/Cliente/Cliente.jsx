@@ -54,7 +54,9 @@ const Clientes = () => {
 
   //#region useEffect;
   useEffect(() => {
-    setCadena(`&numeroDocumentoIdentidad=${filtro.documento}&nombre=${filtro.nombre}`);
+    setCadena(
+      `&numeroDocumentoIdentidad=${filtro.documento}&nombre=${filtro.nombre}`
+    );
   }, [filtro]);
   useEffect(() => {
     Filtro();
@@ -130,32 +132,52 @@ const Clientes = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
-    setModo(modo);
-    if (modo == "Registrar") {
-      setObjeto({
-        id: "000000",
-        tipoDocumentoIdentidadId: "1",
-        numeroDocumentoIdentidad: "",
-        nombre: "",
-        telefono: "",
-        celular: "",
-        correoElectronico: "",
-        direccionPrincipal: "",
-        departamentoId: "15",
-        provinciaId: "01",
-        distritoId: "01",
-        zonaId: "",
-        tipoVentaId: "CO",
-        tipoCobroId: "CP",
-        maximoCreditoUSD: 0,
-        maximoCreditoPEN: 0,
-        observacion: "",
-      });
-    } else {
+  const AbrirModal = async (value, modo = "Registrar", click = false) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      setModo(modo);
+      if (modo == "Registrar") {
+        setObjeto({
+          id: "000000",
+          tipoDocumentoIdentidadId: "1",
+          numeroDocumentoIdentidad: "",
+          nombre: "",
+          telefono: "",
+          celular: "",
+          correoElectronico: "",
+          direccionPrincipal: "",
+          departamentoId: "15",
+          provinciaId: "01",
+          distritoId: "01",
+          zonaId: "",
+          tipoVentaId: "CO",
+          tipoCobroId: "CP",
+          maximoCreditoUSD: 0,
+          maximoCreditoPEN: 0,
+          observacion: "",
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const AbrirModalKey = async (e, modo) => {
+    if (e.key === "Enter") {
+      setModo(modo);
+      let row = document
+        .querySelector("#tablaCliente")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+        setModal(true);
+      }
+    }
   };
   //#endregion
 
@@ -264,11 +286,14 @@ const Clientes = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaCliente"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AbrirModal(e, "Consultar", true)}
+                KeyDown={(e) => AbrirModalKey(e, "Modificar", true)}
               />
             </TablaStyle>
             {/* Tabla */}

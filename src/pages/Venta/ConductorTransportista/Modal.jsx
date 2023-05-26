@@ -66,6 +66,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Conductor"]}
           titulo="Conductor"
+          foco={document.getElementById("tablaTransportista")}
           tamañoModal={[Global.ModalMediano, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -80,7 +81,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="id"
                   placeholder="id"
                   autoComplete="off"
-                  disabled={true}
+                  autoFocus={modo == "Consultar"}
+                  readOnly={true}
                   value={data.id ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

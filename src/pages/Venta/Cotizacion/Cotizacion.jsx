@@ -177,79 +177,106 @@ const Cotizacion = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
-    setModo(modo);
-    switch (accion) {
-      case 0: {
-        setObjeto({
-          empresaId: "01",
-          tipoDocumentoId: "CO",
-          serie: "",
-          numero: "",
-          fechaEmision: moment().format("YYYY-MM-DD"),
-          fechaVencimiento: moment().format("YYYY-MM-DD"),
-          clienteId: "",
-          clienteNombre: "",
-          clienteNumeroDocumentoIdentidad: "",
-          clienteDireccionId: 0,
-          clienteDireccion: "",
-          clienteTelefono: "",
-          departamentoId: null,
-          provinciaId: null,
-          distritoId: null,
-          contactoId: "",
-          contactoNombre: "",
-          contactoTelefono: "",
-          contactoCorreoElectronico: "",
-          contactoCargoId: null,
-          contactoCargoDescripcion: "",
-          contactoCelular: "",
-          personalId: "",
-          monedaId: "S",
-          tipoCambio: 0,
-          tipoVentaId: "CO",
-          tipoCobroId: "EF",
-          numeroOperacion: "",
-          cuentaCorrienteDescripcion: "",
-          validez: "",
-          observacion: "",
-          subTotal: 0,
-          montoIGV: 0,
-          totalNeto: 0,
-          montoRetencion: 0,
-          montoPercepcion: 0,
-          total: 0,
-          porcentajeIGV: dataGlobal.porcentajeIGV,
-          porcentajeRetencion: 0,
-          porcentajePercepcion: 0,
-          incluyeIGV: false,
-          detalles: [],
-        });
-        setModal(true);
-        break;
-      }
-      case 1: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
+
+  const AbrirModal = async (
+    value,
+    modo = "Registrar",
+    click = false,
+    accion = 0
+  ) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      switch (accion) {
+        case 0: {
+          setObjeto({
+            empresaId: "01",
+            tipoDocumentoId: "CO",
+            serie: "",
+            numero: "",
+            fechaEmision: moment().format("YYYY-MM-DD"),
+            fechaVencimiento: moment().format("YYYY-MM-DD"),
+            clienteId: "",
+            clienteNombre: "",
+            clienteNumeroDocumentoIdentidad: "",
+            clienteDireccionId: 0,
+            clienteDireccion: "",
+            clienteTelefono: "",
+            departamentoId: null,
+            provinciaId: null,
+            distritoId: null,
+            contactoId: "",
+            contactoNombre: "",
+            contactoTelefono: "",
+            contactoCorreoElectronico: "",
+            contactoCargoId: null,
+            contactoCargoDescripcion: "",
+            contactoCelular: "",
+            personalId: "",
+            monedaId: "S",
+            tipoCambio: 0,
+            tipoVentaId: "CO",
+            tipoCobroId: "EF",
+            numeroOperacion: "",
+            cuentaCorrienteDescripcion: "",
+            validez: "",
+            observacion: "",
+            subTotal: 0,
+            montoIGV: 0,
+            totalNeto: 0,
+            montoRetencion: 0,
+            montoPercepcion: 0,
+            total: 0,
+            porcentajeIGV: dataGlobal.porcentajeIGV,
+            porcentajeRetencion: 0,
+            porcentajePercepcion: 0,
+            incluyeIGV: false,
+            detalles: [],
+          });
+          setModal(true);
+          break;
+        }
+        case 1: {
+          let valor = await GetIsPermitido(accion, id);
+          if (valor) {
+            await GetPorId(id);
+            setModal(true);
+          }
+          break;
+        }
+        case 2: {
+          let valor = await GetIsPermitido(accion, id);
+          if (valor) {
+            Delete(["Venta", "Cotizacion"], id, setEliminar);
+          }
+          break;
+        }
+        case 3: {
           await GetPorId(id);
           setModal(true);
+          break;
         }
-        break;
+        default:
+          break;
       }
-      case 2: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          Delete(["Venta", "Cotizacion"], id, setEliminar);
-        }
-        break;
-      }
-      case 3: {
+    }
+  };
+  const AbrirModalKey = async (e, modo) => {
+    if (e.key === "Enter") {
+      setModo(modo);
+      let row = document
+        .querySelector("#tablaCotizacion")
+        .querySelector("tr.selected-row");
+      let id = row.firstChild.innerText;
+      let valor = await GetIsPermitido(1, id);
+      if (valor) {
         await GetPorId(id);
         setModal(true);
-        break;
       }
-      default:
-        break;
     }
   };
   const Anular = async () => {
@@ -565,11 +592,14 @@ const Cotizacion = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaCotizacion"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AbrirModal(e, "Consultar", true, 3)}
+                KeyDown={(e) => AbrirModalKey(e, "Modificar", true, 1)}
               />
             </TablaStyle>
             {/* Tabla */}

@@ -344,9 +344,9 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (obj, click = false) => {
+  const AbrirModal = async (value, click = false) => {
     if (click) {
-      let row = obj.target.closest("tr");
+      let row = value.target.closest("tr");
       let detalleId = row.lastChild.innerText;
       let descripcion = row.children[2].innerText;
       let inventario = row.children[5].innerText;
@@ -358,9 +358,9 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       setModalInventario(true);
     } else {
       setDataInventario({
-        detalleId: obj.detalleId,
-        inventario: obj.inventario,
-        descripcion: obj.descripcion,
+        detalleId: value.detalleId,
+        inventario: value.inventario,
+        descripcion: value.descripcion,
       });
       setModalInventario(true);
     }

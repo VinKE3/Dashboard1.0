@@ -8,6 +8,7 @@ import { SelectButton } from "primereact/selectbutton";
 import { useMenu } from "../../../context/ContextMenu";
 import Mensajes from "../../../components/Funciones/Mensajes";
 import { useCallback } from "react";
+import { ScrollTop } from "primereact/scrolltop";
 
 const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -18,9 +19,34 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   const [selectedButton, setSelectedButton] = useState([]); //Listado de botones seleccionados
   const [checked, setChecked] = useState(false);
   const { getMenu, menu } = useMenu();
+  const [listaBotones, setListaBotones] = useState([
+    { name: "Registrar", value: "registrar", id: "registrar", disabled: false },
+    { name: "Modificar", value: "modificar", id: "modificar", disabled: false },
+    { name: "Eliminar", value: "eliminar", id: "eliminar", disabled: false },
+    { name: "Consultar", value: "consultar", id: "consultar", disabled: false },
+    { name: "Anular", value: "anular", id: "anular", disabled: false },
+  ]);
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    if (data.tipoUsuarioId === "NO") {
+      const updatedListaBotones = listaBotones.map((boton) => ({
+        ...boton,
+        disabled: true,
+      }));
+      //quiero que se deshabiliten todos los botones
+
+      setListaBotones(updatedListaBotones);
+    } else {
+      const updatedListaBotones = listaBotones.map((boton) => ({
+        ...boton,
+        disabled: false,
+      }));
+      setListaBotones(updatedListaBotones);
+    }
+  }, [data.tipoUsuarioId]);
+
   useEffect(() => {
     if (selectedMenu != "") {
       setData((prevData) => {
@@ -65,19 +91,12 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   useEffect(() => {
     getMenu();
     Tablas();
-    data;
     ListadoPermisos();
   }, []);
+
   //#endregion
 
   //#region Funciones
-  const listaBotones = [
-    { name: "Registrar", value: "registrar", id: "registrar" },
-    { name: "Modificar", value: "modificar", id: "modificar" },
-    { name: "Eliminar", value: "eliminar", id: "eliminar" },
-    { name: "Consultar", value: "consultar", id: "consultar" },
-    { name: "Anular", value: "anular", id: "anular" },
-  ];
   const listaPermisos = [
     "registrar",
     "modificar",
@@ -100,6 +119,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
       };
     });
   }, [data, setPermisos]);
+
   const ValidarData = ({ target }) => {
     setData((prevState) => ({
       ...prevState,
@@ -211,22 +231,22 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
               <div className={Global.Input}>
                 <div className={Global.CheckStyle}>
                   <Checkbox
+                    disabled={data.tipoUsuarioId == "NO"}
                     inputId="all"
                     onChange={(e) => {
                       setChecked(e.checked);
                       ValidarCheckTodos(e.checked);
                     }}
                     checked={checked}
-                  ></Checkbox>
+                  />
                 </div>
                 <label htmlFor="all" className={Global.LabelCheckStyle}>
                   Todos
                 </label>
               </div>
             </div>
-
-            <div>
-              <div className="card mt-4">
+            <div className="card mt-4 ">
+              <div style={{ width: "auto", height: "500px", overflow: "auto" }}>
                 <Accordion>
                   <AccordionTab
                     header={
@@ -236,7 +256,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                       </div>
                     }
                   >
-                    <ul>
+                    <ul className="overflow-y-auto">
                       {menu.map((item) => (
                         <li
                           className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
@@ -251,6 +271,12 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                     </ul>
                   </AccordionTab>
                 </Accordion>
+                <ScrollTop
+                  target="parent"
+                  threshold={100}
+                  className="w-2rem h-2rem border-round-md bg-primary"
+                  icon="pi pi-arrow-up text-base"
+                />
               </div>
             </div>
           </div>

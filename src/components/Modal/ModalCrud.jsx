@@ -14,8 +14,9 @@ const ModalCrud = ({
   modo,
   menu,
   titulo,
-  tamañoModal = [Global.ModalPequeño, Global.Form],
   cerrar = true,
+  foco,
+  tamañoModal = [Global.ModalPequeño, Global.Form],
 }) => {
   //#region useState
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -29,6 +30,15 @@ const ModalCrud = ({
   //#endregion
 
   //#region Funciones
+  const Enviar = async (e) => {
+    if (e.key == "Enter") {
+      if (modo == "Registrar") {
+        Registrar(e);
+      } else {
+        Modificar(e);
+      }
+    }
+  };
   const RetornarMensaje = async () => {
     if (tipoMensaje == 0) {
       toast.success(mensaje, {
@@ -41,6 +51,7 @@ const ModalCrud = ({
         progress: undefined,
         theme: "dark",
       });
+      foco.focus();
       setModal(false);
     }
   };
@@ -48,8 +59,16 @@ const ModalCrud = ({
     setMensaje([]);
     setTipoMensaje(-1);
   };
-  const CerrarModal = () => {
-    setModal(false);
+  const CerrarModal = (e = null) => {
+    if (e._reactName != "onClick") {
+      if (e.key == "Escape") {
+        foco.focus();
+        setModal(false);
+      }
+    } else {
+      foco.focus();
+      setModal(false);
+    }
   };
   //#endregion
 
@@ -83,7 +102,7 @@ const ModalCrud = ({
             {/*header*/}
 
             {/*body*/}
-            <div className={Global.ModalBody}>
+            <div className={Global.ModalBody} onKeyDown={(e) => CerrarModal(e)}>
               <div className={tamañoModal[1]}>
                 {tipoMensaje > 0 && (
                   <Mensajes
@@ -110,6 +129,7 @@ const ModalCrud = ({
                       ? (e) => Registrar(e)
                       : (e) => Modificar(e)
                   }
+                  onKeyDown={(e) => Enviar(e)}
                 >
                   {modo == "Registrar" ? "Registrar" : "Guardar Cambios"}
                 </button>

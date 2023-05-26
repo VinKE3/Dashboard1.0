@@ -15,6 +15,8 @@ module.exports = {
         label: "#1F2836",
         input: "#343E4F",
         disabled: "#192331",
+        TrPar: "#192436",
+        TrInpar: "#131E2F",
       },
     },
   },

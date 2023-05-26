@@ -98,7 +98,7 @@ function seccionesList() {
           title: "Tipos de Cambio",
         },
         {
-          path: "/Mantenimiento/InformeArticulo",
+          path: "/Mantenimiento/Articulo",
           title: "Artículos",
         },
         {

@@ -10,7 +10,8 @@ export var ModalMediano = "h-full w-full lg:h-[75%] max-h-full lg:max-w-4xl ";
 export var ModalPequeño = "h-full w-full md:h-fit md:max-w-2xl lg:max-w-3xl ";
 //Tamaños de Modal
 
-export var ModalHeader = "flex items-center justify-between pt-4 pb-2 px-5 rounded-tt ";
+export var ModalHeader =
+  "flex items-center justify-between pt-4 pb-2 px-5 rounded-tt ";
 export var ModalBody = "h-full w-full overflow-y-auto overflow-x-hidden ";
 export var ModalFooter =
   "flex items-center justify-end gap-x-2 p-3.5 px-5 rounded-bt ";
@@ -76,8 +77,9 @@ export var BotonOkModal =
   "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black text-light border-gray-800 focus:bg-gradient-to-b focus:from-primary focus:to-yellow-600 focus:text-black focus:border-blue-500 ";
 export var BotonCancelarModal =
   "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 focus:bg-gradient-to-b focus:from-red-700 focus:to-red-600 focus:text-light focus:border-blue-500 ";
+
 export var BotonBasic =
-  "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 text-sm font-semibold uppercase rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 text-gray-100 ";
+  "flex mb-2 px-3 sm:pr-5 sm:pl-4 py-3 sm:py-2 text-sm font-semibold uppercase rounded-md outline-none focus:outline-none ease-linear transition-all duration-150 text-gray-100 focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow focus:shadow-white/50 ";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
 export var BotonPrimary =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
@@ -105,7 +107,7 @@ export var CerrarModal =
 export var THeader =
   "text-sm font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
 export var TBody = "text-sm bg-gradient-to-b from-gray-800 to-slate-800 ";
-export var Tr = "border-b border-gray-400 ";
+export var Tr = "border-b border-gray-600 ";
 export var Td = "p-2 text-left select-none ";
 //Footer
 export var TFooter =

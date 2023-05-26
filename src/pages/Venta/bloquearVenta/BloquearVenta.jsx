@@ -193,6 +193,18 @@ const BloquearVenta = () => {
       });
     }
   };
+  const BloquearKey = async (e) => {
+    if (e.key == "Enter") {
+      let row = document
+        .querySelector("#tablaBloquearVenta")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        let bloqueado = row.children[7].firstChild.id == "true" ? true : false;
+        Bloquear(id, bloqueado);
+      }
+    }
+  };
   const BloquearTodo = async (ids, isBloqueado) => {
     let model = {
       ids: ids,
@@ -308,13 +320,9 @@ const BloquearVenta = () => {
         Header: "B",
         accessor: "isBloqueado",
         Cell: ({ value }) => {
-          return value ? (
-            <div className="flex justify-center">
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <Checkbox checked={false} />
+          return (
+            <div className="flex justify-center" id={value.toString()}>
+              <Checkbox checked={value} />
             </div>
           );
         },
@@ -435,11 +443,13 @@ const BloquearVenta = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaBloquearVenta"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                KeyDown={(e) => BloquearKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}
