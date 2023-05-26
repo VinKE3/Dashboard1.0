@@ -14,35 +14,35 @@ function seccionesList() {
     //?Ventas
     {
       title: "Ventas",
-      id: "Venta",
+      id: "venta",
       icon: <FaBalanceScale className="text-primary" />,
       items: [
         {
-          path: "/Venta/Cliente",
+          path: "/venta/cliente",
           title: "Clientes",
         },
         {
-          path: "/Venta/ConductorTransportista",
+          path: "/venta/conductorTransportista",
           title: "Conductores - Transportistas",
         },
         {
-          path: "/Venta/Cotizacion",
+          path: "/venta/cotizacion",
           title: "Cotización",
         },
         {
-          path: "/Venta/DocumentoVenta",
-          title: "Documentos de Venta",
+          path: "/venta/documentoVenta",
+          title: "Documentos de venta",
         },
         {
-          path: "/Venta/Retencion",
+          path: "/venta/retencion",
           title: "Retención",
         },
         {
-          path: "/Venta/LetraCambioVenta",
+          path: "/venta/letraCambioVenta",
           title: "Letra de Cambio",
         },
         {
-          path: "/Venta/GuiaRemision",
+          path: "/venta/guiaRemision",
           title: "Guías de Remision",
         },
       ],
@@ -50,147 +50,147 @@ function seccionesList() {
     //?Compras
     {
       title: "Compras",
-      id: "Compra",
+      id: "compra",
       icon: <FaClipboardCheck className="text-primary" />,
       items: [
         {
-          path: "/Compra/Proveedor",
+          path: "/compra/proveedor",
           title: "Proveedores",
         },
         {
-          path: "/Compra/OrdenCompra",
-          title: "Órdenes de Compra",
+          path: "/compra/ordenCompra",
+          title: "Órdenes de compra",
         },
         {
-          path: "/Compra/DocumentoCompra",
-          title: "Documentos de Compra",
+          path: "/compra/documentoCompra",
+          title: "Documentos de compra",
         },
         {
-          path: "/Compra/FacturaNegociable",
+          path: "/compra/facturaNegociable",
           title: "Factura Negociable",
         },
         {
-          path: "/Compra/LetraCambioCompra",
+          path: "/compra/letraCambioCompra",
           title: "Letra de Cambio",
         },
         {
-          path: "/Compra/CEF",
+          path: "/compra/cef",
           title: "C.E.F.",
         },
         {
-          path: "/Compra/Cheque",
+          path: "/compra/cheque",
           title: "Cheques",
         },
         {
-          path: "/Compra/GuiaCompra",
-          title: "Guías De Compra",
+          path: "/compra/guiaCompra",
+          title: "Guías De compra",
         },
         {
-          path: "/Finanza/CuentaPorPagar",
+          path: "/Finanza/cuentaPorPagar",
           title: "Cuentas por Pagar",
         },
       ],
     },
-    //?Mantenimiento
+    //?mantenimiento
     {
       title: "Mantenimiento",
-      id: "Mantenimiento",
+      id: "mantenimiento",
       icon: <FaTools className="text-primary" />,
       items: [
         {
-          path: "/Mantenimiento/TipoCambio",
+          path: "/mantenimiento/tipoCambio",
           title: "Tipos de Cambio",
         },
         {
-          path: "/Mantenimiento/Articulo",
+          path: "/mantenimiento/articulo",
           title: "Artículos",
         },
         {
-          path: "/Mantenimiento/Linea",
+          path: "/mantenimiento/linea",
           title: "Lineas",
         },
         {
-          path: "/Mantenimiento/SubLinea",
+          path: "/mantenimiento/subLinea",
           title: "SubLineas",
         },
         {
-          path: "/Mantenimiento/Marca",
+          path: "/mantenimiento/marca",
           title: "Marcas",
         },
         {
-          path: "/Mantenimiento/UnidadMedida",
+          path: "/mantenimiento/unidadMedida",
           title: "Unidades de Medida",
         },
         {
-          path: "/Mantenimiento/TipoCobroPago",
+          path: "/mantenimiento/tipoCobroPago",
           title: "Tipos de Pago",
         },
         {
-          path: "/Mantenimiento/Cargo",
+          path: "/mantenimiento/cargo",
           title: "Cargos",
         },
         {
-          path: "/Mantenimiento/EntidadBancaria",
+          path: "/mantenimiento/entidadBancaria",
           title: "Entidad Bancaria",
         },
         {
-          path: "/Mantenimiento/CuentaCorriente",
+          path: "/mantenimiento/cuentaCorriente",
           title: "Cuentas Corrientes",
         },
         {
-          path: "/Mantenimiento/Departamento",
+          path: "/mantenimiento/departamento",
           title: "Departamentos",
         },
         {
-          path: "/Mantenimiento/Provincia",
+          path: "/mantenimiento/provincia",
           title: "Provincias",
         },
         {
-          path: "/Mantenimiento/Distrito",
+          path: "/mantenimiento/distrito",
           title: "Distritos",
         },
         {
-          path: "/Personal",
+          path: "/personal",
           title: "Personal",
         },
         {
-          path: "/Mantenimiento/EmpresaTransporte",
+          path: "/mantenimiento/empresaTransporte",
           title: "Empresas de Transporte",
         },
         {
-          path: "/Mantenimiento/Vehiculo",
+          path: "/mantenimiento/vehiculo",
           title: "Vehículos",
         },
       ],
     },
-    //?Almacen
+    //?almacen
     {
       title: "Almacén",
-      id: "Almacen",
+      id: "almacen",
       icon: <FaIndustry className="text-primary" />,
       items: [
         {
-          path: "/Almacen/movimientoArticulo",
+          path: "/almacen/movimientoArticulo",
           title: "Movimiento de Artículos",
         },
         {
-          path: "/Almacen/cuadreStock",
+          path: "/almacen/cuadreStock",
           title: "Cuadre de Stock",
         },
         {
-          path: "/Almacen/entradaAlmacen",
+          path: "/almacen/entradaAlmacen",
           title: "Entrada de Almacén",
         },
         {
-          path: "/Almacen/salidaAlmacen",
+          path: "/almacen/salidaAlmacen",
           title: "Salida de Almacén",
         },
         {
-          path: "/Almacen/entradaCilindros",
+          path: "/almacen/entradaCilindros",
           title: "Entrada de Cilindros",
         },
         {
-          path: "/Almacen/salidaCilindro",
+          path: "/almacen/salidaCilindro",
           title: "Salida de Cilindros",
         },
       ],
@@ -202,7 +202,7 @@ function seccionesList() {
       icon: <FaDollarSign className="text-primary" />,
       items: [
         {
-          path: "/Finanza/MovimientoBancario",
+          path: "/finanza/movimientoBancario",
           title: "Movimiento Bancario",
         },
       ],
@@ -210,15 +210,15 @@ function seccionesList() {
     //?Cobranzas
     {
       title: "Cobranzas",
-      id: "Cobranza",
+      id: "cobranza",
       icon: <FaMoneyBillAlt className="text-primary" />,
       items: [
         {
-          path: "/Cobranza/CuentaPorCobrar",
+          path: "/cobranza/cuentaPorCobrar",
           title: "Cuentas por Cobrar",
         },
         {
-          path: "/Cobranza/PlanillaCobro",
+          path: "/cobranza/planillaCobro",
           title: "Planilla Cobro",
         },
       ],
@@ -230,15 +230,15 @@ function seccionesList() {
       icon: <FaUsers className="text-primary" />,
       items: [
         {
-          path: "/Compra/BloquearCompra",
-          title: "Bloquear Compra",
+          path: "/compra/bloquearCompra",
+          title: "Bloquear compra",
         },
         {
-          path: "/Venta/BloquearVenta",
-          title: "Bloquear Venta",
+          path: "/venta/bloquearVenta",
+          title: "Bloquear venta",
         },
         {
-          path: "/Finanza/BloquearMovimientoBancario",
+          path: "/Finanza/bloquearMovimientoBancario",
           title: "Bloquear Movimiento Bancario",
         },
       ],
@@ -263,19 +263,19 @@ function seccionesList() {
       icon: <FaFileAlt className="text-primary" />,
       items: [
         {
-          path: "/Informe/InformeArticulo",
+          path: "/informe/informeArticulo",
           title: "Artículos",
         },
         {
-          path: "/Informe/InformeVenta",
+          path: "/informe/informeVenta",
           title: "Ventas",
         },
         {
-          path: "/Informe/InformeCompra",
+          path: "/informe/informeCompra",
           title: "Compras",
         },
         {
-          path: "/Informe/InformeTesoreria",
+          path: "/informe/informeTesoreria",
           title: "Tesoreria",
         },
       ],

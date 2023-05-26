@@ -9,76 +9,76 @@ import Login from "./pages/auth/Login";
 //?Pages admin
 import Home from "./pages/admin/Home";
 import Error404 from "./pages/Error404";
-//Pages Venta
-import Cliente from "./pages/Venta/Cliente/Cliente";
-import ConductorTransportista from "./pages/Venta/ConductorTransportista/ConductorTransportista";
-import Cotizacion from "./pages/Venta/Cotizacion/Cotizacion";
-import DocumentoVenta from "./pages/Venta/DocumentoVenta/DocumentoVenta";
-import Retencion from "./pages/Venta/Retencion/Retencion";
-import LetraCambioVenta from "./pages/Venta/LetraCambioVenta/LetraCambioVenta";
-import GuiaRemision from "./pages/Venta/GuiaRemision/GuiaRemision";
-//Pages Venta
-//Pages Compra
-import Proveedor from "./pages/Compra/Proveedor/Proveedor";
-import FacturaNegociable from "./pages/Compra/FacturaNegociable/FacturaNegociable";
-import LetraCambioCompra from "./pages/Compra/LetraCambioCompra/LetraCambioCompra";
-import DocumentoCompra from "./pages/Compra/DocumentoCompra/DocumentoCompra";
-import OrdenCompra from "./pages/Compra/OrdenCompra/OrdenCompra";
-import GuiaCompra from "./pages/Compra/GuiaCompra/GuiaCompra";
-//Pages Compra
-//Pages Mantenimiento
-import Usuario from "./pages/Mantenimiento/Usuario/Usuario";
-import TipoCambio from "./pages/Mantenimiento/TipoCambio/TipoCambio";
-import Linea from "./pages/Mantenimiento/Linea/Linea";
-import SubLinea from "./pages/Mantenimiento/SubLinea/SubLinea";
-import Marca from "./pages/Mantenimiento/Marca/Marca";
-import UnidadMedida from "./pages/Mantenimiento/UnidadMedida/UnidadMedida";
-import TipoCobroPago from "./pages/Mantenimiento/TipoCobroPago/TipoCobroPago";
-import Cargo from "./pages/Mantenimiento/Cargo/Cargo";
-import EntidadBancaria from "./pages/Mantenimiento/EntidadBancaria/EntidadBancaria";
-import CuentaCorriente from "./pages/Mantenimiento/CuentaCorriente/CuentaCorriente";
-import Departamento from "./pages/Mantenimiento/Departamento/Departamento";
-import Provincia from "./pages/Mantenimiento/Provincia/Provincia";
-import Distrito from "./pages/Mantenimiento/Distrito/Distrito";
-import Empresa from "./pages/Mantenimiento/Empresa/Empresa";
-import Correlativo from "./pages/Mantenimiento/Correlativo/Correlativo";
-import EmpresaTransporte from "./pages/Mantenimiento/EmpresaTransporte/EmpresaTransporte";
-import Vehiculo from "./pages/Mantenimiento/Vehiculo/Vehiculo";
-//Pages Mantenimiento
-//Pages Almacen
-import MovimientoArticulo from "./pages/Almacen/MovimientoArticulo/MovimientoArticulo";
-import CuadreStock from "./pages/Almacen/CuadreStock/CuadreStock";
-import EntradaAlmacen from "./pages/Almacen/EntradaAlmacen/EntradaAlmacen";
-import SalidaAlmacen from "./pages/Almacen/SalidaAlmacen/SalidaAlmacen";
-import EntradaCilindros from "./pages/Almacen/EntradaCilindros/EntradaCilindros";
-import SalidaCilindros from "./pages/Almacen/SalidaCilindros/SalidaCilindros";
-//Pages Almacen
+//Pages venta
+import Cliente from "./pages/venta/cliente/Cliente";
+import ConductorTransportista from "./pages/venta/conductorTransportista/ConductorTransportista";
+import Cotizacion from "./pages/venta/cotizacion/Cotizacion";
+import DocumentoVenta from "./pages/venta/documentoVenta/DocumentoVenta";
+import Retencion from "./pages/venta/retencion/Retencion";
+import LetraCambioVenta from "./pages/venta/letraCambioVenta/LetraCambioVenta";
+import GuiaRemision from "./pages/venta/guiaRemision/GuiaRemision";
+//Pages venta
+//Pages compra
+import Proveedor from "./pages/compra/proveedor/Proveedor";
+import FacturaNegociable from "./pages/compra/facturaNegociable/FacturaNegociable";
+import LetraCambioCompra from "./pages/compra/letraCambioCompra/LetraCambioCompra";
+import DocumentoCompra from "./pages/compra/documentoCompra/DocumentoCompra";
+import OrdenCompra from "./pages/compra/ordenCompra/OrdenCompra";
+import GuiaCompra from "./pages/compra/guiaCompra/GuiaCompra";
+//Pages compra
+//Pages mantenimiento
+import Usuario from "./pages/mantenimiento/usuario/Usuario";
+import TipoCambio from "./pages/mantenimiento/tipoCambio/TipoCambio";
+import Linea from "./pages/mantenimiento/Linea/linea";
+import SubLinea from "./pages/mantenimiento/subLinea/SubLinea";
+import Marca from "./pages/mantenimiento/marca/Marca";
+import UnidadMedida from "./pages/mantenimiento/unidadMedida/UnidadMedida";
+import TipoCobroPago from "./pages/mantenimiento/tipoCobroPago/TipoCobroPago";
+import Cargo from "./pages/mantenimiento/cargo/Cargo";
+import EntidadBancaria from "./pages/mantenimiento/entidadBancaria/EntidadBancaria";
+import CuentaCorriente from "./pages/mantenimiento/cuentaCorriente/CuentaCorriente";
+import Departamento from "./pages/mantenimiento/departamento/Departamento";
+import Provincia from "./pages/mantenimiento/provincia/Provincia";
+import Distrito from "./pages/mantenimiento/distrito/Distrito";
+import Empresa from "./pages/mantenimiento/empresa/Empresa";
+import Correlativo from "./pages/mantenimiento/correlativo/Correlativo";
+import EmpresaTransporte from "./pages/mantenimiento/empresaTransporte/EmpresaTransporte";
+import Vehiculo from "./pages/mantenimiento/vehiculo/Vehiculo";
+//Pages mantenimiento
+//Pages almacen
+import MovimientoArticulo from "./pages/almacen/movimientoArticulo/MovimientoArticulo";
+import CuadreStock from "./pages/almacen/cuadreStock/CuadreStock";
+import EntradaAlmacen from "./pages/almacen/entradaAlmacen/EntradaAlmacen";
+import SalidaAlmacen from "./pages/almacen/salidaAlmacen/SalidaAlmacen";
+import EntradaCilindros from "./pages/almacen/entradaCilindros/EntradaCilindros";
+import SalidaCilindros from "./pages/almacen/salidaCilindros/SalidaCilindros";
+//Pages almacen
 //Pages Finanzas
-import MovimientoBancario from "./pages/Finanza/MovimientoBancario/MovimientoBancario";
+import MovimientoBancario from "./pages/finanza/movimientoBancario/MovimientoBancario";
 //Pages Finanzas
 //Pages Personal
-import Personal from "./pages/Personal/Personal";
+import Personal from "./pages/personal/Personal";
 //Pages Personal
-//Pages Tesoreria
-import Cef from "./pages/Compra/CEF/Cef";
-import Cheque from "./pages/Compra/Cheque/Cheque";
-import Articulo from "./pages/Mantenimiento/Articulo/Articulo";
-import CuentaPorPagar from "./pages/Finanza/CuentaPorPagar/CuentaPorPagar";
-//Pages Tesoreria
+//Pages tesoreria
+import Cef from "./pages/compra/cef/Cef";
+import Cheque from "./pages/compra/cheque/Cheque";
+import Articulo from "./pages/mantenimiento/articulo/Articulo";
+import CuentaPorPagar from "./pages/finanza/cuentaPorPagar/CuentaPorPagar";
+//Pages tesoreria
 //Pages Bloqueos
-import BloquearVenta from "./pages/Venta/BloquearVenta/BloquearVenta";
-import BloquearCompra from "./pages/Compra/BloquearCompra/BloquearCompra";
-import BloquearMovimientoBancario from "./pages/Finanza/BloquearMovimientoBancario/BloquearMovimientoBancario";
+import BloquearVenta from "./pages/venta/bloquearVenta/BloquearVenta";
+import BloquearCompra from "./pages/compra/bloquearCompra/BloquearCompra";
+import BloquearMovimientoBancario from "./pages/finanza/bloquearMovimientoBancario/BloquearMovimientoBancario";
 //Pages Bloqueos
 //Pages Herramientas
-import InformeArticulo from "./pages/Informe/InformeArticulo/InformeArticulo";
-import InformeCompra from "./pages/Informe/InformeCompra/InformeCompra";
-import InformeVenta from "./pages/Informe/InformeVenta/InformeVenta";
-import InformeTesoreria from "./pages/Informe/InformeTesoreria/InformeTesoreria";
+import InformeArticulo from "./pages/informe/informeArticulo/InformeArticulo";
+import InformeCompra from "./pages/informe/informeCompra/InformeCompra";
+import InformeVenta from "./pages/informe/informeVenta/InformeVenta";
+import InformeTesoreria from "./pages/informe/informeTesoreria/InformeTesoreria";
 //Pages Herramientas
 //Pages Cobranzas
-import CuentaPorCobrar from "./pages/Cobranza/CuentaPorCobrar/CuentaPorCobrar";
-import PLanillaCobro from "./pages/Cobranza/PlanillaCobro/PlanillaCobro";
+import CuentaPorCobrar from "./pages/cobranza/cuentaPorCobrar/CuentaPorCobrar";
+import PLanillaCobro from "./pages/cobranza/planillaCobro/PlanillaCobro";
 //Pages Cobranzas
 
 function App() {
@@ -89,126 +89,126 @@ function App() {
         <Route path="/" element={<LayoutAdmin />}>
           <Route index element={<Home />} />
           {/*VENTAS */}
-          <Route path="/Venta/Cliente" element={<Cliente />} />
+          <Route path="/venta/cliente" element={<Cliente />} />
           <Route
-            path="/Venta/ConductorTransportista"
+            path="/venta/conductorTransportista"
             element={<ConductorTransportista />}
           />
-          <Route path="/Venta/Cotizacion" element={<Cotizacion />} />
-          <Route path="/Venta/DocumentoVenta" element={<DocumentoVenta />} />
-          <Route path="/Venta/GuiaRemision" element={<GuiaRemision />} />
-          <Route path="/Venta/LetraCambioVenta" element={<LetraCambioVenta />} />
-          <Route path="/Venta/Retencion" element={<Retencion />} />
-          <Route path="/Venta/BloquearVenta" element={<BloquearVenta />} />
+          <Route path="/venta/cotizacion" element={<Cotizacion />} />
+          <Route path="/venta/documentoVenta" element={<DocumentoVenta />} />
+          <Route path="/venta/guiaRemision" element={<GuiaRemision />} />
+          <Route path="/venta/letraCambioVenta" element={<LetraCambioVenta />} />
+          <Route path="/venta/retencion" element={<Retencion />} />
+          <Route path="/venta/bloquearVenta" element={<BloquearVenta />} />
           {/*VENTAS */}
           {/*COMPRAS */}
-          <Route path="/Compra/Proveedor" element={<Proveedor />} />
-          <Route path="/Compra/DocumentoCompra" element={<DocumentoCompra />} />
+          <Route path="/compra/proveedor" element={<Proveedor />} />
+          <Route path="/compra/documentoCompra" element={<DocumentoCompra />} />
           <Route
-            path="/Compra/LetraCambioCompra"
+            path="/compra/letraCambioCompra"
             element={<LetraCambioCompra />}
           />
-          <Route path="/Compra/OrdenCompra" element={<OrdenCompra />} />
-          <Route path="/Compra/GuiaCompra" element={<GuiaCompra />} />
-          <Route path="/Compra/CEF" element={<Cef />} />
-          <Route path="/Compra/Cheque" element={<Cheque />} />
+          <Route path="/compra/ordenCompra" element={<OrdenCompra />} />
+          <Route path="/compra/guiaCompra" element={<GuiaCompra />} />
+          <Route path="/compra/cef" element={<Cef />} />
+          <Route path="/compra/cheque" element={<Cheque />} />
 
-          <Route path="/Compra/BloquearCompra" element={<BloquearCompra />} />
+          <Route path="/compra/bloquearCompra" element={<BloquearCompra />} />
           <Route
-            path="/Compra/FacturaNegociable"
+            path="/compra/facturaNegociable"
             element={<FacturaNegociable />}
           />
           {/*COMPRAS */}
 
           {/* MANTENIMIENTO */}
-          <Route path="/Mantenimiento/Usuario" element={<Usuario />} />
-          <Route path="/Mantenimiento/Correlativo" element={<Correlativo />} />
-          <Route path="/Mantenimiento/Empresa" element={<Empresa />} />
-          <Route path="/Mantenimiento/Articulo" element={<Articulo />} />
-          <Route path="/Mantenimiento/TipoCambio" element={<TipoCambio />} />
-          <Route path="/Mantenimiento/Linea" element={<Linea />} />
-          <Route path="/Mantenimiento/SubLinea" element={<SubLinea />} />
-          <Route path="/Mantenimiento/Marca" element={<Marca />} />
+          <Route path="/mantenimiento/usuario" element={<Usuario />} />
+          <Route path="/mantenimiento/correlativo" element={<Correlativo />} />
+          <Route path="/mantenimiento/empresa" element={<Empresa />} />
+          <Route path="/mantenimiento/articulo" element={<Articulo />} />
+          <Route path="/mantenimiento/tipoCambio" element={<TipoCambio />} />
+          <Route path="/mantenimiento/linea" element={<Linea />} />
+          <Route path="/mantenimiento/subLinea" element={<SubLinea />} />
+          <Route path="/mantenimiento/marca" element={<Marca />} />
           <Route
-            path="/Mantenimiento/UnidadMedida"
+            path="/mantenimiento/unidadMedida"
             element={<UnidadMedida />}
           />
           <Route
-            path="/Mantenimiento/TipoCobroPago"
+            path="/mantenimiento/tipoCobroPago"
             element={<TipoCobroPago />}
           />
-          <Route path="/Mantenimiento/Cargo" element={<Cargo />} />
+          <Route path="/mantenimiento/cargo" element={<Cargo />} />
           <Route
-            path="/Mantenimiento/EntidadBancaria"
+            path="/mantenimiento/entidadBancaria"
             element={<EntidadBancaria />}
           />
           <Route
-            path="/Mantenimiento/CuentaCorriente"
+            path="/mantenimiento/cuentaCorriente"
             element={<CuentaCorriente />}
           />
           <Route
-            path="/Mantenimiento/Departamento"
+            path="/mantenimiento/departamento"
             element={<Departamento />}
           />
-          <Route path="/Mantenimiento/Provincia" element={<Provincia />} />
-          <Route path="/Mantenimiento/Distrito" element={<Distrito />} />
+          <Route path="/mantenimiento/provincia" element={<Provincia />} />
+          <Route path="/mantenimiento/distrito" element={<Distrito />} />
           <Route
-            path="/Mantenimiento/EmpresaTransporte"
+            path="/mantenimiento/empresaTransporte"
             element={<EmpresaTransporte />}
           />
-          <Route path="/Mantenimiento/Vehiculo" element={<Vehiculo />} />
+          <Route path="/mantenimiento/vehiculo" element={<Vehiculo />} />
           {/* MANTENIMIENTO */}
 
           {/*ALMACEN */}
           <Route
-            path="Almacen/MovimientoArticulo"
+            path="almacen/movimientoArticulo"
             element={<MovimientoArticulo />}
           />
-          <Route path="Almacen/EntradaAlmacen" element={<EntradaAlmacen />} />
-          <Route path="Almacen/SalidaAlmacen" element={<SalidaAlmacen />} />
+          <Route path="almacen/entradaAlmacen" element={<EntradaAlmacen />} />
+          <Route path="almacen/salidaAlmacen" element={<SalidaAlmacen />} />
           <Route
-            path="Almacen/EntradaCilindros"
+            path="almacen/entradaCilindros"
             element={<EntradaCilindros />}
           />
-          <Route path="Almacen/SalidaCilindro" element={<SalidaCilindros />} />
-          <Route path="Almacen/CuadreStock" element={<CuadreStock />} />
+          <Route path="almacen/salidaCilindro" element={<SalidaCilindros />} />
+          <Route path="almacen/cuadreStock" element={<CuadreStock />} />
           {/*ALMACEN */}
 
           {/* FINANZAS */}
           <Route
-            path="/Finanza/BloquearMovimientoBancario"
+            path="/finanza/bloquearMovimientoBancario"
             element={<BloquearMovimientoBancario />}
           />
-          <Route path="/Finanza/CuentaPorPagar" element={<CuentaPorPagar />} />
+          <Route path="/finanza/cuentaPorPagar" element={<CuentaPorPagar />} />
           <Route
-            path="/Finanza/MovimientoBancario"
+            path="/finanza/movimientoBancario"
             element={<MovimientoBancario />}
           />
           {/* FINANZAS */}
 
           {/*PERSONAL */}
-          <Route path="Personal" element={<Personal />} />
+          <Route path="personal" element={<Personal />} />
           {/*PERSONAL */}
 
           {/*COBRANZAS */}
           <Route
-            path="Cobranza/CuentaPorCobrar"
+            path="cobranza/cuentaPorCobrar"
             element={<CuentaPorCobrar />}
           />
-          <Route path="Cobranza/PlanillaCobro" element={<PLanillaCobro />} />
+          <Route path="cobranza/planillaCobro" element={<PLanillaCobro />} />
           {/*COBRANZAS */}
 
           {/*TESORERIA */}
 
           {/*INFORMES */}
           <Route
-            path="/Informe/InformeArticulo"
+            path="/informe/informeArticulo"
             element={<InformeArticulo />}
           />
-          <Route path="/Informe/InformeVenta" element={<InformeVenta />} />
-          <Route path="/Informe/InformeCompra" element={<InformeCompra />} />
+          <Route path="/informe/informeVenta" element={<InformeVenta />} />
+          <Route path="/informe/informeCompra" element={<InformeCompra />} />
           <Route
-            path="/Informe/InformeTesoreria"
+            path="/informe/informeTesoreria"
             element={<InformeTesoreria />}
           />
           {/*INFORMES */}

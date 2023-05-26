@@ -28,35 +28,35 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
           label: "Clientes",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Venta/Cliente");
+            navigate("/venta/cliente");
           },
         },
         {
           label: "Conductores - Transportistas",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Venta/conductorTransportista");
+            navigate("/venta/conductorTransportista");
           },
         },
         {
-          label: "Documentos de Venta",
+          label: "Documentos de venta",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Venta/documentoVenta");
+            navigate("/venta/documentoVenta");
           },
         },
         {
           label: "Guias de Remision",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Venta/guiaRemision");
+            navigate("/venta/guiaRemision");
           },
         },
         {
           label: "Cotizacion",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Venta/cotizacion");
+            navigate("/venta/cotizacion");
           },
         },
       ],
@@ -69,125 +69,125 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
           label: "Provedores",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Compra/proveedor");
+            navigate("/compra/proveedor");
           },
         },
         {
-          label: "Documentos de Compra",
+          label: "Documentos de compra",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Compra/documentoCompra");
+            navigate("/compra/documentoCompra");
           },
         },
         {
-          label: "Órdenes de Compra",
+          label: "Órdenes de compra",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Compra/ordenCompra");
+            navigate("/compra/ordenCompra");
           },
         },
       ],
     },
     {
-      label: "Mantenimiento",
+      label: "mantenimiento",
       icon: "pi pi-fw pi-wrench",
       items: [
         {
           label: "Tipos de Cambio",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/tipoCambio");
+            navigate("/mantenimiento/tipoCambio");
           },
         },
         {
           label: "Linea",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/linea");
+            navigate("/mantenimiento/linea");
           },
         },
         {
           label: "SubLinea",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/subLinea");
+            navigate("/mantenimiento/subLinea");
           },
         },
         {
           label: "Marca",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/marca");
+            navigate("/mantenimiento/marca");
           },
         },
         {
           label: "Unidades de Medida",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/unidadMedida");
+            navigate("/mantenimiento/unidadMedida");
           },
         },
         {
           label: "Tipos de Pago",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/tipoCobroPago");
+            navigate("/mantenimiento/tipoCobroPago");
           },
         },
         {
           label: "Cargo",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/cargo");
+            navigate("/mantenimiento/cargo");
           },
         },
         {
           label: "Entidades Bancarias",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/entidadBancaria");
+            navigate("/mantenimiento/entidadBancaria");
           },
         },
         {
           label: "Cuentas Corrientes",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/cuentaCorriente");
+            navigate("/mantenimiento/cuentaCorriente");
           },
         },
         {
           label: "Empresa de Transporte",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/empresaTransporte");
+            navigate("/mantenimiento/empresaTransporte");
           },
         },
         {
           label: "Departamento",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/departamento");
+            navigate("/mantenimiento/departamento");
           },
         },
         {
           label: "Provincia",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/provincia");
+            navigate("/mantenimiento/provincia");
           },
         },
         {
           label: "Distritos",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/distrito");
+            navigate("/mantenimiento/distrito");
           },
         },
         {
           label: "Almacenes",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Mantenimiento/almacenes");
+            navigate("/mantenimiento/almacenes");
           },
         },
       ],
@@ -196,14 +196,14 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
       label: "Almacen",
       icon: "pi pi-fw pi-truck",
       command: () => {
-        navigate("/Almacen");
+        navigate("/almacen");
       },
     },
     {
       label: "Personal",
       icon: "pi pi-fw pi-users",
       command: () => {
-        navigate("/Personal");
+        navigate("/personal");
       },
     },
     {
@@ -219,35 +219,35 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
           label: "Articulos",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Informe/InformeArticulo");
+            navigate("/informe/informeArticulo");
           },
         },
         {
           label: "Ventas",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Informe/Venta");
+            navigate("/informe/venta");
           },
         },
         {
           label: "Compras",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Informe/Compra");
+            navigate("/informe/compra");
           },
         },
         {
           label: "Tesoreria",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Informe/Tesoreria");
+            navigate("/informe/tesoreria");
           },
         },
         {
           label: "Clientes",
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
-            navigate("/Venta/Cliente");
+            navigate("/venta/cliente");
           },
         },
       ],

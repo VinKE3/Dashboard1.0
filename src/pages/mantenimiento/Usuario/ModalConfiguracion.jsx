@@ -9,7 +9,6 @@ import { useMenu } from "../../../context/ContextMenu";
 import Mensajes from "../../../components/Funciones/Mensajes";
 import { useCallback } from "react";
 import { ScrollTop } from "primereact/scrolltop";
-
 const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
@@ -20,7 +19,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   const [checked, setChecked] = useState(false);
   const { getMenu, menu } = useMenu();
   const [listaBotones, setListaBotones] = useState([
-    { name: "Nuevo", value: "registrar", id: "registrar", disabled: false },
+    { name: "Registrar", value: "registrar", id: "registrar", disabled: false },
     { name: "Modificar", value: "modificar", id: "modificar", disabled: false },
     { name: "Eliminar", value: "eliminar", id: "eliminar", disabled: false },
     { name: "Consultar", value: "consultar", id: "consultar", disabled: false },
@@ -30,25 +29,11 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (data.tipoUsuarioId === "NO") {
-      const updatedListaBotones = listaBotones.map((boton) => ({
-        ...boton,
-        disabled: true,
-      }));
-      //quiero que se deshabiliten todos los botones
-
-      setListaBotones(updatedListaBotones);
-    } else {
-      const updatedListaBotones = listaBotones.map((boton) => ({
-        ...boton,
-        disabled: false,
-      }));
-      setListaBotones(updatedListaBotones);
-    }
+    PermisosTipoUsuario(data.tipoUsuarioId);
   }, [data.tipoUsuarioId]);
 
   useEffect(() => {
-    if (selectedMenu != "") {
+    if (selectedButton.length > 0 && selectedMenu !== "") {
       setData((prevData) => {
         const model = prevData.permisos.find(
           (permiso) => permiso.menuId === selectedMenu
@@ -70,7 +55,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
             ),
           };
         } else {
-          const model = {
+          const newModel = {
             menuId: selectedMenu,
             usuarioId: data.usuarioId,
             registrar: selectedButton.includes("registrar"),
@@ -81,12 +66,12 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
           };
           return {
             ...prevData,
-            permisos: [...prevData.permisos, model],
+            permisos: [...prevData.permisos, newModel],
           };
         }
       });
     }
-  }, [selectedButton]);
+  }, [selectedButton, selectedMenu]);
 
   useEffect(() => {
     getMenu();
@@ -140,6 +125,104 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   };
   const ValidarMenu = (e) => {
     setSelectedMenu(e.target.innerText);
+  };
+  const PermisosTipoUsuario = (tipoUsuario) => {
+    let update = [];
+    // //? MANTENIMIENTO
+    if (data.tipoUsuarioId === "MA") {
+      const habilitarPermisosDeTodosLosMenus = data.permisos.map((permiso) => ({
+        ...permiso,
+        registrar: true,
+        modificar: true,
+        eliminar: true,
+        consultar: true,
+        anular: false,
+      }));
+      update = listaBotones.map((boton) => ({
+        ...boton,
+        disabled: true,
+      }));
+      setData((prevData) => ({
+        ...prevData,
+        permisos: habilitarPermisosDeTodosLosMenus,
+      }));
+      setSelectedButton(["registrar", "modificar", "eliminar", "consultar"]);
+    }
+    //? ADMINISTRADOR
+    else if (tipoUsuario === "AD") {
+      const habilitarPermisosDeTodosLosMenus = data.permisos.map((permiso) => ({
+        ...permiso,
+        registrar: true,
+        modificar: true,
+        eliminar: true,
+        consultar: true,
+        anular: true,
+      }));
+      update = listaBotones.map((boton) => ({
+        ...boton,
+        disabled: true,
+      }));
+      setData((prevData) => ({
+        ...prevData,
+        permisos: habilitarPermisosDeTodosLosMenus,
+      }));
+      setSelectedButton([
+        "registrar",
+        "modificar",
+        "eliminar",
+        "consultar",
+        "anular",
+      ]);
+    }
+
+    // //? CONSULTA
+    else if (data.tipoUsuarioId === "CO") {
+      update = listaBotones.map((boton) => ({
+        ...boton,
+        disabled: true,
+      }));
+      const habilitarPermisosDeTodosLosMenus = data.permisos.map((permiso) => ({
+        ...permiso,
+        registrar: false,
+        modificar: false,
+        eliminar: false,
+        consultar: true,
+        anular: false,
+      }));
+      setData((prevData) => ({
+        ...prevData,
+        permisos: habilitarPermisosDeTodosLosMenus,
+      }));
+      setSelectedButton(["consultar"]);
+    }
+    //?NO PERMISOS
+    else if (tipoUsuario === "NO") {
+      update = listaBotones.map((boton) => ({
+        ...boton,
+        disabled: true,
+      }));
+      const borrarPermisosDeTodosLosMenus = data.permisos.map((permiso) => ({
+        ...permiso,
+        registrar: false,
+        modificar: false,
+        eliminar: false,
+        consultar: false,
+        anular: false,
+      }));
+      setData((prevData) => ({
+        ...prevData,
+        permisos: borrarPermisosDeTodosLosMenus,
+      }));
+      setSelectedButton([]);
+    }
+    //?PERSONALIZADO
+    else if (tipoUsuario === "PE") {
+      update = listaBotones.map((boton) => ({
+        ...boton,
+        disabled: false,
+      }));
+    }
+    setListaBotones(update);
   };
   //#endregion
 
@@ -231,7 +314,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
               <div className={Global.Input}>
                 <div className={Global.CheckStyle}>
                   <Checkbox
-                    disabled={data.tipoUsuarioId == "NO"}
+                    disabled={data.tipoUsuarioId != "PE"}
                     inputId="all"
                     onChange={(e) => {
                       setChecked(e.checked);
