@@ -30,7 +30,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const Clientes = () => {
+const Cliente = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
@@ -330,4 +330,4 @@ const Clientes = () => {
   //#endregion
 };
 
-export default Clientes;
+export default Cliente;
