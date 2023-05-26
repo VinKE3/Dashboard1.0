@@ -9,20 +9,12 @@ const ModalBasic = ({
   childrenFooter,
   setModal,
   titulo,
-  tamañoModal = [Global.ModalPequeño, Global.Form],
   cerrar = true,
+  tamañoModal = [Global.ModalPequeño, Global.Form],
 }) => {
   //#region Funciones
-  const CerrarModal = (e = null) => {
-    if (e._reactName != "onClick") {
-      if (e.key == "Escape") {
-        foco.focus();
-        setModal(false);
-      }
-    } else {
-      foco.focus();
-      setModal(false);
-    }
+  const CerrarModal = () => {
+    setModal(false);
   };
   //#endregion
 
@@ -45,7 +37,7 @@ const ModalBasic = ({
             {/*header*/}
 
             {/*body*/}
-            <div className={Global.ModalBody} onKeyDown={(e) => CerrarModal(e)}>
+            <div className={Global.ModalBody}>
               <div className={tamañoModal[1]}>{children}</div>
             </div>
             {/*body*/}

@@ -18,28 +18,32 @@ function seccionesList() {
       icon: <FaBalanceScale className="text-primary" />,
       items: [
         {
-          path: "/Venta/clientes",
+          path: "/Venta/Cliente",
           title: "Clientes",
         },
         {
-          path: "/Venta/conductorTransportista",
+          path: "/Venta/ConductorTransportista",
           title: "Conductores - Transportistas",
         },
         {
-          path: "/Venta/documentoVenta",
-          title: "Documentos de Venta",
-        },
-        {
-          path: "/Venta/guiaRemision",
-          title: "Guías de Remision",
-        },
-        {
-          path: "/Venta/cotizacion",
+          path: "/Venta/Cotizacion",
           title: "Cotización",
         },
         {
-          path: "/Venta/retencion",
+          path: "/Venta/DocumentoVenta",
+          title: "Documentos de Venta",
+        },
+        {
+          path: "/Venta/Retencion",
           title: "Retención",
+        },
+        {
+          path: "/Venta/LetraCambioVenta",
+          title: "Letra de Cambio",
+        },
+        {
+          path: "/Venta/GuiaRemision",
+          title: "Guías de Remision",
         },
       ],
     },
@@ -50,19 +54,23 @@ function seccionesList() {
       icon: <FaClipboardCheck className="text-primary" />,
       items: [
         {
-          path: "/Compra/proveedor",
+          path: "/Compra/Proveedor",
           title: "Proveedores",
         },
         {
-          path: "/Compra/ordenCompra",
+          path: "/Compra/OrdenCompra",
           title: "Órdenes de Compra",
         },
         {
-          path: "/Compra/facturaNegociable",
+          path: "/Compra/DocumentoCompra",
+          title: "Documentos de Compra",
+        },
+        {
+          path: "/Compra/FacturaNegociable",
           title: "Factura Negociable",
         },
         {
-          path: "/Compra/letraCambioCompra",
+          path: "/Compra/LetraCambioCompra",
           title: "Letra de Cambio",
         },
         {
@@ -74,15 +82,11 @@ function seccionesList() {
           title: "Cheques",
         },
         {
-          path: "/Compra/documentoCompra",
-          title: "Documentos de Compra",
-        },
-        {
-          path: "/Compra/guiaCompra",
+          path: "/Compra/GuiaCompra",
           title: "Guías De Compra",
         },
         {
-          path: "/Finanza/cuentaPorPagar",
+          path: "/Finanza/CuentaPorPagar",
           title: "Cuentas por Pagar",
         },
       ],
@@ -94,7 +98,7 @@ function seccionesList() {
       icon: <FaTools className="text-primary" />,
       items: [
         {
-          path: "/Mantenimiento/tipoCambio",
+          path: "/Mantenimiento/TipoCambio",
           title: "Tipos de Cambio",
         },
         {
@@ -102,59 +106,59 @@ function seccionesList() {
           title: "Artículos",
         },
         {
-          path: "/Mantenimiento/linea",
+          path: "/Mantenimiento/Linea",
           title: "Lineas",
         },
         {
-          path: "/Mantenimiento/subLinea",
+          path: "/Mantenimiento/SubLinea",
           title: "SubLineas",
         },
         {
-          path: "/Mantenimiento/marca",
+          path: "/Mantenimiento/Marca",
           title: "Marcas",
         },
         {
-          path: "/Mantenimiento/unidadMedida",
+          path: "/Mantenimiento/UnidadMedida",
           title: "Unidades de Medida",
         },
         {
-          path: "/Mantenimiento/tipoCobroPago",
+          path: "/Mantenimiento/TipoCobroPago",
           title: "Tipos de Pago",
         },
         {
-          path: "/Mantenimiento/cargo",
+          path: "/Mantenimiento/Cargo",
           title: "Cargos",
         },
         {
-          path: "/Mantenimiento/entidadBancaria",
+          path: "/Mantenimiento/EntidadBancaria",
           title: "Entidad Bancaria",
         },
         {
-          path: "/Mantenimiento/cuentaCorriente",
+          path: "/Mantenimiento/CuentaCorriente",
           title: "Cuentas Corrientes",
         },
         {
-          path: "/Mantenimiento/departamento",
+          path: "/Mantenimiento/Departamento",
           title: "Departamentos",
         },
         {
-          path: "/Mantenimiento/provincia",
+          path: "/Mantenimiento/Provincia",
           title: "Provincias",
         },
         {
-          path: "/Mantenimiento/distrito",
+          path: "/Mantenimiento/Distrito",
           title: "Distritos",
         },
         {
-          path: "/personal",
+          path: "/Personal",
           title: "Personal",
         },
         {
-          path: "/Mantenimiento/empresaTransporte",
+          path: "/Mantenimiento/EmpresaTransporte",
           title: "Empresas de Transporte",
         },
         {
-          path: "/Mantenimiento/vehiculo",
+          path: "/Mantenimiento/Vehiculo",
           title: "Vehículos",
         },
       ],
@@ -198,7 +202,7 @@ function seccionesList() {
       icon: <FaDollarSign className="text-primary" />,
       items: [
         {
-          path: "/Finanza/movimientoBancario",
+          path: "/Finanza/MovimientoBancario",
           title: "Movimiento Bancario",
         },
       ],
@@ -210,11 +214,11 @@ function seccionesList() {
       icon: <FaMoneyBillAlt className="text-primary" />,
       items: [
         {
-          path: "/Cobranza/cuentaPorCobrar",
+          path: "/Cobranza/CuentaPorCobrar",
           title: "Cuentas por Cobrar",
         },
         {
-          path: "/Cobranza/planillaCobro",
+          path: "/Cobranza/PlanillaCobro",
           title: "Planilla Cobro",
         },
       ],
@@ -226,15 +230,15 @@ function seccionesList() {
       icon: <FaUsers className="text-primary" />,
       items: [
         {
-          path: "/Compra/bloquearCompra",
+          path: "/Compra/BloquearCompra",
           title: "Bloquear Compra",
         },
         {
-          path: "/Venta/bloquearVenta",
+          path: "/Venta/BloquearVenta",
           title: "Bloquear Venta",
         },
         {
-          path: "/Finanza/bloquearMovimientoBancario",
+          path: "/Finanza/BloquearMovimientoBancario",
           title: "Bloquear Movimiento Bancario",
         },
       ],

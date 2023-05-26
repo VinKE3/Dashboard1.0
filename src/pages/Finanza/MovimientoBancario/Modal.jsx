@@ -132,7 +132,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       GetPorIdTipoCambio(data.fechaEmision);
     }
     Tablas();

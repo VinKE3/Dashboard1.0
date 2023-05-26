@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import * as Funciones from "../Funciones/Validaciones";
 
 function Enter({ children }) {
   //#region useEffect

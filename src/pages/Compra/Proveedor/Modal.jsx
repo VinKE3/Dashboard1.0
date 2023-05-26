@@ -77,7 +77,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataUbigeo]);
   useEffect(() => {
     Tablas();
-    if (modo != "Registrar") {
+    if (modo != "Nuevo") {
       ListarCcorriente();
       ListarContacto();
       TablasCargo();
@@ -704,7 +704,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
             </TabPanel>
-            {modo != "Registrar" ? (
+            {modo != "Nuevo" ? (
               <TabPanel
                 header="Cuentas Corrientes"
                 leftIcon="pi pi-money-bill mr-2"
@@ -855,7 +855,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ) : (
               ""
             )}
-            {modo != "Registrar" ? (
+            {modo != "Nuevo" ? (
               <TabPanel header="Contactos" leftIcon="pi pi-user mr-2">
                 {/* Boton */}
                 {modo == "Consultar" ? (

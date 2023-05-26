@@ -18,6 +18,9 @@ module.exports = {
         TrPar: "#192436",
         TrInpar: "#131E2F",
       },
+      fontSize: {
+        mini: "13px",
+      },
     },
   },
   plugins: [require("@headlessui/tailwindcss")],

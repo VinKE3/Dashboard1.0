@@ -114,7 +114,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [modalArt]);
 
   useEffect(() => {
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       GetPorIdTipoCambio(data.fechaEmision);
     }
     ActualizarTotales();
@@ -754,7 +754,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 maxLength="4"
                 autoComplete="off"
                 autoFocus
-                disabled={modo == "Registrar" ? false : true}
+                disabled={modo == "Nuevo" ? false : true}
                 value={data.serie ?? ""}
                 onChange={ValidarData}
                 onBlur={(e) => Numeracion(e)}
@@ -772,7 +772,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Número"
                 maxLength="10"
                 autoComplete="off"
-                disabled={modo == "Registrar" ? false : true}
+                disabled={modo == "Nuevo" ? false : true}
                 value={data.numero ?? ""}
                 onChange={ValidarData}
                 onBlur={(e) => Numeracion(e)}

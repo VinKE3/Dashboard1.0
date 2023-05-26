@@ -172,7 +172,7 @@ const SalidaCilindros = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Modificar", accion = 1) => {
+  const AccionModal = async (id, modo = "Modificar", accion = 1) => {
     setModo(modo);
     switch (accion) {
       case 1: {
@@ -287,9 +287,9 @@ const SalidaCilindros = () => {
           <BotonCRUD
             setEliminar={setEliminar}
             permisos={permisos}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },

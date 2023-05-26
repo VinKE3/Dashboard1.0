@@ -662,7 +662,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     autoComplete="off"
                     maxLength="4"
                     autoFocus
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
@@ -680,12 +680,12 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     placeholder="Número"
                     autoComplete="off"
                     maxLength="10"
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }

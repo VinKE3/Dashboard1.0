@@ -771,12 +771,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="4"
                     autoComplete="off"
                     autoFocus
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }
@@ -793,12 +793,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Número"
                     maxLength="10"
                     autoComplete="off"
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }

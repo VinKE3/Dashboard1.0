@@ -58,7 +58,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   maxLength="2"
                   value={data.subLineaId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Registrar" ? false : true}
+                  disabled={modo == "Nuevo" ? false : true}
                   className={Global.InputStyle}
                 />
               </div>
@@ -72,7 +72,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.lineaId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Registrar" ? false : true}
+                  disabled={modo == "Nuevo" ? false : true}
                   className={Global.InputStyle}
                 >
                   {dataModal.map((linea) => (

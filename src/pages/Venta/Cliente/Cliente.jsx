@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
+import Delete from "../../../components/Funciones/Delete";
 import BotonBasico from "../../../components/Boton/BotonBasico";
 import BotonCRUD from "../../../components/Boton/BotonCRUD";
 import Table from "../../../components/Tabla/Table";
@@ -9,7 +10,6 @@ import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 //#region Estilos
 const TablaStyle = styled.div`
@@ -47,7 +47,7 @@ const Clientes = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -132,7 +132,7 @@ const Clientes = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (value, modo = "Registrar", click = false) => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     if (click) {
       setModo(modo);
       let row = value.target.closest("tr");
@@ -140,7 +140,7 @@ const Clientes = () => {
       await GetPorId(id);
     } else {
       setModo(modo);
-      if (modo == "Registrar") {
+      if (modo == "Nuevo") {
         setObjeto({
           id: "000000",
           tipoDocumentoIdentidadId: "1",
@@ -178,6 +178,26 @@ const Clientes = () => {
         setModal(true);
       }
     }
+    if (e.key === "c") {
+      setModo("Consultar");
+      let row = document
+        .querySelector("#tablaCliente")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+        setModal(true);
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaCliente")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "Cliente"], id, setEliminar);
+      }
+    }
   };
   //#endregion
 
@@ -208,8 +228,8 @@ const Clientes = () => {
             permisos={permisos}
             menu={["Mantenimiento", "Cliente"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar")}
           />
         ),
       },
@@ -275,10 +295,11 @@ const Clientes = () => {
             {/* Boton */}
             {permisos[0] && (
               <BotonBasico
-                botonText="Registrar"
+                botonText="Nuevo"
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
-                click={() => AbrirModal()}
+                click={() => AccionModal()}
+                containerClass=""
               />
             )}
             {/* Boton */}
@@ -292,7 +313,7 @@ const Clientes = () => {
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
-                DobleClick={(e) => AbrirModal(e, "Consultar", true)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => AbrirModalKey(e, "Modificar", true)}
               />
             </TablaStyle>

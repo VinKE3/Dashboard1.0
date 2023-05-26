@@ -20,7 +20,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   const [checked, setChecked] = useState(false);
   const { getMenu, menu } = useMenu();
   const [listaBotones, setListaBotones] = useState([
-    { name: "Registrar", value: "registrar", id: "registrar", disabled: false },
+    { name: "Nuevo", value: "registrar", id: "registrar", disabled: false },
     { name: "Modificar", value: "modificar", id: "modificar", disabled: false },
     { name: "Eliminar", value: "eliminar", id: "eliminar", disabled: false },
     { name: "Consultar", value: "consultar", id: "consultar", disabled: false },

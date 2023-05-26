@@ -9,14 +9,16 @@ const BotonBasico = ({
   containerClass = "sticky top-2 bg-black/30",
 }) => {
   return (
-    <div className={containerClass}>
-      <button onClick={click} className={Global.BotonBasic + botonClass}>
+    <div className={containerClass + "flex"}>
+      <button onClick={click} className={Global.BotonBasico + botonClass}>
         <FontAwesomeIcon
           icon={botonIcon}
-          size="sm"
-          className="m-0 sm:pt-1 sm:pr-1 sm:pl-0"
+          size="1x"
+          className="m-0 py-3 px-2.5 sm:pr-1 sm:py-.2.5"
         />
-        <span className="hidden sm:block md:text-sm">{botonText}</span>
+        <div className="w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 md:text-mini">
+          <p>{botonText}</p>
+        </div>
       </button>
     </div>
   );

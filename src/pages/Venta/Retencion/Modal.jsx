@@ -122,7 +122,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       GetPorIdTipoCambio(data.fechaEmision);
     } else {
       SepararDetalle(data.detalles);
@@ -230,6 +230,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     } else {
       if (data.tipoCambio == 0) {
+        document.getElementById("tipoCambio").focus();
         return [
           false,
           "No es posible hacer la conversión si el tipo de cambio es cero (0.00)",
@@ -390,6 +391,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         porcentaje: 3,
       });
       setHabilitarCampos(true);
+      document.getElementById("consultarDocumento").focus();
     } else {
       //NO cumple validación
       if (resultado[1] != "") {
@@ -405,7 +407,6 @@ const Modal = ({ setModal, modo, objeto }) => {
         });
       }
     }
-    document.getElementById("consultarDocumento").focus();
   };
   const SepararDetalle = async (detalle) => {
     const SepararDocumentoVentaId = detalle.map((detalle) => {
@@ -419,9 +420,19 @@ const Modal = ({ setModal, modo, objeto }) => {
     });
     setDataDetalle(SepararDocumentoVentaId);
   };
-  const CargarDetalle = async (id) => {
-    setHabilitarCampos(false);
-    setDataCabecera(dataDetalle.find((map) => map.documentoVentaId === id));
+  const CargarDetalle = async (value, click = false) => {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.children[1].innerText;
+      setHabilitarCampos(false);
+      setDataCabecera(dataDetalle.find((map) => map.documentoVentaId === id));
+    } else {
+      setHabilitarCampos(false);
+      setDataCabecera(
+        dataDetalle.find((map) => map.documentoVentaId === value)
+      );
+    }
+    document.getElementById("porcentaje").focus();
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -513,7 +524,13 @@ const Modal = ({ setModal, modo, objeto }) => {
         `api/Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`
       );
       if (result.name == "AxiosError") {
-        toast.error(String(result.data.data.messages[0].textos), {
+        let err = "";
+        if (result.response.data == "") {
+          err = response.message;
+        } else {
+          err = String(result.response.data.messages[0].textos);
+        }
+        toast.error(String(err), {
           position: "bottom-right",
           autoClose: 3000,
           hideProgressBar: true,
@@ -523,6 +540,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           progress: undefined,
           theme: "colored",
         });
+        document.getElementById("serieCabecera").focus();
       } else {
         let nuevoTotal = await ConvertirPrecio(
           result.data.data.total,
@@ -539,6 +557,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             monto: Funciones.RedondearNumero(monto, 2),
           });
         }
+        document.getElementById("porcentaje").focus();
       }
     } else {
       if (respuesta[1] != "") {
@@ -705,8 +724,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         modo={modo}
         menu={["Venta", "Retencion"]}
         titulo="Retención"
-        tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
         cerrar={false}
+        foco={document.getElementById("tablaRetencion")}
+        tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
       >
         {tipoMensaje > 0 && (
           <Mensajes
@@ -752,7 +772,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Serie"
                 autoComplete="off"
                 maxLength="4"
-                disabled={modo == "Consultar" ? true : false}
+                autoFocus
+                disabled={modo == "Nuevo" ? false : true}
                 value={data.serie ?? ""}
                 onChange={ValidarData}
                 onBlur={(e) => Numeracion(e)}
@@ -773,7 +794,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 value={data.numero ?? ""}
                 onChange={ValidarData}
                 onBlur={(e) => Numeracion(e)}
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Nuevo" ? false : true}
                 className={Global.InputStyle}
               />
             </div>
@@ -786,6 +807,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="fechaEmision"
                 name="fechaEmision"
                 autoComplete="off"
+                autoFocus={modo == "Modificar"}
                 disabled={modo == "Consultar" ? true : false}
                 value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                 onChange={ValidarData}
@@ -839,6 +861,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 }
                 hidden={modo == "Consultar" ? true : false}
                 disabled={checkVarios ? true : false}
+                onKeyDown={(e) => Funciones.KeyClick(e)}
                 onClick={() => AbrirFiltroCliente()}
               >
                 <FaSearch />
@@ -965,6 +988,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                 }
                 hidden={modo == "Consultar" ? true : false}
+                onKeyDown={(e) => Funciones.KeyClick(e)}
                 onClick={() => {
                   GetPorIdTipoCambio(data.fechaEmision);
                 }}
@@ -994,162 +1018,169 @@ const Modal = ({ setModal, modo, objeto }) => {
         {/* Cabecera */}
 
         {/* Detalles */}
-        <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
-        >
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="tipoDocumento" className={Global.LabelStyle}>
-                Tipo Doc.
-              </label>
-              <select
-                id="tipoDocumento"
-                name="tipoDocumento"
-                onChange={ValidarDataCabecera}
-                disabled={habilitarCampos ? false : true}
-                value={dataCabecera.tipoDocumento ?? ""}
-                className={
-                  modo == "Registrar" ? Global.InputStyle : Global.InputStyle
-                }
-              >
-                {dataTipoDoc.map((map) => (
-                  <option key={map.id} value={map.id}>
-                    {map.descripcion}
-                  </option>
-                ))}
-              </select>
+        {modo != "Consultar" && (
+          <div
+            className={
+              Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+            }
+          >
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputFull}>
+                <label htmlFor="tipoDocumento" className={Global.LabelStyle}>
+                  Tipo Doc.
+                </label>
+                <select
+                  id="tipoDocumento"
+                  name="tipoDocumento"
+                  onChange={ValidarDataCabecera}
+                  disabled={habilitarCampos ? false : true}
+                  value={dataCabecera.tipoDocumento ?? ""}
+                  className={
+                    modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                  }
+                >
+                  {dataTipoDoc.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={Global.InputTercio}>
+                <label htmlFor="serie" className={Global.LabelStyle}>
+                  Serie
+                </label>
+                <input
+                  type="text"
+                  id="serieCabecera"
+                  name="serie"
+                  placeholder="Serie"
+                  autoComplete="off"
+                  maxLength={4}
+                  disabled={
+                    !habilitarCampos || modo == "Consultar" ? true : false
+                  }
+                  value={dataCabecera.serie ?? ""}
+                  onChange={ValidarDataCabecera}
+                  className={
+                    habilitarCampos ? Global.InputStyle : Global.InputStyle
+                  }
+                />
+              </div>
+              <div className={Global.InputMitad}>
+                <label htmlFor="numero" className={Global.LabelStyle}>
+                  Número
+                </label>
+                <input
+                  type="number"
+                  id="numero"
+                  name="numero"
+                  placeholder="Número"
+                  autoComplete="off"
+                  maxLength={10}
+                  min={0}
+                  disabled={
+                    !habilitarCampos || modo == "Consultar" ? true : false
+                  }
+                  value={dataCabecera.numero ?? ""}
+                  onChange={ValidarDataCabecera}
+                  className={
+                    habilitarCampos ? Global.InputBoton : Global.InputBoton
+                  }
+                />
+                <button
+                  id="consultarDocumentoCabecera"
+                  className={Global.BotonBuscar + Global.BotonPrimary}
+                  hidden={modo == "Consultar" ? true : false}
+                  onKeyDown={(e) => Funciones.KeyClick(e)}
+                  onClick={async () => await ConsultarDocumento()}
+                >
+                  <FaSearch></FaSearch>
+                </button>
+              </div>
             </div>
-            <div className={Global.InputTercio}>
-              <label htmlFor="serie" className={Global.LabelStyle}>
-                Serie
-              </label>
-              <input
-                type="text"
-                id="serie"
-                name="serie"
-                placeholder="Serie"
-                autoComplete="off"
-                maxLength={4}
-                autoFocus
-                disabled={
-                  !habilitarCampos || modo == "Consultar" ? true : false
-                }
-                value={dataCabecera.serie ?? ""}
-                onChange={ValidarDataCabecera}
-                className={
-                  habilitarCampos ? Global.InputStyle : Global.InputStyle
-                }
-              />
-            </div>
-            <div className={Global.InputMitad}>
-              <label htmlFor="numero" className={Global.LabelStyle}>
-                Número
-              </label>
-              <input
-                type="number"
-                id="numero"
-                name="numero"
-                placeholder="Número"
-                autoComplete="off"
-                maxLength={10}
-                min={0}
-                disabled={
-                  !habilitarCampos || modo == "Consultar" ? true : false
-                }
-                value={dataCabecera.numero ?? ""}
-                onChange={ValidarDataCabecera}
-                className={
-                  habilitarCampos ? Global.InputBoton : Global.InputBoton
-                }
-              />
-              <button
-                id="consultarDocumento"
-                className={Global.BotonBuscar + Global.BotonPrimary}
-                hidden={modo == "Consultar" ? true : false}
-                onClick={async () => await ConsultarDocumento()}
-              >
-                <FaSearch></FaSearch>
-              </button>
+            <div className={Global.ContenedorInputs}>
+              <div className={Global.InputTercio}>
+                <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+                  Emisión
+                </label>
+                <input
+                  type="date"
+                  id="fechaEmision"
+                  name="fechaEmision"
+                  autoComplete="off"
+                  disabled={true}
+                  value={moment(dataCabecera.fechaEmision ?? "").format(
+                    "yyyy-MM-DD"
+                  )}
+                  onChange={ValidarDataCabecera}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputMitad}>
+                <label htmlFor="total" className={Global.LabelStyle}>
+                  Total Vta.
+                </label>
+                <input
+                  type="text"
+                  id="total"
+                  name="total"
+                  placeholder="Total Venta"
+                  autoComplete="off"
+                  disabled={true}
+                  value={dataCabecera.total ?? ""}
+                  onChange={ValidarDataCabecera}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputTercio}>
+                <label htmlFor="porcentaje" className={Global.LabelStyle}>
+                  % Reten.
+                </label>
+                <input
+                  type="number"
+                  id="porcentaje"
+                  name="porcentaje"
+                  placeholder={"% Retención"}
+                  autoComplete="off"
+                  min={0}
+                  disabled={modo == "Consultar" ? true : false}
+                  value={dataCabecera.porcentaje ?? ""}
+                  onChange={ValidarDataCabecera}
+                  className={Global.InputStyle}
+                />
+              </div>
+              <div className={Global.InputMitad}>
+                <label htmlFor="monto" className={Global.LabelStyle}>
+                  Retención
+                </label>
+                <input
+                  type="number"
+                  id="monto"
+                  name="monto"
+                  placeholder="Retención"
+                  autoComplete="off"
+                  min={0}
+                  disabled={true}
+                  value={dataCabecera.monto ?? ""}
+                  onChange={ValidarDataCabecera}
+                  className={
+                    modo != "Consultar" ? Global.InputBoton : Global.InputStyle
+                  }
+                />
+                <button
+                  id="enviarDetalle"
+                  className={Global.BotonBuscar + Global.BotonPrimary}
+                  hidden={modo == "Consultar" ? true : false}
+                  onKeyDown={(e) => Funciones.KeyClick(e)}
+                  onClick={() => AgregarDetalle()}
+                >
+                  <FaPlus></FaPlus>
+                </button>
+              </div>
             </div>
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputTercio}>
-              <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                Emisión
-              </label>
-              <input
-                type="date"
-                id="fechaEmision"
-                name="fechaEmision"
-                autoComplete="off"
-                disabled={true}
-                value={moment(dataCabecera.fechaEmision ?? "").format("yyyy-MM-DD")}
-                onChange={ValidarDataCabecera}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputMitad}>
-              <label htmlFor="total" className={Global.LabelStyle}>
-                Total Vta.
-              </label>
-              <input
-                type="text"
-                id="total"
-                name="total"
-                placeholder="Total Venta"
-                autoComplete="off"
-                disabled={true}
-                value={dataCabecera.total ?? ""}
-                onChange={ValidarDataCabecera}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputTercio}>
-              <label htmlFor="porcentaje" className={Global.LabelStyle}>
-                % Reten.
-              </label>
-              <input
-                type="number"
-                id="porcentaje"
-                name="porcentaje"
-                placeholder={"% Retención"}
-                autoComplete="off"
-                min={0}
-                disabled={modo == "Consultar" ? true : false}
-                value={dataCabecera.porcentaje ?? ""}
-                onChange={ValidarDataCabecera}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputMitad}>
-              <label htmlFor="monto" className={Global.LabelStyle}>
-                Retención
-              </label>
-              <input
-                type="number"
-                id="monto"
-                name="monto"
-                placeholder="Retención"
-                autoComplete="off"
-                min={0}
-                disabled={true}
-                value={dataCabecera.monto ?? ""}
-                onChange={ValidarDataCabecera}
-                className={
-                  modo != "Consultar" ? Global.InputBoton : Global.InputStyle
-                }
-              />
-              <button
-                id="enviarDetalle"
-                className={Global.BotonBuscar + Global.BotonPrimary}
-                hidden={modo == "Consultar" ? true : false}
-                onClick={() => AgregarDetalle()}
-              >
-                <FaPlus></FaPlus>
-              </button>
-            </div>
-          </div>
-        </div>
+        )}
         {/* Detalles */}
 
         {/* Tabla Detalle */}
@@ -1158,6 +1189,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             columnas={columnas}
             datos={dataDetalle}
             estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
+            DobleClick={(e) => CargarDetalle(e, true)}
           />
         </TablaStyle>
         {/* Tabla Detalle */}

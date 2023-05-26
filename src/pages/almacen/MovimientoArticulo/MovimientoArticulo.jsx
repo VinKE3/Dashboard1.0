@@ -206,7 +206,7 @@ const MovimientoArticulo = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id) => {
+  const AccionModal = async (id) => {
     await GetPorId(id);
     setModal(true);
   };
@@ -321,7 +321,7 @@ const MovimientoArticulo = () => {
             setEliminar={setEliminar}
             permisos={permisos}
             ClickModificar={() => console.log("")}
-            ClickConsultar={() => AbrirModal(row.values.Id)}
+            ClickConsultar={() => AccionModal(row.values.Id)}
             ClickEliminar={() => console.log("")}
           />
         ),

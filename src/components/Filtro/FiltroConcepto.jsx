@@ -88,6 +88,32 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
     }, 200);
     setTimer(newTimer);
   };
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  const KeyTabla = async (e, click = false) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaFiltroConcepto")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+      }
+    }
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+    if (click) {
+      let row = e.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
+  };
   //#endregion
 
   //#region API
@@ -241,6 +267,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                       autoFocus
                       value=""
                       onChange={ValidarTipo}
+                      onKeyDown={(e) => Key(e)}
                       checked={tipo === ""}
                     />
                   </div>
@@ -275,6 +302,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                       name="tipoDocumentoId"
                       value="07"
                       onChange={ValidarTipo}
+                      onKeyDown={(e) => Key(e)}
                       checked={tipo === "07"}
                     />
                   </div>
@@ -292,6 +320,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                       name="tipoDocumentoId"
                       value="LC"
                       onChange={ValidarTipo}
+                      onKeyDown={(e) => Key(e)}
                       checked={tipo === "LC"}
                     />
                   </div>
@@ -314,8 +343,10 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   id="numeroDocumento"
                   name="numeroDocumento"
                   placeholder="Número de Documento"
-                  onChange={ValidarData}
                   autoComplete="off"
+                  autoFocus
+                  onChange={ValidarData}
+                  onKeyDown={(e) => Key(e)}
                   className={Global.InputBoton}
                 />
                 <button
@@ -332,7 +363,13 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
 
             {/* Tabla */}
             <TablaStyle>
-              <TableBasic columnas={columnas} datos={datos} />
+              <TableBasic
+                id={"tablaFiltroConcepto"}
+                columnas={columnas}
+                datos={datos}
+                DobleClick={(e) => KeyTabla(e, true)}
+                KeyDown={(e) => KeyTabla(e)}
+              />
             </TablaStyle>
             {/* Tabla */}
           </div>

@@ -64,7 +64,7 @@ const Usuario = () => {
   const [modal, setModal] = useState(false);
   const [modalConfig, setModalConfig] = useState(false);
   const [modalClave, setModalClave] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //Modal
@@ -176,9 +176,9 @@ const Usuario = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
+  const AccionModal = async (id, modo = "Nuevo") => {
     setModo(modo);
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       setObjeto({
         id: "00",
         nick: "",
@@ -311,8 +311,8 @@ const Usuario = () => {
             permisos={permisos}
             menu={["Mantenimiento", "Usuario"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar")}
           />
         ),
       },
@@ -346,10 +346,10 @@ const Usuario = () => {
             <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
               {permisos[0] && (
                 <BotonBasico
-                  botonText="Registrar"
+                  botonText="Nuevo"
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
-                  click={() => AbrirModal()}
+                  click={() => AccionModal()}
                   containerClass=""
                 />
               )}

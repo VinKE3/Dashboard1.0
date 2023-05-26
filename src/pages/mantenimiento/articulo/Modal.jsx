@@ -130,9 +130,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="lineaId"
               value={data.lineaId ?? ""}
               onChange={ValidarData}
-              disabled={modo != "Registrar" ? true : ""}
+              disabled={modo != "Nuevo" ? true : ""}
               className={
-                modo != "Registrar" ? Global.InputStyle : Global.InputStyle
+                modo != "Nuevo" ? Global.InputStyle : Global.InputStyle
               }
             >
               {lineas.map((map) => (
@@ -151,9 +151,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="subLineaId"
               value={data.subLineaId ?? ""}
               onChange={ValidarData}
-              disabled={modo != "Registrar" ? true : ""}
+              disabled={modo != "Nuevo" ? true : ""}
               className={
-                modo != "Registrar" ? Global.InputStyle : Global.InputStyle
+                modo != "Nuevo" ? Global.InputStyle : Global.InputStyle
               }
             >
               <option value="">--SELECCIONAR--</option>
@@ -178,7 +178,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="codigoBarras"
               autoComplete="off"
               placeholder="Código de Barras"
-              disabled={modo == "Registrar" ? false : true}
+              disabled={modo == "Nuevo" ? false : true}
               value={data.codigoBarras}
               onChange={ValidarData}
               className={Global.InputStyle}

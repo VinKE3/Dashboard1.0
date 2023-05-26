@@ -92,7 +92,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="tipoVentaCompraId"
                   name="tipoVentaCompraId"
-                  disabled={modo == "Registrar" ? false : true}
+                  disabled={modo == "Nuevo" ? false : true}
                   value={data.tipoVentaCompraId ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

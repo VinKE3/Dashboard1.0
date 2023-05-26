@@ -111,7 +111,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       GetPorIdTipoCambio(data.fechaEmision);
     }
     Tablas();
@@ -584,11 +584,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="N° Letra"
                     autoComplete="off"
                     autoFocus
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.numeroLetra ?? ""}
                     onChange={ValidarData}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }

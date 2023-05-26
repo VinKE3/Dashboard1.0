@@ -121,7 +121,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   useEffect(() => {
     Tablas();
-    if (modo != "Registrar") {
+    if (modo != "Nuevo") {
       ListarDireccion();
       ListarContacto();
       ListarPersonal();
@@ -723,7 +723,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="id"
                       placeholder="Código"
                       autoComplete="off"
-                      readOnly={true}
+                      disabled={true}
                       autoFocus={modo == "Consultar"}
                       value={data.id ?? ""}
                       onChange={ValidarData}
@@ -1035,7 +1035,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
             </TabPanel>
-            {modo != "Registrar" ? (
+            {modo != "Nuevo" ? (
               <TabPanel
                 header="Direcciones"
                 leftIcon="pi pi-home mr-2"
@@ -1199,7 +1199,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ) : (
               ""
             )}
-            {modo != "Registrar" ? (
+            {modo != "Nuevo" ? (
               <TabPanel header="Contactos" leftIcon="pi pi-user mr-2">
                 {/* Boton */}
                 {modo == "Consultar" ? (
@@ -1421,7 +1421,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ) : (
               ""
             )}
-            {modo != "Registrar" ? (
+            {modo != "Nuevo" ? (
               <TabPanel header="Personal" leftIcon="pi pi-user mr-2">
                 {/* Boton */}
                 {modo == "Consultar" ? (

@@ -171,7 +171,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataMoneda]);
   useEffect(() => {
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       GetPorIdTipoCambio(data.fechaRegistro);
     }
     Tablas();
@@ -985,12 +985,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Planilla N°"
                     autoComplete="off"
                     autoFocus
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }

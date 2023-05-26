@@ -4,13 +4,15 @@ import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
 import Delete from "../../../components/Funciones/Delete";
 import Anular from "../../../components/Funciones/Anular";
-import Imprimir from "../../../components/Funciones/Imprimir";
 import BotonBasico from "../../../components/Boton/BotonBasico";
 import BotonCRUD from "../../../components/Boton/BotonCRUD";
 import Table from "../../../components/Tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
+import ModalDeshacer from "./ModalDeshacer";
+import ModalRefinanciamiento from "./ModalRefinanciamiento";
+import ModalRenovacion from "./ModalRenovacion";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -50,7 +52,7 @@ const TablaStyle = styled.div`
 `;
 //#endregion
 
-const DocumentoVenta = () => {
+const LetraCambioVenta = () => {
   //#region useState
   const [permisos, setPermisos] = useState([false, false, false, false, false]);
   const [visible, setVisible] = useState(false);
@@ -70,6 +72,9 @@ const DocumentoVenta = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalRefinanciacion, setModalRefinanciacion] = useState(false);
+  const [modalRenovacion, setModalRenovacion] = useState(false);
+  const [modalDeshacer, setModalDeshacer] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
@@ -116,7 +121,7 @@ const DocumentoVenta = () => {
     }
   }, [permisos]);
   useEffect(() => {
-    GetPermisos("DocumentoVenta", setPermisos);
+    GetPermisos("LetraCambioVenta", setPermisos);
   }, []);
   //#endregion
 
@@ -144,18 +149,18 @@ const DocumentoVenta = () => {
   //#region Funciones API
   const Listar = async (filtro = "", pagina = 1) => {
     const result = await ApiMasy.get(
-      `api/Venta/DocumentoVenta/Listar?Pagina=${pagina}${filtro}`
+      `api/Venta/LetraCambioVenta/Listar?Pagina=${pagina}${filtro}`
     );
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
   const GetPorId = async (id) => {
-    const result = await ApiMasy.get(`api/Venta/DocumentoVenta/${id}`);
+    const result = await ApiMasy.get(`api/Venta/LetraCambioVenta/${id}`);
     setObjeto(result.data.data);
   };
   const GetIsPermitido = async (accion, id) => {
     const result = await ApiMasy.get(
-      `api/Venta/DocumentoVenta/IsPermitido?accion=${accion}&id=${id}`
+      `api/Venta/LetraCambioVenta/IsPermitido?accion=${accion}&id=${id}`
     );
     if (!result.data.data) {
       toast.error(String(result.data.messages[0].textos), {
@@ -192,150 +197,45 @@ const DocumentoVenta = () => {
       setModo(modo);
       switch (accion) {
         case 0: {
-          //Consulta Correlativo
-          const result = await ApiMasy.get(
-            `api/Mantenimiento/Correlativo/01/F001`
-          );
-          //Consulta Correlativo
           setObjeto({
-            empresaId: "01",
-            tipoDocumentoId: "01",
-            serie: "F001",
-            numero: String(result.data.data.numero),
+            id: "",
             fechaEmision: moment().format("YYYY-MM-DD"),
             fechaVencimiento: moment().format("YYYY-MM-DD"),
-            cotizacion: "",
-            cotizacionId: "",
-            clienteId: "",
             clienteNombre: "",
-            clienteTipoDocumentoIdentidadId: "",
-            clienteNumeroDocumentoIdentidad: "",
-            clienteDireccionId: 0,
-            clienteDireccion: "",
-            personalId: "",
-            letra: "",
-            letraId: "",
-            monedaId: "S",
-            tipoCambio: 0,
-            tipoVentaId: "CO",
-            tipoCobroId: "CP",
-            numeroOperacion: "",
-            cuentaCorrienteId: "",
-            documentoReferenciaId: "",
-            fechaDocumentoReferencia: null,
-            abonar: true,
-            motivoNotaId: "",
-            motivoNotaDescripcion: "",
-            motivoSustento: "",
-            guiaRemision: "",
-            numeroPedido: "",
-            observacion: "",
-            isAnticipo: false,
-            isOperacionGratuita: false,
-            incluyeIGV: false,
-            afectarStock: false,
-            totalOperacionesInafectas: 0,
-            totalOperacionesGratuitas: 0,
-            subTotal: 0,
-            totalAnticipos: 0,
-            totalNeto: 0,
-            montoIGV: 0,
-            montoRetencion: 0,
-            montoDetraccion: 0,
-            montoImpuestoBolsa: 0,
-            total: 0,
-            porcentajeIGV: dataGlobal.porcentajeIGV,
-            porcentajeRetencion: 0,
-            porcentajeDetraccion: 0,
-            factorImpuestoBolsa: 0.5,
-            detalles: [],
-            cuotas: [],
-            anticipos: [],
+            tipoDocumentoAbreviatura: "",
             numeroDocumento: "",
+            monedaId: "S",
+            total: 0,
+            saldo: 0,
+            isAnulado: false,
+            isBloqueado: false,
+            clienteId: "",
+            clienteDireccion: "",
+            tipoVentaId: "",
+            existeNotaDebitoRelacionada: false,
+            detalles: [],
           });
           setModal(true);
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(accion, id);
           if (valor) {
-            await GetPorId(value);
+            await GetPorId(id);
             setModal(true);
           }
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(accion, id);
           if (valor) {
-            await Delete(["Venta", "DocumentoVenta"], value, setEliminar);
+            Delete(["Venta", "LetraCambioVenta"], id, setEliminar);
           }
           break;
         }
         case 3: {
-          await GetPorId(value);
+          await GetPorId(id);
           setModal(true);
-          break;
-        }
-        case 4: {
-          let row = document
-            .querySelector("#tablaDocumentoVenta")
-            .querySelector("tr.selected-row");
-          if (row != null) {
-            let id = row.children[0].innerHTML;
-            let documento = row.children[2].innerHTML;
-            Swal.fire({
-              title: "¿Desea Anular el documento?",
-              text: documento,
-              icon: "warning",
-              iconColor: "#F7BF3A",
-              showCancelButton: true,
-              color: "#fff",
-              background: "#1a1a2e",
-              confirmButtonColor: "#eea508",
-              confirmButtonText: "Aceptar",
-              cancelButtonColor: "#d33",
-              cancelButtonText: "Cancelar",
-            }).then(async (res) => {
-              if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, value);
-                if (valor) {
-                  await Anular(["Venta", "DocumentoVenta"], id, setEliminar);
-                }
-              }
-            });
-          } else {
-            toast.info("Seleccione una Fila", {
-              position: "bottom-right",
-              autoClose: 3000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          }
-          break;
-        }
-        case 5: {
-          let row = document
-            .querySelector("#tablaDocumentoVenta")
-            .querySelector("tr.selected-row");
-          if (row != null) {
-            let id = row.children[0].innerHTML;
-            await Imprimir(["Venta", "DocumentoVenta"], id);
-          } else {
-            toast.info("Seleccione una Fila", {
-              position: "bottom-right",
-              autoClose: 3000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          }
           break;
         }
         default:
@@ -343,55 +243,143 @@ const DocumentoVenta = () => {
       }
     }
   };
-  const ModalKey = async (e) => {
-    if (e.key === "n") {
-      setModo("Nuevo");
-      AccionModal();
-    }
+  const AbrirModalRefinanciacion = async (modo = "Nuevo") => {
+    setModo(modo);
+    setObjeto({
+      monedaId: "S",
+      tipoCambio: 0,
+      documentosReferencia: [],
+      detalles: [],
+    });
+    setModalRefinanciacion(true);
+  };
+  const AbrirModalRenovacion = async (modo = "Nuevo") => {
+    setModo(modo);
+    setObjeto({
+      monedaId: "S",
+      tipoCambio: 0,
+      documentosReferencia: [],
+      detalles: [],
+    });
+    setModalRenovacion(true);
+  };
+  const AbrirModalDeshacer = async (modo = "Nuevo") => {
+    setModalDeshacer(true);
+  };
+  const AbrirModalKey = async (e, modo) => {
     if (e.key === "Enter") {
+      setModo(modo);
       let row = document
-        .querySelector("#tablaDocumentoVenta")
+        .querySelector("#tablaLetraCambioVenta")
+        .querySelector("tr.selected-row");
+      let id = row.firstChild.innerText;
+      let valor = await GetIsPermitido(1, id);
+      if (valor) {
+        await GetPorId(id);
+        setModal(true);
+      }
+    }
+    if (e.key === "c") {
+      setModo("Consultar");
+      let row = document
+        .querySelector("#tablaLetraCambioVenta")
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        AccionModal(id, "Modificar", 1);
+        await GetPorId(id);
+        setModal(true);
       }
     }
     if (e.key === "Delete") {
       let row = document
-        .querySelector("#tablaDocumentoVenta")
+        .querySelector("#tablaLetraCambioVenta")
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        AccionModal(id, "Eliminar", 2);
+        let valor = await GetIsPermitido(2, id);
+        if (valor) {
+          Delete(["Venta", "LetraCambioVenta"], id, setEliminar);
+        }
       }
     }
-    if (e.key === "c") {
-      let row = document
-        .querySelector("#tablaDocumentoVenta")
-        .querySelector("tr.selected-row");
-      if (row != null) {
-        let id = row.firstChild.innerText;
-        AccionModal(id, "Consultar", 3);
-      }
+  };
+  const Anulacion = async () => {
+    let row = document
+      .querySelector("#tablaLetraCambioVenta")
+      .querySelector("tr.selected-row");
+    if (row != null) {
+      let id = row.children[0].innerHTML;
+      let documento = row.children[2].innerHTML;
+      Swal.fire({
+        title: "¿Desea Anular el documento?",
+        text: documento,
+        icon: "warning",
+        iconColor: "#F7BF3A",
+        showCancelButton: true,
+        color: "#fff",
+        background: "#1a1a2e",
+        confirmButtonColor: "#eea508",
+        confirmButtonText: "Aceptar",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+      }).then(async (res) => {
+        if (res.isConfirmed) {
+          await Anular(["Venta", "LetraCambioVenta"], id, setEliminar);
+        }
+      });
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
-    if (e.key === "a") {
-      let row = document
-        .querySelector("#tablaDocumentoVenta")
-        .querySelector("tr.selected-row");
-      if (row != null) {
-        let id = row.firstChild.innerText;
-        AccionModal(id, "Anular", 4);
+  };
+  const Imprimir = async () => {
+    let row = document
+      .querySelector("#tablaLetraCambioVenta")
+      .querySelector("tr.selected-row");
+    if (row != null) {
+      let id = row.children[0].innerHTML;
+      const result = await ApiMasy.get(
+        `api/Venta/LetraCambioVenta/Imprimir/${id}`
+      );
+      if (result.name == "AxiosError") {
+        let err = "";
+        if (result.response.data == "") {
+          err = result.message;
+        } else {
+          err = String(result.response.data.messages[0].textos);
+        }
+        toast.error(err, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        console.log(result.data);
       }
-    }
-    if (e.key === "p") {
-      let row = document
-        .querySelector("#tablaDocumentoVenta")
-        .querySelector("tr.selected-row");
-      if (row != null) {
-        let id = row.firstChild.innerText;
-        AccionModal(id, "Imprimir", 5);
-      }
+    } else {
+      toast.info("Seleccione una Fila", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
   const Autorizar = async (id, estado) => {
@@ -632,7 +620,7 @@ const DocumentoVenta = () => {
         <>
           <div className="px-2">
             <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Documentos de Venta</h2>
+              <h2 className={Global.TituloH2}>Letra Cambio Venta</h2>
               {filtro.isEnviado === false && (
                 <div className="flex">
                   <div className={Global.CheckStyle}>
@@ -786,12 +774,34 @@ const DocumentoVenta = () => {
                   containerClass=""
                 />
               )}
+              <BotonBasico
+                botonText="Refinanciamiento"
+                botonClass={Global.BotonNaranja}
+                botonIcon={faPlus}
+                click={() => Imprimir()}
+                containerClass=""
+              />
+              <BotonBasico
+                botonText="Renovación"
+                botonClass={Global.BotonMorado}
+                botonIcon={faPrint}
+                click={() => Imprimir()}
+                containerClass=""
+              />
+              <BotonBasico
+                botonText="Deshacer Emisión"
+                botonClass={Global.BotonRosa}
+                botonIcon={faPrint}
+                click={() => Imprimir()}
+                containerClass=""
+              />
+
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
-                  click={() => AccionModal(null, "Anular", 4)}
+                  click={() => Anular()}
                   containerClass=""
                 />
               )}
@@ -799,7 +809,7 @@ const DocumentoVenta = () => {
                 botonText="Imprimir"
                 botonClass={Global.BotonAgregar}
                 botonIcon={faPrint}
-                click={() => AccionModal(null, "Imprimir", 5)}
+                click={() => Imprimir()}
                 containerClass=""
               />
             </div>
@@ -808,14 +818,14 @@ const DocumentoVenta = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
-                id={"tablaDocumentoVenta"}
+                id={"tablaLetraCambioVenta"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
-                KeyDown={(e) => ModalKey(e, "Modificar")}
+                KeyDown={(e) => AbrirModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}
@@ -831,4 +841,4 @@ const DocumentoVenta = () => {
   //#endregion
 };
 
-export default DocumentoVenta;
+export default LetraCambioVenta;

@@ -3,6 +3,8 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
 import Delete from "../../../components/Funciones/Delete";
+import Anular from "../../../components/Funciones/Anular";
+import Imprimir from "../../../components/Funciones/Imprimir";
 import BotonBasico from "../../../components/Boton/BotonBasico";
 import BotonCRUD from "../../../components/Boton/BotonCRUD";
 import Table from "../../../components/Tabla/Table";
@@ -14,7 +16,6 @@ import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
@@ -71,7 +72,7 @@ const Cotizacion = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -132,7 +133,6 @@ const Cotizacion = () => {
     const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
     setObjeto(result.data.data);
   };
-
   const GetIsPermitido = async (accion, id) => {
     const result = await ApiMasy.get(
       `api/Venta/Cotizacion/IsPermitido?accion=${accion}&id=${id}`
@@ -177,9 +177,9 @@ const Cotizacion = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (
+  const AccionModal = async (
     value,
-    modo = "Registrar",
+    modo = "Nuevo",
     accion = 0,
     click = false
   ) => {
@@ -251,7 +251,7 @@ const Cotizacion = () => {
         case 2: {
           let valor = await GetIsPermitido(accion, value);
           if (valor) {
-            Delete(["Venta", "Cotizacion"], value, setEliminar);
+            await Delete(["Venta", "Cotizacion"], value, setEliminar);
           }
           break;
         }
@@ -260,140 +260,122 @@ const Cotizacion = () => {
           setModal(true);
           break;
         }
+        case 4: {
+          let row = document
+            .querySelector("#tablaCotizacion")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let documento = row.children[2].innerHTML;
+            Swal.fire({
+              title: "¿Desea Anular el documento?",
+              text: documento,
+              icon: "warning",
+              iconColor: "#F7BF3A",
+              showCancelButton: true,
+              color: "#fff",
+              background: "#1a1a2e",
+              confirmButtonColor: "#eea508",
+              confirmButtonText: "Aceptar",
+              cancelButtonColor: "#d33",
+              cancelButtonText: "Cancelar",
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                let valor = await GetIsPermitido(accion, value);
+                if (valor) {
+                  await Anular(["Venta", "Cotizacion"], id, setEliminar);
+                }
+              }
+            });
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaCotizacion")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            await Imprimir(["Venta", "Cotizacion"], id);
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
         default:
           break;
       }
     }
   };
-  const AbrirModalKey = async (e, modo) => {
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      setModo("Nuevo");
+      AccionModal();
+    }
     if (e.key === "Enter") {
-      setModo(modo);
       let row = document
         .querySelector("#tablaCotizacion")
         .querySelector("tr.selected-row");
-      let id = row.firstChild.innerText;
-      let valor = await GetIsPermitido(1, id);
-      if (valor) {
-        await GetPorId(id);
-        setModal(true);
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar", 1);
       }
     }
-  };
-  const Anular = async () => {
-    let tabla = document.querySelector("table > tbody").querySelector("tr.selected-row");
-    if (tabla != null) {
-      if (tabla.classList.contains("selected-row")) {
-        let id =
-          document.querySelector("tr.selected-row").children[0].innerHTML;
-        let documento =
-          document.querySelector("tr.selected-row").children[2].innerHTML;
-        Swal.fire({
-          title: "¿Desea Anular el documento?",
-          text: documento,
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then(async (res) => {
-          if (res.isConfirmed) {
-            const result = await ApiMasy.put(
-              `api/Venta/GuiaRemision/Anular/${id}`
-            );
-            if (result.name == "AxiosError") {
-              if (Object.entries(result.response.data).length > 0) {
-                toast.error(String(result.response.data.messages[0].textos), {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              } else {
-                toast.error([result.message], {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              }
-            } else {
-              toast.success(result.data.messages[0].textos[0], {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-            }
-          }
-        });
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaCotizacion")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Eliminar", 2);
       }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
     }
-  };
-  const Imprimir = async () => {
-    let row = document.querySelector("#tablaCotizacion").querySelector("tr.selected-row");
-    if (row != null) {
-      let id = row.children[0].innerHTML;
-      const result = await ApiMasy.get(
-        `api/Venta/DocumentoVenta/Imprimir/${id}`
-      );
-      if (result.name == "AxiosError") {
-        let err = "";
-        if (result.response.data == "") {
-          err = result.message;
-        } else {
-          err = String(result.response.data.messages[0].textos);
-        }
-        toast.error(err, {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } else {
-        console.log(result.data);
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaCotizacion")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
       }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    }
+    if (e.key === "a") {
+      let row = document
+        .querySelector("#tablaCotizacion")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Anular", 4);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaCotizacion")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
+      }
     }
   };
   //#endregion
@@ -483,9 +465,9 @@ const Cotizacion = () => {
           <BotonCRUD
             setEliminar={setEliminar}
             permisos={permisos}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },
@@ -562,10 +544,11 @@ const Cotizacion = () => {
             <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
               {permisos[0] && (
                 <BotonBasico
-                  botonText="Registrar"
+                  botonText="Nuevo"
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
-                  click={() => AbrirModal()}
+                  click={() => AccionModal()}
+                  containerClass=""
                 />
               )}
               {permisos[4] && (
@@ -573,7 +556,7 @@ const Cotizacion = () => {
                   botonText="Anular"
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
-                  click={() => Anular()}
+                  click={() => AccionModal(null, "Anular", 4)}
                   containerClass=""
                 />
               )}
@@ -581,7 +564,7 @@ const Cotizacion = () => {
                 botonText="Imprimir"
                 botonClass={Global.BotonAgregar}
                 botonIcon={faPrint}
-                click={() => Imprimir()}
+                click={() => AccionModal(null, "Imprimir", 5)}
                 containerClass=""
               />
             </div>
@@ -596,8 +579,8 @@ const Cotizacion = () => {
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
-                DobleClick={(e) => AbrirModal(e, "Consultar", 3, true)}
-                KeyDown={(e) => AbrirModalKey(e, "Modificar")}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

@@ -41,7 +41,7 @@ const Correlativo = () => {
   const [index, setIndex] = useState(0);
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -105,9 +105,9 @@ const Correlativo = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (tipoDocumentoId, serie, modo = "Registrar") => {
+  const AccionModal = async (tipoDocumentoId, serie, modo = "Nuevo") => {
     setModo(modo);
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       setObjeto({
         tipoDocumentoId: "01",
         tipoDocumentoDescripcion: "",
@@ -153,14 +153,14 @@ const Correlativo = () => {
             menu={["Mantenimiento", "Correlativo"]}
             id={row.values.id}
             ClickConsultar={() =>
-              AbrirModal(
+              AccionModal(
                 row.values.tipoDocumentoId,
                 row.values.serie,
                 "Consultar"
               )
             }
             ClickModificar={() =>
-              AbrirModal(
+              AccionModal(
                 row.values.tipoDocumentoId,
                 row.values.serie,
                 "Modificar"
@@ -185,10 +185,10 @@ const Correlativo = () => {
             {/* Boton */}
             {permisos[0] && (
               <BotonBasico
-                botonText="Registrar"
+                botonText="Nuevo"
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
-                click={() => AbrirModal()}
+                click={() => AccionModal()}
               />
             )}
             {/* Boton */}

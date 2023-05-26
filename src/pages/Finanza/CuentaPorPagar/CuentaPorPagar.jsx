@@ -158,7 +158,7 @@ const CuentaPorPagar = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id) => {
+  const AccionModal = async (id) => {
     await GetPorId(id);
     setModal(true);
   };
@@ -244,8 +244,8 @@ const CuentaPorPagar = () => {
             permisos={permisos}
             menu={["Compras", "CuentaPorPagar"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar")}
           />
         ),
       },

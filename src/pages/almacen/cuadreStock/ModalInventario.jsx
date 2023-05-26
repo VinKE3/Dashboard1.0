@@ -34,7 +34,7 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
     <ModalBasic
       setModal={setModal}
       objeto={data}
-      modo={"Registrar"}
+      modo={"Nuevo"}
       menu={["", ""]}
       titulo={data.descripcion}
       cerrar={false}

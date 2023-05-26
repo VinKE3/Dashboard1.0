@@ -40,7 +40,7 @@ const Vehiculo = () => {
   const [cadena, setCadena] = useState(`&numeroPlaca=${filtro.numeroPlaca}`);
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -123,9 +123,9 @@ const Vehiculo = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
+  const AccionModal = async (id, modo = "Nuevo") => {
     setModo(modo);
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       setObjeto({
         id: "00",
         empresaId: "01",
@@ -173,8 +173,8 @@ const Vehiculo = () => {
             permisos={permisos}
             menu={["Mantenimiento", "Vehiculo"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar")}
           />
         ),
       },
@@ -206,10 +206,10 @@ const Vehiculo = () => {
             {/* Boton */}
             {permisos[0] && (
               <BotonBasico
-                botonText="Registrar"
+                botonText="Nuevo"
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
-                click={() => AbrirModal()}
+                click={() => AccionModal()}
               />
             )}
             {/* Boton */}

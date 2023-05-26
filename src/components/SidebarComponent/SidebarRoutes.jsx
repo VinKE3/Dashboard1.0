@@ -59,20 +59,6 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
             navigate("/Venta/cotizacion");
           },
         },
-        {
-          label: "Salidas de Articulos",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Venta/salidas-de-InformeArticulo");
-          },
-        },
-        {
-          label: "Registro de Venta - Articulo",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Venta/registro-de-venta-Articulo");
-          },
-        },
       ],
     },
     {
@@ -98,20 +84,6 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
           icon: "pi pi-fw pi-angle-double-right",
           command: () => {
             navigate("/Compra/ordenCompra");
-          },
-        },
-        {
-          label: "Entrada de Articulos",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Compra/entrada-de-InformeArticulo");
-          },
-        },
-        {
-          label: "Registro de Compra - Articulo",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Compra/registro-de-compra-Articulo");
           },
         },
       ],
@@ -218,13 +190,6 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
             navigate("/Mantenimiento/almacenes");
           },
         },
-        {
-          label: "Caja Chica - Configuracion",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Mantenimiento/caja-chica-configuracion");
-          },
-        },
       ],
     },
     {
@@ -244,85 +209,7 @@ const SidebarRoutes = ({ showMenu, onClickShowMenu, onClickButton }) => {
     {
       label: "Tesoreria",
       icon: "pi pi-fw pi-money-bill",
-      items: [
-        {
-          label: "Cuentas por Cobrar",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/cuentas-por-cobrar");
-          },
-        },
-        {
-          label: "Cobros - Cuentas Bancarias",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/cobros-cuentas-bancarias");
-          },
-        },
-        {
-          label: "Retenciones",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/retenciones");
-          },
-        },
-        {
-          label: "Letras de Cambio - Cobro",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/letras-de-cambio-cobro");
-          },
-        },
-        {
-          label: "Cuentas por Pagar",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/cuentas-por-pagar");
-          },
-        },
-        {
-          label: "Pagos en Efectivo",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/pagos-en-efectivo");
-          },
-        },
-        {
-          label: "Pagos - Cuenta Bancaria",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/pagos-cuenta-bancaria");
-          },
-        },
-        {
-          label: "Letras de Cambio - Pago",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/letras-de-cambio-pago");
-          },
-        },
-        {
-          label: "Caja Chica",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/caja-chica");
-          },
-        },
-        {
-          label: "Recibo de Ingreso",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/recibo-de-ingreso");
-          },
-        },
-        {
-          label: "Recibo de Egreso",
-          icon: "pi pi-fw pi-angle-double-right",
-          command: () => {
-            navigate("/Tesoreria/recibo-de-egreso");
-          },
-        },
-      ],
+      items: [],
     },
     {
       label: "Informes",

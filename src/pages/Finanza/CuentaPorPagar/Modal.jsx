@@ -430,7 +430,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <div className="flex item-center justify-center">
-          {modo == "Registrar" ? (
+          {modo == "Nuevo" ? (
             ""
           ) : (
             <>
@@ -502,9 +502,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoDocumentoId"
                   autoFocus
                   value={data.tipoDocumentoId ?? ""}
-                  disabled={modo == "Registrar" ? false : true}
+                  disabled={modo == "Nuevo" ? false : true}
                   className={
-                    modo == "Registrar" ? Global.InputStyle : Global.InputStyle
+                    modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                   }
                 >
                   {dataTipoDoc.map((map) => (

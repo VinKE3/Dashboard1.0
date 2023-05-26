@@ -65,6 +65,32 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  const KeyTabla = async (e, click = false) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaFiltroProveedor")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+      }
+    }
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+    if (click) {
+      let row = e.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
+  };
   //#endregion
 
   //#region API
@@ -89,7 +115,7 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
       provinciaId: result.data.data.provinciaId,
       distritoId: result.data.data.distritoId,
       //Guia de Compra
-      
+
       //Orden de Compra
       contactos: result.data.data.contactos,
       cuentasCorrientes: result.data.data.cuentasCorrientes,
@@ -184,6 +210,7 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
                   autoFocus
                   value={filtro.numeroDocumentoIdentidad}
                   onChange={ValidarData}
+                  onKeyDown={(e) => Key(e)}
                   className={Global.InputStyle}
                 />
               </div>
@@ -199,9 +226,10 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   value={filtro.nombre}
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onKeyDown={(e) => Key(e)}
+                  className={Global.InputStyle}
                 />
-                <button
+                {/* <button
                   id="consultar"
                   onClick={Filtro}
                   className={
@@ -209,13 +237,19 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
                   }
                 >
                   <FaSearch></FaSearch>
-                </button>
+                </button> */}
               </div>
             </div>
 
             {/* Tabla */}
             <TablaStyle>
-              <TableBasic columnas={columnas} datos={datos} />
+              <TableBasic
+                id={"tablaFiltroProveedor"}
+                columnas={columnas}
+                datos={datos}
+                DobleClick={(e) => KeyTabla(e, true)}
+                KeyDown={(e) => KeyTabla(e)}
+              />
             </TablaStyle>
             {/* Tabla */}
           </div>

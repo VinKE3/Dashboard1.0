@@ -176,6 +176,32 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  const KeyTabla = async (e, click = false) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaFiltroOrdenCompra")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+      }
+    }
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+    if (click) {
+      let row = e.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
+  };
   //#endregion
 
   //#region Columnas
@@ -273,9 +299,9 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <button
-            className={Global.BotonModalBase + Global.BotonCancelarModal}
             type="button"
             onClick={() => setModal(false)}
+            className={Global.BotonModalBase + Global.BotonCancelarModal}
           >
             CERRAR
           </button>
@@ -301,6 +327,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     autoFocus
                     value={filtro.fechaInicio}
                     onChange={ValidarData}
+                    onKeyDown={(e) => Key(e)}
                     className={Global.InputStyle}
                   />
                 </div>
@@ -315,9 +342,10 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     autoComplete="off"
                     value={filtro.fechaFin}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    onKeyDown={(e) => Key(e)}
+                    className={Global.InputStyle}
                   />
-                  <button
+                  {/* <button
                     id="consultar"
                     onClick={Filtro}
                     className={
@@ -325,12 +353,18 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     }
                   >
                     <FaSearch></FaSearch>
-                  </button>
+                  </button> */}
                 </div>
               </div>
               {/* Tabla */}
               <TablaStyle>
-                <TableBasic columnas={columnas} datos={data} />
+                <TableBasic
+                  id={"tablaFiltroOrdenCompra"}
+                  columnas={columnas}
+                  datos={data}
+                  DobleClick={(e) => KeyTabla(e, true)}
+                  KeyDown={(e) => KeyTabla(e)}
+                />
               </TablaStyle>
               {/* Tabla */}
             </div>
@@ -342,6 +376,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                 {/* Tabla */}
                 <TablaDetalle>
                   <TableBasic
+                    id={"tablaFiltroOrdenCompraSeleccion"}
                     columnas={columnSeleccion}
                     datos={dataOrdenSeleccionada}
                   />

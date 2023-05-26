@@ -66,13 +66,25 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const Key = async (e, click = false) => {
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
       let row = document
-        .querySelector("#tablaCliente")
+        .querySelector("#tablaFiltroCliente")
         .querySelector("tr.selected-row");
-      let id = row.firstChild.innerText;
-      await GetPorId(id);
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+      }
+    }
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
     }
     if (click) {
       let row = e.target.closest("tr");
@@ -187,9 +199,9 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
               <p className="pl-2">Nuevo</p>
             </button> */}
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
             >
               CERRAR
             </button>
@@ -215,6 +227,7 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
                   autoFocus
                   value={filtro.numeroDocumentoIdentidad}
                   onChange={ValidarData}
+                  onKeyDown={(e) => Key(e)}
                   className={Global.InputStyle}
                 />
               </div>
@@ -230,28 +243,29 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   value={filtro.nombre}
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onKeyDown={(e) => Key(e)}
+                  className={Global.InputStyle}
                 />
-                <button
-                  id="consultar"
+                {/* <button
+                  id="consultarClienteFiltro"
                   onClick={Filtro}
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
                 >
                   <FaSearch></FaSearch>
-                </button>
+                </button> */}
               </div>
             </div>
 
             {/* Tabla */}
             <TablaStyle>
               <TableBasic
-                id="tablaCliente"
+                id="tablaFiltroCliente"
                 columnas={columnas}
                 datos={datos}
-                DobleClick={(e) => Key(e, true)}
-                KeyDown={(e) => Key(e)}
+                DobleClick={(e) => KeyTabla(e, true)}
+                KeyDown={(e) => KeyTabla(e)}
               />
             </TablaStyle>
             {/* Tabla */}

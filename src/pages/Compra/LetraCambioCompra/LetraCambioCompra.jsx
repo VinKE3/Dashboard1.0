@@ -73,7 +73,7 @@ const LetraCambioCompra = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
 
@@ -179,7 +179,7 @@ const LetraCambioCompra = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
+  const AccionModal = async (id, modo = "Nuevo", accion = 0) => {
     setModo(modo);
     switch (accion) {
       case 0: {
@@ -332,9 +332,9 @@ const LetraCambioCompra = () => {
           <BotonCRUD
           setEliminar={setEliminar}
           permisos={permisos}
-          ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-          ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-          ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
+          ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
+          ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
+          ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },
@@ -410,10 +410,10 @@ const LetraCambioCompra = () => {
             {/* Boton */}
             {permisos[0] && (
               <BotonBasico
-                botonText="Registrar"
+                botonText="Nuevo"
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
-                click={() => AbrirModal()}
+                click={() => AccionModal()}
               />
             )}
             {/* Boton */}

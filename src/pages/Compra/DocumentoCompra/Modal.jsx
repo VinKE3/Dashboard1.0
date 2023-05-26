@@ -147,7 +147,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       GetPorIdTipoCambio(data.fechaEmision);
     }
     GetCuentasCorrientes();
@@ -1153,9 +1153,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoFocus
                     value={data.tipoDocumentoId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }
@@ -1178,12 +1178,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Serie"
                     autoComplete="off"
                     maxLength="4"
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.serie ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }
@@ -1200,12 +1200,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Número"
                     autoComplete="off"
                     maxLength="10"
-                    disabled={modo == "Registrar" ? false : true}
+                    disabled={modo == "Nuevo" ? false : true}
                     value={data.numero ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Registrar"
+                      modo == "Nuevo"
                         ? Global.InputStyle
                         : Global.InputStyle
                     }

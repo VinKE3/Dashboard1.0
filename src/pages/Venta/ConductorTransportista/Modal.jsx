@@ -82,7 +82,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="id"
                   autoComplete="off"
                   autoFocus={modo == "Consultar"}
-                  readOnly={true}
+                  disabled={true}
                   value={data.id ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}

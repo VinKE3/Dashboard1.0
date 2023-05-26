@@ -3,6 +3,7 @@ import Mensajes from "../Funciones/Mensajes";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
 import Insert from "../Funciones/Insert";
 import Update from "../Funciones/Update";
 import * as Global from "../Global";
@@ -32,8 +33,8 @@ const ModalCrud = ({
   //#region Funciones
   const Enviar = async (e) => {
     if (e.key == "Enter") {
-      if (modo == "Registrar") {
-        Registrar(e);
+      if (modo == "Nuevo") {
+        Nuevo(e);
       } else {
         Modificar(e);
       }
@@ -62,8 +63,29 @@ const ModalCrud = ({
   const CerrarModal = (e = null) => {
     if (e._reactName != "onClick") {
       if (e.key == "Escape") {
-        foco.focus();
-        setModal(false);
+        if (modo != "Consultar") {
+          Swal.fire({
+            title: "Cerrar Formulario",
+            text: "¿Desea cerrar el formulario?",
+            icon: "warning",
+            iconColor: "#F7BF3A",
+            showCancelButton: true,
+            color: "#fff",
+            background: "#1a1a2e",
+            confirmButtonColor: "#eea508",
+            confirmButtonText: "Aceptar",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              foco.focus();
+              setModal(false);
+            }
+          });
+        } else {
+          foco.focus();
+          setModal(false);
+        }
       }
     } else {
       foco.focus();
@@ -73,7 +95,7 @@ const ModalCrud = ({
   //#endregion
 
   //#region Funciones API
-  const Registrar = async (e) => {
+  const Nuevo = async (e) => {
     e.preventDefault();
     await Insert(menu, objeto, setTipoMensaje, setMensaje);
   };
@@ -92,7 +114,9 @@ const ModalCrud = ({
           <div id="modalCRUD" className={Global.ModalContent}>
             {/*header*/}
             <div className={Global.ModalHeader}>
-              <h3 className={Global.TituloModal}>{modo + " " + titulo}</h3>
+              <h3 className={Global.TituloModal}>
+                {modo == "Nuevo" ? `Registrar ${titulo}` : `${modo} ${titulo}`}
+              </h3>
               {cerrar && (
                 <button className={Global.CerrarModal} onClick={CerrarModal}>
                   <FontAwesomeIcon icon={faXmark} size="lg" />
@@ -125,13 +149,11 @@ const ModalCrud = ({
                   className={Global.BotonModalBase + Global.BotonOkModal}
                   type="button"
                   onClick={
-                    modo == "Registrar"
-                      ? (e) => Registrar(e)
-                      : (e) => Modificar(e)
+                    modo == "Nuevo" ? (e) => Nuevo(e) : (e) => Modificar(e)
                   }
                   onKeyDown={(e) => Enviar(e)}
                 >
-                  {modo == "Registrar" ? "Registrar" : "Guardar Cambios"}
+                  {modo == "Nuevo" ? "Nuevo" : "Guardar Cambios"}
                 </button>
               )}
               <button

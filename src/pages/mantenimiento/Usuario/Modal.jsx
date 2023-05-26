@@ -125,7 +125,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.nick ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Registrar" ? false : true}
+                  disabled={modo == "Nuevo" ? false : true}
                   className={Global.InputStyle}
                 />
               </div>
@@ -153,7 +153,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
 
-            {modo == "Registrar" && (
+            {modo == "Nuevo" && (
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="clave" className={Global.LabelStyle}>

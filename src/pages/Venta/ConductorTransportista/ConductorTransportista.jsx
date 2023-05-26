@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
+import Delete from "../../../components/Funciones/Delete";
 import FiltroBasico from "../../../components/Filtro/FiltroBasico";
 import BotonBasico from "../../../components/Boton/BotonBasico";
 import BotonCRUD from "../../../components/Boton/BotonCRUD";
@@ -9,7 +10,6 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
@@ -42,7 +42,7 @@ const Conductor = () => {
   const [cadena, setCadena] = useState(`&nombre=${filtro.nombre}`);
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -125,15 +125,15 @@ const Conductor = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (value, modo = "Registrar", click = false) => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     if (click) {
       setModo(modo);
       let row = value.target.closest("tr");
       let id = row.firstChild.innerText;
-      await GetPorId(id);
+      await GetPorId(value);
     } else {
       setModo(modo);
-      if (modo == "Registrar") {
+      if (modo == "Nuevo") {
         setObjeto({
           id: "00",
           empresaId: "01",
@@ -152,7 +152,7 @@ const Conductor = () => {
           isActivo: true,
         });
       } else {
-        await GetPorId(id);
+        await GetPorId(value);
       }
     }
     setModal(true);
@@ -166,6 +166,26 @@ const Conductor = () => {
       let id = row.firstChild.innerText;
       await GetPorId(id);
       setModal(true);
+    }
+    if (e.key === "c") {
+      setModo("Consultar");
+      let row = document
+        .querySelector("#tablaTransportista")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+        setModal(true);
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaTransportista")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "Conductor"], id, setEliminar);
+      }
     }
   };
   //#endregion
@@ -201,8 +221,8 @@ const Conductor = () => {
             permisos={permisos}
             menu={["Mantenimiento", "Conductor"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar")}
           />
         ),
       },
@@ -236,10 +256,11 @@ const Conductor = () => {
             {/* Boton */}
             {permisos[0] && (
               <BotonBasico
-                botonText="Registrar"
+                botonText="Nuevo"
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
-                click={() => AbrirModal()}
+                click={() => AccionModal()}
+                containerClass=""
               />
             )}
             {/* Boton */}
@@ -253,7 +274,7 @@ const Conductor = () => {
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
-                DobleClick={(e) => AbrirModal(e, "Consultar", true)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => AbrirModalKey(e, "Modificar", true)}
               />
             </TablaStyle>

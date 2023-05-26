@@ -35,7 +35,7 @@ const Departamento = () => {
   const [cadena, setCadena] = useState(`&nombre=${filtro.nombre}`);
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -118,9 +118,9 @@ const Departamento = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar") => {
+  const AccionModal = async (id, modo = "Nuevo") => {
     setModo(modo);
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       setObjeto({
         id: "00",
         nombre: "",
@@ -151,8 +151,8 @@ const Departamento = () => {
             permisos={permisos}
             menu={["Mantenimiento", "Departamento"]}
             id={row.values.id}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar")}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar")}
           />
         ),
       },
@@ -185,10 +185,10 @@ const Departamento = () => {
             {/* Boton */}
             {permisos[0] && (
               <BotonBasico
-                botonText="Registrar"
+                botonText="Nuevo"
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
-                click={() => AbrirModal()}
+                click={() => AccionModal()}
               />
             )}
             {/* Boton */}

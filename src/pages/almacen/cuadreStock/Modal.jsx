@@ -74,7 +74,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //Data Modales Ayuda
   //Modales de Ayuda
   const [modalInventario, setModalInventario] = useState(false);
-  const [modoInventario, setModoInventario] = useState("Registrar");
+  const [modoInventario, setModoInventario] = useState("Nuevo");
   const [dataInventario, setDataInventario] = useState([]);
   //Modales de Ayuda
   //Filtro
@@ -114,7 +114,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
     }
   }, [refrescar]);
   useEffect(() => {
-    if (modo == "Registrar") {
+    if (modo == "Nuevo") {
       GetPorIdTipoCambio(data.fechaRegistro);
     }
     Tablas();
@@ -344,7 +344,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (value, click = false) => {
+  const AccionModal = async (value, click = false) => {
     if (click) {
       let row = value.target.closest("tr");
       let detalleId = row.lastChild.innerText;
@@ -468,7 +468,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                 <button
                   id={"botonInventario"}
                   onClick={() =>
-                    AbrirModal({
+                    AccionModal({
                       detalleId: row.values.detalleId,
                       descripcion: row.values.descripcion,
                       inventario: row.values.inventario,
@@ -495,7 +495,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                 <button
                   id={"botonInventario"}
                   onClick={() =>
-                    AbrirModal({
+                    AccionModal({
                       detalleId: row.values.detalleId,
                       descripcion: row.values.descripcion,
                       inventario: row.values.inventario,
@@ -1014,7 +1014,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                   "border",
                 ]}
                 Click={(e) => FiltradoPaginado(e)}
-                DobleClick={(e) => AbrirModal(e, true)}
+                DobleClick={(e) => AccionModal(e, true)}
               />
             </TablaStyle>
             {/* Tabla Detalle */}

@@ -78,6 +78,32 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  const KeyTabla = async (e, click = false) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaFiltroCotizacion")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+      }
+    }
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+    if (click) {
+      let row = e.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
+  };
   //#endregion
 
   //#region API
@@ -187,9 +213,9 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
               <p className="pl-2">Nuevo</p>
             </button> */}
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
             >
               CERRAR
             </button>
@@ -212,6 +238,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoFocus
                   value={filtro.clienteNombre}
                   onChange={ValidarData}
+                  onKeyDown={(e) => Key(e)}
                   className={Global.InputStyle}
                 />
               </div>
@@ -226,6 +253,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   value={filtro.fechaInicio}
                   onChange={ValidarData}
+                  onKeyDown={(e) => Key(e)}
                   className={Global.InputStyle}
                 />
               </div>
@@ -240,9 +268,10 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   value={filtro.fechaFin}
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onKeyDown={(e) => Key(e)}
+                  className={Global.InputStyle}
                 />
-                <button
+                {/* <button
                   id="consultar"
                   onClick={Filtro}
                   className={
@@ -250,13 +279,19 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   }
                 >
                   <FaSearch></FaSearch>
-                </button>
+                </button> */}
               </div>
             </div>
 
             {/* Tabla */}
             <TablaStyle>
-              <TableBasic columnas={columnas} datos={datos} />
+              <TableBasic
+                id={"tablaFiltroCotizacion"}
+                columnas={columnas}
+                datos={datos}
+                DobleClick={(e) => KeyTabla(e, true)}
+                KeyDown={(e) => KeyTabla(e)}
+              />
             </TablaStyle>
             {/* Tabla */}
           </div>

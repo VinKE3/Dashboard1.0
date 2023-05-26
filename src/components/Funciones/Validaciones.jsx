@@ -185,7 +185,11 @@ export const MoverFlecha = async (e, id) => {
     }
   }
 };
-
+export const KeyClick = (e) => {
+  if (e.key == "Enter") {
+    e.target.click();
+  }
+};
 export const CerrarModal = async (e) => {
   if (e.key == "Escape") {
     return false;

@@ -57,7 +57,7 @@ const Header = () => {
             icon="pi pi-building"
             onClick={(e) => menu.current.toggle(e)}
             className={
-              Global.BotonBasic + " " + Global.BotonHeader + " !border-none"
+              Global.BotonBasico + " " + Global.BotonHeader + " !border-none"
             }
           >
             <span className="hidden sm:block pl-2">EMPRESA</span>
@@ -66,7 +66,7 @@ const Header = () => {
             <Button
               onClick={handleLogout}
               className={
-                Global.BotonBasic + " " + Global.BotonHeader + " !border-none"
+                Global.BotonBasico + " " + Global.BotonHeader + " !border-none"
               }
             >
               <RiLogoutCircleRLine className="text-black" />

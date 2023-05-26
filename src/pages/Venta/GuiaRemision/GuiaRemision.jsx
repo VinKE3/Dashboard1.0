@@ -3,6 +3,8 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/Funciones/GetPermisos";
 import Delete from "../../../components/Funciones/Delete";
+import Anular from "../../../components/Funciones/Anular";
+import Imprimir from "../../../components/Funciones/Imprimir";
 import BotonBasico from "../../../components/Boton/BotonBasico";
 import BotonCRUD from "../../../components/Boton/BotonCRUD";
 import Table from "../../../components/Tabla/Table";
@@ -12,9 +14,8 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
-import { faPlus, faBan } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
+import { FaSearch, FaWindowMaximize } from "react-icons/fa";
+import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
@@ -40,8 +41,8 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:last-child {
-    width: 80px;
-    max-width: 80px;
+    width: 100px;
+    max-width: 100px;
     text-align: center;
   }
 `;
@@ -66,7 +67,7 @@ const GuiaRemision = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
-  const [modo, setModo] = useState("Registrar");
+  const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
   //#endregion
@@ -171,152 +172,208 @@ const GuiaRemision = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AbrirModal = async (id, modo = "Registrar", accion = 0) => {
-    setModo(modo);
-    switch (accion) {
-      case 0: {
-        //Consulta Correlativo
-        const result = await ApiMasy.get(
-          `api/Mantenimiento/Correlativo/09/0002`
-        );
-        //Consulta Correlativo
-        setObjeto({
-          empresaId: "01",
-          tipoDocumentoId: "09",
-          serie: "0002",
-          numero: String(result.data.data.numero),
-          fechaEmision: moment().format("YYYY-MM-DD"),
-          fechaTraslado: moment().format("YYYY-MM-DD"),
-          clienteId: "",
-          clienteNumeroDocumentoIdentidad: "",
-          clienteNombre: "",
-          clienteDireccionId: 0,
-          clienteDireccion: "",
-          direccionPartida: "",
-          personalId: "",
-          empresaTransporteId: "0001  ",
-          costoMinimo: 0,
-          conductorId: "000000",
-          licenciaConducir: "",
-          vehiculoId: "004",
-          constanciaInscripcion: "",
-          motivoTrasladoId: "01",
-          motivoSustento: "",
-          ingresoEgresoStock: "-",
-          numeroFactura: "",
-          ordenPedido: "",
-          observacion: "",
-          monedaId: "S",
-          afectarStock: true,
-          documentoRelacionadoId: "",
-          detalles: [],
-          documentosRelacionados: [],
-          // numeroDocumento: "",
-        });
-        setModal(true);
-        break;
-      }
-      case 1: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          await GetPorId(id);
+  const AccionModal = async (
+    value,
+    modo = "Nuevo",
+    accion = 0,
+    click = false
+  ) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      setModo(modo);
+      switch (accion) {
+        case 0: {
+          //Consulta Correlativo
+          const result = await ApiMasy.get(
+            `api/Mantenimiento/Correlativo/09/0002`
+          );
+          //Consulta Correlativo
+          setObjeto({
+            empresaId: "01",
+            tipoDocumentoId: "09",
+            serie: "0002",
+            numero: String(result.data.data.numero),
+            fechaEmision: moment().format("YYYY-MM-DD"),
+            fechaTraslado: moment().format("YYYY-MM-DD"),
+            clienteId: "",
+            clienteNumeroDocumentoIdentidad: "",
+            clienteNombre: "",
+            clienteDireccionId: 0,
+            clienteDireccion: "",
+            direccionPartida: "",
+            personalId: "",
+            empresaTransporteId: "0001  ",
+            costoMinimo: 0,
+            conductorId: "000000",
+            licenciaConducir: "",
+            vehiculoId: "004",
+            constanciaInscripcion: "",
+            motivoTrasladoId: "01",
+            motivoSustento: "",
+            ingresoEgresoStock: "-",
+            numeroFactura: "",
+            ordenPedido: "",
+            observacion: "",
+            monedaId: "S",
+            afectarStock: true,
+            documentoRelacionadoId: "",
+            detalles: [],
+            documentosRelacionados: [],
+            // numeroDocumento: "",
+          });
           setModal(true);
+          break;
         }
-        break;
-      }
-      case 2: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          Delete(["Venta", "GuiaRemision"], id, setEliminar);
+        case 1: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await GetPorId(value);
+            setModal(true);
+          }
+          break;
         }
-        break;
+        case 2: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await Delete(["Venta", "GuiaRemision"], value, setEliminar);
+          }
+          break;
+        }
+        case 3: {
+          await GetPorId(value);
+          setModal(true);
+          break;
+        }
+        case 4: {
+          let row = document
+            .querySelector("#tablaGuiaRemision")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let documento = row.children[2].innerHTML;
+            Swal.fire({
+              title: "¿Desea Anular el documento?",
+              text: documento,
+              icon: "warning",
+              iconColor: "#F7BF3A",
+              showCancelButton: true,
+              color: "#fff",
+              background: "#1a1a2e",
+              confirmButtonColor: "#eea508",
+              confirmButtonText: "Aceptar",
+              cancelButtonColor: "#d33",
+              cancelButtonText: "Cancelar",
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                let valor = await GetIsPermitido(accion, value);
+                if (valor) {
+                  await Anular(["Venta", "GuiaRemision"], id, setEliminar);
+                }
+              }
+            });
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaGuiaRemision")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            await Imprimir(["Venta", "GuiaRemision"], id);
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        default:
+          break;
       }
-      case 3: {
-        await GetPorId(id);
-        setModal(true);
-        break;
-      }
-      default:
-        break;
     }
   };
-  const Anular = async () => {
-    let tabla = document
-      .querySelector("table > tbody")
-      .querySelector("tr.selected-row");
-    if (tabla != null) {
-      if (tabla.classList.contains("selected-row")) {
-        let id =
-          document.querySelector("tr.selected-row").children[0].innerHTML;
-        let documento =
-          document.querySelector("tr.selected-row").children[2].innerHTML;
-        Swal.fire({
-          title: "¿Desea Anular el documento?",
-          text: documento,
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then(async (res) => {
-          if (res.isConfirmed) {
-            const result = await ApiMasy.put(
-              `api/Venta/GuiaRemision/Anular/${id}`
-            );
-            if (result.name == "AxiosError") {
-              if (Object.entries(result.response.data).length > 0) {
-                toast.error(String(result.response.data.messages[0].textos), {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              } else {
-                toast.error([result.message], {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              }
-            } else {
-              toast.success(result.data.messages[0].textos[0], {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-            }
-          }
-        });
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      setModo("Nuevo");
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaGuiaRemision")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar", 1);
       }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaGuiaRemision")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Eliminar", 2);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaGuiaRemision")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
+    }
+    if (e.key === "a") {
+      let row = document
+        .querySelector("#tablaGuiaRemision")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Anular", 4);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaGuiaRemision")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
+      }
+    }
+    if (e.key === "h") {
+      let row = document
+        .querySelector("#tablaGuiaRemision")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar Cabecera", 1);
+      }
     }
   };
   //#endregion
@@ -338,7 +395,7 @@ const GuiaRemision = () => {
         },
       },
       {
-        Header: "N° Documento",
+        Header: "Guía N°",
         accessor: "numeroDocumento",
       },
       {
@@ -393,13 +450,25 @@ const GuiaRemision = () => {
       {
         Header: "Acciones",
         Cell: ({ row }) => (
-          <BotonCRUD
-            setEliminar={setEliminar}
-            permisos={permisos}
-            ClickConsultar={() => AbrirModal(row.values.id, "Consultar", 3)}
-            ClickModificar={() => AbrirModal(row.values.id, "Modificar", 1)}
-            ClickEliminar={() => AbrirModal(row.values.id, "Eliminar", 2)}
-          />
+          <div className="flex">
+            <div className={Global.TablaBotonConsultar}>
+              <button
+                id="boton-cabecera"
+                onClick={() => AccionModal(row.values.id, "Cabecera", 1)}
+                className="p-0 px-1"
+                title="Click para abrir cabecera de registro"
+              >
+                <FaWindowMaximize></FaWindowMaximize>
+              </button>
+            </div>
+            <BotonCRUD
+              setEliminar={setEliminar}
+              permisos={permisos}
+              ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
+              ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
+              ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
+            />
+          </div>
         ),
       },
     ],
@@ -480,10 +549,11 @@ const GuiaRemision = () => {
             <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
               {permisos[0] && (
                 <BotonBasico
-                  botonText="Registrar"
+                  botonText="Nuevo"
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
-                  click={() => AbrirModal()}
+                  click={() => AccionModal()}
+                  containerClass=""
                 />
               )}
               {permisos[4] && (
@@ -491,21 +561,31 @@ const GuiaRemision = () => {
                   botonText="Anular"
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
-                  click={() => Anular()}
+                  click={() => AccionModal(null, "Anular", 4)}
                   containerClass=""
                 />
               )}
+              <BotonBasico
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => AccionModal(null, "Imprimir", 5)}
+                containerClass=""
+              />
             </div>
             {/* Boton */}
 
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaGuiaRemision"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

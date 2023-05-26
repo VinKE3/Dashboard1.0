@@ -162,6 +162,32 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  const KeyTabla = async (e, click = false) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaFiltroFactura")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+      }
+    }
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+    if (click) {
+      let row = e.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
+  };
   //#endregion
 
   //#region Columnas
@@ -251,9 +277,9 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
         tamañoModal={[Global.ModalMediano, Global.Form]}
         childrenFooter={
           <button
-            className={Global.BotonModalBase + Global.BotonCancelarModal}
             type="button"
             onClick={() => setModal(false)}
+            className={Global.BotonModalBase + Global.BotonCancelarModal}
           >
             CERRAR
           </button>
@@ -274,6 +300,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
                 {/* Tabla */}
                 <TablaDetalle>
                   <TableBasic
+                    id={"tablaFiltroFacturaSeleccion"}
                     columnas={columnSeleccion}
                     datos={dataFacturaSeleccionada}
                   />
@@ -283,7 +310,10 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             )}
             {/* Tabla Seleccion*/}
 
-            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+            <div
+              className={Global.ContenedorBasico + Global.FondoContenedor}
+              onKeyDown={(e) => Key(e)}
+            >
               {/* Filtro*/}
               <FiltroBasico
                 textLabel={"N° Documento"}
@@ -299,7 +329,13 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
 
               {/* Tabla */}
               <TablaStyle>
-                <TableBasic columnas={columnas} datos={data} />
+                <TableBasic
+                  id={"tablaFiltroFactura"}
+                  columnas={columnas}
+                  datos={data}
+                  DobleClick={(e) => KeyTabla(e, true)}
+                  KeyDown={(e) => KeyTabla(e)}
+                />
               </TablaStyle>
               {/* Tabla */}
             </div>

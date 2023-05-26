@@ -32,18 +32,6 @@ const TablaStyle = styled.div`
     text-align: center;
   }
 `;
-const TablaDetalle = styled.div`
-  & th:first-child {
-    display: none;
-  }
-  & tbody td:first-child {
-    display: none;
-  }
-  & th:last-child {
-    width: 40px;
-    text-align: center;
-  }
-`;
 //#endregion
 
 const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
@@ -99,6 +87,32 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
+  };
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  const KeyTabla = async (e, click = false) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaFiltroLetraVenta")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        await GetPorId(id);
+      }
+    }
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+    if (click) {
+      let row = e.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
   };
   //#endregion
 
@@ -170,9 +184,9 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
         childrenFooter={
           <>
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
+              className={Global.BotonModalBase + Global.BotonCancelarModal}
             >
               CERRAR
             </button>
@@ -194,9 +208,10 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
                   autoComplete="off"
                   autoFocus
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onKeyDown={(e) => Key(e)}
+                  className={Global.InputStyle}
                 />
-                <button
+                {/* <button
                   id="consultar"
                   onClick={Filtro}
                   className={
@@ -204,13 +219,19 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
                   }
                 >
                   <FaSearch></FaSearch>
-                </button>
+                </button> */}
               </div>
             </div>
 
             {/* Tabla */}
             <TablaStyle>
-              <TableBasic columnas={columnas} datos={data} />
+              <TableBasic
+                id={"tablaFiltroFacturaCompra"}
+                columnas={columnas}
+                datos={data}
+                DobleClick={(e) => KeyTabla(e, true)}
+                KeyDown={(e) => KeyTabla(e)}
+              />
             </TablaStyle>
             {/* Tabla */}
           </div>

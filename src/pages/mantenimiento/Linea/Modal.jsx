@@ -42,7 +42,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               maxLength="2"
               autoComplete="off"
               placeholder="00"
-              disabled={modo == "Registrar" ? false : true}
+              disabled={modo == "Nuevo" ? false : true}
               value={data.id ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}

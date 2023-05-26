@@ -57,7 +57,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   maxLength="2"
                   autoFocus
-                  disabled={modo == "Registrar" ? false : true}
+                  disabled={modo == "Nuevo" ? false : true}
                   value={data.provinciaId ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -72,7 +72,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="departamentoId"
                   value={data.departamentoId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Registrar" ? false : true}
+                  disabled={modo == "Nuevo" ? false : true}
                   className={Global.InputStyle}
                 >
                   {dataDepartamento.map((departamento) => (
