@@ -177,12 +177,11 @@ const Cotizacion = () => {
   //#endregion
 
   //#region Funciones Modal
-
   const AbrirModal = async (
     value,
     modo = "Registrar",
-    click = false,
-    accion = 0
+    accion = 0,
+    click = false
   ) => {
     if (click) {
       setModo(modo);
@@ -191,6 +190,7 @@ const Cotizacion = () => {
       await GetPorId(id);
       setModal(true);
     } else {
+      setModo(modo);
       switch (accion) {
         case 0: {
           setObjeto({
@@ -241,22 +241,22 @@ const Cotizacion = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, id);
+          let valor = await GetIsPermitido(accion, value);
           if (valor) {
-            await GetPorId(id);
+            await GetPorId(value);
             setModal(true);
           }
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, id);
+          let valor = await GetIsPermitido(accion, value);
           if (valor) {
-            Delete(["Venta", "Cotizacion"], id, setEliminar);
+            Delete(["Venta", "Cotizacion"], value, setEliminar);
           }
           break;
         }
         case 3: {
-          await GetPorId(id);
+          await GetPorId(value);
           setModal(true);
           break;
         }
@@ -280,9 +280,7 @@ const Cotizacion = () => {
     }
   };
   const Anular = async () => {
-    let tabla = document
-      .querySelector("table > tbody")
-      .querySelector("tr.selected-row");
+    let tabla = document.querySelector("table > tbody").querySelector("tr.selected-row");
     if (tabla != null) {
       if (tabla.classList.contains("selected-row")) {
         let id =
@@ -359,7 +357,7 @@ const Cotizacion = () => {
     }
   };
   const Imprimir = async () => {
-    let row = document.querySelector("#tabla").querySelector("tr.selected-row");
+    let row = document.querySelector("#tablaCotizacion").querySelector("tr.selected-row");
     if (row != null) {
       let id = row.children[0].innerHTML;
       const result = await ApiMasy.get(
@@ -598,8 +596,8 @@ const Cotizacion = () => {
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
-                DobleClick={(e) => AbrirModal(e, "Consultar", true, 3)}
-                KeyDown={(e) => AbrirModalKey(e, "Modificar", true, 1)}
+                DobleClick={(e) => AbrirModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => AbrirModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

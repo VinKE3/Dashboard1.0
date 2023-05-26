@@ -420,6 +420,11 @@ const Modal = ({ setModal, modo, objeto }) => {
     setMensaje([]);
     setTipoMensaje(-1);
   };
+  const KeyClick = (e) => {
+    if (e.key == "Enter") {
+      e.target.click();
+    }
+  };
   //Data General
 
   //Artículos
@@ -459,7 +464,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ConvertirPrecio = async () => {
     if (Object.entries(dataCabecera).length > 0) {
-      if (data.monedaId != dataCabecera.monedaId && dataCabecera.Id != "000000") {
+      if (
+        data.monedaId != dataCabecera.monedaId &&
+        dataCabecera.Id != "000000"
+      ) {
         const model = await Funciones.ConvertirPreciosAMoneda(
           "venta",
           dataCabecera,
@@ -626,7 +634,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           //Valida por id y descripción de artículo
           model = dataDetalle.find((map) => {
             return (
-              map.id == dataCabecera.id && map.descripcion == dataCabecera.descripcion
+              map.id == dataCabecera.id &&
+              map.descripcion == dataCabecera.descripcion
             );
           });
         } else {
@@ -1012,8 +1021,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             modo={modo}
             menu={["Venta", "Cotizacion"]}
             titulo="Cotización"
-            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
+            foco={document.getElementById("tablaCotizacion")}
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -1105,6 +1115,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
+                    autoFocus={modo == "Modificar"}
                     disabled={modo == "Consultar" ? true : false}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
@@ -1180,6 +1191,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     }
                     hidden={modo == "Consultar" ? true : false}
                     disabled={checkVarios ? true : false}
+                    onKeyDown={(e) => KeyClick(e)}
                     onClick={(e) => AbrirFiltroCliente(e)}
                   >
                     <FaSearch></FaSearch>
@@ -1447,6 +1459,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar" ? true : false}
+                    onKeyDown={(e) => KeyClick(e)}
                     onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
@@ -1698,6 +1711,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       disabled={!habilitarFiltro ? false : true}
                       hidden={modo == "Consultar" ? true : false}
+                      onKeyDown={(e) => KeyClick(e)}
                       onClick={() => {
                         setDataCabecera([]);
                         AbrirFiltroArticulo();
@@ -1795,6 +1809,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         id="enviarDetalle"
                         className={Global.BotonBuscar + Global.BotonPrimary}
                         hidden={modo == "Consultar" ? true : false}
+                        onKeyDown={(e) => KeyClick(e)}
                         onClick={() => AbrirFiltroPrecio()}
                       >
                         <FaChevronDown></FaChevronDown>
@@ -1830,6 +1845,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="enviarDetalle"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar" ? true : false}
+                      onKeyDown={(e) => KeyClick(e)}
                       onClick={() => AgregarDetalle()}
                     >
                       <FaPlus></FaPlus>

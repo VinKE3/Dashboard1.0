@@ -24,6 +24,8 @@ const TableBasic = ({
   columnas,
   datos,
   estilos = ["", "", "", "", "", "", ""],
+  DobleClick = () => {},
+  KeyDown = (e) => {},
 }) => {
   //#region Columnas y Datos
   const columns = columnas;
@@ -37,7 +39,6 @@ const TableBasic = ({
     headerGroups,
     page,
     prepareRow,
-    state,
   } = useTable(
     { columns, data, initialState: { pageSize: 50 } },
     useGlobalFilter,
@@ -56,7 +57,10 @@ const TableBasic = ({
           id={id}
           className={"w-full text-light focus:outline-none " + estilos[0]}
           tabIndex={0}
-          onKeyDown={(e) => Funciones.MoverFlecha(e, "#" + id)}
+          onKeyDown={(e) => {
+            Funciones.MoverFlecha(e, "#" + id);
+            KeyDown(e);
+          }}
         >
           <thead className={Global.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (
@@ -87,6 +91,7 @@ const TableBasic = ({
                       <td
                         {...cell.getCellProps()}
                         className={Global.Td + estilos[6]}
+                        onDoubleClick={DobleClick}
                       >
                         {cell.render("Cell")}
                       </td>

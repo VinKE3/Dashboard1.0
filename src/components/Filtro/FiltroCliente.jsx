@@ -66,6 +66,20 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
+  const Key = async (e, click = false) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaCliente")
+        .querySelector("tr.selected-row");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
+    if (click) {
+      let row = e.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+    }
+  };
   //#endregion
 
   //#region API
@@ -232,7 +246,13 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
 
             {/* Tabla */}
             <TablaStyle>
-              <TableBasic id="tablaCliente" columnas={columnas} datos={datos} />
+              <TableBasic
+                id="tablaCliente"
+                columnas={columnas}
+                datos={datos}
+                DobleClick={(e) => Key(e, true)}
+                KeyDown={(e) => Key(e)}
+              />
             </TablaStyle>
             {/* Tabla */}
           </div>

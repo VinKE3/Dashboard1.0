@@ -179,7 +179,7 @@ export const MoverFlecha = async (e, id) => {
       }
     } else {
       if (e.target.tagName == "TABLE") {
-        let tr = document.getElementsByTagName("tr");
+        let tr = document.querySelector(id).getElementsByTagName("tr");
         tr[1].classList.add("selected-row");
       }
     }
