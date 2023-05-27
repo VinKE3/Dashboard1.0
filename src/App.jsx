@@ -29,7 +29,7 @@ import GuiaCompra from "./pages/compra/guiaCompra/GuiaCompra";
 //Pages mantenimiento
 import Usuario from "./pages/mantenimiento/usuario/Usuario";
 import TipoCambio from "./pages/mantenimiento/tipoCambio/TipoCambio";
-import Linea from "./pages/mantenimiento/Linea/linea";
+import Linea from "./pages/mantenimiento/linea/Linea";
 import SubLinea from "./pages/mantenimiento/subLinea/SubLinea";
 import Marca from "./pages/mantenimiento/marca/Marca";
 import UnidadMedida from "./pages/mantenimiento/unidadMedida/UnidadMedida";
