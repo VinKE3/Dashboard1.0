@@ -9,7 +9,6 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 //#region Estilos
@@ -134,16 +133,15 @@ const Cliente = () => {
 
   //#region Funciones Modal
   const AccionModal = async (value, modo = "Nuevo", click = false) => {
+    setModo(modo);
     if (click) {
-      setModo(modo);
       let row = value.target.closest("tr");
       let id = row.firstChild.innerText;
       await GetPorId(id);
     } else {
-      setModo(modo);
       if (modo == "Nuevo") {
         setObjeto({
-          id: "000000",
+          id: "",
           tipoDocumentoIdentidadId: "1",
           numeroDocumentoIdentidad: "",
           nombre: "",
@@ -167,27 +165,18 @@ const Cliente = () => {
     }
     setModal(true);
   };
-  const AbrirModalKey = async (e, modo) => {
-    if (e.key === "Enter") {
-      setModo(modo);
-      let row = document
-        .querySelector("#tablaCliente")
-        .querySelector("tr.selected-row");
-      if (row != null) {
-        let id = row.firstChild.innerText;
-        await GetPorId(id);
-        setModal(true);
-      }
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      n;
+      AccionModal();
     }
-    if (e.key === "c") {
-      setModo("Consultar");
+    if (e.key === "Enter") {
       let row = document
         .querySelector("#tablaCliente")
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        await GetPorId(id);
-        setModal(true);
+        AccionModal(id, "Modificar");
       }
     }
     if (e.key === "Delete") {
@@ -197,6 +186,15 @@ const Cliente = () => {
       if (row != null) {
         let id = row.firstChild.innerText;
         Delete(["Mantenimiento", "Cliente"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaCliente")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
       }
     }
   };
@@ -315,7 +313,7 @@ const Cliente = () => {
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
-                KeyDown={(e) => AbrirModalKey(e, "Modificar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

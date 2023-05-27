@@ -158,7 +158,7 @@ const Conductor = () => {
     }
     setModal(true);
   };
-  const AbrirModalKey = async (e, modo) => {
+  const ModalKey = async (e, modo) => {
     if (e.key === "Enter") {
       setModo(modo);
       let row = document
@@ -276,7 +276,7 @@ const Conductor = () => {
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
-                KeyDown={(e) => AbrirModalKey(e, "Modificar", true)}
+                KeyDown={(e) => ModalKey(e, "Modificar", true)}
               />
             </TablaStyle>
             {/* Tabla */}

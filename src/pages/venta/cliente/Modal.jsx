@@ -702,7 +702,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Cliente"]}
           titulo="Cliente"
-          foco={document.getElementById("documento")}
+          foco={document.getElementById("tablaCliente")}
           tamañoModal={[Global.ModalMediano, Global.Form + " pt-0"]}
         >
           <TabView>

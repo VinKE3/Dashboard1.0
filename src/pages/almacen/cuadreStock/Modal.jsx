@@ -365,7 +365,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       setModalInventario(true);
     }
   };
-  const AbrirModalKey = async (e) => {
+  const ModalKey = async (e) => {
     if (e.key === "Enter") {
       let row = document
         .querySelector("#tablaCuadreStock")

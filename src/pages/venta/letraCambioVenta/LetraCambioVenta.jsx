@@ -267,7 +267,7 @@ const LetraCambioVenta = () => {
   const AbrirModalDeshacer = async (modo = "Nuevo") => {
     setModalDeshacer(true);
   };
-  const AbrirModalKey = async (e, modo) => {
+  const ModalKey = async (e, modo) => {
     if (e.key === "Enter") {
       setModo(modo);
       let row = document
@@ -826,7 +826,7 @@ const LetraCambioVenta = () => {
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
-                KeyDown={(e) => AbrirModalKey(e, "Modificar")}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}
