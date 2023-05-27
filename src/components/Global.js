@@ -85,9 +85,9 @@ export var BotonPrimary =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
 export var BotonNaranja =
   "bg-gradient-to-b from-orange-600 to-orange-800 text-light hover:bg-gradient-to-b hover:from-orange-300 hover:to-orange-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
-  export var BotonMorado =
+export var BotonMorado =
   "bg-gradient-to-b from-purple-600 to-purple-900 text-light hover:bg-gradient-to-b hover:from-purple-300 hover:to-purple-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
-  export var BotonRosa =
+export var BotonRosa =
   "bg-gradient-to-b from-pink-600 to-pink-900 text-light hover:bg-gradient-to-b hover:from-pink-300 hover:to-pink-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
 export var BotonRegistrar =
   "bg-gradient-to-b from-blue-600 to-blue-800 hover:bg-gradient-to-b hover:from-blue-400 hover:to-blue-600 ";

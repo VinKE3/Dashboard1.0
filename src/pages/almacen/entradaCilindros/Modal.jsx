@@ -767,7 +767,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   </select>
                 </div>
               </div>
-              <div className={Global.ContendorIn}>
+              <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="clienteNombre" className={Global.LabelStyle}>
                     Cliente

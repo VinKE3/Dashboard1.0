@@ -1,13 +1,13 @@
 import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/Funciones/GetPermisos";
+import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
-import Anular from "../../../components/Funciones/Anular";
-import Imprimir from "../../../components/Funciones/Imprimir";
+import Anular from "../../../components/funciones/Anular";
+import Imprimir from "../../../components/funciones/Imprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/Tabla/Table";
+import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";

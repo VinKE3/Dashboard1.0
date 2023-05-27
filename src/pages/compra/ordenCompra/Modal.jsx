@@ -3,7 +3,7 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
-import FiltroArticulo from "../../../components/Filtro/FiltroArticulo";
+import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
 import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
 import Swal from "sweetalert2";

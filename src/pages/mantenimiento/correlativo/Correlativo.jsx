@@ -1,9 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/Funciones/GetPermisos";
+import GetPermisos from "../../../components/funciones/GetPermisos";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/Tabla/Table";
+import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";

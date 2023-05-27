@@ -7,7 +7,7 @@ import store from "store2";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { authHelper } from "../helpers/AuthHelper";
-import Enter from "../components/Funciones/Enter";
+import Enter from "../components/funciones/Enter";
 const LayoutAdmin = () => {
   const navigate = useNavigate();
   const { borrarTodosLosTokens } = authHelper;

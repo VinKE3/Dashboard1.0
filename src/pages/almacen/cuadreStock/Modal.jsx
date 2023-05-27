@@ -4,7 +4,7 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalInventario from "./ModalInventario";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
-import Table from "../../../components/Tabla/Table";
+import Table from "../../../components/tabla/Table";
 import { toast } from "react-toastify";
 import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
