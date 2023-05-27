@@ -21,6 +21,7 @@ const Table = ({
   index,
   paginas = 50,
   estilos = ["", "", "", "", "", "", ""],
+  foco = false,
   Click,
   DobleClick = () => {},
   KeyDown = (e) => {},
@@ -49,12 +50,13 @@ const Table = ({
         <table
           {...getTableProps()}
           id={id}
-          className={"w-full text-light focus:outline-none " + estilos[0]}
+          autoFocus={foco}
           tabIndex={0}
           onKeyDown={(e) => {
             Funciones.MoverFlecha(e, "#" + id);
             KeyDown(e);
           }}
+          className={"w-full text-light focus:outline-none " + estilos[0]}
         >
           <thead className={Global.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (

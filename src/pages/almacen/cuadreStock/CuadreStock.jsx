@@ -470,7 +470,7 @@ const CuadreStock = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               {permisos[0] && (
@@ -479,7 +479,7 @@ const CuadreStock = () => {
                   botonClass={Global.BotonAgregar}
                   botonIcon={faArrowAltCircleDown}
                   click={() => AbrirCerrar()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
             </div>

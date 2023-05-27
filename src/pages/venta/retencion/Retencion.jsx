@@ -524,7 +524,7 @@ const Retencion = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
 
@@ -534,7 +534,7 @@ const Retencion = () => {
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
                   click={() => Anulacion()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               <BotonBasico
@@ -542,7 +542,7 @@ const Retencion = () => {
                 botonClass={Global.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                containerClass=""
+                contenedor=""
               />
             </div>
             {/* Boton */}

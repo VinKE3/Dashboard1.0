@@ -78,6 +78,7 @@ const Modal = ({ setModal, objeto, modo }) => {
           modo={modo}
           menu={["Mantenimiento", "Distrito"]}
           titulo="Distrito"
+          foco={document.getElementById("tablaDistrito")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -94,7 +95,7 @@ const Modal = ({ setModal, objeto, modo }) => {
                   autoComplete="off"
                   maxLength="2"
                   autoFocus
-                  disabled={modo == "Nuevo" ? false : true}
+                  disabled={modo != "Nuevo"}
                   value={data.distritoId ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -109,7 +110,7 @@ const Modal = ({ setModal, objeto, modo }) => {
                   name="departamentoId"
                   value={data.departamentoId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Nuevo" ? false : true}
+                  disabled={modo != "Nuevo"}
                   className={Global.InputStyle}
                 >
                   {dataDepartamento.map((map) => (
@@ -129,7 +130,7 @@ const Modal = ({ setModal, objeto, modo }) => {
                 name="provinciaId"
                 value={data.provinciaId ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Nuevo" ? false : true}
+                disabled={modo != "Nuevo"}
                 className={Global.InputStyle}
               >
                 {dataProvincia.map((provincia) => (
@@ -149,7 +150,8 @@ const Modal = ({ setModal, objeto, modo }) => {
                 name="nombre"
                 placeholder="Distrito"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                autoFocus={modo == "Modificar"}
+                disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

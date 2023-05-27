@@ -548,7 +548,7 @@ const SalidaAlmacen = () => {
                 botonClass={Global.BotonAgregar}
                 botonIcon={faCircleCheck}
                 click={() => Cerrar()}
-                containerClass=""
+                contenedor=""
               />
 
               {permisos[4] && (
@@ -557,7 +557,7 @@ const SalidaAlmacen = () => {
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
                   click={() => Anular()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
             </div>

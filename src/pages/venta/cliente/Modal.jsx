@@ -1060,7 +1060,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarDireccion(e);
                       }}
-                      containerClass=""
+                      contenedor=""
                     />
                   </div>
                 )}
@@ -1220,7 +1220,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarContacto(e);
                       }}
-                      containerClass=""
+                      contenedor=""
                     />
                   </div>
                 )}
@@ -1442,7 +1442,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarPersonal(e);
                       }}
-                      containerClass=""
+                      contenedor=""
                     />
                   </div>
                 )}

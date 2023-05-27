@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import FiltroBasico from "../../../components/filtro/FiltroBasico";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -137,25 +138,63 @@ const CuentaCorriente = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo") => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        id: "0100",
-        cuentaCorrienteId: "0000",
-        empresaId: "01",
-        entidadBancaria: "",
-        entidadBancariaId: 1,
-        moneda: "",
-        monedaId: "S",
-        numero: "",
-        observacion: "",
-        tipoCuentaDescripcion: "CORRIENTE",
-      });
-    } else {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      if (modo == "Nuevo") {
+        setObjeto({
+          id: "",
+          cuentaCorrienteId: "0000",
+          empresaId: "01",
+          entidadBancaria: "",
+          entidadBancariaId: 1,
+          moneda: "",
+          monedaId: "S",
+          numero: "",
+          observacion: "",
+          tipoCuentaDescripcion: "CORRIENTE",
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaCuentaCorriente")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar");
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaCuentaCorriente")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "CuentaCorriente"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaCuentaCorriente")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
+      }
+    }
   };
   //#endregion
 
@@ -236,6 +275,7 @@ const CuentaCorriente = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -243,11 +283,14 @@ const CuentaCorriente = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
-                columnas={columnas}
-                datos={datos}
-                total={total}
-                index={index}
-                Click={(e) => FiltradoPaginado(e)}
+                 id={"tablaCuentaCorriente"}
+                 columnas={columnas}
+                 datos={datos}
+                 total={total}
+                 index={index}
+                 Click={(e) => FiltradoPaginado(e)}
+                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                 KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

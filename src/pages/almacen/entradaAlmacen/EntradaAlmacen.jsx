@@ -60,12 +60,12 @@ const EntradaAlmacen = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    proveedorNombre: "",
+    observacion: "",
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
   const [cadena, setCadena] = useState(
-    `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    `&observacion=${filtro.observacion}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
@@ -77,7 +77,7 @@ const EntradaAlmacen = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+      `&observacion=${filtro.observacion}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
     );
   }, [filtro]);
   useEffect(() => {
@@ -466,17 +466,17 @@ const EntradaAlmacen = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputFull}>
-                <label name="proveedorNombre" className={Global.LabelStyle}>
+                <label name="observacion" className={Global.LabelStyle}>
                   Proveedor
                 </label>
                 <input
                   type="text"
-                  id="proveedorNombre"
-                  name="proveedorNombre"
+                  id="observacion"
+                  name="observacion"
                   placeholder="Proveedor"
                   autoComplete="off"
                   autoFocus
-                  value={filtro.proveedorNombre ?? ""}
+                  value={filtro.observacion ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />
@@ -535,7 +535,7 @@ const EntradaAlmacen = () => {
                 botonClass={Global.BotonAgregar}
                 botonIcon={faCircleCheck}
                 click={() => Cerrar()}
-                containerClass=""
+                contenedor=""
               />
 
               {permisos[4] && (
@@ -544,7 +544,7 @@ const EntradaAlmacen = () => {
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
                   click={() => Anular()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
             </div>

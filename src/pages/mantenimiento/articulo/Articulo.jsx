@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import { Checkbox } from "primereact/checkbox";
@@ -8,7 +9,7 @@ import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-import { FaSearch, FaCheck } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
@@ -157,43 +158,81 @@ const Articulo = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo") => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        lineaId: "00",
-        subLineaId: "",
-        articuloId: "",
-        tipoExistenciaId: "01",
-        unidadMedidaId: "1",
-        marcaId: "36",
-        descripcion: "",
-        observacion: "",
-        codigoBarras: "",
-        peso: 0,
-        monedaId: "S",
-        precioCompra: 0,
-        precioCompraDescuento: 0,
-        precioVenta1: 0,
-        precioVenta2: 0,
-        precioVenta3: 0,
-        precioVenta4: 0,
-        porcentajeUtilidad1: 0,
-        porcentajeUtilidad2: 0,
-        porcentajeUtilidad3: 0,
-        porcentajeUtilidad4: 0,
-        stock: 0,
-        stockMinimo: 0,
-        precioIncluyeIGV: true,
-        activarCostoDescuento: false,
-        isActivo: true,
-        controlarStock: true,
-        actualizarPrecioCompra: true,
-      });
-    } else {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      if (modo == "Nuevo") {
+        setObjeto({
+          lineaId: "00",
+          subLineaId: "",
+          articuloId: "",
+          tipoExistenciaId: "01",
+          unidadMedidaId: "1",
+          marcaId: "36",
+          descripcion: "",
+          observacion: "",
+          codigoBarras: "",
+          peso: 0,
+          monedaId: "S",
+          precioCompra: 0,
+          precioCompraDescuento: 0,
+          precioVenta1: 0,
+          precioVenta2: 0,
+          precioVenta3: 0,
+          precioVenta4: 0,
+          porcentajeUtilidad1: 0,
+          porcentajeUtilidad2: 0,
+          porcentajeUtilidad3: 0,
+          porcentajeUtilidad4: 0,
+          stock: 0,
+          stockMinimo: 0,
+          precioIncluyeIGV: true,
+          activarCostoDescuento: false,
+          isActivo: true,
+          controlarStock: true,
+          actualizarPrecioCompra: true,
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaArticulo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar");
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaArticulo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "Articulo"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaArticulo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
+      }
+    }
   };
   //#endregion
 
@@ -375,6 +414,7 @@ const Articulo = () => {
             botonClass={Global.BotonRegistrar}
             botonIcon={faPlus}
             click={() => AccionModal()}
+            contenedor=""
           />
         )}
         {/* Boton */}
@@ -382,11 +422,14 @@ const Articulo = () => {
         {/* Tabla */}
         <TablaStyle>
           <Table
+            id={"tablaArticulo"}
             columnas={columnas}
             datos={datos}
             total={total}
             index={index}
             Click={(e) => FiltradoPaginado(e)}
+            DobleClick={(e) => AccionModal(e, "Consultar", true)}
+            KeyDown={(e) => ModalKey(e)}
           />
         </TablaStyle>
         {/* Tabla */}

@@ -47,6 +47,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "CuentaCorriente"]}
           titulo="Cuenta Corriente"
+          foco={document.getElementById("tablaCuentaCorriente")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -87,7 +88,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   className={Global.InputStyle}
                 >
                   {dataTCuenta.map((tipo) => (
-                    <option key={tipo.id} value={tipo.id}> 
+                    <option key={tipo.id} value={tipo.id}>
                       {tipo.descripcion}
                     </option>
                   ))}

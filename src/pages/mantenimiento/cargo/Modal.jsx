@@ -25,6 +25,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "Cargo"]}
       titulo="Cargo"
+      foco={document.getElementById("tablaCargo")}
       tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
       <div className={Global.ContenedorBasico}>

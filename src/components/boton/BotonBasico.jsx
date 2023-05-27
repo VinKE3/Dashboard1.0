@@ -6,10 +6,10 @@ const BotonBasico = ({
   botonIcon,
   botonText,
   click,
-  containerClass = "sticky top-2 bg-black/30",
+  contenedor = "sticky top-2 bg-black/30",
 }) => {
   return (
-    <div className={containerClass + "flex"}>
+    <div className={contenedor + "flex"}>
       <button onClick={click} className={Global.BotonBasico + botonClass}>
         <FontAwesomeIcon
           icon={botonIcon}

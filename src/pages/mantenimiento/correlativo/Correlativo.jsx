@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -12,16 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 //#region Estilos
 const TablaStyle = styled.div`
-  & th:first-child {
-    display: none;
-  }
-  & tbody td:first-child {
-    display: none;
-  }
-  & th:nth-child(2) {
-    width: 150px;
-  }
-  & th:nth-child(4) {
+  & th:nth-child(3) {
     width: 150px;
   }
   & th:last-child {
@@ -105,29 +97,57 @@ const Correlativo = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (tipoDocumentoId, serie, modo = "Nuevo") => {
+  const AccionModal = async (value, serie, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        tipoDocumentoId: "01",
-        tipoDocumentoDescripcion: "",
-        serie: "",
-        numero: 0,
-      });
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      let serie = row.children[2].innerText;
+      await GetPorId(id, serie);
     } else {
-      await GetPorId(tipoDocumentoId, serie);
+      if (modo == "Nuevo") {
+        setObjeto({
+          tipoDocumentoId: "01",
+          tipoDocumentoDescripcion: "",
+          serie: "",
+          numero: 0,
+        });
+      } else {
+        await GetPorId(value, serie);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaCorrelativo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        let serie = row.children[2].innerText;
+        AccionModal(id, serie, "Modificar");
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaCorrelativo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        let serie = row.children[2].innerText;
+        AccionModal(id, serie, "Consultar");
+      }
+    }
   };
   //#endregion
 
   //#region Columnas
   const columnas = useMemo(
     () => [
-      {
-        Header: "id",
-        accessor: "id",
-      },
       {
         Header: "Tipo Documento",
         accessor: "tipoDocumentoId",
@@ -151,7 +171,7 @@ const Correlativo = () => {
             setEliminar={setEliminar}
             permisos={permisos}
             menu={["Mantenimiento", "Correlativo"]}
-            id={row.values.id}
+            id={""}
             ClickConsultar={() =>
               AccionModal(
                 row.values.tipoDocumentoId,
@@ -189,6 +209,7 @@ const Correlativo = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -196,11 +217,15 @@ const Correlativo = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaCorrelativo"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
+                foco={true}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, null, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

@@ -726,7 +726,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarCcorriente(e);
                       }}
-                      containerClass=""
+                      contenedor=""
                     />
                   </div>
                 )}
@@ -874,7 +874,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarContacto(e);
                       }}
-                      containerClass=""
+                      contenedor=""
                     />
                   </div>
                 )}

@@ -167,7 +167,6 @@ const Cliente = () => {
   };
   const ModalKey = async (e) => {
     if (e.key === "n") {
-      n;
       AccionModal();
     }
     if (e.key === "Enter") {
@@ -298,7 +297,7 @@ const Cliente = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
-                containerClass=""
+                contenedor=""
               />
             )}
             {/* Boton */}

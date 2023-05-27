@@ -350,7 +350,7 @@ const Usuario = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               {permisos[0] && (
@@ -359,7 +359,7 @@ const Usuario = () => {
                   botonClass={Global.BotonConfigurar}
                   botonIcon={faGear}
                   click={() => AbrirModalConfigurar()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               {permisos[0] && (
@@ -368,7 +368,7 @@ const Usuario = () => {
                   botonClass={Global.BotonAgregar}
                   botonIcon={faKey}
                   click={() => AbrirModalClave()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
             </div>

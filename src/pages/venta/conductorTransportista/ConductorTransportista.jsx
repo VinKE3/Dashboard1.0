@@ -127,13 +127,12 @@ const Conductor = () => {
 
   //#region Funciones Modal
   const AccionModal = async (value, modo = "Nuevo", click = false) => {
+    setModo(modo);
     if (click) {
-      setModo(modo);
       let row = value.target.closest("tr");
       let id = row.firstChild.innerText;
-      await GetPorId(value);
+      await GetPorId(id);
     } else {
-      setModo(modo);
       if (modo == "Nuevo") {
         setObjeto({
           id: "00",
@@ -158,25 +157,17 @@ const Conductor = () => {
     }
     setModal(true);
   };
-  const ModalKey = async (e, modo) => {
-    if (e.key === "Enter") {
-      setModo(modo);
-      let row = document
-        .querySelector("#tablaTransportista")
-        .querySelector("tr.selected-row");
-      let id = row.firstChild.innerText;
-      await GetPorId(id);
-      setModal(true);
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
     }
-    if (e.key === "c") {
-      setModo("Consultar");
+    if (e.key === "Enter") {
       let row = document
         .querySelector("#tablaTransportista")
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        await GetPorId(id);
-        setModal(true);
+        AccionModal(id, "Modificar");
       }
     }
     if (e.key === "Delete") {
@@ -186,6 +177,15 @@ const Conductor = () => {
       if (row != null) {
         let id = row.firstChild.innerText;
         Delete(["Mantenimiento", "Conductor"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaTransportista")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
       }
     }
   };
@@ -261,7 +261,7 @@ const Conductor = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
-                containerClass=""
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -276,7 +276,7 @@ const Conductor = () => {
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
-                KeyDown={(e) => ModalKey(e, "Modificar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

@@ -1863,7 +1863,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarIgv(e);
                       }}
-                      containerClass="mb-3"
+                      contenedor="mb-3"
                     />
                     {/* Form */}
                     {estadoIgv && (
@@ -1968,7 +1968,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarRetencion(e);
                       }}
-                      containerClass="mb-3"
+                      contenedor="mb-3"
                     />
                     {/* Form */}
                     {estadoRetencion && (
@@ -2076,7 +2076,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarDetraccion(e);
                       }}
-                      containerClass="mb-3"
+                      contenedor="mb-3"
                     />
                     {/* Form */}
                     {estadoDetraccion && (
@@ -2184,7 +2184,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarPercepcion(e);
                       }}
-                      containerClass="mb-3"
+                      contenedor="mb-3"
                     />
                     {/* Form */}
                     {estadoPercepcion && (

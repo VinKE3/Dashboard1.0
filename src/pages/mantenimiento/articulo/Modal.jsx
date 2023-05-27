@@ -7,12 +7,12 @@ import * as Global from "../../../components/Global";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
-  const [lineas, setLineas] = useState([]);
-  const [subLineas, setSubLineas] = useState([]);
-  const [marcas, setMarcas] = useState([]);
-  const [unidadesMedida, setUnidadesMedida] = useState([]);
-  const [monedas, setMonedas] = useState([]);
+  const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
+  const [dataLinea, setDataLinea] = useState([]);
+  const [dataSubLinea, setDataSubLinea] = useState([]);
+  const [dataMarca, setDataMarca] = useState([]);
+  const [dataUnidadMedida, setDataUnidadMedida] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
   //#endregion
 
   //#region useEffect
@@ -42,7 +42,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     if (target.name == "lineaId") {
-      let model = subLineas.find((map) => map.lineaId == target.value);
+      let model = dataSubLinea.find((map) => map.lineaId == target.value);
       setData((prevData) => ({
         ...prevData,
         subLineaId: model.subLineaId,
@@ -56,12 +56,12 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setTipoDeExistencia(result.data.data.tiposExistencia);
-    setLineas(result.data.data.lineas);
-    setSubLineas(result.data.data.subLineas);
-    setMarcas(result.data.data.marcas);
-    setUnidadesMedida(result.data.data.unidadesMedida);
-    setMonedas(result.data.data.monedas);
+    setDataTipoExistencia(result.data.data.tiposExistencia);
+    setDataLinea(result.data.data.lineas);
+    setDataSubLinea(result.data.data.subLineas);
+    setDataMarca(result.data.data.marcas);
+    setDataUnidadMedida(result.data.data.unidadesMedida);
+    setDataMoneda(result.data.data.monedas);
   };
   //#endregion
 
@@ -74,6 +74,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       titulo="Articulo"
       menu={["Mantenimiento", "Articulo"]}
       cerrar={false}
+      foco={document.getElementById("tablaArticulo")}
       tamañoModal={[Global.ModalFull, Global.Form]}
     >
       <div
@@ -93,7 +94,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               onChange={ValidarData}
               className={Global.InputStyle}
             >
-              {tipoDeExistencia.map((map) => (
+              {dataTipoExistencia.map((map) => (
                 <option key={map.id} value={map.id}>
                   {map.descripcion}
                 </option>
@@ -112,7 +113,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               onChange={ValidarData}
               className={Global.InputStyle}
             >
-              {marcas.map((map) => (
+              {dataMarca.map((map) => (
                 <option key={map.id} value={map.id}>
                   {map.nombre}
                 </option>
@@ -135,7 +136,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 modo != "Nuevo" ? Global.InputStyle : Global.InputStyle
               }
             >
-              {lineas.map((map) => (
+              {dataLinea.map((map) => (
                 <option key={map.id} value={map.id}>
                   {map.descripcion}
                 </option>
@@ -157,7 +158,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               }
             >
               <option value="">--SELECCIONAR--</option>
-              {subLineas
+              {dataSubLinea
                 .filter((model) => model.lineaId == data.lineaId)
                 .map((map) => (
                   <option key={map.subLineaId} value={map.subLineaId}>
@@ -214,7 +215,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               onChange={ValidarData}
               className={Global.InputStyle}
             >
-              {unidadesMedida.map((map) => (
+              {dataUnidadMedida.map((map) => (
                 <option key={map.id} value={map.id}>
                   {map.descripcion}
                 </option>
@@ -372,7 +373,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               onChange={ValidarData}
               className={Global.InputStyle}
             >
-              {monedas.map((map) => (
+              {dataMoneda.map((map) => (
                 <option key={map.id} value={map.id}>
                   {map.descripcion}
                 </option>

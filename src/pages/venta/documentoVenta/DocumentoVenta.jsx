@@ -784,7 +784,7 @@ const DocumentoVenta = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               {permisos[4] && (
@@ -793,7 +793,7 @@ const DocumentoVenta = () => {
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               <BotonBasico
@@ -801,7 +801,7 @@ const DocumentoVenta = () => {
                 botonClass={Global.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                containerClass=""
+                contenedor=""
               />
             </div>
             {/* Boton */}

@@ -554,7 +554,7 @@ const GuiaRemision = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               {permisos[4] && (
@@ -563,7 +563,7 @@ const GuiaRemision = () => {
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               <BotonBasico
@@ -571,7 +571,7 @@ const GuiaRemision = () => {
                 botonClass={Global.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                containerClass=""
+                contenedor=""
               />
             </div>
             {/* Boton */}

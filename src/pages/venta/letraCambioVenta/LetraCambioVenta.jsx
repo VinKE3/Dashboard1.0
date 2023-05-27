@@ -772,7 +772,7 @@ const LetraCambioVenta = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               <BotonBasico
@@ -780,21 +780,21 @@ const LetraCambioVenta = () => {
                 botonClass={Global.BotonNaranja}
                 botonIcon={faPlus}
                 click={() => Imprimir()}
-                containerClass=""
+                contenedor=""
               />
               <BotonBasico
                 botonText="Renovación"
                 botonClass={Global.BotonMorado}
                 botonIcon={faPrint}
                 click={() => Imprimir()}
-                containerClass=""
+                contenedor=""
               />
               <BotonBasico
                 botonText="Deshacer Emisión"
                 botonClass={Global.BotonRosa}
                 botonIcon={faPrint}
                 click={() => Imprimir()}
-                containerClass=""
+                contenedor=""
               />
 
               {permisos[4] && (
@@ -803,7 +803,7 @@ const LetraCambioVenta = () => {
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
                   click={() => Anular()}
-                  containerClass=""
+                  contenedor=""
                 />
               )}
               <BotonBasico
@@ -811,7 +811,7 @@ const LetraCambioVenta = () => {
                 botonClass={Global.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => Imprimir()}
-                containerClass=""
+                contenedor=""
               />
             </div>
             {/* Boton */}

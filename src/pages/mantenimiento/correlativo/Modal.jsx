@@ -44,6 +44,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Correlativo"]}
           titulo="Correlativo"
+          foco={document.getElementById("tablaCorrelativo")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>

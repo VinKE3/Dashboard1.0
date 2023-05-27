@@ -667,7 +667,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     botonClass={Global.BotonAgregar + " !py-1.5 !my-0"}
                     botonIcon={faPlus}
                     click={() => Abono()}
-                    containerClass=""
+                    contenedor=""
                   />
                 )}
                 {habilitarCampo && (
@@ -676,7 +676,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     botonClass={Global.BotonEliminar + " !py-1.5 !px-2 !my-0"}
                     botonIcon={faCancel}
                     click={() => Abono("cancelar")}
-                    containerClass=""
+                    contenedor=""
                   />
                 )}
               </div>

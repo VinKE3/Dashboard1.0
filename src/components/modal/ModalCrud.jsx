@@ -153,7 +153,7 @@ const ModalCrud = ({
                   }
                   onKeyDown={(e) => Enviar(e)}
                 >
-                  {modo == "Nuevo" ? "Nuevo" : "Guardar Cambios"}
+                  {modo == "Nuevo" ? "Registrar" : "Guardar Cambios"}
                 </button>
               )}
               <button
