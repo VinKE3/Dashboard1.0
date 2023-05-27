@@ -1187,15 +1187,16 @@ select:disabled {
   appearance: none;
   border-radius: 6px; */
 }
-.p-inputtext:enabled:hover {
+/*.p-inputtext:enabled:hover {
   /* border-color: #2d3e44; */
-}
+/*}
+
 .p-inputtext:enabled:focus {
   /* outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 1px #fde047;
   border-color: #9eade6; */
-}
+/*}*/
 .p-inputtext.p-invalid.p-component {
   border-color: #ff9a9a;
 }
@@ -1221,9 +1222,6 @@ select:disabled {
   left: 0.75rem;
   color: #b3b3b3;
 }
-.p-input-icon-left > .p-inputtext {
-  /* padding-left: 2.5rem; */
-}
 .p-input-icon-left.p-float-label > label {
   left: 2.5rem;
 }
@@ -1247,23 +1245,6 @@ select:disabled {
 }
 :-ms-input-placeholder {
   color: #b3b3b3;
-}
-.p-input-filled .p-inputtext {
-  /* background-color: #263238; */
-}
-.p-input-filled .p-inputtext:enabled:hover {
-  /* background-color: #263238; */
-}
-.p-input-filled .p-inputtext:enabled:focus {
-  /* background-color: #263238; */
-}
-.p-inputtext-sm .p-inputtext {
-  /* font-size: 0.875rem;
-  padding: 0.4375rem 0.65625rem; */
-}
-.p-inputtext-lg .p-inputtext {
-  /* font-size: 1.25rem;
-  padding: 0.625rem 0.9375rem; */
 }
 .p-listbox {
   background: #161d21;
@@ -6504,10 +6485,7 @@ select:disabled {
   > a {
   border-top: 0 none;
 }
-.p-panelmenu .p-panelmenu-panel:first-child .p-panelmenu-header > a {
-  /* border-top-right-radius: 6px;
-  border-top-left-radius: 6px; */
-}
+
 .p-panelmenu
   .p-panelmenu-panel:last-child
   .p-panelmenu-header:not(.p-highlight)
