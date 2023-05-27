@@ -9,6 +9,7 @@ import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 

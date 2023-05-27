@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
+import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";

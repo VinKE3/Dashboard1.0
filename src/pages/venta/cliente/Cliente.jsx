@@ -9,6 +9,7 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 //#region Estilos
