@@ -5,12 +5,19 @@ const BotonBasico = ({
   botonClass,
   botonIcon,
   botonText,
+  autoFoco = false,
   click,
+  KeyDown = (e) => {},
   contenedor = "sticky top-2 bg-black/30",
 }) => {
   return (
     <div className={contenedor + "flex"}>
-      <button onClick={click} className={Global.BotonBasico + botonClass}>
+      <button
+        onClick={click}
+        autoFocus={autoFoco}
+        className={Global.BotonBasico + botonClass}
+        onKeyDown={(e) => KeyDown(e)}
+      >
         <FontAwesomeIcon
           icon={botonIcon}
           size="1x"

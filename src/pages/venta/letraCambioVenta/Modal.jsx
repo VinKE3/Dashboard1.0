@@ -757,14 +757,16 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (value, click = false) => {
-    if (click) {
-      let row = value.target.closest("tr");
-      let id = row.firstChild.innerText;
-      setDataCabecera(dataDetalle.find((map) => map.id === id));
-    } else {
-      setDataCabecera(dataDetalle.find((map) => map.id === value));
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        setDataCabecera(dataDetalle.find((map) => map.id === id));
+      } else {
+        setDataCabecera(dataDetalle.find((map) => map.id === value));
+      }
+      document.getElementById("cantidad").focus();
     }
-    document.getElementById("cantidad").focus();
   };
   const EliminarDetalle = async (id) => {
     let i = 1;

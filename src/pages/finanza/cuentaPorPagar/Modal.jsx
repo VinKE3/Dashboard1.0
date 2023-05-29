@@ -206,12 +206,24 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     return [true, ""];
   };
-  const CargarDetalle = async (abonoId) => {
-    const result = await ApiMasy.get(
-      `/api/Finanzas/AbonoCompra/${data.id}/${abonoId}`
-    );
-    setHabilitarCampo(false);
-    setDataAbono(result.data.data);
+  const CargarDetalle = async (value, click = false) => {
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        const result = await ApiMasy.get(
+          `/api/Finanzas/AbonoCompra/${data.id}/${id}`
+        );
+        setHabilitarCampo(false);
+        setDataAbono(result.data.data);
+      } else {
+        const result = await ApiMasy.get(
+          `/api/Finanzas/AbonoCompra/${data.id}/${value}`
+        );
+        setHabilitarCampo(false);
+        setDataAbono(result.data.data);
+      }
+    }
   };
   const AgregarAbonoDetalle = async () => {
     let resultado = await ValidarDetalle();
@@ -475,8 +487,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Finanzas", "CuentaPorPagar"]}
           titulo="Cuentas Por Pagar"
-          tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
           cerrar={false}
+          foco={document.getElementById("tablaCuentaPorPagar")}
+          tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
         >
           {tipoMensaje > 0 && (
             <Mensajes
@@ -664,7 +677,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {nuevo && (
                   <BotonBasico
                     botonText="Nuevo"
-                    botonClass={Global.BotonAgregar + " !py-1.5 !my-0"}
+                    botonClass={Global.BotonAgregar + " !my-0"}
                     botonIcon={faPlus}
                     click={() => Abono()}
                     contenedor=""
@@ -916,6 +929,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 "border border-b-0",
                 "border",
               ]}
+              DobleClick={(e) => CargarDetalle(e, true)}
             />
           </TablaStyle>
           {/* Tabla Detalle */}

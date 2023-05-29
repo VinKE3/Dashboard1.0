@@ -318,9 +318,19 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       }
     }
   };
-  const CargarDetalle = async (id) => {
-    setDataCabecera(dataDetalle.find((map) => map.id === id));
+  const CargarDetalle = async (value, click = false) => {
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        // setDataCabecera(dataDetalle.find((map) => map.id === id));
+      } else {
+        setDataCabecera(dataDetalle.find((map) => map.id === value));
+      }
+      document.getElementById("cantidad").focus();
+    }
   };
+
   const EliminarDetalle = async (id) => {
     let i = 1;
     let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
@@ -907,6 +917,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   "border border-b-0",
                   "border",
                 ]}
+                DobleClick={(e) => CargarDetalle(e, true)}
               />
             </TablaStyle>
             {/* Tabla Detalle */}

@@ -16,7 +16,7 @@ const GetPermisos = async (menu, setPermisos) => {
       return true;
     }
     if (menu == "CuentaPorPagar" || menu == "CuentaPorCobrar") {
-      setPermisos([true, false, true, true, true]);
+      setPermisos([true, false, false, true, true]);
       return true;
     }
     if (menu == "Retencion") {

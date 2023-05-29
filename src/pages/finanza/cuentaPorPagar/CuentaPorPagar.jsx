@@ -2,17 +2,20 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Imprimir from "../../../components/funciones/Imprimir";
+import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -74,7 +77,7 @@ const CuentaPorPagar = () => {
   const [modal, setModal] = useState(false);
   const [modo] = useState("Consultar");
   const [objeto, setObjeto] = useState([]);
-  const [elimlinar, setEliminar] = useState(false);
+  const [eliminar, setEliminar] = useState(false);
 
   //#endregion
 
@@ -96,10 +99,10 @@ const CuentaPorPagar = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (elimlinar) {
+    if (eliminar) {
       Listar(cadena, index + 1);
     }
-  }, [elimlinar]);
+  }, [eliminar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -137,6 +140,16 @@ const CuentaPorPagar = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      proveedorNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      isCancelado: "",
+    });
+    setIndex(0);
+    document.getElementById("proveedorNombre").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -158,9 +171,72 @@ const CuentaPorPagar = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id) => {
-    await GetPorId(id);
-    setModal(true);
+  const AccionModal = async (value, accion = 0, click = false) => {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      switch (accion) {
+        case 3: {
+          await GetPorId(value);
+          setModal(true);
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaCuentaPorPagar")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let resultado = await Imprimir(["Finanza", "CuentaPorPagar"], id);
+            if (resultado != null) {
+              const source = `data:application/pdf;base64,${resultado}`;
+              const link = document.createElement("a");
+              const fileName = "file.pdf";
+              link.href = source;
+              link.download = fileName;
+              link.click();
+            }
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    }
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "Enter" || e.key === "c") {
+      let row = document
+        .querySelector("#tablaCuentaPorPagar")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, 3);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaCuentaPorPagar")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, 5);
+      }
+    }
   };
   //#endregion
 
@@ -244,8 +320,8 @@ const CuentaPorPagar = () => {
             permisos={permisos}
             menu={["Compras", "CuentaPorPagar"]}
             id={row.values.id}
-            ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
-            ClickModificar={() => AccionModal(row.values.id, "Modificar")}
+            ClickConsultar={() => AccionModal(row.values.id, 3)}
+            ClickModificar={() => AccionModal(row.values.id, 3)}
           />
         ),
       },
@@ -315,9 +391,9 @@ const CuentaPorPagar = () => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    onClick={Filtro}
+                    onClick={FiltroBoton}
                   >
-                    <FaSearch />
+                    <FaUndoAlt />
                   </button>
                 </div>
               </div>
@@ -380,14 +456,29 @@ const CuentaPorPagar = () => {
             </div>
             {/* Filtro*/}
 
+            {/* Boton */}
+            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+              <BotonBasico
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => AccionModal(null, 5)}
+                contenedor=""
+              />
+            </div>
+            {/* Boton */}
+
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaCuentaPorPagar"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

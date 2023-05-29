@@ -11,7 +11,7 @@ import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
@@ -401,7 +401,7 @@ const LetraCambioCompra = () => {
                   }
                   onClick={Filtro}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>

@@ -16,6 +16,7 @@ const ModalBasic = ({
   const CerrarModal = () => {
     setModal(false);
   };
+
   //#endregion
 
   //#region Render

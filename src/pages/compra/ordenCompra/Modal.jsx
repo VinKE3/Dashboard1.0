@@ -352,7 +352,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ConvertirPrecio = async () => {
     if (Object.entries(dataCabecera).length > 0) {
-      if (data.monedaId != dataCabecera.monedaId && dataCabecera.Id != "000000") {
+      if (
+        data.monedaId != dataCabecera.monedaId &&
+        dataCabecera.Id != "000000"
+      ) {
         const model = await Funciones.ConvertirPreciosAMoneda(
           "compra",
           dataCabecera,
@@ -488,7 +491,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           //Valida por id y descripción de artículo
           model = dataDetalle.find((map) => {
             return (
-              map.id == dataCabecera.id && map.descripcion == dataCabecera.descripcion
+              map.id == dataCabecera.id &&
+              map.descripcion == dataCabecera.descripcion
             );
           });
         } else {
@@ -570,8 +574,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     document.getElementById("consultarArticulo").focus();
   };
-  const CargarDetalle = async (id) => {
-    setDataCabecera(dataDetalle.find((map) => map.id === id));
+  const CargarDetalle = async (value, click = false) => {
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        setDataCabecera(dataDetalle.find((map) => map.id === id));
+      } else {
+        setDataCabecera(dataDetalle.find((map) => map.id === value));
+      }
+      document.getElementById("cantidad").focus();
+    }
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -866,8 +879,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             modo={modo}
             menu={["Compra", "OrdenCompra"]}
             titulo="Orden de Compra"
-            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
+            foco={document.getElementById("tablaOrdenCompra")}
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -923,9 +937,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Nuevo"
-                        ? Global.InputStyle
-                        : Global.InputStyle
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                     }
                   />
                 </div>
@@ -945,9 +957,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Nuevo"
-                        ? Global.InputStyle
-                        : Global.InputStyle
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                     }
                   />
                 </div>
@@ -962,6 +972,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
+                    autoFocus={modo == "Modificar"}
                     disabled={modo == "Consultar"}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
@@ -1054,6 +1065,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     }
                     hidden={modo == "Consultar"}
                     disabled={checkVarios}
+                    onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroProveedor()}
                   >
                     <FaSearch></FaSearch>
@@ -1247,6 +1259,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar"}
+                    onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
@@ -1504,6 +1517,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       disabled={!habilitarFiltro ? false : true}
                       hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={() => {
                         setDataCabecera([]);
                         AbrirFiltroArticulo();
@@ -1619,6 +1633,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="enviarDetalle"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={() => AgregarDetalle()}
                     >
                       <FaPlus></FaPlus>
@@ -1644,6 +1659,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   "border border-b-0",
                   "border",
                 ]}
+                DobleClick={(e) => CargarDetalle(e, true)}
               />
             </TablaStyle>
             {/* Tabla Detalle */}

@@ -7,7 +7,7 @@ import Modal from "./Modal";
 import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { ToastContainer } from "react-toastify";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
@@ -198,6 +198,16 @@ const MovimientoArticulo = () => {
     setDataLocal(model);
     setTotal(model.length);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      tipoExistenciaId: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      conStock: false,
+    });
+    setIndex(0);
+    document.getElementById("descripcion").focus();
+  };
   const FiltradoPaginado = (e) => {
     const filtrado = datos.slice(e.selected * 50, total);
     setDataLocal(filtrado);
@@ -206,9 +216,80 @@ const MovimientoArticulo = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id) => {
-    await GetPorId(id);
-    setModal(true);
+  const AccionModal = async (
+    value,
+    modo = "Nuevo",
+    accion = 0,
+    click = false
+  ) => {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      switch (accion) {
+        case 3: {
+          await GetPorId(value);
+          setModal(true);
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaMovimientoArticulo")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let resultado = await Imprimir(
+              ["Almacen", "MovimientoArticulo"],
+              id
+            );
+            if (resultado != null) {
+              const source = `data:application/pdf;base64,${resultado}`;
+              const link = document.createElement("a");
+              const fileName = "file.pdf";
+              link.href = source;
+              link.download = fileName;
+              link.click();
+            }
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    }
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "Enter" || e.key === "c") {
+      let row = document
+        .querySelector("#tablaMovimientoArticulo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaMovimientoArticulo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
+      }
+    }
   };
   //#endregion
 
@@ -321,7 +402,7 @@ const MovimientoArticulo = () => {
             setEliminar={setEliminar}
             permisos={permisos}
             ClickModificar={() => console.log("")}
-            ClickConsultar={() => AccionModal(row.values.Id)}
+            ClickConsultar={() => AccionModal(row.values.Id, "Consultar", 3)}
             ClickEliminar={() => console.log("")}
           />
         ),
@@ -401,7 +482,7 @@ const MovimientoArticulo = () => {
                     }
                     onClick={Filtro}
                   >
-                    <FaSearch />
+                    <FaUndoAlt />
                   </button>
                 </div>
               </div>
@@ -450,16 +531,25 @@ const MovimientoArticulo = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaMovimientoArticulo"}
                 columnas={columnas}
                 datos={dataLocal}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Consultar")}
               />
             </TablaStyle>
             {/* Tabla */}
           </div>
-          {modal && <Modal setModal={setModal} objeto={objeto} />}
+          {modal && (
+            <Modal
+              setModal={setModal}
+              objeto={objeto}
+              foco={document.getElementById("tablaMovimientoArticulo")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

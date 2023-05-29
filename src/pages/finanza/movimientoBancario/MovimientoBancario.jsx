@@ -12,7 +12,7 @@ import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
@@ -139,6 +139,17 @@ const MovimientoBancario = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      cuentaCorrienteId: "",
+      tipoMovimientoId: "",
+      concepto: "",
+    });
+    setIndex(0);
+    document.getElementById("cuentaCorrienteId").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -195,69 +206,120 @@ const MovimientoBancario = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo", accion = 0) => {
-    setModo(modo);
-    switch (accion) {
-      case 0: {
-        let model = dataCtacte.find((map) => map);
-        if(filtro.cuentaCorrienteId != ""){
-          model = dataCtacte.find((map) => map.cuentaCorrienteId == filtro.cuentaCorrienteId)
-        }
-        console.log(model)
-        setObjeto({
-          id: "",
-          empresaId: "01",
-          cuentaCorrienteId:
-            filtro.cuentaCorrienteId == ""
-              ? dataCtacte[0].cuentaCorrienteId
-              : filtro.cuentaCorrienteId,
-          fechaEmision: moment().format("YYYY-MM-DD"),
-          tipoCambio: 0,
-          tipoMovimientoId: "IN",
-          tipoOperacionId: "",
-          numeroOperacion: "",
-          isCierreCaja: false,
-          tipoBeneficiarioId: "",
-          clienteProveedorId: null,
-          clienteProveedorNombre: "",
-          concepto: "",
-          documentoReferencia: "",
-          tieneDetraccion: false,
-          porcentajeITF: 0,
-          montoITF: 0,
-          montoInteres: 0,
-          monto: 0,
-          total: 0,
-          tieneCuentaDestino: false,
-          cuentaDestinoId: null,
-          monedaId: model.monedaId,
-          detalles: [],
-        });
-        setModal(true);
-        break;
-      }
-      case 1: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          await GetPorId(id);
+  const AccionModal = async (
+    value,
+    modo = "Nuevo",
+    accion = 0,
+    click = false
+  ) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      setModo(modo);
+      switch (accion) {
+        case 0: {
+          let model = dataCtacte.find((map) => map);
+          if (filtro.cuentaCorrienteId != "") {
+            model = dataCtacte.find(
+              (map) => map.cuentaCorrienteId == filtro.cuentaCorrienteId
+            );
+          }
+          setObjeto({
+            id: "",
+            empresaId: "01",
+            cuentaCorrienteId:
+              filtro.cuentaCorrienteId == ""
+                ? dataCtacte[0].cuentaCorrienteId
+                : filtro.cuentaCorrienteId,
+            fechaEmision: moment().format("YYYY-MM-DD"),
+            tipoCambio: 0,
+            tipoMovimientoId: "IN",
+            tipoOperacionId: "",
+            numeroOperacion: "",
+            isCierreCaja: false,
+            tipoBeneficiarioId: "",
+            clienteProveedorId: null,
+            clienteProveedorNombre: "",
+            concepto: "",
+            documentoReferencia: "",
+            tieneDetraccion: false,
+            porcentajeITF: 0,
+            montoITF: 0,
+            montoInteres: 0,
+            monto: 0,
+            total: 0,
+            tieneCuentaDestino: false,
+            cuentaDestinoId: null,
+            monedaId: model.monedaId,
+            detalles: [],
+          });
           setModal(true);
+          break;
         }
-        break;
-      }
-      case 2: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          Delete(["Finanzas", "MovimientoBancario"], id, setEliminar);
+        case 1: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await GetPorId(value);
+            setModal(true);
+          }
+          break;
         }
-        break;
+        case 2: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await Delete(
+              ["Finanzas", "MovimientoBancario"],
+              value,
+              setEliminar
+            );
+          }
+          break;
+        }
+        case 3: {
+          await GetPorId(value);
+          setModal(true);
+          break;
+        }
+        default:
+          break;
       }
-      case 3: {
-        await GetPorId(id);
-        setModal(true);
-        break;
+    }
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      setModo("Nuevo");
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaMovimientoBancario")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar", 1);
       }
-      default:
-        break;
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaMovimientoBancario")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Eliminar", 2);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaMovimientoBancario")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
     }
   };
   //#endregion
@@ -380,11 +442,11 @@ const MovimientoBancario = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-          setEliminar={setEliminar}
-          permisos={permisos}
-          ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
-          ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
-          ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
+            setEliminar={setEliminar}
+            permisos={permisos}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },
@@ -478,9 +540,9 @@ const MovimientoBancario = () => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    onClick={Filtro}
+                    onClick={FiltroBoton}
                   >
-                    <FaSearch />
+                    <FaUndoAlt />
                   </button>
                 </div>
               </div>
@@ -550,6 +612,7 @@ const MovimientoBancario = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -557,11 +620,14 @@ const MovimientoBancario = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaMovimientoBancario"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

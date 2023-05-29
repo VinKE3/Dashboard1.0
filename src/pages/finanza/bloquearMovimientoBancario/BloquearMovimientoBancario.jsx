@@ -7,7 +7,7 @@ import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
@@ -123,6 +123,14 @@ const BloquearMovimientoBancario = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("fechaInicio").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -173,6 +181,18 @@ const BloquearMovimientoBancario = () => {
         progress: undefined,
         theme: "colored",
       });
+    }
+  };
+  const BloquearKey = async (e) => {
+    if (e.key == "Enter") {
+      let row = document
+        .querySelector("#tablaBloquearMovimiento")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        let bloqueado = row.children[6].firstChild.id == "true" ? true : false;
+        Bloquear(id, bloqueado);
+      }
     }
   };
   const BloquearTodo = async (ids, isBloqueado) => {
@@ -286,13 +306,9 @@ const BloquearMovimientoBancario = () => {
         Header: "B",
         accessor: "isBloqueado",
         Cell: ({ value }) => {
-          return value ? (
-            <div className="flex justify-center">
-              <Checkbox checked={true} />
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <Checkbox checked={false} />
+          return (
+            <div className="flex justify-center" id={value.toString()}>
+              <Checkbox checked={value} />
             </div>
           );
         },
@@ -382,9 +398,9 @@ const BloquearMovimientoBancario = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>
@@ -393,11 +409,13 @@ const BloquearMovimientoBancario = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaBloquearMovimiento"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                KeyDown={(e) => BloquearKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

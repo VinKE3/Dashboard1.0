@@ -3,6 +3,7 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
+import Imprimir from "../../../components/funciones/Imprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -11,9 +12,10 @@ import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -131,6 +133,15 @@ const SalidaCilindros = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      clienteNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("clienteNombre").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -172,31 +183,111 @@ const SalidaCilindros = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Modificar", accion = 1) => {
-    setModo(modo);
-    switch (accion) {
-      case 1: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          await GetPorId(id);
+  const AccionModal = async (
+    value,
+    modo = "Nuevo",
+    accion = 0,
+    click = false
+  ) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      setModo(modo);
+      switch (accion) {
+        case 1: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await GetPorId(value);
+            setModal(true);
+          }
+          break;
+        }
+        case 2: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            Delete(["Almacen", "SalidaCilindros"], value, setEliminar);
+          }
+          break;
+        }
+        case 3: {
+          await GetPorId(value);
           setModal(true);
+          break;
         }
-        break;
-      }
-      case 2: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          Delete(["Almacen", "SalidaCilindros"], id, setEliminar);
+        case 5: {
+          let row = document
+            .querySelector("#tablaSalidaCilindro")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let resultado = await Imprimir(["Almacen", "SalidaCilindros"], id);
+            if (resultado != null) {
+              const source = `data:application/pdf;base64,${resultado}`;
+              const link = document.createElement("a");
+              const fileName = "file.pdf";
+              link.href = source;
+              link.download = fileName;
+              link.click();
+            }
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
         }
-        break;
+        default:
+          break;
       }
-      case 3: {
-        await GetPorId(id);
-        setModal(true);
-        break;
+    }
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaSalidaCilindro")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar", 1);
       }
-      default:
-        break;
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaSalidaCilindro")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Eliminar", 2);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaSalidaCilindro")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaSalidaCilindro")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
+      }
     }
   };
   //#endregion
@@ -277,7 +368,17 @@ const SalidaCilindros = () => {
         Header: "T. Salida",
         accessor: "tipoSalida",
         Cell: ({ value }) => {
-          return <p className="text-center">{value}</p>;
+          return (
+            <p
+              className={
+                value == "VENDIDO"
+                  ? "font-semibold text-center text-green-600"
+                  : "font-semibold text-center text-orange-500"
+              }
+            >
+              {value}
+            </p>
+          );
         },
       },
 
@@ -304,7 +405,7 @@ const SalidaCilindros = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Salida Cilindros</h2>
+            <h2 className={Global.TituloH2}>Salida de Cilindros</h2>
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
@@ -354,22 +455,37 @@ const SalidaCilindros = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>
             {/* Filtro*/}
 
+            {/* Boton */}
+            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+              <BotonBasico
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => AccionModal(null, "Imprimir", 5)}
+                contenedor=""
+              />
+            </div>
+            {/* Boton */}
+
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaSalidaCilindro"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

@@ -15,6 +15,7 @@ import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
+import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -46,12 +47,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataCcorrienteMoneda, setDataCcorrienteMoneda] = useState([]);
   const [dataCcorrienteEntidad, setDataCcorrienteEntidad] = useState([]);
   const [objetoCcorriente, setObjetoCcorriente] = useState([]);
-  const [estadoCcorriente, setEstadoCcorriente] = useState(false);
+  const [habilitarCuentaCorriente, setHabilitarCuentaCorriente] =
+    useState(false);
 
   const [dataContacto, setDataContacto] = useState([]);
   const [dataContactoCargo, setDataContactoCargo] = useState([]);
   const [objetoContacto, setObjetoContacto] = useState([]);
-  const [estadoContacto, setEstadoContacto] = useState(false);
+  const [habilitarContacto, setHabilitarContacto] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -122,25 +124,47 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       tipo = "";
     }
-    ConsultarDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
+    GetDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
   };
-  const AgregarCcorriente = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarCcorriente();
-    } else {
-      await GetCcorriente(id);
+  const AgregarCuentaCorriente = async (value = 0, e = null, click = false) => {
+    if (modo != "Consultar") {
+      await Limpiar();
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        await GetCcorriente(id);
+      } else {
+        if (e.target.innerText == "AGREGAR") {
+          await LimpiarCcorriente();
+        } else {
+          await GetCcorriente(id);
+        }
+      }
+      setHabilitarCuentaCorriente(true);
+      if (habilitarCuentaCorriente) {
+        document.getElementById("monedaIdCuenta").focus();
+      }
     }
-    setEstadoCcorriente(true);
   };
-  const AgregarContacto = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarContacto();
-    } else {
-      await GetContacto(id);
+  const AgregarContacto = async (value = 0, e = null, click = false) => {
+    if (modo != "Consultar") {
+      await Limpiar();
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        await GetContacto(id);
+      } else {
+        if (e.target.innerText == "AGREGAR") {
+          await LimpiarContacto();
+        } else {
+          await GetContacto(id);
+        }
+      }
+      setHabilitarContacto(true);
+      if (habilitarContacto) {
+        document.getElementById("nombresContacto").focus();
+      }
     }
-    setEstadoContacto(true);
   };
   const Limpiar = async () => {
     setMen([]);
@@ -187,8 +211,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     await ListarContacto();
     await ListarCcorriente();
     await Limpiar();
-    setEstadoContacto(false);
-    setEstadoCcorriente(false);
+    setHabilitarContacto(false);
+    setHabilitarCuentaCorriente(false);
   };
   //#endregion
 
@@ -199,20 +223,36 @@ const Modal = ({ setModal, modo, objeto }) => {
     );
     setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
   };
-  const ConsultarDocumento = async (filtroApi = "") => {
+  const GetDocumento = async (filtroApi = "") => {
     document.getElementById("consultarApi").hidden = true;
-    const res = await ApiMasy.get(`api/Servicio/ConsultarRucDni${filtroApi}`);
-    if (res.status == 200) {
-      let model = {
-        numeroDocumentoIdentidad: res.data.data.numeroDocumentoIdentidad,
-        nombre: res.data.data.nombre,
-        direccionPrincipal: res.data.data.direccion,
-      };
+    const result = await ApiMasy.get(
+      `api/Servicio/ConsultarRucDni${filtroApi}`
+    );
+    if (result.name == "AxiosError") {
+      let err = "";
+      if (result.response.data == "") {
+        err = result.message;
+      } else {
+        err = String(result.response.data.messages[0].textos);
+      }
+      toast.error(err, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      document.getElementById("consultarApi").hidden = false;
+      document.getElementById("numeroDocumentoIdentidad").focus();
+    } else {
       setData({
         ...data,
-        numeroDocumentoIdentidad: model.numeroDocumentoIdentidad,
-        nombre: model.nombre,
-        direccionPrincipal: model.direccionPrincipal,
+        numeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
+        nombre: result.data.data.nombre,
+        direccionPrincipal: result.data.data.direccion,
       });
       toast.info("Datos extraídos exitosamente", {
         position: "bottom-right",
@@ -225,18 +265,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         theme: "colored",
       });
       document.getElementById("consultarApi").hidden = false;
-    } else {
-      toast.error(String(res.response.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      document.getElementById("consultarApi").hidden = false;
+      document.getElementById("nombreProveedor").focus();
     }
   };
 
@@ -272,6 +301,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           setMen
         );
       } else {
+        document.getElementById("monedaIdCuenta").focus();
         toast.error(
           "Proveedor Cuenta Corriente: Ya existe el registro ingresado",
           {
@@ -370,7 +400,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton"
-                  onClick={(e) => AgregarCcorriente(e, row.values.id)}
+                  onClick={(e) => AgregarCuentaCorriente(row.values.id, e)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -424,7 +454,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton"
-                  onClick={(e) => AgregarContacto(e, row.values.id)}
+                  onClick={(e) => AgregarContacto(row.values.id, e)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -466,6 +496,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Proveedor"]}
           titulo="Proveedor"
+          foco={document.getElementById("tablaProveedor")}
           tamañoModal={[Global.ModalMediano, Global.Form + "pt-0 "]}
         >
           <TabView>
@@ -566,11 +597,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
-                      className={Global.InputBoton}
+                      className={
+                        modo == "Consultar"
+                          ? Global.InputStyle
+                          : Global.InputBoton
+                      }
                     />
                     <button
                       id="consultarApi"
                       hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={(e) => ValidarConsultarDocumento(e)}
                       className={
                         Global.BotonBuscar +
@@ -583,20 +619,22 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </div>
                 </div>
                 <div className={Global.ContenedorInputs}>
-                  <label htmlFor="nombre" className={Global.LabelStyle}>
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    name="nombre"
-                    placeholder="Nombre"
-                    autoComplete="off"
-                    disabled={modo == "Consultar"}
-                    value={data.nombre ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
-                  />
+                  <div className={Global.InputFull}>
+                    <label htmlFor="nombre" className={Global.LabelStyle}>
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      id="nombreProveedor"
+                      name="nombre"
+                      placeholder="Nombre"
+                      autoComplete="off"
+                      disabled={modo == "Consultar"}
+                      value={data.nombre ?? ""}
+                      onChange={ValidarData}
+                      className={Global.InputStyle}
+                    />
+                  </div>
                 </div>
                 <div className={Global.ContenedorInputs}>
                   <div className={Global.InputMitad}>
@@ -721,10 +759,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     />
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
+                      botonClass={Global.BotonAgregar}
                       botonIcon={faPlus}
+                      autoFoco={true}
                       click={(e) => {
-                        AgregarCcorriente(e);
+                        AgregarCuentaCorriente(null, e);
                       }}
                       contenedor=""
                     />
@@ -733,7 +772,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Boton */}
 
                 {/* Form Cuenta Corriente */}
-                {estadoCcorriente && (
+                {habilitarCuentaCorriente && (
                   <div
                     className={
                       Global.ContenedorBasico +
@@ -758,8 +797,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                           Moneda
                         </label>
                         <select
-                          id="monedaId"
+                          id="monedaIdCuenta"
                           name="monedaId"
+                          autoFocus={habilitarCuentaCorriente}
                           value={objetoCcorriente.monedaId ?? ""}
                           onChange={ValidarDataCcorriente}
                           disabled={modo == "Consultar"}
@@ -813,12 +853,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </select>
                     </div>
                     {/*footer*/}
-                    <div className="flex items-center justify-start">
+                    <div className="flex items-center justify-start gap-x-2">
                       {modo == "Consultar" ? (
                         ""
                       ) : (
                         <button
                           type="button"
+                          onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarCcorriente}
                           className={
                             Global.BotonModalBase +
@@ -831,12 +872,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                       )}
                       <button
                         type="button"
-                        onClick={() => setEstadoCcorriente(false)}
                         className={
                           Global.BotonModalBase +
                           Global.BotonCancelarModal +
                           " py-2 sm:py-1  px-3"
                         }
+                        onKeyDown={(e) => Funciones.KeyClick(e)}
+                        onClick={() => setHabilitarCuentaCorriente(false)}
                       >
                         CERRAR
                       </button>
@@ -848,7 +890,12 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Tabla */}
                 <TablaStyle>
-                  <TableBasic columnas={colCcorriente} datos={dataCcorriente} />
+                  <TableBasic
+                    id="tablaCuentaCorrienteProveedor"
+                    columnas={colCcorriente}
+                    datos={dataCcorriente}
+                    DobleClick={(e) => AgregarCuentaCorriente(e, null, true)}
+                  />
                 </TablaStyle>
                 {/* Tabla */}
               </TabPanel>
@@ -869,10 +916,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     />
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass="bg-green-700 hover:bg-green-600 hover:text-light"
+                      botonClass={Global.BotonAgregar}
                       botonIcon={faPlus}
+                      autoFoco={true}
                       click={(e) => {
-                        AgregarContacto(e);
+                        AgregarContacto(null, e);
                       }}
                       contenedor=""
                     />
@@ -881,7 +929,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Boton */}
 
                 {/* Form Contactos */}
-                {estadoContacto && (
+                {habilitarContacto && (
                   <div
                     className={
                       Global.ContenedorBasico +
@@ -907,10 +955,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                         </label>
                         <input
                           type="text"
-                          id="nombres"
+                          id="nombresContacto"
                           name="nombres"
                           placeholder="Nombres"
                           autoComplete="off"
+                          autoFocus={habilitarContacto}
                           disabled={modo == "Consultar"}
                           value={objetoContacto.nombres ?? ""}
                           onChange={ValidarDataContacto}
@@ -1037,6 +1086,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ) : (
                         <button
                           type="button"
+                          onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarContacto}
                           className={
                             Global.BotonModalBase +
@@ -1049,7 +1099,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       )}
                       <button
                         type="button"
-                        onClick={() => setEstadoContacto(false)}
+                        onKeyDown={(e) => Funciones.KeyClick(e)}
+                        onClick={() => setHabilitarContacto(false)}
                         className={
                           Global.BotonModalBase +
                           Global.BotonCancelarModal +
@@ -1066,7 +1117,12 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Tabla */}
                 <TablaStyle>
-                  <TableBasic columnas={colContacto} datos={dataContacto} />
+                  <TableBasic
+                    id="tablaContactoProveedor"
+                    columnas={colContacto}
+                    datos={dataContacto}
+                    DobleClick={(e) => AgregarContacto(e, null, true)}
+                  />
                 </TablaStyle>
                 {/* Tabla */}
               </TabPanel>

@@ -3,6 +3,7 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
+import Imprimir from "../../../components/funciones/Imprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -11,10 +12,11 @@ import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FaUndoAlt } from "react-icons/fa";
+import { faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -127,6 +129,15 @@ const DocumentosdeCompra = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      proveedorNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("proveedorNombre").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -168,73 +179,155 @@ const DocumentosdeCompra = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo", accion = 0) => {
-    setModo(modo);
-    switch (accion) {
-      case 0: {
-        //Consulta Correlativo
-        //Consulta Correlativo
-        setObjeto({
-          empresaId: "01",
-          proveedorId: "",
-          proveedorNombre: "",
-          tipoDocumentoId: "01",
-          serie: "",
-          numero: "",
-          clienteId: "000000",
-          fechaEmision: moment().format("YYYY-MM-DD"),
-          fechaContable: moment().format("YYYY-MM-DD"),
-          fechaVencimiento: moment().format("YYYY-MM-DD"),
-          proveedorNumeroDocumentoIdentidad: "",
-          proveedorDireccion: "",
-          tipoCompraId: "CO",
-          monedaId: "S",
-          tipoCambio: 0,
-          tipoPagoId: "EF",
-          numeroOperacion: "",
-          cuentaCorrienteId: "",
-          documentoReferenciaId: "",
-          abonar: true,
-          motivoNotaId: "",
-          motivoSustento: "",
-          guiaRemision: "",
-          observacion: "",
-          subTotal: 0,
-          porcentajeIGV: dataGlobal.porcentajeIGV,
-          montoIGV: 0,
-          totalNeto: 0,
-          total: 0,
-          incluyeIGV: false,
-          afectarStock: false,
-          detalles: [],
-          ordenesCompraRelacionadas: [],
-          numeroOrdenesCompraRelacionadas: "",
-        });
-        setModal(true);
-        break;
-      }
-      case 1: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          await GetPorId(id);
+  const AccionModal = async (
+    value,
+    modo = "Nuevo",
+    accion = 0,
+    click = false
+  ) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      setModo(modo);
+      switch (accion) {
+        case 0: {
+          setObjeto({
+            empresaId: "01",
+            proveedorId: "",
+            proveedorNombre: "",
+            tipoDocumentoId: "01",
+            serie: "",
+            numero: "",
+            clienteId: "000000",
+            fechaEmision: moment().format("YYYY-MM-DD"),
+            fechaContable: moment().format("YYYY-MM-DD"),
+            fechaVencimiento: moment().format("YYYY-MM-DD"),
+            proveedorNumeroDocumentoIdentidad: "",
+            proveedorDireccion: "",
+            tipoCompraId: "CO",
+            monedaId: "S",
+            tipoCambio: 0,
+            tipoPagoId: "EF",
+            numeroOperacion: "",
+            cuentaCorrienteId: "",
+            documentoReferenciaId: "",
+            abonar: true,
+            motivoNotaId: "",
+            motivoSustento: "",
+            guiaRemision: "",
+            observacion: "",
+            subTotal: 0,
+            porcentajeIGV: dataGlobal.porcentajeIGV,
+            montoIGV: 0,
+            totalNeto: 0,
+            total: 0,
+            incluyeIGV: false,
+            afectarStock: false,
+            detalles: [],
+            ordenesCompraRelacionadas: [],
+            numeroOrdenesCompraRelacionadas: "",
+          });
           setModal(true);
+          break;
         }
-        break;
-      }
-      case 2: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          Delete(["Compra", "DocumentoCompra"], id, setEliminar);
+        case 1: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await GetPorId(value);
+            setModal(true);
+          }
+          break;
         }
-        break;
+        case 2: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await Delete(["Compra", "DocumentoCompra"], value, setEliminar);
+          }
+          break;
+        }
+        case 3: {
+          await GetPorId(value);
+          setModal(true);
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaDocumentoCompra")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let resultado = await Imprimir(["Compra", "DocumentoCompra"], id);
+            if (resultado != null) {
+              const source = `data:application/pdf;base64,${resultado}`;
+              const link = document.createElement("a");
+              const fileName = "file.pdf";
+              link.href = source;
+              link.download = fileName;
+              link.click();
+            }
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        default:
+          break;
       }
-      case 3: {
-        await GetPorId(id);
-        setModal(true);
-        break;
+    }
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      setModo("Nuevo");
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaDocumentoCompra")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar", 1);
       }
-      default:
-        break;
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaDocumentoCompra")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Eliminar", 2);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaDocumentoCompra")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaDocumentoCompra")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
+      }
     }
   };
   //#endregion
@@ -404,33 +497,46 @@ const DocumentosdeCompra = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>
             {/* Filtro*/}
 
             {/* Boton */}
-            {permisos[0] && (
+            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+              {permisos[0] && (
+                <BotonBasico
+                  botonText="Nuevo"
+                  botonClass={Global.BotonRegistrar}
+                  botonIcon={faPlus}
+                  click={() => AccionModal()}
+                  contenedor=""
+                />
+              )}
               <BotonBasico
-                botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
-                botonIcon={faPlus}
-                click={() => AccionModal()}
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => AccionModal(null, "Imprimir", 5)}
+                contenedor=""
               />
-            )}
+            </div>
             {/* Boton */}
 
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaDocumentoCompra"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

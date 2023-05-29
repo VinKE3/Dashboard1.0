@@ -471,14 +471,16 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CargarDetalle = async (value, click = false) => {
-    if (click) {
-      let row = value.target.closest("tr");
-      let id = row.firstChild.innerText;
-      setDataCabecera(dataDetalle.find((map) => map.id === id));
-    } else {
-      setDataCabecera(dataDetalle.find((map) => map.id === value));
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        setDataCabecera(dataDetalle.find((map) => map.id === id));
+      } else {
+        setDataCabecera(dataDetalle.find((map) => map.id === value));
+      }
+      document.getElementById("cantidad").focus();
     }
-    document.getElementById("cantidad").focus();
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -708,530 +710,557 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Render
   return (
     <>
-      <ModalCrud
-        setModal={setModal}
-        objeto={data}
-        modo={modo}
-        menu={["Almacen", "EntradaAlmacen"]}
-        titulo="Entrada de Almacén"
-        foco={document.getElementById("tablaEntradaAlmacen")}
-        tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
-        cerrar={false}
-      >
-        {tipoMensaje > 0 && (
-          <Mensajes
-            tipoMensaje={tipoMensaje}
-            mensaje={mensaje}
-            Click={() => OcultarMensajes()}
-          />
-        )}
-        {/* Cabecera */}
-        <div
-          className={
-            Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
-          }
-        >
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="id" className={Global.LabelStyle}>
-                Tipo Doc.
-              </label>
-              <select
-                id="tipoDocumentoId"
-                name="tipoDocumentoId"
-                value={data.tipoDocumentoId ?? ""}
-                onChange={ValidarData}
-                disabled={true}
-                className={Global.InputStyle}
-              >
-                {dataTipoDocumento.map((map) => (
-                  <option key={map.id} value={map.id}>
-                    {map.descripcion}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={Global.InputTercio}>
-              <label htmlFor="serie" className={Global.LabelStyle}>
-                Serie
-              </label>
-              <input
-                type="text"
-                id="serie"
-                name="serie"
-                placeholder="Serie"
-                maxLength="4"
-                autoComplete="off"
-                autoFocus
-                disabled={modo == "Nuevo" ? false : true}
-                value={data.serie ?? ""}
-                onChange={ValidarData}
-                onBlur={(e) => Numeracion(e)}
-                className={Global.InputStyle}
+      {Object.entries(dataMoneda).length > 0 && (
+        <>
+          <ModalCrud
+            setModal={setModal}
+            objeto={data}
+            modo={modo}
+            menu={["Almacen", "EntradaAlmacen"]}
+            titulo="Entrada de Almacén"
+            foco={document.getElementById("tablaEntradaAlmacen")}
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+            cerrar={false}
+          >
+            {tipoMensaje > 0 && (
+              <Mensajes
+                tipoMensaje={tipoMensaje}
+                mensaje={mensaje}
+                Click={() => OcultarMensajes()}
               />
-            </div>
-            <div className={Global.InputMitad}>
-              <label htmlFor="numero" className={Global.LabelStyle}>
-                Número
-              </label>
-              <input
-                type="text"
-                id="numero"
-                name="numero"
-                placeholder="Número"
-                maxLength="10"
-                autoComplete="off"
-                disabled={modo == "Nuevo" ? false : true}
-                value={data.numero ?? ""}
-                onChange={ValidarData}
-                onBlur={(e) => Numeracion(e)}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputMitad}>
-              <label
-                htmlFor="proveedorNumeroDocumentoIdentidad"
-                className={Global.LabelStyle}
-              >
-                RUC/DNI:
-              </label>
-              <input
-                type="text"
-                id="proveedorNumeroDocumentoIdentidad"
-                name="proveedorNumeroDocumentoIdentidad"
-                placeholder="N° Documento Identidad"
-                autoComplete="off"
-                disabled={true}
-                value={data.proveedorNumeroDocumentoIdentidad ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="proveedorNombre" className={Global.LabelStyle}>
-                Proveedor
-              </label>
-              <input
-                type="text"
-                id="proveedorNombre"
-                name="proveedorNombre"
-                placeholder="Proveedor"
-                autoComplete="off"
-                disabled={true}
-                value={data.proveedorNombre ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
-              />
-              <button
-                id="consultarProveedor"
-                className={
-                  Global.BotonBuscar + Global.BotonPrimary + " !rounded-none"
-                }
-                hidden={modo == "Consultar"}
-                disabled={checkVarios}
-                onKeyDown={(e) => Funciones.KeyClick(e)}
-                onClick={() => AbrirFiltroProveedor()}
-              >
-                <FaSearch></FaSearch>
-              </button>
-              <div className={Global.Input + " w-20"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
-                  <Checkbox
-                    inputId="varios"
-                    name="varios"
-                    disabled={modo == "Consultar"}
-                    onChange={(e) => {
-                      setCheckVarios(e.checked);
-                      ProveedorVarios(e);
-                    }}
-                    checked={checkVarios}
+            )}
+            {/* Cabecera */}
+            <div
+              className={
+                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
+              }
+            >
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="id" className={Global.LabelStyle}>
+                    Tipo Doc.
+                  </label>
+                  <select
+                    id="tipoDocumentoId"
+                    name="tipoDocumentoId"
+                    value={data.tipoDocumentoId ?? ""}
+                    onChange={ValidarData}
+                    disabled={true}
+                    className={Global.InputStyle}
+                  >
+                    {dataTipoDocumento.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="serie" className={Global.LabelStyle}>
+                    Serie
+                  </label>
+                  <input
+                    type="text"
+                    id="serie"
+                    name="serie"
+                    placeholder="Serie"
+                    maxLength="4"
+                    autoComplete="off"
+                    autoFocus
+                    disabled={modo == "Nuevo" ? false : true}
+                    value={data.serie ?? ""}
+                    onChange={ValidarData}
+                    onBlur={(e) => Numeracion(e)}
+                    className={Global.InputStyle}
                   />
                 </div>
-                <label htmlFor="varios" className={Global.LabelCheckStyle}>
-                  Varios
-                </label>
-              </div>
-            </div>
-          </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="proveedorDireccion" className={Global.LabelStyle}>
-                Dirección
-              </label>
-              <input
-                type="text"
-                id="proveedorDireccion"
-                name="proveedorDireccion"
-                placeholder="Dirección"
-                autoComplete="off"
-                disabled={true}
-                value={data.proveedorDireccion ?? ""}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="personalId" className={Global.LabelStyle}>
-                Encargado
-              </label>
-              <select
-                id="personalId"
-                name="personalId"
-                value={data.personalId ?? ""}
-                onChange={ValidarData}
-                disabled={modo == "Consultar"}
-                className={Global.InputStyle}
-              >
-                {dataPersonal.map((map) => (
-                  <option key={map.id} value={map.id}>
-                    {map.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={Global.InputMitad}>
-              <label htmlFor="numeroOP" className={Global.LabelStyle}>
-                N° Operación
-              </label>
-              <input
-                type="text"
-                id="numeroOP"
-                name="numeroOP"
-                placeholder="N° Operación"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.numeroOP ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                F. Emisión
-              </label>
-              <input
-                type="date"
-                id="fechaEmision"
-                name="fechaEmision"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
-                onChange={ValidarData}
-                onBlur={FechaEmision}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="monedaId" className={Global.LabelStyle}>
-                Moneda
-              </label>
-              <select
-                id="monedaId"
-                name="monedaId"
-                value={data.monedaId ?? ""}
-                onChange={ValidarData}
-                disabled={modo == "Consultar"}
-                className={Global.InputStyle}
-              >
-                {dataMoneda.map((moneda) => (
-                  <option key={moneda.id} value={moneda.id}>
-                    {moneda.descripcion}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                T. Cambio
-              </label>
-              <input
-                type="number"
-                id="tipoCambio"
-                name="tipoCambio"
-                placeholder="Tipo de Cambio"
-                autoComplete="off"
-                min={0}
-                disabled={modo == "Consultar"}
-                value={data.tipoCambio ?? ""}
-                onChange={ValidarData}
-                className={
-                  modo == "Consultar" ? Global.InputStyle : Global.InputBoton
-                }
-              />
-              <button
-                id="consultarTipoCambio"
-                className={
-                  Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                }
-                hidden={modo == "Consultar"}
-                onKeyDown={(e) => Funciones.KeyClick(e)}
-                onClick={() => {
-                  GetPorIdTipoCambio(data.fechaEmision);
-                }}
-              >
-                <FaUndoAlt></FaUndoAlt>
-              </button>
-            </div>
-          </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="observacion" className={Global.LabelStyle}>
-                Observación
-              </label>
-              <input
-                type="text"
-                id="observacion"
-                name="observacion"
-                placeholder="Observación"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.observacion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-        </div>
-        {/* Cabecera */}
-
-        {/* Detalles */}
-        {modo != "Consultar" && (
-          <div
-            className={
-              Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
-            }
-          >
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <div className={Global.Input + "w-32"}>
-                  <div className={Global.CheckStyle}>
-                    <RadioButton
-                      inputId="productos"
-                      name="productos"
-                      value="productos"
-                      disabled={modo == "Consultar"}
-                      onChange={(e) => {
-                        ValidarDataCabecera(e);
-                      }}
-                      checked={checkFiltro === "productos"}
-                    ></RadioButton>
-                  </div>
-                  <label
-                    htmlFor="productos"
-                    className={Global.LabelCheckStyle + "rounded-r-none"}
-                  >
-                    Productos
+                <div className={Global.InputMitad}>
+                  <label htmlFor="numero" className={Global.LabelStyle}>
+                    Número
                   </label>
-                </div>
-                <div className={Global.Input + "w-32"}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
-                    <RadioButton
-                      inputId="variosFiltro"
-                      name="variosFiltro"
-                      value="variosFiltro"
-                      disabled={modo == "Consultar"}
-                      onChange={(e) => {
-                        ValidarDataCabecera(e);
-                      }}
-                      checked={checkFiltro === "variosFiltro"}
-                    ></RadioButton>
-                  </div>
-                  <label
-                    htmlFor="variosFiltro"
-                    className={Global.LabelCheckStyle + " !py-1 "}
-                  >
-                    Varios
-                  </label>
+                  <input
+                    type="text"
+                    id="numero"
+                    name="numero"
+                    placeholder="Número"
+                    maxLength="10"
+                    autoComplete="off"
+                    disabled={modo == "Nuevo" ? false : true}
+                    value={data.numero ?? ""}
+                    onChange={ValidarData}
+                    onBlur={(e) => Numeracion(e)}
+                    className={Global.InputStyle}
+                  />
                 </div>
               </div>
-            </div>
 
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="descripcion" className={Global.LabelStyle}>
-                  Descripción
-                </label>
-                <input
-                  type="text"
-                  id="descripcion"
-                  name="descripcion"
-                  placeholder="Descripción"
-                  autoComplete="off"
-                  disabled={!habilitarFiltro ? true : false}
-                  value={dataCabecera.descripcion ?? ""}
-                  onChange={ValidarDataCabecera}
-                  className={Global.InputBoton}
-                />
-                <button
-                  id="consultarArticulo"
-                  className={Global.BotonBuscar + Global.BotonPrimary}
-                  disabled={!habilitarFiltro ? false : true}
-                  hidden={modo == "Consultar"}
-                  onKeyDown={(e) => Funciones.KeyClick(e)}
-                  onClick={() => {
-                    setDataCabecera([]);
-                    AbrirFiltroArticulo();
-                  }}
-                >
-                  <FaSearch></FaSearch>
-                </button>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputMitad}>
+                  <label
+                    htmlFor="proveedorNumeroDocumentoIdentidad"
+                    className={Global.LabelStyle}
+                  >
+                    RUC/DNI:
+                  </label>
+                  <input
+                    type="text"
+                    id="proveedorNumeroDocumentoIdentidad"
+                    name="proveedorNumeroDocumentoIdentidad"
+                    placeholder="N° Documento Identidad"
+                    autoComplete="off"
+                    disabled={true}
+                    value={data.proveedorNumeroDocumentoIdentidad ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="proveedorNombre"
+                    className={Global.LabelStyle}
+                  >
+                    Proveedor
+                  </label>
+                  <input
+                    type="text"
+                    id="proveedorNombre"
+                    name="proveedorNombre"
+                    placeholder="Proveedor"
+                    autoComplete="off"
+                    disabled={true}
+                    value={data.proveedorNombre ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="consultarProveedor"
+                    className={
+                      Global.BotonBuscar +
+                      Global.BotonPrimary +
+                      " !rounded-none"
+                    }
+                    hidden={modo == "Consultar"}
+                    disabled={checkVarios}
+                    onKeyDown={(e) => Funciones.KeyClick(e)}
+                    onClick={() => AbrirFiltroProveedor()}
+                  >
+                    <FaSearch></FaSearch>
+                  </button>
+                  <div className={Global.Input + " w-20"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <Checkbox
+                        inputId="varios"
+                        name="varios"
+                        disabled={modo == "Consultar"}
+                        onChange={(e) => {
+                          setCheckVarios(e.checked);
+                          ProveedorVarios(e);
+                        }}
+                        checked={checkVarios}
+                      />
+                    </div>
+                    <label htmlFor="varios" className={Global.LabelCheckStyle}>
+                      Varios
+                    </label>
+                  </div>
+                </div>
               </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="stock" className={Global.LabelStyle}>
-                  Stock
-                </label>
-                <input
-                  type="stock"
-                  id="stock"
-                  name="stock"
-                  placeholder="Stock"
-                  autoComplete="off"
-                  disabled={true}
-                  value={dataCabecera.stock ?? ""}
-                  onChange={ValidarDataCabecera}
-                  className={Global.InputStyle}
-                />
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="proveedorDireccion"
+                    className={Global.LabelStyle}
+                  >
+                    Dirección
+                  </label>
+                  <input
+                    type="text"
+                    id="proveedorDireccion"
+                    name="proveedorDireccion"
+                    placeholder="Dirección"
+                    autoComplete="off"
+                    disabled={true}
+                    value={data.proveedorDireccion ?? ""}
+                    className={Global.InputStyle}
+                  />
+                </div>
               </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input25pct}>
-                <label
-                  htmlFor="unidadMedidaDescripcion"
-                  className={Global.LabelStyle}
-                >
-                  Unidad
-                </label>
-                <input
-                  type="text"
-                  id="unidadMedidaDescripcion"
-                  name="unidadMedidaDescripcion"
-                  placeholder="Unidad Medida"
-                  autoComplete="off"
-                  disabled={true}
-                  value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                  onChange={ValidarDataCabecera}
-                  className={Global.InputStyle}
-                />
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="personalId" className={Global.LabelStyle}>
+                    Encargado
+                  </label>
+                  <select
+                    id="personalId"
+                    name="personalId"
+                    value={data.personalId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar"}
+                    className={Global.InputStyle}
+                  >
+                    {dataPersonal.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="numeroOP" className={Global.LabelStyle}>
+                    N° Operación
+                  </label>
+                  <input
+                    type="text"
+                    id="numeroOP"
+                    name="numeroOP"
+                    placeholder="N° Operación"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.numeroOP ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
               </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="cantidad" className={Global.LabelStyle}>
-                  Cantidad
-                </label>
-                <input
-                  type="number"
-                  id="cantidad"
-                  name="cantidad"
-                  placeholder="Cantidad"
-                  autoComplete="off"
-                  disabled={modo == "Consultar"}
-                  value={dataCabecera.cantidad ?? ""}
-                  onChange={(e) => {
-                    ValidarDataCabecera(e);
-                    CalcularImporte(e.target.name);
-                  }}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="precioUnitario" className={Global.LabelStyle}>
-                  Precio
-                </label>
-                <input
-                  type="number"
-                  id="precioUnitario"
-                  name="precioUnitario"
-                  placeholder="Precio "
-                  autoComplete="off"
-                  disabled={modo == "Consultar"}
-                  value={dataCabecera.precioUnitario ?? ""}
-                  onChange={(e) => {
-                    ValidarDataCabecera(e);
-                    CalcularImporte(e.target.name);
-                  }}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="importe" className={Global.LabelStyle}>
-                  Importe
-                </label>
-                <input
-                  type="number"
-                  id="importe"
-                  name="importe"
-                  autoComplete="off"
-                  placeholder="Importe"
-                  disabled={modo == "Consultar"}
-                  value={dataCabecera.importe ?? ""}
-                  onChange={(e) => {
-                    ValidarDataCabecera(e);
-                    CalcularImporte(e.target.name);
-                  }}
-                  className={
-                    modo != "Consultar" ? Global.InputBoton : Global.InputStyle
-                  }
-                />
-                <button
-                  id="enviarDetalle"
-                  className={Global.BotonBuscar + Global.BotonPrimary}
-                  hidden={modo == "Consultar"}
-                  onKeyDown={(e) => Funciones.KeyClick(e)}
-                  onClick={() => AgregarDetalle()}
-                >
-                  <FaPlus></FaPlus>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {/* Detalles */}
 
-        {/* Tabla Detalle */}
-        <TablaStyle>
-          <TableBasic
-            columnas={columnas}
-            datos={dataDetalle}
-            estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
-            DobleClick={(e) => CargarDetalle(e, true)}
-          />
-        </TablaStyle>
-        {/* Tabla Detalle */}
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+                    F. Emisión
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaEmision"
+                    name="fechaEmision"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
+                    onChange={ValidarData}
+                    onBlur={FechaEmision}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                    Moneda
+                  </label>
+                  <select
+                    id="monedaId"
+                    name="monedaId"
+                    value={data.monedaId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar"}
+                    className={Global.InputStyle}
+                  >
+                    {dataMoneda.map((moneda) => (
+                      <option key={moneda.id} value={moneda.id}>
+                        {moneda.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                    T. Cambio
+                  </label>
+                  <input
+                    type="number"
+                    id="tipoCambio"
+                    name="tipoCambio"
+                    placeholder="Tipo de Cambio"
+                    autoComplete="off"
+                    min={0}
+                    disabled={modo == "Consultar"}
+                    value={data.tipoCambio ?? ""}
+                    onChange={ValidarData}
+                    className={
+                      modo == "Consultar"
+                        ? Global.InputStyle
+                        : Global.InputBoton
+                    }
+                  />
+                  <button
+                    id="consultarTipoCambio"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    hidden={modo == "Consultar"}
+                    onKeyDown={(e) => Funciones.KeyClick(e)}
+                    onClick={() => {
+                      GetPorIdTipoCambio(data.fechaEmision);
+                    }}
+                  >
+                    <FaUndoAlt></FaUndoAlt>
+                  </button>
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="observacion" className={Global.LabelStyle}>
+                    Observación
+                  </label>
+                  <input
+                    type="text"
+                    id="observacion"
+                    name="observacion"
+                    placeholder="Observación"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.observacion ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* Cabecera */}
 
-        {/*Tabla Footer*/}
-        <div className={Global.ContenedorFooter}>
-          <div className="flex">
-            <div className={Global.FilaVacia}></div>
-            <div className={Global.FilaPrecio}>
-              <p className={Global.FilaContenido}>Total</p>
+            {/* Detalles */}
+            {modo != "Consultar" && (
+              <div
+                className={
+                  Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                }
+              >
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <div className={Global.Input + "w-32"}>
+                      <div className={Global.CheckStyle}>
+                        <RadioButton
+                          inputId="productos"
+                          name="productos"
+                          value="productos"
+                          disabled={modo == "Consultar"}
+                          onChange={(e) => {
+                            ValidarDataCabecera(e);
+                          }}
+                          checked={checkFiltro === "productos"}
+                        ></RadioButton>
+                      </div>
+                      <label
+                        htmlFor="productos"
+                        className={Global.LabelCheckStyle + "rounded-r-none"}
+                      >
+                        Productos
+                      </label>
+                    </div>
+                    <div className={Global.Input + "w-32"}>
+                      <div className={Global.CheckStyle + Global.Anidado}>
+                        <RadioButton
+                          inputId="variosFiltro"
+                          name="variosFiltro"
+                          value="variosFiltro"
+                          disabled={modo == "Consultar"}
+                          onChange={(e) => {
+                            ValidarDataCabecera(e);
+                          }}
+                          checked={checkFiltro === "variosFiltro"}
+                        ></RadioButton>
+                      </div>
+                      <label
+                        htmlFor="variosFiltro"
+                        className={Global.LabelCheckStyle + " !py-1 "}
+                      >
+                        Varios
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="descripcion" className={Global.LabelStyle}>
+                      Descripción
+                    </label>
+                    <input
+                      type="text"
+                      id="descripcion"
+                      name="descripcion"
+                      placeholder="Descripción"
+                      autoComplete="off"
+                      disabled={!habilitarFiltro ? true : false}
+                      value={dataCabecera.descripcion ?? ""}
+                      onChange={ValidarDataCabecera}
+                      className={Global.InputBoton}
+                    />
+                    <button
+                      id="consultarArticulo"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      disabled={!habilitarFiltro ? false : true}
+                      hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
+                      onClick={() => {
+                        setDataCabecera([]);
+                        AbrirFiltroArticulo();
+                      }}
+                    >
+                      <FaSearch></FaSearch>
+                    </button>
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="stock" className={Global.LabelStyle}>
+                      Stock
+                    </label>
+                    <input
+                      type="stock"
+                      id="stock"
+                      name="stock"
+                      placeholder="Stock"
+                      autoComplete="off"
+                      disabled={true}
+                      value={dataCabecera.stock ?? ""}
+                      onChange={ValidarDataCabecera}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input25pct}>
+                    <label
+                      htmlFor="unidadMedidaDescripcion"
+                      className={Global.LabelStyle}
+                    >
+                      Unidad
+                    </label>
+                    <input
+                      type="text"
+                      id="unidadMedidaDescripcion"
+                      name="unidadMedidaDescripcion"
+                      placeholder="Unidad Medida"
+                      autoComplete="off"
+                      disabled={true}
+                      value={dataCabecera.unidadMedidaDescripcion ?? ""}
+                      onChange={ValidarDataCabecera}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="cantidad" className={Global.LabelStyle}>
+                      Cantidad
+                    </label>
+                    <input
+                      type="number"
+                      id="cantidad"
+                      name="cantidad"
+                      placeholder="Cantidad"
+                      autoComplete="off"
+                      disabled={modo == "Consultar"}
+                      value={dataCabecera.cantidad ?? ""}
+                      onChange={(e) => {
+                        ValidarDataCabecera(e);
+                        CalcularImporte(e.target.name);
+                      }}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label
+                      htmlFor="precioUnitario"
+                      className={Global.LabelStyle}
+                    >
+                      Precio
+                    </label>
+                    <input
+                      type="number"
+                      id="precioUnitario"
+                      name="precioUnitario"
+                      placeholder="Precio "
+                      autoComplete="off"
+                      disabled={modo == "Consultar"}
+                      value={dataCabecera.precioUnitario ?? ""}
+                      onChange={(e) => {
+                        ValidarDataCabecera(e);
+                        CalcularImporte(e.target.name);
+                      }}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="importe" className={Global.LabelStyle}>
+                      Importe
+                    </label>
+                    <input
+                      type="number"
+                      id="importe"
+                      name="importe"
+                      autoComplete="off"
+                      placeholder="Importe"
+                      disabled={modo == "Consultar"}
+                      value={dataCabecera.importe ?? ""}
+                      onChange={(e) => {
+                        ValidarDataCabecera(e);
+                        CalcularImporte(e.target.name);
+                      }}
+                      className={
+                        modo != "Consultar"
+                          ? Global.InputBoton
+                          : Global.InputStyle
+                      }
+                    />
+                    <button
+                      id="enviarDetalle"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
+                      onClick={() => AgregarDetalle()}
+                    >
+                      <FaPlus></FaPlus>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* Detalles */}
+
+            {/* Tabla Detalle */}
+            <TablaStyle>
+              <TableBasic
+                columnas={columnas}
+                datos={dataDetalle}
+                estilos={[
+                  "",
+                  "",
+                  "",
+                  "border ",
+                  "",
+                  "border border-b-0",
+                  "border",
+                ]}
+                DobleClick={(e) => CargarDetalle(e, true)}
+              />
+            </TablaStyle>
+            {/* Tabla Detalle */}
+
+            {/*Tabla Footer*/}
+            <div className={Global.ContenedorFooter}>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>Total</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>{total ?? "0.00"}</p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
             </div>
-            <div className={Global.FilaImporte}>
-              <p className={Global.FilaContenido}>{total ?? "0.00"}</p>
-            </div>
-            <div className={Global.UltimaFila}></div>
-          </div>
-        </div>
-        {/*Tabla Footer*/}
-      </ModalCrud>
-      {modalProv && (
-        <FiltroProveedor
-          setModal={setModalProv}
-          setObjeto={setDataProveedor}
-          foco={document.getElementById("personalId")}
-        />
-      )}
-      {modalArt && (
-        <FiltroArticulo
-          setModal={setModalArt}
-          setObjeto={setDataCabecera}
-          foco={document.getElementById("cantidad")}
-        />
+            {/*Tabla Footer*/}
+          </ModalCrud>
+          {modalProv && (
+            <FiltroProveedor
+              setModal={setModalProv}
+              setObjeto={setDataProveedor}
+              foco={document.getElementById("personalId")}
+            />
+          )}
+          {modalArt && (
+            <FiltroArticulo
+              setModal={setModalArt}
+              setObjeto={setDataCabecera}
+              foco={document.getElementById("cantidad")}
+            />
+          )}
+        </>
       )}
     </>
   );

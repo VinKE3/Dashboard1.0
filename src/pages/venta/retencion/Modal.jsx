@@ -421,18 +421,20 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataDetalle(SepararDocumentoVentaId);
   };
   const CargarDetalle = async (value, click = false) => {
-    if (click) {
-      let row = value.target.closest("tr");
-      let id = row.children[1].innerText;
-      setHabilitarCampos(false);
-      setDataCabecera(dataDetalle.find((map) => map.documentoVentaId === id));
-    } else {
-      setHabilitarCampos(false);
-      setDataCabecera(
-        dataDetalle.find((map) => map.documentoVentaId === value)
-      );
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.children[1].innerText;
+        setHabilitarCampos(false);
+        setDataCabecera(dataDetalle.find((map) => map.documentoVentaId === id));
+      } else {
+        setHabilitarCampos(false);
+        setDataCabecera(
+          dataDetalle.find((map) => map.documentoVentaId === value)
+        );
+      }
+      document.getElementById("porcentaje").focus();
     }
-    document.getElementById("porcentaje").focus();
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -808,7 +810,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="fechaEmision"
                 autoComplete="off"
                 autoFocus={modo == "Modificar"}
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                 onChange={ValidarData}
                 onBlur={() => {
@@ -871,7 +873,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <Checkbox
                     inputId="varios"
                     name="varios"
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     onChange={(e) => {
                       setCheckVarios(e.checked);
                       ClientesVarios(e);
@@ -896,7 +898,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="clienteDireccion"
               placeholder="Dirección"
               autoComplete="off"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.clienteDireccion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -913,7 +915,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="tipoVentaId"
                 value={data.tipoVentaId ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 className={Global.InputStyle}
               >
                 {dataTipoVenta.map((map) => (
@@ -932,7 +934,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="tipoCobroId"
                 value={data.tipoCobroId ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 className={Global.InputStyle}
               >
                 {dataTipoCobro.map((map) => (
@@ -954,7 +956,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="monedaId"
                 value={data.monedaId ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 className={Global.InputStyle}
               >
                 {dataMoneda.map((map) => (
@@ -975,7 +977,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Tipo de Cambio"
                 autoComplete="off"
                 min={0}
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.tipoCambio ?? ""}
                 onChange={ValidarData}
                 className={
@@ -1008,7 +1010,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="observacion"
               placeholder="Observación"
               autoComplete="off"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.observacion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -1144,7 +1146,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder={"% Retención"}
                   autoComplete="off"
                   min={0}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={dataCabecera.porcentaje ?? ""}
                   onChange={ValidarDataCabecera}
                   className={Global.InputStyle}

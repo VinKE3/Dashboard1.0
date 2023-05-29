@@ -588,14 +588,16 @@ const Modal = ({ setModal, modo, objeto }) => {
     return [true, ""];
   };
   const CargarDetalle = async (value, click = false) => {
-    if (click) {
-      let row = value.target.closest("tr");
-      let id = row.firstChild.innerText;
-      setDataCabecera(dataDetalle.find((map) => map.id === id));
-    } else {
-      setDataCabecera(dataDetalle.find((map) => map.id === value));
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        setDataCabecera(dataDetalle.find((map) => map.id === id));
+      } else {
+        setDataCabecera(dataDetalle.find((map) => map.id === value));
+      }
+      document.getElementById("cantidad").focus();
     }
-    document.getElementById("cantidad").focus();
   };
   const AgregarDetalle = async () => {
     //Obtiene resultado de Validación
@@ -1078,9 +1080,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Nuevo"
-                        ? Global.InputStyle
-                        : Global.InputStyle
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                     }
                   />
                 </div>
@@ -1100,9 +1100,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Nuevo"
-                        ? Global.InputStyle
-                        : Global.InputStyle
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                     }
                   />
                 </div>
@@ -1119,7 +1117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="fechaEmision"
                     autoComplete="off"
                     autoFocus={modo == "Modificar"}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     onBlur={() => {
@@ -1140,7 +1138,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaVencimiento"
                     name="fechaVencimiento"
                     autoComplete="off"
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={moment(data.fechaVencimiento ?? "").format(
                       "yyyy-MM-DD"
                     )}
@@ -1204,7 +1202,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Checkbox
                         inputId="varios"
                         name="varios"
-                        disabled={modo == "Consultar" }
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           setCheckVarios(e.checked);
                           ClientesVarios(e);
@@ -1253,7 +1251,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={(e) => {
                       CambioDireccion(e.target.value);
                     }}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {Object.entries(dataClienteDirec).length > 0 &&
@@ -1279,7 +1277,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="contactoId"
                       value={data.contactoId ?? ""}
                       onChange={ValidarData}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       className={Global.InputStyle}
                     >
                       {/* <option key={"-1"} value={""}>
@@ -1306,7 +1304,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="contactoTelefono"
                       placeholder="Teléfono"
                       autoComplete="off"
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={data.contactoTelefono ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1345,7 +1343,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Checkbox
                         inputId="editarCargo"
                         name="editarCargo"
-                        disabled={modo == "Consultar" }
+                        disabled={modo == "Consultar"}
                         checked={checkCargo}
                         onChange={(e) => setCheckCargo(e.checked)}
                       />
@@ -1372,7 +1370,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="contactoCorreoElectronico"
                       placeholder="E-mail"
                       autoComplete="off"
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={data.contactoCorreoElectronico ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1391,7 +1389,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="contactoCelular"
                       placeholder="Celular"
                       autoComplete="off"
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={data.contactoCelular ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -1409,7 +1407,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="personalId"
                   value={data.personalId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   className={Global.InputStyle}
                 >
                   {dataVendedor.map((map) => (
@@ -1430,7 +1428,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="monedaId"
                     value={data.monedaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataMoneda.map((map) => (
@@ -1451,7 +1449,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton}
@@ -1479,7 +1477,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoVentaId"
                     value={data.tipoVentaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataTipoVenta.map((map) => (
@@ -1507,7 +1505,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoCobroId"
                     value={data.tipoCobroId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataTipoCobro
@@ -1537,7 +1535,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         name="numeroOperacion"
                         placeholder="Número de Operación"
                         autoComplete="off"
-                        disabled={modo == "Consultar" }
+                        disabled={modo == "Consultar"}
                         value={data.numeroOperacion ?? ""}
                         onChange={ValidarData}
                         className={Global.InputStyle}
@@ -1562,7 +1560,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="cuentaCorrienteDescripcion"
                     value={data.cuentaCorrienteDescripcion ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     <option key={"-1"} value={""}>
@@ -1588,7 +1586,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="validez"
                     placeholder="Validez de la cotización"
                     autoComplete="off"
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={data.validez ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1607,7 +1605,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="observacion"
                     placeholder="Observación"
                     autoComplete="off"
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={data.observacion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputBoton}
@@ -1655,7 +1653,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           inputId="productos"
                           name="productos"
                           value="productos"
-                          disabled={modo == "Consultar" }
+                          disabled={modo == "Consultar"}
                           onChange={(e) => {
                             ValidarDataCabecera(e);
                           }}
@@ -1675,7 +1673,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           inputId="variosFiltro"
                           name="variosFiltro"
                           value="variosFiltro"
-                          disabled={modo == "Consultar" }
+                          disabled={modo == "Consultar"}
                           onChange={(e) => {
                             ValidarDataCabecera(e);
                           }}
@@ -1772,7 +1770,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="Cantidad"
                       autoComplete="off"
                       min={0}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
                         ValidarDataCabecera(e);
@@ -1795,7 +1793,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="Precio"
                       autoComplete="off"
                       min={0}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
                         ValidarDataCabecera(e);
@@ -1832,7 +1830,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       placeholder="Importe"
                       autoComplete="off"
                       min={0}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
                         ValidarDataCabecera(e);
@@ -1908,7 +1906,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="porcentajeIGV"
                     value={data.porcentajeIGV ?? ""}
                     onChange={(e) => ValidarData(e)}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.FilaContenidoSelect}
                   >
                     {dataIgv.map((map) => (
@@ -1950,7 +1948,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="porcentajeRetencion"
                     value={data.porcentajeRetencion ?? ""}
                     onChange={(e) => ValidarData(e)}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.FilaContenidoSelect}
                   >
                     {dataRetencion.map((map) => (
@@ -1981,7 +1979,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="porcentajePercepcion"
                     value={data.porcentajePercepcion ?? ""}
                     onChange={(e) => ValidarData(e)}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.FilaContenidoSelect}
                   >
                     {dataPercepcion.map((map) => (

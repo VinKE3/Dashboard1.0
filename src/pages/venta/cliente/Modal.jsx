@@ -16,6 +16,7 @@ import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import * as Global from "../../../components/Global";
+import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const TablaStyle = styled.div`
@@ -71,19 +72,19 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [respuesta, setEliminar] = useState(false);
 
   const [dataDireccion, setDataDireccion] = useState([]);
-  const [objetoDireccion, setObjetoDireccion] = useState([]);
+  const [objDireccion, setObjDireccion] = useState([]);
   const [dataUbiDirec, setDataUbiDirec] = useState([]);
-  const [estadoDireccion, setEstadoDireccion] = useState(false);
+  const [habilitarDireccion, setHabilitarDireccion] = useState(false);
 
   const [dataContacto, setDataContacto] = useState([]);
   const [dataContactoCargo, setDataContactoCargo] = useState([]);
-  const [objetoContacto, setObjetoContacto] = useState([]);
-  const [estadoContacto, setEstadoContacto] = useState(false);
+  const [objContacto, setObjContacto] = useState([]);
+  const [habilitarContacto, setHabilitarContacto] = useState(false);
 
   const [dataPersonal, setDataPersonal] = useState([]);
   const [dataPersonalCombo, setDataPersonalCombo] = useState([]);
-  const [objetoPersonal, setObjetoPersonal] = useState([]);
-  const [estadoPersonal, setEstadoPersonal] = useState(false);
+  const [objPersonal, setObjPersonal] = useState([]);
+  const [habilitarPersonal, setHabilitarPersonal] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -110,8 +111,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   useEffect(() => {
     if (Object.keys(dataUbiDirec).length > 0) {
-      setObjetoDireccion({
-        ...objetoDireccion,
+      setObjDireccion({
+        ...objDireccion,
         departamentoId: dataUbiDirec.departamentoId,
         provinciaId: dataUbiDirec.provinciaId,
         distritoId: dataUbiDirec.distritoId,
@@ -125,7 +126,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       ListarDireccion();
       ListarContacto();
       ListarPersonal();
-      TablasCargo();
+      TablasContacto();
       TablasPersonal();
     }
   }, []);
@@ -158,31 +159,31 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ValidarDataDireccion = async ({ target }) => {
     if (target.name == "isActivo") {
-      setObjetoDireccion((prevState) => ({
+      setObjDireccion((prevState) => ({
         ...prevState,
         [target.name]: target.checked,
       }));
     } else {
-      setObjetoDireccion((prevState) => ({
+      setObjDireccion((prevState) => ({
         ...prevState,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const ValidarDataContacto = async ({ target }) => {
-    setObjetoContacto((prevState) => ({
+    setObjContacto((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
   const ValidarDataPersonal = async ({ target }) => {
     if (target.name == "default") {
-      setObjetoPersonal((prevState) => ({
+      setObjPersonal((prevState) => ({
         ...prevState,
         [target.name]: target.checked,
       }));
     } else {
-      setObjetoPersonal((prevState) => ({
+      setObjPersonal((prevState) => ({
         ...prevState,
         [target.name]: target.value.toUpperCase(),
       }));
@@ -198,25 +199,47 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       tipo = "";
     }
-    ConsultarDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
+    GetDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
   };
-  const AgregarDireccion = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarDireccion();
-    } else {
-      await GetDireccion(id);
+  const AgregarDireccion = async (value = 0, e = null, click = false) => {
+    if (modo != "Consultar") {
+      await Limpiar();
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        await GetDireccion(id);
+      } else {
+        if (e.target.innerText == "AGREGAR") {
+          await LimpiarDireccion();
+        } else {
+          await GetDireccion(value);
+        }
+      }
+      setHabilitarDireccion(true);
+      if (habilitarDireccion) {
+        document.getElementById("direccionDireccion").focus();
+      }
     }
-    setEstadoDireccion(true);
   };
-  const AgregarContacto = async (e, id = 0) => {
-    await Limpiar(e);
-    if (e.target.innerText == "AGREGAR") {
-      await LimpiarContacto();
-    } else {
-      await GetContacto(id);
+  const AgregarContacto = async (value = 0, e = null, click = false) => {
+    if (modo != "Consultar") {
+      await Limpiar();
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        await GetContacto(id);
+      } else {
+        if (e.target.innerText == "AGREGAR") {
+          await LimpiarContacto();
+        } else {
+          await GetContacto(value);
+        }
+      }
+      setHabilitarContacto(true);
+      if (habilitarContacto) {
+        document.getElementById("nombresContacto").focus();
+      }
     }
-    setEstadoContacto(true);
   };
   const AgregarPersonal = async (e, id = 0) => {
     await Limpiar(e);
@@ -225,7 +248,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       await GetPersonal(id);
     }
-    setEstadoPersonal(true);
+    setHabilitarPersonal(true);
   };
   const Limpiar = async () => {
     setMen([]);
@@ -233,7 +256,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     setEliminar(false);
   };
   const LimpiarDireccion = async () => {
-    setObjetoDireccion({
+    setObjDireccion({
       id: 0,
       clienteId: data.id,
       direccion: "",
@@ -245,7 +268,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     });
   };
   const LimpiarContacto = async () => {
-    setObjetoContacto({
+    setObjContacto({
       id: "",
       clienteId: data.id,
       contactoId: 0,
@@ -259,7 +282,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     });
   };
   const LimpiarPersonal = async () => {
-    setObjetoPersonal({
+    setObjPersonal({
       id: "",
       clienteId: data.id,
       personalId: "<<NI>>01",
@@ -283,9 +306,9 @@ const Modal = ({ setModal, modo, objeto }) => {
     await ListarContacto();
     await ListarPersonal();
     await Limpiar();
-    setEstadoDireccion(false);
-    setEstadoContacto(false);
-    setEstadoPersonal(false);
+    setHabilitarDireccion(false);
+    setHabilitarContacto(false);
+    setHabilitarPersonal(false);
   };
   //#endregion
 
@@ -299,30 +322,48 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoVenta(result.data.data.tiposVenta);
     setDataTipoCobro(result.data.data.tiposCobro);
   };
-  const ConsultarDocumento = async (filtroApi = "") => {
+  const GetDocumento = async (filtroApi = "") => {
     document.getElementById("consultarApi").hidden = true;
-    const res = await ApiMasy.get(`api/Servicio/ConsultarRucDni${filtroApi}`);
-    if (res.status == 200) {
-      let model = {
-        numeroDocumentoIdentidad: res.data.data.numeroDocumentoIdentidad,
-        nombre: res.data.data.nombre,
-        direccionPrincipal: res.data.data.direccion,
-        departamentoId: res.data.data.ubigeo[0],
-        provinciaId: res.data.data.ubigeo[1],
-        distritoId: res.data.data.ubigeo[2],
-      };
+    const result = await ApiMasy.get(
+      `api/Servicio/ConsultarRucDni${filtroApi}`
+    );
+    if (result.name == "AxiosError") {
+      let err = "";
+      if (result.response.data == "") {
+        err = result.message;
+      } else {
+        err = String(result.response.data.messages[0].textos);
+      }
+      toast.error(err, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      document.getElementById("consultarApi").hidden = false;
+      document.getElementById("numeroDocumentoIdentidad").focus();
+    } else {
       setData({
         ...data,
-        numeroDocumentoIdentidad: model.numeroDocumentoIdentidad,
-        nombre: model.nombre,
-        direccionPrincipal: model.direccionPrincipal,
+        numeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
+        nombre: result.data.data.nombre,
+        direccionPrincipal: result.data.data.direccionPrincipal,
         departamentoId:
-          model.departamentoId == ""
+          result.data.data.departamentoId == ""
             ? data.departamentoId
-            : model.departamentoId,
+            : result.data.data.departamentoId,
         provinciaId:
-          model.provinciaId == "" ? data.provinciaId : model.provinciaId,
-        distritoId: model.distritoId == "" ? data.distritoId : model.distritoId,
+          result.data.data.provinciaId == ""
+            ? data.provinciaId
+            : result.data.data.provinciaId,
+        distritoId:
+          result.data.data.distritoId == ""
+            ? data.distritoId
+            : result.data.data.distritoId,
       });
       toast.info("Datos extraídos exitosamente", {
         position: "bottom-right",
@@ -335,21 +376,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         theme: "colored",
       });
       document.getElementById("consultarApi").hidden = false;
-    } else {
-      toast.error(String(res.response.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      document.getElementById("consultarApi").hidden = false;
+      document.getElementById("zonaId").focus();
     }
   };
-
   const ListarDireccion = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${data.id}`
@@ -363,17 +392,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClienteDireccion/${id}`
     );
-    setObjetoDireccion(result.data.data);
+    setObjDireccion(result.data.data);
   };
   const EnviarClienteDireccion = async () => {
-    if (objetoDireccion.id == 0) {
+    if (objDireccion.id == 0) {
       let existe = dataDireccion.find(
-        (map) => map.direccion == objetoDireccion.direccion
+        (map) => map.direccion == objDireccion.direccion
       );
       if (existe == undefined) {
         await Insert(
           ["Mantenimiento", "ClienteDireccion"],
-          objetoDireccion,
+          objDireccion,
           setTipoMen,
           setMen
         );
@@ -392,14 +421,14 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       await Update(
         ["Mantenimiento", "ClienteDireccion"],
-        objetoDireccion,
+        objDireccion,
         setTipoMen,
         setMen
       );
     }
   };
 
-  const TablasCargo = async () => {
+  const TablasContacto = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ClienteContacto/FormularioTablas`
     );
@@ -413,17 +442,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const GetContacto = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/ClienteContacto/${id}`);
-    setObjetoContacto(result.data.data);
+    setObjContacto(result.data.data);
   };
   const EnviarClienteContacto = async () => {
-    if (objetoContacto.id == 0) {
+    if (objContacto.id == 0) {
       let existe = dataContacto.find(
-        (map) => map.nombres == objetoContacto.nombres
+        (map) => map.nombres == objContacto.nombres
       );
       if (existe == undefined) {
         await Insert(
           ["Mantenimiento", "ClienteContacto"],
-          objetoContacto,
+          objContacto,
           setTipoMen,
           setMen
         );
@@ -442,7 +471,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       await Update(
         ["Mantenimiento", "ClienteContacto"],
-        objetoContacto,
+        objContacto,
         setTipoMen,
         setMen
       );
@@ -480,17 +509,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const GetPersonal = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/ClientePersonal/${id}`);
-    setObjetoPersonal(result.data.data);
+    setObjPersonal(result.data.data);
   };
   const EnviarClientePersonal = async () => {
-    if (objetoPersonal.id == 0) {
+    if (objPersonal.id == 0) {
       let existe = dataPersonal.find(
-        (map) => map.personalId == objetoPersonal.personalId
+        (map) => map.personalId == objPersonal.personalId
       );
       if (existe == undefined) {
         await Insert(
           ["Mantenimiento", "ClientePersonal"],
-          objetoPersonal,
+          objPersonal,
           setTipoMen,
           setMen
         );
@@ -509,7 +538,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       await Update(
         ["Mantenimiento", "ClientePersonal"],
-        objetoPersonal,
+        objPersonal,
         setTipoMen,
         setMen
       );
@@ -538,7 +567,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton"
-                  onClick={(e) => AgregarDireccion(e, row.values.id)}
+                  onClick={(e) => AgregarDireccion(row.values.id, e)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -592,7 +621,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton"
-                  onClick={(e) => AgregarContacto(e, row.values.id)}
+                  onClick={(e) => AgregarContacto(row.values.id, e)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -713,7 +742,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             >
               <div className={Global.ContenedorBasico + " mt-4"}>
                 <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputTercio}>
+                  <div className={Global.Input25pct}>
                     <label htmlFor="id" className={Global.LabelStyle}>
                       Código
                     </label>
@@ -743,7 +772,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoFocus
                       value={data.tipoDocumentoIdentidadId ?? ""}
                       onChange={ValidarData}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       className={Global.InputStyle}
                     >
                       {dataTipoDoc.map((tipo) => (
@@ -766,7 +795,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="numeroDocumentoIdentidad"
                       placeholder="N° Documento Identidad"
                       autoComplete="off"
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={ValidarData}
                       className={
@@ -778,6 +807,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <button
                       id="consultarApi"
                       hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={(e) => ValidarConsultarDocumento(e)}
                       className={
                         Global.BotonBuscar +
@@ -799,7 +829,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="zonaId"
                       value={data.zonaId ?? ""}
                       onChange={ValidarData}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       className={Global.InputStyle}
                     >
                       {dataZona.map((map) => (
@@ -820,7 +850,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="nombre"
                     placeholder="Nombre"
                     autoComplete="off"
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={data.nombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -837,7 +867,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="telefono"
                       placeholder="Teléfono"
                       autoComplete="off"
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={data.telefono ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -856,7 +886,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="correoElectronico"
                       placeholder="Correo"
                       autoComplete="off"
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       value={data.correoElectronico ?? ""}
                       onChange={ValidarData}
                       className={Global.InputStyle}
@@ -876,7 +906,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="direccionPrincipal"
                     placeholder="Dirección Principal"
                     autoComplete="off"
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={data.direccionPrincipal ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -902,7 +932,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="tipoVentaId"
                       value={data.tipoVentaId ?? ""}
                       onChange={ValidarData}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       className={Global.InputStyle}
                     >
                       {dataTipoVenta.map((map) => (
@@ -921,7 +951,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="tipoCobroId"
                       value={data.tipoCobroId ?? ""}
                       onChange={ValidarData}
-                      disabled={modo == "Consultar" }
+                      disabled={modo == "Consultar"}
                       className={Global.InputStyle}
                     >
                       {dataTipoCobro
@@ -946,7 +976,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="observacion"
                     placeholder="Observación"
                     autoComplete="off"
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={data.observacion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -969,7 +999,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Máximo US$"
                         autoComplete="off"
                         min={0}
-                        disabled={modo == "Consultar" }
+                        disabled={modo == "Consultar"}
                         value={data.maximoCreditoUSD ?? ""}
                         onChange={ValidarData}
                         className={Global.InputStyle}
@@ -1008,7 +1038,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Máximo S/"
                         autoComplete="off"
                         min={0}
-                        disabled={modo == "Consultar" }
+                        disabled={modo == "Consultar"}
                         value={data.maximoCreditoPEN ?? ""}
                         onChange={ValidarData}
                         className={Global.InputStyle}
@@ -1035,6 +1065,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
             </TabPanel>
+
             {modo != "Nuevo" ? (
               <TabPanel
                 header="Direcciones"
@@ -1057,8 +1088,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       botonText="Agregar"
                       botonClass={Global.BotonAgregar}
                       botonIcon={faPlus}
+                      autoFoco={true}
                       click={(e) => {
-                        AgregarDireccion(e);
+                        AgregarDireccion(null, e);
                       }}
                       contenedor=""
                     />
@@ -1067,7 +1099,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Boton */}
 
                 {/* Form Direcciones */}
-                {estadoDireccion && (
+                {habilitarDireccion && (
                   <div
                     className={
                       Global.ContenedorBasico +
@@ -1096,12 +1128,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                           </label>
                           <input
                             type="text"
-                            id="direccion"
-                            name="direccion"
+                            id="direccionDireccion"
+                            name="direccionContacto"
                             placeholder="Dirección secundaria"
                             autoComplete="off"
-                            disabled={modo == "Consultar" }
-                            value={objetoDireccion.direccion ?? ""}
+                            autoFocus={habilitarDireccion}
+                            disabled={modo == "Consultar"}
+                            value={objDireccion.direccion ?? ""}
                             onChange={ValidarDataDireccion}
                             className={Global.InputBoton}
                           />
@@ -1111,10 +1144,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                             <Checkbox
                               inputId="isActivo"
                               name="isActivo"
-                              disabled={modo == "Consultar" }
-                              value={objetoDireccion.isActivo}
+                              disabled={modo == "Consultar"}
+                              value={objDireccion.isActivo}
                               onChange={ValidarDataDireccion}
-                              checked={objetoDireccion.isActivo ? true : ""}
+                              checked={objDireccion.isActivo ? true : ""}
                             ></Checkbox>
                           </div>
                           <label
@@ -1131,9 +1164,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       setDataUbigeo={setDataUbiDirec}
                       id={["depaId", "provId", "disId"]}
                       dato={{
-                        departamentoId: objetoDireccion.departamentoId,
-                        provinciaId: objetoDireccion.provinciaId,
-                        distritoId: objetoDireccion.distritoId,
+                        departamentoId: objDireccion.departamentoId,
+                        provinciaId: objDireccion.provinciaId,
+                        distritoId: objDireccion.distritoId,
                       }}
                     ></Ubigeo>
                     <div className={Global.ContenedorInputs}>
@@ -1150,8 +1183,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="comentario"
                           placeholder="Comentario"
                           autoComplete="off"
-                          disabled={modo == "Consultar" }
-                          value={objetoDireccion.comentario ?? ""}
+                          disabled={modo == "Consultar"}
+                          value={objDireccion.comentario ?? ""}
                           onChange={ValidarDataDireccion}
                           className={Global.InputStyle}
                         />
@@ -1164,6 +1197,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ) : (
                         <button
                           type="button"
+                          id="enviarClientDireccion"
+                          onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarClienteDireccion}
                           className={
                             Global.BotonModalBase +
@@ -1176,7 +1211,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       )}
                       <button
                         type="button"
-                        onClick={() => setEstadoDireccion(false)}
+                        id="cerrarClienteDireccion"
+                        onKeyDown={(e) => Funciones.KeyClick(e)}
+                        onClick={() => setHabilitarDireccion(false)}
                         className={
                           Global.BotonModalBase +
                           Global.BotonCancelarModal +
@@ -1192,7 +1229,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Form Direcciones */}
                 {/* Tabla */}
                 <TablaStyle>
-                  <TableBasic columnas={colDireccion} datos={dataDireccion} />
+                  <TableBasic
+                    id="tablaDireccionCliente"
+                    columnas={colDireccion}
+                    datos={dataDireccion}
+                    DobleClick={(e) => AgregarDireccion(e, null, true)}
+                  />
                 </TablaStyle>
                 {/* Tabla */}
               </TabPanel>
@@ -1217,8 +1259,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       botonText="Agregar"
                       botonClass={Global.BotonAgregar}
                       botonIcon={faPlus}
+                      autoFoco={true}
                       click={(e) => {
-                        AgregarContacto(e);
+                        AgregarContacto(null, e);
                       }}
                       contenedor=""
                     />
@@ -1227,7 +1270,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Boton */}
 
                 {/* Form Contactos */}
-                {estadoContacto && (
+                {habilitarContacto && (
                   <div
                     className={
                       Global.ContenedorBasico +
@@ -1253,12 +1296,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                         </label>
                         <input
                           type="text"
-                          id="nombres"
-                          name="nombres"
+                          id="nombresContacto"
+                          name="nombresContactoCliente"
                           placeholder="Nombres"
                           autoComplete="off"
-                          disabled={modo == "Consultar" }
-                          value={objetoContacto.nombres ?? ""}
+                          autoFocus={habilitarContacto}
+                          disabled={modo == "Consultar"}
+                          value={objContacto.nombres ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
                         />
@@ -1277,8 +1321,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="N° Documento Identidad"
                           autoComplete="off"
                           maxLength="15"
-                          disabled={modo == "Consultar" }
-                          value={objetoContacto.numeroDocumentoIdentidad ?? ""}
+                          disabled={modo == "Consultar"}
+                          value={objContacto.numeroDocumentoIdentidad ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
                         />
@@ -1293,9 +1337,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <select
                           id="cargoId"
                           name="cargoId"
-                          value={objetoContacto.cargoId ?? ""}
+                          value={objContacto.cargoId ?? ""}
                           onChange={ValidarDataContacto}
-                          disabled={modo == "Consultar" }
+                          disabled={modo == "Consultar"}
                           className={Global.InputStyle}
                         >
                           {dataContactoCargo.map((cargo) => (
@@ -1316,8 +1360,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="Celular"
                           autoComplete="off"
                           maxLength="15"
-                          disabled={modo == "Consultar" }
-                          value={objetoContacto.celular ?? ""}
+                          disabled={modo == "Consultar"}
+                          value={objContacto.celular ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
                         />
@@ -1336,8 +1380,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="Teléfono"
                           autoComplete="off"
                           maxLength="15"
-                          disabled={modo == "Consultar" }
-                          value={objetoContacto.telefono ?? ""}
+                          disabled={modo == "Consultar"}
+                          value={objContacto.telefono ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
                         />
@@ -1355,8 +1399,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           placeholder="Correo"
                           name="correoElectronico"
                           autoComplete="off"
-                          disabled={modo == "Consultar" }
-                          value={objetoContacto.correoElectronico ?? ""}
+                          disabled={modo == "Consultar"}
+                          value={objContacto.correoElectronico ?? ""}
                           onChange={ValidarDataContacto}
                           className={Global.InputStyle}
                         />
@@ -1369,12 +1413,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </label>
                       <input
                         type="text"
-                        id="direccion"
+                        id="direccionContacto"
                         name="direccion"
                         placeholder="Dirección"
                         autoComplete="off"
-                        disabled={modo == "Consultar" }
-                        value={objetoContacto.direccion ?? ""}
+                        disabled={modo == "Consultar"}
+                        value={objContacto.direccion ?? ""}
                         onChange={ValidarDataContacto}
                         className={Global.InputStyle}
                       />
@@ -1386,6 +1430,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ) : (
                         <button
                           type="button"
+                          id="enviarClienteContacto"
+                          onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarClienteContacto}
                           className={
                             Global.BotonModalBase +
@@ -1398,7 +1444,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       )}
                       <button
                         type="button"
-                        onClick={() => setEstadoContacto(false)}
+                        id="cerrarClienteContacto"
+                        onKeyDown={(e) => Funciones.KeyClick(e)}
+                        onClick={() => setHabilitarContacto(false)}
                         className={
                           Global.BotonModalBase +
                           Global.BotonCancelarModal +
@@ -1414,13 +1462,19 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Form Contactos */}
                 {/* Tabla */}
                 <TablaStyle>
-                  <TableBasic columnas={colContacto} datos={dataContacto} />
+                  <TableBasic
+                    id="tablaContactoCliente"
+                    columnas={colContacto}
+                    datos={dataContacto}
+                    DobleClick={(e) => AgregarContacto(e, null, true)}
+                  />
                 </TablaStyle>
                 {/* Tabla */}
               </TabPanel>
             ) : (
               ""
             )}
+
             {modo != "Nuevo" ? (
               <TabPanel header="Personal" leftIcon="pi pi-user mr-2">
                 {/* Boton */}
@@ -1439,6 +1493,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       botonText="Agregar"
                       botonClass={Global.BotonAgregar}
                       botonIcon={faPlus}
+                      autoFoco={true}
                       click={(e) => {
                         AgregarPersonal(e);
                       }}
@@ -1449,7 +1504,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Boton */}
 
                 {/* Form Personal */}
-                {estadoPersonal && (
+                {habilitarPersonal && (
                   <div
                     className={
                       Global.ContenedorBasico +
@@ -1480,9 +1535,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                           <select
                             id="personalId"
                             name="personalId"
-                            value={objetoPersonal.personalId ?? ""}
+                            autoFocus={habilitarPersonal}
+                            value={objPersonal.personalId ?? ""}
                             onChange={ValidarDataPersonal}
-                            disabled={modo == "Consultar" }
+                            disabled={modo == "Consultar"}
                             className={Global.InputBoton}
                           >
                             {dataPersonalCombo.map((personal) => (
@@ -1497,10 +1553,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                             <Checkbox
                               inputId="default"
                               name="default"
-                              disabled={modo == "Consultar" }
-                              value={objetoPersonal.default}
+                              disabled={modo == "Consultar"}
+                              value={objPersonal.default}
                               onChange={ValidarDataPersonal}
-                              checked={objetoPersonal.default ? true : ""}
+                              checked={objPersonal.default ? true : ""}
                             ></Checkbox>
                           </div>
                           <label
@@ -1519,6 +1575,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ) : (
                         <button
                           type="button"
+                          id="enviarClientePersonal"
+                          onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarClientePersonal}
                           className={
                             Global.BotonModalBase +
@@ -1531,7 +1589,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       )}
                       <button
                         type="button"
-                        onClick={() => setEstadoPersonal(false)}
+                        id="cerrarClientePersonal"
+                        onKeyDown={(e) => Funciones.KeyClick(e)}
+                        onClick={() => setHabilitarPersonal(false)}
                         className={
                           Global.BotonModalBase +
                           Global.BotonCancelarModal +
@@ -1548,7 +1608,11 @@ const Modal = ({ setModal, modo, objeto }) => {
 
                 {/* Tabla */}
                 <TablaPersonal>
-                  <TableBasic columnas={colPersonal} datos={dataPersonal} />
+                  <TableBasic
+                    id="tablaPersonalCliente"
+                    columnas={colPersonal}
+                    datos={dataPersonal}
+                  />
                 </TablaPersonal>
                 {/* Tabla */}
               </TabPanel>

@@ -229,6 +229,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones Detalles
   const ValidarDetalle = async () => {
     if (Object.entries(dataCabecera).length == 0) {
+      document.getElementById("consultarConcepto").focus();
+
       return [false, "Seleccione un Item"];
     }
     //Valida montos
@@ -336,6 +338,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
       //Luego de añadir el artículo se limpia
       setDataCabecera([]);
+      document.getElementById("consultarConcepto").focus();
     } else {
       toast.error(resultado[1], {
         position: "bottom-right",
@@ -348,10 +351,22 @@ const Modal = ({ setModal, modo, objeto }) => {
         theme: "colored",
       });
     }
-    document.getElementById("consultarConcepto").focus();
   };
-  const CargarDetalle = async (id) => {
-    setDataCabecera(dataDetalle.find((map) => map.documentoCompraId === id));
+  const CargarDetalle = async (value, click = false) => {
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        setDataCabecera(
+          dataDetalle.find((map) => map.documentoCompraId === id)
+        );
+      } else {
+        setDataCabecera(
+          dataDetalle.find((map) => map.documentoCompraId === value)
+        );
+      }
+      document.getElementById("abono").focus();
+    }
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -554,8 +569,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             modo={modo}
             menu={["Compra", "Cheque"]}
             titulo="Cheque"
-            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+            foco={document.getElementById("tablaCheque")}
             cerrar={false}
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -586,9 +602,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.numeroFactura ?? ""}
                     onChange={ValidarData}
                     className={
-                      modo == "Nuevo"
-                        ? Global.InputStyle
-                        : Global.InputStyle
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                     }
                   />
                 </div>
@@ -599,6 +613,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="plazo"
                     name="plazo"
+                    autoFocus={modo == "Modificar"}
                     disabled={modo == "Consultar"}
                     value={data.plazo ?? ""}
                     onChange={ValidarData}
@@ -714,6 +729,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     }
                     hidden={modo == "Consultar"}
                     disabled={checkVarios}
+                    onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroProveedor()}
                   >
                     <FaSearch></FaSearch>
@@ -860,6 +876,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                     hidden={modo == "Consultar"}
+                    onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
@@ -915,6 +932,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="consultarConcepto"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={(e) => {
                         setDataCabecera([]);
                         AbrirFiltroConcepto(e);
@@ -964,6 +982,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="enviarDetalle"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={(e) => AgregarDetalle(e)}
                     >
                       <FaPlus></FaPlus>
@@ -989,6 +1008,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   "border border-b-0",
                   "border",
                 ]}
+                DobleClick={(e) => CargarDetalle(e, true)}
               />
             </TablaStyle>
             {/* Tabla Detalle */}

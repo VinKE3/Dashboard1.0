@@ -84,13 +84,9 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
+  //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
   useEffect(() => {
     if (Object.keys(dataCliente).length > 0) {
       Cliente();
@@ -497,8 +493,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     document.getElementById("consultarArticulo").focus();
   };
-  const CargarDetalle = async (id) => {
-    setDataCabecera(dataDetalle.find((map) => map.id === id));
+  const CargarDetalle = async (value, click = false) => {
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        setDataCabecera(dataDetalle.find((map) => map.id === id));
+      } else {
+        setDataCabecera(dataDetalle.find((map) => map.id === value));
+      }
+      document.getElementById("cantidad").focus();
+    }
   };
   const EliminarDetalle = async (id) => {
     let i = 1;
@@ -743,628 +748,670 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
   return (
     <>
-      <ModalCrud
-        setModal={setModal}
-        objeto={data}
-        modo={modo}
-        menu={["Almacen", "SalidaAlmacen"]}
-        titulo="Salida de Articulos"
-        tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
-        cerrar={false}
-      >
-        {tipoMensaje > 0 && (
-          <Mensajes
-            tipoMensaje={tipoMensaje}
-            mensaje={mensaje}
-            Click={() => OcultarMensajes()}
-          />
-        )}
-        {/* Cabecera */}
-        <div
-          className={
-            Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
-          }
-        >
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputTercio}>
-              <label htmlFor="serie" className={Global.LabelStyle}>
-                Serie
-              </label>
-              <input
-                type="text"
-                id="serie"
-                name="serie"
-                placeholder="Serie"
-                maxLength="4"
-                autoComplete="off"
-                autoFocus
-                disabled={modo == "Nuevo" ? false : true}
-                value={data.serie ?? ""}
-                onChange={ValidarData}
-                onBlur={(e) => Numeracion(e)}
-                className={
-                  modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
-                }
-              />
-            </div>
-            <div className={Global.InputMitad}>
-              <label htmlFor="numero" className={Global.LabelStyle}>
-                Número
-              </label>
-              <input
-                type="text"
-                id="numero"
-                name="numero"
-                placeholder="Número"
-                maxLength="10"
-                autoComplete="off"
-                disabled={modo == "Nuevo" ? false : true}
-                value={data.numero ?? ""}
-                onChange={ValidarData}
-                onBlur={(e) => Numeracion(e)}
-                className={
-                  modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
-                }
-              />
-            </div>
-            <div className={Global.InputTercio}>
-              <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                F. Emisión
-              </label>
-              <input
-                type="date"
-                id="fechaEmision"
-                name="fechaEmision"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={moment(data.fechaInicio ?? "").format("yyyy-MM-DD")}
-                onChange={ValidarData}
-                onBlur={FechaEmision}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputTercio}>
-              <label htmlFor="fechaTerminacion" className={Global.LabelStyle}>
-                F. Terminación
-              </label>
-              <input
-                type="date"
-                id="fechaTerminacion"
-                name="fechaTerminacion"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={moment(data.fechaTerminacion ?? "").format("yyyy-MM-DD")}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="clienteNombre" className={Global.LabelStyle}>
-                Cliente
-              </label>
-              <input
-                type="text"
-                id="clienteNombre"
-                name="clienteNombre"
-                placeholder="Buscar Cliente"
-                autoComplete="off"
-                disabled={true}
-                value={data.clienteNombre ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
-              />
-              <button
-                id="consultar"
-                className={
-                  Global.BotonBuscar + Global.BotonPrimary + " !rounded-none"
-                }
-                hidden={modo == "Consultar"}
-                disabled={checkVarios}
-                onClick={() => AbrirFiltroCliente()}
-              >
-                <FaSearch></FaSearch>
-              </button>
-              <div className={Global.Input + " w-20"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
-                  <Checkbox
-                    inputId="varios"
-                    name="varios"
-                    disabled={modo == "Consultar"}
-                    onChange={(e) => {
-                      setCheckVarios(e.checked);
-                      ClientesVarios(e);
-                    }}
-                    checked={checkVarios}
-                  ></Checkbox>
-                </div>
-                <label htmlFor="varios" className={Global.LabelCheckStyle}>
-                  Varios
-                </label>
-              </div>
-            </div>
-            <div className={Global.InputTercio}>
-              <label htmlFor="monedaId" className={Global.LabelStyle}>
-                Moneda
-              </label>
-              <select
-                id="monedaId"
-                name="monedaId"
-                value={data.monedaId ?? ""}
-                onChange={ValidarData}
-                disabled={modo == "Consultar"}
-                className={Global.InputStyle}
-              >
-                {dataMoneda.map((map) => (
-                  <option key={map.id} value={map.id}>
-                    {map.descripcion}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={Global.InputTercio}>
-              <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                T. Cambio
-              </label>
-              <input
-                type="number"
-                id="tipoCambio"
-                name="tipoCambio"
-                placeholder="Tipo de Cambio"
-                autoComplete="off"
-                min={0}
-                disabled={modo == "Consultar"}
-                value={data.tipoCambio ?? ""}
-                onChange={ValidarData}
-                className={
-                  modo != "Consultar" ? Global.InputBoton : Global.InputStyle
-                }
-              />
-              <button
-                id="consultarTipoCambio"
-                className={
-                  Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                }
-                hidden={modo == "Consultar"}
-                onClick={() => {
-                  GetPorIdTipoCambio(data.fechaInicio);
-                }}
-              >
-                <FaUndoAlt></FaUndoAlt>
-              </button>
-            </div>
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="personalId" className={Global.LabelStyle}>
-              Responsable
-            </label>
-            <select
-              id="personalId"
-              name="personalId"
-              value={data.personalId ?? ""}
-              onChange={ValidarData}
-              disabled={modo == "Consultar"}
-              className={Global.InputStyle}
-            >
-              {dataVendedor.map((map) => (
-                <option key={map.id} value={map.id}>
-                  {map.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="lineaProduccion" className={Global.LabelStyle}>
-              Linea de Producción
-            </label>
-            <input
-              type="text"
-              id="lineaProduccion"
-              name="lineaProduccion"
-              placeholder="Linea de Producción"
-              autoComplete="off"
-              disabled={modo == "Consultar"}
-              value={data.lineaProduccion ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="envasado" className={Global.LabelStyle}>
-              Envasado
-            </label>
-            <input
-              type="text"
-              id="envasado"
-              name="envasado"
-              placeholder="Envasado"
-              autoComplete="off"
-              disabled={modo == "Consultar"}
-              value={data.envasado ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="numeroLote" className={Global.LabelStyle}>
-                N° Lote
-              </label>
-              <input
-                type="text"
-                id="numeroLote"
-                name="numeroLote"
-                placeholder="N° Lote"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.numeroLote ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="guiaRemision" className={Global.LabelStyle}>
-                Guia Remision
-              </label>
-              <input
-                type="text"
-                id="guiaRemision"
-                name="guiaRemision"
-                placeholder="Guia Remision"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.guiaRemision ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="observacion" className={Global.LabelStyle}>
-              Observación
-            </label>
-            <input
-              type="text"
-              id="observacion"
-              name="observacion"
-              placeholder="Observación"
-              autoComplete="off"
-              disabled={modo == "Consultar"}
-              value={data.observacion ?? ""}
-              onChange={ValidarData}
-              className={Global.InputBoton}
-            />
-            <div className={Global.Input36}>
-              <div className={Global.CheckStyle + Global.Anidado}>
-                <Checkbox
-                  inputId="incluyeIGV"
-                  name="incluyeIGV"
-                  onChange={(e) => {
-                    ValidarData(e);
-                  }}
-                  checked={data.incluyeIGV ? true : ""}
-                  disabled={
-                    data.tipoDocumentoId == "03" || modo == "Consultar"
-                      ? true
-                      : false
-                  }
-                ></Checkbox>
-              </div>
-              <label htmlFor="incluyeIGV" className={Global.LabelCheckStyle}>
-                Incluye IGV
-              </label>
-            </div>
-          </div>
-
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="porcentajeIGV" className={Global.LabelStyle}>
-                IGV 18%
-              </label>
-              <input
-                type="number"
-                id="porcentajeIGV"
-                name="porcentajeIGV"
-                placeholder="Observación"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.porcentajeIGV ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="gastosIndirectos" className={Global.LabelStyle}>
-                Gastos Indirectos
-              </label>
-              <input
-                type="number"
-                id="gastosIndirectos"
-                name="gastosIndirectos"
-                placeholder="Observación"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.gastosIndirectos ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="cantidadSolicitada" className={Global.LabelStyle}>
-                Cant. Solicitada
-              </label>
-              <input
-                type="number"
-                id="cantidadSolicitada"
-                name="cantidadSolicitada"
-                placeholder="cantidad"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.cantidadSolicitada ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="cantidadProducida" className={Global.LabelStyle}>
-                Cant. Producida
-              </label>
-              <input
-                type="number"
-                id="cantidadProducida"
-                name="cantidadProducida"
-                placeholder="cantidad"
-                autoComplete="off"
-                disabled={modo == "Consultar"}
-                value={data.cantidadProducida ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
-              />
-            </div>
-          </div>
-        </div>
-        {/* Cabecera */}
-        {/* Detalles */}
-        {modo != "Consultar" && (
-          <div
-            className={
-              Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
-            }
+      {Object.entries(dataMoneda).length > 0 && (
+        <>
+          <ModalCrud
+            setModal={setModal}
+            objeto={data}
+            modo={modo}
+            menu={["Almacen", "SalidaAlmacen"]}
+            titulo="Salida de Articulos"
+            cerrar={false}
+            foco={document.getElementById("tablaSalidaAlmacen")}
+            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
           >
-            <div className={Global.ContenedorInputs}>
+            {tipoMensaje > 0 && (
+              <Mensajes
+                tipoMensaje={tipoMensaje}
+                mensaje={mensaje}
+                Click={() => OcultarMensajes()}
+              />
+            )}
+            {/* Cabecera */}
+            <div
+              className={
+                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
+              }
+            >
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="serie" className={Global.LabelStyle}>
+                    Serie
+                  </label>
+                  <input
+                    type="text"
+                    id="serie"
+                    name="serie"
+                    placeholder="Serie"
+                    maxLength="4"
+                    autoComplete="off"
+                    autoFocus
+                    disabled={modo == "Nuevo" ? false : true}
+                    value={data.serie ?? ""}
+                    onChange={ValidarData}
+                    onBlur={(e) => Numeracion(e)}
+                    className={
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                    }
+                  />
+                </div>
+                <div className={Global.InputMitad}>
+                  <label htmlFor="numero" className={Global.LabelStyle}>
+                    Número
+                  </label>
+                  <input
+                    type="text"
+                    id="numero"
+                    name="numero"
+                    placeholder="Número"
+                    maxLength="10"
+                    autoComplete="off"
+                    disabled={modo == "Nuevo" ? false : true}
+                    value={data.numero ?? ""}
+                    onChange={ValidarData}
+                    onBlur={(e) => Numeracion(e)}
+                    className={
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                    }
+                  />
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+                    F. Emisión
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaEmision"
+                    name="fechaEmision"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={moment(data.fechaInicio ?? "").format("yyyy-MM-DD")}
+                    onChange={ValidarData}
+                    onBlur={FechaEmision}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputTercio}>
+                  <label
+                    htmlFor="fechaTerminacion"
+                    className={Global.LabelStyle}
+                  >
+                    F. Terminación
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaTerminacion"
+                    name="fechaTerminacion"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={moment(data.fechaTerminacion ?? "").format(
+                      "yyyy-MM-DD"
+                    )}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="clienteNombre" className={Global.LabelStyle}>
+                    Cliente
+                  </label>
+                  <input
+                    type="text"
+                    id="clienteNombre"
+                    name="clienteNombre"
+                    placeholder="Buscar Cliente"
+                    autoComplete="off"
+                    disabled={true}
+                    value={data.clienteNombre ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputBoton}
+                  />
+                  <button
+                    id="consultar"
+                    className={
+                      Global.BotonBuscar +
+                      Global.BotonPrimary +
+                      " !rounded-none"
+                    }
+                    hidden={modo == "Consultar"}
+                    disabled={checkVarios}
+                    onClick={() => AbrirFiltroCliente()}
+                  >
+                    <FaSearch></FaSearch>
+                  </button>
+                  <div className={Global.Input + " w-20"}>
+                    <div className={Global.CheckStyle + Global.Anidado}>
+                      <Checkbox
+                        inputId="varios"
+                        name="varios"
+                        disabled={modo == "Consultar"}
+                        onChange={(e) => {
+                          setCheckVarios(e.checked);
+                          ClientesVarios(e);
+                        }}
+                        checked={checkVarios}
+                      ></Checkbox>
+                    </div>
+                    <label htmlFor="varios" className={Global.LabelCheckStyle}>
+                      Varios
+                    </label>
+                  </div>
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                    Moneda
+                  </label>
+                  <select
+                    id="monedaId"
+                    name="monedaId"
+                    value={data.monedaId ?? ""}
+                    onChange={ValidarData}
+                    disabled={modo == "Consultar"}
+                    className={Global.InputStyle}
+                  >
+                    {dataMoneda.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                    T. Cambio
+                  </label>
+                  <input
+                    type="number"
+                    id="tipoCambio"
+                    name="tipoCambio"
+                    placeholder="Tipo de Cambio"
+                    autoComplete="off"
+                    min={0}
+                    disabled={modo == "Consultar"}
+                    value={data.tipoCambio ?? ""}
+                    onChange={ValidarData}
+                    className={
+                      modo != "Consultar"
+                        ? Global.InputBoton
+                        : Global.InputStyle
+                    }
+                  />
+                  <button
+                    id="consultarTipoCambio"
+                    className={
+                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    }
+                    hidden={modo == "Consultar"}
+                    onClick={() => {
+                      GetPorIdTipoCambio(data.fechaInicio);
+                    }}
+                  >
+                    <FaUndoAlt></FaUndoAlt>
+                  </button>
+                </div>
+              </div>
               <div className={Global.InputFull}>
-                <label htmlFor="descripcion" className={Global.LabelStyle}>
-                  Descripción
+                <label htmlFor="personalId" className={Global.LabelStyle}>
+                  Responsable
+                </label>
+                <select
+                  id="personalId"
+                  name="personalId"
+                  value={data.personalId ?? ""}
+                  onChange={ValidarData}
+                  disabled={modo == "Consultar"}
+                  className={Global.InputStyle}
+                >
+                  {dataVendedor.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="lineaProduccion" className={Global.LabelStyle}>
+                  Linea de Producción
                 </label>
                 <input
                   type="text"
-                  id="descripcion"
-                  name="descripcion"
-                  placeholder="Descripción"
+                  id="lineaProduccion"
+                  name="lineaProduccion"
+                  placeholder="Linea de Producción"
                   autoComplete="off"
-                  disabled={true}
-                  value={dataCabecera.descripcion ?? ""}
-                  onChange={ValidarDataArt}
-                  className={
-                    modo == "Consultar" ? Global.InputStyle : Global.InputBoton
-                  }
-                />
-                <button
-                  id="consultarArticulo"
-                  className={Global.BotonBuscar + Global.BotonPrimary}
-                  hidden={modo == "Consultar"}
-                  onClick={() => {
-                    setDataCabecera([]);
-                    AbrirFiltroArticulo();
-                  }}
-                >
-                  <FaSearch></FaSearch>
-                </button>
-              </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="stock" className={Global.LabelStyle}>
-                  Stock
-                </label>
-                <input
-                  type="stock"
-                  id="stock"
-                  name="stock"
-                  placeholder="Stock"
-                  autoComplete="off"
-                  disabled={true}
-                  value={dataCabecera.stock ?? ""}
-                  onChange={ValidarDataArt}
+                  disabled={modo == "Consultar"}
+                  value={data.lineaProduccion ?? ""}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
-            </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input25pct}>
-                <label
-                  htmlFor="unidadMedidaDescripcion"
-                  className={Global.LabelStyle}
-                >
-                  Unidad
+              <div className={Global.InputFull}>
+                <label htmlFor="envasado" className={Global.LabelStyle}>
+                  Envasado
                 </label>
                 <input
                   type="text"
-                  id="unidadMedidaDescripcion"
-                  name="unidadMedidaDescripcion"
-                  placeholder="Unidad Medida"
+                  id="envasado"
+                  name="envasado"
+                  placeholder="Envasado"
                   autoComplete="off"
-                  disabled={true}
-                  value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                  onChange={ValidarDataArt}
+                  disabled={modo == "Consultar"}
+                  value={data.envasado ?? ""}
+                  onChange={ValidarData}
                   className={Global.InputStyle}
                 />
               </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="cantidad" className={Global.LabelStyle}>
-                  Cantidad
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="numeroLote" className={Global.LabelStyle}>
+                    N° Lote
+                  </label>
+                  <input
+                    type="text"
+                    id="numeroLote"
+                    name="numeroLote"
+                    placeholder="N° Lote"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.numeroLote ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label htmlFor="guiaRemision" className={Global.LabelStyle}>
+                    Guia Remision
+                  </label>
+                  <input
+                    type="text"
+                    id="guiaRemision"
+                    name="guiaRemision"
+                    placeholder="Guia Remision"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.guiaRemision ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
+              <div className={Global.InputFull}>
+                <label htmlFor="observacion" className={Global.LabelStyle}>
+                  Observación
                 </label>
                 <input
-                  type="number"
-                  id="cantidad"
-                  name="cantidad"
-                  placeholder="Cantidad"
+                  type="text"
+                  id="observacion"
+                  name="observacion"
+                  placeholder="Observación"
                   autoComplete="off"
-                  min={0}
                   disabled={modo == "Consultar"}
-                  value={dataCabecera.cantidad ?? ""}
-                  onChange={(e) => {
-                    ValidarDataArt(e);
-                    CalcularImporte(e.target.name);
-                  }}
-                  className={Global.InputStyle}
+                  value={data.observacion ?? ""}
+                  onChange={ValidarData}
+                  className={Global.InputBoton}
                 />
+                <div className={Global.Input36}>
+                  <div className={Global.CheckStyle + Global.Anidado}>
+                    <Checkbox
+                      inputId="incluyeIGV"
+                      name="incluyeIGV"
+                      onChange={(e) => {
+                        ValidarData(e);
+                      }}
+                      checked={data.incluyeIGV ? true : ""}
+                      disabled={
+                        data.tipoDocumentoId == "03" || modo == "Consultar"
+                          ? true
+                          : false
+                      }
+                    ></Checkbox>
+                  </div>
+                  <label
+                    htmlFor="incluyeIGV"
+                    className={Global.LabelCheckStyle}
+                  >
+                    Incluye IGV
+                  </label>
+                </div>
               </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="precioUnitario" className={Global.LabelStyle}>
-                  Precio
-                </label>
-                <input
-                  type="number"
-                  id="precioUnitario"
-                  name="precioUnitario"
-                  placeholder="Precio "
-                  autoComplete="off"
-                  min={0}
-                  disabled={modo == "Consultar"}
-                  value={dataCabecera.precioUnitario ?? ""}
-                  onChange={(e) => {
-                    ValidarDataArt(e);
-                    CalcularImporte(e.target.name);
-                  }}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.Input25pct}>
-                <label htmlFor="importe" className={Global.LabelStyle}>
-                  Importe
-                </label>
-                <input
-                  type="number"
-                  id="importe"
-                  name="importe"
-                  autoComplete="off"
-                  placeholder="Importe"
-                  min={0}
-                  disabled={modo == "Consultar"}
-                  value={dataCabecera.importe ?? ""}
-                  onChange={(e) => {
-                    ValidarDataArt(e);
-                    CalcularImporte(e.target.name);
-                  }}
-                  className={
-                    modo != "Consultar" ? Global.InputBoton : Global.InputStyle
-                  }
-                />
-                <button
-                  id="enviarDetalle"
-                  className={Global.BotonBuscar + Global.BotonPrimary}
-                  hidden={modo == "Consultar"}
-                  onClick={() => AgregarDetalle()}
-                >
-                  <FaPlus></FaPlus>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {/* Detalles */}
-        {/* Tabla Detalle */}
-        <TablaStyle>
-          <TableBasic
-            columnas={columnas}
-            datos={dataDetalle}
-            estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
-          />
-        </TablaStyle>
-        {/* Tabla Detalle */}
 
-        {/*Tabla Footer*/}
-        <div className={Global.ContenedorFooter}>
-          <div className="flex">
-            <div className={Global.FilaVacia}></div>
-            <div className={Global.FilaPrecio}>
-              <p className={Global.FilaContenido}>Total a Pagar</p>
+              <div className={Global.ContenedorInputs}>
+                <div className={Global.InputFull}>
+                  <label htmlFor="porcentajeIGV" className={Global.LabelStyle}>
+                    IGV 18%
+                  </label>
+                  <input
+                    type="number"
+                    id="porcentajeIGV"
+                    name="porcentajeIGV"
+                    placeholder="Observación"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.porcentajeIGV ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="gastosIndirectos"
+                    className={Global.LabelStyle}
+                  >
+                    Gastos Indirectos
+                  </label>
+                  <input
+                    type="number"
+                    id="gastosIndirectos"
+                    name="gastosIndirectos"
+                    placeholder="Observación"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.gastosIndirectos ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="cantidadSolicitada"
+                    className={Global.LabelStyle}
+                  >
+                    Cant. Solicitada
+                  </label>
+                  <input
+                    type="number"
+                    id="cantidadSolicitada"
+                    name="cantidadSolicitada"
+                    placeholder="cantidad"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.cantidadSolicitada ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+                <div className={Global.InputFull}>
+                  <label
+                    htmlFor="cantidadProducida"
+                    className={Global.LabelStyle}
+                  >
+                    Cant. Producida
+                  </label>
+                  <input
+                    type="number"
+                    id="cantidadProducida"
+                    name="cantidadProducida"
+                    placeholder="cantidad"
+                    autoComplete="off"
+                    disabled={modo == "Consultar"}
+                    value={data.cantidadProducida ?? ""}
+                    onChange={ValidarData}
+                    className={Global.InputStyle}
+                  />
+                </div>
+              </div>
             </div>
-            <div className={Global.FilaImporte}>
-              <p className={Global.FilaContenido}>{data.total ?? "0.00"}</p>
-            </div>
-            <div className={Global.UltimaFila}></div>
-          </div>
-          <div className="flex">
-            <div className={Global.FilaVacia}></div>
-            <div className={Global.FilaPrecio}>
-              <p className={Global.FilaContenido}>Total Galones</p>
-            </div>
-            <div className={Global.FilaImporte}>
-              <p className={Global.FilaContenido}>
-                {data.totalGalones ?? "0.00"}
-              </p>
-            </div>
-            <div className={Global.UltimaFila}></div>
-          </div>
-        </div>
-        <div className={Global.ContenedorFooter}>
-          <div className="flex">
-            <div className={Global.FilaVacia + " flex justify-end"}>
-              <p className={Global.FilaContenido}>
-                COSTO DE GALON X 1 EN SOLES
-              </p>
-            </div>
-            <div className={Global.FilaImporte}>
-              <p className={Global.FilaContenido}>
-                {data.costoGalon ?? "0.00"}
-              </p>
-            </div>
-            <div className={Global.UltimaFila}></div>
-          </div>
-          <div className="flex">
-            <div className={Global.FilaVacia + " flex justify-end"}>
-              <p className={Global.FilaContenido}>
-                COSTO DE GALON X 1 EN SOLES + GASTOS INDIRECTOS (0.00%)
-              </p>
-            </div>
-            <div className={Global.FilaImporte}>
-              <p className={Global.FilaContenido}>
-                {data.costoGalonMasGastoIndirectos ?? "0.00"}
-              </p>
-            </div>
-            <div className={Global.UltimaFila}></div>
-          </div>
-          <div className="flex">
-            <div className={Global.FilaVacia + " flex justify-end"}>
-              <p className={Global.FilaContenido}>
-                COSTO DE GALON X 1 EN SOLES + IGV (18.00%)
-              </p>
-            </div>
-            <div className={Global.FilaImporte}>
-              <p className={Global.FilaContenido}>
-                {data.costoGalonMasIGV ?? "0.00"}
-              </p>
-            </div>
-            <div className={Global.UltimaFila}></div>
-          </div>
-        </div>
+            {/* Cabecera */}
+            {/* Detalles */}
+            {modo != "Consultar" && (
+              <div
+                className={
+                  Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                }
+              >
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="descripcion" className={Global.LabelStyle}>
+                      Descripción
+                    </label>
+                    <input
+                      type="text"
+                      id="descripcion"
+                      name="descripcion"
+                      placeholder="Descripción"
+                      autoComplete="off"
+                      disabled={true}
+                      value={dataCabecera.descripcion ?? ""}
+                      onChange={ValidarDataArt}
+                      className={
+                        modo == "Consultar"
+                          ? Global.InputStyle
+                          : Global.InputBoton
+                      }
+                    />
+                    <button
+                      id="consultarArticulo"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      hidden={modo == "Consultar"}
+                      onClick={() => {
+                        setDataCabecera([]);
+                        AbrirFiltroArticulo();
+                      }}
+                    >
+                      <FaSearch></FaSearch>
+                    </button>
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="stock" className={Global.LabelStyle}>
+                      Stock
+                    </label>
+                    <input
+                      type="stock"
+                      id="stock"
+                      name="stock"
+                      placeholder="Stock"
+                      autoComplete="off"
+                      disabled={true}
+                      value={dataCabecera.stock ?? ""}
+                      onChange={ValidarDataArt}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.Input25pct}>
+                    <label
+                      htmlFor="unidadMedidaDescripcion"
+                      className={Global.LabelStyle}
+                    >
+                      Unidad
+                    </label>
+                    <input
+                      type="text"
+                      id="unidadMedidaDescripcion"
+                      name="unidadMedidaDescripcion"
+                      placeholder="Unidad Medida"
+                      autoComplete="off"
+                      disabled={true}
+                      value={dataCabecera.unidadMedidaDescripcion ?? ""}
+                      onChange={ValidarDataArt}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="cantidad" className={Global.LabelStyle}>
+                      Cantidad
+                    </label>
+                    <input
+                      type="number"
+                      id="cantidad"
+                      name="cantidad"
+                      placeholder="Cantidad"
+                      autoComplete="off"
+                      min={0}
+                      disabled={modo == "Consultar"}
+                      value={dataCabecera.cantidad ?? ""}
+                      onChange={(e) => {
+                        ValidarDataArt(e);
+                        CalcularImporte(e.target.name);
+                      }}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label
+                      htmlFor="precioUnitario"
+                      className={Global.LabelStyle}
+                    >
+                      Precio
+                    </label>
+                    <input
+                      type="number"
+                      id="precioUnitario"
+                      name="precioUnitario"
+                      placeholder="Precio "
+                      autoComplete="off"
+                      min={0}
+                      disabled={modo == "Consultar"}
+                      value={dataCabecera.precioUnitario ?? ""}
+                      onChange={(e) => {
+                        ValidarDataArt(e);
+                        CalcularImporte(e.target.name);
+                      }}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.Input25pct}>
+                    <label htmlFor="importe" className={Global.LabelStyle}>
+                      Importe
+                    </label>
+                    <input
+                      type="number"
+                      id="importe"
+                      name="importe"
+                      autoComplete="off"
+                      placeholder="Importe"
+                      min={0}
+                      disabled={modo == "Consultar"}
+                      value={dataCabecera.importe ?? ""}
+                      onChange={(e) => {
+                        ValidarDataArt(e);
+                        CalcularImporte(e.target.name);
+                      }}
+                      className={
+                        modo != "Consultar"
+                          ? Global.InputBoton
+                          : Global.InputStyle
+                      }
+                    />
+                    <button
+                      id="enviarDetalle"
+                      className={Global.BotonBuscar + Global.BotonPrimary}
+                      hidden={modo == "Consultar"}
+                      onClick={() => AgregarDetalle()}
+                    >
+                      <FaPlus></FaPlus>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* Detalles */}
+            {/* Tabla Detalle */}
+            <TablaStyle>
+              <TableBasic
+                columnas={columnas}
+                datos={dataDetalle}
+                estilos={[
+                  "",
+                  "",
+                  "",
+                  "border ",
+                  "",
+                  "border border-b-0",
+                  "border",
+                ]}
+                DobleClick={(e) => CargarDetalle(e, true)}
+              />
+            </TablaStyle>
+            {/* Tabla Detalle */}
 
-        {/*Tabla Footer*/}
-      </ModalCrud>
-      {modalCliente && (
-        <FiltroCliente
-          setModal={setModalCliente}
-          setObjeto={setDataCliente}
-          foco={document.getElementById("monedaId")}
-        />
-      )}
-      {modalArt && (
-        <FiltroArticulo
-          setModal={setModalArt}
-          setObjeto={setDataCabecera}
-          foco={document.getElementById("cantidad")}
-        />
+            {/*Tabla Footer*/}
+            <div className={Global.ContenedorFooter}>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>Total a Pagar</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>{data.total ?? "0.00"}</p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia}></div>
+                <div className={Global.FilaPrecio}>
+                  <p className={Global.FilaContenido}>Total Galones</p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.totalGalones ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+            </div>
+            <div className={Global.ContenedorFooter}>
+              <div className="flex">
+                <div className={Global.FilaVacia + " flex justify-end"}>
+                  <p className={Global.FilaContenido}>
+                    COSTO DE GALON X 1 EN SOLES
+                  </p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.costoGalon ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia + " flex justify-end"}>
+                  <p className={Global.FilaContenido}>
+                    COSTO DE GALON X 1 EN SOLES + GASTOS INDIRECTOS (0.00%)
+                  </p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.costoGalonMasGastoIndirectos ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+              <div className="flex">
+                <div className={Global.FilaVacia + " flex justify-end"}>
+                  <p className={Global.FilaContenido}>
+                    COSTO DE GALON X 1 EN SOLES + IGV (18.00%)
+                  </p>
+                </div>
+                <div className={Global.FilaImporte}>
+                  <p className={Global.FilaContenido}>
+                    {data.costoGalonMasIGV ?? "0.00"}
+                  </p>
+                </div>
+                <div className={Global.UltimaFila}></div>
+              </div>
+            </div>
+
+            {/*Tabla Footer*/}
+          </ModalCrud>
+          {modalCliente && (
+            <FiltroCliente
+              setModal={setModalCliente}
+              setObjeto={setDataCliente}
+              foco={document.getElementById("monedaId")}
+            />
+          )}
+          {modalArt && (
+            <FiltroArticulo
+              setModal={setModalArt}
+              setObjeto={setDataCabecera}
+              foco={document.getElementById("cantidad")}
+            />
+          )}
+        </>
       )}
     </>
   );

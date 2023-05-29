@@ -350,7 +350,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   className={Global.InputBoton}
                 />
                 <button
-                  id="consultar"
+                  id="consultarCuentas"
                   onClick={Filtro}
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary

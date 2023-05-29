@@ -230,9 +230,9 @@ const EntradaAlmacen = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, id);
+          let valor = await GetIsPermitido(accion, value);
           if (valor) {
-            Delete(["Almacen", "EntradaAlmacen"], id, setEliminar);
+            Delete(["Almacen", "EntradaAlmacen"], value, setEliminar);
           }
           break;
         }

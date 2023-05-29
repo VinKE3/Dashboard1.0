@@ -1,12 +1,13 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
@@ -125,6 +126,14 @@ const Proveedor = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      documento: "",
+      nombre: "",
+    });
+    setIndex(0);
+    document.getElementById("documento").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -132,29 +141,67 @@ const Proveedor = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo") => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        id: "000000",
-        tipoDocumentoIdentidadId: "1",
-        numeroDocumentoIdentidad: "",
-        nombre: "",
-        telefono: "",
-        celular: "",
-        correoElectronico: "",
-        direccionPrincipal: "",
-        departamentoId: "15",
-        provinciaId: "01",
-        distritoId: "01",
-        condicion: "",
-        estado: "",
-        obsevacion: "",
-      });
-    } else {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      if (modo == "Nuevo") {
+        setObjeto({
+          id: "000000",
+          tipoDocumentoIdentidadId: "1",
+          numeroDocumentoIdentidad: "",
+          nombre: "",
+          telefono: "",
+          celular: "",
+          correoElectronico: "",
+          direccionPrincipal: "",
+          departamentoId: "15",
+          provinciaId: "01",
+          distritoId: "01",
+          condicion: "",
+          estado: "",
+          obsevacion: "",
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaProveedor")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar");
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaProveedor")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "Proveedor"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaProveedor")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
+      }
+    }
   };
   //#endregion
 
@@ -237,9 +284,9 @@ const Proveedor = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>
@@ -252,6 +299,7 @@ const Proveedor = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -259,11 +307,14 @@ const Proveedor = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaProveedor"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

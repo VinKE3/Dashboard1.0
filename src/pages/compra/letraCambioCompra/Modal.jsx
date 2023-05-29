@@ -556,8 +556,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             modo={modo}
             menu={["Compra", "LetraCambioCompra"]}
             titulo="Letra de Cambio"
-            tamañoModal={[Global.ModalFull, Global.Form]}
             cerrar={false}
+            foco={document.getElementById("tablaFacturaNegociable")}
+            tamañoModal={[Global.ModalFull, Global.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -588,9 +589,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.numeroLetra ?? ""}
                     onChange={ValidarData}
                     className={
-                      modo == "Nuevo"
-                        ? Global.InputStyle
-                        : Global.InputStyle
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                     }
                   />
                 </div>

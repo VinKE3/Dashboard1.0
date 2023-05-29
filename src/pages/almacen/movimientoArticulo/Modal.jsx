@@ -3,6 +3,7 @@ import ModalBasic from "../../../components/modal/ModalBasic";
 import TableBasic from "../../../components/tabla/TableBasic";
 import styled from "styled-components";
 import moment from "moment";
+import Swal from "sweetalert2";
 import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -69,12 +70,20 @@ const tdStyle = {
 };
 //#endregion
 
-const Modal = ({ setModal, objeto }) => {
+const Modal = ({ setModal, objeto, foco }) => {
   //#region useState
   const [data] = useState(objeto);
   const [detalles] = useState(objeto.detalles);
   //#endregion
 
+  //#region Funciones
+  const CerrarModalKey = (e) => {
+    if (e.key == "Escape" || e.key == "Enter") {
+      foco.focus();
+      setModal(false);
+    }
+  };
+  //#endregion
   //#region Columnas
   const columnasDetalles = [
     {
@@ -244,7 +253,9 @@ const Modal = ({ setModal, objeto }) => {
           <button
             className={Global.BotonModalBase + Global.BotonCancelarModal}
             type="button"
+            autoFocus
             onClick={() => setModal(false)}
+            onKeyDown={(e) => CerrarModalKey(e)}
           >
             CERRAR
           </button>
@@ -260,6 +271,7 @@ const Modal = ({ setModal, objeto }) => {
             columnas={columnasDetalles}
             datos={detalles}
             estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
+            KeyDown={(e) => CerrarModalKey(e)}
           />
         </TablaStyle>
 
