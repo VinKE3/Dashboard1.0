@@ -592,9 +592,9 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton"
-                  onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
+                  onClick={() => CargarDetalle(row.values.id)}
                 >
                   <FaPen></FaPen>
                 </button>
@@ -631,9 +631,10 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             objeto={data}
             modo={modo}
             menu={["Almacen", "EntradaCilindros"]}
-            tamañoModal={[Global.ModalFull, Global.Form]}
             titulo="Entrada de Cilindros"
             cerrar={false}
+            foco={document.getElementById("tablaEntradaCilindro")}
+            tamañoModal={[Global.ModalFull, Global.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -685,9 +686,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Nuevo"
-                        ? Global.InputStyle
-                        : Global.InputStyle
+                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
                     }
                   />
                 </div>
@@ -697,7 +696,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                       <Checkbox
                         inputId="isSobrante"
                         name="isSobrante"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         value={data.isSobrante ?? ""}
                         onChange={(e) => {
                           ValidarData(e);
@@ -717,7 +716,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                       <Checkbox
                         inputId="isVenta"
                         name="isVenta"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         value={data.isVenta ?? ""}
                         onChange={(e) => {
                           ValidarData(e);
@@ -734,14 +733,15 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               <div className={Global.ContenedorInputs}>
                 <div className={Global.Input40pct}>
                   <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                    Fecha Emisión
+                    F. Emisión
                   </label>
                   <input
                     type="date"
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    autoFocus={modo == "Modificar"}
+                    disabled={modo == "Consultar"}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -754,7 +754,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   <select
                     id="personalId"
                     name="personalId"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={data.personalId}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -787,7 +787,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
+                    onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroCilindro()}
                   >
                     <FaSearch></FaSearch>
@@ -805,7 +806,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   name="observacion"
                   placeholder="Observación"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar"}
                   value={data.observacion ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -868,7 +869,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                       placeholder="Cantidad"
                       autoComplete="off"
                       min={0}
-                      disabled={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar"}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={ValidarCabecera}
                       className={Global.InputBoton + Global.Anidado}
@@ -880,7 +881,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                         Global.Anidado +
                         Global.BotonPrimary
                       }
-                      hidden={modo == "Consultar" ? true : false}
+                      hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={() => AgregarDetalle()}
                     >
                       <FaPlus></FaPlus>

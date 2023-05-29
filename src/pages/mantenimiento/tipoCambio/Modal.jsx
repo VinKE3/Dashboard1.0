@@ -114,7 +114,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             className={
               Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
             }
-            hidden={modo == "Consultar" ? true : false}
+            hidden={modo == "Consultar"}
             onClick={() => ConsultarTipoCambio(`?fecha=${data.id}`)}
             onKeyDown={(e) => {
               if (e.key == "Enter") {

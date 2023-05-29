@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -10,10 +11,11 @@ import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import {
   faPlus,
   faArrowAltCircleDown,
+  faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
@@ -133,6 +135,14 @@ const CuadreStock = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("fechaInicio").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -180,135 +190,224 @@ const CuadreStock = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo", accion = 0) => {
-    setModo(modo);
-    switch (accion) {
-      case 0: {
-        //Consulta Correlativo
-        const result = await ApiMasy.get(
-          `api/Mantenimiento/Correlativo/CU/0001`
-        );
-        //Consulta Correlativo
-        setObjeto({
-          empresaId: "01",
-          tipoDocumentoId: "01",
-          serie: "0001",
-          numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
-          fechaRegistro: moment().format("YYYY-MM-DD"),
-          horaRegistro: "",
-          monedaId: "S",
-          tipoCambio: 0,
-          responsableId: "<<NI>>01",
-          observacion: "",
-          totalSobra: 0,
-          totalFalta: 0,
-          saldoTotal: 0,
-          detalles: null,
-        });
-        await GetDetalles("");
-        setModal(true);
-        break;
-      }
-      case 1: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          await GetPorId(id);
-          await GetDetalles(id);
+  const AccionModal = async (
+    value,
+    modo = "Nuevo",
+    accion = 0,
+    click = false
+  ) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
+    } else {
+      setModo(modo);
+      switch (accion) {
+        case 0: {
+          //Consulta Correlativo
+          const result = await ApiMasy.get(
+            `api/Mantenimiento/Correlativo/CU/0001`
+          );
+          //Consulta Correlativo
+          setObjeto({
+            empresaId: "01",
+            tipoDocumentoId: "01",
+            serie: "0001",
+            numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
+            fechaRegistro: moment().format("YYYY-MM-DD"),
+            horaRegistro: "",
+            monedaId: "S",
+            tipoCambio: 0,
+            responsableId: "<<NI>>01",
+            observacion: "",
+            totalSobra: 0,
+            totalFalta: 0,
+            saldoTotal: 0,
+            detalles: null,
+          });
+          await GetDetalles("");
           setModal(true);
+          break;
         }
-        break;
-      }
-      case 2: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          Delete(["Almacen", "CuadreStock"], id, setEliminar);
+        case 1: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await GetPorId(value);
+            setModal(true);
+          }
+          break;
         }
-        break;
-      }
-      case 3: {
-        await GetPorId(id);
-        await GetDetalles(id);
-        setModal(true);
-        break;
-      }
-      default:
-        break;
-    }
-  };
-  const AbrirCerrar = async () => {
-    let tabla = document
-      .querySelector("table > tbody")
-      .querySelector("tr.selected-row");
-    if (tabla != null) {
-      if (tabla.classList.contains("selected-row")) {
-        let id = document.querySelector("tr.selected-row").firstChild.innerHTML;
-        const cerrado = datos.find((item) => item.id == id);
-        const title = cerrado.estado
-          ? "Abrir Cuadre De Stock"
-          : "Cerrar Cuadre De Stock";
-        const estado = !cerrado.estado;
-        Swal.fire({
-          title: title,
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#EE8100",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            ApiMasy.put(
-              `api/Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`
-            ).then((response) => {
-              console.log(response);
-              if (response.name == "AxiosError") {
-                let err = "";
-                if (response.response.data == "") {
-                  err = response.message;
-                } else {
-                  err = String(response.response.data.messages[0].textos);
-                }
-                toast.error(err, {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              } else {
-                Listar(cadena, index + 1);
-                toast.success(String(response.data.messages[0].textos), {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
+        case 2: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            Delete(["Almacen", "CuadreStock"], value, setEliminar);
+          }
+          break;
+        }
+        case 3: {
+          await GetPorId(value);
+          setModal(true);
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaCuadreStock")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let resultado = await Imprimir(["Almacen", "CuadreStock"], id);
+            if (resultado != null) {
+              const source = `data:application/pdf;base64,${resultado}`;
+              const link = document.createElement("a");
+              const fileName = "file.pdf";
+              link.href = source;
+              link.download = fileName;
+              link.click();
+            }
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        case 6: {
+          let row = document
+            .querySelector("#tablaCuadreStock")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            const cerrado = datos.find((item) => item.id == id);
+            const title = cerrado.estado
+              ? "Abrir Cuadre De Stock"
+              : "Cerrar Cuadre De Stock";
+            const estado = !cerrado.estado;
+            Swal.fire({
+              title: title,
+              icon: "warning",
+              iconColor: "#F7BF3A",
+              showCancelButton: true,
+              color: "#fff",
+              background: "#1a1a2e",
+              confirmButtonColor: "#EE8100",
+              confirmButtonText: "Aceptar",
+              cancelButtonColor: "#d33",
+              cancelButtonText: "Cancelar",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                ApiMasy.put(
+                  `api/Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`
+                ).then((response) => {
+                  if (response.name == "AxiosError") {
+                    let err = "";
+                    if (response.response.data == "") {
+                      err = response.message;
+                    } else {
+                      err = String(response.response.data.messages[0].textos);
+                    }
+                    toast.error(err, {
+                      position: "bottom-right",
+                      autoClose: 3000,
+                      hideProgressBar: true,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "colored",
+                    });
+                  } else {
+                    Listar(cadena, index + 1);
+                    toast.success(String(response.data.messages[0].textos), {
+                      position: "bottom-right",
+                      autoClose: 3000,
+                      hideProgressBar: true,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "colored",
+                    });
+                  }
                 });
               }
             });
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
           }
-        });
+          break;
+        }
+        default:
+          break;
       }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    }
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      setModo("Nuevo");
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaCuadreStock")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar", 1);
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaCuadreStock")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Eliminar", 2);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaCuadreStock")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaCuadreStock")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
+      }
+    }
+    if (e.key === "a") {
+      let row = document
+        .querySelector("#tablaCuadreStock")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "AbrirCerrar", 6);
+      }
     }
   };
   //endregion
@@ -453,9 +552,9 @@ const CuadreStock = () => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    onClick={Filtro}
+                    onClick={FiltroBoton}
                   >
-                    <FaSearch />
+                    <FaUndoAlt />
                   </button>
                 </div>
               </div>
@@ -473,26 +572,34 @@ const CuadreStock = () => {
                   contenedor=""
                 />
               )}
-              {permisos[0] && (
-                <BotonBasico
-                  botonText="Cerrar / Abrir"
-                  botonClass={Global.BotonAgregar}
-                  botonIcon={faArrowAltCircleDown}
-                  click={() => AbrirCerrar()}
-                  contenedor=""
-                />
-              )}
+              <BotonBasico
+                botonText="Cerrar / Abrir"
+                botonClass={Global.BotonMorado}
+                botonIcon={faArrowAltCircleDown}
+                click={() => AccionModal(null, "AbrirCerrar", 6)}
+                contenedor=""
+              />
+              <BotonBasico
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => AccionModal(null, "Imprimir", 5)}
+                contenedor=""
+              />
             </div>
             {/* Boton */}
 
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaCuadreStock"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

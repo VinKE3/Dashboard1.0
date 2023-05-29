@@ -365,22 +365,22 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       setModalInventario(true);
     }
   };
-  const ModalKey = async (e) => {
-    if (e.key === "Enter") {
-      let row = document
-        .querySelector("#tablaCuadreStock")
-        .querySelector("tr.selected-row");
-      let detalleId = row.lastChild.innerText;
-      let descripcion = row.children[2].innerText;
-      let inventario = row.children[5].innerText;
-      setDataInventario({
-        detalleId: detalleId,
-        inventario: inventario,
-        descripcion: descripcion,
-      });
-      setModalInventario(true);
-    }
-  };
+  // const ModalKey = async (e) => {
+  //   if (e.key === "Enter") {
+  //     let row = document
+  //       .querySelector("#tablaCuadreStockModal")
+  //       .querySelector("tr.selected-row");
+  //     let detalleId = row.lastChild.innerText;
+  //     let descripcion = row.children[2].innerText;
+  //     let inventario = row.children[5].innerText;
+  //     setDataInventario({
+  //       detalleId: detalleId,
+  //       inventario: inventario,
+  //       descripcion: descripcion,
+  //     });
+  //     setModalInventario(true);
+  //   }
+  // };
   //#endregion
 
   //#region Columnas
@@ -628,6 +628,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             modo={modo}
             menu={["Almacen", "CuadreStock"]}
             titulo="Cuadre de Stock"
+            foco={document.getElementById("tablaCuadreStock")}
             tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
             cerrar={false}
           >
@@ -695,7 +696,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     id="fechaRegistro"
                     name="fechaRegistro"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    autoFocus
+                    disabled={modo == "Consultar"}
                     value={moment(data.fechaRegistro ?? "").format(
                       "yyyy-MM-DD"
                     )}
@@ -713,7 +715,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     name="monedaId"
                     value={data.monedaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataMoneda.map((map) => (
@@ -734,7 +736,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
                     className={
@@ -748,7 +750,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
@@ -768,7 +770,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     name="personalId"
                     value={data.personalId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataVendedor.map((map) => (
@@ -809,7 +811,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     name="observacion"
                     placeholder="Observación"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={data.observacion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -838,7 +840,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     name="marca"
                     placeholder="Marca"
                     autoComplete="off"
-                    autoFocus
+                    autoFocus={modo == "Modificar"}
                     value={filtro.marca}
                     onChange={ValidarDataFiltro}
                     className={Global.InputStyle}
@@ -856,17 +858,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     autoComplete="off"
                     value={filtro.descripcion}
                     onChange={ValidarDataFiltro}
-                    className={Global.InputBoton}
+                    className={Global.InputStyle}
                   />
-                  <button
-                    id="consultarFiltro"
-                    onClick={FiltroLocal}
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
-                  >
-                    <FaSearch></FaSearch>
-                  </button>
                 </div>
               </div>
               <div className={Global.ContenedorInputs}>
@@ -877,7 +870,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         inputId="todos"
                         name="tipoExistenciaId"
                         value={""}
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           ValidarDataFiltro(e);
                         }}
@@ -897,7 +890,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         inputId="mercaderia"
                         name="tipoExistenciaId"
                         value={"01"}
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           ValidarDataFiltro(e);
                         }}
@@ -917,7 +910,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         inputId="productoTerminado"
                         name="tipoExistenciaId"
                         value="02"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           ValidarDataFiltro(e);
                         }}
@@ -937,7 +930,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         inputId="materiaPrima"
                         name="tipoExistenciaId"
                         value="03"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           ValidarDataFiltro(e);
                         }}
@@ -957,7 +950,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         inputId="envasesEmbalajes"
                         name="tipoExistenciaId"
                         value="04"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           ValidarDataFiltro(e);
                         }}
@@ -977,7 +970,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         inputId="otros"
                         name="tipoExistenciaId"
                         value="99"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           ValidarDataFiltro(e);
                         }}
@@ -999,7 +992,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             {/* Tabla Detalle */}
             <TablaStyle>
               <Table
-                id={"tablaCuadreStock"}
+                id={"tablaCuadreStockModal"}
                 columnas={columnas}
                 datos={dataLocal}
                 total={total}
@@ -1066,7 +1059,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
               modo={modoInventario}
               objeto={dataInventario}
               setObjeto={setDataInventario}
-              foco={document.getElementById("tablaCuadreStock")}
+              foco={document.getElementById("tablaCuadreStockModal")}
             />
           )}
         </>

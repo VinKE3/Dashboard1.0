@@ -1005,7 +1005,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaRegistro"
                     name="fechaRegistro"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={moment(data.fechaRegistro ?? "").format(
                       "yyyy-MM-DD"
                     )}
@@ -1025,7 +1025,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaVenta"
                     name="fechaVenta"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={moment(data.fechaVenta ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1075,8 +1075,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonPrimary +
                       " !rounded-none"
                     }
-                    hidden={modo == "Consultar" ? true : false}
-                    disabled={checkVarios ? true : false}
+                    hidden={modo == "Consultar"}
+                    disabled={checkVarios}
                     onClick={() => AbrirFiltroCliente()}
                   >
                     <FaSearch></FaSearch>
@@ -1086,12 +1086,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Checkbox
                         inputId="varios"
                         name="varios"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar"}
                         onChange={(e) => {
                           setCheckVarios(e.checked);
                           ClientesVarios(e);
                         }}
-                        checked={checkVarios ? true : ""}
+                        checked={checkVarios}
                       ></Checkbox>
                     </div>
                     <label htmlFor="varios" className={Global.LabelCheckStyle}>
@@ -1132,7 +1132,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="personalId"
                     value={data.personalId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataVendedor.map((map) => (
@@ -1152,7 +1152,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="nombreBanco"
                     placeholder="Banco"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={data.nombreBanco ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1173,7 +1173,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="monedaId"
                     value={data.monedaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataMoneda.map((map) => (
@@ -1194,7 +1194,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
                     className={
@@ -1208,7 +1208,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
                     }}
@@ -1225,7 +1225,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoCobroId"
                     value={data.tipoCobroId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataTipoCobro
@@ -1270,7 +1270,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="observacion"
                     placeholder="Observación"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     value={data.observacion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1309,7 +1309,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <button
                       id="consultarDocumento"
                       className={Global.BotonBuscar + Global.BotonPrimary}
-                      hidden={modo == "Consultar" ? true : false}
+                      hidden={modo == "Consultar"}
                       onClick={(e) => {
                         setDataConcepto([]);
                         AbrirFiltroConcepto(e);
@@ -1725,7 +1725,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <button
                         id="enviarDetalle"
                         className={Global.BotonBuscar + Global.BotonPrimary}
-                        hidden={modo == "Consultar" ? true : false}
+                        hidden={modo == "Consultar"}
                         onClick={(e) => AgregarDetalle(e)}
                       >
                         <FaPlus></FaPlus>

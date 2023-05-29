@@ -1178,9 +1178,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.tipoDocumentoId ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Nuevo" ? false : true}
-                    className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
-                    }
+                    className={Global.InputStyle}
                   >
                     {dataTipoDoc.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -1199,9 +1197,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.serie ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Nuevo" ? false : true}
-                    className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
-                    }
+                    className={Global.InputStyle}
                   >
                     {dataSeries
                       .filter(
@@ -1237,7 +1233,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonPrimary +
                       " rounded-r-none"
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroCotizacion()}
                   >
@@ -1248,7 +1244,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonEliminar
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroCotizacion()}
                   >
@@ -1291,7 +1287,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
                     className={
@@ -1305,7 +1301,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
@@ -1323,7 +1319,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoVentaId"
                     value={data.tipoVentaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
                     {dataTipoVenta.map((map) => (
@@ -1342,7 +1338,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="monedaId"
                     value={data.monedaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" }
+                    disabled={modo == "Consultar"}
                     className={Global.InputBoton}
                   >
                     {dataMoneda.map((map) => (
@@ -1359,7 +1355,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonPrimary +
                       " rounded-r-none"
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroCotizacion()}
                   >
@@ -1370,7 +1366,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonEliminar
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroCotizacion()}
                   >

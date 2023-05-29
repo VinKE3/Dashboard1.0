@@ -223,7 +223,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             <select
               id="tipoSalidaId"
               name="tipoSalidaId"
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar"}
               onChange={ValidarData}
               value={data.tipoSalidaId ?? ""}
               className={
@@ -287,7 +287,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               name="observacion"
               autoComplete="off"
               placeholder="Observación"
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar"}
               value={data.observacion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}

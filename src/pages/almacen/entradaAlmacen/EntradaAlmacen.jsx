@@ -3,6 +3,7 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
+import Imprimir from "../../../components/funciones/Imprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -12,11 +13,12 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import {
   faPlus,
   faBan,
   faCircleCheck,
+  faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
@@ -133,6 +135,15 @@ const EntradaAlmacen = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      observacion: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("observacion").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -174,205 +185,268 @@ const EntradaAlmacen = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo", accion = 0) => {
-    setModo(modo);
-    switch (accion) {
-      case 0: {
-        setObjeto({
-          empresaId: "01",
-          proveedorId: "",
-          tipoDocumentoId: "EN",
-          serie: "",
-          numero: "",
-          clienteId: "000000",
-          proveedorNumeroDocumentoIdentidad: "",
-          proveedorDireccion: "",
-          personalId: dataGlobal.personalId,
-          fechaEmision: moment().format("YYYY-MM-DD"),
-          monedaId: "S",
-          tipoCambio: 0,
-          numeroOP: "",
-          observacion: "",
-          detalles: [],
-        });
-        setModal(true);
-        break;
-      }
-      case 1: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          await GetPorId(id);
-          setModal(true);
-        }
-        break;
-      }
-      case 2: {
-        let valor = await GetIsPermitido(accion, id);
-        if (valor) {
-          Delete(["Almacen", "EntradaAlmacen"], id, setEliminar);
-        }
-        break;
-      }
-      case 3: {
-        await GetPorId(id);
-        setModal(true);
-        break;
-      }
-      default:
-        break;
-    }
-  };
-  const Anular = async () => {
-    let tabla = document
-      .querySelector("table > tbody")
-      .querySelector("tr.selected-row");
-    if (tabla != null) {
-      if (tabla.classList.contains("selected-row")) {
-        let id =
-          document.querySelector("tr.selected-row").children[0].innerHTML;
-        let documento =
-          document.querySelector("tr.selected-row").children[3].innerHTML;
-        Swal.fire({
-          title: "¿Desea Anular el documento?",
-          text: documento,
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then(async (res) => {
-          if (res.isConfirmed) {
-            const result = await ApiMasy.put(
-              `api/Almacen/EntradaAlmacen/Anular/${id}`
-            );
-            if (result.name == "AxiosError") {
-              if (Object.entries(result.response.data).length > 0) {
-                toast.error(String(result.response.data.messages[0].textos), {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              } else {
-                toast.error([result.message], {
-                  position: "bottom-right",
-                  autoClose: 3000,
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-                });
-              }
-            } else {
-              toast.success(result.data.messages[0].textos[0], {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-            }
-          }
-        });
-      }
+  const AccionModal = async (
+    value,
+    modo = "Nuevo",
+    accion = 0,
+    click = false
+  ) => {
+    if (click) {
+      setModo(modo);
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
+      await GetPorId(id);
+      setModal(true);
     } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
-  const Cerrar = async () => {
-    let tabla = document
-      .querySelector("table > tbody")
-      .querySelector("tr.selected-row");
-    if (tabla != null) {
-      if (tabla.classList.contains("selected-row")) {
-        let id = document.querySelector("tr.selected-row").firstChild.innerHTML;
-        const cerrado = datos.find((item) => item.id == id);
-        const title = cerrado.cerrado
-          ? "¿Desea Abrir el documento?"
-          : "¿Desea Cerrar el documento?";
-        Swal.fire({
-          title: title,
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#EE8100",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            ApiMasy.put(`api/Almacen/EntradaAlmacen/Cerrar/${id}`).then(
-              (response) => {
-                if (response.name == "AxiosError") {
-                  let err = "";
-                  if (response.response.data == "") {
-                    err = response.message;
-                  } else {
-                    err = String(response.response.data.messages[0].textos);
-                  }
-                  toast.error(err, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                  });
-                } else {
-                  Listar(cadena, index + 1);
-                  toast.success(String(response.data.messages[0].textos), {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                  });
+      setModo(modo);
+      switch (accion) {
+        case 0: {
+          setObjeto({
+            empresaId: "01",
+            proveedorId: "",
+            tipoDocumentoId: "EN",
+            serie: "",
+            numero: "",
+            clienteId: "000000",
+            proveedorNumeroDocumentoIdentidad: "",
+            proveedorDireccion: "",
+            personalId: dataGlobal.personalId,
+            fechaEmision: moment().format("YYYY-MM-DD"),
+            monedaId: "S",
+            tipoCambio: 0,
+            numeroOP: "",
+            observacion: "",
+            detalles: [],
+          });
+          setModal(true);
+          break;
+        }
+        case 1: {
+          let valor = await GetIsPermitido(accion, value);
+          if (valor) {
+            await GetPorId(value);
+            setModal(true);
+          }
+          break;
+        }
+        case 2: {
+          let valor = await GetIsPermitido(accion, id);
+          if (valor) {
+            Delete(["Almacen", "EntradaAlmacen"], id, setEliminar);
+          }
+          break;
+        }
+        case 3: {
+          await GetPorId(value);
+          setModal(true);
+          break;
+        }
+        case 4: {
+          let row = document
+            .querySelector("#tablaEntradaAlmacen")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let documento = row.children[3].innerHTML;
+            Swal.fire({
+              title: "¿Desea Anular el documento?",
+              text: documento,
+              icon: "warning",
+              iconColor: "#F7BF3A",
+              showCancelButton: true,
+              color: "#fff",
+              background: "#1a1a2e",
+              confirmButtonColor: "#eea508",
+              confirmButtonText: "Aceptar",
+              cancelButtonColor: "#d33",
+              cancelButtonText: "Cancelar",
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                let valor = await GetIsPermitido(accion, value);
+                if (valor) {
+                  await Anular(["Venta", "DocumentoVenta"], id, setEliminar);
                 }
               }
-            );
+            });
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
           }
-        });
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaEntradaAlmacen")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let resultado = await Imprimir(["Almacen", "EntradaAlmacen"], id);
+            if (resultado != null) {
+              const source = `data:application/pdf;base64,${resultado}`;
+              const link = document.createElement("a");
+              const fileName = "file.pdf";
+              link.href = source;
+              link.download = fileName;
+              link.click();
+            }
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        case 6: {
+          let row = document
+            .querySelector("#tablaEntradaAlmacen")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            const cerrado = datos.find((item) => item.id == id);
+            const title = cerrado.cerrado
+              ? "¿Desea Abrir el documento?"
+              : "¿Desea Cerrar el documento?";
+            Swal.fire({
+              title: title,
+              icon: "warning",
+              iconColor: "#F7BF3A",
+              showCancelButton: true,
+              color: "#fff",
+              background: "#1a1a2e",
+              confirmButtonColor: "#EE8100",
+              confirmButtonText: "Aceptar",
+              cancelButtonColor: "#d33",
+              cancelButtonText: "Cancelar",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                ApiMasy.put(`api/Almacen/EntradaAlmacen/Cerrar/${id}`).then(
+                  (response) => {
+                    if (response.name == "AxiosError") {
+                      let err = "";
+                      if (response.response.data == "") {
+                        err = response.message;
+                      } else {
+                        err = String(response.response.data.messages[0].textos);
+                      }
+                      toast.error(err, {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                      });
+                    } else {
+                      Listar(cadena, index + 1);
+                      toast.success(String(response.data.messages[0].textos), {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                      });
+                    }
+                  }
+                );
+              }
+            });
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        default:
+          break;
       }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    }
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      setModo("Nuevo");
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaEntradaAlmacen")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar", 1);
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaEntradaAlmacen")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Eliminar", 2);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaEntradaAlmacen")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
+    }
+    if (e.key === "a") {
+      let row = document
+        .querySelector("#tablaEntradaAlmacen")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Anular", 4);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaEntradaAlmacen")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
+      }
+    }
+    if (e.key === "w") {
+      let row = document
+        .querySelector("#tablaEntradaAlmacen")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "AbrirCerrar", 6);
+      }
     }
   };
   //#endregion
@@ -461,7 +535,7 @@ const EntradaAlmacen = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Entrada Artículos</h2>
+            <h2 className={Global.TituloH2}>Entrada de Almacén</h2>
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
@@ -511,9 +585,9 @@ const EntradaAlmacen = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>
@@ -527,14 +601,15 @@ const EntradaAlmacen = () => {
                   botonClass={Global.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
+                  contenedor=""
                 />
               )}
 
               <BotonBasico
                 botonText="Cerrar"
-                botonClass={Global.BotonAgregar}
+                botonClass={Global.BotonMorado}
                 botonIcon={faCircleCheck}
-                click={() => Cerrar()}
+                click={() => AccionModal(null, "AbrirCerrar", 6)}
                 contenedor=""
               />
 
@@ -543,21 +618,31 @@ const EntradaAlmacen = () => {
                   botonText="Anular"
                   botonClass={Global.BotonEliminar}
                   botonIcon={faBan}
-                  click={() => Anular()}
+                  click={() => AccionModal(null, "Anular", 4)}
                   contenedor=""
                 />
               )}
+              <BotonBasico
+                botonText="Imprimir"
+                botonClass={Global.BotonAgregar}
+                botonIcon={faPrint}
+                click={() => AccionModal(null, "Imprimir", 5)}
+                contenedor=""
+              />
             </div>
             {/* Boton */}
 
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaEntradaAlmacen"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
+                KeyDown={(e) => ModalKey(e, "Modificar")}
               />
             </TablaStyle>
             {/* Tabla */}

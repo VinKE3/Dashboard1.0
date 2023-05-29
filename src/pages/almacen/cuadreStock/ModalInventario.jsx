@@ -53,7 +53,7 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
               autoComplete="off"
               autoFocus
               placeholder="Inventario"
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar"}
               value={data.inventario ?? ""}
               onChange={ValidarData}
               onKeyDown={(e) => KeyDown(e)}
@@ -64,7 +64,7 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
               className={
                 Global.BotonBuscar + Global.Anidado + Global.BotonAgregar
               }
-              hidden={modo == "Consultar" ? true : false}
+              hidden={modo == "Consultar"}
               onClick={() => PasarDatos()}
             >
               <FaUndoAlt></FaUndoAlt>

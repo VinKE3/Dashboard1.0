@@ -1192,8 +1192,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       Global.BotonPrimary +
                       " !rounded-none"
                     }
-                    hidden={modo == "Consultar" ? true : false}
-                    disabled={checkVarios ? true : false}
+                    hidden={modo == "Consultar"}
+                    disabled={checkVarios}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={(e) => AbrirFiltroCliente(e)}
                   >
@@ -1209,7 +1209,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           setCheckVarios(e.checked);
                           ClientesVarios(e);
                         }}
-                        checked={checkVarios ? true : ""}
+                        checked={checkVarios}
                       ></Checkbox>
                     </div>
                     <label htmlFor="varios" className={Global.LabelCheckStyle}>
@@ -1461,7 +1461,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    hidden={modo == "Consultar" ? true : false}
+                    hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
                       GetPorIdTipoCambio(data.fechaEmision);
@@ -1713,7 +1713,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="consultarArticulo"
                       className={Global.BotonBuscar + Global.BotonPrimary}
                       disabled={!habilitarFiltro ? false : true}
-                      hidden={modo == "Consultar" ? true : false}
+                      hidden={modo == "Consultar"}
                       onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={() => {
                         setDataCabecera([]);
@@ -1811,7 +1811,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <button
                         id="enviarDetalle"
                         className={Global.BotonBuscar + Global.BotonPrimary}
-                        hidden={modo == "Consultar" ? true : false}
+                        hidden={modo == "Consultar"}
                         onKeyDown={(e) => Funciones.KeyClick(e)}
                         onClick={() => AbrirFiltroPrecio()}
                       >
@@ -1847,7 +1847,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <button
                       id="enviarDetalle"
                       className={Global.BotonBuscar + Global.BotonPrimary}
-                      hidden={modo == "Consultar" ? true : false}
+                      hidden={modo == "Consultar"}
                       onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={() => AgregarDetalle()}
                     >

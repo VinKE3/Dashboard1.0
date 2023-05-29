@@ -777,7 +777,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     />
                     <button
                       id="consultarApi"
-                      hidden={modo == "Consultar" ? true : false}
+                      hidden={modo == "Consultar"}
                       onClick={(e) => ValidarConsultarDocumento(e)}
                       className={
                         Global.BotonBuscar +

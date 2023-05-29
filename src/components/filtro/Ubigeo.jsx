@@ -121,7 +121,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           id={id[0]}
           name={id[0]}
           onChange={ValidarData}
-          disabled={modo == "Consultar" ? true : false}
+          disabled={modo == "Consultar"}
           className={Global.InputStyle}
         >
           {dataDep.map((departamento) => (
@@ -139,7 +139,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           id={id[1]}
           name={id[1]}
           onChange={ValidarData}
-          disabled={modo == "Consultar" ? true : false}
+          disabled={modo == "Consultar"}
           className={Global.InputStyle}
         >
           {dataProv.map((provincia) => (
@@ -157,7 +157,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           id={id[2]}
           name={id[2]}
           onChange={ValidarData}
-          disabled={modo == "Consultar" ? true : false}
+          disabled={modo == "Consultar"}
           className={Global.InputStyle}
         >
           {Object.entries(dataDist).length > 0 &&
