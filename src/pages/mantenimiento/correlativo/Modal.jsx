@@ -59,7 +59,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.tipoDocumentoId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   className={Global.InputStyle}
                 >
                   {dataTipoDocumento.map((forma) => (
@@ -79,7 +79,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="serie"
                   placeholder="Serie"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.serie}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -100,7 +100,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoDocumentoDescripcion"
                   placeholder="Descripción"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.tipoDocumentoDescripcion}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -117,7 +117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="numero"
                   autoComplete="off"
                   min={0}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.numero}
                   onChange={ValidarData}
                   className={Global.InputStyle}

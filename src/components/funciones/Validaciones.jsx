@@ -151,13 +151,15 @@ export const ConvertirPreciosAMoneda = async (
 
 export const Seleccionar = (e) => {
   let row = e.target.closest("tr");
-  if (row.classList.contains("selected-row")) {
-    row.classList.remove("selected-row");
-  } else {
-    document.querySelectorAll("*").forEach((map) => {
-      map.classList.remove("selected-row");
-    });
-    row.classList.add("selected-row");
+  if (row != null) {
+    if (row.classList.contains("selected-row")) {
+      row.classList.remove("selected-row");
+    } else {
+      document.querySelectorAll("*").forEach((map) => {
+        map.classList.remove("selected-row");
+      });
+      row.classList.add("selected-row");
+    }
   }
 };
 export const MoverFlecha = async (e, id) => {
@@ -170,17 +172,24 @@ export const MoverFlecha = async (e, id) => {
         if (filaSiguiente != null) {
           row.classList.remove("selected-row");
           filaSiguiente.classList.add("selected-row");
+          if (filaAnterior != null) {
+            filaAnterior.scrollIntoView();
+          }
         }
       } else if (e.keyCode == 38) {
         if (filaAnterior != null) {
           row.classList.remove("selected-row");
           filaAnterior.classList.add("selected-row");
+          if (filaAnterior != null) {
+            filaAnterior.scrollIntoView();
+          }
         }
       }
     } else {
       if (e.target.tagName == "TABLE") {
         let tr = document.querySelector(id).getElementsByTagName("tr");
         tr[1].classList.add("selected-row");
+        tr.scrollIntoView();
       }
     }
   }

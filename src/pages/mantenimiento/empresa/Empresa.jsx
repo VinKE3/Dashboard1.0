@@ -297,22 +297,81 @@ const Empresa = ({ modo }) => {
     setPorcentajesDetraccion(detraccion);
     setPorcentajesPercepcion(percepcion);
   };
-  const GuardarTodo = async () => {
-    const result = await ApiMasy.put(`api/Empresa/Configuracion`, dataGeneral);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        toast.error(result.response.data.messages[0].textos[0], {
-          position: "bottom-right",
-          autoClose: 300,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+  const GuardarTodo = async (e) => {
+    if (e._reactName != "onClick") {
+      if (e.key == "Enter") {
+        const result = await ApiMasy.put(
+          `api/Empresa/Configuracion`,
+          dataGeneral
+        );
+        if (result.name == "AxiosError") {
+          if (Object.entries(result.response.data).length > 0) {
+            toast.error(result.response.data.messages[0].textos[0], {
+              position: "bottom-right",
+              autoClose: 300,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          } else {
+            toast.error(result.message, {
+              position: "bottom-right",
+              autoClose: 300,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+        } else {
+          toast.success(result.data.messages[0].textos[0], {
+            position: "bottom-right",
+            autoClose: 300,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
+      }
+    } else {
+      const result = await ApiMasy.put(
+        `api/Empresa/Configuracion`,
+        dataGeneral
+      );
+      if (result.name == "AxiosError") {
+        if (Object.entries(result.response.data).length > 0) {
+          toast.error(result.response.data.messages[0].textos[0], {
+            position: "bottom-right",
+            autoClose: 300,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          toast.error(result.message, {
+            position: "bottom-right",
+            autoClose: 300,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       } else {
-        toast.error(result.message, {
+        toast.success(result.data.messages[0].textos[0], {
           position: "bottom-right",
           autoClose: 300,
           hideProgressBar: true,
@@ -323,17 +382,6 @@ const Empresa = ({ modo }) => {
           theme: "colored",
         });
       }
-    } else {
-      toast.success(result.data.messages[0].textos[0], {
-        position: "bottom-right",
-        autoClose: 300,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
     }
 
     await Configuracion();
@@ -1181,6 +1229,7 @@ const Empresa = ({ modo }) => {
                     className={Global.BotonModalBase + Global.BotonOkModal}
                     type="button"
                     onClick={GuardarTodo}
+                    onKeyDown={(e) => GuardarTodo(e)}
                   >
                     Guardar Cambios
                   </button>
@@ -1863,7 +1912,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarIgv(e);
                       }}
-                      contenedor="mb-3"
+                      contenedor=""
                     />
                     {/* Form */}
                     {estadoIgv && (
@@ -1891,7 +1940,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                disabled={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" }
                                 value={objetoIgv.porcentaje}
                                 onChange={ValidarDataIgv}
                                 className={Global.InputBoton}
@@ -1956,7 +2005,11 @@ const Empresa = ({ modo }) => {
                       </div>
                     )}
                     <TablaStyle>
-                      <TableBasic columnas={colIgv} datos={porcentajesIGV} />
+                      <TableBasic
+                        id="tablaIGV"
+                        columnas={colIgv}
+                        datos={porcentajesIGV}
+                      />
                     </TablaStyle>
                   </div>
                   <div className="card">
@@ -1968,7 +2021,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarRetencion(e);
                       }}
-                      contenedor="mb-3"
+                      contenedor=""
                     />
                     {/* Form */}
                     {estadoRetencion && (
@@ -1996,7 +2049,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 autoFocus
                                 min={0}
-                                disabled={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" }
                                 value={objetoRetencion.porcentaje}
                                 onChange={ValidarDataRetencion}
                                 className={Global.InputBoton}
@@ -2062,6 +2115,7 @@ const Empresa = ({ modo }) => {
                     {/* Form */}
                     <TablaStyle>
                       <TableBasic
+                        id="tablaRetencion"
                         columnas={colRetencion}
                         datos={porcentajesRetencion}
                       />
@@ -2076,7 +2130,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarDetraccion(e);
                       }}
-                      contenedor="mb-3"
+                      contenedor=""
                     />
                     {/* Form */}
                     {estadoDetraccion && (
@@ -2104,7 +2158,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                disabled={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" }
                                 value={objetoDetraccion.porcentaje}
                                 onChange={ValidarDataDetraccion}
                                 className={Global.InputBoton}
@@ -2170,6 +2224,7 @@ const Empresa = ({ modo }) => {
                     {/* Form */}
                     <TablaStyle>
                       <TableBasic
+                        id="tablaDetraccion"
                         columnas={colDetraccion}
                         datos={porcentajesDetraccion}
                       />
@@ -2184,7 +2239,7 @@ const Empresa = ({ modo }) => {
                       click={(e) => {
                         AgregarPercepcion(e);
                       }}
-                      contenedor="mb-3"
+                      contenedor=""
                     />
                     {/* Form */}
                     {estadoPercepcion && (
@@ -2212,7 +2267,7 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                disabled={modo == "Consultar" ? true : false}
+                                disabled={modo == "Consultar" }
                                 value={objetoPercepcion.porcentaje}
                                 onChange={ValidarDataPercepcion}
                                 className={Global.InputBoton}
@@ -2278,6 +2333,7 @@ const Empresa = ({ modo }) => {
                     {/* Form */}
                     <TablaStyle>
                       <TableBasic
+                        id="tablaPercepcion"
                         columnas={colPercepcion}
                         datos={porcentajesPercepcion}
                       />

@@ -41,10 +41,31 @@ const Modal = ({ setModal, modo, objeto }) => {
         precioVenta: result.data.data.precioVenta,
       });
     }
+    if (result.name == "AxiosError") {
+      let error = "";
+      //Captura el mensaje de error
+      if (Object.entries(result.response.data).length > 0) {
+        error = String(result.response.data.messages[0].textos);
+      } else {
+        error = String(result.message);
+      }
+      //Captura el mensaje de error
 
-    if (result.status == 200) {
+      toast.error(error, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+      document.getElementById("id").focus();
+    } else {
       toast.info(
-        "Tipo de Cambio extraído exitosamente. Día: " + moment(result.data.data.fecha).format("DD/MM/YYYY"),
+        "Tipo de Cambio extraído exitosamente. Día: " +
+          moment(result.data.data.fecha).format("DD/MM/YYYY"),
         {
           position: "bottom-right",
           autoClose: 3000,
@@ -56,17 +77,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           theme: "colored",
         }
       );
-    } else {
-      toast.error(String(result.response.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      document.getElementById("botonRegistrarModalCrud").focus();
+      setEliminar(true);
     }
   };
   //#endregion
@@ -79,6 +91,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "TipoCambio"]}
       titulo="Tipo de Cambio"
+      foco={document.getElementById("tablaTipoCambio")}
       tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
       <div className={Global.ContenedorBasico}>
@@ -91,7 +104,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             id="id"
             name="id"
             autoFocus
-            disabled={modo == "Consultar" ? true : false}
+            disabled={modo == "Consultar"}
             value={moment(data.id).format("yyyy-MM-DD")}
             onChange={ValidarData}
             className={Global.InputBoton}
@@ -103,6 +116,11 @@ const Modal = ({ setModal, modo, objeto }) => {
             }
             hidden={modo == "Consultar" ? true : false}
             onClick={() => ConsultarTipoCambio(`?fecha=${data.id}`)}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                ConsultarTipoCambio(`?fecha=${data.id}`);
+              }
+            }}
           >
             <FaSearch></FaSearch>
           </button>
@@ -118,7 +136,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioCompra"
               autoComplete="off"
               min={0}
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar"}
               value={data.precioCompra}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -134,7 +152,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="precioVenta"
               autoComplete="off"
               min={0}
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar"}
               value={data.precioVenta}
               onChange={ValidarData}
               className={Global.InputStyle}

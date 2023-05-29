@@ -26,6 +26,7 @@ const ModalClave = ({ setModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "Usuario/CambiarClave"]}
       titulo="Contraseña"
+      foco={document.getElementById("tablaUsuario")}
       tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
       <div className={Global.ContenedorBasico}>

@@ -40,6 +40,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "EmpresaTransporte"]}
           titulo="Empresa Transporte"
+          foco={document.getElementById("tablaEmpresaTransporte")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -77,7 +78,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   className={Global.InputStyle}
                 />
               </div>
@@ -92,7 +93,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Razón Social"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -110,7 +111,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Telefono"
                   autoComplete="off"
                   maxLength={20}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.telefono ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -126,7 +127,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="celular"
                   placeholder="Celular"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.celular ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -143,7 +144,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="correoElectronico"
                 placeholder="Email"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.correoElectronico ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -159,7 +160,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="direccion"
                 placeholder="Direccion"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.direccion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -186,7 +187,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

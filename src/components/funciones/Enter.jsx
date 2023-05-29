@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import * as Funciones from "../funciones/Validaciones";
 
 function Enter({ children }) {
   //#region useEffect
@@ -30,6 +29,18 @@ function Enter({ children }) {
           siguienteElemento = (siguienteElemento + 1) % inputs.length;
         }
         e.preventDefault();
+        if (inputs[foco + 1] != undefined) {
+          if (inputs[foco + 1].tagName == "TABLE") {
+            let tabla = document.querySelector("table > tbody");
+            tabla.focus();
+            let row = tabla.querySelector("tr");
+            document.querySelectorAll("*").forEach((map) => {
+              map.classList.remove("selected-row");
+            });
+            row.classList.add("selected-row");
+          }
+        }
+
         if (document.activeElement.tagName != "TABLE") {
           inputs[siguienteElemento].focus();
         }

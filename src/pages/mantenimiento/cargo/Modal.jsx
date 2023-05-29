@@ -41,7 +41,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Descripción"
               autoComplete="off"
               autoFocus
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" }
               value={data.descripcion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -58,7 +58,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Sueldo"
               autoComplete="off"
               min={0}
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" }
               defaultValue={data.sueldo ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}

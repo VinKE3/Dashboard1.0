@@ -15,7 +15,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch, FaCheck } from "react-icons/fa";
+import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
@@ -135,6 +135,16 @@ const DocumentoVenta = () => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
+  };
+  const FiltroBoton = async () => {
+    setFiltro({
+      clienteNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      isEnviado: "",
+    });
+    setIndex(0);
+    document.getElementById("clienteNombre").focus();
   };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
@@ -324,7 +334,15 @@ const DocumentoVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Venta", "DocumentoVenta"], id);
+            let resultado = await Imprimir(["Venta", "DocumentoVenta"], id);
+            if (resultado != null) {
+              const source = `data:application/pdf;base64,${resultado}`;
+              const link = document.createElement("a");
+              const fileName = "file.pdf";
+              link.href = source;
+              link.download = fileName;
+              link.click();
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -711,9 +729,9 @@ const DocumentoVenta = () => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    onClick={Filtro}
+                    onClick={FiltroBoton}
                   >
-                    <FaSearch />
+                    <FaUndoAlt />
                   </button>
                 </div>
               </div>

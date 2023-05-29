@@ -1291,7 +1291,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
                     className={
@@ -1323,7 +1323,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoVentaId"
                     value={data.tipoVentaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {dataTipoVenta.map((map) => (
@@ -1342,7 +1342,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="monedaId"
                     value={data.monedaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputBoton}
                   >
                     {dataMoneda.map((map) => (

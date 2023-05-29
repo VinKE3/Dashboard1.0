@@ -131,6 +131,13 @@ const CuentaCorriente = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      numero: "",
+    });
+    setIndex(0);
+    document.getElementById("numero").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -264,7 +271,7 @@ const CuentaCorriente = () => {
               value={filtro.numero}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={Filtro}
+              onClick={FiltroBoton}
             />
             {/* Filtro*/}
 
@@ -283,14 +290,14 @@ const CuentaCorriente = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
-                 id={"tablaCuentaCorriente"}
-                 columnas={columnas}
-                 datos={datos}
-                 total={total}
-                 index={index}
-                 Click={(e) => FiltradoPaginado(e)}
-                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
-                 KeyDown={(e) => ModalKey(e)}
+                id={"tablaCuentaCorriente"}
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

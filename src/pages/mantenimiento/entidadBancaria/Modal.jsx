@@ -42,6 +42,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "EntidadBancaria"]}
           titulo="Entidad Bancaria"
+          foco={document.getElementById("tablaEntidadBancaria")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -54,7 +55,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="id"
                   name="id"
-                  placeholder="00"
+                  placeholder="Código"
                   autoComplete="off"
                   value={data.id ?? ""}
                   onChange={ValidarData}
@@ -77,7 +78,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   maxLength="11"
                   autoFocus
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar"}
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -92,7 +93,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipo"
                   value={data.tipo ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar"}
                   className={Global.InputStyle}
                 >
                   {dataModal.map((tipo) => (
@@ -113,7 +114,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Nombre"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

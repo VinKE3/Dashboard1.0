@@ -14,7 +14,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
@@ -143,6 +143,15 @@ const Retencion = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      clienteNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("clienteNombre").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -247,7 +256,7 @@ const Retencion = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let documento = row.children[2].innerHTML;
+            let documento = row.children[3].innerHTML;
             Swal.fire({
               title: "¿Desea Anular el documento?",
               text: documento,
@@ -319,7 +328,7 @@ const Retencion = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        AccionModal(id, "Modificar", 1);
+        AccionModal(id, "Consultar", 3);
       }
     }
     if (e.key === "Delete") {
@@ -508,9 +517,9 @@ const Retencion = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>

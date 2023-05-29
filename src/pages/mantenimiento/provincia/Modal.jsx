@@ -41,6 +41,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Provincia"]}
           titulo="Provincia"
+          foco={document.getElementById("tablaProvincia")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -53,7 +54,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="provinciaId"
                   name="provinciaId"
-                  placeholder="00"
+                  placeholder="Código"
                   autoComplete="off"
                   maxLength="2"
                   autoFocus
@@ -93,7 +94,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Provincia"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                autoFocus={modo == "Modificar"}
+                disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

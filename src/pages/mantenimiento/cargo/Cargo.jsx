@@ -123,6 +123,13 @@ const Cargo = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      descripcion: "",
+    });
+    setIndex(0);
+    document.getElementById("descripcion").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -222,7 +229,7 @@ const Cargo = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Cargo</h2>
+            <h2 className={Global.TituloH2}>Cargos</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -233,7 +240,7 @@ const Cargo = () => {
               value={filtro.descripcion}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={Filtro}
+              onClick={FiltroBoton}
             />
             {/* Filtro*/}
 

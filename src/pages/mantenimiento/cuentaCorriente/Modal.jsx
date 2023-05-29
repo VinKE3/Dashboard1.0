@@ -63,7 +63,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="cuentaCorrienteId"
                   name="cuentaCorrienteId"
-                  placeholder="00"
+                  placeholder="Código"
                   autoComplete="off"
                   value={data.cuentaCorrienteId ?? ""}
                   onChange={ValidarData}
@@ -84,7 +84,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.tipoCuentaDescripcion ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   className={Global.InputStyle}
                 >
                   {dataTCuenta.map((tipo) => (
@@ -103,7 +103,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="monedaId"
                   value={data.monedaId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   className={Global.InputStyle}
                 >
                   {dataMoneda.map((moneda) => (
@@ -127,7 +127,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="entidadBancariaId"
                   value={data.entidadBancariaId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   className={Global.InputStyle}
                 >
                   {dataEntidad.map((entidad) => (

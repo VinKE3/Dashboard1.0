@@ -14,7 +14,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
@@ -50,8 +50,6 @@ const TablaStyle = styled.div`
     max-width: 100px;
   }
 `;
-//#endregion
-
 //#endregion
 
 const Cotizacion = () => {
@@ -170,6 +168,15 @@ const Cotizacion = () => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
+  };
+  const FiltroBoton = async () => {
+    setFiltro({
+      clienteNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("clienteNombre").focus();
   };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
@@ -483,7 +490,7 @@ const Cotizacion = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Cotización</h2>
+            <h2 className={Global.TituloH2}>Cotizaciones</h2>
 
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
@@ -533,9 +540,9 @@ const Cotizacion = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>

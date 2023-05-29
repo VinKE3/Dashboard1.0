@@ -112,6 +112,13 @@ const Departamento = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      nombre: "",
+    });
+    setIndex(0);
+    document.getElementById("nombre").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -128,7 +135,7 @@ const Departamento = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          id: "00",
+          id: "",
           nombre: "",
         });
       } else {
@@ -217,7 +224,7 @@ const Departamento = () => {
               value={filtro.nombre}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={Filtro}
+              onClick={FiltroBoton}
             />
             {/* Filtro*/}
 
@@ -236,14 +243,14 @@ const Departamento = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
-               id={"tablaDepartamento"}
-               columnas={columnas}
-               datos={datos}
-               total={total}
-               index={index}
-               Click={(e) => FiltradoPaginado(e)}
-               DobleClick={(e) => AccionModal(e, "Consultar", true)}
-               KeyDown={(e) => ModalKey(e)}
+                id={"tablaDepartamento"}
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

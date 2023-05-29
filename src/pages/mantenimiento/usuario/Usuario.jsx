@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import FiltroBasico from "../../../components/filtro/FiltroBasico";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -169,6 +170,13 @@ const Usuario = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      nickFiltro: "",
+    });
+    setIndex(0);
+    document.getElementById("nickFiltro").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -176,23 +184,61 @@ const Usuario = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo") => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        id: "00",
-        nick: "",
-        observacion: "",
-        isActivo: true,
-        habilitarAfectarStock: true,
-        personalId: "",
-        clave: "",
-        claveConfirmacion: "",
-      });
-    } else {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      if (modo == "Nuevo") {
+        setObjeto({
+          id: "",
+          nick: "",
+          observacion: "",
+          isActivo: true,
+          habilitarAfectarStock: true,
+          personalId: "",
+          clave: "",
+          claveConfirmacion: "",
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaUsuario")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar");
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaUsuario")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "Usuario"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaUsuario")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
+      }
+    }
   };
   const AbrirModalConfigurar = async (modo = "Modificar") => {
     let tabla = document
@@ -338,7 +384,7 @@ const Usuario = () => {
               value={filtro.nickFiltro}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={Filtro}
+              onClick={FiltroBoton}
             />
             {/* Filtro*/}
 
@@ -377,11 +423,14 @@ const Usuario = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaUsuario"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

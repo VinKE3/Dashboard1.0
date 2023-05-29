@@ -40,7 +40,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="text"
               id="id"
               name="id"
-              placeholder="00"
+              placeholder="Código"
               autoComplete="off"
               maxLength="2"
               autoFocus

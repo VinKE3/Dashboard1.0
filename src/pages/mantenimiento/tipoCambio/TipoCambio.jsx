@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -8,7 +9,7 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
@@ -116,6 +117,14 @@ const TipodeCambio = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      anio: moment().format("YYYY"),
+      mes: "",
+    });
+    setIndex(0);
+    document.getElementById("anio").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -123,18 +132,64 @@ const TipodeCambio = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo") => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        id: moment().format("YYYY-MM-DD"),
-        precioCompra: "0",
-        precioVenta: "0",
-      });
-    } else {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = moment(row.firstChild.innerText, "DD/MM/YYYY").format(
+        "YYYY-MM-DD"
+      );
       await GetPorId(id);
+    } else {
+      if (modo == "Nuevo") {
+        setObjeto({
+          id: moment().format("YYYY-MM-DD"),
+          precioCompra: "0",
+          precioVenta: "0",
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaTipoCambio")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = moment(row.firstChild.innerText, "DD/MM/YYYY").format(
+          "YYYY-MM-DD"
+        );
+        AccionModal(id, "Modificar");
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaTipoCambio")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = moment(row.firstChild.innerText, "DD/MM/YYYY").format(
+          "YYYY-MM-DD"
+        );
+        Delete(["Mantenimiento", "TipoCambio"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaTipoCambio")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = moment(row.firstChild.innerText, "DD/MM/YYYY").format(
+          "YYYY-MM-DD"
+        );
+        AccionModal(id, "Consultar");
+      }
+    }
   };
   //#endregion
 
@@ -145,7 +200,9 @@ const TipodeCambio = () => {
         Header: "Fecha",
         accessor: "id",
         Cell: ({ value }) => {
-          return moment(value).format("DD/MM/YYYY");
+          return (
+            <p className="text center">{moment(value).format("DD/MM/YYYY")}</p>
+          );
         },
       },
       {
@@ -240,10 +297,7 @@ const TipodeCambio = () => {
             {/* Filtro*/}
             <div className={Global.ContenedorFiltro}>
               <div className={Global.InputsFiltro}>
-                <label
-                  htmlFor="anio"
-                  className={Global.LabelStyle}
-                >
+                <label htmlFor="anio" className={Global.LabelStyle}>
                   Año:
                 </label>
                 <input
@@ -259,10 +313,7 @@ const TipodeCambio = () => {
               </div>
 
               <div className={Global.InputsFiltro}>
-                <label
-                  id="mes"
-                  className={Global.LabelStyle}
-                >
+                <label id="mes" className={Global.LabelStyle}>
                   Mes:
                 </label>
                 <select
@@ -283,9 +334,9 @@ const TipodeCambio = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>
@@ -298,6 +349,7 @@ const TipodeCambio = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -305,11 +357,14 @@ const TipodeCambio = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaTipoCambio"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

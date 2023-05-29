@@ -808,7 +808,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="fechaEmision"
                 autoComplete="off"
                 autoFocus={modo == "Modificar"}
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                 onChange={ValidarData}
                 onBlur={() => {
@@ -871,7 +871,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <Checkbox
                     inputId="varios"
                     name="varios"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     onChange={(e) => {
                       setCheckVarios(e.checked);
                       ClientesVarios(e);
@@ -896,7 +896,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="clienteDireccion"
               placeholder="Dirección"
               autoComplete="off"
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" }
               value={data.clienteDireccion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -913,7 +913,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="tipoVentaId"
                 value={data.tipoVentaId ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 className={Global.InputStyle}
               >
                 {dataTipoVenta.map((map) => (
@@ -932,7 +932,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="tipoCobroId"
                 value={data.tipoCobroId ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 className={Global.InputStyle}
               >
                 {dataTipoCobro.map((map) => (
@@ -954,7 +954,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="monedaId"
                 value={data.monedaId ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 className={Global.InputStyle}
               >
                 {dataMoneda.map((map) => (
@@ -975,7 +975,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Tipo de Cambio"
                 autoComplete="off"
                 min={0}
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.tipoCambio ?? ""}
                 onChange={ValidarData}
                 className={
@@ -1008,7 +1008,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="observacion"
               placeholder="Observación"
               autoComplete="off"
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar" }
               value={data.observacion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -1144,7 +1144,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder={"% Retención"}
                   autoComplete="off"
                   min={0}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={dataCabecera.porcentaje ?? ""}
                   onChange={ValidarDataCabecera}
                   className={Global.InputStyle}

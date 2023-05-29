@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import FiltroBasico from "../../../components/filtro/FiltroBasico";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -116,6 +117,13 @@ const Vehiculo = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      numeroPlaca: "",
+    });
+    setIndex(0);
+    document.getElementById("numeroPlaca").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -123,23 +131,61 @@ const Vehiculo = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo") => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        id: "00",
-        empresaId: "01",
-        empresaTransporteId: "0001",
-        numeroPlaca: "",
-        marca: "",
-        modelo: "",
-        certificadoInscripcion: "",
-        observacion: "",
-      });
-    } else {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      if (modo == "Nuevo") {
+        setObjeto({
+          id: "",
+          empresaId: "01",
+          empresaTransporteId: "0001",
+          numeroPlaca: "",
+          marca: "",
+          modelo: "",
+          certificadoInscripcion: "",
+          observacion: "",
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaVehiculo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar");
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaVehiculo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "Vehiculo"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaVehiculo")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
+      }
+    }
   };
   //#endregion
   //#region Columnas
@@ -199,7 +245,7 @@ const Vehiculo = () => {
               value={filtro.numeroPlaca}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={Filtro}
+              onClick={FiltroBoton}
             />
             {/* Filtro*/}
 
@@ -210,6 +256,7 @@ const Vehiculo = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -217,11 +264,14 @@ const Vehiculo = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaVehiculo"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

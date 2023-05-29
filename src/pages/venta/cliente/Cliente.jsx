@@ -7,7 +7,7 @@ import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
@@ -124,6 +124,14 @@ const Cliente = () => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
+  };
+  const FiltroBoton = async () => {
+    setFiltro({
+      documento: "",
+      nombre: "",
+    });
+    setIndex(0);
+    document.getElementById("documento").focus();
   };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
@@ -282,9 +290,9 @@ const Cliente = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>

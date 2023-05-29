@@ -26,6 +26,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "UnidadMedida"]}
       titulo="Unidad de Medida"
+      foco={document.getElementById("tablaUnidadMedida")}
       tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
       <div className={Global.ContenedorBasico}>
@@ -38,7 +39,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               type="text"
               id="id"
               name="id"
-              placeholder="00"
+              placeholder="Código"
               autoComplete="off"
               value={data.id ?? ""}
               onChange={ValidarData}
@@ -57,7 +58,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Código SUNAT"
               autoComplete="off"
               autoFocus
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar"}
               value={data.codigoSunat ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
@@ -74,7 +75,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             name="descripcion"
             autoComplete="off"
             placeholder="Descripción"
-            disabled={modo == "Consultar" ? true : false}
+            disabled={modo == "Consultar"}
             value={data.descripcion ?? ""}
             onChange={ValidarData}
             className={Global.InputStyle}

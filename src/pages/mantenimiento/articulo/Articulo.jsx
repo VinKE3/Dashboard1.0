@@ -9,7 +9,7 @@ import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
@@ -150,6 +150,14 @@ const Articulo = () => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
+  };
+  const FiltroBoton = async () => {
+    setFiltro({
+      codigoBarras: "",
+      descripcion: "",
+    });
+    setIndex(0);
+    document.getElementById("codigoBarras").focus();
   };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
@@ -396,12 +404,12 @@ const Articulo = () => {
             />
             <button
               id="consultar"
-              onClick={Filtro}
+              onClick={FiltroBoton}
               className={
                 Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
               }
             >
-              <FaSearch></FaSearch>
+              <FaUndoAlt></FaUndoAlt>
             </button>
           </div>
         </div>

@@ -52,8 +52,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           setModal={setModal}
           objeto={data}
           modo={modo}
-          menu={["Mantenimiento", "Usuario"]}
           titulo="Usuario"
+          menu={["Mantenimiento", "Usuario"]}
+          foco={document.getElementById("tablaUsuario")}
         >
           <div className={Global.ContenedorBasico}>
             <div className={Global.ContenedorInputs}>
@@ -71,7 +72,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.id ?? ""}
                     onChange={ValidarData}
                     disabled={true}
-                    className={Global.InputBoton }
+                    className={Global.InputBoton}
                   />
                 </div>
                 <div className={Global.InputFull}>
@@ -79,7 +80,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <Checkbox
                       inputId="isActivo"
                       name="isActivo"
-                      disabled={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar"}
                       checked={data.isActivo ? true : ""}
                       onChange={(e) => ValidarData(e)}
                     ></Checkbox>
@@ -96,7 +97,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <Checkbox
                       inputId="habilitarAfectarStock"
                       name="habilitarAfectarStock"
-                      disabled={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar"}
                       checked={data.habilitarAfectarStock ? true : ""}
                       onChange={(e) => ValidarData(e)}
                     ></Checkbox>
@@ -136,9 +137,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="personalId"
                   name="personalId"
+                  autoFocus={modo == "Modificar"}
                   value={data.personalId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar"}
                   className={Global.InputStyle}
                 >
                   <option key={-1} value={""}>
@@ -167,7 +169,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     value={data.clave ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   />
                 </div>
@@ -186,13 +188,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     value={data.claveConfirmacion ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   />
                 </div>
               </div>
             )}
-            
+
             <div className={Global.InputFull}>
               <label htmlFor="observacion" className={Global.LabelStyle}>
                 Observación
@@ -205,7 +207,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar"}
                 className={Global.InputStyle}
               />
             </div>

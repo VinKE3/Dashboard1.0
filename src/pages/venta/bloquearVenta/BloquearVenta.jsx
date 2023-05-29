@@ -7,7 +7,7 @@ import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
@@ -141,6 +141,16 @@ const BloquearVenta = () => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
+  };
+  const FiltroBoton = async () => {
+    setFiltro({
+      tipoDocumentoId: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("tipoDocumentoId").focus();
+
   };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
@@ -353,7 +363,7 @@ const BloquearVenta = () => {
         <>
           <div className="px-2">
             <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Bloquear Venta</h2>
+              <h2 className={Global.TituloH2}>Bloquear Ventas</h2>
               <div className="flex">
                 <div className={Global.CheckStyle}>
                   <Checkbox
@@ -432,9 +442,9 @@ const BloquearVenta = () => {
                   className={
                     Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                   }
-                  onClick={Filtro}
+                  onClick={FiltroBoton}
                 >
-                  <FaSearch />
+                  <FaUndoAlt />
                 </button>
               </div>
             </div>

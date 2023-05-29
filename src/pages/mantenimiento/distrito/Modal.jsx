@@ -91,7 +91,7 @@ const Modal = ({ setModal, objeto, modo }) => {
                   type="text"
                   id="distritoId"
                   name="distritoId"
-                  placeholder="00"
+                  placeholder="Código"
                   autoComplete="off"
                   maxLength="2"
                   autoFocus

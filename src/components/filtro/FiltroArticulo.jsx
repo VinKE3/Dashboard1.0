@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { FaSearch, FaCheck } from "react-icons/fa";
+import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 import * as Funciones from "../funciones/Validaciones";
@@ -292,7 +292,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
                   >
-                    <FaSearch></FaSearch>
+                    <FaUndoAlt></FaUndoAlt>
                   </button> */}
                 </div>
               </div>

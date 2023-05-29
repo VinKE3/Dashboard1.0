@@ -1038,7 +1038,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaEmision"
                     name="fechaEmision"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1056,7 +1056,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="fechaTraslado"
                     name="fechaTraslado"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={moment(data.fechaTraslado ?? "").format(
                       "yyyy-MM-DD"
                     )}
@@ -1151,7 +1151,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <Checkbox
                         inputId="varios"
                         name="varios"
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" }
                         onChange={(e) => {
                           setCheckVarios(e.checked);
                           ClientesVarios(e);
@@ -1180,7 +1180,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="direccionPartida"
                     placeholder="Dirección de Partida"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={data.direccionPartida ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1201,7 +1201,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="clienteDireccionId"
                     value={data.clienteDireccionId ?? ""}
                     onChange={(e) => CambioDireccion(e.target.value)}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {Object.entries(dataClienteDirec).length > 0 &&
@@ -1224,7 +1224,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="personalId"
                     value={data.personalId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {dataVendedor.map((map) => (
@@ -1249,7 +1249,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="empresaTransporteId"
                     value={data.empresaTransporteId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {dataEmpresaTransporte.map((map) => (
@@ -1273,7 +1273,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Costo Mínimo"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={data.costoMinimo ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1291,7 +1291,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="conductorId"
                     value={data.conductorId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {dataConductor.map((map) => (
@@ -1314,7 +1314,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="licenciaConducir"
                     placeholder="Licencia de Conducir"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={data.licenciaConducir ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1332,7 +1332,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="vehiculoId"
                     value={data.vehiculoId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {dataVehiculo.map((map) => (
@@ -1355,7 +1355,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="constanciaInscripcion"
                     placeholder="Constancia Inscripción"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={data.constanciaInscripcion ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1376,7 +1376,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="motivoTrasladoId"
                     value={data.motivoTrasladoId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {dataMotivoTraslado.map((map) => (
@@ -1394,7 +1394,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="motivoSustento"
                       autoComplete="off"
                       placeholder="Sustento"
-                      disabled={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" }
                       value={data.motivoSustento ?? ""}
                       onChange={ValidarData}
                       className={Global.InputBoton + " rounded-l-md"}
@@ -1434,7 +1434,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="numeroPedido"
                     placeholder="Orden Pedido"
                     autoComplete="off"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={data.numeroPedido ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -1449,7 +1449,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="monedaId"
                     value={data.monedaId ?? ""}
                     onChange={ValidarData}
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     className={Global.InputStyle}
                   >
                     {dataMoneda.map((map) => (
@@ -1506,7 +1506,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="observacion"
                       placeholder="Observación"
                       autoComplete="off"
-                      disabled={modo == "Consultar" ? true : false}
+                      disabled={modo == "Consultar" }
                       value={data.observacion ?? ""}
                       onChange={ValidarData}
                       className={Global.InputBoton}
@@ -1557,7 +1557,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             inputId="productos"
                             name="productos"
                             value="productos"
-                            disabled={modo == "Consultar" ? true : false}
+                            disabled={modo == "Consultar" }
                             onChange={(e) => {
                               ValidarDataCabecera(e);
                             }}
@@ -1577,7 +1577,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             inputId="variosFiltro"
                             name="variosFiltro"
                             value="variosFiltro"
-                            disabled={modo == "Consultar" ? true : false}
+                            disabled={modo == "Consultar" }
                             onChange={(e) => {
                               ValidarDataCabecera(e);
                             }}
@@ -1678,7 +1678,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Cantidad"
                         autoComplete="off"
                         min={0}
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" }
                         value={dataCabecera.cantidad ?? ""}
                         onChange={(e) => {
                           ValidarDataCabecera(e);
@@ -1701,7 +1701,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Precio"
                         autoComplete="off"
                         min={0}
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" }
                         value={dataCabecera.precioUnitario ?? ""}
                         onChange={(e) => {
                           ValidarDataCabecera(e);
@@ -1721,7 +1721,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         placeholder="Importe"
                         autoComplete="off"
                         min={0}
-                        disabled={modo == "Consultar" ? true : false}
+                        disabled={modo == "Consultar" }
                         value={dataCabecera.importe ?? ""}
                         onChange={(e) => {
                           ValidarDataCabecera(e);

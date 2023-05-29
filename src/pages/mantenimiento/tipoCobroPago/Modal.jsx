@@ -43,6 +43,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "TipoCobroPago"]}
           titulo="Tipo de Pago"
+          foco={document.getElementById("tablaCobroPago")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -58,7 +59,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Descripción"
                   autoComplete="off"
                   autoFocus
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.descripcion ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -74,7 +75,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="abreviatura"
                   placeholder="Abreviatura"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.abreviatura ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -114,7 +115,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="plazo"
                   min={0}
                   value={data.plazo ?? ""}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   onChange={ValidarData}
                   className={Global.InputStyle}
                 />

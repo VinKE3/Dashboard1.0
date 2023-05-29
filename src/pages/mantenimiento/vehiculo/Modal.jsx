@@ -43,6 +43,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "Vehiculo"]}
           titulo="Vehiculos"
+          foco={document.getElementById("tablaVehiculo")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -55,6 +56,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="subLineaId"
                   name="subLineaId"
+                  placeholder="Código"
                   autoComplete="off"
                   value={data.id ?? ""}
                   disabled={true}
@@ -74,7 +76,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.empresaTransporteId ?? ""}
                   onChange={ValidarData}
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar"}
                   className={Global.InputStyle}
                 >
                   {dataModal.map((empresa) => (
@@ -98,7 +100,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="numeroPlaca"
                 placeholder=" N° Placa"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar"}
                 value={data.numeroPlaca ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -114,7 +116,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="marca"
                 placeholder="Marca"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar"}
                 value={data.marca ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -130,7 +132,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="modelo"
                 placeholder="Modelo"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar"}
                 value={data.modelo ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -149,7 +151,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="certificadoInscripcion"
                 placeholder=" Certificado Inscripción"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar"}
                 value={data.certificadoInscripcion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -165,7 +167,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder=" Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar"}
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

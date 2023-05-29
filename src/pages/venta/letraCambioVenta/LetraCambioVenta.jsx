@@ -18,7 +18,7 @@ import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
-import { FaSearch, FaCheck } from "react-icons/fa";
+import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 //#region Estilos
@@ -701,7 +701,7 @@ const LetraCambioVenta = () => {
                     }
                     onClick={Filtro}
                   >
-                    <FaSearch />
+                    <FaUndoAlt />
                   </button>
                 </div>
               </div>

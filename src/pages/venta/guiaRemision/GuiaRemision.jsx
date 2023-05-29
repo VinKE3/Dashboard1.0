@@ -14,7 +14,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaSearch, FaWindowMaximize } from "react-icons/fa";
+import { FaUndoAlt, FaWindowMaximize } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
@@ -131,6 +131,15 @@ const GuiaRemision = () => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
+  };
+  const FiltroBoton = async () => {
+    setFiltro({
+      clienteNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    });
+    setIndex(0);
+    document.getElementById("clienteNombre").focus();
   };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
@@ -502,6 +511,7 @@ const GuiaRemision = () => {
                     name="clienteNombre"
                     placeholder="Cliente"
                     autoComplete="off"
+                    autoFocus
                     value={filtro.clienteNombre ?? ""}
                     onChange={ValidarData}
                     className={Global.InputStyle}
@@ -537,9 +547,9 @@ const GuiaRemision = () => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    onClick={Filtro}
+                    onClick={FiltroBoton}
                   >
-                    <FaSearch />
+                    <FaUndoAlt />
                   </button>
                 </div>
               </div>

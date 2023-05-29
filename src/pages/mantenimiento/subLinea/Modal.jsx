@@ -41,6 +41,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "SubLinea"]}
           titulo="Sublinea"
+          foco={document.getElementById("tablaSubLinea")}
           tamañoModal={[Global.ModalPequeño, Global.Form]}
         >
           <div className={Global.ContenedorBasico}>
@@ -53,9 +54,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="subLineaId"
                   name="subLineaId"
-                  placeholder="00"
+                  placeholder="Código"
                   autoComplete="off"
                   maxLength="2"
+                  autoFocus
                   value={data.subLineaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Nuevo" ? false : true}
@@ -69,7 +71,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="lineaId"
                   name="lineaId"
-                  autoFocus
                   value={data.lineaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Nuevo" ? false : true}
@@ -93,7 +94,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="descripcion"
                 placeholder="Descripción"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                autoFocus={modo == "Modificar"}
+                disabled={modo == "Consultar"}
                 value={data.descripcion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

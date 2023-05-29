@@ -92,6 +92,58 @@ const ModalCrud = ({
       setModal(false);
     }
   };
+  const CerrarModalKey = (e) => {
+    if (e.key == "Escape") {
+      if (modo != "Consultar") {
+        Swal.fire({
+          title: "Cerrar Formulario",
+          text: "¿Desea cerrar el formulario?",
+          icon: "warning",
+          iconColor: "#F7BF3A",
+          showCancelButton: true,
+          color: "#fff",
+          background: "#1a1a2e",
+          confirmButtonColor: "#eea508",
+          confirmButtonText: "Aceptar",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            foco.focus();
+            setModal(false);
+          }
+        });
+      } else {
+        foco.focus();
+        setModal(false);
+      }
+    }
+    if (e.key == "Enter") {
+      if (modo != "Consultar") {
+        Swal.fire({
+          title: "Cerrar Formulario",
+          text: "¿Desea cerrar el formulario?",
+          icon: "warning",
+          iconColor: "#F7BF3A",
+          showCancelButton: true,
+          color: "#fff",
+          background: "#1a1a2e",
+          confirmButtonColor: "#eea508",
+          confirmButtonText: "Aceptar",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            foco.focus();
+            setModal(false);
+          }
+        });
+      } else {
+        foco.focus();
+        setModal(false);
+      }
+    }
+  };
   //#endregion
 
   //#region Funciones API
@@ -146,6 +198,7 @@ const ModalCrud = ({
                 ""
               ) : (
                 <button
+                  id="botonRegistrarModalCrud"
                   className={Global.BotonModalBase + Global.BotonOkModal}
                   type="button"
                   onClick={
@@ -161,7 +214,7 @@ const ModalCrud = ({
                 type="button"
                 autoFocus={modo == "Consultar"}
                 onClick={CerrarModal}
-                onKeyDown={(e) => CerrarModal(e)}
+                onKeyDown={(e) => CerrarModalKey(e)}
               >
                 CERRAR
               </button>

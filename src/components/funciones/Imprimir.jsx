@@ -23,6 +23,7 @@ const Imprimir = async (menu, id) => {
       progress: undefined,
       theme: "colored",
     });
+    return null;
   } else {
     return result.data;
   }

@@ -27,6 +27,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       modo={modo}
       menu={["Mantenimiento", "Linea"]}
       titulo="Linea"
+      foco={document.getElementById("tablaLinea")}
       tamañoModal={[Global.ModalPequeño, Global.Form]}
     >
       <div className={Global.ContenedorBasico}>
@@ -41,7 +42,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="id"
               maxLength="2"
               autoComplete="off"
-              placeholder="00"
+              placeholder="Código"
+              autoFocus
               disabled={modo == "Nuevo" ? false : true}
               value={data.id ?? ""}
               onChange={ValidarData}
@@ -57,8 +59,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="descripcion"
               name="descripcion"
               autoComplete="off"
+              autoFocus={modo == "Modificar"}
               placeholder="Descripción"
-              disabled={modo == "Consultar" ? true : false}
+              disabled={modo == "Consultar"}
               value={data.descripcion ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}

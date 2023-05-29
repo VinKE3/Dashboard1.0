@@ -93,7 +93,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <Checkbox
                     inputId="isActivo"
                     name="isActivo"
-                    disabled={modo == "Consultar" ? true : false}
+                    disabled={modo == "Consultar" }
                     value={data.isActivo ?? ""}
                     onChange={(e) => {
                       ValidarData(e);
@@ -139,7 +139,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Nombre Conductor"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -159,7 +159,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="numeroDocumentoIdentidad"
                   placeholder="D.N.I"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -175,7 +175,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="licenciaConducir"
                   placeholder="Licencia de Conducir"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.licenciaConducir ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -193,7 +193,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="telefono"
                   placeholder="Telefono"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.telefono ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -209,7 +209,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="celular"
                   placeholder="Celular"
                   autoComplete="off"
-                  disabled={modo == "Consultar" ? true : false}
+                  disabled={modo == "Consultar" }
                   value={data.celular ?? ""}
                   onChange={ValidarData}
                   className={Global.InputStyle}
@@ -226,7 +226,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="correoElectronico"
                 placeholder="Email"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.correoElectronico ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -242,7 +242,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="direccion"
                 placeholder="Direccion"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.direccion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}
@@ -268,7 +268,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" ? true : false}
+                disabled={modo == "Consultar" }
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
                 className={Global.InputStyle}

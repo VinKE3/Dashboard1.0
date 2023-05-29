@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Delete from "../../../components/funciones/Delete";
 import FiltroBasico from "../../../components/filtro/FiltroBasico";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -9,7 +10,6 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
@@ -118,6 +118,13 @@ const EntidadBancaria = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      nombre: "",
+    });
+    setIndex(0);
+    document.getElementById("nombre").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -125,19 +132,57 @@ const EntidadBancaria = () => {
   //#endregion
 
   //#region Funciones Modal
-  const AccionModal = async (id, modo = "Nuevo") => {
+  const AccionModal = async (value, modo = "Nuevo", click = false) => {
     setModo(modo);
-    if (modo == "Nuevo") {
-      setObjeto({
-        id: "00",
-        nombre: "",
-        numeroDocumentoIdentidad: "",
-        tipo: "BANCO",
-      });
-    } else {
+    if (click) {
+      let row = value.target.closest("tr");
+      let id = row.firstChild.innerText;
       await GetPorId(id);
+    } else {
+      if (modo == "Nuevo") {
+        setObjeto({
+          id: "",
+          nombre: "",
+          numeroDocumentoIdentidad: "",
+          tipo: "BANCO",
+        });
+      } else {
+        await GetPorId(value);
+      }
     }
     setModal(true);
+  };
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      AccionModal();
+    }
+    if (e.key === "Enter") {
+      let row = document
+        .querySelector("#tablaEntidadBancaria")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Modificar");
+      }
+    }
+    if (e.key === "Delete") {
+      let row = document
+        .querySelector("#tablaEntidadBancaria")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        Delete(["Mantenimiento", "EntidadBancaria"], id, setEliminar);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaEntidadBancaria")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar");
+      }
+    }
   };
   //#endregion
 
@@ -191,7 +236,7 @@ const EntidadBancaria = () => {
               value={filtro.nombre}
               onChange={ValidarData}
               botonId={"buscar"}
-              onClick={Filtro}
+              onClick={FiltroBoton}
             />
             {/* Filtro*/}
 
@@ -202,6 +247,7 @@ const EntidadBancaria = () => {
                 botonClass={Global.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
+                contenedor=""
               />
             )}
             {/* Boton */}
@@ -209,11 +255,14 @@ const EntidadBancaria = () => {
             {/* Tabla */}
             <TablaStyle>
               <Table
+                id={"tablaEntidadBancaria"}
                 columnas={columnas}
                 datos={datos}
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
               />
             </TablaStyle>
             {/* Tabla */}

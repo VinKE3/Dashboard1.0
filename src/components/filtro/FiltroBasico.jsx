@@ -1,5 +1,5 @@
 import React from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import * as Global from "../Global";
 const FiltroBasico = ({
   textLabel,
@@ -8,12 +8,15 @@ const FiltroBasico = ({
   placeHolder,
   maxLength,
   onChange,
+  boton = true,
   botonId,
   onClick,
 }) => {
   return (
-    <div className={Global.InputFull  + " mb-2"}>
-      <label htmlFor={name} className={Global.LabelStyle}>{textLabel}</label>
+    <div className={Global.InputFull + " mb-2"}>
+      <label htmlFor={name} className={Global.LabelStyle}>
+        {textLabel}
+      </label>
       <input
         type="text"
         id={name}
@@ -23,17 +26,19 @@ const FiltroBasico = ({
         placeholder={placeHolder}
         autoComplete="off"
         autoFocus
-        value = {value ?? ""}
+        value={value ?? ""}
         onChange={onChange}
-        className={Global.InputBoton}
+        className={boton ? Global.InputBoton : Global.InputStyle}
       />
-      <button
-        className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
-        id={botonId}
-        onClick={onClick}
-      >
-        <FaSearch></FaSearch>
-      </button>
+      {boton && (
+        <button
+          className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
+          id={botonId}
+          onClick={onClick}
+        >
+          <FaUndoAlt></FaUndoAlt>
+        </button>
+      )}
     </div>
   );
 };

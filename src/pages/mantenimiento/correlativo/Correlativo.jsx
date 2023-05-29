@@ -200,7 +200,7 @@ const Correlativo = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <h2 className={Global.TituloH2}>Correlativo</h2>
+            <h2 className={Global.TituloH2}>Correlativos</h2>
 
             {/* Boton */}
             {permisos[0] && (
