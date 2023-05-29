@@ -262,7 +262,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       //Si tiene detalleId entonces modifica registro
       if (dataCabecera.detalleId != undefined) {
         let dataDetalleMod = dataDetalle.map((map) => {
-          if (map.id == dataCabecera.id) {
+          if (map.detalleId == dataCabecera.detalleId) {
             return {
               detalleId: dataCabecera.detalleId,
               salidaCilindrosId: dataCabecera.id,
@@ -322,18 +322,17 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
     if (modo != "Consultar") {
       if (click) {
         let row = value.target.closest("tr");
-        let id = row.firstChild.innerText;
-        // setDataCabecera(dataDetalle.find((map) => map.id === id));
+        let id = row.children[1].innerText;
+        setDataCabecera(dataDetalle.find((map) => map.detalleId == id));
       } else {
-        setDataCabecera(dataDetalle.find((map) => map.id === value));
+        setDataCabecera(dataDetalle.find((map) => map.detalleId == value));
       }
       document.getElementById("cantidad").focus();
     }
   };
-
   const EliminarDetalle = async (id) => {
     let i = 1;
-    let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
+    let nuevoDetalle = dataDetalle.filter((map) => map.detalleId !== id);
     if (nuevoDetalle.length > 0) {
       setDataDetalle(
         nuevoDetalle.map((map) => {
@@ -415,7 +414,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         } else {
           //Modifica registro en base al id
           dataDetalleMod = dataDetalleMod.map((map) => {
-            if (map.salidaCilindrosId == dataDetalleExiste.salidaCilindrosId) {
+            if (map.detalleId == dataDetalleExiste.detalleId) {
               //Calculos
               let cantidad =
                 dataDetalleExiste.cantidad + dataPersonalDetalleMap.cantidad;
@@ -451,8 +450,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           ) {
             //Si el resultado es 0 entonces se elimina por completo el registro
             detalleEliminado = detalleEliminado.filter(
-              (map) =>
-                map.salidaCilindrosId !== dataDetalleExiste.salidaCilindrosId
+              (map) => map.detalleId !== dataDetalleExiste.detalleId
             );
             //Si el resultado es 0 entonces se elimina por completo el registro
 
@@ -485,9 +483,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
             //Modifica registro en base al id
             dataDetalleEliminar = dataDetalleEliminar.map((map) => {
-              if (
-                map.salidaCilindrosId == dataDetalleExiste.salidaCilindrosId
-              ) {
+              if (map.detalleId == dataDetalleExiste.detalleId) {
                 //Calculos
                 let cantidad =
                   dataDetalleExiste.cantidad - dataPersonalDetalleMap.cantidad;
@@ -604,7 +600,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   id="boton"
                   className="p-0 px-1"
                   title="Click para modificar registro"
-                  onClick={() => CargarDetalle(row.values.id)}
+                  onClick={() => CargarDetalle(row.values.detalleId)}
                 >
                   <FaPen></FaPen>
                 </button>
@@ -614,7 +610,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={() => {
-                    EliminarDetalle(row.values.id);
+                    EliminarDetalle(row.values.detalleId);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
