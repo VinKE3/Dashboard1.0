@@ -19,6 +19,7 @@ import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -187,6 +188,20 @@ const DocumentoVenta = () => {
   //#endregion
 
   //#region Funciones Modal
+
+  const openPDFInNewTab = async (pdfData) => {
+    // Decodificar el código del PDF
+    const byteCharacters = btoa(unescape(encodeURIComponent(pdfData)));
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    window.open(url);
+  };
+
   const AccionModal = async (
     value,
     modo = "Nuevo",
@@ -335,13 +350,9 @@ const DocumentoVenta = () => {
           if (row != null) {
             let id = row.children[0].innerHTML;
             let resultado = await Imprimir(["Venta", "DocumentoVenta"], id);
+            console.log(resultado);
             if (resultado != null) {
-              const source = `data:application/pdf;base64,${resultado}`;
-              const link = document.createElement("a");
-              const fileName = "file.pdf";
-              link.href = source;
-              link.download = fileName;
-              link.click();
+              await openPDFInNewTab(resultado);
             }
           } else {
             toast.info("Seleccione una Fila", {
