@@ -691,9 +691,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     value={data.numero ?? ""}
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
-                    className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
-                    }
+                    className={Global.InputStyle}
                   />
                 </div>
                 <div className={Global.InputTercio}>

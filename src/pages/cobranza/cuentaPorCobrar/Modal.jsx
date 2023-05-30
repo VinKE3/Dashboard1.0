@@ -167,7 +167,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.tipoDocumentoId ?? ""}
                   disabled={modo == "Nuevo" ? false : true}
                   className={
-                    modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                    Global.InputStyle
                   }
                 >
                   {dataTipoDoc.map((map) => (

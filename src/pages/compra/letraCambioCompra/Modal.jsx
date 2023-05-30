@@ -606,7 +606,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.numeroLetra ?? ""}
                     onChange={ValidarData}
                     className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                      Global.InputStyle
                     }
                   />
                 </div>

@@ -1003,7 +1003,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     disabled={modo == "Nuevo" ? false : true}
                     className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                      Global.InputStyle
                     }
                   >
                     {dataSerie.map((map) => (

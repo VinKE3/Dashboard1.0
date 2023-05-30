@@ -1165,7 +1165,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     disabled={modo == "Nuevo" ? false : true}
                     className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                      Global.InputStyle
                     }
                   >
                     {dataTipoDoc.map((map) => (
@@ -1191,7 +1191,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                      Global.InputStyle
                     }
                   />
                 </div>
@@ -1211,7 +1211,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     onBlur={(e) => Numeracion(e)}
                     className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                      Global.InputStyle
                     }
                   />
                 </div>

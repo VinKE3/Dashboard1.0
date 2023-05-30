@@ -222,21 +222,9 @@ const LetraCambioVenta = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            id: "",
-            fechaEmision: moment().format("YYYY-MM-DD"),
-            fechaVencimiento: moment().format("YYYY-MM-DD"),
-            clienteNombre: "",
-            tipoDocumentoAbreviatura: "",
-            numeroDocumento: "",
             monedaId: "S",
-            total: 0,
-            saldo: 0,
-            isAnulado: false,
-            isBloqueado: false,
-            clienteId: "",
-            clienteDireccion: "",
-            tipoVentaId: "",
-            existeNotaDebitoRelacionada: false,
+            tipoCambio: 0,
+            documentosReferencia: [],
             detalles: [],
           });
           setModal(true);

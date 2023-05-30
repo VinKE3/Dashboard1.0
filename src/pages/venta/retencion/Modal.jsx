@@ -1038,7 +1038,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={habilitarCampos ? false : true}
                   value={dataCabecera.tipoDocumento ?? ""}
                   className={
-                    modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                    Global.InputStyle
                   }
                 >
                   {dataTipoDoc.map((map) => (

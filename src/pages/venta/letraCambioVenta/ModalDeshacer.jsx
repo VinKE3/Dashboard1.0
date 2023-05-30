@@ -1181,7 +1181,7 @@ const ModalDeshacer = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     disabled={modo == "Nuevo" ? false : true}
                     className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                      Global.InputStyle
                     }
                   >
                     {dataTipoDoc.map((map) => (
@@ -1202,7 +1202,7 @@ const ModalDeshacer = ({ setModal, modo, objeto }) => {
                     onChange={ValidarData}
                     disabled={modo == "Nuevo" ? false : true}
                     className={
-                      modo == "Nuevo" ? Global.InputStyle : Global.InputStyle
+                      Global.InputStyle
                     }
                   >
                     {dataSeries

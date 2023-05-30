@@ -1,28 +1,12 @@
 import React, { useState, useEffect } from "react";
-import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import FiltroLetraVenta from "../../../components/filtro/FiltroLetraVenta";
-import FiltroCotizacion from "../../../components/filtro/FiltroCotizacion";
-import FiltroCliente from "../../../components/filtro/FiltroCliente";
-import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
-import FiltroPrecio from "../../../components/filtro/FiltroPrecio";
 import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { Checkbox } from "primereact/checkbox";
-import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
-import {
-  FaPlus,
-  FaChevronDown,
-  FaSearch,
-  FaUndoAlt,
-  FaPen,
-  FaTrashAlt,
-  FaPaste,
-} from "react-icons/fa";
+import { FaSearch, FaUndoAlt, FaPen, FaTrashAlt, FaPlus } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -37,18 +21,75 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(2) {
+  & th:nth-child(2),
+  & th:nth-child(3) {
+    width: 45px;
+    text-align: center;
+  }
+  & th:nth-child(4) {
+    width: 100%;
+  }
+
+  & th:nth-child(5) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+    text-align: center;
+  }
+  & th:nth-child(6) {
+    width: 115px;
+    min-width: 115px;
+    max-width: 115px;
+    text-align: center;
+  }
+  & th:nth-child(7) {
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(8),
+  & th:nth-child(9) {
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
+    text-align: center;
+  }
+  & th:last-child {
+    width: 75px;
+    min-width: 90px;
+    max-width: 90px;
+    text-align: center;
+  }
+`;
+const TablaDetalleStyle = styled.div`
+  & th:first-child {
+    display: none;
+  }
+  & tbody td:first-child {
+    display: none;
+  }
+  & th:nth-child(2),
+  & th:nth-child(4) {
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(4),
+  & th:nth-child(3),
   & th:nth-child(5) {
-    width: 90px;
+    width: 45px;
+    text-align: center;
+  }
+  & th:nth-child(6) {
+    width: 100%;
+  }
+  & th:nth-child(7) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
     text-align: center;
   }
 
-  & th:nth-child(6),
-  & th:nth-child(7) {
+  & th:nth-child(8) {
     width: 130px;
     min-width: 130px;
     max-width: 130px;
@@ -67,42 +108,30 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   //Data General
   const [data, setData] = useState(objeto);
-  const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
-  const [dataGlobal] = useState(store.session.get("global"));
+  const [dataDetalle, setDataDetalle] = useState(objeto.documentosReferencia);
   //Data General
   //Tablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
-  const [dataSeries, setDataSeries] = useState([]);
-  const [dataVendedor, setDataVendedor] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  const [dataTipoVenta, setDataTipoVenta] = useState([]);
-  const [dataTipoCobro, setDataTipoCobro] = useState([]);
-  const [dataMotivoNota, setDataMotivoNota] = useState([]);
-  const [dataIgv, setDataIgv] = useState([]);
-  const [dataRetencion, setDataRetencion] = useState([]);
-  const [dataDetraccion, setDataDetraccion] = useState([]);
-  const [dataCtacte, setDataCtacte] = useState([]);
-  const [dataDocRef, setDataDocRef] = useState([]);
+  const [dataPersonal, setDataPersonal] = useState([]);
   //Tablas
   //Data Modales Ayuda
-  const [dataCliente, setDataCliente] = useState([]);
-  const [dataClienteDirec, setDataClienteDirec] = useState([]);
-  const [dataCotizacion, setDataCotizacion] = useState([]);
-  const [dataCabecera, setDataCabecera] = useState([]);
-  const [dataPrecio, setDataPrecio] = useState([]);
-  const [dataLetra, setDataLetra] = useState([]);
+  const [dataCabecera, setDataCabecera] = useState({
+    tipoDocumentoId: "01",
+    serie: "",
+    numero: "",
+    numeroLetra: "",
+  });
+  const [dataLetra, setDataLetra] = useState({
+    fechaEmision: moment().format("YYYY-MM-DD"),
+    fechaVencimiento: moment().format("YYYY-MM-DD"),
+    dias: 0,
+  });
+  const [dataLetraDetalle, setDataLetraDetalle] = useState([]);
   //Data Modales Ayuda
-  //Modales de Ayuda
-  const [modalCliente, setModalCliente] = useState(false);
-  const [modalCotizacion, setModalCotizacion] = useState(false);
-  const [modalArt, setModalArt] = useState(false);
-  const [modalPrecio, setModalPrecio] = useState(false);
-  const [modalLetra, setModalLetra] = useState(false);
-  //Modales de Ayuda
-  const [checkVarios, setCheckVarios] = useState(false);
-  const [checkFiltro, setCheckFiltro] = useState("productos");
-  const [habilitarFiltro, setHabilitarFiltro] = useState(false);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
+  const [totalDocumento, setTotalDocumento] = useState(0);
+  const [totalDetalle, setTotalDetalle] = useState(0);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
@@ -110,90 +139,26 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    if (Object.keys(dataCliente).length > 0) {
-      if (dataCliente.direcciones != undefined) {
-        setDataClienteDirec(dataCliente.direcciones);
-      }
-      Cliente();
-      setDataLetra([]);
-      //Consulta los Documentos de Referencia
-      if (dataCliente.clienteId != "") {
-        GetDocReferencia(dataCliente.clienteId);
-        setRefrescar(true);
-      } else {
-        setDataDocRef([]);
-        setRefrescar(true);
-      }
-    }
-  }, [dataCliente]);
+    // console.log(dataCabecera);
+  }, [dataCabecera]);
   useEffect(() => {
-    if (Object.keys(dataCotizacion).length > 0) {
-      //Cabecera
-      setData({
-        ...data,
-        clienteId: dataCotizacion.clienteId,
-        clienteTipoDocumentoIdentidadId:
-          dataCotizacion.clienteTipoDocumentoIdentidadId,
-        clienteNumeroDocumentoIdentidad:
-          dataCotizacion.clienteNumeroDocumentoIdentidad,
-        clienteNombre: dataCotizacion.clienteNombre,
-        clienteDireccionId: dataCotizacion.clienteDireccionId,
-        cotizacionId: dataCotizacion.cotizacionId,
-        cotizacion: dataCotizacion.cotizacion,
-        personalId: dataCotizacion.personalId,
-        monedaId: dataCotizacion.monedaId,
-        incluyeIGV: dataCotizacion.incluyeIGV,
-        porcentajeIGV: dataCotizacion.porcentajeIGV,
-        porcentajeRetencion: dataCotizacion.porcentajeRetencion,
-        porcentajePercepcion: dataCotizacion.porcentajePercepcion,
-        observacion: dataCotizacion.observacion ?? "",
-      });
-      GetDireccion(dataCotizacion.clienteId);
-      //Cabecera
-      //Detalles
-      setDataDetalle(dataCotizacion.detalles);
-      //Asignar detalleId
-      let i = 1;
-      dataCotizacion.detalles.map(() => i++);
-      setDetalleId(i);
-      //Asignar detalleId
-      //Detalles
-      setRefrescar(true);
-    }
-  }, [dataCotizacion]);
-  useEffect(() => {
-    if (Object.keys(dataLetra).length > 0) {
-      //Cabecera
-      setData({
-        ...data,
-        letraId: dataLetra.id,
-        letra: dataLetra.numeroDocumento,
-      });
-      //Cabecera
-      setRefrescar(true);
-    }
-  }, [dataLetra]);
-  useEffect(() => {
-    setData({ ...data, detalles: dataDetalle });
+    setData({ ...data, documentosReferencia: dataDetalle });
   }, [dataDetalle]);
   useEffect(() => {
-    if (Object.keys(dataPrecio).length > 0) {
-      setDataCabecera({
-        ...dataCabecera,
-        precioUnitario: dataPrecio.precioUnitario,
-      });
-    }
-  }, [dataPrecio]);
-  useEffect(() => {
-    if (Object.entries(dataCabecera).length > 0) {
-      CalcularImporte();
-    }
-  }, [dataCabecera.precioUnitario]);
-  useEffect(() => {
-    if (!modalArt) {
-      ConvertirPrecio();
-    }
-  }, [modalArt]);
+    let model = dataLetraDetalle.map((map) => {
+      return {
+        id: map.id,
+        fechaEmision: map.fechaEmision,
+        fechaVencimiento: map.fechaVencimiento,
+        tipoCambio: map.tipoCambio,
+        monedaId: map.monedaId,
+        totalPEN: map.totalPEN,
+        totalUSD: map.totalUSD,
+        aval: map.aval,
+      };
+    });
+    setData({ ...data, detalles: model });
+  }, [dataLetraDetalle]);
   useEffect(() => {
     if (refrescar) {
       ActualizarTotales();
@@ -202,175 +167,140 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(data.fechaEmision);
-    } else {
-      GetDireccion(data.clienteId);
+      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
     }
-    GetCuentasCorrientes();
     Tablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  //Data General
-  const ValidarData = async ({ target }) => {
-    if (
-      target.name == "incluyeIGV" ||
-      target.name == "afectarStock" ||
-      target.name == "abonar" ||
-      target.name == "isAnticipo" ||
-      target.name == "isOperacionGratuita"
-    ) {
-      if (target.name == "incluyeIGV" || target.name == "isOperacionGratuita") {
-        setRefrescar(true);
+  //Data Cabecera
+  const DataCabecera = async ({ target }) => {
+    setDataCabecera((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+  };
+  const LimpiarCabecera = async (accion) => {
+    switch (accion) {
+      case 0: {
+        //Reinicia todo
+        setDataDetalle([]);
+        setDataLetraDetalle([]);
+        setDataCabecera({
+          tipoDocumentoId: "01",
+          serie: "",
+          numero: "",
+        });
+        document.getElementById("tipoDocumentoId").focus();
       }
-      setData((prevState) => ({
-        ...prevState,
-        [target.name]: target.checked,
-      }));
-    } else {
-      setData((prevState) => ({
-        ...prevState,
-        [target.name]: target.value.toUpperCase(),
-      }));
-    }
-
-    if (target.name == "tipoDocumentoId") {
-      //Busca el primer resultado que coincida con tipoDocumentoId
-      let serie = dataSeries.find(
-        (map) => map.tipoDocumentoId === target.value
-      );
-      //Busca el primer resultado que coincida con tipoDocumentoId
-
-      //Si es undefined entonces asigna en blanco
-      serie = serie != undefined ? serie.serie : "";
-      //Si es undefined entonces asigna en blanco
-
-      //Obtiene el correlativo
-      let correlativo = await GetCorrelativo(target.value, serie);
-      correlativo = correlativo != undefined ? correlativo : "";
-      //Obtiene el correlativo
-      setData((prevState) => ({
-        ...prevState,
-        serie: serie,
-        numero: correlativo,
-      }));
-
-      if (target.value == "03") {
-        setData((prevState) => ({
-          ...prevState,
-          incluyeIGV: true,
-        }));
-      } else {
-        setData((prevState) => ({
-          ...prevState,
-          incluyeIGV: false,
-        }));
+      case 1: {
+        //Reinicia las letras
+        setDataLetra({
+          fechaEmision: moment().format("YYYY-MM-DD"),
+          fechaVencimiento: moment().format("YYYY-MM-DD"),
+          dias: 0,
+          aval: "",
+        });
+        setDataCabecera((prev) => ({ ...prev, numeroLetra: "" }));
+        setDataLetraDetalle([]);
+        document.getElementById("numeroLetra").focus();
+      }
+      case 2: {
+        //Limpia la cabecera
+        setDataCabecera({
+          tipoDocumentoId: "01",
+          serie: "",
+          numero: "",
+        });
+      }
+      case 4: {
+        //Limpia las letras
+        setDataLetra({
+          fechaEmision: moment().format("YYYY-MM-DD"),
+          fechaVencimiento: moment().format("YYYY-MM-DD"),
+          dias: 0,
+          aval: "",
+        });
+        setDataCabecera((prev) => ({ ...prev, numeroLetra: "" }));
+        document.getElementById("numeroLetra").focus();
       }
 
-      if (target.value != "07" || target.value != "08") {
-        setData((prevState) => ({
-          ...prevState,
-          documentoReferenciaId: "",
-          motivoNotaId: "",
-          motivoSustento: "",
-        }));
-      }
-    }
-
-    if (target.name == "serie") {
-      //Obtiene el correlativo
-      let correlativo = await GetCorrelativo(
-        data.tipoDocumentoId,
-        target.value
-      );
-      correlativo = correlativo != undefined ? correlativo : "";
-      //Obtiene el correlativo
-      setData((prevState) => ({
-        ...prevState,
-        numero: correlativo,
-      }));
-    }
-    if (
-      target.name == "porcentajeIGV" ||
-      target.name == "porcentajeRetencion" ||
-      target.name == "porcentajeDetraccion" ||
-      target.name == "factorImpuestoBolsa"
-    ) {
-      setRefrescar(true);
-    }
-
-    if (target.name == "tipoVentaId") {
-      let model = dataTipoCobro.find(
-        (map) => map.tipoVentaCompraId == target.value
-      );
-      setData((prevData) => ({
-        ...prevData,
-        tipoCobroId: model.id,
-        fechaVencimiento: moment().format("YYYY-MM-DD"),
-      }));
-    }
-
-    if (target.name == "tipoCobroId") {
-      let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
-      setData((prevState) => ({
-        ...prevState,
-        fechaVencimiento: fecha,
-      }));
-
-      if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
-          numeroOperacion: "",
-          cuentaCorrienteId: "",
-        }));
-      }
+      default:
+        break;
     }
   };
-  const ClientesVarios = async ({ target }) => {
-    if (target.checked) {
-      //Obtiene el personal default de Clientes Varios
-      let personal = dataGlobal.cliente.personal.find(
-        (map) => map.default == true
-      );
-      //Obtiene el personal default de Clientes Varios
-
-      setDataCliente((prevState) => ({
-        ...prevState,
-        clienteId: dataGlobal.cliente.id,
-        clienteTipoDocumentoIdentidadId:
-          dataGlobal.cliente.tipoDocumentoIdentidadId,
-        clienteNumeroDocumentoIdentidad:
-          dataGlobal.cliente.numeroDocumentoIdentidad,
-        clienteNombre: dataGlobal.cliente.nombre,
-        tipoVentaId: dataGlobal.cliente.tipoVentaId,
-        tipoCobroId: dataGlobal.cliente.tipoCobroId,
-        clienteDireccionId: dataGlobal.cliente.direccionPrincipalId,
-        clienteDireccion: dataGlobal.cliente.direccionPrincipal,
-        personalId: personal.personalId,
-        direcciones: dataGlobal.cliente.direcciones,
-      }));
-    } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
-        clienteId: "",
-        clienteTipoDocumentoIdentidadId: "",
-        clienteNumeroDocumentoIdentidad: "",
-        clienteNombre: "",
-        clienteDireccionId: 0,
-        clienteDireccion: "",
-        personalId: dataGlobal.personalId,
-        direcciones: [],
-      }));
-      setDataClienteDirec([]);
+  const ValidarDocumentoReferencia = async () => {
+    if (Object.entries(dataCabecera).length == 0) {
+      document.getElementById("tipoDocumentoId").focus();
+      return [false, "Seleccione un Documento"];
     }
+    //Valida Serie y Número
+    if (dataCabecera.serie == "") {
+      document.getElementById("tipoDocumentoId").focus();
+      return [false, "La serie es requerida"];
+    }
+    if (dataCabecera.numero == "") {
+      document.getElementById("serie").focus();
+      return [false, "El número de documento es requerido"];
+    }
+
+    //Valida Serie y Número
+    const result = await ApiMasy.get(
+      `api/Venta/LetraCambioVenta/GetDocumentoReferencia?tipoDocumentoId=${dataCabecera.tipoDocumentoId}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}`
+    );
+    //Valida montos
+    if (result.data.data.saldo <= 0) {
+      return [false, "El Documento de Venta se encuentra Cancelado."];
+    }
+    if (result.data.data.isAnulado) {
+      return [false, "El Documento de Venta se encuentra Anulado."];
+    }
+    if (result.data.data.isBloqueado) {
+      return [false, "El Documento de Venta se encuentra Bloqueado."];
+    }
+    let duplicado = dataDetalle.find((map) => map.id == result.data.data.id);
+    if (duplicado != undefined) {
+      return [
+        false,
+        "El Documento de Venta se encuentra registrado en el detalle.",
+      ];
+    }
+    //Valida montos
+    return [true, "", result.data.data];
   };
-  const FechaEmision = async () => {
-    if (modo != "Consultar") {
-      toast(
-        "Si la fecha de emisión ha sido cambiada, no olvide consultar el tipo de cambio.",
+  const AgregarDocumentoReferencia = async () => {
+    let resultado = await ValidarDocumentoReferencia();
+    if (resultado[0]) {
+      setDataDetalle((prevState) => [
+        ...prevState,
         {
-          position: "bottom-left",
+          id: resultado[2].id,
+          fechaEmision: resultado[2].fechaEmision,
+          fechaVencimiento: resultado[2].fechaVencimiento,
+          clienteNombre: resultado[2].clienteNombre,
+          tipoDocumentoAbreviatura: resultado[2].tipoDocumentoAbreviatura,
+          numeroDocumento: resultado[2].numeroDocumento,
+          monedaId: resultado[2].monedaId,
+          total: resultado[2].total,
+          saldo: resultado[2].saldo,
+          isAnulado: resultado[2].isAnulado,
+          isBloqueado: resultado[2].isBloqueado,
+          clienteId: resultado[2].clienteId,
+          clienteDireccion: resultado[2].clienteDireccion,
+          tipoVentaId: resultado[2].tipoVentaId,
+          detalleId: detalleId,
+        },
+      ]);
+      setDetalleId(detalleId + 1);
+      await LimpiarCabecera(2);
+      setRefrescar(true);
+      document.getElementById("numeroLetra").focus();
+    } else {
+      //NO cumple validación
+      if (resultado[1] != "") {
+        toast.error(resultado[1], {
+          position: "bottom-right",
           autoClose: 3000,
           hideProgressBar: true,
           closeOnClick: true,
@@ -378,161 +308,41 @@ const Modal = ({ setModal, modo, objeto }) => {
           draggable: true,
           progress: undefined,
           theme: "colored",
-        }
+        });
+      }
+    }
+  };
+  const EliminarDocumentoReferencia = async (id) => {
+    let i = 1;
+    let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
+    if (nuevoDetalle.length > 0) {
+      setDataDetalle(
+        nuevoDetalle.map((map) => {
+          return {
+            ...map,
+            detalleId: i++,
+          };
+        })
       );
-    }
-  };
-  const FechaVencimiento = async (tipoVentaId, tipoCobroId) => {
-    if (tipoVentaId != "CO") {
-      let model = dataTipoCobro.find((map) => map.id === tipoCobroId);
-      let fecha = moment(moment().format("YYYY-MM-DD"))
-        .add(model.plazo, "days")
-        .format("YYYY-MM-DD");
-      let fechaHoy = moment().format("YYYY-MM-DD");
-      let fechaRetorno = fecha == undefined ? fechaHoy : fecha;
-      return fechaRetorno;
+      setDetalleId(i);
     } else {
-      let fechaHoy = moment().format("YYYY-MM-DD");
-      return fechaHoy;
-    }
-  };
-  const CambioDireccion = async (id) => {
-    if (modo != "Consultar") {
-      let model = dataClienteDirec.find((map) => map.id == id);
-      setData((prevState) => ({
-        ...prevState,
-        clienteDireccionId: model.id,
-        clienteDireccion: model.direccion,
-      }));
-    }
-  };
-  const DetalleDocReferencia = async (id) => {
-    if (id != "") {
-      const result = await ApiMasy.get(`api/Venta/DocumentoVenta/${id}`);
-      Swal.fire({
-        title: "¿Desea copiar los detalles del documento?",
-        text: result.data.data.numeroDocumento,
-        icon: "warning",
-        iconColor: "#F7BF3A",
-        showCancelButton: true,
-        color: "#fff",
-        background: "#1a1a2e",
-        confirmButtonColor: "#eea508",
-        confirmButtonText: "Aceptar",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-      }).then((res) => {
-        if (res.isConfirmed) {
-          setDataDetalle(result.data.data.detalles);
-          setRefrescar(true);
-        }
-      });
-    }
-  };
-  const Cliente = async () => {
-    //Consultar Fecha
-    let fecha = await FechaVencimiento(
-      dataCliente.tipoVentaId,
-      dataCliente.tipoCobroId
-    );
-    //Consultar Fecha
-
-    setData({
-      ...data,
-      clienteId: dataCliente.clienteId,
-      clienteTipoDocumentoIdentidadId:
-        dataCliente.clienteTipoDocumentoIdentidadId,
-      clienteNumeroDocumentoIdentidad:
-        dataCliente.clienteNumeroDocumentoIdentidad,
-      clienteNombre: dataCliente.clienteNombre,
-      clienteDireccionId: dataCliente.clienteDireccionId,
-      clienteDireccion: dataCliente.clienteDireccion,
-      tipoVentaId: dataCliente.tipoVentaId,
-      tipoCobroId: dataCliente.tipoCobroId,
-      fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
-      personalId:
-        dataCliente.personalId == ""
-          ? dataGlobal.personalId
-          : dataCliente.personalId,
-
+      //Asgina directamente a 1
+      setDetalleId(nuevoDetalle.length + 1);
+      //Asgina directamente a 1
+      setDataDetalle(nuevoDetalle);
       //Limpia las letras
-      letraId: "",
-      letra: "",
+      setDataLetraDetalle([]);
       //Limpia las letras
-    });
+    }
+    setRefrescar(true);
   };
   const OcultarMensajes = async () => {
     setMensaje([]);
     setTipoMensaje(-1);
   };
-  //Data General
+  //Data Cabecera
 
-  //Artículos
-  const ValidarDataCabecera = async ({ target }) => {
-    //Valida Articulos Varios
-    if (target.name == "productos") {
-      setCheckFiltro(target.name);
-      setHabilitarFiltro(false);
-      setDataCabecera([]);
-    } else if (target.name == "variosFiltro") {
-      setCheckFiltro(target.name);
-      setHabilitarFiltro(true);
-      setDataCabecera({
-        id: dataGlobal.articulo.id,
-        lineaId: dataGlobal.articulo.lineaId,
-        subLineaId: dataGlobal.articulo.subLineaId,
-        articuloId: dataGlobal.articulo.articuloId,
-        unidadMedidaId: dataGlobal.articulo.unidadMedidaId,
-        marcaId: dataGlobal.articulo.marcaId,
-        descripcion: dataGlobal.articulo.descripcion,
-        codigoBarras: dataGlobal.articulo.codigoBarras,
-        precioCompra: dataGlobal.articulo.precioCompra,
-        precioUnitario: dataGlobal.articulo.precioVenta1,
-        stock: dataGlobal.articulo.stock,
-        unidadMedidaDescripcion: dataGlobal.articulo.unidadMedidaDescripcion,
-        //Calculo para Detalle
-        cantidad: 0,
-        importe: 0,
-        //Calculo para Detalle
-      });
-    } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
-        [target.name]: target.value.toUpperCase(),
-      }));
-    }
-  };
-  const ConvertirPrecio = async () => {
-    if (Object.entries(dataCabecera).length > 0) {
-      if (
-        data.monedaId != dataCabecera.monedaId &&
-        dataCabecera.Id != "000000"
-      ) {
-        const model = await Funciones.ConvertirPreciosAMoneda(
-          "venta",
-          dataCabecera,
-          data.monedaId,
-          data.tipoCambio
-        );
-        if (model != null) {
-          setDataCabecera({
-            ...dataCabecera,
-            precioCompra: model.precioCompra,
-            precioVenta1: model.precioVenta1,
-            precioVenta2: model.precioVenta2,
-            precioVenta3: model.precioVenta3,
-            precioVenta4: model.precioVenta4,
-            precioUnitario: model.precioVenta1,
-          });
-        }
-      } else {
-        setDataCabecera({
-          ...dataCabecera,
-          precioUnitario: dataCabecera.precioVenta1,
-        });
-      }
-    }
-  };
+  //Calculos
   const CalcularImporte = async (name = "precioUnitario") => {
     let cantidad = document.getElementById("cantidad").value;
     let precio = document.getElementById("precioUnitario").value;
@@ -562,184 +372,134 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   };
-  //Artículos
-
+  const ActualizarTotales = async () => {
+    //Suma los importes de los detalles
+    let total = dataDetalle.reduce((i, map) => {
+      return i + map.saldo;
+    }, 0);
+    setTotalDocumento(Funciones.RedondearNumero(total, 2));
+  };
+  //Calculos
   //#endregion
 
   //#region Funciones Detalles
-  const ValidarDetalle = async () => {
-    if (Object.entries(dataCabecera).length == 0) {
-      return [false, "Seleccione un Item"];
+  const DataCabeceraLetra = async ({ target }) => {
+    setDataCabecera((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+    if (target.name == "fechaEmision") {
+      await FechaVencimiento({ name: "fechaEmision" }, target.value);
+    }
+  };
+  const ValidarDetalleLetra = async () => {
+    //Valida que hayan documentos
+    if (Object.entries(dataDetalle).length <= 0) {
+      document.getElementById("tipoDocumentoId").focus();
+      return [false, "Ingrese un Documento"];
     }
 
-    //Valida Descripción
-    if (dataCabecera.descripcion == undefined) {
-      return [false, "La descripción es requerida"];
+    //Valida N° Letras
+    if (dataCabecera.numeroLetra == "") {
+      document.getElementById("numeroLetra").focus();
+      return [false, "El número de letras es requerido"];
     }
+    //Valida N° Letras
 
-    //Valida montos
-    if (Funciones.IsNumeroValido(dataCabecera.cantidad, false) != "") {
-      document.getElementById("cantidad").focus();
+    //Valida Tipo Cambio
+    if (Funciones.IsNumeroValido(data.tipoCambio, false) != "") {
+      document.getElementById("consultarTipoCambio").focus();
       return [
         false,
-        "Cantidad: " + Funciones.IsNumeroValido(dataCabecera.cantidad, false),
+        "Tipo de Cambio: " + Funciones.IsNumeroValido(data.tipoCambio, false),
       ];
     }
-    if (Funciones.IsNumeroValido(dataCabecera.precioUnitario, false) != "") {
-      document.getElementById("precioUnitario").focus();
-      return [
-        false,
-        "Precio Unitario: " +
-          Funciones.IsNumeroValido(dataCabecera.precioUnitario, false),
-      ];
-    }
-    if (Funciones.IsNumeroValido(dataCabecera.importe, false) != "") {
-      document.getElementById("importe").focus();
-      return [
-        false,
-        "Importe: " + Funciones.IsNumeroValido(dataCabecera.importe, false),
-      ];
-    }
-    //Valida montos
+    //Valida Tipo Cambio
 
-    //Valida Stock
-    if (data.afectarStock) {
-      if (dataCabecera.stock < dataCabecera.cantidad) {
-        return [
-          false,
-          "Stock: El artículo no cuenta con el stock necesario para esta operación",
-        ];
-      }
-    }
-    //Valia precio Venta debe ser mayor a precio Compra
-    if (dataCabecera.precioCompra != undefined) {
-      if (dataCabecera.precioCompra > dataCabecera.precioUnitario) {
-        Swal.fire({
-          title: "Aviso del sistema",
-          text: `Precio de Venta: ${dataCabecera.precioUnitario}  |  Precio de Compra: ${dataCabecera.precioCompra}.   
-        El precio de Venta está por debajo del precio de Compra.`,
-          icon: "error",
-          iconColor: "#F7BF3A",
-          showCancelButton: false,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-        });
-        return [false, ""];
-      }
-    }
     return [true, ""];
   };
-  const AgregarDetalle = async () => {
+  const AgregarDetalleLetra = async () => {
     //Obtiene resultado de Validación
-    let resultado = await ValidarDetalle();
+    let resultado = await ValidarDetalleLetra();
 
     if (resultado[0]) {
-      //Si tiene detalleId entonces modifica registro
-      if (dataCabecera.detalleId != undefined) {
-        let dataDetalleMod = dataDetalle.map((map) => {
-          if (map.id == dataCabecera.id) {
-            return {
-              detalleId: dataCabecera.detalleId,
-              id: dataCabecera.id,
-              lineaId: dataCabecera.lineaId,
-              subLineaId: dataCabecera.subLineaId,
-              articuloId: dataCabecera.articuloId,
-              marcaId: dataCabecera.marcaId,
-              codigoBarras: dataCabecera.codigoBarras,
-              descripcion: dataCabecera.descripcion,
-              stock: dataCabecera.stock,
-              unidadMedidaDescripcion: dataCabecera.unidadMedidaDescripcion,
-              unidadMedidaId: dataCabecera.unidadMedidaId,
-              cantidad: dataCabecera.cantidad,
-              precioCompra: dataCabecera.precioCompra,
-              precioUnitario: dataCabecera.precioUnitario,
-              montoIGV: dataCabecera.montoIGV,
-              subTotal: dataCabecera.subTotal,
-              importe: dataCabecera.importe,
-            };
-          } else {
-            return map;
-          }
-        });
-        setDataDetalle(dataDetalleMod);
-        setRefrescar(true);
-      } else {
-        let model = [];
-        //Valida Artículos Varios
-        if (dataCabecera.id == "00000000") {
-          //Valida por id y descripción de artículo
-          model = dataDetalle.find((map) => {
-            return (
-              map.id == dataCabecera.id &&
-              map.descripcion == dataCabecera.descripcion
-            );
-          });
-        } else {
-          //Valida solo por id
-          model = dataDetalle.find((map) => {
-            return map.id == dataCabecera.id;
-          });
-        }
-
-        if (model == undefined) {
-          setDataDetalle((prev) => [
+      //Correlativo
+      let correlativo = await GetCorrelativo();
+      //Correlativo
+      let item = detalleId;
+      //Totales
+      //Soles
+      let totalPEN = totalDocumento;
+      let totalPENDividido = totalPEN / dataCabecera.numeroLetra;
+      let totalPENUltimaFila =
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1);
+      //Soles
+      //Dolares
+      let totalUSD = totalDocumento / data.tipoCambio;
+      let totalUSDDividido = totalUSD / dataCabecera.numeroLetra;
+      let totalUSDUltimaFila =
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1);
+      //Dolares
+      console.log(totalPENDividido);
+      console.log(totalPENUltimaFila);
+      console.log(Funciones.RedondearNumero(totalUSDDividido, 2));
+      console.log(Funciones.RedondearNumero(totalUSDUltimaFila, 2));
+      //Totales
+      for (let index = 0; index < dataCabecera.numeroLetra; index++) {
+        if (dataCabecera.numeroLetra - index == 1) {
+          console.log("final");
+          console.log(("0000000000" + correlativo).slice(-10));
+          setDataLetraDetalle((prev) => [
             ...prev,
             {
-              detalleId: detalleId,
-              id: dataCabecera.id,
-              lineaId: dataCabecera.lineaId,
-              subLineaId: dataCabecera.subLineaId,
-              articuloId: dataCabecera.articuloId,
-              marcaId: dataCabecera.marcaId,
-              codigoBarras: dataCabecera.codigoBarras,
-              descripcion: dataCabecera.descripcion,
-              stock: dataCabecera.stock,
-              unidadMedidaDescripcion: dataCabecera.unidadMedidaDescripcion,
-              unidadMedidaId: dataCabecera.unidadMedidaId,
-              cantidad: dataCabecera.cantidad,
-              precioCompra: dataCabecera.precioCompra,
-              precioUnitario: dataCabecera.precioUnitario,
-              montoIGV: dataCabecera.montoIGV,
-              subTotal: dataCabecera.subTotal,
-              importe: dataCabecera.importe,
+              detalleId: item,
+              id: ("0000000000" + correlativo).slice(-10),
+              fechaEmision: dataLetra.fechaEmision,
+              dias: dataLetra.dias,
+              fechaVencimiento: dataLetra.fechaVencimiento,
+              aval: dataLetra.aval,
+              monedaId: dataLetra.monedaId,
+              tipoCambio: dataLetra.tipoCambio,
+              totalPEN: Funciones.RedondearNumero(totalPENUltimaFila, 2),
+              totalUSD: Funciones.RedondearNumero(totalUSDUltimaFila, 2),
+              importe:
+                dataLetra.monedaId == "S"
+                  ? Funciones.RedondearNumero(totalPENUltimaFila, 2)
+                  : Funciones.RedondearNumero(totalUSDUltimaFila, 2),
             },
           ]);
-          setDetalleId(detalleId + 1);
-          setRefrescar(true);
         } else {
-          Swal.fire({
-            title: "Aviso del sistema",
-            text:
-              "El artículo " +
-              model.descripcion +
-              " ya está registrado en el detalle, ¿Desea modificar los datos de venta del artículo?",
-            icon: "error",
-            iconColor: "#F7BF3A",
-            showCancelButton: true,
-            color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
-            cancelButtonColor: "#d33",
-            cancelButtonText: "Cancelar",
-          }).then((res) => {
-            if (res.isConfirmed) {
-              CargarDetalle(model.id);
-            }
-          });
+          console.log(index);
+          console.log(("0000000000" + correlativo).slice(-10));
+          setDataLetraDetalle((prev) => [
+            ...prev,
+            {
+              detalleId: item,
+              id: ("0000000000" + correlativo).slice(-10),
+              fechaEmision: dataLetra.fechaEmision,
+              dias: dataLetra.dias,
+              fechaVencimiento: dataLetra.fechaVencimiento,
+              aval: dataLetra.aval,
+              monedaId: dataLetra.monedaId,
+              tipoCambio: dataLetra.tipoCambio,
+              totalPEN: Funciones.RedondearNumero(totalPENDividido, 2),
+              totalUSD: Funciones.RedondearNumero(totalUSDDividido, 2),
+              importe:
+                dataLetra.monedaId == "S"
+                  ? Funciones.RedondearNumero(totalPENDividido, 2)
+                  : Funciones.RedondearNumero(totalUSDDividido, 2),
+            },
+          ]);
         }
+        item++;
+        correlativo++;
       }
-      //Luego de añadir el artículo se limpia
-      setDataCabecera([]);
-      if (document.getElementById("productos")) {
-        document.getElementById("productos").checked = true;
-        document
-          .getElementById("productos")
-          .dispatchEvent(new Event("click", { bubbles: true }));
-      }
-      document.getElementById("consultarArticulo").focus();
+
+      // setDetalleId(detalleId + 1);
+      // setRefrescar(true);
+
+      // LimpiarCabecera(3);
+      // document.getElementById("numeroLetra").focus();
     } else {
       //NO cumple validación
       if (resultado[1] != "") {
@@ -756,7 +516,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
   };
-  const CargarDetalle = async (value, click = false) => {
+  const CargarDetalleLetra = async (value, click = false) => {
     if (modo != "Consultar") {
       if (click) {
         let row = value.target.closest("tr");
@@ -768,11 +528,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       document.getElementById("cantidad").focus();
     }
   };
-  const EliminarDetalle = async (id) => {
+  const EliminarDetalleLetra = async (id) => {
     let i = 1;
-    let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
+    let nuevoDetalle = dataLetraDetalle.filter((map) => map.id !== id);
     if (nuevoDetalle.length > 0) {
-      setDataDetalle(
+      setDataLetraDetalle(
         nuevoDetalle.map((map) => {
           return {
             ...map,
@@ -784,151 +544,53 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
-      setDataDetalle(nuevoDetalle);
+      setDataLetraDetalle(nuevoDetalle);
     }
     setRefrescar(true);
   };
-
-  //Calculos
-  const ImpuestoBolsa = async () => {
-    let fecha = data.fechaEmision.toString();
-    if (!isNaN(Date.parse(fecha))) {
-      if (fecha.length == 10) {
-        let year = parseInt(fecha.slice(0, 4));
-        if (year < 2019) {
-          setData({ ...data, factorImpuestoBolsa: 0 });
-        } else if (year == 2019) {
-          setData({ ...data, factorImpuestoBolsa: 0.1 });
-        } else if (year == 2020) {
-          setData({ ...data, factorImpuestoBolsa: 0.2 });
-        } else if (year == 2021) {
-          setData({ ...data, factorImpuestoBolsa: 0.3 });
-        } else if (year == 2022) {
-          setData({ ...data, factorImpuestoBolsa: 0.4 });
-        } else {
-          setData({ ...data, factorImpuestoBolsa: 0.5 });
-        }
-      }
+  const FechaVencimiento = async ({ target }, emision = null) => {
+    let fechaHoy = moment().format("YYYY-MM-DD");
+    let fechaRetorno, fecha;
+    if (target != undefined) {
+      fecha = moment(dataLetra.fechaEmision)
+        .add(target.value, "days")
+        .format("YYYY-MM-DD");
+      fechaRetorno = fecha == undefined ? fechaHoy : fecha;
+      setDataLetra((prev) => ({
+        ...prev,
+        dias: target.value,
+        fechaVencimiento: fechaRetorno,
+      }));
+      return;
+    }
+    if (emision != null) {
+      fecha = moment(emision).add(dataLetra.dias, "days").format("YYYY-MM-DD");
+      fechaRetorno = fecha == undefined ? fechaHoy : fecha;
+      setDataLetra((prev) => ({
+        ...prev,
+        dias: dataLetra.dias,
+        fechaVencimiento: fechaRetorno,
+        fechaEmision: emision,
+      }));
+      return;
     }
   };
-  const ActualizarTotales = async () => {
-    //Suma los importes de los detalles
-    let importeTotal = dataDetalle.reduce((i, map) => {
-      return i + map.importe;
-    }, 0);
-
-    //Valida si es operación gratuita
-    if (!data.isOperacionGratuita) {
-      //Porcentajes
-      let porcentajeIgvSeleccionado = data.porcentajeIGV;
-      let porcentajeRetencionSelect = data.porcentajeRetencion;
-      let porcentajeDetraccionSelect = data.porcentajeDetraccion;
-      let porcentajeImpuestoBolsa = data.factorImpuestoBolsa;
-      let incluyeIgv = data.incluyeIGV;
-      //Porcentajes
-      //Montos
-      let subTotal = 0,
-        montoIGV = 0,
-        total = 0,
-        totalNeto = 0,
-        retencion = 0,
-        detraccion = 0,
-        bolsa = 0;
-      //Montos
-
-      //Calculo Check IncluyeIGV
-      if (incluyeIgv) {
-        totalNeto = Funciones.RedondearNumero(importeTotal, 2);
-        subTotal = Funciones.RedondearNumero(
-          totalNeto / (1 + porcentajeIgvSeleccionado / 100),
-          2
-        );
-        montoIGV = Funciones.RedondearNumero(totalNeto - subTotal, 2);
-      } else {
-        subTotal = Funciones.RedondearNumero(importeTotal, 2);
-        montoIGV = Funciones.RedondearNumero(
-          subTotal * (porcentajeIgvSeleccionado / 100),
-          2
-        );
-        totalNeto = Funciones.RedondearNumero(subTotal + montoIGV, 2);
-      }
-      //Calculo Check IncluyeIGV
-
-      //Calculo Impuesto Bolsa
-      dataDetalle.map((map) => {
-        if (map.codigoBarras == "ICBPER") {
-          bolsa = bolsa + map.cantidad * porcentajeImpuestoBolsa;
-        }
-      });
-      //Calculo Impuesto Bolsa
-
-      //Calculos
-      retencion = Funciones.RedondearNumero(
-        totalNeto * (porcentajeRetencionSelect / 100),
-        2
-      );
-      detraccion = Funciones.RedondearNumero(
-        totalNeto * (porcentajeDetraccionSelect / 100),
-        2
-      );
-      total = totalNeto + detraccion + bolsa;
-      //Calculos
-      setData((prevState) => ({
-        ...prevState,
-        subTotal: Funciones.RedondearNumero(subTotal, 2),
-        montoIGV: Funciones.RedondearNumero(montoIGV, 2),
-        totalNeto: Funciones.RedondearNumero(totalNeto, 2),
-        montoImpuestoBolsa: Funciones.RedondearNumero(bolsa, 2),
-        montoRetencion: Funciones.RedondearNumero(retencion, 2),
-        montoDetraccion: Funciones.RedondearNumero(detraccion, 2),
-        totalOperacionesGratuitas: 0,
-        total: Funciones.RedondearNumero(total, 2),
-      }));
-    } else {
-      //Asigna a todo 0 y la suma de importes pasa a totalOperacionesGratuitas
-      setData((prevState) => ({
-        ...prevState,
-        incluyeIGV: false,
-        totalOperacionesGratuitas: importeTotal,
-        porcentajeIGV: 0,
-        porcentajeDetraccion: 0,
-        porcentajeRetencion: 0,
-        subTotal: 0,
-        montoIGV: 0,
-        totalNeto: 0,
-        montoImpuestoBolsa: 0,
-        montoRetencion: 0,
-        montoDetraccion: 0,
-        total: 0,
-      }));
-    }
-  };
-  //Calculos
   //#endregion
 
   //#region API
   const Tablas = async () => {
     const result = await ApiMasy.get(
-      `api/Venta/DocumentoVenta/FormularioTablas`
+      `api/Venta/LetraCambioVenta/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumento);
-    setDataSeries(
-      result.data.data.series.sort((a, b) => a.serie.localeCompare(b.serie))
-    );
-    setDataVendedor(
-      result.data.data.vendedores.map((res) => ({
+    setDataPersonal(
+      result.data.data.personal.map((res) => ({
         id: res.id,
         nombre:
           res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
     setDataMoneda(result.data.data.monedas);
-    setDataTipoVenta(result.data.data.tiposVenta);
-    setDataTipoCobro(result.data.data.tiposCobro);
-    setDataMotivoNota(result.data.data.motivosNota);
-    setDataIgv(result.data.data.porcentajesIGV);
-    setDataRetencion(result.data.data.porcentajesRetencion);
-    setDataDetraccion(result.data.data.porcentajesDetraccion);
   };
   const GetPorIdTipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
@@ -969,75 +631,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       OcultarMensajes();
     }
   };
-  const GetDireccion = async (id) => {
+  const GetCorrelativo = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/ClienteDireccion/ListarPorCliente?clienteId=${id}`
+      `api/Venta/LetraCambioVenta/GetNuevoNumero`
     );
-    setDataClienteDirec(result.data.data);
-  };
-  const GetCuentasCorrientes = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/CuentaCorriente/Listar`
-    );
-    setDataCtacte(
-      result.data.data.data.map((res) => ({
-        id: res.cuentaCorrienteId,
-        descripcion:
-          res.monedaId == "D"
-            ? res.numero + " | " + res.entidadBancariaNombre + " |  [US$]"
-            : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
-      }))
-    );
-  };
-  const GetDocReferencia = async (id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/DocumentoVenta/GetDocumentosReferencia?clienteId=${id}`
-    );
-    setDataDocRef(result.data.data);
-    setRefrescar(true);
-  };
-  const GetCorrelativo = async (tipoDocumento, serie) => {
-    if (serie != "" && serie.length == 4) {
-      const result = await ApiMasy.get(
-        `api/Mantenimiento/Correlativo/${tipoDocumento}/${serie}`
-      );
-      return result.data.data.numero;
-    } else {
-      return "";
-    }
-  };
-  //#endregion
-
-  //#region Funciones Modal
-  const AbrirFiltroCliente = async () => {
-    setModalCliente(true);
-  };
-  const AbrirFiltroCotizacion = async () => {
-    setModalCotizacion(true);
-  };
-  const AbrirFiltroArticulo = async () => {
-    setModalArt(true);
-  };
-  const AbrirFiltroPrecio = async () => {
-    if (dataCabecera.id != undefined && dataCabecera.id != "") {
-      setModalPrecio(true);
-    } else {
-      toast.error("Seleccione un producto", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
-  const AbrirFiltroLetra = async () => {
-    if (data.clienteId != "") {
-      setModalLetra(true);
-    }
+    return Number(result.data.data);
   };
   //#endregion
 
@@ -1048,54 +646,132 @@ const Modal = ({ setModal, modo, objeto }) => {
       accessor: "id",
     },
     {
-      Header: "Item",
+      Header: "Emisión",
+      accessor: "fechaEmision",
+      Cell: ({ value }) => {
+        return (
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+        );
+      },
+    },
+    {
+      Header: "Vcmto.",
+      accessor: "fechaVencimiento",
+      Cell: ({ value }) => {
+        return (
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+        );
+      },
+    },
+    {
+      Header: "Cliente",
+      accessor: "clienteNombre",
+    },
+    {
+      Header: "Tipo",
+      accessor: "tipoDocumentoAbreviatura",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
+    {
+      Header: "Número",
+      accessor: "numeroDocumento",
+    },
+    {
+      Header: "M",
+      accessor: "monedaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
+      },
+    },
+    {
+      Header: "Total",
+      accessor: "total",
+      Cell: ({ value }) => {
+        return <p className="text-right font-semibold pr-2.5">{value}</p>;
+      },
+    },
+    {
+      Header: "Saldo",
+      accessor: "saldo",
+      Cell: ({ value }) => {
+        return <p className="text-right font-semibold pr-5">{value}</p>;
+      },
+    },
+    {
+      Header: "Acciones",
+      Cell: ({ row }) => (
+        <div className="flex item-center justify-center">
+          <div className={Global.TablaBotonEliminar}>
+            <button
+              id="boton-eliminar"
+              onClick={() => {
+                EliminarDocumentoReferencia(row.values.id);
+              }}
+              className="p-0 px-1"
+              title="Click para eliminar registro"
+            >
+              <FaTrashAlt></FaTrashAlt>
+            </button>
+          </div>
+        </div>
+      ),
+    },
+  ];
+  const columnasDetalle = [
+    {
+      Header: "id",
+      accessor: "id",
+    },
+    {
+      Header: "N°",
       accessor: "detalleId",
       Cell: ({ value }) => {
         return <p className="text-center">{value}</p>;
       },
     },
     {
-      Header: "Descripción",
-      accessor: "descripcion",
-    },
-    {
-      Header: "Unidad",
-      accessor: "unidadMedidaDescripcion",
-      Cell: ({ value }) => {
-        return <p className="text-center font-semibold">{value}</p>;
-      },
-    },
-    {
-      Header: "Cantidad",
-      accessor: "cantidad",
+      Header: "Emisión",
+      accessor: "fechaEmision",
       Cell: ({ value }) => {
         return (
-          <p className="text-right font-semibold pr-1.5">
-            {Funciones.RedondearNumero(value, 4)}
-          </p>
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
         );
       },
     },
     {
-      Header: "Precio",
-      accessor: "precioUnitario",
+      Header: "Días",
+      accessor: "dias",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
+    {
+      Header: "Vcmto.",
+      accessor: "fechaVencimiento",
       Cell: ({ value }) => {
         return (
-          <p className="text-right font-semibold pr-2.5">
-            {Funciones.RedondearNumero(value, 4)}
-          </p>
+          <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
         );
+      },
+    },
+    {
+      Header: "Avales",
+      accessor: "aval",
+    },
+    {
+      Header: "M",
+      accessor: "monedaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value == "S" ? "S/." : "US$"}</p>;
       },
     },
     {
       Header: "Importe",
       accessor: "importe",
       Cell: ({ value }) => {
-        return (
-          <p className="text-right font-semibold pr-5">
-            {Funciones.RedondearNumero(value, 4)}
-          </p>
-        );
+        return <p className="text-right font-semibold pr-2.5">{value}</p>;
       },
     },
     {
@@ -1109,7 +785,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.TablaBotonModificar}>
                 <button
                   id="boton"
-                  onClick={() => CargarDetalle(row.values.id)}
+                  onClick={() => CargarDetalleLetra(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -1121,7 +797,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="boton-eliminar"
                   onClick={() => {
-                    EliminarDetalle(row.values.id);
+                    EliminarDetalleLetra(row.values.id);
                   }}
                   className="p-0 px-1"
                   title="Click para eliminar registro"
@@ -1146,7 +822,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Venta", "DocumentoVenta"]}
+            menu={["Venta", "LetraCambioVenta"]}
             titulo="Emisión de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
@@ -1159,13 +835,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                 Click={() => OcultarMensajes()}
               />
             )}
-            {/* Cabecera */}
+            {/* Cabecera Documento */}
             <div
               className={
-                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
+                Global.ContenedorBasico +
+                " mb-4 !gap-0 " +
+                Global.FondoContenedor
               }
             >
-              <div className={Global.ContenedorInputs}>
+              <div className={Global.ContenedorInputs + " mb-2"}>
                 <div className={Global.InputFull}>
                   <label
                     htmlFor="tipoDocumentoId"
@@ -1177,8 +855,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoDocumentoId"
                     name="tipoDocumentoId"
                     autoFocus
-                    value={data.tipoDocumentoId ?? ""}
-                    onChange={ValidarData}
+                    value={dataCabecera.tipoDocumentoId ?? ""}
+                    onChange={DataCabecera}
                     disabled={modo == "Nuevo" ? false : true}
                     className={Global.InputStyle}
                   >
@@ -1193,24 +871,18 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <label htmlFor="serie" className={Global.LabelStyle}>
                     Serie
                   </label>
-                  <select
+                  <input
+                    type="text"
                     id="serie"
                     name="serie"
-                    value={data.serie ?? ""}
-                    onChange={ValidarData}
+                    placeholder="Serie"
+                    autoComplete="off"
+                    maxLength="4"
                     disabled={modo == "Nuevo" ? false : true}
+                    value={dataCabecera.serie ?? ""}
+                    onChange={DataCabecera}
                     className={Global.InputStyle}
-                  >
-                    {dataSeries
-                      .filter(
-                        (model) => model.tipoDocumentoId == data.tipoDocumentoId
-                      )
-                      .map((map) => (
-                        <option key={map.serie} value={map.serie}>
-                          {map.serie}
-                        </option>
-                      ))}
-                  </select>
+                  />
                 </div>
                 <div className={Global.InputMitad}>
                   <label htmlFor="numero" className={Global.LabelStyle}>
@@ -1223,12 +895,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Número"
                     autoComplete="off"
                     maxLength="10"
-                    disabled={true}
-                    value={data.numero ?? ""}
+                    disabled={modo == "Nuevo" ? false : true}
+                    value={dataCabecera.numero ?? ""}
+                    onChange={DataCabecera}
                     className={Global.InputBoton}
                   />
                   <button
-                    id="consultarOC"
+                    id="consultarDocumento"
                     className={
                       Global.BotonBuscar +
                       Global.Anidado +
@@ -1237,20 +910,19 @@ const Modal = ({ setModal, modo, objeto }) => {
                     }
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
-                    onClick={() => AbrirFiltroCotizacion()}
+                    onClick={() => AgregarDocumentoReferencia()}
                   >
                     <FaSearch></FaSearch>
                   </button>
                   <button
-                    id="consultarOC"
+                    id="eliminarDocumentos"
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonEliminar
                     }
                     hidden={modo == "Consultar"}
-                    onKeyDown={(e) => Funciones.KeyClick(e)}
-                    onClick={() => AbrirFiltroCotizacion()}
+                    onClick={() => LimpiarCabecera(0)}
                   >
-                    <FaSearch></FaSearch>
+                    <FaTrashAlt></FaTrashAlt>
                   </button>
                 </div>
               </div>
@@ -1269,15 +941,55 @@ const Modal = ({ setModal, modo, objeto }) => {
                     "border border-b-0",
                     "border",
                   ]}
-                  DobleClick={(e) => CargarDetalle(e, true)}
                 />
               </TablaStyle>
               {/* Tabla Detalle */}
-            </div>
-            {/* Cabecera */}
 
-            <div className={Global.ContenedorBasico}>
-              <div className={Global.ContenedorInputs}>
+              {/*Tabla Footer*/}
+              <div className={Global.ContenedorFooter}>
+                <div className="flex">
+                  <div className={Global.FilaVacia}></div>
+                  <div className={Global.FilaPrecio}>
+                    <p className={Global.FilaContenido}>Total</p>
+                  </div>
+                  <div className={Global.FilaImporte}>
+                    <p className={Global.FilaContenido}>
+                      {totalDocumento ?? "0.00"}
+                    </p>
+                  </div>
+                  <div className={Global.UltimaFila}></div>
+                </div>
+              </div>
+              {/*Tabla Footer*/}
+            </div>
+            {/* Cabecera Documento */}
+
+            {/* Cabecera Letra */}
+            <div
+              className={
+                Global.ContenedorBasico +
+                " mb-4 !gap-0 " +
+                Global.FondoContenedor
+              }
+            >
+              <div className={Global.ContenedorInputs + " mb-1.5"}>
+                <div className={Global.InputTercio}>
+                  <label htmlFor="numeroLetra" className={Global.LabelStyle}>
+                    N° Letras
+                  </label>
+                  <input
+                    type="number"
+                    id="numeroLetra"
+                    name="numeroLetra"
+                    placeholder="N° Letras"
+                    autoComplete="off"
+                    min={0}
+                    disabled={modo == "Consultar"}
+                    value={dataCabecera.numeroLetra ?? ""}
+                    onChange={DataCabecera}
+                    className={Global.InputStyle}
+                  />
+                </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
                     T. Cambio
@@ -1289,9 +1001,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Tipo de Cambio"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar"}
+                    disabled={true}
                     value={data.tipoCambio ?? ""}
-                    onChange={ValidarData}
+                    onChange={DataCabeceraLetra}
                     className={
                       modo != "Consultar"
                         ? Global.InputBoton
@@ -1306,30 +1018,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(data.fechaEmision);
+                      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>
                   </button>
-                </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="tipoVentaId" className={Global.LabelStyle}>
-                    Tipo Venta
-                  </label>
-                  <select
-                    id="tipoVentaId"
-                    name="tipoVentaId"
-                    value={data.tipoVentaId ?? ""}
-                    onChange={ValidarData}
-                    disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
-                  >
-                    {dataTipoVenta.map((map) => (
-                      <option key={map.id} value={map.id}>
-                        {map.descripcion}
-                      </option>
-                    ))}
-                  </select>
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="monedaId" className={Global.LabelStyle}>
@@ -1339,9 +1032,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={ValidarData}
+                    onChange={DataCabeceraLetra}
                     disabled={modo == "Consultar"}
-                    className={Global.InputBoton}
+                    className={Global.InputStyle}
                   >
                     {dataMoneda.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -1349,38 +1042,118 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </option>
                     ))}
                   </select>
-                  <button
-                    id="consultarOC"
-                    className={
-                      Global.BotonBuscar +
-                      Global.Anidado +
-                      Global.BotonPrimary +
-                      " rounded-r-none"
-                    }
-                    hidden={modo == "Consultar"}
-                    onKeyDown={(e) => Funciones.KeyClick(e)}
-                    onClick={() => AbrirFiltroCotizacion()}
-                  >
-                    <FaSearch></FaSearch>
-                  </button>
-                  <button
-                    id="consultarOC"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonEliminar
-                    }
-                    hidden={modo == "Consultar"}
-                    onKeyDown={(e) => Funciones.KeyClick(e)}
-                    onClick={() => AbrirFiltroCotizacion()}
-                  >
-                    <FaSearch></FaSearch>
-                  </button>
                 </div>
               </div>
+
+              <div className={Global.ContenedorBasico + " mb-2"}>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputMitad}>
+                    <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+                      Fecha Emisión
+                    </label>
+                    <input
+                      type="date"
+                      id="fechaEmision"
+                      name="fechaEmision"
+                      autoComplete="off"
+                      autoFocus={modo == "Modificar"}
+                      disabled={modo == "Consultar"}
+                      value={moment(dataLetra.fechaEmision ?? "").format(
+                        "yyyy-MM-DD"
+                      )}
+                      onChange={DataCabeceraLetra}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputTercio}>
+                    <label htmlFor="dias" className={Global.LabelStyle}>
+                      Días
+                    </label>
+                    <input
+                      type="number"
+                      id="dias"
+                      name="dias"
+                      placeholder="Días"
+                      autoComplete="off"
+                      min={0}
+                      disabled={modo == "Consultar"}
+                      value={dataLetra.dias ?? ""}
+                      onChange={FechaVencimiento}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                  <div className={Global.InputMitad}>
+                    <label
+                      htmlFor="fechaVencimiento"
+                      className={Global.LabelStyle}
+                    >
+                      Fecha Vencimiento
+                    </label>
+                    <input
+                      type="date"
+                      id="fechaVencimiento"
+                      name="fechaVencimiento"
+                      autoComplete="off"
+                      disabled={true}
+                      value={moment(dataLetra.fechaVencimiento ?? "").format(
+                        "yyyy-MM-DD"
+                      )}
+                      className={Global.InputStyle}
+                    />
+                  </div>
+                </div>
+                <div className={Global.ContenedorInputs}>
+                  <div className={Global.InputFull}>
+                    <label htmlFor="aval" className={Global.LabelStyle}>
+                      Aval
+                    </label>
+                    <input
+                      type="text"
+                      id="aval"
+                      name="aval"
+                      placeholder="Aval"
+                      autoComplete="aval"
+                      min={0}
+                      disabled={modo == "Consultar"}
+                      value={dataLetra.aval ?? ""}
+                      onChange={DataCabeceraLetra}
+                      className={Global.InputBoton}
+                    />
+                    <button
+                      id="enviarDetalleLetra"
+                      className={
+                        Global.BotonBuscar +
+                        Global.Anidado +
+                        Global.BotonPrimary +
+                        " rounded-r-none"
+                      }
+                      hidden={modo == "Consultar"}
+                      onKeyDown={(e) => Funciones.KeyClick(e)}
+                      onClick={() => AgregarDetalleLetra()}
+                    >
+                      <FaPlus></FaPlus>
+                    </button>
+                    <button
+                      id="eliminarDetalleLetra"
+                      className={
+                        Global.BotonBuscar +
+                        Global.Anidado +
+                        Global.BotonEliminar
+                      }
+                      hidden={modo == "Consultar"}
+                      onClick={() => LimpiarCabecera(1)}
+                    >
+                      <FaTrashAlt></FaTrashAlt>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               {/* Tabla Detalle */}
-              <TablaStyle>
+              <TablaDetalleStyle>
                 <TableBasic
-                  columnas={columnas}
-                  datos={dataDetalle}
+                  columnas={columnasDetalle}
+                  datos={dataLetraDetalle}
                   estilos={[
                     "",
                     "",
@@ -1390,20 +1163,21 @@ const Modal = ({ setModal, modo, objeto }) => {
                     "border border-b-0",
                     "border",
                   ]}
-                  DobleClick={(e) => CargarDetalle(e, true)}
+                  DobleClick={(e) => CargarDetalleLetra(e, true)}
                 />
-              </TablaStyle>
+              </TablaDetalleStyle>
               {/* Tabla Detalle */}
+
               {/*Tabla Footer*/}
               <div className={Global.ContenedorFooter}>
                 <div className="flex">
                   <div className={Global.FilaVacia}></div>
                   <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total a Pagar</p>
+                    <p className={Global.FilaContenido}>Total</p>
                   </div>
                   <div className={Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
-                      {data.total ?? "0.00"}
+                      {totalDetalle ?? "0.00"}
                     </p>
                   </div>
                   <div className={Global.UltimaFila}></div>
@@ -1411,52 +1185,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               {/*Tabla Footer*/}
             </div>
+            {/* Cabecera Letra */}
           </ModalCrud>
         </>
-      )}
-      {modalCliente && (
-        <FiltroCliente
-          setModal={setModalCliente}
-          setObjeto={setDataCliente}
-          foco={document.getElementById("clienteDireccionId")}
-        />
-      )}
-      {modalCotizacion && (
-        <FiltroCotizacion
-          setModal={setModalCotizacion}
-          id={data.clienteId}
-          setObjeto={setDataCotizacion}
-          objeto={data.cotizacionId}
-          foco={document.getElementById("clienteDireccionId")}
-        />
-      )}
-      {modalArt && (
-        <FiltroArticulo
-          setModal={setModalArt}
-          setObjeto={setDataCabecera}
-          foco={document.getElementById("cantidad")}
-        />
-      )}
-      {modalPrecio && (
-        <FiltroPrecio
-          setModal={setModalPrecio}
-          objeto={{
-            precioVenta1: dataCabecera.precioVenta1,
-            precioVenta2: dataCabecera.precioVenta2,
-            precioVenta3: dataCabecera.precioVenta3,
-            precioVenta4: dataCabecera.precioVenta4,
-          }}
-          setObjeto={setDataPrecio}
-          foco={document.getElementById("precioUnitario")}
-        />
-      )}
-      {modalLetra && (
-        <FiltroLetraVenta
-          setModal={setModalLetra}
-          id={data.clienteId}
-          setObjeto={setDataLetra}
-          foco={document.getElementById("monedaId")}
-        />
       )}
     </>
   );
