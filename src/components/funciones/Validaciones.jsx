@@ -204,4 +204,10 @@ export const CerrarModal = async (e) => {
     return false;
   }
 };
+
+export const PDF = async (data) => {
+  const blob = new Blob([data], { type: "application/pdf" });
+  const blobUrl = URL.createObjectURL(blob);
+  window.open(blobUrl);
+};
 //#endregion

@@ -45,7 +45,7 @@ const Header = () => {
     window.location.href = "/login";
   };
   return (
-    <header className="h-auto pt-3 pb-2 px-3 ">
+    <header className="h-auto pt-5 px-6 ">
       <nav className="h-full pb-3 md:pb-0 flex flex-col md:flex-row items-center justify-between">
         <h1 className="pb-2 md:pb-0 font-bold text-xl">
           Bienvenido{" "}
@@ -57,7 +57,7 @@ const Header = () => {
             icon="pi pi-building"
             onClick={(e) => menu.current.toggle(e)}
             className={
-              Global.BotonBasico + " " + Global.BotonHeader + " !border-none"
+              Global.BotonBasico + " " + Global.BotonHeader + " !py-1 !border-none"
             }
           >
             <span className="hidden sm:block pl-2">EMPRESA</span>
@@ -66,7 +66,7 @@ const Header = () => {
             <Button
               onClick={handleLogout}
               className={
-                Global.BotonBasico + " " + Global.BotonHeader + " !border-none"
+                Global.BotonBasico + " " + Global.BotonHeader + " !py-1 !border-none"
               }
             >
               <RiLogoutCircleRLine className="text-black" />

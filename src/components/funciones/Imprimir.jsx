@@ -1,8 +1,8 @@
-import ApiMasy from "../../api/ApiMasy";
+import Api from "../../api/Api";
 import { toast } from "react-toastify";
-
+import * as Funciones from "../funciones/Validaciones";
 const Imprimir = async (menu, id) => {
-  const result = await ApiMasy.get(`api/${menu[0]}/${menu[1]}/Imprimir/${id}`);
+  const result = await Api.get(`api/${menu[0]}/${menu[1]}/Imprimir/${id}`);
   if (result.name == "AxiosError") {
     let error = "";
     //Captura el mensaje de error
@@ -25,7 +25,7 @@ const Imprimir = async (menu, id) => {
     });
     return null;
   } else {
-    return result.data;
+    Funciones.PDF(result.data);
   }
 };
 

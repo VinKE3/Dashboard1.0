@@ -23,7 +23,7 @@ const BotonBasico = ({
           size="1x"
           className="m-0 py-3 px-2.5 sm:pr-1 sm:py-.2.5"
         />
-        <div className="w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 md:text-mini">
+        <div className={Global.BotonTexto}>
           <p>{botonText}</p>
         </div>
       </button>

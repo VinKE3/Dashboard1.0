@@ -79,7 +79,8 @@ export var BotonCancelarModal =
   "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 focus:bg-gradient-to-b focus:from-red-700 focus:to-red-600 focus:text-light focus:border-blue-500 ";
 
 export var BotonBasico =
-  "flex mb-2 text-sm md:text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
+  "flex mb-2 text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
+  export var BotonTexto = "w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 text-mini";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
 export var BotonPrimary =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
@@ -98,7 +99,7 @@ export var BotonAgregar =
 export var BotonEliminar =
   "bg-gradient-to-b from-red-600 to-red-800 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-700 ";
 export var BotonHeader =
-  "bg-gradient-to-b from-yellow-400 to-yellow-600 hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-700 !text-black ";
+  "bg-gradient-to-b from-yellow-400 to-yellow-600 hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-700 !text-gray-800 ";
 export var BotonPaginacion =
   "px-3 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md ";
 export var BotonPaginacionFlechas =

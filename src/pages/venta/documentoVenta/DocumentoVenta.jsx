@@ -188,20 +188,6 @@ const DocumentoVenta = () => {
   //#endregion
 
   //#region Funciones Modal
-
-  const openPDFInNewTab = async (pdfData) => {
-    // Decodificar el código del PDF
-    const byteCharacters = btoa(unescape(encodeURIComponent(pdfData)));
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    window.open(url);
-  };
-
   const AccionModal = async (
     value,
     modo = "Nuevo",
@@ -349,11 +335,7 @@ const DocumentoVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let resultado = await Imprimir(["Venta", "DocumentoVenta"], id);
-            console.log(resultado);
-            if (resultado != null) {
-              await openPDFInNewTab(resultado);
-            }
+            await Imprimir(["Venta", "DocumentoVenta"], id);
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",

@@ -298,15 +298,7 @@ const SalidaAlmacen = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let resultado = await Imprimir(["Almacen", "SalidaAlmacen"], id);
-            if (resultado != null) {
-              const source = `data:application/pdf;base64,${resultado}`;
-              const link = document.createElement("a");
-              const fileName = "file.pdf";
-              link.href = source;
-              link.download = fileName;
-              link.click();
-            }
+            await Imprimir(["Almacen", "SalidaAlmacen"], id);
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",

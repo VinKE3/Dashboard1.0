@@ -4,12 +4,14 @@ import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
 import Anular from "../../../components/funciones/Anular";
+import Imprimir from "../../../components/funciones/Imprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
+import ModalCabecera from "./ModalCabecera";
 import ModalDeshacer from "./ModalDeshacer";
 import ModalRefinanciamiento from "./ModalRefinanciamiento";
 import ModalRenovacion from "./ModalRenovacion";
@@ -21,6 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
+
 //#region Estilos
 const TablaStyle = styled.div`
   & th:first-child {
@@ -29,22 +32,32 @@ const TablaStyle = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(7) {
-    text-align: right;
+  & th:nth-child(2),
+  & th:nth-child(3) {
+    text-align: center;
+    width: 60px;
   }
-  & th:nth-child(6) {
+  & th:nth-child(4) {
+    width: 135px;
+  }
+  & th:nth-child(7),
+  & th:nth-child(11),
+  & th:nth-child(12),
+  & th:nth-child(13) {
     text-align: center;
     width: 40px;
   }
   & th:nth-child(8),
   & th:nth-child(9),
-  & th:nth-child(10),
-  & th:nth-child(11) {
+  & th:nth-child(10) {
+    text-align: right;
+    width: 60px;
+  }
+  th:nth-child(14),
+  th:nth-child(15),
+  th:nth-child(17) {
     text-align: center;
     width: 40px;
-  }
-  th:nth-child(16) {
-    text-align: center;
   }
   & th:last-child {
     width: 90px;
@@ -66,13 +79,14 @@ const LetraCambioVenta = () => {
     clienteNombre: "",
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
-    isEnviado: "",
+    isCancelado: "",
   });
   const [cadena, setCadena] = useState(
-    `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isenviado=${filtro.isEnviado}`
+    `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isCancelado=${filtro.isCancelado}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalCabecera, setModalCabecera] = useState(false);
   const [modalRefinanciacion, setModalRefinanciacion] = useState(false);
   const [modalRenovacion, setModalRenovacion] = useState(false);
   const [modalDeshacer, setModalDeshacer] = useState(false);
@@ -85,7 +99,7 @@ const LetraCambioVenta = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isenviado=${filtro.isEnviado}`
+      `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}&isCancelado=${filtro.isCancelado}`
     );
   }, [filtro]);
   useEffect(() => {
@@ -141,6 +155,16 @@ const LetraCambioVenta = () => {
     }, 200);
     setTimer(newTimer);
   };
+  const FiltroBoton = async () => {
+    setFiltro({
+      clienteNombre: "",
+      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      isCancelado: "",
+    });
+    setIndex(0);
+    document.getElementById("clienteNombre").focus();
+  };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
     Listar(cadena, e.selected + 1);
@@ -188,14 +212,13 @@ const LetraCambioVenta = () => {
     accion = 0,
     click = false
   ) => {
+    setModo(modo);
     if (click) {
-      setModo(modo);
       let row = value.target.closest("tr");
       let id = row.firstChild.innerText;
       await GetPorId(id);
-      setModal(true);
+      setModalCabecera(true);
     } else {
-      setModo(modo);
       switch (accion) {
         case 0: {
           setObjeto({
@@ -223,7 +246,7 @@ const LetraCambioVenta = () => {
           let valor = await GetIsPermitido(accion, id);
           if (valor) {
             await GetPorId(id);
-            setModal(true);
+            setModalCabecera(true);
           }
           break;
         }
@@ -236,36 +259,99 @@ const LetraCambioVenta = () => {
         }
         case 3: {
           await GetPorId(id);
-          setModal(true);
+          setModalCabecera(true);
+          break;
+        }
+        case 4: {
+          let row = document
+            .querySelector("#tablaLetraCambioVenta")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            let documento = row.children[2].innerHTML;
+            Swal.fire({
+              title: "¿Desea Anular el documento?",
+              text: documento,
+              icon: "warning",
+              iconColor: "#F7BF3A",
+              showCancelButton: true,
+              color: "#fff",
+              background: "#1a1a2e",
+              confirmButtonColor: "#eea508",
+              confirmButtonText: "Aceptar",
+              cancelButtonColor: "#d33",
+              cancelButtonText: "Cancelar",
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                let valor = await GetIsPermitido(accion, value);
+                if (valor) {
+                  await Anular(["Venta", "LetraCambioVenta"], id, setEliminar);
+                }
+              }
+            });
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        case 5: {
+          let row = document
+            .querySelector("#tablaLetraCambioVenta")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.children[0].innerHTML;
+            await Imprimir(["Venta", "LetraCambioVenta"], id);
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
+          break;
+        }
+        case 6: {
+          setObjeto({
+            monedaId: "S",
+            tipoCambio: 0,
+            documentosReferencia: [],
+            detalles: [],
+          });
+          setModalRefinanciacion(true);
+          break;
+        }
+        case 7: {
+          setObjeto({
+            monedaId: "S",
+            tipoCambio: 0,
+            documentosReferencia: [],
+            detalles: [],
+          });
+          setModalRenovacion(true);
+          break;
+        }
+        case 8: {
+          setModalDeshacer(true);
           break;
         }
         default:
           break;
       }
     }
-  };
-  const AbrirModalRefinanciacion = async (modo = "Nuevo") => {
-    setModo(modo);
-    setObjeto({
-      monedaId: "S",
-      tipoCambio: 0,
-      documentosReferencia: [],
-      detalles: [],
-    });
-    setModalRefinanciacion(true);
-  };
-  const AbrirModalRenovacion = async (modo = "Nuevo") => {
-    setModo(modo);
-    setObjeto({
-      monedaId: "S",
-      tipoCambio: 0,
-      documentosReferencia: [],
-      detalles: [],
-    });
-    setModalRenovacion(true);
-  };
-  const AbrirModalDeshacer = async (modo = "Nuevo") => {
-    setModalDeshacer(true);
   };
   const ModalKey = async (e, modo) => {
     if (e.key === "Enter") {
@@ -304,171 +390,6 @@ const LetraCambioVenta = () => {
       }
     }
   };
-  const Anulacion = async () => {
-    let row = document
-      .querySelector("#tablaLetraCambioVenta")
-      .querySelector("tr.selected-row");
-    if (row != null) {
-      let id = row.children[0].innerHTML;
-      let documento = row.children[2].innerHTML;
-      Swal.fire({
-        title: "¿Desea Anular el documento?",
-        text: documento,
-        icon: "warning",
-        iconColor: "#F7BF3A",
-        showCancelButton: true,
-        color: "#fff",
-        background: "#1a1a2e",
-        confirmButtonColor: "#eea508",
-        confirmButtonText: "Aceptar",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-      }).then(async (res) => {
-        if (res.isConfirmed) {
-          await Anular(["Venta", "LetraCambioVenta"], id, setEliminar);
-        }
-      });
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
-  const Imprimir = async () => {
-    let row = document
-      .querySelector("#tablaLetraCambioVenta")
-      .querySelector("tr.selected-row");
-    if (row != null) {
-      let id = row.children[0].innerHTML;
-      const result = await ApiMasy.get(
-        `api/Venta/LetraCambioVenta/Imprimir/${id}`
-      );
-      if (result.name == "AxiosError") {
-        let err = "";
-        if (result.response.data == "") {
-          err = result.message;
-        } else {
-          err = String(result.response.data.messages[0].textos);
-        }
-        toast.error(err, {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } else {
-        console.log(result.data);
-      }
-    } else {
-      toast.info("Seleccione una Fila", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
-  const Autorizar = async (id, estado) => {
-    if (estado != false) {
-      toast.error(
-        "Documento Venta: Solo se pueden autorizar documentos pendientes.",
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-    } else {
-      console.log(id);
-    }
-  };
-  const AutorizarTodo = async (ids, value) => {
-    let model = {
-      ids: ids,
-      isBloqueado: value,
-    };
-    const title = value
-      ? "Autorizar Registros de Ventas (50 registros mostrados)"
-      : "Desautorizar Registros de Ventas (50 registros mostrados)";
-
-    Swal.fire({
-      title: title,
-      icon: "warning",
-      iconColor: "#F7BF3A",
-      showCancelButton: true,
-      color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#EE8100",
-      confirmButtonText: "Aceptar",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // ApiMasy.put(`api/Venta/BloquearVenta`, model).then((response) => {
-        //   if (response.name == "AxiosError") {
-        //     let err = "";
-        //     if (response.response.data == "") {
-        //       err = response.message;
-        //     } else {
-        //       err = String(response.response.data.messages[0].textos);
-        //     }
-        //     toast.error(err, {
-        //       position: "bottom-right",
-        //       autoClose: 3000,
-        //       hideProgressBar: true,
-        //       closeOnClick: true,
-        //       pauseOnHover: true,
-        //       draggable: true,
-        //       progress: undefined,
-        //       theme: "colored",
-        //     });
-        //   } else {
-        //     Listar(
-        //       `&tipoDocumentoId=${
-        //         document.getElementById("tipoDocumentoId").value
-        //       }&fechaInicio=${
-        //         document.getElementById("fechaInicio").value
-        //       }&fechaFin=${document.getElementById("fechaFin").value}`,
-        //       index + 1
-        //     );
-        //     toast.info(String(response.data.messages[0].textos), {
-        //       position: "bottom-right",
-        //       autoClose: 3000,
-        //       hideProgressBar: true,
-        //       closeOnClick: true,
-        //       pauseOnHover: true,
-        //       draggable: true,
-        //       progress: undefined,
-        //       theme: "colored",
-        //     });
-        //   }
-        // });
-        setChecked(value);
-      } else {
-        setChecked(!value);
-      }
-    });
-  };
   //#endregion
 
   //#region Columnas
@@ -481,6 +402,15 @@ const LetraCambioVenta = () => {
       {
         Header: "Emisión",
         accessor: "fechaEmision",
+        Cell: ({ value }) => {
+          return (
+            <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
+          );
+        },
+      },
+      {
+        Header: "Vcmto.",
+        accessor: "fechaVencimiento",
         Cell: ({ value }) => {
           return (
             <p className="text-center">{moment(value).format("DD/MM/YY")}</p>
@@ -514,19 +444,22 @@ const LetraCambioVenta = () => {
         },
       },
       {
-        Header: "C",
-        accessor: "isCancelado",
+        Header: "Abonado",
+        accessor: "abonado",
         Cell: ({ value }) => {
-          return (
-            <div className="flex justify-center">
-              <Checkbox checked={value} />
-            </div>
-          );
+          return <p className="text-right font-semibold">{value}</p>;
         },
       },
       {
-        Header: "S",
-        accessor: "afectarStock",
+        Header: "Saldo",
+        accessor: "saldo",
+        Cell: ({ value }) => {
+          return <p className="text-right font-semibold">{value}</p>;
+        },
+      },
+      {
+        Header: "C",
+        accessor: "isCancelado",
         Cell: ({ value }) => {
           return (
             <div className="flex justify-center">
@@ -558,55 +491,52 @@ const LetraCambioVenta = () => {
         },
       },
       {
-        Header: "Cotización",
-        accessor: "cotizacion",
+        Header: "N° Único",
+        accessor: "numeroUnico",
       },
       {
-        Header: "O. Pedido",
-        accessor: "ordenPedido",
-      },
-      {
-        Header: "G. Remisión",
-        accessor: "guiaRemision",
-      },
-      {
-        Header: "Tienda/Vend.",
-        accessor: "tiendaVendedor",
-      },
-      {
-        Header: "E",
-        accessor: "isEnviado",
+        Header: "Días Atrazo",
+        accessor: "diasAtrazo",
         Cell: ({ value }) => {
-          return (
-            <div className="flex justify-center">
-              <Checkbox checked={value} />
-            </div>
-          );
+          return <p className="text-center font-semibold">{value}</p>;
         },
       },
-
+      {
+        Header: "Doc. Ref.",
+        accessor: "documentosReferencia",
+      },
+      {
+        Header: "Estado",
+        accessor: "estadoLetraId",
+        Cell: ({ value }) => {
+          let estado = "";
+          switch (value) {
+            case "E":
+              estado = "EMITIDO";
+              break;
+            case "T":
+              estado = "PROTESTADO";
+              break;
+            case "R":
+              estado = "RENOVADO";
+              break;
+            default:
+              estado = value;
+              break;
+          }
+          return <p className="text-center">{estado}</p>;
+        },
+      },
       {
         Header: "Acciones",
         Cell: ({ row }) => (
-          <div className="flex">
-            <div className={Global.TablaBotonConsultar}>
-              <button
-                id="boton-autorizar"
-                onClick={() => Autorizar(row.values.id, row.values.isEnviado)}
-                className="p-0 px-1"
-                title="Click para autorizar registro"
-              >
-                <FaCheck></FaCheck>
-              </button>
-            </div>
-            <BotonCRUD
-              setEliminar={setEliminar}
-              permisos={permisos}
-              ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
-              ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
-              ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
-            />
-          </div>
+          <BotonCRUD
+            setEliminar={setEliminar}
+            permisos={permisos}
+            ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
+            ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
+          />
         ),
       },
     ],
@@ -620,32 +550,7 @@ const LetraCambioVenta = () => {
       {visible ? (
         <>
           <div className="px-2">
-            <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Letra Cambio Venta</h2>
-              {filtro.isEnviado === false && (
-                <div className="flex">
-                  <div className={Global.CheckStyle}>
-                    <Checkbox
-                      inputId="isAutorizado"
-                      name="isAutorizado"
-                      onChange={(e) => {
-                        AutorizarTodo(
-                          datos.map((d) => d.id),
-                          e.checked
-                        );
-                      }}
-                      checked={checked}
-                    ></Checkbox>
-                  </div>
-                  <label
-                    htmlFor="isAutorizado"
-                    className={Global.LabelCheckStyle + " font-semibold"}
-                  >
-                    Autorizar Todos
-                  </label>
-                </div>
-              )}
-            </div>
+            <h2 className={Global.TituloH2}>Letra Cambio Venta</h2>
             {/* Filtro*/}
             <div
               className={
@@ -699,7 +604,7 @@ const LetraCambioVenta = () => {
                     className={
                       Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
                     }
-                    onClick={Filtro}
+                    onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
                   </button>
@@ -708,55 +613,55 @@ const LetraCambioVenta = () => {
 
               <div className={Global.ContenedorFiltro + " !my-0"}>
                 <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-28"}>
+                  <div className={Global.Input + "w-40"}>
                     <div className={Global.CheckStyle}>
                       <RadioButton
                         inputId="isEnviadoTodos"
-                        name="isEnviado"
+                        name="isCancelado"
                         value={""}
                         onChange={ValidarData}
-                        checked={filtro.isEnviado === ""}
+                        checked={filtro.isCancelado === ""}
                       />
                     </div>
                     <label
                       htmlFor="isEnviadoTodos"
                       className={Global.LabelCheckStyle + " rounded-r-none "}
                     >
-                      Todos
+                      Todas las Letras
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
+                  <div className={Global.Input + "w-36"}>
                     <div className={Global.CheckStyle + Global.Anidado}>
                       <RadioButton
                         inputId="isEnviadoPendiente"
-                        name="isEnviado"
+                        name="isCancelado"
                         value={false}
                         onChange={ValidarData}
-                        checked={filtro.isEnviado === false}
+                        checked={filtro.isCancelado === false}
                       />
                     </div>
                     <label
                       htmlFor="isEnviadoPendiente"
                       className={Global.LabelCheckStyle + " rounded-r-none"}
                     >
-                      Pendientes
+                      Solo Deudas
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
+                  <div className={Global.Input + "w-40"}>
                     <div className={Global.CheckStyle + Global.Anidado}>
                       <RadioButton
-                        inputId="isEnviado"
-                        name="isEnviado"
+                        inputId="isCancelado"
+                        name="isCancelado"
                         value={true}
                         onChange={ValidarData}
-                        checked={filtro.isEnviado === true}
+                        checked={filtro.isCancelado === true}
                       />
                     </div>
                     <label
-                      htmlFor="isEnviado"
+                      htmlFor="isCancelado"
                       className={Global.LabelCheckStyle + "font-semibold"}
                     >
-                      Enviados
+                      Solo Cancelados
                     </label>
                   </div>
                 </div>
@@ -832,6 +737,34 @@ const LetraCambioVenta = () => {
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalCabecera && (
+            <ModalCabecera
+              setModal={setModalCabecera}
+              modo={modo}
+              objeto={objeto}
+            />
+          )}
+          {modalRefinanciacion && (
+            <ModalCabecera
+              setModal={setModalRefinanciacion}
+              modo={modo}
+              objeto={objeto}
+            />
+          )}
+          {modalRenovacion && (
+            <ModalCabecera
+              setModal={setModalRenovacion}
+              modo={modo}
+              objeto={objeto}
+            />
+          )}
+          {modalDeshacer && (
+            <ModalCabecera
+              setModal={setModalDeshacer}
+              modo={modo}
+              objeto={objeto}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (
