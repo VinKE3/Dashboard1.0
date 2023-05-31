@@ -3,7 +3,6 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
-import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FaSearch, FaUndoAlt, FaPen, FaTrashAlt, FaPlus } from "react-icons/fa";
@@ -63,13 +62,12 @@ const TablaStyle = styled.div`
   }
 `;
 const TablaDetalleStyle = styled.div`
-  & th:first-child {
-    display: none;
+  & th:nth-child(2) {
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
   }
-  & tbody td:first-child {
-    display: none;
-  }
-  & th:nth-child(2),
+  & th:nth-child(1),
   & th:nth-child(4) {
     width: 40px;
     text-align: center;
@@ -113,7 +111,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Tablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  const [dataPersonal, setDataPersonal] = useState([]);
   //Tablas
   //Data Modales Ayuda
   const [dataCabecera, setDataCabecera] = useState({
@@ -125,11 +122,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataLetra, setDataLetra] = useState({
     fechaEmision: moment().format("YYYY-MM-DD"),
     fechaVencimiento: moment().format("YYYY-MM-DD"),
-    dias: 0,
+    dias: "",
+    aval: "",
   });
   const [dataLetraDetalle, setDataLetraDetalle] = useState([]);
   //Data Modales Ayuda
-  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
+  const [detalleId, setDetalleId] = useState(dataLetraDetalle.length + 1);
+  const [habilitar, setHabilitar] = useState(true);
   const [totalDocumento, setTotalDocumento] = useState(0);
   const [totalDetalle, setTotalDetalle] = useState(0);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -138,9 +137,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    // console.log(dataCabecera);
-  }, [dataCabecera]);
   useEffect(() => {
     setData({ ...data, documentosReferencia: dataDetalle });
   }, [dataDetalle]);
@@ -176,10 +172,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data Cabecera
   const DataCabecera = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
+    if (target.name == "monedaId" || target.name == "tipoCambio") {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    } else {
+      setDataCabecera((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
+    }
   };
   const LimpiarCabecera = async (accion) => {
     switch (accion) {
@@ -192,6 +195,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           serie: "",
           numero: "",
         });
+        setHabilitar(true);
         document.getElementById("tipoDocumentoId").focus();
       }
       case 1: {
@@ -199,11 +203,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         setDataLetra({
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaVencimiento: moment().format("YYYY-MM-DD"),
-          dias: 0,
+          dias: "",
           aval: "",
         });
         setDataCabecera((prev) => ({ ...prev, numeroLetra: "" }));
         setDataLetraDetalle([]);
+        setHabilitar(true);
         document.getElementById("numeroLetra").focus();
       }
       case 2: {
@@ -214,20 +219,19 @@ const Modal = ({ setModal, modo, objeto }) => {
           numero: "",
         });
       }
-      case 4: {
+      case 3: {
         //Limpia las letras
         setDataLetra({
           fechaEmision: moment().format("YYYY-MM-DD"),
           fechaVencimiento: moment().format("YYYY-MM-DD"),
-          dias: 0,
+          dias: "",
           aval: "",
         });
         setDataCabecera((prev) => ({ ...prev, numeroLetra: "" }));
-        document.getElementById("numeroLetra").focus();
       }
-
-      default:
+      default: {
         break;
+      }
     }
   };
   const ValidarDocumentoReferencia = async () => {
@@ -289,10 +293,14 @@ const Modal = ({ setModal, modo, objeto }) => {
           clienteId: resultado[2].clienteId,
           clienteDireccion: resultado[2].clienteDireccion,
           tipoVentaId: resultado[2].tipoVentaId,
-          detalleId: detalleId,
         },
       ]);
-      setDetalleId(detalleId + 1);
+      if (Object.entries(dataLetraDetalle).length > 0) {
+        setMensaje([
+          "Para reflejar el nuevo saldo, vuelva a generar las letras.",
+        ]);
+        setTipoMensaje(2);
+      }
       await LimpiarCabecera(2);
       setRefrescar(true);
       document.getElementById("numeroLetra").focus();
@@ -316,19 +324,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     let i = 1;
     let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
     if (nuevoDetalle.length > 0) {
-      setDataDetalle(
-        nuevoDetalle.map((map) => {
-          return {
-            ...map,
-            detalleId: i++,
-          };
-        })
-      );
-      setDetalleId(i);
+      setDataDetalle(nuevoDetalle);
     } else {
-      //Asgina directamente a 1
-      setDetalleId(nuevoDetalle.length + 1);
-      //Asgina directamente a 1
       setDataDetalle(nuevoDetalle);
       //Limpia las letras
       setDataLetraDetalle([]);
@@ -343,48 +340,22 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data Cabecera
 
   //Calculos
-  const CalcularImporte = async (name = "precioUnitario") => {
-    let cantidad = document.getElementById("cantidad").value;
-    let precio = document.getElementById("precioUnitario").value;
-    let importe = document.getElementById("importe").value;
-    let foco = name;
-
-    if (foco == "cantidad" || foco == "precioUnitario") {
-      if (!isNaN(cantidad) && !isNaN(precio)) {
-        importe = Funciones.RedondearNumero(cantidad * precio, 2);
-      }
-    } else {
-      if (!isNaN(precio)) {
-        precio =
-          cantidad != 0 ? Funciones.RedondearNumero(importe / cantidad, 4) : 0;
-      }
-    }
-    if (!isNaN(precio)) {
-      let subTotal = Funciones.RedondearNumero(importe / 1.18, 2);
-      let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
-      setDataCabecera({
-        ...dataCabecera,
-        cantidad: cantidad,
-        precioUnitario: precio,
-        importe: importe,
-        subTotal: subTotal,
-        montoIGV: montoIGV,
-      });
-    }
-  };
   const ActualizarTotales = async () => {
-    //Suma los importes de los detalles
     let total = dataDetalle.reduce((i, map) => {
       return i + map.saldo;
     }, 0);
+    let totalDetalle = dataLetraDetalle.reduce((i, map) => {
+      return i + map.importe;
+    }, 0);
     setTotalDocumento(Funciones.RedondearNumero(total, 2));
+    setTotalDetalle(Funciones.RedondearNumero(totalDetalle, 2));
   };
   //Calculos
   //#endregion
 
   //#region Funciones Detalles
   const DataCabeceraLetra = async ({ target }) => {
-    setDataCabecera((prevState) => ({
+    setDataLetra((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
@@ -400,9 +371,11 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     //Valida N° Letras
-    if (dataCabecera.numeroLetra == "") {
-      document.getElementById("numeroLetra").focus();
-      return [false, "El número de letras es requerido"];
+    if (extras.habilitarDetalle) {
+      if (dataCabecera.numeroLetra == "") {
+        document.getElementById("numeroLetra").focus();
+        return [false, "El número de letras es requerido"];
+      }
     }
     //Valida N° Letras
 
@@ -421,85 +394,90 @@ const Modal = ({ setModal, modo, objeto }) => {
   const AgregarDetalleLetra = async () => {
     //Obtiene resultado de Validación
     let resultado = await ValidarDetalleLetra();
+    //Obtiene resultado de Validación
 
     if (resultado[0]) {
-      //Correlativo
-      let correlativo = await GetCorrelativo();
-      //Correlativo
-      let item = detalleId;
-      //Totales
-      //Soles
-      let totalPEN = totalDocumento;
-      let totalPENDividido = totalPEN / dataCabecera.numeroLetra;
-      let totalPENUltimaFila =
-        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1);
-      //Soles
-      //Dolares
-      let totalUSD = totalDocumento / data.tipoCambio;
-      let totalUSDDividido = totalUSD / dataCabecera.numeroLetra;
-      let totalUSDUltimaFila =
-        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1);
-      //Dolares
-      console.log(totalPENDividido);
-      console.log(totalPENUltimaFila);
-      console.log(Funciones.RedondearNumero(totalUSDDividido, 2));
-      console.log(Funciones.RedondearNumero(totalUSDUltimaFila, 2));
-      //Totales
-      for (let index = 0; index < dataCabecera.numeroLetra; index++) {
-        if (dataCabecera.numeroLetra - index == 1) {
-          console.log("final");
-          console.log(("0000000000" + correlativo).slice(-10));
-          setDataLetraDetalle((prev) => [
-            ...prev,
-            {
-              detalleId: item,
-              id: ("0000000000" + correlativo).slice(-10),
+      if (dataLetra.detalleId != undefined) {
+        let dataDetalleMod = dataLetraDetalle.map((map) => {
+          if (map.id == dataLetra.id) {
+            return {
+              detalleId: dataLetra.detalleId,
+              id: dataLetra.id,
               fechaEmision: dataLetra.fechaEmision,
               dias: dataLetra.dias,
               fechaVencimiento: dataLetra.fechaVencimiento,
               aval: dataLetra.aval,
               monedaId: dataLetra.monedaId,
               tipoCambio: dataLetra.tipoCambio,
-              totalPEN: Funciones.RedondearNumero(totalPENUltimaFila, 2),
-              totalUSD: Funciones.RedondearNumero(totalUSDUltimaFila, 2),
-              importe:
-                dataLetra.monedaId == "S"
-                  ? Funciones.RedondearNumero(totalPENUltimaFila, 2)
-                  : Funciones.RedondearNumero(totalUSDUltimaFila, 2),
-            },
-          ]);
-        } else {
-          console.log(index);
-          console.log(("0000000000" + correlativo).slice(-10));
-          setDataLetraDetalle((prev) => [
-            ...prev,
-            {
+              totalPEN: dataLetra.totalPEN,
+              totalUSD: dataLetra.totalUSD,
+              importe: dataLetra.importe,
+            };
+          } else {
+            return map;
+          }
+        });
+        setDataLetraDetalle(dataDetalleMod);
+        setHabilitar(true);
+      } else {
+        let dataDetalleMod = [];
+        let item = detalleId;
+        let correlativo = await GetCorrelativo();
+        let totales = await TotalDetalle(totalDocumento);
+        //Itera en base al n° de letras asignadas
+        for (let index = 0; index < dataCabecera.numeroLetra; index++) {
+          if (dataCabecera.numeroLetra - index == 1) {
+            dataDetalleMod.push({
               detalleId: item,
               id: ("0000000000" + correlativo).slice(-10),
               fechaEmision: dataLetra.fechaEmision,
               dias: dataLetra.dias,
               fechaVencimiento: dataLetra.fechaVencimiento,
               aval: dataLetra.aval,
-              monedaId: dataLetra.monedaId,
-              tipoCambio: dataLetra.tipoCambio,
-              totalPEN: Funciones.RedondearNumero(totalPENDividido, 2),
-              totalUSD: Funciones.RedondearNumero(totalUSDDividido, 2),
+              monedaId: data.monedaId,
+              tipoCambio: data.tipoCambio,
+              totalPEN: Funciones.RedondearNumero(
+                totales.totalPENUltimaFila,
+                2
+              ),
+              totalUSD: Funciones.RedondearNumero(
+                totales.totalUSDUltimaFila,
+                2
+              ),
               importe:
-                dataLetra.monedaId == "S"
-                  ? Funciones.RedondearNumero(totalPENDividido, 2)
-                  : Funciones.RedondearNumero(totalUSDDividido, 2),
-            },
-          ]);
+                data.monedaId == "S"
+                  ? Funciones.RedondearNumero(totales.totalPENUltimaFila, 2)
+                  : Funciones.RedondearNumero(totales.totalUSDUltimaFila, 2),
+            });
+          } else {
+            dataDetalleMod.push({
+              detalleId: item,
+              id: ("0000000000" + correlativo).slice(-10),
+              fechaEmision: dataLetra.fechaEmision,
+              dias: dataLetra.dias,
+              fechaVencimiento: dataLetra.fechaVencimiento,
+              aval: dataLetra.aval,
+              monedaId: data.monedaId,
+              tipoCambio: data.tipoCambio,
+              totalPEN: Funciones.RedondearNumero(totales.totalPENDividido, 2),
+              totalUSD: Funciones.RedondearNumero(totales.totalUSDDividido, 2),
+              importe:
+                data.monedaId == "S"
+                  ? Funciones.RedondearNumero(totales.totalPENDividido, 2)
+                  : Funciones.RedondearNumero(totales.totalUSDDividido, 2),
+            });
+          }
+          item++;
+          correlativo++;
         }
-        item++;
-        correlativo++;
+        //Itera en base al n° de letras asignadas
+        OcultarMensajes();
+        setDataLetraDetalle(dataDetalleMod);
       }
 
-      // setDetalleId(detalleId + 1);
-      // setRefrescar(true);
-
-      // LimpiarCabecera(3);
-      // document.getElementById("numeroLetra").focus();
+      await LimpiarCabecera(3);
+      setRefrescar(true);
+      document.getElementById("numeroLetra").focus();
     } else {
       //NO cumple validación
       if (resultado[1] != "") {
@@ -520,33 +498,14 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (modo != "Consultar") {
       if (click) {
         let row = value.target.closest("tr");
-        let id = row.firstChild.innerText;
-        setDataCabecera(dataDetalle.find((map) => map.id === id));
+        let id = row.children[1].innerText;
+        setDataLetra(dataLetraDetalle.find((map) => map.id === id));
       } else {
-        setDataCabecera(dataDetalle.find((map) => map.id === value));
+        setDataLetra(dataLetraDetalle.find((map) => map.id === value));
       }
-      document.getElementById("cantidad").focus();
+      setHabilitar(false);
+      document.getElementById("fechaEmision").focus();
     }
-  };
-  const EliminarDetalleLetra = async (id) => {
-    let i = 1;
-    let nuevoDetalle = dataLetraDetalle.filter((map) => map.id !== id);
-    if (nuevoDetalle.length > 0) {
-      setDataLetraDetalle(
-        nuevoDetalle.map((map) => {
-          return {
-            ...map,
-            detalleId: i++,
-          };
-        })
-      );
-      setDetalleId(i);
-    } else {
-      //Asgina directamente a 1
-      setDetalleId(nuevoDetalle.length + 1);
-      setDataLetraDetalle(nuevoDetalle);
-    }
-    setRefrescar(true);
   };
   const FechaVencimiento = async ({ target }, emision = null) => {
     let fechaHoy = moment().format("YYYY-MM-DD");
@@ -575,6 +534,41 @@ const Modal = ({ setModal, modo, objeto }) => {
       return;
     }
   };
+  //Calculos
+  const TotalDetalle = async (total) => {
+    //Totales
+    //Soles
+    let totalPEN = Funciones.RedondearNumero(total, 2);
+    let totalPENDividido = Funciones.RedondearNumero(
+      totalPEN / dataCabecera.numeroLetra,
+      2
+    );
+    let totalPENUltimaFila = Funciones.RedondearNumero(
+      totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
+      2
+    );
+    //Soles
+    //Dolares
+    let totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
+    let totalUSDDividido = Funciones.RedondearNumero(
+      totalUSD / dataCabecera.numeroLetra,
+      2
+    );
+    let totalUSDUltimaFila = Funciones.RedondearNumero(
+      totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
+      2
+    );
+    //Dolares
+    //Totales
+
+    return {
+      totalPENDividido: totalPENDividido,
+      totalPENUltimaFila: totalPENUltimaFila,
+      totalUSDDividido: totalUSDDividido,
+      totalUSDUltimaFila: totalUSDUltimaFila,
+    };
+  };
+  //Calculos
   //#endregion
 
   //#region API
@@ -583,13 +577,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       `api/Venta/LetraCambioVenta/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumento);
-    setDataPersonal(
-      result.data.data.personal.map((res) => ({
-        id: res.id,
-        nombre:
-          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-      }))
-    );
     setDataMoneda(result.data.data.monedas);
   };
   const GetPorIdTipoCambio = async (id) => {
@@ -721,15 +708,15 @@ const Modal = ({ setModal, modo, objeto }) => {
   ];
   const columnasDetalle = [
     {
-      Header: "id",
-      accessor: "id",
-    },
-    {
       Header: "N°",
       accessor: "detalleId",
       Cell: ({ value }) => {
         return <p className="text-center">{value}</p>;
       },
+    },
+    {
+      Header: "N° Letra",
+      accessor: "id",
     },
     {
       Header: "Emisión",
@@ -771,7 +758,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Importe",
       accessor: "importe",
       Cell: ({ value }) => {
-        return <p className="text-right font-semibold pr-2.5">{value}</p>;
+        return (
+          <p className="text-right font-semibold pr-2.5">
+            {Funciones.RedondearNumero(value, 2)}
+          </p>
+        );
       },
     },
     {
@@ -790,19 +781,6 @@ const Modal = ({ setModal, modo, objeto }) => {
                   title="Click para modificar registro"
                 >
                   <FaPen></FaPen>
-                </button>
-              </div>
-
-              <div className={Global.TablaBotonEliminar}>
-                <button
-                  id="boton-eliminar"
-                  onClick={() => {
-                    EliminarDetalleLetra(row.values.id);
-                  }}
-                  className="p-0 px-1"
-                  title="Click para eliminar registro"
-                >
-                  <FaTrashAlt></FaTrashAlt>
                 </button>
               </div>
             </>
@@ -839,7 +817,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <div
               className={
                 Global.ContenedorBasico +
-                " mb-4 !gap-0 " +
+                " mb-2 !gap-0 " +
                 Global.FondoContenedor
               }
             >
@@ -930,6 +908,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               {/* Tabla Detalle */}
               <TablaStyle>
                 <TableBasic
+                  id="tablaDocumento"
                   columnas={columnas}
                   datos={dataDetalle}
                   estilos={[
@@ -967,11 +946,10 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Cabecera Letra */}
             <div
               className={
-                Global.ContenedorBasico +
-                " mb-4 !gap-0 " +
-                Global.FondoContenedor
+                Global.ContenedorBasico + " !gap-0 " + Global.FondoContenedor
               }
             >
+              <p className={Global.Subtitulo + " pb-1"}>Letras por Factura</p>
               <div className={Global.ContenedorInputs + " mb-1.5"}>
                 <div className={Global.InputTercio}>
                   <label htmlFor="numeroLetra" className={Global.LabelStyle}>
@@ -984,7 +962,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="N° Letras"
                     autoComplete="off"
                     min={0}
-                    disabled={modo == "Consultar"}
+                    disabled={modo == "Consultar" || !habilitar}
                     value={dataCabecera.numeroLetra ?? ""}
                     onChange={DataCabecera}
                     className={Global.InputStyle}
@@ -1003,7 +981,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={true}
                     value={data.tipoCambio ?? ""}
-                    onChange={DataCabeceraLetra}
+                    onChange={DataCabecera}
                     className={
                       modo != "Consultar"
                         ? Global.InputBoton
@@ -1032,7 +1010,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={DataCabeceraLetra}
+                    onChange={DataCabecera}
                     disabled={modo == "Consultar"}
                     className={Global.InputStyle}
                   >
@@ -1152,6 +1130,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               {/* Tabla Detalle */}
               <TablaDetalleStyle>
                 <TableBasic
+                  id="tablaDetalle"
                   columnas={columnasDetalle}
                   datos={dataLetraDetalle}
                   estilos={[

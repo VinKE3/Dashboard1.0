@@ -284,6 +284,7 @@ const DocumentoVenta = () => {
           break;
         }
         case 3: {
+          console.log("DASDASDAS");
           await GetPorId(value);
           setModal(true);
           break;
@@ -293,7 +294,7 @@ const DocumentoVenta = () => {
             .querySelector("#tablaDocumentoVenta")
             .querySelector("tr.selected-row");
           if (row != null) {
-            let id = row.children[0].innerHTML;
+            let id = row.firstChild.innerHTML;
             let documento = row.children[2].innerHTML;
             Swal.fire({
               title: "¿Desea Anular el documento?",
@@ -309,7 +310,7 @@ const DocumentoVenta = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, value);
+                let valor = await GetIsPermitido(accion, id);
                 if (valor) {
                   await Anular(["Venta", "DocumentoVenta"], id, setEliminar);
                 }
@@ -397,6 +398,7 @@ const DocumentoVenta = () => {
       }
     }
     if (e.key === "p") {
+      console.log("object");
       let row = document
         .querySelector("#tablaDocumentoVenta")
         .querySelector("tr.selected-row");

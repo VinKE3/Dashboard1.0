@@ -14,7 +14,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
   //#region API
   const GetPorId = async (precio) => {
     setObjeto({
-      precioUnitario: precio,
+      precioUnitario: Funciones.RedondearNumero(precio, 2),
     });
     foco.focus();
     setModal(false);

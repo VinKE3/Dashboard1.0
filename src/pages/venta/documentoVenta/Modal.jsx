@@ -180,7 +180,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (Object.keys(dataPrecio).length > 0) {
       setDataCabecera({
         ...dataCabecera,
-        precioUnitario: dataPrecio.precioUnitario,
+        precioUnitario: Funciones.RedondearNumero(dataPrecio.precioUnitario, 2),
       });
     }
   }, [dataPrecio]);
@@ -253,7 +253,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData((prevState) => ({
         ...prevState,
         serie: serie,
-        numero: correlativo,
+        numero: "",
       }));
 
       if (target.value == "03") {
@@ -554,9 +554,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
       setDataCabecera({
         ...dataCabecera,
-        cantidad: cantidad,
-        precioUnitario: precio,
-        importe: importe,
+        cantidad: Funciones.RedondearNumero(cantidad, 2),
+        precioUnitario: Funciones.RedondearNumero(precio, 2),
+        importe: Funciones.RedondearNumero(importe, 2),
         subTotal: subTotal,
         montoIGV: montoIGV,
       });

@@ -20,7 +20,7 @@ import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
-import { FaUndoAlt, FaCheck } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 
@@ -231,22 +231,22 @@ const LetraCambioVenta = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, id);
+          let valor = await GetIsPermitido(accion, value);
           if (valor) {
-            await GetPorId(id);
+            await GetPorId(value);
             setModalCabecera(true);
           }
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, id);
+          let valor = await GetIsPermitido(accion, value);
           if (valor) {
-            Delete(["Venta", "LetraCambioVenta"], id, setEliminar);
+            Delete(["Venta", "LetraCambioVenta"], value, setEliminar);
           }
           break;
         }
         case 3: {
-          await GetPorId(id);
+          await GetPorId(value);
           setModalCabecera(true);
           break;
         }
@@ -271,7 +271,7 @@ const LetraCambioVenta = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, value);
+                let valor = await GetIsPermitido(accion, id);
                 if (valor) {
                   await Anular(["Venta", "LetraCambioVenta"], id, setEliminar);
                 }
@@ -341,28 +341,30 @@ const LetraCambioVenta = () => {
       }
     }
   };
-  const ModalKey = async (e, modo) => {
-    if (e.key === "Enter") {
-      setModo(modo);
-      let row = document
-        .querySelector("#tablaLetraCambioVenta")
-        .querySelector("tr.selected-row");
-      let id = row.firstChild.innerText;
-      let valor = await GetIsPermitido(1, id);
-      if (valor) {
-        await GetPorId(id);
-        setModal(true);
-      }
+  const ModalKey = async (e) => {
+    if (e.key === "n") {
+      setModo("Nuevo");
+      AccionModal();
     }
-    if (e.key === "c") {
-      setModo("Consultar");
+    if (e.key === "r") {
+      setModo("Nuevo");
+      AccionModal(null, "Nuevo", 6);
+    }
+    if (e.key === "t") {
+      setModo("Nuevo");
+      AccionModal(null, "Nuevo", 7);
+    }
+    if (e.key === "y") {
+      setModo("Nuevo");
+      AccionModal(null, "Nuevo", 8);
+    }
+    if (e.key === "Enter") {
       let row = document
         .querySelector("#tablaLetraCambioVenta")
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        await GetPorId(id);
-        setModal(true);
+        AccionModal(id, "Modificar", 1);
       }
     }
     if (e.key === "Delete") {
@@ -371,10 +373,34 @@ const LetraCambioVenta = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        let valor = await GetIsPermitido(2, id);
-        if (valor) {
-          Delete(["Venta", "LetraCambioVenta"], id, setEliminar);
-        }
+        AccionModal(id, "Eliminar", 2);
+      }
+    }
+    if (e.key === "c") {
+      let row = document
+        .querySelector("#tablaLetraCambioVenta")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Consultar", 3);
+      }
+    }
+    if (e.key === "a") {
+      let row = document
+        .querySelector("#tablaLetraCambioVenta")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Anular", 4);
+      }
+    }
+    if (e.key === "p") {
+      let row = document
+        .querySelector("#tablaLetraCambioVenta")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Imprimir", 5);
       }
     }
   };
@@ -672,21 +698,21 @@ const LetraCambioVenta = () => {
                 botonText="Refinanciamiento"
                 botonClass={Global.BotonNaranja}
                 botonIcon={faPlus}
-                click={() => Imprimir()}
+                click={() => AccionModal(null, "Nuevo", 6)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Renovación"
                 botonClass={Global.BotonMorado}
-                botonIcon={faPrint}
-                click={() => Imprimir()}
+                botonIcon={faPlus}
+                click={() => AccionModal(null, "Nuevo", 7)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Deshacer Emisión"
                 botonClass={Global.BotonRosa}
-                botonIcon={faPrint}
-                click={() => Imprimir()}
+                botonIcon={faBan}
+                click={() => AccionModal(null, "Nuevo", 8)}
                 contenedor=""
               />
 
@@ -733,21 +759,21 @@ const LetraCambioVenta = () => {
             />
           )}
           {modalRefinanciacion && (
-            <ModalCabecera
+            <ModalRefinanciamiento
               setModal={setModalRefinanciacion}
               modo={modo}
               objeto={objeto}
             />
           )}
           {modalRenovacion && (
-            <ModalCabecera
+            <ModalRenovacion
               setModal={setModalRenovacion}
               modo={modo}
               objeto={objeto}
             />
           )}
           {modalDeshacer && (
-            <ModalCabecera
+            <ModalDeshacer
               setModal={setModalDeshacer}
               modo={modo}
               objeto={objeto}

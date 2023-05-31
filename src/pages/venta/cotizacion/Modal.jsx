@@ -510,9 +510,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
       setDataCabecera({
         ...dataCabecera,
-        cantidad: cantidad,
-        precioUnitario: precio,
-        importe: importe,
+        cantidad: Funciones.RedondearNumero(cantidad, 2),
+        precioUnitario: Funciones.RedondearNumero(precio, 2),
+        importe: Funciones.RedondearNumero(importe, 2),
         subTotal: subTotal,
         montoIGV: montoIGV,
       });

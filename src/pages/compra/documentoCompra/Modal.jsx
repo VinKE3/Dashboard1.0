@@ -481,9 +481,9 @@ const Modal = ({ setModal, modo, objeto }) => {
       let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
       setDataCabecera({
         ...dataCabecera,
-        cantidad: cantidad,
-        precioUnitario: precio,
-        importe: importe,
+        cantidad: Funciones.RedondearNumero(cantidad, 2),
+        precioUnitario: Funciones.RedondearNumero(precio, 2),
+        importe: Funciones.RedondearNumero(importe, 2),
         subTotal: subTotal,
         montoIGV: montoIGV,
       });
@@ -784,12 +784,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                 marcaId: dataOCDetallemap.marcaId,
                 descripcion: dataOCDetallemap.descripcion,
                 codigoBarras: dataOCDetallemap.codigoBarras,
-                cantidad: cantidad,
+                cantidad: Funciones.RedondearNumero(cantidad, 2),
                 stock: dataOCDetallemap.stock,
                 precioUnitario: dataOCDetallemap.precioUnitario,
                 subTotal: subTotal,
                 montoIGV: montoIGV,
-                importe: importe,
+                importe: Funciones.RedondearNumero(importe, 2),
                 presentacion: dataOCDetallemap.presentacion ?? "",
                 unidadMedidaDescripcion:
                   dataOCDetallemap.unidadMedidaDescripcion,
@@ -868,7 +868,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   precioUnitario: dataDetalleExiste.precioUnitario,
                   subTotal: subTotal,
                   montoIGV: montoIGV,
-                  importe: importe,
+                  importe: Funciones.RedondearNumero(importe, 2),
                   presentacion: dataOCDetallemap.presentacion ?? "",
                   unidadMedidaDescripcion:
                     dataOCDetallemap.unidadMedidaDescripcion,

@@ -67,7 +67,7 @@ export var Disabled = "!bg-gray-800/90 ";
 export var TituloH2 = "mb-2 py-2 text-xl md:text-2xl font-bold text-light ";
 export var TituloH4 = "mb-1 py-2 text-xl font-bold text-light ";
 export var TituloModal = "text-xl md:text-2xl font-semibold text-light ";
-export var Subtitulo = "my-0 py-0 font-bold text-base text-light ";
+export var Subtitulo = "m-0 p-0 pl-1 text-lg font-bold text-light";
 //#endregion
 
 //#region Botones
@@ -80,7 +80,8 @@ export var BotonCancelarModal =
 
 export var BotonBasico =
   "flex mb-2 text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
-  export var BotonTexto = "w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 text-mini";
+export var BotonTexto =
+  "w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 text-mini";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
 export var BotonPrimary =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";

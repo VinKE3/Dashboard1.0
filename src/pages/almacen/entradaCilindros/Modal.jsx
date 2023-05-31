@@ -428,7 +428,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                 unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
                 marcaId: dataPersonalDetalleMap.marcaId,
                 descripcion: dataDetalleExiste.descripcion,
-                cantidad: cantidad,
+                cantidad: Funciones.RedondearNumero(cantidad, 2),
                 unidadMedidaDescripcion:
                   dataPersonalDetalleMap.unidadMedidaDescripcion,
               };
@@ -497,7 +497,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   unidadMedidaId: dataPersonalDetalleMap.unidadMedidaId,
                   marcaId: dataPersonalDetalleMap.marcaId,
                   descripcion: dataDetalleExiste.descripcion,
-                  cantidad: cantidad,
+                  cantidad: Funciones.RedondearNumero(cantidad, 2),
                   unidadMedidaDescripcion:
                     dataPersonalDetalleMap.unidadMedidaDescripcion,
                 };

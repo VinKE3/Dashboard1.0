@@ -554,9 +554,9 @@ const ModalDeshacer = ({ setModal, modo, objeto }) => {
       let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
       setDataCabecera({
         ...dataCabecera,
-        cantidad: cantidad,
-        precioUnitario: precio,
-        importe: importe,
+        cantidad: Funciones.RedondearNumero(cantidad, 2),
+        precioUnitario: Funciones.RedondearNumero(precio, 2),
+        importe: Funciones.RedondearNumero(importe, 2),
         subTotal: subTotal,
         montoIGV: montoIGV,
       });
@@ -1149,7 +1149,7 @@ const ModalDeshacer = ({ setModal, modo, objeto }) => {
             menu={["Venta", "DocumentoVenta"]}
             titulo="Documento de Venta"
             cerrar={false}
-            foco={document.getElementById("tablaDocumentoVenta")}
+            foco={document.getElementById("tablaLetraCambioVenta")}
             tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
           >
             {tipoMensaje > 0 && (

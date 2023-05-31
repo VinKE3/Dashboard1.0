@@ -289,7 +289,7 @@ const Cotizacion = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, value);
+                let valor = await GetIsPermitido(accion, id);
                 if (valor) {
                   await Anular(["Venta", "Cotizacion"], id, setEliminar);
                 }
