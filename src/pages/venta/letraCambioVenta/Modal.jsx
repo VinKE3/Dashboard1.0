@@ -371,11 +371,9 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
 
     //Valida N° Letras
-    if (extras.habilitarDetalle) {
-      if (dataCabecera.numeroLetra == "") {
-        document.getElementById("numeroLetra").focus();
-        return [false, "El número de letras es requerido"];
-      }
+    if (dataCabecera.numeroLetra == "") {
+      document.getElementById("numeroLetra").focus();
+      return [false, "El número de letras es requerido"];
     }
     //Valida N° Letras
 
@@ -970,7 +968,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                    T. Cambio
+                    Tipo Cambio
                   </label>
                   <input
                     type="number"

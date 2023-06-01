@@ -253,7 +253,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setData((prevState) => ({
         ...prevState,
         serie: serie,
-        numero: "",
+        numero: ("0000000000" + String(correlativo)).slice(-10),
       }));
 
       if (target.value == "03") {
@@ -288,7 +288,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Obtiene el correlativo
       setData((prevState) => ({
         ...prevState,
-        numero: correlativo,
+        numero: ("0000000000" + String(correlativo)).slice(-10),
       }));
     }
     if (
@@ -1232,7 +1232,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputTercio}>
                   <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                    F. Emisión
+                    Fecha Emisión
                   </label>
                   <input
                     type="date"
@@ -1255,7 +1255,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     htmlFor="fechaVencimiento"
                     className={Global.LabelStyle}
                   >
-                    F. Vcmto
+                    Fecha Vcmto
                   </label>
                   <input
                     type="date"
@@ -1281,7 +1281,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     type="text"
                     id="numeroDocumento"
                     name="numeroDocumento"
-                    placeholder="Cotización"
+                    placeholder="Buscar Cotización"
                     autoComplete="off"
                     disabled={true}
                     value={data.cotizacion ?? ""}
@@ -1476,7 +1476,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                    T. Cambio
+                    Tipo Cambio
                   </label>
                   <input
                     type="number"

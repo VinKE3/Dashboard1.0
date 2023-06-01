@@ -152,7 +152,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   type="text"
                   id="serie"
                   name="serie"
-                  placeholder="0000"
+                  placeholder="Serie"
                   autoComplete="off"
                   disabled={true}
                   value={data.serie ?? ""}

@@ -207,7 +207,7 @@ const GuiaRemision = () => {
             empresaId: "01",
             tipoDocumentoId: "09",
             serie: "0002",
-            numero: String(result.data.data.numero),
+            numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
             fechaEmision: moment().format("YYYY-MM-DD"),
             fechaTraslado: moment().format("YYYY-MM-DD"),
             clienteId: "",

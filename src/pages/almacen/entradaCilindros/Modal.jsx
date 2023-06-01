@@ -737,7 +737,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               <div className={Global.ContenedorInputs}>
                 <div className={Global.Input40pct}>
                   <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                    F. Emisión
+                    Fecha Emisión
                   </label>
                   <input
                     type="date"

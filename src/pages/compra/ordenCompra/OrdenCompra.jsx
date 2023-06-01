@@ -4,16 +4,22 @@ import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
 import Imprimir from "../../../components/funciones/Imprimir";
+import Finalizar from "../../../components/funciones/Finalizar";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
-import { faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowAltCircleDown,
+  faPlus,
+  faPrint,
+} from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
@@ -216,7 +222,7 @@ const OrdenCompra = () => {
             proveedorId: "",
             tipoDocumentoId: "OC",
             serie: "0001",
-            numero: result.data.data.numero,
+            numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
             clienteId: "000000",
             fechaEmision: moment().format("YYYY-MM-DD"),
             fechaContable: moment().format("YYYY-MM-DD"),
@@ -294,8 +300,50 @@ const OrdenCompra = () => {
           }
           break;
         }
-        default:
+        case 6: {
+          let row = document
+            .querySelector("#tablaOrdenCompra")
+            .querySelector("tr.selected-row");
+          if (row != null) {
+            let id = row.firstChild.innerHTML;
+            let documento = row.children[2].innerHTML;
+            Swal.fire({
+              title: "¿Desea Finalizar el documento?",
+              text: documento,
+              icon: "warning",
+              iconColor: "#F7BF3A",
+              showCancelButton: true,
+              color: "#fff",
+              background: "#1a1a2e",
+              confirmButtonColor: "#eea508",
+              confirmButtonText: "Aceptar",
+              cancelButtonColor: "#d33",
+              cancelButtonText: "Cancelar",
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                let valor = await GetIsPermitido(1, id);
+                if (valor) {
+                  await Finalizar(["Compra", "OrdenCompra"], id, setEliminar);
+                }
+              }
+            });
+          } else {
+            toast.info("Seleccione una Fila", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          }
           break;
+        }
+        default: {
+          break;
+        }
       }
     }
   };
@@ -338,6 +386,15 @@ const OrdenCompra = () => {
       if (row != null) {
         let id = row.firstChild.innerText;
         AccionModal(id, "Imprimir", 5);
+      }
+    }
+    if (e.key === "f") {
+      let row = document
+        .querySelector("#tablaOrdenCompra")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        AccionModal(id, "Finalizar", 6);
       }
     }
   };
@@ -550,6 +607,13 @@ const OrdenCompra = () => {
                   contenedor=""
                 />
               )}
+              <BotonBasico
+                botonText="Finalizar"
+                botonClass={Global.BotonMorado}
+                botonIcon={faArrowAltCircleDown}
+                click={() => AccionModal(null, "Finalizar", 6)}
+                contenedor=""
+              />
               <BotonBasico
                 botonText="Imprimir"
                 botonClass={Global.BotonAgregar}

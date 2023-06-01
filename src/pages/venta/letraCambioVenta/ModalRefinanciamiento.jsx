@@ -493,7 +493,6 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
         }));
         //Calcula el porcentaje
       } else {
-        console.log(target.name);
         //Calcula el monto
         let porcentajePago = Number(target.value);
         let montoPago = Number(document.getElementById("montoPago").value);
@@ -1022,7 +1021,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Venta", "LetraCambioVenta"]}
+            menu={["Venta", "LetraCambioVenta/Refinanciacion"]}
             titulo="Refinanciamiento de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
@@ -1298,7 +1297,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                 Global.ContenedorBasico + " !gap-0 " + Global.FondoContenedor
               }
             >
-              <p className={Global.Subtitulo + " pb-1"}>Letras por Factura</p>
+              <p className={Global.Subtitulo + " pb-1"}>Letras por Renovación</p>
               <div className={Global.ContenedorInputs + " mb-1.5"}>
                 <div className={Global.InputTercio}>
                   <label htmlFor="numeroLetra" className={Global.LabelStyle}>
@@ -1319,7 +1318,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                    T. Cambio
+                    Tipo Cambio
                   </label>
                   <input
                     type="number"

@@ -926,7 +926,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputFull}>
                   <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                    F. Emisión
+                    Fecha Emisión
                   </label>
                   <input
                     type="date"
@@ -961,7 +961,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputFull}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                    T. Cambio
+                    Tipo Cambio
                   </label>
                   <input
                     type="number"

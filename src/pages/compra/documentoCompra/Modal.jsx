@@ -131,7 +131,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataOrdenCompra]);
   useEffect(() => {
-    // console.log(dataDetalle);
     setData((prev) => ({ ...prev, detalles: dataDetalle }));
   }, [dataDetalle]);
   useEffect(() => {
@@ -1219,7 +1218,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={Global.ContenedorInputs}>
                 <div className={Global.InputTercio}>
                   <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                    F. Emisión
+                    Fecha Emisión
                   </label>
                   <input
                     type="date"
@@ -1256,7 +1255,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     htmlFor="fechaVencimiento"
                     className={Global.LabelStyle}
                   >
-                    F. Vcmto
+                    Fecha Vcmto
                   </label>
                   <input
                     type="date"
@@ -1385,7 +1384,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                    T. Cambio
+                    Tipo Cambio
                   </label>
                   <input
                     type="number"

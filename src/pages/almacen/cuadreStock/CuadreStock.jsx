@@ -346,8 +346,8 @@ const CuadreStock = () => {
           }
           break;
         }
-        default:
-          break;
+        default:{
+          break;}
       }
     }
   };

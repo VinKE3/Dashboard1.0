@@ -5,6 +5,7 @@ import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
 import Anular from "../../../components/funciones/Anular";
 import Imprimir from "../../../components/funciones/Imprimir";
+import EnviarBloquear from "../../../components/funciones/EnviarBloquear";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -74,8 +75,8 @@ const DocumentoVenta = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
+  const [autorizado, setAutorizado] = useState(false);
   const [eliminar, setEliminar] = useState(false);
-  const [checked, setChecked] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -213,7 +214,7 @@ const DocumentoVenta = () => {
             empresaId: "01",
             tipoDocumentoId: "01",
             serie: "F001",
-            numero: String(result.data.data.numero),
+            numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
             fechaEmision: moment().format("YYYY-MM-DD"),
             fechaVencimiento: moment().format("YYYY-MM-DD"),
             cotizacion: "",
@@ -284,7 +285,6 @@ const DocumentoVenta = () => {
           break;
         }
         case 3: {
-          console.log("DASDASDAS");
           await GetPorId(value);
           setModal(true);
           break;
@@ -351,8 +351,88 @@ const DocumentoVenta = () => {
           }
           break;
         }
-        default:
+        case 6:
+          {
+            if (value.isEnviado) {
+              toast.error(
+                "Solo se pueden autorizar documentos con estado Pendiente ",
+                {
+                  position: "bottom-right",
+                  autoClose: 3000,
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                }
+              );
+            } else {
+              const titulo = value.isAutorizado
+                ? "¿Desea Desautorizar el Documento?"
+                : "¿Desea Autorizar el Documento?";
+              Swal.fire({
+                title: titulo,
+                text: value.documento,
+                icon: "warning",
+                iconColor: "#F7BF3A",
+                showCancelButton: true,
+                color: "#fff",
+                background: "#1a1a2e",
+                confirmButtonColor: "#eea508",
+                confirmButtonText: "Aceptar",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Cancelar",
+              }).then(async (res) => {
+                if (res.isConfirmed) {
+                  await EnviarBloquear(
+                    ["Venta", "DocumentoVenta", "Enviar"],
+                    {
+                      ids: [value.id],
+                      enviar: value.isAutorizado,
+                    },
+                    setEliminar
+                  );
+                }
+              });
+            }
+          }
           break;
+        case 7: {
+          const titulo = value.isAutorizado
+            ? "Autorizar Registros de Ventas (50 registros mostrados)"
+            : "Desautorizar Registros de Ventas (50 registros mostrados)";
+          Swal.fire({
+            title: titulo,
+            icon: "warning",
+            iconColor: "#F7BF3A",
+            showCancelButton: true,
+            color: "#fff",
+            background: "#1a1a2e",
+            confirmButtonColor: "#eea508",
+            confirmButtonText: "Aceptar",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+          }).then(async (res) => {
+            if (res.isConfirmed) {
+              await EnviarBloquear(
+                ["Venta", "DocumentoVenta", "Enviar"],
+                {
+                  ids: value.ids,
+                  enviar: value.isAutorizado,
+                },
+                setEliminar
+              );
+              setAutorizado(value.isAutorizado);
+            } else {
+              setAutorizado(!value.isAutorizado);
+            }
+          });
+          break;
+        }
+        default: {
+          break;
+        }
       }
     }
   };
@@ -398,7 +478,6 @@ const DocumentoVenta = () => {
       }
     }
     if (e.key === "p") {
-      console.log("object");
       let row = document
         .querySelector("#tablaDocumentoVenta")
         .querySelector("tr.selected-row");
@@ -407,92 +486,32 @@ const DocumentoVenta = () => {
         AccionModal(id, "Imprimir", 5);
       }
     }
-  };
-  const Autorizar = async (id, estado) => {
-    if (estado != false) {
-      toast.error(
-        "Documento Venta: Solo se pueden autorizar documentos pendientes.",
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-    } else {
-      console.log(id);
-    }
-  };
-  const AutorizarTodo = async (ids, value) => {
-    let model = {
-      ids: ids,
-      isBloqueado: value,
-    };
-    const title = value
-      ? "Autorizar Registros de Ventas (50 registros mostrados)"
-      : "Desautorizar Registros de Ventas (50 registros mostrados)";
-
-    Swal.fire({
-      title: title,
-      icon: "warning",
-      iconColor: "#F7BF3A",
-      showCancelButton: true,
-      color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#EE8100",
-      confirmButtonText: "Aceptar",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // ApiMasy.put(`api/Venta/BloquearVenta`, model).then((response) => {
-        //   if (response.name == "AxiosError") {
-        //     let err = "";
-        //     if (response.response.data == "") {
-        //       err = response.message;
-        //     } else {
-        //       err = String(response.response.data.messages[0].textos);
-        //     }
-        //     toast.error(err, {
-        //       position: "bottom-right",
-        //       autoClose: 3000,
-        //       hideProgressBar: true,
-        //       closeOnClick: true,
-        //       pauseOnHover: true,
-        //       draggable: true,
-        //       progress: undefined,
-        //       theme: "colored",
-        //     });
-        //   } else {
-        //     Listar(
-        //       `&tipoDocumentoId=${
-        //         document.getElementById("tipoDocumentoId").value
-        //       }&fechaInicio=${
-        //         document.getElementById("fechaInicio").value
-        //       }&fechaFin=${document.getElementById("fechaFin").value}`,
-        //       index + 1
-        //     );
-        //     toast.info(String(response.data.messages[0].textos), {
-        //       position: "bottom-right",
-        //       autoClose: 3000,
-        //       hideProgressBar: true,
-        //       closeOnClick: true,
-        //       pauseOnHover: true,
-        //       draggable: true,
-        //       progress: undefined,
-        //       theme: "colored",
-        //     });
-        //   }
-        // });
-        setChecked(value);
-      } else {
-        setChecked(!value);
+    if (e.key === "r") {
+      let row = document
+        .querySelector("#tablaDocumentoVenta")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        let documento = row.children[2].innerText;
+        let isEnviado = row.children[15].firstChild.id == "true" ? true : false;
+        let isAutorizado =
+          row.children[16].firstChild.id == "true" ? true : false;
+        AccionModal(
+          {
+            id: id,
+            documento: documento,
+            isEnviado: isEnviado,
+            isAutorizado: isAutorizado,
+          },
+          "Enviar",
+          6
+        );
       }
-    });
+    }
+    if (e.key === "t") {
+      let ids = datos.map((map) => map.id);
+      AccionModal({ ids: ids, isAutorizado: autorizado }, "Enviar", 6);
+    }
   };
   //#endregion
 
@@ -603,13 +622,26 @@ const DocumentoVenta = () => {
         accessor: "isEnviado",
         Cell: ({ value }) => {
           return (
-            <div className="flex justify-center">
+            <div className="flex justify-center" id={value.toString()}>
               <Checkbox checked={value} />
             </div>
           );
         },
       },
-
+      {
+        Header: "Aut.",
+        accessor: "enviar",
+        Cell: ({ value }) => {
+          return (
+            <div
+              className="flex justify-center"
+              id={value == null ? "false" : value.toString()}
+            >
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
       {
         Header: "Acciones",
         Cell: ({ row }) => (
@@ -617,7 +649,18 @@ const DocumentoVenta = () => {
             <div className={Global.TablaBotonConsultar}>
               <button
                 id="boton-autorizar"
-                onClick={() => Autorizar(row.values.id, row.values.isEnviado)}
+                onClick={() =>
+                  AccionModal(
+                    {
+                      id: row.values.id,
+                      documento: row.values.numeroDocumento,
+                      isEnviado: row.values.isEnviado,
+                      isAutorizado: row.values.enviar,
+                    },
+                    "Enviar",
+                    6
+                  )
+                }
                 className="p-0 px-1"
                 title="Click para autorizar registro"
               >
@@ -654,12 +697,17 @@ const DocumentoVenta = () => {
                       inputId="isAutorizado"
                       name="isAutorizado"
                       onChange={(e) => {
-                        AutorizarTodo(
-                          datos.map((d) => d.id),
-                          e.checked
+                        AccionModal(
+                          {
+                            ids: datos.map((map) => map.id),
+                            isAutorizado: e.checked,
+                          },
+                          "Enviar",
+                          7
                         );
                       }}
-                      checked={checked}
+                      value={autorizado}
+                      checked={autorizado}
                     ></Checkbox>
                   </div>
                   <label

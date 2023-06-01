@@ -390,9 +390,9 @@ const MovimientoArticulo = () => {
           <BotonCRUD
             setEliminar={setEliminar}
             permisos={permisos}
-            ClickModificar={() => console.log("")}
+            ClickModificar={() => {}}
             ClickConsultar={() => AccionModal(row.values.Id, "Consultar", 3)}
-            ClickEliminar={() => console.log("")}
+            ClickEliminar={() => {}}
           />
         ),
       },

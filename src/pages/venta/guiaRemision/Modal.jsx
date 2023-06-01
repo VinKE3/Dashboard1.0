@@ -164,7 +164,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Obtiene el correlativo
       setData((prevState) => ({
         ...prevState,
-        numero: correlativo,
+        numero: ("0000000000" + String(correlativo)).slice(-10),
       }));
     }
     if (target.name == "motivoTrasladoId") {
@@ -1002,9 +1002,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.serie ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Nuevo" ? false : true}
-                    className={
-                      Global.InputStyle
-                    }
+                    className={Global.InputStyle}
                   >
                     {dataSerie.map((map) => (
                       <option key={map.serie} value={map.serie}>
@@ -1031,7 +1029,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="fechaEmision" className={Global.LabelStyle}>
-                    F. Emisión
+                    Fecha Emisión
                   </label>
                   <input
                     type="date"
@@ -1461,7 +1459,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                    T. Cambio
+                    Tipo Cambio
                   </label>
                   <input
                     type="number"

@@ -93,7 +93,6 @@ const LetraCambioVenta = () => {
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
-  const [checked, setChecked] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -324,10 +323,6 @@ const LetraCambioVenta = () => {
         }
         case 7: {
           setObjeto({
-            monedaId: "S",
-            tipoCambio: 0,
-            documentosReferencia: [],
-            detalles: [],
           });
           setModalRenovacion(true);
           break;

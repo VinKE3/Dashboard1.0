@@ -200,7 +200,7 @@ const PlanillaCobro = () => {
             empresaId: "01",
             tipoDocumentoId: "PL",
             serie: "0001",
-            numero: result.data.data.numero,
+            numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
             fechaRegistro: moment().format("YYYY-MM-DD"),
             fechaVenta: moment().format("YYYY-MM-DD"),
             clienteId: "",

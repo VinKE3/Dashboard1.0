@@ -1201,7 +1201,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputTercio}>
                   <label htmlFor="tipoCambio" className={Global.LabelStyle}>
-                    T. Cambio
+                    Tipo Cambio
                   </label>
                   <input
                     type="number"
@@ -1487,7 +1487,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         htmlFor="tipoCambioCabecera"
                         className={Global.LabelStyle}
                       >
-                        T. Cambio
+                        Tipo Cambio
                       </label>
                       <input
                         type="number"
