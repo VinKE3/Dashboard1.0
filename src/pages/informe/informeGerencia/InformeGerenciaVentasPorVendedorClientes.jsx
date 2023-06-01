@@ -1,9 +1,9 @@
 import { useEffect, useState, useMemo } from "react";
-import ModalBasic from "../../../components/Modal/ModalBasic";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
-import BotonCRUD from "../../../components/Boton/BotonCRUD";
-import Table from "../../../components/Tabla/Table";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import Table from "../../../components/tabla/Table";
 import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import moment from "moment";

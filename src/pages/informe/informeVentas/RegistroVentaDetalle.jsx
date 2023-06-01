@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import ModalBasic from "../../../components/Modal/ModalBasic";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
 import * as Global from "../../../components/Global";
-import BotonBasico from "../../../components/Boton/BotonBasico";
+import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import store from "store2";
 import moment from "moment";
