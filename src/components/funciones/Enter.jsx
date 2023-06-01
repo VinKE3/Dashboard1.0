@@ -31,9 +31,9 @@ function Enter({ children }) {
         e.preventDefault();
         if (inputs[foco + 1] != undefined) {
           if (inputs[foco + 1].tagName == "TABLE") {
-            let tabla = document.querySelector("table > tbody");
+            let tabla = inputs[foco + 1];
             tabla.focus();
-            let row = tabla.querySelector("tr");
+            let row = tabla.querySelector("tbody > tr");
             document.querySelectorAll("*").forEach((map) => {
               map.classList.remove("selected-row");
             });
