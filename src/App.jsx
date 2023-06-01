@@ -71,10 +71,7 @@ import BloquearCompra from "./pages/compra/bloquearCompra/BloquearCompra";
 import BloquearMovimientoBancario from "./pages/finanza/bloquearMovimientoBancario/BloquearMovimientoBancario";
 //Pages Bloqueos
 //Pages Herramientas
-import InformeArticulo from "./pages/informe/informeArticulo/InformeArticulo";
-import InformeCompra from "./pages/informe/informeCompra/InformeCompra";
-import InformeVenta from "./pages/informe/informeVenta/InformeVenta";
-import InformeTesoreria from "./pages/informe/informeTesoreria/InformeTesoreria";
+import Informe from "./pages/informe/Informe"
 //Pages Herramientas
 //Pages Cobranzas
 import CuentaPorCobrar from "./pages/cobranza/cuentaPorCobrar/CuentaPorCobrar";
@@ -202,14 +199,8 @@ function App() {
 
           {/*INFORMES */}
           <Route
-            path="/informe/informeArticulo"
-            element={<InformeArticulo />}
-          />
-          <Route path="/informe/informeVenta" element={<InformeVenta />} />
-          <Route path="/informe/informeCompra" element={<InformeCompra />} />
-          <Route
-            path="/informe/informeTesoreria"
-            element={<InformeTesoreria />}
+            path="/informe/informe"
+            element={<Informe />}
           />
           {/*INFORMES */}
         </Route>

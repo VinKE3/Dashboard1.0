@@ -263,20 +263,8 @@ function seccionesList() {
       icon: <FaFileAlt className="text-primary" />,
       items: [
         {
-          path: "/informe/informeArticulo",
-          title: "Artículos",
-        },
-        {
-          path: "/informe/informeVenta",
-          title: "Ventas",
-        },
-        {
-          path: "/informe/informeCompra",
-          title: "Compras",
-        },
-        {
-          path: "/informe/informeTesoreria",
-          title: "Tesoreria",
+          path: "/informe/informe",
+          title: "Informe",
         },
       ],
     },
