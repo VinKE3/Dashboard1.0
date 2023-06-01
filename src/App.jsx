@@ -71,7 +71,7 @@ import BloquearCompra from "./pages/compra/bloquearCompra/BloquearCompra";
 import BloquearMovimientoBancario from "./pages/finanza/bloquearMovimientoBancario/BloquearMovimientoBancario";
 //Pages Bloqueos
 //Pages Herramientas
-import Informe from "./pages/informe/Informe"
+import Informe from "./pages/informe/Informe";
 //Pages Herramientas
 //Pages Cobranzas
 import CuentaPorCobrar from "./pages/cobranza/cuentaPorCobrar/CuentaPorCobrar";
@@ -94,7 +94,10 @@ function App() {
           <Route path="/venta/cotizacion" element={<Cotizacion />} />
           <Route path="/venta/documentoVenta" element={<DocumentoVenta />} />
           <Route path="/venta/guiaRemision" element={<GuiaRemision />} />
-          <Route path="/venta/letraCambioVenta" element={<LetraCambioVenta />} />
+          <Route
+            path="/venta/letraCambioVenta"
+            element={<LetraCambioVenta />}
+          />
           <Route path="/venta/retencion" element={<Retencion />} />
           <Route path="/venta/bloquearVenta" element={<BloquearVenta />} />
           {/*VENTAS */}
@@ -195,13 +198,8 @@ function App() {
           <Route path="cobranza/planillaCobro" element={<PLanillaCobro />} />
           {/*COBRANZAS */}
 
-          {/*TESORERIA */}
-
           {/*INFORMES */}
-          <Route
-            path="/informe/informe"
-            element={<Informe />}
-          />
+          <Route path="/informe/informe" element={<Informe />} />
           {/*INFORMES */}
         </Route>
 
