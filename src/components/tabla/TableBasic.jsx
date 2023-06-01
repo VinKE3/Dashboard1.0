@@ -24,6 +24,7 @@ const TableBasic = ({
   columnas,
   datos,
   estilos = ["", "", "", "", "", "", ""],
+  Click = (e) => {},
   DobleClick = () => {},
   KeyDown = (e) => {},
 }) => {
@@ -33,18 +34,13 @@ const TableBasic = ({
   //#endregion
 
   //#region Obtiene props React Table
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-  } = useTable(
-    { columns, data, initialState: { pageSize: 50 } },
-    useGlobalFilter,
-    useSortBy,
-    usePagination
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow } =
+    useTable(
+      { columns, data, initialState: { pageSize: 50 } },
+      useGlobalFilter,
+      useSortBy,
+      usePagination
+    );
   //#endregion
 
   //#region Render
@@ -84,7 +80,10 @@ const TableBasic = ({
                 <tr
                   {...row.getRowProps()}
                   className={Global.Tr + estilos[5]}
-                  onClick={(e) => Funciones.Seleccionar(e)}
+                  onClick={(e) => {
+                    Funciones.Seleccionar(e);
+                    Click(e);
+                  }}
                 >
                   {row.cells.map((cell) => {
                     return (

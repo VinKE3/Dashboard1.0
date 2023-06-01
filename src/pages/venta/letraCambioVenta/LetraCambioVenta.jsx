@@ -322,8 +322,7 @@ const LetraCambioVenta = () => {
           break;
         }
         case 7: {
-          setObjeto({
-          });
+          setObjeto({});
           setModalRenovacion(true);
           break;
         }
@@ -724,7 +723,7 @@ const LetraCambioVenta = () => {
                 botonText="Imprimir"
                 botonClass={Global.BotonAgregar}
                 botonIcon={faPrint}
-                click={() => Imprimir()}
+                click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""
               />
             </div>
@@ -771,7 +770,7 @@ const LetraCambioVenta = () => {
             <ModalDeshacer
               setModal={setModalDeshacer}
               modo={modo}
-              objeto={objeto}
+              foco={document.getElementById("tablaLetraCambioVenta")}
             />
           )}
           <ToastContainer />

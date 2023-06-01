@@ -108,13 +108,13 @@ const TablaDetalleStyle = styled.div`
 //#endregion
 
 const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
+  
   //#region useState
   //Data General
   const [data, setData] = useState(objeto);
-  const [dataDetalle, setDataDetalle] = useState(objeto.documentosReferencia);
+  const [dataDetalle, setDataDetalle] = useState([]);
   //Data General
   //Tablas
-  const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   //Tablas
   //Data Modales Ayuda
@@ -775,7 +775,6 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/FormularioTablas`
     );
-    setDataTipoDoc(result.data.data.tiposDocumento);
     setDataMoneda(result.data.data.monedas);
   };
   const GetPorIdTipoCambio = async (id) => {
@@ -1015,7 +1014,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   //#region Render
   return (
     <>
-      {Object.entries(dataTipoDoc).length > 0 && (
+      {Object.entries(dataMoneda).length > 0 && (
         <>
           <ModalCrud
             setModal={setModal}

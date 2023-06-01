@@ -106,7 +106,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   //Data General
   const [data, setData] = useState(objeto);
-  const [dataDetalle, setDataDetalle] = useState(objeto.documentosReferencia);
+  const [dataDetalle, setDataDetalle] = useState([]);
   //Data General
   //Tablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
