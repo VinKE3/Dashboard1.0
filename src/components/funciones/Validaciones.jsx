@@ -206,8 +206,18 @@ export const CerrarModal = async (e) => {
 };
 
 export const PDF = async (data) => {
-  const blob = new Blob([data], { type: "application/pdf" });
-  const blobUrl = URL.createObjectURL(blob);
-  window.open(blobUrl);
+  let blob = new Blob([data], { type: "application/pdf" });
+  let blobUrl = URL.createObjectURL(blob);
+  let test = "test.pdf";
+  // blobUrl.window.open(blobUrl);
+  let win = window.open();
+  win.document.write(
+    '<iframe name= "' +
+      test +
+      '" src="' +
+      blobUrl +
+      '" frameborder="0" allowfullscreen></iframe>'
+  );
+  win.document.title = test;
 };
 //#endregion
