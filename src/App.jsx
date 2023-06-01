@@ -202,7 +202,7 @@ function App() {
           <Route path="/informe/informe" element={<Informe />} />
           {/*INFORMES */}
         </Route>
-
+        //?comentario
         {/*ERROR */}
         <Route path="*" element={<Error404 />} />
         {/*ERROR */}
