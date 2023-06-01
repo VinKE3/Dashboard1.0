@@ -256,28 +256,40 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/GetSimplificado?isRenovado=${dataCabecera.isRenovado}&numero=${dataCabecera.numero}`
     );
-    //Valida montos
-    if (result.data.data.saldo <= 0) {
-      document.getElementById("numero").focus();
-      return [false, "El Documento de Venta se encuentra Cancelado."];
+    if (result.name == "AxiosError") {
+      let error = "";
+      //Captura el mensaje de error
+      if (Object.entries(result.response.data).length > 0) {
+        error = String(result.response.data.messages[0].textos);
+      } else {
+        error = String(result.message);
+      }
+      //Captura el mensaje de error
+      return [false, error];
+    } else {
+      //Valida montos
+      if (result.data.data.saldo <= 0) {
+        document.getElementById("numero").focus();
+        return [false, "El Documento de Venta se encuentra Cancelado."];
+      }
+      if (result.data.data.isAnulado) {
+        document.getElementById("numero").focus();
+        return [false, "El Documento de Venta se encuentra Anulado."];
+      }
+      if (result.data.data.isBloqueado) {
+        document.getElementById("numero").focus();
+        return [false, "El Documento de Venta se encuentra Bloqueado."];
+      }
+      let duplicado = dataDetalle.find((map) => map.id == result.data.data.id);
+      if (duplicado != undefined) {
+        document.getElementById("numero").focus();
+        return [
+          false,
+          "El Documento de Venta se encuentra registrado en el detalle.",
+        ];
+      }
+      //Valida montos
     }
-    if (result.data.data.isAnulado) {
-      document.getElementById("numero").focus();
-      return [false, "El Documento de Venta se encuentra Anulado."];
-    }
-    if (result.data.data.isBloqueado) {
-      document.getElementById("numero").focus();
-      return [false, "El Documento de Venta se encuentra Bloqueado."];
-    }
-    let duplicado = dataDetalle.find((map) => map.id == result.data.data.id);
-    if (duplicado != undefined) {
-      document.getElementById("numero").focus();
-      return [
-        false,
-        "El Documento de Venta se encuentra registrado en el detalle.",
-      ];
-    }
-    //Valida montos
     return [true, "", result.data.data];
   };
   const ValidarDocumentoReferencia = async () => {
