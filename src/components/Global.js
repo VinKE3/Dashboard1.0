@@ -1,3 +1,7 @@
+//#region Padre
+export var ContenedorPadre = "h-full w-full px-2 ";
+//#endregion
+
 //#region Modal
 export var FondoModal =
   "flex justify-center items-center fixed inset-0 z-50 outline-none bg-neutral-700/60 ";
@@ -20,11 +24,12 @@ export var Form = "w-full h-full py-1.5 px-5 ";
 
 //#region Contendores Inputs
 export var ContenedorBasico =
-  "grid gap-y-2.5 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 ";
+  "grid gap-y-1.5 md:gap-y-2 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 overflow-y-auto";
 export var FondoContenedor = "bg-secondary-300 shadow-md shadow-gray-700/60 ";
-export var ContenedorInputs = "flex flex-col md:flex-row gap-y-3 md:gap-x-2 ";
+export var ContenedorInputs =
+  "flex flex-col md:flex-row gap-y-2.5 md:gap-x-2 overflow-x-auto ";
 export var ContenedorFiltro =
-  "flex flex-col sm:flex-row sm:justify-between my-2 gap-y-3 sm:gap-x-2 md:text-sm ";
+  "flex flex-col sm:flex-row sm:justify-between gap-y-1.5 md:gap-y-2 sm:gap-x-2 my-2 ";
 export var ContenedorRow = "flex flex-row gap-y-3 gap-x-2 ";
 export var Input = "flex min-w-min ";
 export var InputFull = "flex w-full min-w-min ";
@@ -49,28 +54,30 @@ export var InputsFiltro = "flex flex-1 overflow-hidden ";
 
 //#region Inputs
 export var LabelStyle =
-  "px-3 inline-flex items-center text-sm lg:text-mini font-semibold border border-r-0 rounded-l-md bg-label border-gray-600 text-light focus:bg-slate-800 focus:outline-none focus:border-blue-500 ";
+  "px-3 inline-flex items-center text-mini font-semibold border border-r-0 rounded-l-md bg-label border-gray-600 text-light focus:bg-slate-800 focus:outline-none focus:border-blue-500 ";
 export var LabelCheckStyle =
-  "w-full flex-1 inline-flex items-center py-1.5 pr-2.5 pl-1 text-sm lg:text-mini font-semibold leading-normal rounded-r-lg border border-l-0 border-gray-600 bg-disabled text-light cursor-pointer ";
+  "w-full flex-1 inline-flex items-center py-1.5 pr-2.5 pl-1 text-mini font-semibold leading-normal rounded-r-lg border border-l-0 border-gray-600 bg-disabled text-light cursor-pointer ";
 export var InputStyle =
-  "block w-full flex-1 py-1.5 px-2.5 text-sm lg:text-mini border rounded-none rounded-r-lg bg-input border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
+  "block w-full flex-1 py-1.5 px-2.5 text-mini border rounded-none rounded-r-lg bg-input border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
 export var InputBoton =
-  "block w-full py-1.5 px-2.5 flex-1 text-sm lg:text-mini border rounded-none bg-input border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
+  "block w-full py-1.5 px-2.5 flex-1 text-mini border rounded-none bg-input border-gray-600 placeholder-gray-400 text-light focus:bg-gray-800 focus:outline-none focus:border-blue-500 selection:bg-blue-500 selection:text-black ";
 export var CheckStyle =
-  "flex inline-flex items-center pl-3 pr-1 lg:text-mini font-semibold rounded-l-md border border-r-0 bg-disabled border-gray-600 text-light ";
+  "flex inline-flex items-center pl-3 pr-1 text-mini font-semibold rounded-l-md border border-r-0 bg-disabled border-gray-600 text-light ";
 export var Anidado = "!border-l-0 rounded-l-none ";
 export var SinBorde = "!border-none  ";
 export var Disabled = "!bg-gray-800/90 ";
 //#endregion
 
 //#region Titulos H
-export var TituloH2 = "mb-2 py-2 text-xl md:text-2xl font-bold text-light ";
+export var TituloH2 = "py-2 text-xl md:text-2xl font-bold text-light ";
 export var TituloH4 = "mb-1 py-2 text-xl font-bold text-light ";
 export var TituloModal = "text-xl md:text-2xl font-semibold text-light ";
 export var Subtitulo = "m-0 p-0 pl-1 text-lg font-bold text-light";
+export var TituloUsuario = "font-bold text-light text-xl pb-1.5";
 //#endregion
 
 //#region Botones
+export var ContenedorBotones = "sticky top-2 z-20 flex gap-2 ";
 export var BotonModalBase =
   "px-6 py-2 text-sm font-semibold border-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 uppercase ";
 export var BotonOkModal =
@@ -101,55 +108,73 @@ export var BotonEliminar =
   "bg-gradient-to-b from-red-600 to-red-800 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-700 ";
 export var BotonHeader =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-700 !text-gray-800 ";
-export var BotonPaginacion =
-  "px-3 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md ";
-export var BotonPaginacionFlechas =
-  "px-2 py-2 mx-1 my-1 bg-yellow-400 hover:bg-yellow-500 text-center rounded-md ";
-export var BotonPaginacionActivo =
-  "bg-gradient-to-b from-gray-700 to-gray-600 text-light ";
 export var CerrarModal =
   "p-1 ml-auto bg-transparent border-0 hover:text-red-500 text-light float-right text-xl md:text-2xl leading-none font-semibold outline-none focus:outline-none ";
 //#endregion
 
-//#region Tablas
+//#region Tabla
+export var Table = "w-full text-light focus:outline-none ";
+
+//#region Filas
 export var THeader =
-  "text-sm lg:text-mini font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
-export var TBody =
-  "text-sm lg:text-mini bg-gradient-to-b from-gray-800 to-slate-800 ";
+  "text-mini font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
+export var TBody = "text-mini bg-gradient-to-b from-gray-800 to-slate-800 ";
+export var Th = "px-1 py-1 md:py-2 ";
 export var Tr = "border-b border-gray-600 ";
-export var Td = "p-2 text-left select-none ";
-//Footer
-export var TFooter =
-  "py-1 flex flex-col sm:flex-row align-items-center justify-center bg-secondary-900 text-light text-sm ";
-export var TotalRegistros =
-  "min-w-fit py-1 sm:py-3 sm:px-3 flex flex-1 align-items-center justify-center sm:justify-start ";
-//Footers
+export var Td = "px-1 py-1 md:py-2 text-left select-none ";
+//#endregion
 
-//Footer Detalle
-export var ContenedorFooter = "bg-gradient-to-t from-gray-900 to-gray-800 ";
-export var FilaVacia =
-  "w-full px-5 flex items-center justify-start border border-gray-400 ";
-export var FilaImporte =
-  "min-w-[130px] py-1 px-2 flex justify-end border border-gray-400 ";
-export var FilaPrecio =
-  "min-w-[130px] flex items-center justify-end border border-gray-400 ";
-export var UltimaFila =
-  "min-w-[91px] flex items-center justify-center border border-gray-400 ";
-export var FilaContenido = "pr-4 text-p-align-right font-bold text-light ";
-export var FilaContenidoSelect =
-  "min-w-[45px] ml-2 bg-gray-700 rounded-md font-semibold ";
-export var FilaMovArticulo =
-  "min-w-[100px] flex items-center justify-end border border-gray-400 ";
-export var FilaContenidoMovArt =
-  "pr-4 text-p-align-right font-bold text-light ";
-//Footer Detalle
-
+//#region Botones Fila
 export var TablaBotonConsultar =
   "w-4 mr-2 scale-110 transform hover:text-green-500 hover:scale-125";
 export var TablaBotonModificar =
   "w-4 mr-2 transform hover:text-orange-500 hover:scale-125";
 export var TablaBotonEliminar =
   "w-4 mr-2 transform hover:text-red-500 hover:scale-125";
+//#endregion
+
+//#region Footer
+
+export var ContenedorTablaFooter =
+  "min-h-min w-full py-2 flex flex-col sm:flex-row items-center justify-center sm:justify-between bg-gray-800 text-light ";
+export var ContenedorTotalPaginas =
+  "w-auto gap-x-5 flex items-center justify-between text-mini ";
+export var FooterTexto =
+  "text-center align-text-bottom font-semibold uppercase";
+
+//#region Paginacion
+export var ContendorPaginacion =
+  "gap-x-3 flex items-center justify-center sm:justify-end flex-wrap text-mini";
+export var ContendorBotonesPaginacion =
+  "w-auto flex items-center justify-center sm:justify-end flex-wrap ";
+export var BotonPaginacion =
+  "w-10 h-9 flex items-center justify-center text-sm !text-black font-bold ";
+export var BotonPaginacionActivo =
+  "!bg-transparent !bg-gradient-to-b !from-gray-700 !to-gray-600 !text-white ";
+//#endregion
+
+//#region Footer Detalle
+export var ContenedorFooter =
+  "flex flex-col overflow-x-auto bg-gradient-to-t from-gray-900 to-gray-800 ";
+export var FilaFooter =
+  "py-0.5 flex items-center justify-end border border-gray-400 ";
+export var FilaVacia = "w-full sm:px-5 ";
+export var FilaPrecio = "min-w-[90px] ";
+export var FilaImporte = "min-w-[90px] ";
+export var FilaInput = "min-w-[100px] pr-4 ";
+export var UltimaFila = "min-w-[75px] ";
+export var FilaContenido =
+  "pr-4 text-sm text-p-align-right font-semibold text-light ";
+export var FilaContenidoSelect =
+  "min-w-[45px] ml-2 bg-gray-700 rounded-md font-semibold ";
+export var FilaMovArticulo =
+  "min-w-[100px] flex items-center justify-end border border-gray-400 ";
+export var FilaContenidoMovArt =
+  "pr-4 text-p-align-right font-bold text-light ";
+//#endregion
+
+//#endregion
+
 //#endregion
 
 //#region Mensajes

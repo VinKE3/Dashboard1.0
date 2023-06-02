@@ -13,7 +13,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -224,7 +224,7 @@ const EntidadBancaria = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Entidades Bancarias</h2>
 
             {/* Filtro*/}
@@ -253,7 +253,7 @@ const EntidadBancaria = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaEntidadBancaria"}
                 columnas={columnas}
@@ -264,7 +264,7 @@ const EntidadBancaria = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

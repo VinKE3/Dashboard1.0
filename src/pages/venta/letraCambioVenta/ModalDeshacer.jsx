@@ -15,7 +15,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   max-width: 100%;
   overflow-x: auto;
   & th:first-child {
@@ -433,7 +433,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id="tablaDocumento"
                   columnas={columnas}
@@ -449,7 +449,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                   ]}
                   Click={(e) => CargarDetalle(e)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla Detalle */}
             </div>
             {/* Cabecera Documento */}
@@ -459,7 +459,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
               <p className={Global.Subtitulo}>Detalle de Proceso</p>
 
               {/* Tabla Detalle */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id="tablaDetalle"
                   columnas={columnasDetalle}
@@ -474,7 +474,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     "border",
                   ]}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla Detalle */}
             </div>
             {/* Cabecera Letra */}

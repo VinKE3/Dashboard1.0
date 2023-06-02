@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }

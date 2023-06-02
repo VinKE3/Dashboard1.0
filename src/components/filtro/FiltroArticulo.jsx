@@ -7,7 +7,7 @@ import styled from "styled-components";
 import * as Global from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -298,7 +298,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
               </div>
 
               {/* Tabla */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id={"tablaFiltroArticulo"}
                   columnas={columnas}
@@ -306,7 +306,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                   DobleClick={(e) => KeyTabla(e, true)}
                   KeyDown={(e) => KeyTabla(e)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla */}
             </div>
           </>

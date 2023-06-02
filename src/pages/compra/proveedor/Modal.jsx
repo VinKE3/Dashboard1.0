@@ -18,7 +18,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -29,7 +29,7 @@ const TablaStyle = styled.div`
     width: 90px;
   }
   & th:last-child {
-    width: 130px;
+    width: 100px;
     text-align: center;
   }
 `;
@@ -889,14 +889,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Form Cuenta Corriente */}
 
                 {/* Tabla */}
-                <TablaStyle>
+                <DivTabla>
                   <TableBasic
                     id="tablaCuentaCorrienteProveedor"
                     columnas={colCcorriente}
                     datos={dataCcorriente}
                     DobleClick={(e) => AgregarCuentaCorriente(e, null, true)}
                   />
-                </TablaStyle>
+                </DivTabla>
                 {/* Tabla */}
               </TabPanel>
             ) : (
@@ -1116,14 +1116,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Form Contactos */}
 
                 {/* Tabla */}
-                <TablaStyle>
+                <DivTabla>
                   <TableBasic
                     id="tablaContactoProveedor"
                     columnas={colContacto}
                     datos={dataContacto}
                     DobleClick={(e) => AgregarContacto(e, null, true)}
                   />
-                </TablaStyle>
+                </DivTabla>
                 {/* Tabla */}
               </TabPanel>
             ) : (

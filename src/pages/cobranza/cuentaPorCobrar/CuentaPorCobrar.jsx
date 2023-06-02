@@ -18,7 +18,7 @@ import * as Global from "../../../components/Global";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -327,7 +327,7 @@ const CuentaPorCobrar = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Cuentas por Cobrar</h2>
 
             {/* Filtro*/}
@@ -448,7 +448,7 @@ const CuentaPorCobrar = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={Global.ContenedorBotones}>
               <BotonBasico
                 botonText="Imprimir"
                 botonClass={Global.BotonAgregar}
@@ -460,7 +460,7 @@ const CuentaPorCobrar = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCuentaPorCobrar"}
                 columnas={columnas}
@@ -471,7 +471,7 @@ const CuentaPorCobrar = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}

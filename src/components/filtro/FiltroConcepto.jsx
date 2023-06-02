@@ -10,7 +10,7 @@ import * as Global from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -362,7 +362,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
             </div>
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 id={"tablaFiltroConcepto"}
                 columnas={columnas}
@@ -370,7 +370,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                 DobleClick={(e) => KeyTabla(e, true)}
                 KeyDown={(e) => KeyTabla(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
         }

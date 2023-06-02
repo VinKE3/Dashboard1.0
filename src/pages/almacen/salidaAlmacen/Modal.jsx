@@ -17,7 +17,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -36,9 +36,9 @@ const TablaStyle = styled.div`
 
   & th:nth-child(6),
   & th:nth-child(7) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
     text-align: center;
   }
   & th:last-child {
@@ -1301,7 +1301,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Detalles */}
 
             {/* Tabla Detalle */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 columnas={columnas}
                 datos={dataDetalle}
@@ -1316,32 +1316,32 @@ const Modal = ({ setModal, modo, objeto }) => {
                 ]}
                 DobleClick={(e) => CargarDetalle(e, true)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla Detalle */}
 
             {/*Tabla Footer*/}
             <div className={Global.ContenedorFooter}>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Total a Pagar</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>{data.total ?? "0.00"}</p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Total Galones</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.totalGalones ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
             </div>
             <div className={Global.ContenedorFooter}>
@@ -1351,12 +1351,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     COSTO DE GALON X 1 EN SOLES
                   </p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.costoGalon ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
                 <div className={Global.FilaVacia + " pr-0 flex justify-end"}>
@@ -1364,12 +1364,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     COSTO DE GALON X 1 EN SOLES + GASTOS INDIRECTOS (0.00%)
                   </p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.costoGalonMasGastoIndirectos ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
                 <div className={Global.FilaVacia + " pr-0 flex justify-end"}>
@@ -1377,12 +1377,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     COSTO DE GALON X 1 EN SOLES + IGV (18.00%)
                   </p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.costoGalonMasIGV ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
             </div>
 

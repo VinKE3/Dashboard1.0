@@ -18,7 +18,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   max-width: 100%;
   overflow-x: auto;
   & th:first-child {
@@ -82,9 +82,9 @@ const TablaStyle = styled.div`
   & th:nth-child(13),
   & th:nth-child(14) {
     background: linear-gradient(198deg, #302579 0%, #222246 100%);
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
     text-align: center;
   }
   & th:last-child {
@@ -1758,7 +1758,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Detalles */}
 
             {/* Tabla Detalle */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 columnas={columnas}
                 datos={dataDetalle}
@@ -1773,20 +1773,20 @@ const Modal = ({ setModal, modo, objeto }) => {
                 ]}
                 DobleClick={(e) => CargarDetalle(e, true)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla Detalle */}
 
             {/*Tabla Footer*/}
             <div className={Global.ContenedorFooter}>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Total a Pagar</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>{data.total ?? "0.00"}</p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
             </div>
             {/*Tabla Footer*/}

@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -249,7 +249,7 @@ const Cliente = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Clientes</h2>
 
             {/* Filtro*/}
@@ -311,7 +311,7 @@ const Cliente = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCliente"}
                 columnas={columnas}
@@ -322,7 +322,7 @@ const Cliente = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}

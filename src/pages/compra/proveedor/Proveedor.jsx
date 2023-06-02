@@ -13,7 +13,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -243,7 +243,7 @@ const Proveedor = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Proveedor</h2>
 
             {/* Filtro*/}
@@ -305,7 +305,7 @@ const Proveedor = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaProveedor"}
                 columnas={columnas}
@@ -316,7 +316,7 @@ const Proveedor = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

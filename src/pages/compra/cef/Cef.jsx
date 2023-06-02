@@ -18,7 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -435,7 +435,7 @@ const Cef = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
+       <div className={Global.ContenedorPadre}>
         <h2 className={Global.TituloH2}>C.E.F</h2>
 
         {/* Filtro*/}
@@ -495,7 +495,7 @@ const Cef = () => {
         {/* Filtro*/}
 
         {/* Boton */}
-        <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+        <div className={Global.ContenedorBotones}>
           {permisos[0] && (
             <BotonBasico
               botonText="Nuevo"
@@ -516,7 +516,7 @@ const Cef = () => {
         {/* Boton */}
 
         {/* Tabla */}
-        <TablaStyle>
+        <DivTabla>
           <Table
             id={"tablaCEF"}
             columnas={columnas}
@@ -527,7 +527,7 @@ const Cef = () => {
             DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
             KeyDown={(e) => ModalKey(e, "Modificar")}
           />
-        </TablaStyle>
+        </DivTabla>
         {/* Tabla */}
       </div>
 

@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -361,7 +361,7 @@ const BloquearVenta = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <div className="flex items-center justify-between">
               <h2 className={Global.TituloH2}>Bloquear Ventas</h2>
               <div className="flex">
@@ -451,7 +451,7 @@ const BloquearVenta = () => {
             {/* Filtro*/}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaBloquearVenta"}
                 columnas={columnas}
@@ -461,7 +461,7 @@ const BloquearVenta = () => {
                 Click={(e) => FiltradoPaginado(e)}
                 KeyDown={(e) => BloquearKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           <ToastContainer />

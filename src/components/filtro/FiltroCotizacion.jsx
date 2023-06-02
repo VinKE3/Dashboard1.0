@@ -8,7 +8,7 @@ import styled from "styled-components";
 import * as Global from "../Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -284,7 +284,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
             </div>
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 id={"tablaFiltroCotizacion"}
                 columnas={columnas}
@@ -292,7 +292,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                 DobleClick={(e) => KeyTabla(e, true)}
                 KeyDown={(e) => KeyTabla(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
         }

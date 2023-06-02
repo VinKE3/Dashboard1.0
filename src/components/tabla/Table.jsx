@@ -2,16 +2,8 @@ import React from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
-import styled from "styled-components";
 import * as Global from "../Global";
 import * as Funciones from "../funciones/Validaciones";
-
-const Tabla = styled.div`
-  & .selected-row {
-    /* background: linear-gradient(90deg, #d2ae11 0%, #d9ad22 100%); */
-    background: linear-gradient(90deg, #1a3e5f 0%, #25358d 100%);
-  }
-`;
 
 const Table = ({
   id = "tabla",
@@ -44,9 +36,9 @@ const Table = ({
 
   //#region Render
   return (
-    <div className="flex flex-col overflow-x-auto rounded md:text-sm">
+    <div className="h-full w-full flex flex-col rounded ">
       {/* Tabla */}
-      <Tabla>
+      <div className="overflow-x-auto">
         <table
           {...getTableProps()}
           id={id}
@@ -56,7 +48,7 @@ const Table = ({
             Funciones.MoverFlecha(e, "#" + id);
             KeyDown(e);
           }}
-          className={"w-full text-light focus:outline-none " + estilos[0]}
+          className={Global.Table + estilos[0]}
         >
           <thead className={Global.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (
@@ -64,7 +56,7 @@ const Table = ({
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={"p-2 " + estilos[3]}
+                    className={Global.Th + estilos[3]}
                   >
                     {column.render("Header")}
                   </th>
@@ -98,57 +90,64 @@ const Table = ({
             })}
           </tbody>
         </table>
-      </Tabla>
+      </div>
+
       {/* Tabla */}
 
       {/* Footer */}
-      <div className={Global.TFooter}>
-        {/* Total de registros */}
-        <div className={Global.TotalRegistros}>
-          <span className="text-center align-text-bottom font-semibold ">
-            {"Total de registros: "}
-            <span className="font-bold text-primary">{totalPaginas}</span>
-          </span>
+      <div className={Global.ContenedorTablaFooter}>
+        <div className={Global.ContenedorTotalPaginas}>
+          {/* Total de registros */}
+          <div className="min-w-fit">
+            <span className={Global.FooterTexto}>
+              {"Total de registros: "}
+              <span className="text-primary">{totalPaginas}</span>
+            </span>
+          </div>
+          {/* Total de registros */}
         </div>
-        {/* Total de registros */}
 
-        {/* Pagina 1 de total */}
-        <div className="min-w-fit py-1 sm:py-3 sm:px-3 flex align-items-center justify-center">
-          <span className="text-center align-text-bottom">
-            {"Página "}
-            <span className="font-bold text-primary">{index + 1}</span>
-            {" de "}
-            <span className="font-bold text-primary">{numeroPaginas} </span>
-          </span>
+        <div className={Global.ContendorPaginacion}>
+          {/* Pagina 1 de total */}
+          <div className="min-w-fit">
+            <span className={Global.FooterTexto}>
+              {"Página "}
+              <span className="text-primary">{index + 1}</span>
+              {" de "}
+              <span className="text-primary">{numeroPaginas} </span>
+            </span>
+          </div>
+          {/* Pagina 1 de total */}
+
+          {/* Paginado */}
+          <ReactPaginate
+            pageRangeDisplayed={2}
+            onPageChange={Click}
+            pageCount={
+              totalPaginas == 0
+                ? 1
+                : parseInt(Math.ceil(totalPaginas / cantidadRegistros))
+            }
+            forcePage={index}
+            nextLabel={<FaAngleDoubleRight className="text-lg" />}
+            previousLabel={<FaAngleDoubleLeft className="text-lg" />}
+            breakLabel="..."
+            renderOnZeroPageCount={null}
+            containerClassName={Global.ContendorBotonesPaginacion}
+            pageClassName="flex"
+            breakClassName="flex align-items-center justify-center"
+            pageLinkClassName={Global.BotonPaginacion + Global.BotonPrimary}
+            breakLinkClassName={Global.BotonPaginacion + Global.BotonPrimary}
+            previousLinkClassName={
+              Global.BotonPaginacion + Global.BotonPrimary + " !w-8 rounded-l"
+            }
+            nextLinkClassName={
+              Global.BotonPaginacion + Global.BotonPrimary + " !w-8 rounded-r"
+            }
+            activeLinkClassName={Global.BotonPaginacionActivo}
+          />
+          {/* Paginado */}
         </div>
-        {/* Pagina 1 de total */}
-
-        {/* Paginado */}
-        <ReactPaginate
-          pageRangeDisplayed={2}
-          onPageChange={Click}
-          pageCount={
-            totalPaginas == 0
-              ? 1
-              : parseInt(Math.ceil(totalPaginas / cantidadRegistros))
-          }
-          forcePage={index}
-          nextLabel={<FaAngleDoubleRight className="text-lg" />}
-          previousLabel={<FaAngleDoubleLeft className="text-lg" />}
-          breakLabel="..."
-          renderOnZeroPageCount={null}
-          containerClassName="flex align-items-center justify-center flex-wrap font-bold text-black"
-          pageClassName="flex"
-          breakClassName="flex align-items-center justify-center"
-          previousClassName="flex"
-          nextClassName="flex"
-          pageLinkClassName={Global.BotonPaginacion}
-          breakLinkClassName={Global.BotonPaginacion}
-          nextLinkClassName={Global.BotonPaginacionFlechas}
-          previousLinkClassName={Global.BotonPaginacionFlechas}
-          activeLinkClassName={Global.BotonPaginacionActivo}
-        />
-        {/* Paginado */}
       </div>
       {/* Footer */}
     </div>

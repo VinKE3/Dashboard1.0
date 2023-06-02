@@ -102,6 +102,11 @@ select:disabled {
   display: none;
 }
 
+.selected-row {
+  /* background: linear-gradient(90deg, #d2ae11 0%, #d9ad22 100%); */
+  background: linear-gradient(90deg, #1a3e5f 0%, #25358d 100%);
+}
+
 .p-disabled,
 .p-component:disabled {
   opacity: 0.4;

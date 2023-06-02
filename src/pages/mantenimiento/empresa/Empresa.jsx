@@ -14,7 +14,7 @@ import BotonBasico from "../../../components/boton/BotonBasico";
 import Swal from "sweetalert2";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -926,7 +926,7 @@ const Empresa = ({ modo }) => {
   return (
     <>
       {Object.entries(dataGeneral).length > 0 && (
-        <div className={Global.Form}>
+        <div className={Global.ContenedorPadre + " overflow-y-auto"}>
           <TabView>
             <TabPanel
               header="Datos Principales"
@@ -1223,7 +1223,7 @@ const Empresa = ({ modo }) => {
                     />
                   </div>
                 </div>
-                <div className="flex justify-end border-t pt-2 border-light ">
+                <div className="flex justify-end pt-2 ">
                   <button
                     id="guardarTodo"
                     className={Global.BotonModalBase + Global.BotonOkModal}
@@ -1883,7 +1883,7 @@ const Empresa = ({ modo }) => {
                   </div>
                 </div>
 
-                <div className="mt-10 pt-3 border-t border-light flex justify-end">
+                <div className="mt-10 pt-3 flex justify-end">
                   <button
                     id="guardarTodo"
                     className={Global.BotonModalBase + Global.BotonOkModal}
@@ -2004,13 +2004,13 @@ const Empresa = ({ modo }) => {
                         {/*footer*/}
                       </div>
                     )}
-                    <TablaStyle>
+                    <DivTabla>
                       <TableBasic
                         id="tablaIGV"
                         columnas={colIgv}
                         datos={porcentajesIGV}
                       />
-                    </TablaStyle>
+                    </DivTabla>
                   </div>
                   <div className="card">
                     <h4 className={Global.TituloH4}>RETENCIONES</h4>
@@ -2113,13 +2113,13 @@ const Empresa = ({ modo }) => {
                       </div>
                     )}
                     {/* Form */}
-                    <TablaStyle>
+                    <DivTabla>
                       <TableBasic
                         id="tablaRetencion"
                         columnas={colRetencion}
                         datos={porcentajesRetencion}
                       />
-                    </TablaStyle>
+                    </DivTabla>
                   </div>
                   <div className="card">
                     <h4 className={Global.TituloH4}>DETRACCIONES</h4>
@@ -2222,13 +2222,13 @@ const Empresa = ({ modo }) => {
                       </div>
                     )}
                     {/* Form */}
-                    <TablaStyle>
+                    <DivTabla>
                       <TableBasic
                         id="tablaDetraccion"
                         columnas={colDetraccion}
                         datos={porcentajesDetraccion}
                       />
-                    </TablaStyle>
+                    </DivTabla>
                   </div>
                   <div className="card">
                     <h4 className={Global.TituloH4}>PERCEPCIONES</h4>
@@ -2331,18 +2331,19 @@ const Empresa = ({ modo }) => {
                       </div>
                     )}
                     {/* Form */}
-                    <TablaStyle>
+                    <DivTabla>
                       <TableBasic
                         id="tablaPercepcion"
                         columnas={colPercepcion}
                         datos={porcentajesPercepcion}
                       />
-                    </TablaStyle>
+                    </DivTabla>
                   </div>
                 </div>
               </div>
             </TabPanel>
           </TabView>
+
           <ToastContainer />
         </div>
       )}

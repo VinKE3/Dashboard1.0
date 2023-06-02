@@ -18,7 +18,7 @@ import * as Global from "../../../components/Global";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -396,7 +396,7 @@ const SalidaCilindros = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Salida de Cilindros</h2>
 
             {/* Filtro*/}
@@ -456,7 +456,7 @@ const SalidaCilindros = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={Global.ContenedorBotones}>
               <BotonBasico
                 botonText="Imprimir"
                 botonClass={Global.BotonAgregar}
@@ -468,7 +468,7 @@ const SalidaCilindros = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaSalidaCilindro"}
                 columnas={columnas}
@@ -479,7 +479,7 @@ const SalidaCilindros = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

@@ -25,7 +25,7 @@ import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -557,7 +557,7 @@ const LetraCambioVenta = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Letra Cambio Venta</h2>
             {/* Filtro*/}
             <div
@@ -678,7 +678,7 @@ const LetraCambioVenta = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={Global.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
@@ -730,7 +730,7 @@ const LetraCambioVenta = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaLetraCambioVenta"}
                 columnas={columnas}
@@ -741,7 +741,7 @@ const LetraCambioVenta = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}

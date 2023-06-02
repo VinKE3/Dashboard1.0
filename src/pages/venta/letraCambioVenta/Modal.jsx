@@ -13,7 +13,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -49,19 +49,19 @@ const TablaStyle = styled.div`
   }
   & th:nth-child(8),
   & th:nth-child(9) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
-    text-align: center;
-  }
-  & th:last-child {
-    width: 75px;
+    width: 90px;
     min-width: 90px;
     max-width: 90px;
     text-align: center;
   }
+  & th:last-child {
+    width: 75px;
+    min-width: 75px;
+    max-width: 75px;
+    text-align: center;
+  }
 `;
-const TablaDetalleStyle = styled.div`
+const DivDetalle = styled.div`
   & th:nth-child(2) {
     width: 100px;
     min-width: 100px;
@@ -88,15 +88,15 @@ const TablaDetalleStyle = styled.div`
   }
 
   & th:nth-child(8) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;
@@ -233,6 +233,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         break;
       }
     }
+    setRefrescar(true);
   };
   const ValidarDocumentoReferencia = async () => {
     if (Object.entries(dataCabecera).length == 0) {
@@ -534,29 +535,48 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   //Calculos
   const TotalDetalle = async (total) => {
+    let moneda = dataDetalle[0].monedaId;
+    let totalPEN,
+      totalPENDividido,
+      totalPENUltimaFila,
+      totalUSD,
+      totalUSDDividido,
+      totalUSDUltimaFila;
     //Totales
-    //Soles
-    let totalPEN = Funciones.RedondearNumero(total, 2);
-    let totalPENDividido = Funciones.RedondearNumero(
-      totalPEN / dataCabecera.numeroLetra,
-      2
-    );
-    let totalPENUltimaFila = Funciones.RedondearNumero(
-      totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Soles
-    //Dolares
-    let totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
-    let totalUSDDividido = Funciones.RedondearNumero(
-      totalUSD / dataCabecera.numeroLetra,
-      2
-    );
-    let totalUSDUltimaFila = Funciones.RedondearNumero(
-      totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Dolares
+    if (moneda == "S") {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra, 2);
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1), 2);
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra, 2);
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1), 2);
+      //Dolares
+    } else {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total * data.tipoCambio, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra, 2);
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1), 2);
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra, 2);
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1), 2);
+      //Dolares
+    }
+
     //Totales
 
     return {
@@ -904,7 +924,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id="tablaDocumento"
                   columnas={columnas}
@@ -919,22 +939,22 @@ const Modal = ({ setModal, modo, objeto }) => {
                     "border",
                   ]}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
               <div className={Global.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
+                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                  <div className={Global.FilaFooter + Global.FilaPrecio}>
                     <p className={Global.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
+                  <div className={Global.FilaFooter + Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
                       {totalDocumento ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}
@@ -1126,7 +1146,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaDetalleStyle>
+              <DivDetalle>
                 <TableBasic
                   id="tablaDetalle"
                   columnas={columnasDetalle}
@@ -1142,22 +1162,22 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ]}
                   DobleClick={(e) => CargarDetalleLetra(e, true)}
                 />
-              </TablaDetalleStyle>
+              </DivDetalle>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
               <div className={Global.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
+                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                  <div className={Global.FilaFooter + Global.FilaPrecio}>
                     <p className={Global.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
+                  <div className={Global.FilaFooter + Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
                       {totalDetalle ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}

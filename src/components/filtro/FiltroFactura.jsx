@@ -9,7 +9,7 @@ import { FaTrash, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as Global from "../Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -328,7 +328,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
               {/* Filtro*/}
 
               {/* Tabla */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id={"tablaFiltroFactura"}
                   columnas={columnas}
@@ -336,7 +336,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
                   DobleClick={(e) => KeyTabla(e, true)}
                   KeyDown={(e) => KeyTabla(e)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla */}
             </div>
           </>

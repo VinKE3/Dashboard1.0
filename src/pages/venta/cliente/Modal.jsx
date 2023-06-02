@@ -19,7 +19,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -1228,14 +1228,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 )}
                 {/* Form Direcciones */}
                 {/* Tabla */}
-                <TablaStyle>
+                <DivTabla>
                   <TableBasic
                     id="tablaDireccionCliente"
                     columnas={colDireccion}
                     datos={dataDireccion}
                     DobleClick={(e) => AgregarDireccion(e, null, true)}
                   />
-                </TablaStyle>
+                </DivTabla>
                 {/* Tabla */}
               </TabPanel>
             ) : (
@@ -1461,14 +1461,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 )}
                 {/* Form Contactos */}
                 {/* Tabla */}
-                <TablaStyle>
+                <DivTabla>
                   <TableBasic
                     id="tablaContactoCliente"
                     columnas={colContacto}
                     datos={dataContacto}
                     DobleClick={(e) => AgregarContacto(e, null, true)}
                   />
-                </TablaStyle>
+                </DivTabla>
                 {/* Tabla */}
               </TabPanel>
             ) : (

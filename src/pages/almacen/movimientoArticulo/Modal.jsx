@@ -8,7 +8,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   max-width: 100%;
   overflow-x: auto;
   & th:nth-child(1) {
@@ -266,14 +266,14 @@ const Modal = ({ setModal, objeto, foco }) => {
       <div
         className={Global.ContenedorBasico + Global.FondoContenedor + "!gap-0"}
       >
-        <TablaStyle>
+        <DivTabla>
           <TableBasic
             columnas={columnasDetalles}
             datos={detalles}
             estilos={["", "", "", "border ", "", "border border-b-0", "border"]}
             KeyDown={(e) => CerrarModalKey(e)}
           />
-        </TablaStyle>
+        </DivTabla>
 
         {/*Tabla Footer*/}
         <div className={Global.ContenedorFooter + "overflow-auto"}>

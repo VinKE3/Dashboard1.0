@@ -10,7 +10,7 @@ import styled from "styled-components";
 import * as Global from "../Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -358,7 +358,7 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
                 </div>
               )}
               {/* Tabla */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id={"tablaFiltroCilindro"}
                   columnas={columnas}
@@ -366,7 +366,7 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
                   DobleClick={(e) => KeyTabla(e, true)}
                   KeyDown={(e) => KeyTabla(e)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla */}
             </div>
           </>

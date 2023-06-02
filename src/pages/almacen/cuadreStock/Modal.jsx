@@ -16,7 +16,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   max-width: 100%;
   overflow-x: auto;
   & th:first-child {
@@ -990,7 +990,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             {/* Detalles */}
 
             {/* Tabla Detalle */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCuadreStockModal"}
                 columnas={columnas}
@@ -1009,46 +1009,46 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                 Click={(e) => FiltradoPaginado(e)}
                 DobleClick={(e) => AccionModal(e, true)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla Detalle */}
 
             {/*Tabla Footer*/}
             <div className={Global.ContenedorFooter}>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Total Sobra</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.totalSobra ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Total Falta</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.totalFalta ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Saldo Total</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.saldoTotal ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
             </div>
             {/*Tabla Footer*/}

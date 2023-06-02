@@ -205,19 +205,25 @@ export const CerrarModal = async (e) => {
   }
 };
 
-export const PDF = async (data) => {
+export const PDF = async (data, id) => {
   let blob = new Blob([data], { type: "application/pdf" });
-  let blobUrl = URL.createObjectURL(blob);
-  let test = "test.pdf";
-  // blobUrl.window.open(blobUrl);
+
+  let titulo = `${id}.pdf`;
+  // let custom = new FormData();
+  // custom.append("pdf", blob, `${id}.pdf`);
+  // console.log(custom.get("pdf"));
+  // console.log(blob);
+  let url = URL.createObjectURL(blob);
   let win = window.open();
   win.document.write(
     '<iframe name= "' +
-      test +
+      titulo +
       '" src="' +
-      blobUrl +
-      '" frameborder="0" allowfullscreen></iframe>'
+      url +
+      '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" download= "' +
+      titulo +
+      '" allowfullscreen></iframe>'
   );
-  win.document.title = test;
+  win.document.title = titulo;
 };
 //#endregion

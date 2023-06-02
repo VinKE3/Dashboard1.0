@@ -8,7 +8,7 @@ import moment from "moment";
 import * as Global from "../Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -224,7 +224,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
             </div>
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 id={"tablaFiltroFacturaCompra"}
                 columnas={columnas}
@@ -232,7 +232,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
                 DobleClick={(e) => KeyTabla(e, true)}
                 KeyDown={(e) => KeyTabla(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
         }

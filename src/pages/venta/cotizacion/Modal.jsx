@@ -27,7 +27,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -46,9 +46,9 @@ const TablaStyle = styled.div`
 
   & th:nth-child(6),
   & th:nth-child(7) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
     text-align: center;
   }
   & th:last-child {
@@ -1859,7 +1859,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Detalles */}
 
             {/* Tabla Detalle */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 id={"tablaDetalleCotizacion"}
                 columnas={columnas}
@@ -1875,26 +1875,26 @@ const Modal = ({ setModal, modo, objeto }) => {
                 ]}
                 DobleClick={(e) => CargarDetalle(e, true)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla Detalle */}
 
             {/*Tabla Footer*/}
             <div className={Global.ContenedorFooter}>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>SubTotal</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.subTotal ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <label
                     htmlFor="porcentajeIGV"
                     className={Global.FilaContenido + " !px-0"}
@@ -1916,27 +1916,27 @@ const Modal = ({ setModal, modo, objeto }) => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.montoIGV ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
 
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Total</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>{data.total ?? "0.00"}</p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <label
                     htmlFor="porcentajeRetencion"
                     className={Global.FilaContenido + " !px-0"}
@@ -1958,16 +1958,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.montoRetencion ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <label
                     htmlFor="porcentajePercepcion"
                     className={Global.FilaContenido + " !px-0"}
@@ -1989,25 +1989,25 @@ const Modal = ({ setModal, modo, objeto }) => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.montoPercepcion ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
 
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
+                <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                <div className={Global.FilaFooter + Global.FilaPrecio}>
                   <p className={Global.FilaContenido}>Total a pagar</p>
                 </div>
-                <div className={Global.FilaImporte}>
+                <div className={Global.FilaFooter + Global.FilaImporte}>
                   <p className={Global.FilaContenido}>
                     {data.totalNeto ?? "0.00"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={Global.FilaFooter + Global.UltimaFila}></div>
               </div>
             </div>
             {/*Tabla Footer*/}

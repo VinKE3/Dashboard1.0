@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -406,7 +406,7 @@ const MovimientoArticulo = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Movimiento de Artículos</h2>
 
             {/* Filtro*/}
@@ -518,7 +518,7 @@ const MovimientoArticulo = () => {
             {/* Filtro*/}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaMovimientoArticulo"}
                 columnas={columnas}
@@ -529,7 +529,7 @@ const MovimientoArticulo = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Consultar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && (

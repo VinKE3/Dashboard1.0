@@ -15,7 +15,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:nth-child(1),
   & th:nth-child(2) {
     width: 40px;
@@ -36,9 +36,9 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:nth-child(7) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
     text-align: center;
   }
   & th:last-child {
@@ -916,7 +916,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           {/*Detalle*/}
 
           {/* Tabla Detalle */}
-          <TablaStyle>
+          <DivTabla>
             <TableBasic
               columnas={columnas}
               datos={dataDetalle}
@@ -931,7 +931,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               ]}
               DobleClick={(e) => CargarDetalle(e, true)}
             />
-          </TablaStyle>
+          </DivTabla>
           {/* Tabla Detalle */}
         </ModalCrud>
       )}

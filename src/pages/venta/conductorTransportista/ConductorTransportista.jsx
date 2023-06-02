@@ -14,7 +14,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -214,11 +214,11 @@ const Conductor = () => {
         accessor: "numeroDocumentoIdentidad",
       },
       {
-        Header: "Licencia de Conducir",
+        Header: "L. de Conducir",
         accessor: "licenciaConducir",
       },
       {
-        Header: "Empresa de Transporte",
+        Header: "E. Transporte",
         accessor: "empresaTransporteNombre",
       },
       {
@@ -244,7 +244,7 @@ const Conductor = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Conductores y Transportistas</h2>
 
             {/* Filtro*/}
@@ -274,7 +274,7 @@ const Conductor = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaTransportista"}
                 columnas={columnas}
@@ -285,7 +285,7 @@ const Conductor = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

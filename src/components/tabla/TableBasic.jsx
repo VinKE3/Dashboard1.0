@@ -60,11 +60,11 @@ const TableBasic = ({
         >
           <thead className={Global.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} className={estilos[2]}>
+              <tr {...headerGroup.getHeaderGroupProps()} className={Global.Tr + estilos[2]}>
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={"p-2 " + estilos[3]}
+                    className={Global.Th + estilos[3]}
                   >
                     {column.render("Header")}
                   </th>

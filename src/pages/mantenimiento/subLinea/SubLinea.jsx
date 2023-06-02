@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:last-child {
     text-align: center;
     width: 100px;
@@ -223,7 +223,7 @@ const SubLineas = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>SubLíneas</h2>
 
             {/* Filtro*/}
@@ -252,7 +252,7 @@ const SubLineas = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaSubLinea"}
                 columnas={columnas}
@@ -263,7 +263,7 @@ const SubLineas = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

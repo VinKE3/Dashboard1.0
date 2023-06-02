@@ -12,7 +12,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
 import * as Global from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:nth-child(3) {
     width: 150px;
   }
@@ -199,7 +199,7 @@ const Correlativo = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+           <div className={Global.ContenedorPadre}>
             <h2 className={Global.TituloH2}>Correlativos</h2>
 
             {/* Boton */}
@@ -215,7 +215,7 @@ const Correlativo = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCorrelativo"}
                 columnas={columnas}
@@ -227,7 +227,7 @@ const Correlativo = () => {
                 DobleClick={(e) => AccionModal(e, null, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

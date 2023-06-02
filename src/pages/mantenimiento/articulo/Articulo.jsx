@@ -16,7 +16,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -367,7 +367,7 @@ const Articulo = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
+       <div className={Global.ContenedorPadre}>
         <h2 className={Global.TituloH2}>Artículos</h2>
 
         {/* Filtro*/}
@@ -428,7 +428,7 @@ const Articulo = () => {
         {/* Boton */}
 
         {/* Tabla */}
-        <TablaStyle>
+        <DivTabla>
           <Table
             id={"tablaArticulo"}
             columnas={columnas}
@@ -439,7 +439,7 @@ const Articulo = () => {
             DobleClick={(e) => AccionModal(e, "Consultar", true)}
             KeyDown={(e) => ModalKey(e)}
           />
-        </TablaStyle>
+        </DivTabla>
         {/* Tabla */}
       </div>
 

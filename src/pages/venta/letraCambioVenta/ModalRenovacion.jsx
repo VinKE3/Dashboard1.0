@@ -14,7 +14,7 @@ import * as Global from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   max-width: 100%;
   overflow-x: auto;
   & th:first-child {
@@ -58,9 +58,9 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:nth-child(11) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
     text-align: center;
   }
   & th:last-child {
@@ -70,7 +70,7 @@ const TablaStyle = styled.div`
     text-align: center;
   }
 `;
-const TablaDetalleStyle = styled.div`
+const DivDetalle = styled.div`
   & th:nth-child(2) {
     width: 100px;
     min-width: 100px;
@@ -97,9 +97,9 @@ const TablaDetalleStyle = styled.div`
   }
 
   & th:nth-child(8) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
     text-align: center;
   }
   & th:last-child {
@@ -767,29 +767,64 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
   };
   //Calculos
   const TotalDetalle = async (total) => {
+    let moneda = dataDetalle[0].monedaId;
+    let totalPEN,
+      totalPENDividido,
+      totalPENUltimaFila,
+      totalUSD,
+      totalUSDDividido,
+      totalUSDUltimaFila;
     //Totales
-    //Soles
-    let totalPEN = Funciones.RedondearNumero(total, 2);
-    let totalPENDividido = Funciones.RedondearNumero(
-      totalPEN / dataCabecera.numeroLetra,
-      2
-    );
-    let totalPENUltimaFila = Funciones.RedondearNumero(
-      totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Soles
-    //Dolares
-    let totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
-    let totalUSDDividido = Funciones.RedondearNumero(
-      totalUSD / dataCabecera.numeroLetra,
-      2
-    );
-    let totalUSDUltimaFila = Funciones.RedondearNumero(
-      totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Dolares
+    if (moneda == "S") {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra,
+        2
+      );
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra,
+        2
+      );
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Dolares
+    } else {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total * data.tipoCambio, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra,
+        2
+      );
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra,
+        2
+      );
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Dolares
+    }
+
     //Totales
 
     return {
@@ -1117,13 +1152,13 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={Global.InputMitad}>
                   <label htmlFor="numero" className={Global.LabelStyle}>
-                    Número
+                    Número Letra
                   </label>
                   <input
                     type="text"
                     id="numero"
                     name="numero"
-                    placeholder="Número"
+                    placeholder="Buscar número de letra"
                     autoComplete="off"
                     maxLength="10"
                     autoFocus
@@ -1252,7 +1287,7 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id="tablaDocumento"
                   columnas={columnas}
@@ -1268,58 +1303,58 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
                   ]}
                   DobleClick={(e) => CargarDocumentoReferencia(e, true)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
               <div className={Global.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
+                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                  <div className={Global.FilaFooter + Global.FilaPrecio}>
                     <p className={Global.FilaContenido}>Total Saldo</p>
                   </div>
-                  <div className={Global.FilaImporte}>
+                  <div className={Global.FilaFooter + Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
                       {extras.totalSaldo ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
+                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                  <div className={Global.FilaFooter + Global.FilaPrecio}>
                     <p className={Global.FilaContenido}>Total Interés</p>
                   </div>
-                  <div className={Global.FilaImporte}>
+                  <div className={Global.FilaFooter + Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
                       {extras.totalInteres ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
+                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                  <div className={Global.FilaFooter + Global.FilaPrecio}>
                     <p className={Global.FilaContenido}>Total Pago</p>
                   </div>
-                  <div className={Global.FilaImporte}>
+                  <div className={Global.FilaFooter + Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
                       {extras.totalPago ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
+                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                  <div className={Global.FilaFooter + Global.FilaPrecio}>
                     <p className={Global.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
+                  <div className={Global.FilaFooter + Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
                       {extras.total ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}
@@ -1513,7 +1548,7 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaDetalleStyle>
+              <DivDetalle>
                 <TableBasic
                   id="tablaDetalle"
                   columnas={columnasDetalle}
@@ -1529,22 +1564,22 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
                   ]}
                   DobleClick={(e) => CargarDetalleLetra(e, true)}
                 />
-              </TablaDetalleStyle>
+              </DivDetalle>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
               <div className={Global.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
+                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
+                  <div className={Global.FilaFooter + Global.FilaPrecio}>
                     <p className={Global.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
+                  <div className={Global.FilaFooter + Global.FilaImporte}>
                     <p className={Global.FilaContenido}>
                       {extras.totalDetalle ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}
