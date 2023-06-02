@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ModalBasic from "../modal/ModalBasic";
 import * as Global from "../Global";
 
-const ModalImprimir = ({ setModal, objeto }) => {
+const ModalImprimir = ({ setModal, objeto, foco }) => {
   //#region useState
   const [pdf, setPdf] = useState(objeto);
   const [fileName, setFileName] = useState([]);
@@ -30,6 +30,12 @@ const ModalImprimir = ({ setModal, objeto }) => {
       }
     }
     return filename;
+  };
+  const Key = async (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
   };
   //#endregion
 
@@ -61,6 +67,8 @@ const ModalImprimir = ({ setModal, objeto }) => {
             <button
               type="button"
               onClick={() => setModal(false)}
+              onKeyDown={(e) => Key(e)}
+              autoFocus
               className={Global.BotonModalBase + Global.BotonCancelarModal}
             >
               CERRAR

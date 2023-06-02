@@ -100,6 +100,7 @@ const DocumentoVenta = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -395,7 +396,7 @@ const DocumentoVenta = () => {
                     ["Venta", "DocumentoVenta", "Enviar"],
                     {
                       ids: [value.id],
-                      enviar: value.isAutorizado,
+                      enviar: !value.isAutorizado,
                     },
                     setEliminar
                   );
@@ -425,7 +426,7 @@ const DocumentoVenta = () => {
                 ["Venta", "DocumentoVenta", "Enviar"],
                 {
                   ids: value.ids,
-                  enviar: value.isAutorizado,
+                  enviar: !value.isAutorizado,
                 },
                 setEliminar
               );
@@ -639,10 +640,7 @@ const DocumentoVenta = () => {
         accessor: "enviar",
         Cell: ({ value }) => {
           return (
-            <div
-              className="flex justify-center"
-              id={value == null ? "false" : value.toString()}
-            >
+            <div className="flex justify-center" id={value.toString()}>
               <Checkbox checked={value} />
             </div>
           );
@@ -891,7 +889,11 @@ const DocumentoVenta = () => {
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
           {modalImprimir && (
-            <ModalImprimir objeto={objeto} setModal={setModalImprimir} />
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaDocumentoVenta")}
+            />
           )}
           <ToastContainer />
         </>
