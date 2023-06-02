@@ -1,14 +1,37 @@
-import { useEffect, useState, useMemo } from "react";
-import ApiMasy from "../../api/ApiMasy";
+import { useEffect, useState } from "react";
 import ModalBasic from "../modal/ModalBasic";
-import TableBasic from "../tabla/TableBasic";
-import { FaUndoAlt, FaCheck } from "react-icons/fa";
-import styled from "styled-components";
 import * as Global from "../Global";
-import * as Funciones from "../funciones/Validaciones";
 
+const ModalImprimir = ({ setModal, objeto }) => {
+  //#region useState
+  const [pdf, setPdf] = useState(objeto);
+  const [fileName, setFileName] = useState([]);
+  //#endregion
 
-const ModalImprimir = ({ setModal, setObjeto, foco }) => {
+  //#region useEffect;
+  useEffect(() => {
+    PasarDatos();
+  }, []);
+  //#endregion
+
+  //#region Funciones
+  const PasarDatos = async () => {
+    let model = await GetNombreArchivo(pdf.headers.get("content-disposition"));
+    setFileName(model);
+    setPdf(URL.createObjectURL(pdf.data));
+  };
+  const GetNombreArchivo = async (disposition) => {
+    let filename = "PDF";
+    if (disposition && disposition.indexOf("attachment") !== -1) {
+      let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      let matches = filenameRegex.exec(disposition);
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, "");
+      }
+    }
+    return filename;
+  };
+  //#endregion
 
   //#region Render
   return (
@@ -18,10 +41,23 @@ const ModalImprimir = ({ setModal, setObjeto, foco }) => {
         objeto={[]}
         modo={""}
         menu={["", ""]}
-        titulo="Consultar Artículos"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        titulo={"Reporte " + fileName.slice(0, fileName.length - 4)}
+        cerrar={false}
+        tamañoModal={[Global.ModalFull, Global.Form]}
         childrenFooter={
           <>
+            <a
+              id="enlace"
+              href={pdf}
+              download={fileName}
+              className={
+                Global.BotonModalBase +
+                Global.BotonAgregar +
+                " !text-light border-none"
+              }
+            >
+              DESCARGAR
+            </a>
             <button
               type="button"
               onClick={() => setModal(false)}
@@ -34,6 +70,13 @@ const ModalImprimir = ({ setModal, setObjeto, foco }) => {
       >
         {
           <>
+            <iframe
+              typeof="application/pdf"
+              width={"100%"}
+              height={"100%%"}
+              id="hola"
+              src={pdf}
+            ></iframe>
           </>
         }
       </ModalBasic>

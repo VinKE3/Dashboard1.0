@@ -5,6 +5,7 @@ import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
 import Anular from "../../../components/funciones/Anular";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import EnviarBloquear from "../../../components/funciones/EnviarBloquear";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -73,6 +74,7 @@ const DocumentoVenta = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [autorizado, setAutorizado] = useState(false);
@@ -336,7 +338,11 @@ const DocumentoVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Venta", "DocumentoVenta"], id);
+            let model = await Imprimir(["Venta", "DocumentoVenta"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -884,6 +890,9 @@ const DocumentoVenta = () => {
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir objeto={objeto} setModal={setModalImprimir} />
+          )}
           <ToastContainer />
         </>
       ) : (
