@@ -38,7 +38,7 @@ const SidebarMenus = ({
 
   return (
     <div
-      className={`h-[100vh] overflow-y-scroll fixed xl:static w-full md:w-[50%] lg:w-[35%] xl:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-200 scrollbar-hide ${showMenu ? "left-0" : "-left-full"}
+      className={`h-[100vh] overflow-y-scroll fixed xl:static w-full lg:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-200 scrollbar-hide ${showMenu ? "left-0" : "-left-full"}
        transition-all`}
     >
       <div className="h-[8vh] scrollbar-hide">

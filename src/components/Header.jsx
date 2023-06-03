@@ -45,8 +45,8 @@ const Header = () => {
     window.location.href = "/login";
   };
   return (
-    <header className="h-auto !bg-header">
-      <nav className="h-full p-2 flex flex-col md:flex-row items-center justify-between">
+    <header className="bg-secondary-300">
+      <nav className="h-full p-2 pt-3.5 flex flex-col md:flex-row items-center justify-between ">
         <p className={G.TituloUsuario}>
           Bienvenido{" "}
           <span className="text-primary">{store.session.get("usuario")}</span>

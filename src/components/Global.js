@@ -146,7 +146,7 @@ export var FooterTexto =
 
 //#region Paginacion
 export var ContendorPaginacion =
-  "gap-x-3 flex items-center justify-center sm:justify-end flex-wrap text-mini";
+  "gap-y-1 sm:gap-y-0 gap-x-3 flex flex-col sm:flex-row items-center justify-center sm:justify-end flex-wrap text-mini ";
 export var ContendorBotonesPaginacion =
   "w-auto flex items-center justify-center sm:justify-end flex-wrap ";
 export var BotonPaginacion =
@@ -161,10 +161,10 @@ export var ContenedorFooter =
 export var FilaFooter =
   "py-0.5 flex items-center justify-end border border-gray-400 ";
 export var FilaVacia = "w-full sm:px-5 ";
-export var FilaPrecio = "min-w-[90px] ";
+export var FilaPrecio = "min-w-[180px] ";
 export var FilaImporte = "min-w-[90px] ";
-export var FilaInput = "min-w-[100px] pr-4 ";
-export var UltimaFila = "min-w-[75px] ";
+export var FilaInput = "min-w-[180px] pr-4 ";
+export var UltimaFila = "w-auto px-2 sm:min-w-[75px] ";
 export var FilaContenido =
   "pr-4 text-sm text-p-align-right font-semibold text-light ";
 export var FilaContenidoSelect =

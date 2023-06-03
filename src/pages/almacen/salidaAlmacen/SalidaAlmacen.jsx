@@ -60,8 +60,8 @@ const SalidaAlmacen = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     numeroDocumento: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&numeroDocumento=${filtro.numeroDocumento}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -135,8 +135,8 @@ const SalidaAlmacen = () => {
   const FiltroBoton = async () => {
     setFiltro({
       numeroDocumento: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     });
     setIndex(0);
     document.getElementById("numeroDocumento").focus();

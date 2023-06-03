@@ -54,8 +54,8 @@ const MovimientoArticulo = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     tipoExistenciaId: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     conStock: false,
   });
   const [filtroLocal, setFiltroLocal] = useState({
@@ -201,8 +201,8 @@ const MovimientoArticulo = () => {
   const FiltroBoton = async () => {
     setFiltro({
       tipoExistenciaId: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
       conStock: false,
     });
     setIndex(0);

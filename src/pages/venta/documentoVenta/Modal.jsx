@@ -41,12 +41,12 @@ const DivTabla = styled.div`
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(4),
-  & th:nth-child(5) {
-    width: 90px;
+  & th:nth-child(4) {
+    width: 60px;
     text-align: center;
   }
 
+  & th:nth-child(5),
   & th:nth-child(6),
   & th:nth-child(7) {
     width: 90px;
@@ -1160,17 +1160,10 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             )}
             {/* Cabecera */}
-            <div
-              className={
-                G.ContenedorBasico + " mb-4 " + G.FondoContenedor
-              }
-            >
+            <div className={G.ContenedorBasico + " mb-4 " + G.FondoContenedor}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="tipoDocumentoId"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
                     Tipo Doc.
                   </label>
                   <select
@@ -1251,10 +1244,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputTercio}>
-                  <label
-                    htmlFor="fechaVencimiento"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="fechaVencimiento" className={G.LabelStyle}>
                     Fecha Vcmto
                   </label>
                   <input
@@ -1271,10 +1261,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="numeroDocumento"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="numeroDocumento" className={G.LabelStyle}>
                     Cotización
                   </label>
                   <input
@@ -1287,16 +1274,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.cotizacion ?? ""}
                     onChange={ValidarData}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarOC"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroCotizacion()}
@@ -1343,9 +1326,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <button
                     id="consultarCliente"
                     className={
-                      G.BotonBuscar +
-                      G.BotonPrimary +
-                      " !rounded-none"
+                      G.BotonBuscar + G.BotonPrimary + " !rounded-none"
                     }
                     hidden={modo == "Consultar"}
                     disabled={checkVarios}
@@ -1375,10 +1356,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="clienteDireccionId"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="clienteDireccionId" className={G.LabelStyle}>
                     Dirección
                   </label>
                   <select
@@ -1489,16 +1467,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.tipoCambio ?? ""}
                     onChange={ValidarData}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
@@ -1562,10 +1536,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {data.tipoCobroId == "CH" || data.tipoCobroId == "DE" ? (
                   <>
                     <div className={G.InputTercio}>
-                      <label
-                        htmlFor="numeroOperacion"
-                        className={G.LabelStyle}
-                      >
+                      <label htmlFor="numeroOperacion" className={G.LabelStyle}>
                         Nro. Ope.
                       </label>
                       <input
@@ -1639,9 +1610,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     <button
                       id="detalleDocReferencia"
                       className={
-                        G.BotonBuscar +
-                        G.BotonPrimary +
-                        " !rounded-none"
+                        G.BotonBuscar + G.BotonPrimary + " !rounded-none"
                       }
                       hidden={modo == "Consultar"}
                       onClick={() =>
@@ -1662,10 +1631,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           checked={data.abonar ? true : ""}
                         ></Checkbox>
                       </div>
-                      <label
-                        htmlFor="abonar"
-                        className={G.LabelCheckStyle}
-                      >
+                      <label htmlFor="abonar" className={G.LabelCheckStyle}>
                         Abo.
                       </label>
                     </div>
@@ -1847,10 +1813,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         }
                       ></Checkbox>
                     </div>
-                    <label
-                      htmlFor="afectarStock"
-                      className={G.LabelCheckStyle}
-                    >
+                    <label htmlFor="afectarStock" className={G.LabelCheckStyle}>
                       Afectar Stock
                     </label>
                   </div>
@@ -1861,11 +1824,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             {/* Detalles */}
             {modo != "Consultar" && (
-              <div
-                className={
-                  G.ContenedorBasico + G.FondoContenedor + " mb-2"
-                }
-              >
+              <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputFull}>
                     <div className={G.Input + "w-32"}>
@@ -1924,9 +1883,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={!habilitarFiltro ? true : false}
                       value={dataCabecera.descripcion ?? ""}
                       onChange={ValidarDataCabecera}
-                      className={
-                        !habilitarFiltro ? G.InputBoton : G.InputBoton
-                      }
+                      className={!habilitarFiltro ? G.InputBoton : G.InputBoton}
                     />
                     <button
                       id="consultarArticulo"
@@ -2001,10 +1958,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     />
                   </div>
                   <div className={G.Input25pct}>
-                    <label
-                      htmlFor="precioUnitario"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="precioUnitario" className={G.LabelStyle}>
                       Precio
                     </label>
                     <input
@@ -2057,9 +2011,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         CalcularImporte(e.target.name);
                       }}
                       className={
-                        modo != "Consultar"
-                          ? G.InputBoton
-                          : G.InputStyle
+                        modo != "Consultar" ? G.InputBoton : G.InputStyle
                       }
                     />
                     <button

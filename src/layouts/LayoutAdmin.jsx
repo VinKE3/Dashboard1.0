@@ -28,7 +28,7 @@ const LayoutAdmin = () => {
       <div className="xl:col-span-5">
         <Header />
         <Enter>
-          <div className="h-[78vh] md:h-[84vh] w-full overflow-y-auto">
+          <div className="h-[78vh] md:h-[88vh] w-full overflow-y-auto">
             <Outlet />
           </div>
         </Enter>

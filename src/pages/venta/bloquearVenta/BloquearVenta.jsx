@@ -57,8 +57,8 @@ const BloquearVenta = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     tipoDocumentoId: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
   const [cadena, setCadena] = useState(
     `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -145,8 +145,8 @@ const BloquearVenta = () => {
   const FiltroBoton = async () => {
     setFiltro({
       tipoDocumentoId: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     });
     setIndex(0);
     document.getElementById("tipoDocumentoId").focus();
