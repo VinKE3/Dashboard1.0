@@ -157,14 +157,14 @@ export var BotonPaginacionActivo =
 
 //#region Footer Detalle
 export var ContenedorFooter =
-  "flex flex-col overflow-x-auto bg-gradient-to-t from-gray-900 to-gray-800 ";
+  "flex flex-col overflow-x-auto border border-gray-200 bg-gradient-to-t from-gray-900 to-gray-800 ";
 export var FilaFooter =
   "py-0.5 flex items-center justify-end border border-gray-400 ";
-export var FilaVacia = "w-full sm:px-5 ";
+export var FilaVacia = "w-full sm:px-5 flex items-center justify-end";
 export var FilaPrecio = "min-w-[180px] ";
 export var FilaImporte = "min-w-[90px] ";
 export var FilaInput = "min-w-[180px] pr-4 ";
-export var UltimaFila = "w-auto px-2 sm:min-w-[75px] ";
+export var UltimaFila = "w-auto px-2 sm:min-w-[75px] flex items-center justify-center";
 export var FilaContenido =
   "pr-4 text-sm text-p-align-right font-semibold text-light ";
 export var FilaContenidoSelect =

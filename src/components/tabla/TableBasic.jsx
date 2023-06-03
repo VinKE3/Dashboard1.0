@@ -12,7 +12,6 @@ import {
 //#region Estilos
 const Tabla = styled.div`
   overflow: auto;
-  border-radius: 5px;
   & .selected-row {
     background: linear-gradient(90deg, #0a5d8d 10%, #093955 50%);
   }
@@ -51,7 +50,7 @@ const TableBasic = ({
         <table
           {...getTableProps()}
           id={id}
-          className={"w-full text-light focus:outline-none " + estilos[0]}
+          className={G.Table + estilos[0]}
           tabIndex={0}
           onKeyDown={(e) => {
             Funciones.MoverFlecha(e, "#" + id);
@@ -60,7 +59,10 @@ const TableBasic = ({
         >
           <thead className={G.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} className={G.Tr + estilos[2]}>
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                className={G.Tr + estilos[2]}
+              >
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}

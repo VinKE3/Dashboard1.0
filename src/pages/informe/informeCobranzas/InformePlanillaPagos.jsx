@@ -29,7 +29,7 @@ const InformePlanillaPagos = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "sinDetalle" ||
       target.value === "conDetalle" ||
@@ -72,7 +72,7 @@ const InformePlanillaPagos = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {monedas.map((moneda) => (
@@ -92,7 +92,7 @@ const InformePlanillaPagos = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -105,7 +105,7 @@ const InformePlanillaPagos = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -119,7 +119,7 @@ const InformePlanillaPagos = ({ setModal }) => {
                     name="agrupar"
                     value="sinDetalle"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "sinDetalle"}
                   />
@@ -138,7 +138,7 @@ const InformePlanillaPagos = ({ setModal }) => {
                     name="agrupar"
                     value="conDetalle"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "conDetalle"}
                   />
@@ -157,7 +157,7 @@ const InformePlanillaPagos = ({ setModal }) => {
                     name="agrupar"
                     value="reporte"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "reporte"}
                   />

@@ -28,7 +28,7 @@ const InformeCilindros = ({ setModal }) => {
     Personal();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "reporteSalidaCilindros" ||
       target.value === "reporteEntradaCilindros" ||
@@ -77,7 +77,7 @@ const InformeCilindros = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -100,7 +100,7 @@ const InformeCilindros = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -113,7 +113,7 @@ const InformeCilindros = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -127,7 +127,7 @@ const InformeCilindros = ({ setModal }) => {
                     name="agrupar"
                     value="reporteSalidaCilindros"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "reporteSalidaCilindros"}
                   />
@@ -146,7 +146,7 @@ const InformeCilindros = ({ setModal }) => {
                     name="agrupar"
                     value="reporteEntradaCilindros"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "reporteEntradaCilindros"}
                   />
@@ -165,7 +165,7 @@ const InformeCilindros = ({ setModal }) => {
                     name="agrupar"
                     value="reporteCilindrosVendidos"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "reporteCilindrosVendidos"}
                   />
@@ -188,7 +188,7 @@ const InformeCilindros = ({ setModal }) => {
                     name="agrupar"
                     value="reporteCilindrosPendientes"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "reporteCilindrosPendientes"}
                   />
@@ -207,7 +207,7 @@ const InformeCilindros = ({ setModal }) => {
                     name="agrupar"
                     value="reporteCilindrosSobrantes"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "reporteCilindrosSobrantes"}
                   />

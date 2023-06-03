@@ -31,7 +31,7 @@ const VentasPorPersonalArticulo = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name === "verComision") {
       setData((prevState) => ({
         ...prevState,
@@ -88,7 +88,7 @@ const VentasPorPersonalArticulo = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -111,7 +111,7 @@ const VentasPorPersonalArticulo = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -124,7 +124,7 @@ const VentasPorPersonalArticulo = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -138,7 +138,7 @@ const VentasPorPersonalArticulo = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {moneda.map((moneda) => (

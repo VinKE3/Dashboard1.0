@@ -65,7 +65,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -237,7 +237,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.clienteNombre}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
@@ -252,7 +252,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   name="fechaInicio"
                   autoComplete="off"
                   value={filtro.fechaInicio}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
@@ -267,7 +267,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   name="fechaFin"
                   autoComplete="off"
                   value={filtro.fechaFin}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />

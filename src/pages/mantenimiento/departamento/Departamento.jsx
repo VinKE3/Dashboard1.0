@@ -98,7 +98,7 @@ const Departamento = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -222,7 +222,7 @@ const Departamento = () => {
               name={"nombre"}
               maxLength={"200"}
               value={filtro.nombre}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />

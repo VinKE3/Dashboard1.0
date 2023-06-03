@@ -165,7 +165,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
   //#region Funciones
   //Data General
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.name == "incluyeIGV" ||
       target.name == "afectarStock" ||
@@ -701,7 +701,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     value={moment(data.fechaRegistro ?? "").format(
                       "yyyy-MM-DD"
                     )}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={FechaEmision}
                     className={G.InputStyle}
                   />
@@ -714,7 +714,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -738,7 +738,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     min={0}
                     disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={
                       modo != "Consultar"
                         ? G.InputBoton
@@ -769,7 +769,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     id="personalId"
                     name="personalId"
                     value={data.personalId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -813,7 +813,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={data.observacion ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>

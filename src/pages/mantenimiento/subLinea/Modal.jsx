@@ -16,7 +16,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -59,7 +59,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   maxLength="2"
                   autoFocus
                   value={data.subLineaId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Nuevo" ? false : true}
                   className={G.InputStyle}
                 />
@@ -72,7 +72,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="lineaId"
                   name="lineaId"
                   value={data.lineaId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Nuevo" ? false : true}
                   className={G.InputStyle}
                 >
@@ -97,7 +97,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoFocus={modo == "Modificar"}
                 disabled={modo == "Consultar"}
                 value={data.descripcion ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>

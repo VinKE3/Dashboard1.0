@@ -34,7 +34,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == id[0]) {
       await ConsultarProvincia();
       document.getElementById(id[1]).selectedIndex = 0;
@@ -120,7 +120,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
         <select
           id={id[0]}
           name={id[0]}
-          onChange={ValidarData}
+          onChange={HandleData}
           disabled={modo == "Consultar"}
           className={G.InputStyle}
         >
@@ -138,7 +138,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
         <select
           id={id[1]}
           name={id[1]}
-          onChange={ValidarData}
+          onChange={HandleData}
           disabled={modo == "Consultar"}
           className={G.InputStyle}
         >
@@ -156,7 +156,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
         <select
           id={id[2]}
           name={id[2]}
-          onChange={ValidarData}
+          onChange={HandleData}
           disabled={modo == "Consultar"}
           className={G.InputStyle}
         >

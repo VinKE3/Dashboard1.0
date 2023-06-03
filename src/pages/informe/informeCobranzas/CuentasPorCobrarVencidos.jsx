@@ -52,7 +52,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
         ...prevState,
@@ -96,7 +96,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
               name="clienteId"
               autoFocus
               value={data.clienteId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -119,7 +119,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -132,7 +132,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -146,7 +146,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {monedas.map((moneda) => (
@@ -165,7 +165,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
               name="diasId"
               autoFocus
               value={data.diasId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {Rango.map((rango) => (

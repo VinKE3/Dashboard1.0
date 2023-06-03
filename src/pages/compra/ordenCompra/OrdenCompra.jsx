@@ -131,7 +131,7 @@ const OrdenCompra = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -498,7 +498,7 @@ const OrdenCompra = () => {
                     autoComplete="off"
                     autoFocus
                     value={filtro.proveedorNombre ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -511,7 +511,7 @@ const OrdenCompra = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -524,7 +524,7 @@ const OrdenCompra = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <button
@@ -546,7 +546,7 @@ const OrdenCompra = () => {
                         inputId="TODOS"
                         name="estado"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.estado === ""}
                       />
                     </div>
@@ -563,7 +563,7 @@ const OrdenCompra = () => {
                         inputId="N"
                         name="estado"
                         value={"N"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.estado == "N"}
                       />
                     </div>
@@ -580,7 +580,7 @@ const OrdenCompra = () => {
                         inputId="S"
                         name="estado"
                         value={"S"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.estado == "S"}
                       />
                     </div>

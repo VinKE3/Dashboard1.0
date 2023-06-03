@@ -26,7 +26,7 @@ const DeudasPorPagar = ({ setModal }) => {
     Proveedores();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -57,7 +57,7 @@ const DeudasPorPagar = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -70,7 +70,7 @@ const DeudasPorPagar = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -85,7 +85,7 @@ const DeudasPorPagar = ({ setModal }) => {
               name="proveedorId"
               autoFocus
               value={data.proveedorId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>

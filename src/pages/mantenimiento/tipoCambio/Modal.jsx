@@ -15,7 +15,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -106,7 +106,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             autoFocus
             disabled={modo == "Consultar"}
             value={moment(data.id).format("yyyy-MM-DD")}
-            onChange={ValidarData}
+            onChange={HandleData}
             className={G.InputBoton}
           />
           <button
@@ -138,7 +138,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar"}
               value={data.precioCompra}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -154,7 +154,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar"}
               value={data.precioVenta}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>

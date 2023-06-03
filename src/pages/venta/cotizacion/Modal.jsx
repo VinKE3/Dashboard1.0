@@ -195,7 +195,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   //Data General
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "incluyeIGV") {
       if (target.name == "incluyeIGV") {
         setRefrescar(true);
@@ -490,28 +490,30 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   const CalcularImporte = async (name = "precioUnitario") => {
-    let cantidad = document.getElementById("cantidad").value;
-    let precio = document.getElementById("precioUnitario").value;
-    let importe = document.getElementById("importe").value;
+    let cantidad = Number(document.getElementById("cantidad").value);
+    let precioUnitario = Number(
+      document.getElementById("precioUnitario").value
+    );
+    let importe = Number(document.getElementById("importe").value);
     let foco = name;
 
     if (foco == "cantidad" || foco == "precioUnitario") {
-      if (!isNaN(cantidad) && !isNaN(precio)) {
-        importe = Funciones.RedondearNumero(cantidad * precio, 2);
+      if (!isNaN(cantidad) && !isNaN(precioUnitario)) {
+        importe = Funciones.RedondearNumero(cantidad * precioUnitario, 2);
       }
     } else {
-      if (!isNaN(precio)) {
-        precio =
+      if (!isNaN(precioUnitario)) {
+        precioUnitario =
           cantidad != 0 ? Funciones.RedondearNumero(importe / cantidad, 4) : 0;
       }
     }
-    if (!isNaN(precio)) {
+    if (!isNaN(precioUnitario)) {
       let subTotal = Funciones.RedondearNumero(importe / 1.18, 2);
       let montoIGV = Funciones.RedondearNumero(importe - subTotal, 2);
       setDataCabecera({
         ...dataCabecera,
         cantidad: Funciones.RedondearNumero(cantidad, 2),
-        precioUnitario: Funciones.RedondearNumero(precio, 2),
+        precioUnitario: Funciones.RedondearNumero(precioUnitario, 2),
         importe: Funciones.RedondearNumero(importe, 2),
         subTotal: subTotal,
         montoIGV: montoIGV,
@@ -1038,11 +1040,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             )}
             {/* Cabecera */}
-            <div
-              className={
-                G.ContenedorBasico + " mb-4 " + G.FondoContenedor
-              }
-            >
+            <div className={G.ContenedorBasico + " mb-4 " + G.FondoContenedor}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputMitad}>
                   <label htmlFor="id" className={G.LabelStyle}>
@@ -1052,7 +1050,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoDocumentoId"
                     name="tipoDocumentoId"
                     value={data.tipoDocumentoId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={true}
                     className={G.InputStyle}
                   >
@@ -1077,11 +1075,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="4"
                     disabled={modo == "Nuevo" ? false : true}
                     value={data.serie ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={(e) => Numeracion(e)}
-                    className={
-                      G.InputStyle
-                    }
+                    className={G.InputStyle}
                   />
                 </div>
                 <div className={G.InputMitad}>
@@ -1097,11 +1093,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="10"
                     disabled={modo == "Nuevo" ? false : true}
                     value={data.numero ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={(e) => Numeracion(e)}
-                    className={
-                      G.InputStyle
-                    }
+                    className={G.InputStyle}
                   />
                 </div>
               </div>
@@ -1119,7 +1113,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoFocus={modo == "Modificar"}
                     disabled={modo == "Consultar"}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={() => {
                       FechaEmision();
                     }}
@@ -1127,10 +1121,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputMitad}>
-                  <label
-                    htmlFor="fechaVencimiento"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="fechaVencimiento" className={G.LabelStyle}>
                     Fecha Vencimiento
                   </label>
                   <input
@@ -1142,7 +1133,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={moment(data.fechaVencimiento ?? "").format(
                       "yyyy-MM-DD"
                     )}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -1164,7 +1155,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={true}
                     value={data.clienteNumeroDocumentoIdentidad ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -1180,15 +1171,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={true}
                     value={data.clienteNombre ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <button
                     id="consultarCliente"
                     className={
-                      G.BotonBuscar +
-                      G.BotonPrimary +
-                      " !rounded-none"
+                      G.BotonBuscar + G.BotonPrimary + " !rounded-none"
                     }
                     hidden={modo == "Consultar"}
                     disabled={checkVarios}
@@ -1219,10 +1208,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
               <div className={G.ContenedorInputs}>
                 <div className={G.InputMitad}>
-                  <label
-                    htmlFor="clienteTelefono"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="clienteTelefono" className={G.LabelStyle}>
                     Teléfono
                   </label>
                   <input
@@ -1233,15 +1219,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={true}
                     value={data.clienteTelefono ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="clienteDireccion"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="clienteDireccion" className={G.LabelStyle}>
                     Dirección
                   </label>
                   <select
@@ -1276,7 +1259,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="contactoId"
                       name="contactoId"
                       value={data.contactoId ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       disabled={modo == "Consultar"}
                       className={G.InputStyle}
                     >
@@ -1292,10 +1275,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </select>
                   </div>
                   <div className={G.InputMitad}>
-                    <label
-                      htmlFor="contactoTelefono"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="contactoTelefono" className={G.LabelStyle}>
                       Telef. Contacto
                     </label>
                     <input
@@ -1306,7 +1286,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.contactoTelefono ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1323,7 +1303,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="contactoCargoId"
                       name="contactoCargoId"
                       value={data.contactoCargoId ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       disabled={checkCargo ? false : true}
                       className={G.InputBoton}
                     >
@@ -1348,10 +1328,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         onChange={(e) => setCheckCargo(e.checked)}
                       />
                     </div>
-                    <label
-                      htmlFor="editarCargo"
-                      className={G.LabelCheckStyle}
-                    >
+                    <label htmlFor="editarCargo" className={G.LabelCheckStyle}>
                       Editar
                     </label>
                   </div>
@@ -1372,15 +1349,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.contactoCorreoElectronico ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
                   <div className={G.InputMitad}>
-                    <label
-                      htmlFor="contactoCelular"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="contactoCelular" className={G.LabelStyle}>
                       Cel. Contacto
                     </label>
                     <input
@@ -1391,7 +1365,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.contactoCelular ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1406,7 +1380,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="personalId"
                   name="personalId"
                   value={data.personalId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
@@ -1427,7 +1401,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -1451,14 +1425,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
@@ -1476,7 +1448,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoVentaId"
                     name="tipoVentaId"
                     value={data.tipoVentaId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -1504,7 +1476,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="tipoCobroId"
                     name="tipoCobroId"
                     value={data.tipoCobroId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -1523,10 +1495,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {data.tipoCobroId == "CH" || data.tipoCobroId == "DE" ? (
                   <>
                     <div className={G.InputMitad}>
-                      <label
-                        htmlFor="numeroOperacion"
-                        className={G.LabelStyle}
-                      >
+                      <label htmlFor="numeroOperacion" className={G.LabelStyle}>
                         Nro. Ope.
                       </label>
                       <input
@@ -1537,7 +1506,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         autoComplete="off"
                         disabled={modo == "Consultar"}
                         value={data.numeroOperacion ?? ""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         className={G.InputStyle}
                       />
                     </div>
@@ -1559,7 +1528,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="cuentaCorrienteDescripcion"
                     name="cuentaCorrienteDescripcion"
                     value={data.cuentaCorrienteDescripcion ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -1588,7 +1557,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={data.validez ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -1607,7 +1576,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={data.observacion ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <div className={G.Input36}>
@@ -1616,7 +1585,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         inputId="incluyeIGV"
                         name="incluyeIGV"
                         onChange={(e) => {
-                          ValidarData(e);
+                          HandleData(e);
                         }}
                         checked={data.incluyeIGV ? true : ""}
                         disabled={
@@ -1626,10 +1595,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         }
                       ></Checkbox>
                     </div>
-                    <label
-                      htmlFor="incluyeIGV"
-                      className={G.LabelCheckStyle}
-                    >
+                    <label htmlFor="incluyeIGV" className={G.LabelCheckStyle}>
                       Incluye IGV
                     </label>
                   </div>
@@ -1640,11 +1606,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             {/* Detalles */}
             {modo != "Consultar" && (
-              <div
-                className={
-                  G.ContenedorBasico + G.FondoContenedor + " mb-2"
-                }
-              >
+              <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputFull}>
                     <div className={G.Input + "w-32"}>
@@ -1703,9 +1665,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={!habilitarFiltro ? true : false}
                       value={dataCabecera.descripcion ?? ""}
                       onChange={ValidarDataCabecera}
-                      className={
-                        !habilitarFiltro ? G.InputBoton : G.InputBoton
-                      }
+                      className={!habilitarFiltro ? G.InputBoton : G.InputBoton}
                     />
                     <button
                       id="consultarArticulo"
@@ -1780,10 +1740,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     />
                   </div>
                   <div className={G.Input25pct}>
-                    <label
-                      htmlFor="precioUnitario"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="precioUnitario" className={G.LabelStyle}>
                       Precio
                     </label>
                     <input
@@ -1837,9 +1794,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         CalcularImporte(e.target.name);
                       }}
                       className={
-                        modo != "Consultar"
-                          ? G.InputBoton
-                          : G.InputStyle
+                        modo != "Consultar" ? G.InputBoton : G.InputStyle
                       }
                     />
                     <button
@@ -1886,9 +1841,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <p className={G.FilaContenido}>SubTotal</p>
                 </div>
                 <div className={G.FilaFooter + G.FilaImporte}>
-                  <p className={G.FilaContenido}>
-                    {data.subTotal ?? "0.00"}
-                  </p>
+                  <p className={G.FilaContenido}>{data.subTotal ?? "0.00"}</p>
                 </div>
                 <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>
@@ -1905,7 +1858,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="porcentajeIGV"
                     name="porcentajeIGV"
                     value={data.porcentajeIGV ?? ""}
-                    onChange={(e) => ValidarData(e)}
+                    onChange={(e) => HandleData(e)}
                     disabled={modo == "Consultar"}
                     className={G.FilaContenidoSelect}
                   >
@@ -1917,9 +1870,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </select>
                 </div>
                 <div className={G.FilaFooter + G.FilaImporte}>
-                  <p className={G.FilaContenido}>
-                    {data.montoIGV ?? "0.00"}
-                  </p>
+                  <p className={G.FilaContenido}>{data.montoIGV ?? "0.00"}</p>
                 </div>
                 <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>
@@ -1947,7 +1898,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="porcentajeRetencion"
                     name="porcentajeRetencion"
                     value={data.porcentajeRetencion ?? ""}
-                    onChange={(e) => ValidarData(e)}
+                    onChange={(e) => HandleData(e)}
                     disabled={modo == "Consultar"}
                     className={G.FilaContenidoSelect}
                   >
@@ -1978,7 +1929,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="porcentajePercepcion"
                     name="porcentajePercepcion"
                     value={data.porcentajePercepcion ?? ""}
-                    onChange={(e) => ValidarData(e)}
+                    onChange={(e) => HandleData(e)}
                     disabled={modo == "Consultar"}
                     className={G.FilaContenidoSelect}
                   >
@@ -2003,9 +1954,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <p className={G.FilaContenido}>Total a pagar</p>
                 </div>
                 <div className={G.FilaFooter + G.FilaImporte}>
-                  <p className={G.FilaContenido}>
-                    {data.totalNeto ?? "0.00"}
-                  </p>
+                  <p className={G.FilaContenido}>{data.totalNeto ?? "0.00"}</p>
                 </div>
                 <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>

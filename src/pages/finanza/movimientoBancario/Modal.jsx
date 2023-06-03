@@ -141,7 +141,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   //Data General
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "tieneCuentaDestino" || target.name == "isCierreCaja") {
       setData((prevState) => ({
         ...prevState,
@@ -769,7 +769,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="cuentaCorrienteId"
                       name="cuentaCorrienteId"
                       value={data.cuentaCorrienteId ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       disabled={true}
                       className={G.InputStyle}
                       // className={
@@ -793,7 +793,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           name="isCierreCaja"
                           disabled={modo == "Consultar"}
                           onChange={(e) => {
-                            ValidarData(e);
+                            HandleData(e);
                           }}
                           checked={data.isCierreCaja ? true : ""}
                         ></Checkbox>
@@ -818,7 +818,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="monedaId"
                     autoFocus
                     value={data.monedaId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -843,7 +843,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={() => {
                       FechaEmision();
                     }}
@@ -863,7 +863,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={
                       modo != "Consultar"
                         ? G.InputBoton
@@ -896,7 +896,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoMovimientoId"
                     disabled={modo == "Consultar"}
                     value={data.tipoMovimientoId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   >
                     {dataTipoMovimiento.map((map) => (
@@ -921,7 +921,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoOperacionId"
                     disabled={modo == "Consultar"}
                     value={data.tipoOperacionId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   >
                     {dataTipoOperacion.map((map) => (
@@ -952,7 +952,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={data.numeroOperacion ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -970,7 +970,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         name="tieneCuentaDestino"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarData(e);
+                          HandleData(e);
                           CuentaDestino(e.target.value);
                         }}
                         checked={data.tieneCuentaDestino ? true : ""}
@@ -995,7 +995,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         name="cuentaDestinoId"
                         disabled={modo == "Consultar"}
                         value={data.cuentaDestinoId ?? ""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         className={G.InputStyle + G.Anidado}
                       >
                         <option key={-1} value={""}>
@@ -1028,7 +1028,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="tipoBeneficiarioId"
                       disabled={modo == "Consultar"}
                       value={data.tipoBeneficiarioId ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputBoton}
                     >
                       {dataTipoBenef
@@ -1056,7 +1056,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.clienteProveedorNombre ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle + G.Anidado}
                     />
                   ) : (
@@ -1069,7 +1069,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         autoComplete="off"
                         disabled={true}
                         value={data.clienteProveedorNombre ?? ""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         className={G.InputBoton}
                       />
                       <button
@@ -1104,7 +1104,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={data.concepto ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -1127,7 +1127,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={data.documentoReferencia ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1155,7 +1155,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={data.porcentajeITF ?? ""}
                       onChange={(e) => {
-                        ValidarData(e);
+                        HandleData(e);
                         ActualizarTotales(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1174,7 +1174,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={true}
                       value={data.montoITF ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1192,7 +1192,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={data.montoInteres ?? ""}
                       onChange={(e) => {
-                        ValidarData(e);
+                        HandleData(e);
                         ActualizarTotales(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1217,7 +1217,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       }
                       value={data.monto ?? ""}
                       onChange={(e) => {
-                        ValidarData(e);
+                        HandleData(e);
                         ActualizarTotales(e.target.name);
                       }}
                       className={
@@ -1241,7 +1241,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={data.total ?? ""}
                       onChange={(e) => {
-                        ValidarData(e);
+                        HandleData(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}

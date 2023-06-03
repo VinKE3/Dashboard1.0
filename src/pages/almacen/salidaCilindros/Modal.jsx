@@ -56,7 +56,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -201,7 +201,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   autoComplete="off"
                   disabled={true}
                   value={data.numeroFactura ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -216,7 +216,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   autoComplete="off"
                   value={data.numeroGuia ?? ""}
                   disabled={true}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -229,7 +229,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   id="tipoSalidaId"
                   name="tipoSalidaId"
                   disabled={modo == "Consultar"}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   value={data.tipoSalidaId ?? ""}
                   className={
                     modo == "Consultar"
@@ -257,7 +257,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   autoComplete="off"
                   disabled={true}
                   value={data.clienteId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -270,7 +270,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   name="personalId"
                   disabled={true}
                   value={data.personalId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 >
                   {dataPersonal.map((item) => (
@@ -294,7 +294,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   placeholder="Observación"
                   disabled={modo == "Consultar"}
                   value={data.observacion ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>

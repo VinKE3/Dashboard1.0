@@ -111,7 +111,7 @@ const EmpresadeTransporte = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -258,7 +258,7 @@ const EmpresadeTransporte = () => {
               name={"nombre"}
               value={filtro.nombre}
               maxLength={"200"}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />

@@ -21,7 +21,7 @@ const ListadoDeCostos = ({ setModal }) => {
     Marcas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "agruparMarca" ||
       target.value === "agruparLinea" ||
@@ -67,7 +67,7 @@ const ListadoDeCostos = ({ setModal }) => {
               name="tipoExistenciaId"
               autoFocus
               value={data.tipoExistenciaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -89,7 +89,7 @@ const ListadoDeCostos = ({ setModal }) => {
               name="marcaId"
               autoFocus
               value={data.marcaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -112,7 +112,7 @@ const ListadoDeCostos = ({ setModal }) => {
                     name="agrupar"
                     value="todos"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "todos"}
                   />
@@ -131,7 +131,7 @@ const ListadoDeCostos = ({ setModal }) => {
                     name="agrupar"
                     value="agruparMarca"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "agruparMarca"}
                   />
@@ -150,7 +150,7 @@ const ListadoDeCostos = ({ setModal }) => {
                     name="agrupar"
                     value="agruparLinea"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "agruparLinea"}
                   />

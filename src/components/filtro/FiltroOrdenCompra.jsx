@@ -163,7 +163,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -326,7 +326,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     autoComplete="off"
                     autoFocus
                     value={filtro.fechaInicio}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />
@@ -341,7 +341,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     name="fechaFin"
                     autoComplete="off"
                     value={filtro.fechaFin}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />

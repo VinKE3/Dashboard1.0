@@ -8,7 +8,7 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -55,7 +55,7 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
               placeholder="Inventario"
               disabled={modo == "Consultar"}
               value={data.inventario ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               onKeyDown={(e) => KeyDown(e)}
               className={G.InputStyle}
             />

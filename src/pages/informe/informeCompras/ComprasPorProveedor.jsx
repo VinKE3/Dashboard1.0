@@ -31,7 +31,7 @@ const ComprasPorProveedor = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
         ...prevState,
@@ -76,7 +76,7 @@ const ComprasPorProveedor = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -89,7 +89,7 @@ const ComprasPorProveedor = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -104,7 +104,7 @@ const ComprasPorProveedor = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {moneda.map((moneda) => (
@@ -123,7 +123,7 @@ const ComprasPorProveedor = ({ setModal }) => {
               name="proveedorId"
               autoFocus
               value={data.proveedorId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -145,7 +145,7 @@ const ComprasPorProveedor = ({ setModal }) => {
                     name="agrupar"
                     value="sinDetalle"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "sinDetalle"}
                   />
@@ -164,7 +164,7 @@ const ComprasPorProveedor = ({ setModal }) => {
                     name="agrupar"
                     value="conDetalle"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "conDetalle"}
                   />

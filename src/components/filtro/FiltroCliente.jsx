@@ -53,7 +53,7 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -226,7 +226,7 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.numeroDocumentoIdentidad}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
@@ -242,7 +242,7 @@ const FiltroCliente = ({ setModal, setObjeto, foco }) => {
                   placeholder="Nombre"
                   autoComplete="off"
                   value={filtro.nombre}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />

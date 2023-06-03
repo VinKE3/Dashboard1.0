@@ -37,7 +37,7 @@ const VentaTipoDocumento = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.name === "facturas" ||
       target.name === "boletas" ||
@@ -97,7 +97,7 @@ const VentaTipoDocumento = ({ setModal }) => {
               name="cargoId"
               autoFocus
               value={data.cargoId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -119,7 +119,7 @@ const VentaTipoDocumento = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -142,7 +142,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -155,7 +155,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -170,7 +170,7 @@ const VentaTipoDocumento = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {moneda.map((moneda) => (
@@ -189,7 +189,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                     inputId="facturas"
                     name="facturas"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.facturas ? true : ""}
                   />
@@ -204,7 +204,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                     inputId="boletas"
                     name="boletas"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.boletas ? true : ""}
                   />
@@ -219,7 +219,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                     inputId="guiasRemision"
                     name="guiasRemision"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.guiasRemision ? true : ""}
                   />
@@ -234,7 +234,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                     inputId="notasCredito"
                     name="notasCredito"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.notasCredito ? true : ""}
                   />
@@ -250,7 +250,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                   inputId="agruparPersonal"
                   name="agruparPersonal"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.agruparPersonal ? true : ""}
                 />

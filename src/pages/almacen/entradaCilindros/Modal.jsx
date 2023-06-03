@@ -103,7 +103,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "isSobrante" || target.name == "isVenta") {
       setData((prevState) => ({
         ...prevState,
@@ -671,7 +671,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     autoFocus
                     disabled={modo == "Nuevo" ? false : true}
                     value={data.serie ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={(e) => Numeracion(e)}
                     className={G.InputStyle}
                   />
@@ -689,7 +689,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     maxLength="10"
                     disabled={modo == "Nuevo" ? false : true}
                     value={data.numero ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={(e) => Numeracion(e)}
                     className={G.InputStyle}
                   />
@@ -703,7 +703,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                         disabled={modo == "Consultar"}
                         value={data.isSobrante ?? ""}
                         onChange={(e) => {
-                          ValidarData(e);
+                          HandleData(e);
                         }}
                         checked={data.isSobrante ? true : ""}
                       />
@@ -723,7 +723,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                         disabled={modo == "Consultar"}
                         value={data.isVenta ?? ""}
                         onChange={(e) => {
-                          ValidarData(e);
+                          HandleData(e);
                         }}
                         checked={data.isVenta ? true : ""}
                       />
@@ -747,7 +747,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     autoFocus={modo == "Modificar"}
                     disabled={modo == "Consultar"}
                     value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -760,7 +760,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     name="personalId"
                     disabled={modo == "Consultar"}
                     value={data.personalId}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   >
                     {dataPersonal.map((item) => (
@@ -812,7 +812,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   autoComplete="off"
                   disabled={modo == "Consultar"}
                   value={data.observacion ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>

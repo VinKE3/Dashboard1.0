@@ -28,7 +28,7 @@ const InformeCobranzas = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "cancelados" ||
       target.value === "pendientes" ||
@@ -71,7 +71,7 @@ const InformeCobranzas = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {monedas.map((moneda) => (
@@ -91,7 +91,7 @@ const InformeCobranzas = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -104,7 +104,7 @@ const InformeCobranzas = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -118,7 +118,7 @@ const InformeCobranzas = ({ setModal }) => {
                     name="agrupar"
                     value="cancelados"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "cancelados"}
                   />
@@ -137,7 +137,7 @@ const InformeCobranzas = ({ setModal }) => {
                     name="agrupar"
                     value="pendientes"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "pendientes"}
                   />
@@ -156,7 +156,7 @@ const InformeCobranzas = ({ setModal }) => {
                     name="agrupar"
                     value="todos"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "todos"}
                   />

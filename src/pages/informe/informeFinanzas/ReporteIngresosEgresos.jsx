@@ -116,7 +116,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
     Personal();
   }, []);
 
-  // const ValidarData = async ({ target }) => {
+  // const HandleData = async ({ target }) => {
   //   if (target.name === "tipoId") {
   //     setData((prevState) => ({
   //       ...prevState,
@@ -141,7 +141,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
   //   }));
   // };
 
-  const ValidarData = (e) => {
+  const HandleData = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({
       ...prevState,
@@ -197,7 +197,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {monedas.map((moneda) => (
@@ -216,7 +216,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
               name="tipoId"
               autoFocus
               value={data.tipoId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {tipos.map((tipo) => (
@@ -237,7 +237,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 name="conceptoIngresoId"
                 autoFocus
                 value={data.conceptoIngresoId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               >
                 {conceptoIngresos.map((concepto) => (
@@ -259,7 +259,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 name="conceptoEgresoId"
                 autoFocus
                 value={data.conceptoEgresoId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               >
                 {conceptoEgresos.map((concepto) => (
@@ -281,7 +281,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 name="conceptoId"
                 autoFocus
                 value={""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 disabled={true}
                 className={G.InputStyle}
               >
@@ -301,7 +301,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 name="personalId"
                 autoFocus
                 value={data.personalId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               >
                 <option key={-1} value={""}>
@@ -326,7 +326,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                   name="nombre"
                   autoFocus
                   value={data.nombre ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -342,7 +342,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -355,7 +355,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -367,7 +367,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                   inputId="visualizar"
                   name="visualizar"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.visualizar ? true : ""}
                 />

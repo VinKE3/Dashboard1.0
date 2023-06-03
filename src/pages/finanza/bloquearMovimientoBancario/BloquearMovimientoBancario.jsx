@@ -109,7 +109,7 @@ const BloquearMovimientoBancario = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -377,7 +377,7 @@ const BloquearMovimientoBancario = () => {
                   name="fechaInicio"
                   autoFocus
                   value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -390,7 +390,7 @@ const BloquearMovimientoBancario = () => {
                   id="fechaFin"
                   name="fechaFin"
                   value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputBoton}
                 />
                 <button

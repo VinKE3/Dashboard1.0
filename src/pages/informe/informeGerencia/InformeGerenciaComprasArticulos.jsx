@@ -35,7 +35,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
     console.log(data);
   }, [data]);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -61,7 +61,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -74,7 +74,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -88,7 +88,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
               name="tipoReporteId"
               autoFocus
               value={data.tipoReporteId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>

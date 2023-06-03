@@ -137,7 +137,7 @@ const Articulo = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -384,7 +384,7 @@ const Articulo = () => {
               autoComplete="off"
               autoFocus
               value={filtro.codigoBarras}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -399,7 +399,7 @@ const Articulo = () => {
               placeholder="Descripción"
               autoComplete="off"
               value={filtro.descripcion}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputBoton}
             />
             <button

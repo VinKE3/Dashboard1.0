@@ -34,7 +34,7 @@ const VentaTiendaMarca = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.name === "facturas" ||
       target.name === "boletas" ||
@@ -81,7 +81,7 @@ const VentaTiendaMarca = ({ setModal }) => {
               name="cargoId"
               autoFocus
               value={data.cargoId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -103,7 +103,7 @@ const VentaTiendaMarca = ({ setModal }) => {
               name="marcaId"
               autoFocus
               value={data.marcaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -126,7 +126,7 @@ const VentaTiendaMarca = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -139,7 +139,7 @@ const VentaTiendaMarca = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -154,7 +154,7 @@ const VentaTiendaMarca = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {moneda.map((moneda) => (
@@ -173,7 +173,7 @@ const VentaTiendaMarca = ({ setModal }) => {
                     inputId="facturas"
                     name="facturas"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.facturas ? true : ""}
                   />
@@ -188,7 +188,7 @@ const VentaTiendaMarca = ({ setModal }) => {
                     inputId="boletas"
                     name="boletas"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.boletas ? true : ""}
                   />
@@ -203,7 +203,7 @@ const VentaTiendaMarca = ({ setModal }) => {
                     inputId="guiasRemision"
                     name="guiasRemision"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.guiasRemision ? true : ""}
                   />

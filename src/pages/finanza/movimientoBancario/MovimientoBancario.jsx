@@ -125,7 +125,7 @@ const MovimientoBancario = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -479,7 +479,7 @@ const MovimientoBancario = () => {
                     name="cuentaCorrienteId"
                     value={filtro.cuentaCorrienteId ?? ""}
                     autoFocus
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   >
                     <option key={-1} value={""}>
@@ -501,7 +501,7 @@ const MovimientoBancario = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -519,7 +519,7 @@ const MovimientoBancario = () => {
                     placeholder="Concepto"
                     autoComplete="off"
                     value={filtro.concepto ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -532,7 +532,7 @@ const MovimientoBancario = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <button
@@ -555,7 +555,7 @@ const MovimientoBancario = () => {
                         inputId="todos"
                         name="tipoMovimientoId"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.tipoMovimientoId === ""}
                       />
                     </div>
@@ -572,7 +572,7 @@ const MovimientoBancario = () => {
                         inputId="visualizarIngresos"
                         name="tipoMovimientoId"
                         value={"IN"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.tipoMovimientoId === "IN"}
                       />
                     </div>
@@ -589,7 +589,7 @@ const MovimientoBancario = () => {
                         inputId="visualizarEgresos"
                         name="tipoMovimientoId"
                         value={"EG"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.tipoMovimientoId === "EG"}
                       />
                     </div>

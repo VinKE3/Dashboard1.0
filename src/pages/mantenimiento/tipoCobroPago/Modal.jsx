@@ -16,7 +16,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -61,7 +61,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   disabled={modo == "Consultar" }
                   value={data.descripcion ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -77,7 +77,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   disabled={modo == "Consultar" }
                   value={data.abreviatura ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -95,7 +95,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoVentaCompraId"
                   disabled={modo == "Nuevo" ? false : true}
                   value={data.tipoVentaCompraId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 >
                   {dataModal.map((forma) => (
@@ -116,7 +116,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   min={0}
                   value={data.plazo ?? ""}
                   disabled={modo == "Consultar" }
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>

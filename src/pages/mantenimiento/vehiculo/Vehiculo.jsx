@@ -103,7 +103,7 @@ const Vehiculo = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -243,7 +243,7 @@ const Vehiculo = () => {
               name={"numeroPlaca"}
               maxLength={"200"}
               value={filtro.numeroPlaca}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />

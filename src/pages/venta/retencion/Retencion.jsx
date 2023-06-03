@@ -129,7 +129,7 @@ const Retencion = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -483,7 +483,7 @@ const Retencion = () => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.clienteNombre ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -496,7 +496,7 @@ const Retencion = () => {
                   id="fechaInicio"
                   name="fechaInicio"
                   value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -509,7 +509,7 @@ const Retencion = () => {
                   id="fechaFin"
                   name="fechaFin"
                   value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputBoton}
                 />
                 <button

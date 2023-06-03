@@ -26,7 +26,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
     Marcas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -56,7 +56,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
               name="marcaId"
               autoFocus
               value={data.marcaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>

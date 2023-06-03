@@ -127,7 +127,7 @@ const DocumentoVenta = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -739,7 +739,7 @@ const DocumentoVenta = () => {
                     autoComplete="off"
                     autoFocus
                     value={filtro.clienteNombre ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -752,7 +752,7 @@ const DocumentoVenta = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -765,7 +765,7 @@ const DocumentoVenta = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <button
@@ -786,7 +786,7 @@ const DocumentoVenta = () => {
                         inputId="isEnviadoTodos"
                         name="isEnviado"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isEnviado === ""}
                       />
                     </div>
@@ -803,7 +803,7 @@ const DocumentoVenta = () => {
                         inputId="isEnviadoPendiente"
                         name="isEnviado"
                         value={false}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isEnviado === false}
                       />
                     </div>
@@ -820,7 +820,7 @@ const DocumentoVenta = () => {
                         inputId="isEnviado"
                         name="isEnviado"
                         value={true}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isEnviado === true}
                       />
                     </div>

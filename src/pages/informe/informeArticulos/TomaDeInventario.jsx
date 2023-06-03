@@ -15,7 +15,7 @@ const TomaDeInventario = ({ setModal }) => {
     TipoDeDocumentos();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "conStock") {
       setData((prevState) => ({
         ...prevState,
@@ -52,7 +52,7 @@ const TomaDeInventario = ({ setModal }) => {
               name="tipoExistenciaId"
               autoFocus
               value={data.tipoExistenciaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputBoton}
             >
               <option key={-1} value={""}>
@@ -72,7 +72,7 @@ const TomaDeInventario = ({ setModal }) => {
                   name="conStock"
                   value="New York"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.conStock ? true : ""}
                 />

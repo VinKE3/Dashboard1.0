@@ -33,7 +33,7 @@ const VentasPorPersonalDetalle = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name === "verComision") {
       setData((prevState) => ({
         ...prevState,
@@ -90,7 +90,7 @@ const VentasPorPersonalDetalle = ({ setModal }) => {
               name="tipoDocumentoId"
               autoFocus
               value={data.tipoDocumentoId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -112,7 +112,7 @@ const VentasPorPersonalDetalle = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -135,7 +135,7 @@ const VentasPorPersonalDetalle = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -148,7 +148,7 @@ const VentasPorPersonalDetalle = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -162,7 +162,7 @@ const VentasPorPersonalDetalle = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputBoton}
             >
               {moneda.map((moneda) => (
@@ -177,7 +177,7 @@ const VentasPorPersonalDetalle = ({ setModal }) => {
                   inputId="verComision"
                   name="verComision"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.verComision ? true : ""}
                 />

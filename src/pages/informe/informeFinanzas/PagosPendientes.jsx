@@ -38,7 +38,7 @@ const PagosPendientes = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "porFecha" ||
       target.value === "porProveedor" ||
@@ -120,7 +120,7 @@ const PagosPendientes = ({ setModal }) => {
                 name="agrupar"
                 value="porFecha"
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.checkFiltro === "porFecha"}
               />
@@ -139,7 +139,7 @@ const PagosPendientes = ({ setModal }) => {
                 name="agrupar"
                 value="porProveedor"
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.checkFiltro === "porProveedor"}
               />
@@ -158,7 +158,7 @@ const PagosPendientes = ({ setModal }) => {
                 name="agrupar"
                 value="pagosRealizados"
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.checkFiltro === "pagosRealizados"}
               />
@@ -179,7 +179,7 @@ const PagosPendientes = ({ setModal }) => {
               name="proveedorId"
               autoFocus
               value={data.proveedorId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -202,7 +202,7 @@ const PagosPendientes = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -215,7 +215,7 @@ const PagosPendientes = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -230,7 +230,7 @@ const PagosPendientes = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {moneda.map((moneda) => (
@@ -253,7 +253,7 @@ const PagosPendientes = ({ setModal }) => {
                 autoComplete="off"
                 min={0}
                 value={data.tipoCambio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
               <button
@@ -274,7 +274,7 @@ const PagosPendientes = ({ setModal }) => {
                   inputId="detallado"
                   name="detallado"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.detallado ? true : ""}
                 />

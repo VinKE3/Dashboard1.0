@@ -11,7 +11,7 @@ const ModalClave = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = ({ target }) => {
+  const HandleData = ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -42,7 +42,7 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             autoComplete="off"
             autoFocus
             value={data.claveAnterior ?? ""}
-            onChange={ValidarData}
+            onChange={HandleData}
             className={G.InputStyle}
           />
         </div>
@@ -57,7 +57,7 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             placeholder="Clave Nueva"
             autoComplete="off"
             value={data.claveNueva ?? ""}
-            onChange={ValidarData}
+            onChange={HandleData}
             className={G.InputStyle}
           />
         </div>
@@ -72,7 +72,7 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             placeholder="Confirmar Clave Nueva"
             autoComplete="off"
             value={data.claveNuevaConfirmacion ?? ""}
-            onChange={ValidarData}
+            onChange={HandleData}
             className={G.InputStyle}
           />
         </div>

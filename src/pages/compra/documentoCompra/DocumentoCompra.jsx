@@ -115,7 +115,7 @@ const DocumentosdeCompra = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -455,7 +455,7 @@ const DocumentosdeCompra = () => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.proveedorNombre ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -468,7 +468,7 @@ const DocumentosdeCompra = () => {
                   id="fechaInicio"
                   name="fechaInicio"
                   value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -481,7 +481,7 @@ const DocumentosdeCompra = () => {
                   id="fechaFin"
                   name="fechaFin"
                   value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputBoton}
                 />
                 <button

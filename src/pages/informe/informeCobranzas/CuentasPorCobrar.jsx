@@ -33,7 +33,7 @@ const CuentasPorCobrar = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "general" ||
       target.value === "detallado" ||
@@ -101,7 +101,7 @@ const CuentasPorCobrar = ({ setModal }) => {
               name="clienteId"
               autoFocus
               value={data.clienteId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -123,7 +123,7 @@ const CuentasPorCobrar = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -145,7 +145,7 @@ const CuentasPorCobrar = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {monedas.map((moneda) => (
@@ -165,7 +165,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -178,7 +178,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -192,7 +192,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                     name="agrupar"
                     value="general"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "general"}
                   />
@@ -211,7 +211,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                     name="agrupar"
                     value="detallado"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "detallado"}
                   />
@@ -230,7 +230,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                     name="agrupar"
                     value="porPersonal"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "porPersonal"}
                   />
@@ -253,7 +253,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                     name="agrupar"
                     value="fechaEmision"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro2 === "fechaEmision"}
                   />
@@ -272,7 +272,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                     name="agrupar"
                     value="fechaVencimiento"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro2 === "fechaVencimiento"}
                   />

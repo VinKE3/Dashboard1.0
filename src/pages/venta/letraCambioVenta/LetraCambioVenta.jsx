@@ -140,7 +140,7 @@ const LetraCambioVenta = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -578,7 +578,7 @@ const LetraCambioVenta = () => {
                     autoComplete="off"
                     autoFocus
                     value={filtro.clienteNombre ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -591,7 +591,7 @@ const LetraCambioVenta = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -604,7 +604,7 @@ const LetraCambioVenta = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <button
@@ -627,7 +627,7 @@ const LetraCambioVenta = () => {
                         inputId="isEnviadoTodos"
                         name="isCancelado"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === ""}
                       />
                     </div>
@@ -644,7 +644,7 @@ const LetraCambioVenta = () => {
                         inputId="isEnviadoPendiente"
                         name="isCancelado"
                         value={false}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === false}
                       />
                     </div>
@@ -661,7 +661,7 @@ const LetraCambioVenta = () => {
                         inputId="isCancelado"
                         name="isCancelado"
                         value={true}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === true}
                       />
                     </div>

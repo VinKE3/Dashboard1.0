@@ -32,7 +32,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = ({ target }) => {
+  const HandleData = ({ target }) => {
     if (target.name == "isActivo" || target.name == "habilitarAfectarStock") {
       setData({ ...data, [target.name]: target.checked });
     } else {
@@ -70,7 +70,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Código"
                     autoComplete="off"
                     value={data.id ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={true}
                     className={G.InputBoton}
                   />
@@ -82,7 +82,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="isActivo"
                       disabled={modo == "Consultar"}
                       checked={data.isActivo ? true : ""}
-                      onChange={(e) => ValidarData(e)}
+                      onChange={(e) => HandleData(e)}
                     ></Checkbox>
                   </div>
                   <label
@@ -99,7 +99,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       name="habilitarAfectarStock"
                       disabled={modo == "Consultar"}
                       checked={data.habilitarAfectarStock ? true : ""}
-                      onChange={(e) => ValidarData(e)}
+                      onChange={(e) => HandleData(e)}
                     ></Checkbox>
                   </div>
                   <label
@@ -125,7 +125,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   autoFocus
                   value={data.nick ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Nuevo" ? false : true}
                   className={G.InputStyle}
                 />
@@ -139,7 +139,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="personalId"
                   autoFocus={modo == "Modificar"}
                   value={data.personalId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
@@ -168,7 +168,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Clave"
                     autoComplete="off"
                     value={data.clave ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   />
@@ -187,7 +187,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Repetir Clave"
                     autoComplete="off"
                     value={data.claveConfirmacion ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   />
@@ -206,7 +206,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 placeholder="Observación"
                 autoComplete="off"
                 value={data.observacion ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 disabled={modo == "Consultar"}
                 className={G.InputStyle}
               />

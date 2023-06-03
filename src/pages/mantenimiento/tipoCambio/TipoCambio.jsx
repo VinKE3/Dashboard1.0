@@ -103,7 +103,7 @@ const TipodeCambio = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -307,7 +307,7 @@ const TipodeCambio = () => {
                   autoFocus
                   min={0}
                   value={filtro.anio}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -320,7 +320,7 @@ const TipodeCambio = () => {
                   id="mes"
                   name="mes"
                   value={filtro.mes}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputBoton}
                 >
                   {meses.map((map) => (

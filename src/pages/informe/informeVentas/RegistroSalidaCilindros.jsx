@@ -28,7 +28,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
     Personal();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.value === "porFecha" || target.value === "porPersonal") {
       setData((prevState) => ({
         ...prevState,
@@ -71,7 +71,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -94,7 +94,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -107,7 +107,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -121,7 +121,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
                     name="agrupar"
                     value="porFecha"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "porFecha"}
                   />
@@ -140,7 +140,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
                     name="agrupar"
                     value="porPersonal"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "porPersonal"}
                   />

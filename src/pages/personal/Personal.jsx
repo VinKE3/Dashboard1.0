@@ -117,7 +117,7 @@ const Personal = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -280,7 +280,7 @@ const Personal = () => {
               maxLength={"200"}
               placeHolder={"Nombre"}
               value={filtro.nombre}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />

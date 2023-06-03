@@ -59,7 +59,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     Personal();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "porDocumento" ||
       target.value === "porDetalle" ||
@@ -106,7 +106,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
             <input
               type="date"
               id="fechaInicio"
-              onChange={ValidarData}
+              onChange={HandleData}
               name="fechaInicio"
               value={data.fechaInicio ?? ""}
               className={G.InputStyle}
@@ -119,7 +119,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
             <input
               type="date"
               id="fechaFin"
-              onChange={ValidarData}
+              onChange={HandleData}
               name="fechaFin"
               value={data.fechaFin ?? ""}
               className={G.InputBoton}
@@ -134,7 +134,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -154,7 +154,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
             <input
               type="text"
               id="cliente"
-              onChange={ValidarData}
+              onChange={HandleData}
               name="cliente"
               value={filtroLocal.cliente ?? ""}
               className={G.InputStyle}

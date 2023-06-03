@@ -22,7 +22,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.name == "isActivo" ||
       target.name == "precioIncluyeIGV" ||
@@ -91,7 +91,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoFocus
               disabled={modo == "Consultar" }
               value={data.tipoExistenciaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {dataTipoExistencia.map((map) => (
@@ -110,7 +110,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="marcaId"
               disabled={modo == "Consultar" }
               value={data.marcaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {dataMarca.map((map) => (
@@ -130,7 +130,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="lineaId"
               name="lineaId"
               value={data.lineaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               disabled={modo != "Nuevo" ? true : ""}
               className={
                 modo != "Nuevo" ? G.InputStyle : G.InputStyle
@@ -151,7 +151,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="subLineaId"
               name="subLineaId"
               value={data.subLineaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               disabled={modo != "Nuevo" ? true : ""}
               className={
                 modo != "Nuevo" ? G.InputStyle : G.InputStyle
@@ -181,7 +181,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Código de Barras"
               disabled={modo == "Nuevo" ? false : true}
               value={data.codigoBarras}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -197,7 +197,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Descripción"
               disabled={modo == "Consultar" }
               value={data.descripcion}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -212,7 +212,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="unidadMedidaId"
               disabled={modo == "Consultar" }
               value={data.unidadMedidaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {dataUnidadMedida.map((map) => (
@@ -235,7 +235,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.peso ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -251,7 +251,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Stock"
               disabled={true}
               value={data.stock ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -267,7 +267,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Stock Mínimo"
               disabled={modo == "Consultar" }
               value={data.stockMinimo ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -286,7 +286,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.precioIncluyeIGV}
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.precioIncluyeIGV ? true : ""}
               ></Checkbox>
@@ -308,7 +308,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.precioCompra ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -320,7 +320,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.activarCostoDescuento}
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.activarCostoDescuento ? true : ""}
               ></Checkbox>
@@ -348,7 +348,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.precioCompraDescuento ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -370,7 +370,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="monedaId"
               disabled={modo == "Consultar" }
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {dataMoneda.map((map) => (
@@ -395,7 +395,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.porcentajeUtilidad1 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -412,7 +412,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.porcentajeUtilidad2 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -430,7 +430,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.porcentajeUtilidad3 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -447,7 +447,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.porcentajeUtilidad4 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -466,7 +466,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.precioVenta1 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -483,7 +483,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.precioVenta2 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -501,7 +501,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.precioVenta3 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -518,7 +518,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar" }
               value={data.precioVenta4 ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -537,7 +537,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             placeholder="Observacion"
             disabled={modo == "Consultar" }
             value={data.observacion ?? ""}
-            onChange={ValidarData}
+            onChange={HandleData}
             className={G.InputStyle}
           />
         </div>
@@ -550,7 +550,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.isActivo}
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.isActivo ? true : ""}
               ></Checkbox>
@@ -567,7 +567,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.controlarStock}
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.controlarStock ? true : ""}
               ></Checkbox>
@@ -584,7 +584,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.actualizarPrecioCompra}
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.actualizarPrecioCompra ? true : ""}
               ></Checkbox>

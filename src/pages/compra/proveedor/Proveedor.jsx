@@ -112,7 +112,7 @@ const Proveedor = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -260,7 +260,7 @@ const Proveedor = () => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.documento}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -276,7 +276,7 @@ const Proveedor = () => {
                   autoComplete="off"
                   placeholder="Nombre"
                   value={filtro.nombre}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputBoton}
                 />
                 <button

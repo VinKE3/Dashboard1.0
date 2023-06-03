@@ -105,7 +105,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
     });
   }, [data, setPermisos]);
 
-  const ValidarData = ({ target }) => {
+  const HandleData = ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -271,7 +271,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   name="tipoUsuarioId"
                   value={data.tipoUsuarioId ?? ""}
                   autoFocus
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 >
                   {dataTipoUsuario.map((map) => (
@@ -290,7 +290,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   id="menus"
                   name="menus"
                   value={selectedMenu}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>

@@ -104,7 +104,7 @@ const SubLineas = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -233,7 +233,7 @@ const SubLineas = () => {
               name={"descripcion"}
               maxLength={"200"}
               value={filtro.descripcion}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />

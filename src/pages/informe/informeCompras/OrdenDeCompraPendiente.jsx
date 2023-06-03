@@ -33,7 +33,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
         ...prevState,
@@ -81,7 +81,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               name="proveedorId"
               autoFocus
               value={data.proveedorId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -103,7 +103,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               name="documentoId"
               autoFocus
               value={data.documentoId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -126,7 +126,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -139,7 +139,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -154,7 +154,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {moneda.map((moneda) => (

@@ -68,7 +68,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -345,7 +345,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   placeholder="Número de Documento"
                   autoComplete="off"
                   autoFocus
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   onKeyDown={(e) => Key(e)}
                   className={G.InputBoton}
                 />

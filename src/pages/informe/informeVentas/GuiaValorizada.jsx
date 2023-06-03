@@ -28,7 +28,7 @@ const GuiaValorizada = ({ setModal }) => {
     Cliente();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
         ...prevState,
@@ -65,7 +65,7 @@ const GuiaValorizada = ({ setModal }) => {
               name="clienteId"
               autoFocus
               value={data.clienteId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
@@ -88,7 +88,7 @@ const GuiaValorizada = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -101,7 +101,7 @@ const GuiaValorizada = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -115,7 +115,7 @@ const GuiaValorizada = ({ setModal }) => {
                     name="agrupar"
                     value="sinDetalle"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "sinDetalle"}
                   />
@@ -134,7 +134,7 @@ const GuiaValorizada = ({ setModal }) => {
                     name="agrupar"
                     value="conDetalle"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "conDetalle"}
                   />

@@ -28,7 +28,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "porDocumento" ||
       target.value === "porDetalle" ||
@@ -72,7 +72,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             >
               {monedas.map((moneda) => (
@@ -92,7 +92,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -105,7 +105,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
             </div>
@@ -119,7 +119,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
                     name="agrupar"
                     value="porDocumento"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "porDocumento"}
                   />
@@ -138,7 +138,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
                     name="agrupar"
                     value="porDetalle"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "porDetalle"}
                   />
@@ -157,7 +157,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
                     name="agrupar"
                     value="porArticulo"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "porArticulo"}
                   />
@@ -176,7 +176,7 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
                     name="agrupar"
                     value="porPersonal"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "porPersonal"}
                   />

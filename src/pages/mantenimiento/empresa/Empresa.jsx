@@ -138,7 +138,7 @@ const Empresa = ({ modo }) => {
     noviembre2: [10, 22],
     diciembre2: [11, 23],
   };
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
       setDataGeneral((prevState) => ({
         ...prevState,
@@ -950,7 +950,7 @@ const Empresa = ({ modo }) => {
                       autoComplete="off"
                       autoFocus
                       value={dataGeneral.numeroDocumentoIdentidad ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -965,7 +965,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Nombre"
                       autoComplete="off"
                       value={dataGeneral.nombre ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -982,7 +982,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Teléfono"
                       autoComplete="off"
                       value={dataGeneral.telefono ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1000,7 +1000,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Correo"
                       autoComplete="off"
                       value={dataGeneral.correoElectronico ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1017,7 +1017,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Celular"
                       autoComplete="off"
                       value={dataGeneral.celular ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1032,7 +1032,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Observacion"
                       autoComplete="off"
                       value={dataGeneral.observacion ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1048,7 +1048,7 @@ const Empresa = ({ modo }) => {
                     placeholder="Dirección"
                     autoComplete="off"
                     value={dataGeneral.direccion ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -1076,7 +1076,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Número Concar Id"
                       autoComplete="off"
                       value={dataGeneral.concarEmpresaId ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1094,7 +1094,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Empresa Concar"
                       autoComplete="off"
                       value={dataGeneral.concarEmpresaNombre ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1114,7 +1114,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Usuario Venta"
                       autoComplete="off"
                       value={dataGeneral.concarUsuarioVenta ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1132,7 +1132,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Usuario Compra"
                       autoComplete="off"
                       value={dataGeneral.concarUsuarioCompra ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1152,7 +1152,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Usuario Pago"
                       autoComplete="off"
                       value={dataGeneral.concarUsuarioPago ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1170,7 +1170,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Usuario Cobro"
                       autoComplete="off"
                       value={dataGeneral.concarUsuarioCobro ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1195,7 +1195,7 @@ const Empresa = ({ modo }) => {
                               "yyyy-MM-DD"
                             )
                       }
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1218,7 +1218,7 @@ const Empresa = ({ modo }) => {
                               "yyyy-MM-DD"
                             )
                       }
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1260,7 +1260,7 @@ const Empresa = ({ modo }) => {
                       min={0}
                       autoFocus
                       value={dataGeneral.anioHabilitado1}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputBoton}
                     />
                   </div>
@@ -1580,7 +1580,7 @@ const Empresa = ({ modo }) => {
                       placeholder="año"
                       min={0}
                       value={dataGeneral.anioHabilitado2}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={G.InputBoton}
                     />
                   </div>

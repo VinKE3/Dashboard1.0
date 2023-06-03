@@ -134,7 +134,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   //Data General
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -751,7 +751,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <select
                 id="tipoDocumento"
                 name="tipoDocumento"
-                onChange={ValidarData}
+                onChange={HandleData}
                 value={data.tipoDocumento ?? ""}
                 disabled={true}
                 className={G.InputStyle}
@@ -777,7 +777,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoFocus
                 disabled={modo == "Nuevo" ? false : true}
                 value={data.serie ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 onBlur={(e) => Numeracion(e)}
                 className={G.InputStyle}
               />
@@ -794,7 +794,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 maxLength="10"
                 value={data.numero ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 onBlur={(e) => Numeracion(e)}
                 disabled={modo == "Nuevo" ? false : true}
                 className={G.InputStyle}
@@ -812,7 +812,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoFocus={modo == "Modificar"}
                 disabled={modo == "Consultar"}
                 value={moment(data.fechaEmision ?? "").format("yyyy-MM-DD")}
-                onChange={ValidarData}
+                onChange={HandleData}
                 onBlur={() => {
                   FechaEmision();
                 }}
@@ -837,7 +837,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 disabled={true}
                 value={data.clienteNumeroDocumentoIdentidad ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
@@ -853,7 +853,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 disabled={true}
                 value={data.clienteNombre ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               />
               <button
@@ -900,7 +900,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               disabled={modo == "Consultar"}
               value={data.clienteDireccion ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>
@@ -914,7 +914,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="tipoVentaId"
                 name="tipoVentaId"
                 value={data.tipoVentaId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 disabled={modo == "Consultar"}
                 className={G.InputStyle}
               >
@@ -933,7 +933,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="tipoCobroId"
                 name="tipoCobroId"
                 value={data.tipoCobroId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 disabled={modo == "Consultar"}
                 className={G.InputStyle}
               >
@@ -955,7 +955,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="monedaId"
                 name="monedaId"
                 value={data.monedaId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 disabled={modo == "Consultar"}
                 className={G.InputStyle}
               >
@@ -979,7 +979,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 min={0}
                 disabled={modo == "Consultar"}
                 value={data.tipoCambio ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={
                   modo != "Consultar" ? G.InputBoton : G.InputStyle
                 }
@@ -1012,7 +1012,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               disabled={modo == "Consultar"}
               value={data.observacion ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               className={G.InputStyle}
             />
           </div>

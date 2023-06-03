@@ -74,7 +74,7 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -196,7 +196,7 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
                 name={"numeroDocumento"}
                 maxLength={"20"}
                 value={filtro.numeroDocumento}
-                onChange={ValidarData}
+                onChange={HandleData}
                 botonId={"buscar"}
                 onClick={Filtro}
               />

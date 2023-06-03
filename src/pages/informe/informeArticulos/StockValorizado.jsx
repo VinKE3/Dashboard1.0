@@ -25,7 +25,7 @@ const StockValorizado = ({ setModal }) => {
     console.log(data);
   }, [data]);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name === "conStock" || target.name === "corteFecha") {
       setData((prevState) => ({
         ...prevState,
@@ -73,7 +73,7 @@ const StockValorizado = ({ setModal }) => {
                 name="tipoExistenciaId"
                 autoFocus
                 value={data.tipoExistenciaId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputBoton}
               >
                 <option key={-1} value={""}>
@@ -91,7 +91,7 @@ const StockValorizado = ({ setModal }) => {
                     inputId="conStock"
                     name="conStock"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.conStock ? true : ""}
                   />
@@ -106,7 +106,7 @@ const StockValorizado = ({ setModal }) => {
                     inputId="corteFecha"
                     name="corteFecha"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.corteFecha ? true : ""}
                   />
@@ -127,7 +127,7 @@ const StockValorizado = ({ setModal }) => {
                     name="agrupar"
                     value="agruparMarca"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "agruparMarca"}
                   />
@@ -146,7 +146,7 @@ const StockValorizado = ({ setModal }) => {
                     name="agrupar"
                     value="agruparLinea"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "agruparLinea"}
                   />

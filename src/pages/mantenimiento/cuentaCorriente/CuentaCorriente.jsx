@@ -117,7 +117,7 @@ const CuentaCorriente = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -269,7 +269,7 @@ const CuentaCorriente = () => {
               name={"numero"}
               maxLength={"40"}
               value={filtro.numero}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />

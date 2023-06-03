@@ -126,7 +126,7 @@ const CuentaPorCobrar = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -348,7 +348,7 @@ const CuentaPorCobrar = () => {
                     placeholder="Cliente"
                     autoComplete="off"
                     value={filtro.clienteNombre ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -361,7 +361,7 @@ const CuentaPorCobrar = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputStyle}
                   />
                 </div>
@@ -374,7 +374,7 @@ const CuentaPorCobrar = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={G.InputBoton}
                   />
                   <button
@@ -397,7 +397,7 @@ const CuentaPorCobrar = () => {
                         inputId="todos"
                         name="isCancelado"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === ""}
                       />
                     </div>
@@ -414,7 +414,7 @@ const CuentaPorCobrar = () => {
                         inputId="soloDeuda"
                         name="isCancelado"
                         value={false}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === false}
                       />
                     </div>
@@ -431,7 +431,7 @@ const CuentaPorCobrar = () => {
                         inputId="soloCancelado"
                         name="isCancelado"
                         value={true}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === true}
                       />
                     </div>

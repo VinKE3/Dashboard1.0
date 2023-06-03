@@ -156,7 +156,7 @@ const Usuario = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -382,7 +382,7 @@ const Usuario = () => {
               name={"nickFiltro"}
               placeHolder={"Buscar por Nick"}
               value={filtro.nickFiltro}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />

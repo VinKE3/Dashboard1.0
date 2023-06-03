@@ -16,7 +16,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -60,7 +60,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   disabled={modo == "Nuevo" ? false : true}
                   value={data.provinciaId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
@@ -72,7 +72,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="departamentoId"
                   name="departamentoId"
                   value={data.departamentoId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Nuevo" ? false : true}
                   className={G.InputStyle}
                 >
@@ -97,7 +97,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoFocus={modo == "Modificar"}
                 disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
