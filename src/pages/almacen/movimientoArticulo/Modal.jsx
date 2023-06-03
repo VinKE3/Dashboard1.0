@@ -4,7 +4,7 @@ import TableBasic from "../../../components/tabla/TableBasic";
 import styled from "styled-components";
 import moment from "moment";
 import Swal from "sweetalert2";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
@@ -247,11 +247,11 @@ const Modal = ({ setModal, objeto, foco }) => {
       modo={""}
       menu={["", ""]}
       titulo="Movimiento de Articulos"
-      tamañoModal={[Global.ModalFull, Global.Form]}
+      tamañoModal={[G.ModalFull, G.Form]}
       childrenFooter={
         <>
           <button
-            className={Global.BotonModalBase + Global.BotonCancelarModal}
+            className={G.BotonModalBase + G.BotonCancelarModal}
             type="button"
             autoFocus
             onClick={() => setModal(false)}
@@ -264,7 +264,7 @@ const Modal = ({ setModal, objeto, foco }) => {
     >
       {/*Tabla Detalle*/}
       <div
-        className={Global.ContenedorBasico + Global.FondoContenedor + "!gap-0"}
+        className={G.ContenedorBasico + G.FondoContenedor + "!gap-0"}
       >
         <DivTabla>
           <TableBasic
@@ -276,86 +276,86 @@ const Modal = ({ setModal, objeto, foco }) => {
         </DivTabla>
 
         {/*Tabla Footer*/}
-        <div className={Global.ContenedorFooter + "overflow-auto"}>
+        <div className={G.ContenedorFooter + "overflow-auto"}>
           <div className="flex">
-            <div className={Global.FilaVacia} style={divStyle}></div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Entradas</p>
+            <div className={G.FilaVacia} style={divStyle}></div>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Entradas</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Costo</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Costo</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Total</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Total</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Salidas</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Salidas</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Precio</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Precio</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Total</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Total</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Saldo</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Saldo</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Costo</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Costo</p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>Total</p>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>Total</p>
             </div>
           </div>
           <div className="flex">
-            <div className={Global.FilaVacia} style={divStyle}></div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaVacia} style={divStyle}></div>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.entradaCantidadTotal, 2) ??
                   "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.entradaCostoTotal, 2) ?? "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.entradaImporteTotal, 2) ??
                   "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.salidaCantidadTotal, 2) ??
                   "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.salidaCostoTotal, 2) ?? "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.salidaImporteTotal, 2) ??
                   "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.saldoCantidadTotal, 2) ??
                   "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.saldoCostoTotal, 2) ?? "0.00"}
               </p>
             </div>
-            <div className={Global.FilaMovArticulo}>
-              <p className={Global.FilaContenidoMovArt}>
+            <div className={G.FilaMovArticulo}>
+              <p className={G.FilaContenidoMovArt}>
                 {Funciones.RedondearNumero(data.saldoImporteTotal, 2) ?? "0.00"}
               </p>
             </div>

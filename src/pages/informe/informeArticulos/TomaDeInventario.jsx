@@ -3,7 +3,7 @@ import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
 import { Checkbox } from "primereact/checkbox";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -42,9 +42,9 @@ const TomaDeInventario = ({ setModal }) => {
   return (
     <>
       <ModalBasic titulo="Toma de Inventario" setModal={setModal}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoExistenciaId" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
               Tipo
             </label>
             <select
@@ -53,7 +53,7 @@ const TomaDeInventario = ({ setModal }) => {
               autoFocus
               value={data.tipoExistenciaId ?? ""}
               onChange={ValidarData}
-              className={Global.InputBoton}
+              className={G.InputBoton}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -65,8 +65,8 @@ const TomaDeInventario = ({ setModal }) => {
               ))}
             </select>
 
-            <div className={Global.Input + " w-25"}>
-              <div className={Global.CheckStyle + Global.Anidado}>
+            <div className={G.Input + " w-25"}>
+              <div className={G.CheckStyle + G.Anidado}>
                 <Checkbox
                   inputId="conStock"
                   name="conStock"
@@ -77,7 +77,7 @@ const TomaDeInventario = ({ setModal }) => {
                   checked={data.conStock ? true : ""}
                 />
               </div>
-              <label htmlFor="abonar" className={Global.LabelCheckStyle}>
+              <label htmlFor="abonar" className={G.LabelCheckStyle}>
                 Con Stock
               </label>
             </div>
@@ -86,7 +86,7 @@ const TomaDeInventario = ({ setModal }) => {
         <div className="mt-2">
           <BotonBasico
             botonText="ACEPTAR"
-            botonClass={Global.BotonAgregar}
+            botonClass={G.BotonAgregar}
             botonIcon={faPlus}
             click={() => Imprimir()}
           />

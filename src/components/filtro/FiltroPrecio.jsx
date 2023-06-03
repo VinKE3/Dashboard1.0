@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ModalBasic from "../modal/ModalBasic";
 import { FaCheck } from "react-icons/fa";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
   //#region useState
@@ -30,11 +30,11 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Precios"
-        tamañoModal={[Global.ModalPequeño, Global.Form]}
+        tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={
           <>
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -44,24 +44,24 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
+          <div className={G.ContenedorBasico}>
             {/*Tabla Footer*/}
-            <div className={Global.ContenedorFooter}>
+            <div className={G.ContenedorFooter}>
               <div className="flex">
-                <div className={Global.FilaVacia}>
-                  <p className={Global.FilaContenido}>Precio 1</p>
+                <div className={G.FilaVacia}>
+                  <p className={G.FilaContenido}>Precio 1</p>
                 </div>
-                <div className={Global.FilaImporte + "py-1.5"}>
-                  <p className={Global.FilaContenido}>
+                <div className={G.FilaImporte + "py-1.5"}>
+                  <p className={G.FilaContenido}>
                     {datos.precioVenta1 ?? "0"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila + "py-1.5"}>
+                <div className={G.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta1)}
                     className={
-                      Global.BotonModalBase +
-                      Global.BotonAgregar +
+                      G.BotonModalBase +
+                      G.BotonAgregar +
                       "border-none"
                     }
                   >
@@ -70,20 +70,20 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                 </div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}>
-                  <p className={Global.FilaContenido}>Precio 2</p>
+                <div className={G.FilaVacia}>
+                  <p className={G.FilaContenido}>Precio 2</p>
                 </div>
-                <div className={Global.FilaImporte + "py-1.5"}>
-                  <p className={Global.FilaContenido}>
+                <div className={G.FilaImporte + "py-1.5"}>
+                  <p className={G.FilaContenido}>
                     {datos.precioVenta2 ?? "0"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila + "py-1.5"}>
+                <div className={G.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta2)}
                     className={
-                      Global.BotonModalBase +
-                      Global.BotonAgregar +
+                      G.BotonModalBase +
+                      G.BotonAgregar +
                       "border-none"
                     }
                   >
@@ -92,20 +92,20 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                 </div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}>
-                  <p className={Global.FilaContenido}>Precio 3</p>
+                <div className={G.FilaVacia}>
+                  <p className={G.FilaContenido}>Precio 3</p>
                 </div>
-                <div className={Global.FilaImporte + "py-1.5"}>
-                  <p className={Global.FilaContenido}>
+                <div className={G.FilaImporte + "py-1.5"}>
+                  <p className={G.FilaContenido}>
                     {datos.precioVenta3 ?? "0"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila + "py-1.5"}>
+                <div className={G.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta3)}
                     className={
-                      Global.BotonModalBase +
-                      Global.BotonAgregar +
+                      G.BotonModalBase +
+                      G.BotonAgregar +
                       "border-none"
                     }
                   >
@@ -114,20 +114,20 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                 </div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}>
-                  <p className={Global.FilaContenido}>Precio 4</p>
+                <div className={G.FilaVacia}>
+                  <p className={G.FilaContenido}>Precio 4</p>
                 </div>
-                <div className={Global.FilaImporte + "py-1.5"}>
-                  <p className={Global.FilaContenido}>
+                <div className={G.FilaImporte + "py-1.5"}>
+                  <p className={G.FilaContenido}>
                     {datos.precioVenta4 ?? "0"}
                   </p>
                 </div>
-                <div className={Global.UltimaFila + "py-1.5"}>
+                <div className={G.UltimaFila + "py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta4)}
                     className={
-                      Global.BotonModalBase +
-                      Global.BotonAgregar +
+                      G.BotonModalBase +
+                      G.BotonAgregar +
                       "border-none"
                     }
                   >

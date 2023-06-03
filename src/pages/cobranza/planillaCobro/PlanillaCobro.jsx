@@ -15,7 +15,7 @@ import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -426,18 +426,18 @@ const PlanillaCobro = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Planilla de Cobro</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Planilla de Cobro</h2>
 
             {/* Filtro*/}
             <div
               className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
               }
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="clienteNombre" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="clienteNombre" className={G.LabelStyle}>
                     Cliente
                   </label>
                   <input
@@ -449,11 +449,11 @@ const PlanillaCobro = () => {
                     autoFocus
                     value={filtro.clienteNombre ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -462,11 +462,11 @@ const PlanillaCobro = () => {
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -475,12 +475,12 @@ const PlanillaCobro = () => {
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                     onClick={FiltroBoton}
                   >
@@ -492,11 +492,11 @@ const PlanillaCobro = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className={Global.ContenedorBotones}>
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -504,7 +504,7 @@ const PlanillaCobro = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""

@@ -15,7 +15,7 @@ import moment from "moment";
 import styled from "styled-components";
 import { faPlus, faKey, faGear } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -372,8 +372,8 @@ const Usuario = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Usuario</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Usuario</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -389,11 +389,11 @@ const Usuario = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className={Global.ContenedorBotones}>
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -402,7 +402,7 @@ const Usuario = () => {
               {permisos[0] && (
                 <BotonBasico
                   botonText="Configuracion"
-                  botonClass={Global.BotonConfigurar}
+                  botonClass={G.BotonConfigurar}
                   botonIcon={faGear}
                   click={() => AbrirModalConfigurar()}
                   contenedor=""
@@ -411,7 +411,7 @@ const Usuario = () => {
               {permisos[0] && (
                 <BotonBasico
                   botonText="Cambiar Contraseña"
-                  botonClass={Global.BotonAgregar}
+                  botonClass={G.BotonAgregar}
                   botonIcon={faKey}
                   click={() => AbrirModalClave()}
                   contenedor=""

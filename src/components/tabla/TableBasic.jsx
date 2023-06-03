@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 import {
   useTable,
@@ -58,13 +58,13 @@ const TableBasic = ({
             KeyDown(e);
           }}
         >
-          <thead className={Global.THeader + estilos[1]}>
+          <thead className={G.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} className={Global.Tr + estilos[2]}>
+              <tr {...headerGroup.getHeaderGroupProps()} className={G.Tr + estilos[2]}>
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={Global.Th + estilos[3]}
+                    className={G.Th + estilos[3]}
                   >
                     {column.render("Header")}
                   </th>
@@ -73,13 +73,13 @@ const TableBasic = ({
             ))}
           </thead>
 
-          <tbody {...getTableBodyProps()} className={Global.TBody + estilos[4]}>
+          <tbody {...getTableBodyProps()} className={G.TBody + estilos[4]}>
             {page.map((row) => {
               prepareRow(row);
               return (
                 <tr
                   {...row.getRowProps()}
-                  className={Global.Tr + estilos[5]}
+                  className={G.Tr + estilos[5]}
                   onClick={(e) => {
                     Funciones.Seleccionar(e);
                     Click(e);
@@ -89,7 +89,7 @@ const TableBasic = ({
                     return (
                       <td
                         {...cell.getCellProps()}
-                        className={Global.Td + estilos[6]}
+                        className={G.Td + estilos[6]}
                         onDoubleClick={DobleClick}
                       >
                         {cell.render("Cell")}

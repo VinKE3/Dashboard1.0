@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
   //#region useState
@@ -38,12 +38,12 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
       menu={["", ""]}
       titulo={data.descripcion}
       cerrar={false}
-      tamañoModal={[Global.ModalPequeño + " !w-auto !max-w-3xl", Global.Form]}
+      tamañoModal={[G.ModalPequeño + " !w-auto !max-w-3xl", G.Form]}
     >
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="inventario" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <label htmlFor="inventario" className={G.LabelStyle}>
               Inventario
             </label>
             <input
@@ -57,12 +57,12 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
               value={data.inventario ?? ""}
               onChange={ValidarData}
               onKeyDown={(e) => KeyDown(e)}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
             {/* <button
               id="guardarInventario"
               className={
-                Global.BotonBuscar + Global.Anidado + Global.BotonAgregar
+                G.BotonBuscar + G.Anidado + G.BotonAgregar
               }
               hidden={modo == "Consultar"}
               onClick={() => PasarDatos()}

@@ -5,7 +5,7 @@ import TableBasic from "../tabla/TableBasic";
 import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import moment from "moment";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -158,7 +158,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
               id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
-                Global.BotonModalBase + Global.BotonAgregar + " border-none "
+                G.BotonModalBase + G.BotonAgregar + " border-none "
               }
             >
               <FaCheck></FaCheck>
@@ -180,13 +180,13 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Buscar Letra"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             <button
               type="button"
               onClick={() => setModal(false)}
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCancelarModal}
             >
               CERRAR
             </button>
@@ -194,10 +194,10 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="numero" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="numero" className={G.LabelStyle}>
                   Número de Documento
                 </label>
                 <input
@@ -209,13 +209,13 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
                   autoFocus
                   onChange={ValidarData}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
                 {/* <button
                   id="consultar"
                   onClick={Filtro}
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                 >
                   <FaSearch></FaSearch>

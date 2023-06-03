@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import store from "store2";
@@ -49,11 +49,11 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
     <>
       <ModalBasic titulo="Informe Compras Articulos" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -62,11 +62,11 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -75,12 +75,12 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton}
+                className={G.InputBoton}
               />
             </div>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoReporteId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="tipoReporteId" className={G.LabelStyle}>
               Tipo de Reporte
             </label>
             <select
@@ -89,7 +89,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
               autoFocus
               value={data.tipoReporteId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -105,7 +105,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonAgregar}
               botonIcon={faPlus}
               click={() => Imprimir()}
             />

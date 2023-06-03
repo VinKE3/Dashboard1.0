@@ -5,7 +5,7 @@ import TableBasic from "../tabla/TableBasic";
 import FiltroBasico from "../filtro/FiltroBasico";
 import { FaCheck } from "react-icons/fa";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {
@@ -151,7 +151,7 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
             <button
               onClick={() => GetPorId(row.values.id)}
               className={
-                Global.BotonModalBase + Global.BotonAgregar + " border-none "
+                G.BotonModalBase + G.BotonAgregar + " border-none "
               }
             >
               <FaCheck></FaCheck>
@@ -172,12 +172,12 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Facturas"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <button
             type="button"
             onClick={() => setModal(false)}
-            className={Global.BotonModalBase + Global.BotonCancelarModal}
+            className={G.BotonModalBase + G.BotonCancelarModal}
           >
             CERRAR
           </button>
@@ -186,7 +186,7 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
         {
           <>
             <div
-              className={Global.ContenedorBasico + Global.FondoContenedor}
+              className={G.ContenedorBasico + G.FondoContenedor}
               onKeyDown={(e) => Key(e)}
             >
               {/* Filtro*/}

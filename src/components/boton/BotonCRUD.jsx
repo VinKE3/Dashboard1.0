@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Delete from "../funciones/Delete";
 import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 const BotonCRUD = ({
   setEliminar,
@@ -31,7 +31,7 @@ const BotonCRUD = ({
   return (
     <div className="flex item-center justify-center">
       {permisos[3] ? (
-        <div className={Global.TablaBotonConsultar}>
+        <div className={G.TablaBotonConsultar}>
           <button
             id="boton-consultar"
             onClick={ClickConsultar}
@@ -45,7 +45,7 @@ const BotonCRUD = ({
         ""
       )}
       {permisos[1] ? (
-        <div className={Global.TablaBotonModificar}>
+        <div className={G.TablaBotonModificar}>
           <button
             id="boton-modificar"
             onClick={ClickModificar}
@@ -59,7 +59,7 @@ const BotonCRUD = ({
         ""
       )}
       {permisos[2] ? (
-        <div className={Global.TablaBotonEliminar}>
+        <div className={G.TablaBotonEliminar}>
           <button
             id="boton-eliminar"
             onClick={ValidarEliminar}

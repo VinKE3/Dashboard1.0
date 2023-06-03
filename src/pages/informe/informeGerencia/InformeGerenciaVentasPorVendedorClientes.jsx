@@ -10,7 +10,7 @@ import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {
@@ -92,15 +92,15 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   return (
     <ModalBasic
       titulo="Reporte Utilidades"
-      tamañoModal={[Global.ModalGrande, Global.Form]}
+      tamañoModal={[G.ModalGrande, G.Form]}
       setModal={setModal}
     >
       <div
-        className={Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
+        className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
       >
-        <div className={Global.ContenedorFiltro + " !my-0"}>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputsFiltro + " !my-0"}>
+          <div className={G.Input42pct}>
+            <label htmlFor="fechaInicio" className={G.LabelStyle}>
               Desde
             </label>
             <input
@@ -109,11 +109,11 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               onChange={ValidarData}
               name="fechaInicio"
               value={data.fechaInicio ?? ""}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaFin" className={Global.LabelStyle}>
+          <div className={G.Input42pct}>
+            <label htmlFor="fechaFin" className={G.LabelStyle}>
               Hasta
             </label>
             <input
@@ -122,11 +122,11 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               onChange={ValidarData}
               name="fechaFin"
               value={data.fechaFin ?? ""}
-              className={Global.InputBoton}
+              className={G.InputBoton}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="personalId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="personalId" className={G.LabelStyle}>
               Personal
             </label>
             <select
@@ -135,7 +135,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               autoFocus
               value={data.personalId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -147,8 +147,8 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="cliente" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="cliente" className={G.LabelStyle}>
               Cliente
             </label>
             <input
@@ -157,7 +157,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               onChange={ValidarData}
               name="cliente"
               value={filtroLocal.cliente ?? ""}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
         </div>

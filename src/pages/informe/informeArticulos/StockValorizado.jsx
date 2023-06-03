@@ -4,7 +4,7 @@ import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
 import { Checkbox } from "primereact/checkbox";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -61,11 +61,11 @@ const StockValorizado = ({ setModal }) => {
     <>
       <ModalBasic titulo="Stock Valorizado" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <label htmlFor="tipoExistenciaId" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
                 Tipo
               </label>
               <select
@@ -74,7 +74,7 @@ const StockValorizado = ({ setModal }) => {
                 autoFocus
                 value={data.tipoExistenciaId ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton}
+                className={G.InputBoton}
               >
                 <option key={-1} value={""}>
                   {"--TODOS--"}
@@ -85,8 +85,8 @@ const StockValorizado = ({ setModal }) => {
                   </option>
                 ))}
               </select>
-              <div className={Global.Input + " w-25"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + " w-25"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <Checkbox
                     inputId="conStock"
                     name="conStock"
@@ -96,12 +96,12 @@ const StockValorizado = ({ setModal }) => {
                     checked={data.conStock ? true : ""}
                   />
                 </div>
-                <label htmlFor="conStock" className={Global.InputBoton}>
+                <label htmlFor="conStock" className={G.InputBoton}>
                   Con Stock
                 </label>
               </div>
-              <div className={Global.Input + " w-25"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + " w-25"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <Checkbox
                     inputId="corteFecha"
                     name="corteFecha"
@@ -111,17 +111,17 @@ const StockValorizado = ({ setModal }) => {
                     checked={data.corteFecha ? true : ""}
                   />
                 </div>
-                <label htmlFor="corteFecha" className={Global.InputBoton}>
+                <label htmlFor="corteFecha" className={G.InputBoton}>
                   Corte Fecha
                 </label>
               </div>
             </div>
           </div>
 
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="agruparMarca"
                     name="agrupar"
@@ -134,13 +134,13 @@ const StockValorizado = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="agruparMarca"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Agrupar por Marca
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="agruparLinea"
                     name="agrupar"
@@ -153,7 +153,7 @@ const StockValorizado = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="agruparLinea"
-                  className={Global.LabelCheckStyle + " !py-1 "}
+                  className={G.LabelCheckStyle + " !py-1 "}
                 >
                   Agrupar por Linea y Sublinea
                 </label>
@@ -163,7 +163,7 @@ const StockValorizado = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonAgregar}
               botonIcon={faPlus}
               click={() => Imprimir()}
             />

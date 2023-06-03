@@ -21,7 +21,7 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -526,13 +526,13 @@ const EntradaAlmacen = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Entrada de Almacén</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Entrada de Almacén</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputFull}>
-                <label name="observacion" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.InputFull}>
+                <label name="observacion" className={G.LabelStyle}>
                   Proveedor
                 </label>
                 <input
@@ -544,11 +544,11 @@ const EntradaAlmacen = () => {
                   autoFocus
                   value={filtro.observacion ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="fechaInicio" className={G.LabelStyle}>
                   Desde
                 </label>
                 <input
@@ -557,11 +557,11 @@ const EntradaAlmacen = () => {
                   name="fechaInicio"
                   value={filtro.fechaInicio ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="fechaFin" className={G.LabelStyle}>
                   Hasta
                 </label>
                 <input
@@ -570,12 +570,12 @@ const EntradaAlmacen = () => {
                   name="fechaFin"
                   value={filtro.fechaFin ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  className={G.InputBoton}
                 />
                 <button
                   id="buscar"
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                   onClick={FiltroBoton}
                 >
@@ -586,11 +586,11 @@ const EntradaAlmacen = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className={Global.ContenedorBotones}>
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -599,7 +599,7 @@ const EntradaAlmacen = () => {
 
               <BotonBasico
                 botonText="Cerrar"
-                botonClass={Global.BotonMorado}
+                botonClass={G.BotonMorado}
                 botonIcon={faCircleCheck}
                 click={() => AccionModal(null, "AbrirCerrar", 6)}
                 contenedor=""
@@ -608,7 +608,7 @@ const EntradaAlmacen = () => {
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
-                  botonClass={Global.BotonEliminar}
+                  botonClass={G.BotonEliminar}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
                   contenedor=""
@@ -616,7 +616,7 @@ const EntradaAlmacen = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""

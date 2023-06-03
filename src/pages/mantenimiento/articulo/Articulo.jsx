@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
@@ -367,13 +367,13 @@ const Articulo = () => {
   //#region Render
   return (
     <>
-       <div className={Global.ContenedorPadre}>
-        <h2 className={Global.TituloH2}>Artículos</h2>
+       <div className={G.ContenedorPadre}>
+        <h2 className={G.TituloH2}>Artículos</h2>
 
         {/* Filtro*/}
-        <div className={Global.ContenedorInputs + "mb-2"}>
-          <div className={Global.Input60pct}>
-            <label htmlFor="codigoBarras" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputs + "mb-2"}>
+          <div className={G.Input60pct}>
+            <label htmlFor="codigoBarras" className={G.LabelStyle}>
               Cod. Barras
             </label>
             <input
@@ -385,11 +385,11 @@ const Articulo = () => {
               autoFocus
               value={filtro.codigoBarras}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="descripcion" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="descripcion" className={G.LabelStyle}>
               Descripción
             </label>
             <input
@@ -400,13 +400,13 @@ const Articulo = () => {
               autoComplete="off"
               value={filtro.descripcion}
               onChange={ValidarData}
-              className={Global.InputBoton}
+              className={G.InputBoton}
             />
             <button
               id="consultar"
               onClick={FiltroBoton}
               className={
-                Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                G.BotonBuscar + G.Anidado + G.BotonPrimary
               }
             >
               <FaUndoAlt></FaUndoAlt>
@@ -419,7 +419,7 @@ const Articulo = () => {
         {permisos[0] && (
           <BotonBasico
             botonText="Nuevo"
-            botonClass={Global.BotonRegistrar}
+            botonClass={G.BotonRegistrar}
             botonIcon={faPlus}
             click={() => AccionModal()}
             contenedor=""

@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 const ModalBasic = ({
   children,
@@ -10,7 +10,7 @@ const ModalBasic = ({
   setModal,
   titulo,
   cerrar = true,
-  tamañoModal = [Global.ModalPequeño, Global.Form],
+  tamañoModal = [G.ModalPequeño, G.Form],
 }) => {
   //#region Funciones
   const CerrarModal = () => {
@@ -22,15 +22,15 @@ const ModalBasic = ({
   //#region Render
   return (
     <>
-      <div className={Global.FondoModal}>
+      <div className={G.FondoModal}>
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div id="modalBasic" className={Global.ModalContent}>
+          <div id="modalBasic" className={G.ModalContent}>
             {/*header*/}
-            <div className={Global.ModalHeader}>
-              <h3 className={Global.TituloModal}>{titulo}</h3>
+            <div className={G.ModalHeader}>
+              <h3 className={G.TituloModal}>{titulo}</h3>
               {cerrar && (
-                <button className={Global.CerrarModal} onClick={CerrarModal}>
+                <button className={G.CerrarModal} onClick={CerrarModal}>
                   <FontAwesomeIcon icon={faXmark} size="lg" />
                 </button>
               )}
@@ -38,13 +38,13 @@ const ModalBasic = ({
             {/*header*/}
 
             {/*body*/}
-            <div className={Global.ModalBody}>
+            <div className={G.ModalBody}>
               <div className={tamañoModal[1]}>{children}</div>
             </div>
             {/*body*/}
 
             {/*footer*/}
-            <div className={Global.ModalFooter}>{childrenFooter}</div>
+            <div className={G.ModalFooter}>{childrenFooter}</div>
             {/*footer*/}
           </div>
         </div>

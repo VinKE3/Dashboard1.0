@@ -22,7 +22,7 @@ import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -557,17 +557,17 @@ const LetraCambioVenta = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Letra Cambio Venta</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Letra Cambio Venta</h2>
             {/* Filtro*/}
             <div
               className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
               }
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="clienteNombre" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="clienteNombre" className={G.LabelStyle}>
                     Cliente
                   </label>
                   <input
@@ -579,11 +579,11 @@ const LetraCambioVenta = () => {
                     autoFocus
                     value={filtro.clienteNombre ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -592,11 +592,11 @@ const LetraCambioVenta = () => {
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -605,12 +605,12 @@ const LetraCambioVenta = () => {
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                     onClick={FiltroBoton}
                   >
@@ -619,10 +619,10 @@ const LetraCambioVenta = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-40"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputMitad}>
+                  <div className={G.Input + "w-40"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="isEnviadoTodos"
                         name="isCancelado"
@@ -633,13 +633,13 @@ const LetraCambioVenta = () => {
                     </div>
                     <label
                       htmlFor="isEnviadoTodos"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                      className={G.LabelCheckStyle + " rounded-r-none "}
                     >
                       Todas las Letras
                     </label>
                   </div>
-                  <div className={Global.Input + "w-36"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-36"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="isEnviadoPendiente"
                         name="isCancelado"
@@ -650,13 +650,13 @@ const LetraCambioVenta = () => {
                     </div>
                     <label
                       htmlFor="isEnviadoPendiente"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                      className={G.LabelCheckStyle + " rounded-r-none"}
                     >
                       Solo Deudas
                     </label>
                   </div>
-                  <div className={Global.Input + "w-40"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-40"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="isCancelado"
                         name="isCancelado"
@@ -667,7 +667,7 @@ const LetraCambioVenta = () => {
                     </div>
                     <label
                       htmlFor="isCancelado"
-                      className={Global.LabelCheckStyle + "font-semibold"}
+                      className={G.LabelCheckStyle + "font-semibold"}
                     >
                       Solo Cancelados
                     </label>
@@ -678,11 +678,11 @@ const LetraCambioVenta = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className={Global.ContenedorBotones}>
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -690,21 +690,21 @@ const LetraCambioVenta = () => {
               )}
               <BotonBasico
                 botonText="Refinanciamiento"
-                botonClass={Global.BotonNaranja}
+                botonClass={G.BotonNaranja}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 6)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Renovación"
-                botonClass={Global.BotonMorado}
+                botonClass={G.BotonMorado}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 7)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Deshacer Emisión"
-                botonClass={Global.BotonRosa}
+                botonClass={G.BotonRosa}
                 botonIcon={faBan}
                 click={() => AccionModal(null, "Nuevo", 8)}
                 contenedor=""
@@ -713,7 +713,7 @@ const LetraCambioVenta = () => {
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
-                  botonClass={Global.BotonEliminar}
+                  botonClass={G.BotonEliminar}
                   botonIcon={faBan}
                   click={() => Anular()}
                   contenedor=""
@@ -721,7 +721,7 @@ const LetraCambioVenta = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""

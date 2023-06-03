@@ -2,7 +2,7 @@ import React from "react";
 import { useTable, usePagination, useSortBy } from "react-table";
 import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
-import * as Global from "../Global";
+import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 
 const Table = ({
@@ -48,15 +48,15 @@ const Table = ({
             Funciones.MoverFlecha(e, "#" + id);
             KeyDown(e);
           }}
-          className={Global.Table + estilos[0]}
+          className={G.Table + estilos[0]}
         >
-          <thead className={Global.THeader + estilos[1]}>
+          <thead className={G.THeader + estilos[1]}>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className={Global.Th + estilos[3]}
+                    className={G.Th + estilos[3]}
                   >
                     {column.render("Header")}
                   </th>
@@ -65,20 +65,20 @@ const Table = ({
             ))}
           </thead>
 
-          <tbody {...getTableBodyProps()} className={Global.TBody + estilos[4]}>
+          <tbody {...getTableBodyProps()} className={G.TBody + estilos[4]}>
             {page.map((row) => {
               prepareRow(row);
               return (
                 <tr
                   {...row.getRowProps()}
-                  className={Global.Tr + estilos[5]}
+                  className={G.Tr + estilos[5]}
                   onClick={(e) => Funciones.Seleccionar(e)}
                 >
                   {row.cells.map((cell) => {
                     return (
                       <td
                         {...cell.getCellProps()}
-                        className={Global.Td + estilos[6]}
+                        className={G.Td + estilos[6]}
                         onDoubleClick={DobleClick}
                       >
                         {cell.render("Cell")}
@@ -95,11 +95,11 @@ const Table = ({
       {/* Tabla */}
 
       {/* Footer */}
-      <div className={Global.ContenedorTablaFooter}>
-        <div className={Global.ContenedorTotalPaginas}>
+      <div className={G.ContenedorTablaFooter}>
+        <div className={G.ContenedorTotalPaginas}>
           {/* Total de registros */}
           <div className="min-w-fit">
-            <span className={Global.FooterTexto}>
+            <span className={G.FooterTexto}>
               {"Total de registros: "}
               <span className="text-primary">{totalPaginas}</span>
             </span>
@@ -107,10 +107,10 @@ const Table = ({
           {/* Total de registros */}
         </div>
 
-        <div className={Global.ContendorPaginacion}>
+        <div className={G.ContendorPaginacion}>
           {/* Pagina 1 de total */}
           <div className="min-w-fit">
-            <span className={Global.FooterTexto}>
+            <span className={G.FooterTexto}>
               {"Página "}
               <span className="text-primary">{index + 1}</span>
               {" de "}
@@ -133,18 +133,18 @@ const Table = ({
             previousLabel={<FaAngleDoubleLeft className="text-lg" />}
             breakLabel="..."
             renderOnZeroPageCount={null}
-            containerClassName={Global.ContendorBotonesPaginacion}
+            containerClassName={G.ContendorBotonesPaginacion}
             pageClassName="flex"
             breakClassName="flex align-items-center justify-center"
-            pageLinkClassName={Global.BotonPaginacion + Global.BotonPrimary}
-            breakLinkClassName={Global.BotonPaginacion + Global.BotonPrimary}
+            pageLinkClassName={G.BotonPaginacion + G.BotonPrimary}
+            breakLinkClassName={G.BotonPaginacion + G.BotonPrimary}
             previousLinkClassName={
-              Global.BotonPaginacion + Global.BotonPrimary + " !w-8 rounded-l"
+              G.BotonPaginacion + G.BotonPrimary + " !w-8 rounded-l"
             }
             nextLinkClassName={
-              Global.BotonPaginacion + Global.BotonPrimary + " !w-8 rounded-r"
+              G.BotonPaginacion + G.BotonPrimary + " !w-8 rounded-r"
             }
-            activeLinkClassName={Global.BotonPaginacionActivo}
+            activeLinkClassName={G.BotonPaginacionActivo}
           />
           {/* Paginado */}
         </div>

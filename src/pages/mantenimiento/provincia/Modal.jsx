@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -42,12 +42,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "Provincia"]}
           titulo="Provincia"
           foco={document.getElementById("tablaProvincia")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input48}>
-                <label htmlFor="provinciaId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input48}>
+                <label htmlFor="provinciaId" className={G.LabelStyle}>
                   Código
                 </label>
                 <input
@@ -61,11 +61,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Nuevo" ? false : true}
                   value={data.provinciaId ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="departamentoId" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="departamentoId" className={G.LabelStyle}>
                   Departamento
                 </label>
                 <select
@@ -74,7 +74,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.departamentoId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataDepartamento.map((departamento) => (
                     <option key={departamento.id} value={departamento.id}>
@@ -85,7 +85,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
+              <label htmlFor="nombre" className={G.LabelStyle}>
                 Provincia
               </label>
               <input
@@ -98,7 +98,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
           </div>

@@ -4,7 +4,7 @@ import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
 import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 //#region Estilos
 const DivTabla = styled.div`
@@ -214,7 +214,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
               id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
               className={
-                Global.BotonModalBase + Global.BotonAgregar + "border-none"
+                G.BotonModalBase + G.BotonAgregar + "border-none"
               }
             >
               <FaCheck></FaCheck>
@@ -236,13 +236,13 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Artículos"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             <button
               type="button"
               onClick={() => setModal(false)}
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCancelarModal}
             >
               CERRAR
             </button>
@@ -251,10 +251,10 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
       >
         {
           <>
-            <div className={Global.ContenedorBasico}>
-              <div className={Global.ContenedorInputs + "mb-2"}>
-                <div className={Global.Input60pct}>
-                  <label htmlFor="codigoBarras" className={Global.LabelStyle}>
+            <div className={G.ContenedorBasico}>
+              <div className={G.ContenedorInputs + "mb-2"}>
+                <div className={G.Input60pct}>
+                  <label htmlFor="codigoBarras" className={G.LabelStyle}>
                     Cod. Barras
                   </label>
                   <input
@@ -267,11 +267,11 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                     value={filtro.codigoBarras}
                     onChange={ValidarData}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputFull}>
-                  <label htmlFor="descripcion" className={Global.LabelStyle}>
+                <div className={G.InputFull}>
+                  <label htmlFor="descripcion" className={G.LabelStyle}>
                     Descripción
                   </label>
                   <input
@@ -283,13 +283,13 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                     value={filtro.descripcion}
                     onChange={ValidarData}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                   {/* <button
                     id="consultarArticuloFiltro"
                     onClick={Filtro}
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                   >
                     <FaUndoAlt></FaUndoAlt>

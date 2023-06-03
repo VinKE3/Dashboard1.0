@@ -4,7 +4,7 @@ import ModalCrud from "../../../components/modal/ModalCrud";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { FaSearch } from "react-icons/fa";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -92,11 +92,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       menu={["Mantenimiento", "TipoCambio"]}
       titulo="Tipo de Cambio"
       foco={document.getElementById("tablaTipoCambio")}
-      tamañoModal={[Global.ModalPequeño, Global.Form]}
+      tamañoModal={[G.ModalPequeño, G.Form]}
     >
-      <div className={Global.ContenedorBasico}>
+      <div className={G.ContenedorBasico}>
         <div className="flex">
-          <label htmlFor="id" className={Global.LabelStyle}>
+          <label htmlFor="id" className={G.LabelStyle}>
             Tipo
           </label>
           <input
@@ -107,12 +107,12 @@ const Modal = ({ setModal, modo, objeto }) => {
             disabled={modo == "Consultar"}
             value={moment(data.id).format("yyyy-MM-DD")}
             onChange={ValidarData}
-            className={Global.InputBoton}
+            className={G.InputBoton}
           />
           <button
             id="consultarTipoCambio"
             className={
-              Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+              G.BotonBuscar + G.Anidado + G.BotonPrimary
             }
             hidden={modo == "Consultar"}
             onClick={() => ConsultarTipoCambio(`?fecha=${data.id}`)}
@@ -125,9 +125,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             <FaSearch></FaSearch>
           </button>
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="precioCompra" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <label htmlFor="precioCompra" className={G.LabelStyle}>
               P. Compra
             </label>
             <input
@@ -139,11 +139,11 @@ const Modal = ({ setModal, modo, objeto }) => {
               disabled={modo == "Consultar"}
               value={data.precioCompra}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="precioVenta" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="precioVenta" className={G.LabelStyle}>
               P. Venta
             </label>
             <input
@@ -155,7 +155,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               disabled={modo == "Consultar"}
               value={data.precioVenta}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
         </div>

@@ -5,7 +5,7 @@ import TableBasic from "../tabla/TableBasic";
 import { FaSearch, FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -178,7 +178,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
               id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
-                Global.BotonModalBase + Global.BotonAgregar + "border-none"
+                G.BotonModalBase + G.BotonAgregar + "border-none"
               }
             >
               <FaCheck></FaCheck>
@@ -200,12 +200,12 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Cotizacion"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             {/* <button
               className={
-                Global.BotonOkModal + " flex items-center justify-center"
+                G.BotonOkModal + " flex items-center justify-center"
               }
               type="button"
             >
@@ -215,7 +215,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
             <button
               type="button"
               onClick={() => setModal(false)}
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCancelarModal}
             >
               CERRAR
             </button>
@@ -223,10 +223,10 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs + " mb-2"}>
-              <div className={Global.InputFull}>
-                <label htmlFor="clienteNombre" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs + " mb-2"}>
+              <div className={G.InputFull}>
+                <label htmlFor="clienteNombre" className={G.LabelStyle}>
                   Cliente
                 </label>
                 <input
@@ -239,11 +239,11 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   value={filtro.clienteNombre}
                   onChange={ValidarData}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="fechaInicio" className={G.LabelStyle}>
                   Desde
                 </label>
                 <input
@@ -254,11 +254,11 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   value={filtro.fechaInicio}
                   onChange={ValidarData}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="fechaFin" className={G.LabelStyle}>
                   Hasta
                 </label>
                 <input
@@ -269,13 +269,13 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   value={filtro.fechaFin}
                   onChange={ValidarData}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
                 {/* <button
                   id="consultar"
                   onClick={Filtro}
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                 >
                   <FaSearch></FaSearch>

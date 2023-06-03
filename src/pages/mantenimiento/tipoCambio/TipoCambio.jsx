@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:last-child {
@@ -291,13 +291,13 @@ const TipodeCambio = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Tipo de Cambio</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Tipo de Cambio</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputsFiltro}>
-                <label htmlFor="anio" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.InputsFiltro}>
+                <label htmlFor="anio" className={G.LabelStyle}>
                   Año:
                 </label>
                 <input
@@ -308,12 +308,12 @@ const TipodeCambio = () => {
                   min={0}
                   value={filtro.anio}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
 
-              <div className={Global.InputsFiltro}>
-                <label id="mes" className={Global.LabelStyle}>
+              <div className={G.InputsFiltro}>
+                <label id="mes" className={G.LabelStyle}>
                   Mes:
                 </label>
                 <select
@@ -321,7 +321,7 @@ const TipodeCambio = () => {
                   name="mes"
                   value={filtro.mes}
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  className={G.InputBoton}
                 >
                   {meses.map((map) => (
                     <option key={map.numero} value={map.numero}>
@@ -332,7 +332,7 @@ const TipodeCambio = () => {
                 <button
                   id="buscar"
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                   onClick={FiltroBoton}
                 >
@@ -346,7 +346,7 @@ const TipodeCambio = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""

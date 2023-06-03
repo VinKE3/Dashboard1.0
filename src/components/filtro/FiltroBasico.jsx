@@ -1,6 +1,6 @@
 import React from "react";
 import { FaUndoAlt } from "react-icons/fa";
-import * as Global from "../Global";
+import * as G from "../Global";
 const FiltroBasico = ({
   textLabel,
   value,
@@ -13,8 +13,8 @@ const FiltroBasico = ({
   onClick,
 }) => {
   return (
-    <div className={Global.InputFull + " mb-2"}>
-      <label htmlFor={name} className={Global.LabelStyle}>
+    <div className={G.InputFull + " mb-2"}>
+      <label htmlFor={name} className={G.LabelStyle}>
         {textLabel}
       </label>
       <input
@@ -28,11 +28,11 @@ const FiltroBasico = ({
         autoFocus
         value={value ?? ""}
         onChange={onChange}
-        className={boton ? Global.InputBoton : Global.InputStyle}
+        className={boton ? G.InputBoton : G.InputStyle}
       />
       {boton && (
         <button
-          className={Global.BotonBuscar + Global.Anidado + Global.BotonPrimary}
+          className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
           id={botonId}
           onClick={onClick}
         >

@@ -14,7 +14,7 @@ import moment from "moment";
 import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 
 //#region Estilos
@@ -327,18 +327,18 @@ const CuentaPorPagar = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Cuentas por Pagar</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Cuentas por Pagar</h2>
 
             {/* Filtro*/}
             <div
               className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
               }
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="proveedorNombre" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="proveedorNombre" className={G.LabelStyle}>
                     Proveedor
                   </label>
                   <input
@@ -350,11 +350,11 @@ const CuentaPorPagar = () => {
                     autoFocus
                     value={filtro.proveedorNombre ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -363,11 +363,11 @@ const CuentaPorPagar = () => {
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -376,12 +376,12 @@ const CuentaPorPagar = () => {
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                     onClick={FiltroBoton}
                   >
@@ -390,10 +390,10 @@ const CuentaPorPagar = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputMitad}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="todos"
                         name="isCancelado"
@@ -404,13 +404,13 @@ const CuentaPorPagar = () => {
                     </div>
                     <label
                       htmlFor="todos"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                      className={G.LabelCheckStyle + " rounded-r-none "}
                     >
                       Todos
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="soloDeuda"
                         name="isCancelado"
@@ -421,13 +421,13 @@ const CuentaPorPagar = () => {
                     </div>
                     <label
                       htmlFor="soloDeuda"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                      className={G.LabelCheckStyle + " rounded-r-none"}
                     >
                       Deudas
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="soloCancelado"
                         name="isCancelado"
@@ -438,7 +438,7 @@ const CuentaPorPagar = () => {
                     </div>
                     <label
                       htmlFor="soloCancelado"
-                      className={Global.LabelCheckStyle + "font-semibold"}
+                      className={G.LabelCheckStyle + "font-semibold"}
                     >
                       Cancelados
                     </label>
@@ -449,10 +449,10 @@ const CuentaPorPagar = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className={Global.ContenedorBotones}>
+            <div className={G.ContenedorBotones}>
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, 5)}
                 contenedor=""

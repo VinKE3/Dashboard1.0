@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import store from "store2";
@@ -45,10 +45,10 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
     <>
       <ModalBasic titulo="Informe Costos Productos" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="marcaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="marcaId" className={G.LabelStyle}>
               Marcas
             </label>
             <select
@@ -57,7 +57,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
               autoFocus
               value={data.marcaId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -73,7 +73,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonAgregar}
               botonIcon={faPlus}
               click={() => Imprimir()}
             />

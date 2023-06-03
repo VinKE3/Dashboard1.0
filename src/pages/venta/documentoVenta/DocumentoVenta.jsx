@@ -20,7 +20,7 @@ import styled from "styled-components";
 import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -650,7 +650,7 @@ const DocumentoVenta = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <div className="flex">
-            <div className={Global.TablaBotonConsultar}>
+            <div className={G.TablaBotonConsultar}>
               <button
                 id="boton-autorizar"
                 onClick={() =>
@@ -691,12 +691,12 @@ const DocumentoVenta = () => {
     <>
       {visible ? (
         <>
-          <div className={Global.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Documentos de Venta</h2>
+              <h2 className={G.TituloH2}>Documentos de Venta</h2>
               {filtro.isEnviado === false && (
                 <div className="flex">
-                  <div className={Global.CheckStyle}>
+                  <div className={G.CheckStyle}>
                     <Checkbox
                       inputId="isAutorizado"
                       name="isAutorizado"
@@ -716,7 +716,7 @@ const DocumentoVenta = () => {
                   </div>
                   <label
                     htmlFor="isAutorizado"
-                    className={Global.LabelCheckStyle + " font-semibold"}
+                    className={G.LabelCheckStyle + " font-semibold"}
                   >
                     Autorizar Todos
                   </label>
@@ -725,14 +725,10 @@ const DocumentoVenta = () => {
             </div>
 
             {/* Filtro*/}
-            <div
-              className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
-            >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="clienteNombre" className={Global.LabelStyle}>
+            <div className={G.ContenedorFiltro}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="clienteNombre" className={G.LabelStyle}>
                     Cliente
                   </label>
                   <input
@@ -744,11 +740,11 @@ const DocumentoVenta = () => {
                     autoFocus
                     value={filtro.clienteNombre ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -757,11 +753,11 @@ const DocumentoVenta = () => {
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -770,13 +766,11 @@ const DocumentoVenta = () => {
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
                     onChange={ValidarData}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -784,10 +778,10 @@ const DocumentoVenta = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputMitad}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="isEnviadoTodos"
                         name="isEnviado"
@@ -798,13 +792,13 @@ const DocumentoVenta = () => {
                     </div>
                     <label
                       htmlFor="isEnviadoTodos"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                      className={G.LabelCheckStyle + " rounded-r-none "}
                     >
                       Todos
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="isEnviadoPendiente"
                         name="isEnviado"
@@ -815,13 +809,13 @@ const DocumentoVenta = () => {
                     </div>
                     <label
                       htmlFor="isEnviadoPendiente"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                      className={G.LabelCheckStyle + " rounded-r-none"}
                     >
                       Pendientes
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="isEnviado"
                         name="isEnviado"
@@ -832,7 +826,7 @@ const DocumentoVenta = () => {
                     </div>
                     <label
                       htmlFor="isEnviado"
-                      className={Global.LabelCheckStyle + "font-semibold"}
+                      className={G.LabelCheckStyle + "font-semibold"}
                     >
                       Enviados
                     </label>
@@ -843,11 +837,11 @@ const DocumentoVenta = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className={Global.ContenedorBotones}>
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonRegistrar}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -856,7 +850,7 @@ const DocumentoVenta = () => {
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
-                  botonClass={Global.BotonEliminar}
+                  botonClass={G.BotonEliminar}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
                   contenedor=""
@@ -864,7 +858,7 @@ const DocumentoVenta = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonAgregar}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""

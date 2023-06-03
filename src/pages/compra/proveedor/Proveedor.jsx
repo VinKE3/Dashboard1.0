@@ -11,7 +11,7 @@ import { FaUndoAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {
@@ -243,13 +243,13 @@ const Proveedor = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Proveedor</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Proveedor</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.Input96}>
-                <label htmlFor="documento" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.Input96}>
+                <label htmlFor="documento" className={G.LabelStyle}>
                   N° Documento
                 </label>
                 <input
@@ -261,12 +261,12 @@ const Proveedor = () => {
                   autoFocus
                   value={filtro.documento}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
 
-              <div className={Global.InputsFiltro}>
-                <label htmlFor="nombre" className={Global.LabelStyle}>
+              <div className={G.InputsFiltro}>
+                <label htmlFor="nombre" className={G.LabelStyle}>
                   Nombre:
                 </label>
                 <input
@@ -277,12 +277,12 @@ const Proveedor = () => {
                   placeholder="Nombre"
                   value={filtro.nombre}
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  className={G.InputBoton}
                 />
                 <button
                   id="buscar"
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                   onClick={FiltroBoton}
                 >
@@ -296,7 +296,7 @@ const Proveedor = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""

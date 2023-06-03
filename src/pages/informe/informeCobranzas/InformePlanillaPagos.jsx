@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { RadioButton } from "primereact/radiobutton";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -61,10 +61,10 @@ const InformePlanillaPagos = ({ setModal }) => {
     <>
       <ModalBasic titulo="Informe PLanilla de Pago" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
             </label>
             <select
@@ -73,7 +73,7 @@ const InformePlanillaPagos = ({ setModal }) => {
               autoFocus
               value={data.monedaId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               {monedas.map((moneda) => (
                 <option key={moneda.id} value={moneda.id}>
@@ -82,9 +82,9 @@ const InformePlanillaPagos = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -93,11 +93,11 @@ const InformePlanillaPagos = ({ setModal }) => {
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -106,14 +106,14 @@ const InformePlanillaPagos = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton}
+                className={G.InputBoton}
               />
             </div>
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="sinDetalle"
                     name="agrupar"
@@ -126,13 +126,13 @@ const InformePlanillaPagos = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="sinDetalle"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Sin Detalle de Planilla
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="conDetalle"
                     name="agrupar"
@@ -145,13 +145,13 @@ const InformePlanillaPagos = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="conDetalle"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Con Detalle de Planilla
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporte"
                     name="agrupar"
@@ -164,18 +164,18 @@ const InformePlanillaPagos = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporte"
-                  className={Global.LabelCheckStyle + " !py-1 "}
+                  className={G.LabelCheckStyle + " !py-1 "}
                 >
                   Reporte Mensual
                 </label>
               </div>
             </div>
           </div>
-          <div className={Global.ContenedorInputs}>
+          <div className={G.ContenedorInputs}>
             <div className="mt-2">
               <BotonBasico
                 botonText="ACEPTAR"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonAgregar}
                 botonIcon={faPlus}
                 click={() => Imprimir()}
               />

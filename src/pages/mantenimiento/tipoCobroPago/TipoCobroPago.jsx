@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {
@@ -233,8 +233,8 @@ const TipoCobroPago = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Tipo de Pago</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Tipo de Pago</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -253,7 +253,7 @@ const TipoCobroPago = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { RadioButton } from "primereact/radiobutton";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -70,10 +70,10 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
     <>
       <ModalBasic titulo="Compras Por Proveedor" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="proveedorId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="proveedorId" className={G.LabelStyle}>
               Proveedores
             </label>
             <select
@@ -82,7 +82,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               autoFocus
               value={data.proveedorId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -94,8 +94,8 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="documentoId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="documentoId" className={G.LabelStyle}>
               Documento
             </label>
             <select
@@ -104,7 +104,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               autoFocus
               value={data.documentoId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -116,9 +116,9 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -127,11 +127,11 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -140,13 +140,13 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton}
+                className={G.InputBoton}
               />
             </div>
           </div>
 
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
             </label>
             <select
@@ -155,7 +155,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
               autoFocus
               value={data.monedaId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               {moneda.map((moneda) => (
                 <option key={moneda.id} value={moneda.id}>
@@ -168,7 +168,7 @@ const OrdenDeCompraPendiente = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonAgregar}
               botonIcon={faPlus}
               click={() => Imprimir()}
             />

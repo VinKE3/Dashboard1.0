@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { RadioButton } from "primereact/radiobutton";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -64,11 +64,11 @@ const ComprasPorProveedor = ({ setModal }) => {
     <>
       <ModalBasic titulo="Compras Por Proveedor" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -77,11 +77,11 @@ const ComprasPorProveedor = ({ setModal }) => {
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -90,13 +90,13 @@ const ComprasPorProveedor = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton}
+                className={G.InputBoton}
               />
             </div>
           </div>
 
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
             </label>
             <select
@@ -105,7 +105,7 @@ const ComprasPorProveedor = ({ setModal }) => {
               autoFocus
               value={data.monedaId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               {moneda.map((moneda) => (
                 <option key={moneda.id} value={moneda.id}>
@@ -114,8 +114,8 @@ const ComprasPorProveedor = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="proveedorId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="proveedorId" className={G.LabelStyle}>
               Proveedores
             </label>
             <select
@@ -124,7 +124,7 @@ const ComprasPorProveedor = ({ setModal }) => {
               autoFocus
               value={data.proveedorId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -136,10 +136,10 @@ const ComprasPorProveedor = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="sinDetalle"
                     name="agrupar"
@@ -152,13 +152,13 @@ const ComprasPorProveedor = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="sinDetalle"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Sin Detalle de Articulos
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="conDetalle"
                     name="agrupar"
@@ -171,7 +171,7 @@ const ComprasPorProveedor = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="conDetalle"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Con Detalle de Articulos
                 </label>
@@ -181,7 +181,7 @@ const ComprasPorProveedor = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonAgregar}
               botonIcon={faPlus}
               click={() => Imprimir()}
             />

@@ -12,7 +12,7 @@ import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -337,13 +337,13 @@ const BloquearMovimientoBancario = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
+           <div className={G.ContenedorPadre}>
             <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>
+              <h2 className={G.TituloH2}>
                 Bloquear Movimientos Bancarios
               </h2>
               <div className="flex">
-                <div className={Global.CheckStyle}>
+                <div className={G.CheckStyle}>
                   <Checkbox
                     inputId="isBloqueado"
                     name="isBloqueado"
@@ -358,7 +358,7 @@ const BloquearMovimientoBancario = () => {
                 </div>
                 <label
                   htmlFor="isBloqueado"
-                  className={Global.LabelCheckStyle + " font-semibold"}
+                  className={G.LabelCheckStyle + " font-semibold"}
                 >
                   Bloquear Todos
                 </label>
@@ -366,9 +366,9 @@ const BloquearMovimientoBancario = () => {
             </div>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.InputMitad}>
+                <label htmlFor="fechaInicio" className={G.LabelStyle}>
                   Desde
                 </label>
                 <input
@@ -378,11 +378,11 @@ const BloquearMovimientoBancario = () => {
                   autoFocus
                   value={filtro.fechaInicio ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="fechaFin" className={G.LabelStyle}>
                   Hasta
                 </label>
                 <input
@@ -391,12 +391,12 @@ const BloquearMovimientoBancario = () => {
                   name="fechaFin"
                   value={filtro.fechaFin ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputBoton}
+                  className={G.InputBoton}
                 />
                 <button
                   id="buscar"
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                   onClick={FiltroBoton}
                 >

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -44,12 +44,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "TipoCobroPago"]}
           titulo="Tipo de Pago"
           foco={document.getElementById("tablaCobroPago")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="descripcion" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="descripcion" className={G.LabelStyle}>
                   Descripción
                 </label>
                 <input
@@ -62,11 +62,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" }
                   value={data.descripcion ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="abreviatura" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="abreviatura" className={G.LabelStyle}>
                   Abreviatura
                 </label>
                 <input
@@ -78,15 +78,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" }
                   value={data.abreviatura ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
                 <label
                   htmlFor="tipoVentaCompraId"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   Forma Pago
                 </label>
@@ -96,7 +96,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Nuevo" ? false : true}
                   value={data.tipoVentaCompraId ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataModal.map((forma) => (
                     <option key={forma.id} value={forma.id}>
@@ -105,8 +105,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="plazo" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="plazo" className={G.LabelStyle}>
                   Plazo
                 </label>
                 <input
@@ -117,7 +117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.plazo ?? ""}
                   disabled={modo == "Consultar" }
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>

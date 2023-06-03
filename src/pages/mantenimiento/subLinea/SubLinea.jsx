@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -223,8 +223,8 @@ const SubLineas = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>SubLíneas</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>SubLíneas</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -243,7 +243,7 @@ const SubLineas = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""

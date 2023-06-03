@@ -9,7 +9,7 @@ import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -51,11 +51,11 @@ const InformeGerenciaRegistroSalida = () => {
   });
   return (
     <div
-      className={Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
+      className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
     >
-      <div className={Global.ContenedorFiltro + " !my-0"}>
-        <div className={Global.InputFull}>
-          <label name="tipoExistenciaId" className={Global.LabelStyle}>
+      <div className={G.ContenedorInputsFiltro + " !my-0"}>
+        <div className={G.InputFull}>
+          <label name="tipoExistenciaId" className={G.LabelStyle}>
             Tipo de Existencia
           </label>
           <select
@@ -64,7 +64,7 @@ const InformeGerenciaRegistroSalida = () => {
             autoFocus
             value={data.personalId ?? ""}
             onChange={ValidarFiltro}
-            className={Global.InputStyle}
+            className={G.InputStyle}
           >
             <option key={-1} value={""}>
               {"--TODOS--"}
@@ -77,8 +77,8 @@ const InformeGerenciaRegistroSalida = () => {
             ))}
           </select>
         </div>
-        <div className={Global.Input42pct}>
-          <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+        <div className={G.Input42pct}>
+          <label htmlFor="fechaInicio" className={G.LabelStyle}>
             Desde
           </label>
           <input
@@ -87,11 +87,11 @@ const InformeGerenciaRegistroSalida = () => {
             name="fechaInicio"
             value={filtro.fechaInicio ?? ""}
             onChange={ValidarFiltro}
-            className={Global.InputStyle}
+            className={G.InputStyle}
           />
         </div>
-        <div className={Global.Input42pct}>
-          <label htmlFor="fechaFin" className={Global.LabelStyle}>
+        <div className={G.Input42pct}>
+          <label htmlFor="fechaFin" className={G.LabelStyle}>
             Hasta
           </label>
           <input
@@ -100,12 +100,12 @@ const InformeGerenciaRegistroSalida = () => {
             name="fechaFin"
             value={filtro.fechaFin ?? ""}
             onChange={ValidarFiltro}
-            className={Global.InputBoton}
+            className={G.InputBoton}
           />
           <button
             id="buscar"
             className={
-              Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+              G.BotonBuscar + G.Anidado + G.BotonPrimary
             }
             onClick={Filtro}
           >

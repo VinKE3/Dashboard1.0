@@ -11,7 +11,7 @@ import { FaSearch, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
@@ -274,14 +274,14 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
             menu={["", ""]}
             cerrar={false}
             titulo="Deshacer Emisión de Letra"
-            tamañoModal={[Global.ModalMediano, Global.Form]}
+            tamañoModal={[G.ModalMediano, G.Form]}
             childrenFooter={
-              <div className={Global.ModalFooter}>
+              <div className={G.ModalFooter}>
                 <button
                   type="button"
                   onClick={() => Enviar()}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.BotonModalBase + Global.BotonOkModal}
+                  className={G.BotonModalBase + G.BotonOkModal}
                 >
                   Deshacer
                 </button>
@@ -292,7 +292,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     setModal(false);
                   }}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.BotonModalBase + Global.BotonCancelarModal}
+                  className={G.BotonModalBase + G.BotonCancelarModal}
                 >
                   CERRAR
                 </button>
@@ -309,12 +309,12 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
             {/* Cabecera Documento */}
             <div
               className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                G.ContenedorBasico + G.FondoContenedor + " mb-2"
               }
             >
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputMitad}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -324,11 +324,11 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     value={filtro.fechaInicio ?? ""}
                     onChange={Filtro}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.InputMitad}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -338,15 +338,15 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     value={filtro.fechaFin ?? ""}
                     onChange={Filtro}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
               </div>
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputFull}>
                   <label
                     htmlFor="tipoDocumentoId"
-                    className={Global.LabelStyle}
+                    className={G.LabelStyle}
                   >
                     Tipo Doc.
                   </label>
@@ -358,7 +358,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     onChange={Filtro}
                     onKeyDown={(e) => Key(e)}
                     disabled={modo == "Nuevo" ? false : true}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     <option key={-1} value={""}>
                       --TODOS--
@@ -370,8 +370,8 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="serie" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="serie" className={G.LabelStyle}>
                     Serie
                   </label>
                   <input
@@ -385,11 +385,11 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     value={filtro.serie ?? ""}
                     onChange={Filtro}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input66pct}>
-                  <label htmlFor="numero" className={Global.LabelStyle}>
+                <div className={G.Input66pct}>
+                  <label htmlFor="numero" className={G.LabelStyle}>
                     Número
                   </label>
                   <input
@@ -403,14 +403,14 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     value={filtro.numero ?? ""}
                     onChange={Filtro}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="consultarDocumento"
                     className={
-                      Global.BotonBuscar +
-                      Global.Anidado +
-                      Global.BotonPrimary +
+                      G.BotonBuscar +
+                      G.Anidado +
+                      G.BotonPrimary +
                       " rounded-r-none"
                     }
                     hidden={modo == "Consultar"}
@@ -422,7 +422,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                   <button
                     id="eliminarDocumentos"
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonEliminar
+                      G.BotonBuscar + G.Anidado + G.BotonEliminar
                     }
                     hidden={modo == "Consultar"}
                     onClick={() => Limpiar()}
@@ -455,8 +455,8 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
             {/* Cabecera Documento */}
 
             {/* Cabecera Letra */}
-            <div className={Global.ContenedorBasico + Global.FondoContenedor}>
-              <p className={Global.Subtitulo}>Detalle de Proceso</p>
+            <div className={G.ContenedorBasico + G.FondoContenedor}>
+              <p className={G.Subtitulo}>Detalle de Proceso</p>
 
               {/* Tabla Detalle */}
               <DivTabla>

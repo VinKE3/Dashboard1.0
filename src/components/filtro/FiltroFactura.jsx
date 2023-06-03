@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaTrash, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {
@@ -227,7 +227,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
               id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
-                Global.BotonModalBase + Global.BotonAgregar + " border-none "
+                G.BotonModalBase + G.BotonAgregar + " border-none "
               }
             >
               <FaCheck></FaCheck>
@@ -254,7 +254,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
           <button
             onClick={() => EliminarFila(row.values.id)}
             className={
-              Global.BotonModalBase + Global.BotonEliminar + "border-none"
+              G.BotonModalBase + G.BotonEliminar + "border-none"
             }
           >
             <FaTrash></FaTrash>
@@ -274,12 +274,12 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Facturas"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <button
             type="button"
             onClick={() => setModal(false)}
-            className={Global.BotonModalBase + Global.BotonCancelarModal}
+            className={G.BotonModalBase + G.BotonCancelarModal}
           >
             CERRAR
           </button>
@@ -291,7 +291,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             {Object.entries(dataFacturaSeleccionada).length > 0 && (
               <div
                 className={
-                  Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                  G.ContenedorBasico + G.FondoContenedor + " mb-2"
                 }
               >
                 <p className=" px-1 text-base text-light font-bold">
@@ -311,7 +311,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             {/* Tabla Seleccion*/}
 
             <div
-              className={Global.ContenedorBasico + Global.FondoContenedor}
+              className={G.ContenedorBasico + G.FondoContenedor}
               onKeyDown={(e) => Key(e)}
             >
               {/* Filtro*/}

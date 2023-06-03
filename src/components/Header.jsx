@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import store from "store2";
 import { authHelper } from "../helpers/AuthHelper";
 import { RiLogoutCircleRLine } from "react-icons/ri";
-import * as Global from "../components/Global";
+import * as G from "../components/Global";
 
 const Header = () => {
   const menu = useRef(null);
@@ -45,9 +45,9 @@ const Header = () => {
     window.location.href = "/login";
   };
   return (
-    <header className="h-auto">
+    <header className="h-auto !bg-header">
       <nav className="h-full p-2 flex flex-col md:flex-row items-center justify-between">
-        <p className={Global.TituloUsuario}>
+        <p className={G.TituloUsuario}>
           Bienvenido{" "}
           <span className="text-primary">{store.session.get("usuario")}</span>
         </p>
@@ -56,14 +56,14 @@ const Header = () => {
           <Button
             icon="pi pi-building"
             onClick={(e) => menu.current.toggle(e)}
-            className={Global.BotonBasico + Global.BotonHeader + "h-7 !border-none" }
+            className={G.BotonBasico + G.BotonHeader + "h-7 !border-none" }
           >
             <span className="hidden sm:block pl-2">EMPRESA</span>
           </Button>
           <div>
             <Button
               onClick={handleLogout}
-              className={Global.BotonBasico + Global.BotonHeader + "h-7 !border-none"
+              className={G.BotonBasico + G.BotonHeader + "h-7 !border-none"
               }
             >
               <RiLogoutCircleRLine className="text-black" />

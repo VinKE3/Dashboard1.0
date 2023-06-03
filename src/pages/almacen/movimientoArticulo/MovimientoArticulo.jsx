@@ -12,7 +12,7 @@ import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -406,18 +406,18 @@ const MovimientoArticulo = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Movimiento de Artículos</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Movimiento de Artículos</h2>
 
             {/* Filtro*/}
             <div
               className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
+                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
               }
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="tipoExistenciaId" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="tipoExistenciaId" className={G.LabelStyle}>
                     Tipo de Existencia
                   </label>
                   <select
@@ -426,7 +426,7 @@ const MovimientoArticulo = () => {
                     autoFocus
                     value={filtro.tipoExistenciaId ?? ""}
                     onChange={ValidarFiltro}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     <option key={-1} value={""}>
                       {"--TODOS--"}
@@ -439,8 +439,8 @@ const MovimientoArticulo = () => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -449,11 +449,11 @@ const MovimientoArticulo = () => {
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
                     onChange={ValidarFiltro}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -462,12 +462,12 @@ const MovimientoArticulo = () => {
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
                     onChange={ValidarFiltro}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                     onClick={Filtro}
                   >
@@ -476,10 +476,10 @@ const MovimientoArticulo = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico}>
-                <div className={Global.ContenedorFiltro + " !my-0"}>
-                  <div className={Global.InputFull}>
-                    <label name="descripcion" className={Global.LabelStyle}>
+              <div className={G.ContenedorBasico}>
+                <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                  <div className={G.InputFull}>
+                    <label name="descripcion" className={G.LabelStyle}>
                       Descripción
                     </label>
                     <input
@@ -489,11 +489,11 @@ const MovimientoArticulo = () => {
                       placeholder="Descripción"
                       value={filtroLocal.descripcion ?? ""}
                       onChange={ValidarFiltroLocal}
-                      className={Global.InputBoton}
+                      className={G.InputBoton}
                     />
-                    <div className={Global.ContenedorFiltro + " !my-0"}>
-                      <div className={Global.Input + "w-32"}>
-                        <div className={Global.CheckStyle + " rounded-l-none"}>
+                    <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                      <div className={G.Input + "w-32"}>
+                        <div className={G.CheckStyle + " rounded-l-none"}>
                           <Checkbox
                             inputId="conStock"
                             name="conStock"
@@ -505,7 +505,7 @@ const MovimientoArticulo = () => {
                         </div>
                         <label
                           htmlFor="conStock"
-                          className={Global.LabelCheckStyle}
+                          className={G.LabelCheckStyle}
                         >
                           Con Stock
                         </label>

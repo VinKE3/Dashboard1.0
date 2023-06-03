@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import { Checkbox } from "primereact/checkbox";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -56,11 +56,11 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "Usuario"]}
           foco={document.getElementById("tablaUsuario")}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="id" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <div className={G.InputFull}>
+                  <label htmlFor="id" className={G.LabelStyle}>
                     Código
                   </label>
                   <input
@@ -72,11 +72,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.id ?? ""}
                     onChange={ValidarData}
                     disabled={true}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <Checkbox
                       inputId="isActivo"
                       name="isActivo"
@@ -87,13 +87,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </div>
                   <label
                     htmlFor="isActivo"
-                    className={Global.LabelCheckStyle + " !rounded-r-none"}
+                    className={G.LabelCheckStyle + " !rounded-r-none"}
                   >
                     Activo{" "}
                   </label>
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <Checkbox
                       inputId="habilitarAfectarStock"
                       name="habilitarAfectarStock"
@@ -104,7 +104,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </div>
                   <label
                     htmlFor="habilitarAfectarStock"
-                    className={Global.LabelCheckStyle}
+                    className={G.LabelCheckStyle}
                   >
                     Afectar Stock
                   </label>
@@ -112,9 +112,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
 
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="nick" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="nick" className={G.LabelStyle}>
                   Nick
                 </label>
                 <input
@@ -127,11 +127,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.nick ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="personalId" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="personalId" className={G.LabelStyle}>
                   Personal
                 </label>
                 <select
@@ -141,7 +141,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.personalId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar"}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   <option key={-1} value={""}>
                     --SELECCIONAR--
@@ -156,9 +156,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
 
             {modo == "Nuevo" && (
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="clave" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputFull}>
+                  <label htmlFor="clave" className={G.LabelStyle}>
                     Clave
                   </label>
                   <input
@@ -170,13 +170,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.clave ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputFull}>
+                <div className={G.InputFull}>
                   <label
                     htmlFor="claveConfirmacion"
-                    className={Global.LabelStyle}
+                    className={G.LabelStyle}
                   >
                     Repetir Clave
                   </label>
@@ -189,14 +189,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.claveConfirmacion ?? ""}
                     onChange={ValidarData}
                     disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
               </div>
             )}
 
-            <div className={Global.InputFull}>
-              <label htmlFor="observacion" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="observacion" className={G.LabelStyle}>
                 Observación
               </label>
               <input
@@ -208,7 +208,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
                 disabled={modo == "Consultar"}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -26,12 +26,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       menu={["Mantenimiento", "Cargo"]}
       titulo="Cargo"
       foco={document.getElementById("tablaCargo")}
-      tamañoModal={[Global.ModalPequeño, Global.Form]}
+      tamañoModal={[G.ModalPequeño, G.Form]}
     >
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="descripcion" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <label htmlFor="descripcion" className={G.LabelStyle}>
               Descripción
             </label>
             <input
@@ -44,11 +44,11 @@ const Modal = ({ setModal, modo, objeto }) => {
               disabled={modo == "Consultar" }
               value={data.descripcion ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input56}>
-            <label htmlFor="sueldo" className={Global.LabelStyle}>
+          <div className={G.Input56}>
+            <label htmlFor="sueldo" className={G.LabelStyle}>
               Sueldo
             </label>
             <input
@@ -61,7 +61,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               disabled={modo == "Consultar" }
               defaultValue={data.sueldo ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
         </div>

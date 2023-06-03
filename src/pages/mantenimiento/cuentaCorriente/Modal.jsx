@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -48,14 +48,14 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "CuentaCorriente"]}
           titulo="Cuenta Corriente"
           foco={document.getElementById("tablaCuentaCorriente")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input40pct}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input40pct}>
                 <label
                   htmlFor="cuentaCorrienteId"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   Código
                 </label>
@@ -68,13 +68,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.cuentaCorrienteId ?? ""}
                   onChange={ValidarData}
                   disabled={true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
+              <div className={G.InputFull}>
                 <label
                   htmlFor="tipoCuentaDescripcion"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   T. Cuenta
                 </label>
@@ -85,7 +85,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.tipoCuentaDescripcion ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" }
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataTCuenta.map((tipo) => (
                     <option key={tipo.id} value={tipo.id}>
@@ -94,8 +94,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="monedaId" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="monedaId" className={G.LabelStyle}>
                   Moneda
                 </label>
                 <select
@@ -104,7 +104,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.monedaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" }
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataMoneda.map((moneda) => (
                     <option key={moneda.id} value={moneda.id}>
@@ -114,11 +114,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </select>
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
                 <label
                   htmlFor="entidadBancariaId"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   E.Bancaria
                 </label>
@@ -128,7 +128,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.entidadBancariaId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" }
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataEntidad.map((entidad) => (
                     <option key={entidad.id} value={entidad.id}>
@@ -137,8 +137,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="numero" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="numero" className={G.LabelStyle}>
                   Número de Cuenta
                 </label>
                 <input
@@ -151,12 +151,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consulta" ? true : false}
                   value={data.numero ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="observacion" className={Global.LabelStyle}>
+              <label htmlFor="observacion" className={G.LabelStyle}>
                 Observación
               </label>
               <input
@@ -168,7 +168,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consulta" ? true : false}
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
           </div>

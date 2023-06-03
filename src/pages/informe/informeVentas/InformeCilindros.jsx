@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { RadioButton } from "primereact/radiobutton";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -66,10 +66,10 @@ const InformeCilindros = ({ setModal }) => {
     <>
       <ModalBasic titulo="Informe De Cilindros" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="personalId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="personalId" className={G.LabelStyle}>
               Personal
             </label>
             <select
@@ -78,7 +78,7 @@ const InformeCilindros = ({ setModal }) => {
               autoFocus
               value={data.personalId ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -90,9 +90,9 @@ const InformeCilindros = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -101,11 +101,11 @@ const InformeCilindros = ({ setModal }) => {
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -114,14 +114,14 @@ const InformeCilindros = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={ValidarData}
-                className={Global.InputBoton}
+                className={G.InputBoton}
               />
             </div>
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="reporteSalidaCilindros"
                     name="agrupar"
@@ -134,13 +134,13 @@ const InformeCilindros = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporteSalidaCilindros"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Reporte Salida Cilindros
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporteEntradaCilindros"
                     name="agrupar"
@@ -153,13 +153,13 @@ const InformeCilindros = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporteEntradaCilindros"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Reporte Entrada Cilindros
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporteCilindrosVendidos"
                     name="agrupar"
@@ -172,17 +172,17 @@ const InformeCilindros = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporteCilindrosVendidos"
-                  className={Global.LabelCheckStyle + " !py-1 "}
+                  className={G.LabelCheckStyle + " !py-1 "}
                 >
                   Reporte Cilindros Vendidos
                 </label>
               </div>
             </div>
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="reporteCilindrosPendientes"
                     name="agrupar"
@@ -195,13 +195,13 @@ const InformeCilindros = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporteCilindrosPendientes"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Reporte Cilindros Pendientes
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporteCilindrosSobrantes"
                     name="agrupar"
@@ -214,18 +214,18 @@ const InformeCilindros = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporteCilindrosSobrantes"
-                  className={Global.LabelCheckStyle + " !py-1 "}
+                  className={G.LabelCheckStyle + " !py-1 "}
                 >
                   Reporte Cilindros Sobrantes
                 </label>
               </div>
             </div>
           </div>
-          <div className={Global.ContenedorInputs}>
+          <div className={G.ContenedorInputs}>
             <div className="mt-2">
               <BotonBasico
                 botonText="ACEPTAR"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonAgregar}
                 botonIcon={faPlus}
                 click={() => Imprimir()}
               />

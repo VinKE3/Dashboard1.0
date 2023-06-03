@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -27,12 +27,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       menu={["Mantenimiento", "UnidadMedida"]}
       titulo="Unidad de Medida"
       foco={document.getElementById("tablaUnidadMedida")}
-      tamañoModal={[Global.ModalPequeño, Global.Form]}
+      tamañoModal={[G.ModalPequeño, G.Form]}
     >
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputMitad}>
-            <label htmlFor="id" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputMitad}>
+            <label htmlFor="id" className={G.LabelStyle}>
               Código
             </label>
             <input
@@ -44,11 +44,11 @@ const Modal = ({ setModal, modo, objeto }) => {
               value={data.id ?? ""}
               onChange={ValidarData}
               disabled
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="codigoSunat" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="codigoSunat" className={G.LabelStyle}>
               Código SUNAT
             </label>
             <input
@@ -61,12 +61,12 @@ const Modal = ({ setModal, modo, objeto }) => {
               disabled={modo == "Consultar"}
               value={data.codigoSunat ?? ""}
               onChange={ValidarData}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
         </div>
-        <div className={Global.InputFull}>
-          <label htmlFor="descripcion" className={Global.LabelStyle}>
+        <div className={G.InputFull}>
+          <label htmlFor="descripcion" className={G.LabelStyle}>
             Descripción
           </label>
           <input
@@ -78,7 +78,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             disabled={modo == "Consultar"}
             value={data.descripcion ?? ""}
             onChange={ValidarData}
-            className={Global.InputStyle}
+            className={G.InputStyle}
           />
         </div>
       </div>

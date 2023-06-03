@@ -10,7 +10,7 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -224,8 +224,8 @@ const EntidadBancaria = () => {
     <>
       {visible ? (
         <>
-           <div className={Global.ContenedorPadre}>
-            <h2 className={Global.TituloH2}>Entidades Bancarias</h2>
+           <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Entidades Bancarias</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -244,7 +244,7 @@ const EntidadBancaria = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonRegistrar}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""

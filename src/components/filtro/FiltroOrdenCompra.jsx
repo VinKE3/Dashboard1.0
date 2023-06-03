@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -248,7 +248,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
               id="boton"
               onClick={() => GetPorId(row.values.id)}
               className={
-                Global.BotonModalBase + Global.BotonAgregar + " border-none "
+                G.BotonModalBase + G.BotonAgregar + " border-none "
               }
             >
               <FaCheck></FaCheck>
@@ -276,7 +276,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
             id="boton"
             onClick={() => EliminarFila(row.values.id)}
             className={
-              Global.BotonModalBase + Global.BotonEliminar + "border-none"
+              G.BotonModalBase + G.BotonEliminar + "border-none"
             }
           >
             <FaTrash></FaTrash>
@@ -296,12 +296,12 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Órdenes de Compra"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <button
             type="button"
             onClick={() => setModal(false)}
-            className={Global.BotonModalBase + Global.BotonCancelarModal}
+            className={G.BotonModalBase + G.BotonCancelarModal}
           >
             CERRAR
           </button>
@@ -311,12 +311,12 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
           <>
             <div
               className={
-                Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
+                G.ContenedorBasico + G.FondoContenedor + " mb-2"
               }
             >
-              <div className={Global.ContenedorInputs + "mb-2"}>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs + "mb-2"}>
+                <div className={G.InputMitad}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -328,11 +328,11 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     value={filtro.fechaInicio}
                     onChange={ValidarData}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.InputMitad}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -343,13 +343,13 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     value={filtro.fechaFin}
                     onChange={ValidarData}
                     onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                   {/* <button
                     id="consultar"
                     onClick={Filtro}
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                   >
                     <FaSearch></FaSearch>
@@ -369,7 +369,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
               {/* Tabla */}
             </div>
             {Object.entries(dataOrdenSeleccionada).length > 0 && (
-              <div className={Global.ContenedorBasico + Global.FondoContenedor}>
+              <div className={G.ContenedorBasico + G.FondoContenedor}>
                 <p className=" px-1 text-base text-light font-bold">
                   SELECCIONADOS
                 </p>

@@ -6,7 +6,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Insert from "../funciones/Insert";
 import Update from "../funciones/Update";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 const ModalCrud = ({
   children,
@@ -17,7 +17,7 @@ const ModalCrud = ({
   titulo,
   cerrar = true,
   foco,
-  tamañoModal = [Global.ModalPequeño, Global.Form],
+  tamañoModal = [G.ModalPequeño, G.Form],
 }) => {
   //#region useState
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -160,17 +160,17 @@ const ModalCrud = ({
   //#region Render
   return (
     <>
-      <div className={Global.FondoModal}>
+      <div className={G.FondoModal}>
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div id="modalCRUD" className={Global.ModalContent}>
+          <div id="modalCRUD" className={G.ModalContent}>
             {/*header*/}
-            <div className={Global.ModalHeader}>
-              <h3 className={Global.TituloModal}>
+            <div className={G.ModalHeader}>
+              <h3 className={G.TituloModal}>
                 {modo == "Nuevo" ? `Registrar ${titulo}` : `${modo} ${titulo}`}
               </h3>
               {cerrar && (
-                <button className={Global.CerrarModal} onClick={CerrarModal}>
+                <button className={G.CerrarModal} onClick={CerrarModal}>
                   <FontAwesomeIcon icon={faXmark} size="lg" />
                 </button>
               )}
@@ -178,7 +178,7 @@ const ModalCrud = ({
             {/*header*/}
 
             {/*body*/}
-            <div className={Global.ModalBody} onKeyDown={(e) => CerrarModal(e)}>
+            <div className={G.ModalBody} onKeyDown={(e) => CerrarModal(e)}>
               <div className={tamañoModal[1]}>
                 {tipoMensaje > 0 && (
                   <Mensajes
@@ -193,13 +193,13 @@ const ModalCrud = ({
             {/*body*/}
 
             {/*footer*/}
-            <div className={Global.ModalFooter}>
+            <div className={G.ModalFooter}>
               {modo == "Consultar" ? (
                 ""
               ) : (
                 <button
                   id="botonRegistrarModalCrud"
-                  className={Global.BotonModalBase + Global.BotonOkModal}
+                  className={G.BotonModalBase + G.BotonOkModal}
                   type="button"
                   onClick={
                     modo == "Nuevo" ? (e) => Nuevo(e) : (e) => Modificar(e)
@@ -210,7 +210,7 @@ const ModalCrud = ({
                 </button>
               )}
               <button
-                className={Global.BotonModalBase + Global.BotonCancelarModal}
+                className={G.BotonModalBase + G.BotonCancelarModal}
                 type="button"
                 autoFocus={modo == "Consultar"}
                 onClick={CerrarModal}

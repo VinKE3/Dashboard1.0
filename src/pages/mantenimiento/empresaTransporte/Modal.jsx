@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import Ubigeo from "../../../components/filtro/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -41,12 +41,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "EmpresaTransporte"]}
           titulo="Empresa Transporte"
           foco={document.getElementById("tablaEmpresaTransporte")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input72}>
-                <label htmlFor="id" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input72}>
+                <label htmlFor="id" className={G.LabelStyle}>
                   Código
                 </label>
                 <input
@@ -58,13 +58,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.id ?? ""}
                   onChange={ValidarData}
                   disabled={true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
+              <div className={G.InputFull}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   RUC N°
                 </label>
@@ -79,12 +79,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar" }
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
+              <label htmlFor="nombre" className={G.LabelStyle}>
                 Razón Social
               </label>
               <input
@@ -96,12 +96,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.nombre ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
-                <label htmlFor="telefono" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputMitad}>
+                <label htmlFor="telefono" className={G.LabelStyle}>
                   Telefono
                 </label>
                 <input
@@ -114,11 +114,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" }
                   value={data.telefono ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="celular" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="celular" className={G.LabelStyle}>
                   Celular
                 </label>
                 <input
@@ -130,12 +130,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar" }
                   value={data.celular ?? ""}
                   onChange={ValidarData}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="correoElectronico" className={Global.LabelStyle}>
+              <label htmlFor="correoElectronico" className={G.LabelStyle}>
                 Email
               </label>
               <input
@@ -147,11 +147,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.correoElectronico ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
             <div className="flex">
-              <label htmlFor="direccion" className={Global.LabelStyle}>
+              <label htmlFor="direccion" className={G.LabelStyle}>
                 Dirección
               </label>
               <input
@@ -163,7 +163,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.direccion ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
             <Ubigeo
@@ -178,7 +178,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ></Ubigeo>
 
             <div className="flex">
-              <label htmlFor="observacion" className={Global.LabelStyle}>
+              <label htmlFor="observacion" className={G.LabelStyle}>
                 Observación
               </label>
               <input
@@ -190,7 +190,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar" }
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
           </div>

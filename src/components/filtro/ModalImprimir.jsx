@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ModalBasic from "../modal/ModalBasic";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 const ModalImprimir = ({ setModal, objeto, foco }) => {
   //#region useState
@@ -49,7 +49,7 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
         menu={["", ""]}
         titulo={"Reporte " + fileName.slice(0, fileName.length - 4)}
         cerrar={false}
-        tamañoModal={[Global.ModalFull, Global.Form]}
+        tamañoModal={[G.ModalFull, G.Form]}
         childrenFooter={
           <>
             <a
@@ -57,8 +57,8 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
               href={pdf}
               download={fileName}
               className={
-                Global.BotonModalBase +
-                Global.BotonAgregar +
+                G.BotonModalBase +
+                G.BotonAgregar +
                 " !text-light border-none"
               }
             >
@@ -69,7 +69,7 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
               onClick={() => setModal(false)}
               onKeyDown={(e) => Key(e)}
               autoFocus
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCancelarModal}
             >
               CERRAR
             </button>

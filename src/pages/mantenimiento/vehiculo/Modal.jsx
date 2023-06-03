@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -44,12 +44,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "Vehiculo"]}
           titulo="Vehiculos"
           foco={document.getElementById("tablaVehiculo")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input48}>
-                <label htmlFor="subLineaId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input48}>
+                <label htmlFor="subLineaId" className={G.LabelStyle}>
                   Código
                 </label>
                 <input
@@ -60,13 +60,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   value={data.id ?? ""}
                   disabled={true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
+              <div className={G.InputFull}>
                 <label
                   htmlFor="empresaTransporteId"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   Empresa Transporte
                 </label>
@@ -77,7 +77,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={data.empresaTransporteId ?? ""}
                   onChange={ValidarData}
                   disabled={modo == "Consultar"}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataModal.map((empresa) => (
                     <option
@@ -91,7 +91,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="numeroPlaca" className={Global.LabelStyle}>
+              <label htmlFor="numeroPlaca" className={G.LabelStyle}>
                 N° Placa
               </label>
               <input
@@ -103,11 +103,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar"}
                 value={data.numeroPlaca ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
             <div className="flex">
-              <label htmlFor="marca" className={Global.LabelStyle}>
+              <label htmlFor="marca" className={G.LabelStyle}>
                 Marca
               </label>
               <input
@@ -119,11 +119,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar"}
                 value={data.marca ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
             <div className="flex">
-              <label htmlFor="modelo" className={Global.LabelStyle}>
+              <label htmlFor="modelo" className={G.LabelStyle}>
                 Modelo
               </label>
               <input
@@ -135,13 +135,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar"}
                 value={data.modelo ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
             <div className="flex">
               <label
                 htmlFor="certificadoInscripcion"
-                className={Global.LabelStyle}
+                className={G.LabelStyle}
               >
                 Certificado Inscripción
               </label>
@@ -154,11 +154,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar"}
                 value={data.certificadoInscripcion ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
             <div className="flex">
-              <label htmlFor="observacion" className={Global.LabelStyle}>
+              <label htmlFor="observacion" className={G.LabelStyle}>
                 Observación
               </label>
               <input
@@ -170,7 +170,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar"}
                 value={data.observacion ?? ""}
                 onChange={ValidarData}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               />
             </div>
           </div>

@@ -4,7 +4,7 @@ import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
 import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -148,7 +148,7 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
             id="boton"
             onClick={() => GetPorId(row.values.id)}
             className={
-              Global.BotonModalBase + Global.BotonAgregar + "border-none"
+              G.BotonModalBase + G.BotonAgregar + "border-none"
             }
           >
             <FaCheck></FaCheck>
@@ -169,12 +169,12 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
         modo={""}
         menu={["", ""]}
         titulo="Consultar Proveedores"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             {/* <button
               className={
-                Global.BotonOkModal + " flex items-center justify-center"
+                G.BotonOkModal + " flex items-center justify-center"
               }
               type="button"
             >
@@ -182,7 +182,7 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
               <p className="pl-2">Nuevo</p>
             </button> */}
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -192,12 +192,12 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input60pct}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input60pct}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   N° Documento
                 </label>
@@ -211,11 +211,11 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
                   value={filtro.numeroDocumentoIdentidad}
                   onChange={ValidarData}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="nombre" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="nombre" className={G.LabelStyle}>
                   Nombre
                 </label>
                 <input
@@ -227,13 +227,13 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
                   value={filtro.nombre}
                   onChange={ValidarData}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
                 {/* <button
                   id="consultar"
                   onClick={Filtro}
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                 >
                   <FaSearch></FaSearch>

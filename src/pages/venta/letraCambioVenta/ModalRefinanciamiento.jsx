@@ -10,7 +10,7 @@ import { RadioButton } from "primereact/radiobutton";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
@@ -944,7 +944,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <div className="flex item-center justify-center">
-          <div className={Global.TablaBotonModificar}>
+          <div className={G.TablaBotonModificar}>
             <button
               id="boton-modificar"
               onClick={() => {
@@ -956,7 +956,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               <FaPen></FaPen>
             </button>
           </div>
-          <div className={Global.TablaBotonEliminar}>
+          <div className={G.TablaBotonEliminar}>
             <button
               id="boton-eliminar"
               onClick={() => {
@@ -1039,7 +1039,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             ""
           ) : (
             <>
-              <div className={Global.TablaBotonModificar}>
+              <div className={G.TablaBotonModificar}>
                 <button
                   id="boton"
                   onClick={() => CargarDetalleLetra(row.values.id)}
@@ -1070,7 +1070,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             titulo="Refinanciamiento de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
-            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -1082,15 +1082,15 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             {/* Cabecera Documento */}
             <div
               className={
-                Global.ContenedorBasico +
+                G.ContenedorBasico +
                 " mb-2 !gap-0 !overflow-x-auto" +
-                Global.FondoContenedor
+                G.FondoContenedor
               }
             >
-              <div className={Global.ContenedorInputs + " mb-2"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.InputFull}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputs + " mb-2"}>
+                <div className={G.InputMitad}>
+                  <div className={G.InputFull}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="normal"
                         name="isRenovado"
@@ -1102,13 +1102,13 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </div>
                     <label
                       htmlFor="normal"
-                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                      className={G.LabelCheckStyle + "rounded-r-none"}
                     >
                       Normal
                     </label>
                   </div>
-                  <div className={Global.InputFull}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.InputFull}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="renovado"
                         name="isRenovado"
@@ -1119,14 +1119,14 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </div>
                     <label
                       htmlFor="renovado"
-                      className={Global.LabelCheckStyle}
+                      className={G.LabelCheckStyle}
                     >
                       Renovado
                     </label>
                   </div>
                 </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="numero" className={Global.LabelStyle}>
+                <div className={G.InputMitad}>
+                  <label htmlFor="numero" className={G.LabelStyle}>
                     Número Letra
                   </label>
                   <input
@@ -1140,12 +1140,12 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     disabled={!extras.habilitar}
                     value={dataCabecera.numero ?? ""}
                     onChange={DataCabecera}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="consultarDocumento"
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                     hidden={modo == "Consultar"}
                     disabled={!extras.habilitar}
@@ -1157,12 +1157,12 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico + " mb-2"}>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.Input25pct}>
+              <div className={G.ContenedorBasico + " mb-2"}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.Input25pct}>
                     <label
                       htmlFor="porcentajeInteres"
-                      className={Global.LabelStyle}
+                      className={G.LabelStyle}
                     >
                       % Interés
                     </label>
@@ -1176,11 +1176,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.porcentajeInteres ?? ""}
                       onChange={PorcentajesCabecera}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.Input25pct}>
-                    <label htmlFor="montoInteres" className={Global.LabelStyle}>
+                  <div className={G.Input25pct}>
+                    <label htmlFor="montoInteres" className={G.LabelStyle}>
                       Monto Interés
                     </label>
                     <input
@@ -1193,13 +1193,13 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.montoInteres ?? ""}
                       onChange={PorcentajesCabecera}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.Input25pct}>
+                  <div className={G.Input25pct}>
                     <label
                       htmlFor="porcentajePago"
-                      className={Global.LabelStyle}
+                      className={G.LabelStyle}
                     >
                       % Pago
                     </label>
@@ -1213,11 +1213,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.porcentajePago ?? ""}
                       onChange={PorcentajesCabecera}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="montoPago" className={Global.LabelStyle}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="montoPago" className={G.LabelStyle}>
                       Monto Pago
                     </label>
                     <input
@@ -1229,14 +1229,14 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={true}
                       value={dataCabecera.montoPago ?? ""}
-                      className={Global.InputBoton}
+                      className={G.InputBoton}
                     />
                     <button
                       id="enviarDocumento"
                       className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonPrimary +
+                        G.BotonBuscar +
+                        G.Anidado +
+                        G.BotonPrimary +
                         " rounded-r-none"
                       }
                       hidden={modo == "Consultar"}
@@ -1248,9 +1248,9 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     <button
                       id="eliminarDocumentos"
                       className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonEliminar
+                        G.BotonBuscar +
+                        G.Anidado +
+                        G.BotonEliminar
                       }
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(0)}
@@ -1282,54 +1282,54 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
-              <div className={Global.ContenedorFooter}>
+              <div className={G.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
-                  <div className={Global.FilaFooter + Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total Saldo</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total Saldo</p>
                   </div>
-                  <div className={Global.FilaFooter + Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalSaldo ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
-                  <div className={Global.FilaFooter + Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total Interés</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total Interés</p>
                   </div>
-                  <div className={Global.FilaFooter + Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalInteres ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
-                  <div className={Global.FilaFooter + Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total Pago</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total Pago</p>
                   </div>
-                  <div className={Global.FilaFooter + Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalPago ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
-                  <div className={Global.FilaFooter + Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaFooter + Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.total ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}
@@ -1339,15 +1339,15 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             {/* Cabecera Letra */}
             <div
               className={
-                Global.ContenedorBasico + " !gap-0 " + Global.FondoContenedor
+                G.ContenedorBasico + " !gap-0 " + G.FondoContenedor
               }
             >
-              <p className={Global.Subtitulo + " pb-1"}>
+              <p className={G.Subtitulo + " pb-1"}>
                 Letras por Renovación
               </p>
-              <div className={Global.ContenedorInputs + " mb-1.5"}>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="numeroLetra" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs + " mb-1.5"}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="numeroLetra" className={G.LabelStyle}>
                     N° Letras
                   </label>
                   <input
@@ -1360,11 +1360,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Consultar" || !extras.habilitarDetalle}
                     value={dataCabecera.numeroLetra ?? ""}
                     onChange={DataCabecera}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="tipoCambio" className={G.LabelStyle}>
                     Tipo Cambio
                   </label>
                   <input
@@ -1379,14 +1379,14 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     onChange={DataCabecera}
                     className={
                       modo != "Consultar"
-                        ? Global.InputBoton
-                        : Global.InputStyle
+                        ? G.InputBoton
+                        : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
@@ -1397,8 +1397,8 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     <FaUndoAlt></FaUndoAlt>
                   </button>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="monedaId" className={G.LabelStyle}>
                     Moneda
                   </label>
                   <select
@@ -1407,7 +1407,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     value={data.monedaId ?? ""}
                     onChange={DataCabecera}
                     disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     {dataMoneda.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -1418,10 +1418,10 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico + " mb-2"}>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+              <div className={G.ContenedorBasico + " mb-2"}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="fechaEmision" className={G.LabelStyle}>
                       Fecha Emisión
                     </label>
                     <input
@@ -1435,11 +1435,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                         "yyyy-MM-DD"
                       )}
                       onChange={DataCabeceraLetra}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputTercio}>
-                    <label htmlFor="dias" className={Global.LabelStyle}>
+                  <div className={G.InputTercio}>
+                    <label htmlFor="dias" className={G.LabelStyle}>
                       Días
                     </label>
                     <input
@@ -1452,13 +1452,13 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataLetra.dias ?? ""}
                       onChange={FechaVencimiento}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputMitad}>
+                  <div className={G.InputMitad}>
                     <label
                       htmlFor="fechaVencimiento"
-                      className={Global.LabelStyle}
+                      className={G.LabelStyle}
                     >
                       Fecha Vencimiento
                     </label>
@@ -1471,13 +1471,13 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       value={moment(dataLetra.fechaVencimiento ?? "").format(
                         "yyyy-MM-DD"
                       )}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <label htmlFor="aval" className={Global.LabelStyle}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputFull}>
+                    <label htmlFor="aval" className={G.LabelStyle}>
                       Aval
                     </label>
                     <input
@@ -1490,14 +1490,14 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataLetra.aval ?? ""}
                       onChange={DataCabeceraLetra}
-                      className={Global.InputBoton}
+                      className={G.InputBoton}
                     />
                     <button
                       id="enviarDetalleLetra"
                       className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonPrimary +
+                        G.BotonBuscar +
+                        G.Anidado +
+                        G.BotonPrimary +
                         " rounded-r-none"
                       }
                       hidden={modo == "Consultar"}
@@ -1509,9 +1509,9 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     <button
                       id="eliminarDetalleLetra"
                       className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonEliminar
+                        G.BotonBuscar +
+                        G.Anidado +
+                        G.BotonEliminar
                       }
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(1)}
@@ -1543,18 +1543,18 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
-              <div className={Global.ContenedorFooter}>
+              <div className={G.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaFooter + Global.FilaVacia}></div>
-                  <div className={Global.FilaFooter + Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaFooter + Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalDetalle ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.FilaFooter + Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}

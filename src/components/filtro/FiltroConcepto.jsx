@@ -6,7 +6,7 @@ import { RadioButton } from "primereact/radiobutton";
 import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import moment from "moment";
-import * as Global from "../Global";
+import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 
 //#region Estilos
@@ -216,7 +216,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
               id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
               className={
-                Global.BotonModalBase + Global.BotonAgregar + "border-none"
+                G.BotonModalBase + G.BotonAgregar + "border-none"
               }
             >
               <FaCheck></FaCheck>
@@ -242,11 +242,11 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
             ? "Buscar Cuentas por Pagar"
             : "Buscar Cuentas por Cobrar"
         }
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCancelarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -256,11 +256,11 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle}>
                     <RadioButton
                       inputId="todos"
                       name="tipoDocumentoId"
@@ -273,13 +273,13 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   </div>
                   <label
                     htmlFor="todos"
-                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                    className={G.LabelCheckStyle + "rounded-r-none"}
                   >
                     Todos
                   </label>
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <RadioButton
                       inputId="factura"
                       name="tipoDocumentoId"
@@ -290,13 +290,13 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   </div>
                   <label
                     htmlFor="factura"
-                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                    className={G.LabelCheckStyle + "rounded-r-none"}
                   >
                     Factura
                   </label>
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <RadioButton
                       inputId="notaCredito"
                       name="tipoDocumentoId"
@@ -308,13 +308,13 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   </div>
                   <label
                     htmlFor="notaCredito"
-                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                    className={G.LabelCheckStyle + "rounded-r-none"}
                   >
                     Nota Credito
                   </label>
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <RadioButton
                       inputId="letraCambio"
                       name="tipoDocumentoId"
@@ -326,16 +326,16 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   </div>
                   <label
                     htmlFor="letraCambio"
-                    className={Global.LabelCheckStyle}
+                    className={G.LabelCheckStyle}
                   >
                     Letra de Cambio
                   </label>
                 </div>
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="numeroDocumento" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="numeroDocumento" className={G.LabelStyle}>
                   Número de Documento
                 </label>
                 <input
@@ -347,13 +347,13 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   autoFocus
                   onChange={ValidarData}
                   onKeyDown={(e) => Key(e)}
-                  className={Global.InputBoton}
+                  className={G.InputBoton}
                 />
                 <button
                   id="consultarCuentas"
                   onClick={Filtro}
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                 >
                   <FaSearch></FaSearch>
