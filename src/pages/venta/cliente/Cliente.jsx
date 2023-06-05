@@ -59,9 +59,10 @@ const Cliente = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -71,10 +72,10 @@ const Cliente = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
-
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -249,7 +250,7 @@ const Cliente = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Clientes</h2>
 
             {/* Filtro*/}
@@ -287,9 +288,7 @@ const Cliente = () => {
                 />
                 <button
                   id="buscar"
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />

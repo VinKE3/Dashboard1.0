@@ -2,9 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
-import Anular from "../../../components/funciones/Anular";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -63,14 +65,19 @@ const Cotizacion = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
@@ -83,7 +90,9 @@ const Cotizacion = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -95,6 +104,7 @@ const Cotizacion = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -132,26 +142,6 @@ const Cotizacion = () => {
     const result = await ApiMasy.get(`api/Venta/Cotizacion/${id}`);
     setObjeto(result.data.data);
   };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/Cotizacion/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
   //#endregion
 
   //#region Funciones Filtrado
@@ -172,8 +162,12 @@ const Cotizacion = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("clienteNombre").focus();
@@ -249,7 +243,7 @@ const Cotizacion = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Venta/Cotizacion", accion, value);
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -257,7 +251,7 @@ const Cotizacion = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Venta/Cotizacion", accion, value);
           if (valor) {
             await Delete(["Venta", "Cotizacion"], value, setEliminar);
           }
@@ -289,9 +283,13 @@ const Cotizacion = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, id);
+                let valor = await GetIsPermitido(
+                  "Venta/Cotizacion",
+                  accion,
+                  id
+                );
                 if (valor) {
-                  await Anular(["Venta", "Cotizacion"], id, setEliminar);
+                  await Put(`Venta/Cotizacion/Anular/${id}`, setEliminar);
                 }
               }
             });
@@ -315,7 +313,11 @@ const Cotizacion = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Venta", "Cotizacion"], id);
+            let model = await Imprimir(["Venta", "Cotizacion"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -489,7 +491,7 @@ const Cotizacion = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Cotizaciones</h2>
 
             {/* Filtro*/}
@@ -537,9 +539,7 @@ const Cotizacion = () => {
                 />
                 <button
                   id="buscar"
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -595,6 +595,13 @@ const Cotizacion = () => {
           </div>
 
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaCotizacion")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

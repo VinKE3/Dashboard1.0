@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Delete from "../funciones/Delete";
 import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
-import "react-toastify/dist/ReactToastify.css";
 import * as G from "../Global";
 
 const BotonCRUD = ({
@@ -21,7 +20,7 @@ const BotonCRUD = ({
 
   const ValidarEliminar = async () => {
     if (id != "") {
-      Delete([menu[0], menu[1]], id, setEliminar);
+      await Delete([menu[0], menu[1]], id, setEliminar);
     } else {
       ClickEliminar();
     }

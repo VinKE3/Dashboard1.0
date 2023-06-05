@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import Put from "../../../components/funciones/Put";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
@@ -9,7 +10,6 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaUndoAlt } from "react-icons/fa";
 import moment from "moment";
-import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import * as G from "../../../components/Global";
@@ -52,8 +52,12 @@ const BloquearMovimientoBancario = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -68,14 +72,16 @@ const BloquearMovimientoBancario = () => {
     setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
+      Listar(cadena, index + 1);
     }
   }, [eliminar]);
-
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -125,8 +131,12 @@ const BloquearMovimientoBancario = () => {
   };
   const FiltroBoton = async () => {
     setFiltro({
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("fechaInicio").focus();
@@ -139,67 +149,12 @@ const BloquearMovimientoBancario = () => {
 
   //#region Funciones Modal
   const Bloquear = async (id, isBloqueado) => {
-    let model = {
+    await Put(`Finanzas/BloquearMovimientoBancario`, setEliminar, {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
-    };
-    const result = await ApiMasy.put(
-      `api/Finanzas/BloquearMovimientoBancario`,
-      model
-    );
-    if (result.name == "AxiosError") {
-      let err = "";
-      if (result.response.data == "") {
-        err = response.message;
-      } else {
-        err = String(result.response.data.messages[0].textos);
-      }
-      toast.error(err, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    } else {
-      Listar(
-        `&fechaInicio=${
-          document.getElementById("fechaInicio").value
-        }&fechaFin=${document.getElementById("fechaFin").value}`,
-        index + 1
-      );
-      toast.success(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    }
-  };
-  const BloquearKey = async (e) => {
-    if (e.key == "Enter") {
-      let row = document
-        .querySelector("#tablaBloquearMovimiento")
-        .querySelector("tr.selected-row");
-      if (row != null) {
-        let id = row.firstChild.innerText;
-        let bloqueado = row.children[6].firstChild.id == "true" ? true : false;
-        Bloquear(id, bloqueado);
-      }
-    }
+    });
   };
   const BloquearTodo = async (ids, isBloqueado) => {
-    let model = {
-      ids: ids,
-      isBloqueado: isBloqueado,
-    };
     const title = isBloqueado
       ? "Bloquear Registros de Movimientos (50 registros mostrados)"
       : "Desbloquear Registros de Movimientos (50 registros mostrados)";
@@ -215,52 +170,26 @@ const BloquearMovimientoBancario = () => {
       confirmButtonText: "Aceptar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        ApiMasy.put(`api/Finanzas/BloquearMovimientoBancario`, model).then(
-          (response) => {
-            if (response.name == "AxiosError") {
-              let err = "";
-              if (response.response.data == "") {
-                err = response.message;
-              } else {
-                err = String(response.response.data.messages[0].textos);
-              }
-              toast.error(err, {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-            } else {
-              Listar(
-                `&fechaInicio=${
-                  document.getElementById("fechaInicio").value
-                }&fechaFin=${document.getElementById("fechaFin").value}`,
-                index + 1
-              );
-              toast.info(String(response.data.messages[0].textos), {
-                position: "bottom-right",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
-            }
-          }
-        );
+    }).then(async (res) => {
+      if (res.isConfirmed) {
+        await Bloquear(ids, isBloqueado);
         setChecked(isBloqueado);
       } else {
         setChecked(!isBloqueado);
       }
     });
+  };
+  const Key = async (e) => {
+    if (e.key == "Enter") {
+      let row = document
+        .querySelector("#tablaBloquearMovimiento")
+        .querySelector("tr.selected-row");
+      if (row != null) {
+        let id = row.firstChild.innerText;
+        let bloqueado = row.children[6].firstChild.id == "true" ? true : false;
+        Bloquear(id, bloqueado);
+      }
+    }
   };
   //#endregion
 
@@ -337,11 +266,9 @@ const BloquearMovimientoBancario = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <div className="flex items-center justify-between">
-              <h2 className={G.TituloH2}>
-                Bloquear Movimientos Bancarios
-              </h2>
+              <h2 className={G.TituloH2}>Bloquear Movimientos Bancarios</h2>
               <div className="flex">
                 <div className={G.CheckStyle}>
                   <Checkbox
@@ -395,9 +322,7 @@ const BloquearMovimientoBancario = () => {
                 />
                 <button
                   id="buscar"
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -415,7 +340,7 @@ const BloquearMovimientoBancario = () => {
                 total={total}
                 index={index}
                 Click={(e) => FiltradoPaginado(e)}
-                KeyDown={(e) => BloquearKey(e)}
+                KeyDown={(e) => Key(e)}
               />
             </DivTabla>
             {/* Tabla */}

@@ -12,12 +12,12 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect.
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Usuario/FormularioTablas`
     );

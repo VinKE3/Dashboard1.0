@@ -44,7 +44,7 @@ const ReporteCompra = ({ setModal }) => {
   };
   return (
     <>
-      <ModalBasic titulo="Reporte De Compra" setModal={setModal}>
+      <ModalBasic titulo="Reporte de Compra" setModal={setModal}>
         <div
           className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >

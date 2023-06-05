@@ -10,13 +10,17 @@ import store from "store2";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import Mensajes from "../../../components/funciones/Mensajes";
-import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 
 const PagosPendientes = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     proveedorId: "",
     checkFiltro: "porFecha",
     tipoCambio: 0,
@@ -33,7 +37,7 @@ const PagosPendientes = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    GetPorIdTipoCambio(data.fechaFin);
+    TipoCambio(data.fechaFin);
     Proveedores();
     Monedas();
   }, []);
@@ -63,7 +67,7 @@ const PagosPendientes = ({ setModal }) => {
     }));
   };
 
-  const GetPorIdTipoCambio = async (id) => {
+  const TipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
     if (result.name == "AxiosError") {
       if (Object.entries(result.response.data).length > 0) {
@@ -110,9 +114,7 @@ const PagosPendientes = ({ setModal }) => {
             Click={() => OcultarMensajes()}
           />
         )}
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
           <div className={G.InputFull}>
             <div className={G.CheckStyle}>
               <RadioButton
@@ -125,10 +127,7 @@ const PagosPendientes = ({ setModal }) => {
                 checked={data.checkFiltro === "porFecha"}
               />
             </div>
-            <label
-              htmlFor="porFecha"
-              className={G.LabelCheckStyle + +" !my-0"}
-            >
+            <label htmlFor="porFecha" className={G.LabelCheckStyle + +" !my-0"}>
               Cronograma de Pagos pendientes (Por Fecha)
             </label>
           </div>
@@ -258,11 +257,9 @@ const PagosPendientes = ({ setModal }) => {
               />
               <button
                 id="consultarTipoCambio"
-                className={
-                  G.BotonBuscar + G.Anidado + G.BotonPrimary
-                }
+                className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                 onClick={() => {
-                  GetPorIdTipoCambio(data.fechaFin);
+                  TipoCambio(data.fechaFin);
                 }}
               >
                 <FaUndoAlt></FaUndoAlt>

@@ -2,8 +2,7 @@ import ApiMasy from "../../api/ApiMasy";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 const Delete = async (menu, id, setEliminar) => {
-  setEliminar(false);
-  const result = Swal.fire({
+  Swal.fire({
     title: "Eliminar registro",
     icon: "warning",
     iconColor: "#F7BF3A",
@@ -14,17 +13,12 @@ const Delete = async (menu, id, setEliminar) => {
     confirmButtonText: "Aceptar",
     cancelButtonColor: "#d33",
     cancelButtonText: "Cancelar",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      ApiMasy.delete(`api/${menu[0]}/${menu[1]}/${id}`).then((response) => {
-        if (response.name == "AxiosError") {
-          let err = "";
-          if (response.response.data == "") {
-            err = response.message;
-          } else {
-            err = String(response.response.data.messages[0].textos);
-          }
-          toast.error(err, {
+  }).then(async (res) => {
+    if (res.isConfirmed) {
+      const result = await ApiMasy.delete(`api/${menu[0]}/${menu[1]}/${id}`);
+      if (result.tipo == 1) {
+        result.textos.map((map) => {
+          toast.error(map, {
             position: "bottom-right",
             autoClose: 3000,
             hideProgressBar: true,
@@ -34,10 +28,10 @@ const Delete = async (menu, id, setEliminar) => {
             progress: undefined,
             theme: "colored",
           });
-          setEliminar(false);
-        } else {
-          setEliminar(true);
-          toast.info(String(response.data.messages[0].textos), {
+        });
+      } else {
+        result.data.messages[0].textos.map((map) => {
+          toast.success(map, {
             position: "bottom-right",
             autoClose: 3000,
             hideProgressBar: true,
@@ -47,11 +41,11 @@ const Delete = async (menu, id, setEliminar) => {
             progress: undefined,
             theme: "colored",
           });
-        }
-      });
+        });
+        setEliminar(true);
+      }
     }
   });
-  return result;
 };
 
 export default Delete;

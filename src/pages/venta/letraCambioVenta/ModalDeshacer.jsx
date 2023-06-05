@@ -10,7 +10,7 @@ import { Checkbox } from "primereact/checkbox";
 import { FaSearch, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -43,9 +43,9 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
   const [dataDetalle, setDataDetalle] = useState([]);
   const [dataLetraDetalle, setDataLetraDetalle] = useState([]);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [filtro, setFiltro] = useState({
     fechaInicio: moment().format("YYYY-MM-DD"),
@@ -73,7 +73,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
     RetornarMensaje();
   }, [tipoMensaje]);
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -165,7 +165,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/FormularioTablas`
     );
@@ -180,14 +180,9 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
       const result = await ApiMasy.delete(
         `api/Venta/LetraCambioVenta/Deshacer/${id}`
       );
-      if (result.name == "AxiosError") {
-        if (Object.entries(result.response.data).length > 0) {
-          setTipoMensaje(result.response.data.messages[0].tipo);
-          setMensaje(result.response.data.messages[0].textos);
-        } else {
-          setTipoMensaje(1);
-          setMensaje([result.message]);
-        }
+      if (result.tipo == 1) {
+        setTipoMensaje(result.tipo);
+        setMensaje(result.textos);
       } else {
         setTipoMensaje(result.data.messages[0].tipo);
         setMensaje(result.data.messages[0].textos[0]);
@@ -307,11 +302,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
               />
             )}
             {/* Cabecera Documento */}
-            <div
-              className={
-                G.ContenedorBasico + G.FondoContenedor + " mb-2"
-              }
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputMitad}>
                   <label htmlFor="fechaInicio" className={G.LabelStyle}>
@@ -344,10 +335,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
               </div>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="tipoDocumentoId"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
                     Tipo Doc.
                   </label>
                   <select
@@ -393,7 +381,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     Número
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="numero"
                     name="numero"
                     placeholder="Número"
@@ -421,9 +409,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                   </button>
                   <button
                     id="eliminarDocumentos"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonEliminar
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonEliminar}
                     hidden={modo == "Consultar"}
                     onClick={() => Limpiar()}
                   >

@@ -10,7 +10,7 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 
 //#region Estilos
@@ -69,6 +69,7 @@ const Cargo = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -228,7 +229,7 @@ const Cargo = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Cargos</h2>
 
             {/* Filtro*/}

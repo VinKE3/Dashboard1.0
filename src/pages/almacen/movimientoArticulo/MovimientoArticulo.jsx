@@ -11,7 +11,6 @@ import { FaUndoAlt } from "react-icons/fa";
 import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
 import * as G from "../../../components/Global";
 
 //#region Estilos
@@ -54,8 +53,12 @@ const MovimientoArticulo = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     tipoExistenciaId: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     conStock: false,
   });
   const [filtroLocal, setFiltroLocal] = useState({
@@ -201,8 +204,12 @@ const MovimientoArticulo = () => {
   const FiltroBoton = async () => {
     setFiltro({
       tipoExistenciaId: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       conStock: false,
     });
     setIndex(0);
@@ -406,14 +413,12 @@ const MovimientoArticulo = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Movimiento de Artículos</h2>
 
             {/* Filtro*/}
             <div
-              className={
-                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
               <div className={G.ContenedorInputsFiltro + " !my-0"}>
                 <div className={G.InputFull}>
@@ -466,9 +471,7 @@ const MovimientoArticulo = () => {
                   />
                   <button
                     id="buscar"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={Filtro}
                   >
                     <FaUndoAlt />
@@ -503,10 +506,7 @@ const MovimientoArticulo = () => {
                             checked={filtroLocal.conStock ? true : ""}
                           ></Checkbox>
                         </div>
-                        <label
-                          htmlFor="conStock"
-                          className={G.LabelCheckStyle}
-                        >
+                        <label htmlFor="conStock" className={G.LabelCheckStyle}>
                           Con Stock
                         </label>
                       </div>

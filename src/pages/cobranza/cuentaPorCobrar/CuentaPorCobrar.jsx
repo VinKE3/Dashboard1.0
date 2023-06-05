@@ -3,6 +3,7 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -66,8 +67,12 @@ const CuentaPorCobrar = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     isCancelado: "",
   });
   const [cadena, setCadena] = useState(
@@ -75,6 +80,7 @@ const CuentaPorCobrar = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo] = useState("Consultar");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
@@ -88,7 +94,9 @@ const CuentaPorCobrar = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -100,6 +108,7 @@ const CuentaPorCobrar = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -143,8 +152,12 @@ const CuentaPorCobrar = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       isCancelado: "",
     });
     setIndex(0);
@@ -190,7 +203,11 @@ const CuentaPorCobrar = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Finanza", "CuentaPorCobrar"], id);
+            let model = await Imprimir(["Finanzas", "CuentaPorCobrar"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -217,7 +234,7 @@ const CuentaPorCobrar = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        AccionModal(id, "Consultar", 3);
+        AccionModal(id, 3);
       }
     }
     if (e.key === "p") {
@@ -226,7 +243,7 @@ const CuentaPorCobrar = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        AccionModal(id, "Imprimir", 5);
+        AccionModal(id, 5);
       }
     }
   };
@@ -312,8 +329,8 @@ const CuentaPorCobrar = () => {
             permisos={permisos}
             menu={["Finanzas", "CuentaPorCobrar"]}
             id={row.values.id}
-            ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
-            ClickModificar={() => AccionModal(row.values.id, "Consultar", 3)}
+            ClickConsultar={() => AccionModal(row.values.id, 3)}
+            ClickModificar={() => AccionModal(row.values.id, 3)}
           />
         ),
       },
@@ -327,14 +344,12 @@ const CuentaPorCobrar = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Cuentas por Cobrar</h2>
 
             {/* Filtro*/}
             <div
-              className={
-                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
               <div className={G.ContenedorInputsFiltro + " !my-0"}>
                 <div className={G.InputFull}>
@@ -379,9 +394,7 @@ const CuentaPorCobrar = () => {
                   />
                   <button
                     id="buscar"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -453,7 +466,7 @@ const CuentaPorCobrar = () => {
                 botonText="Imprimir"
                 botonClass={G.BotonAgregar}
                 botonIcon={faPrint}
-                click={() => AccionModal(null, "Imprimir", 5)}
+                click={() => AccionModal(null, 5)}
                 contenedor=""
               />
             </div>
@@ -475,6 +488,13 @@ const CuentaPorCobrar = () => {
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaCuentaPorCobrar")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

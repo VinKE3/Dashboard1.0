@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Get from "../../../components/funciones/Get";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import TableBasic from "../../../components/tabla/TableBasic";
@@ -78,7 +79,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataUbigeo]);
   useEffect(() => {
-    Tablas();
+    GetTablas();
     if (modo != "Nuevo") {
       ListarCcorriente();
       ListarContacto();
@@ -124,7 +125,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       tipo = "";
     }
-    GetDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
+    GetDocumento(tipo, documento);
   };
   const AgregarCuentaCorriente = async (value = 0, e = null, click = false) => {
     if (modo != "Consultar") {
@@ -217,58 +218,32 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Proveedor/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
   };
-  const GetDocumento = async (filtroApi = "") => {
+  const GetDocumento = async (tipo, documento) => {
     document.getElementById("consultarApi").hidden = true;
-    const result = await ApiMasy.get(
-      `api/Servicio/ConsultarRucDni${filtroApi}`
+    const result = await Get(
+      `Servicio/ConsultarRucDni?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`,
+      "Datos extraídos exitosamente."
     );
-    if (result.name == "AxiosError") {
-      let err = "";
-      if (result.response.data == "") {
-        err = result.message;
-      } else {
-        err = String(result.response.data.messages[0].textos);
-      }
-      toast.error(err, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    if (result == undefined) {
       document.getElementById("consultarApi").hidden = false;
       document.getElementById("numeroDocumentoIdentidad").focus();
     } else {
       setData({
         ...data,
-        numeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
-        nombre: result.data.data.nombre,
-        direccionPrincipal: result.data.data.direccion,
-      });
-      toast.info("Datos extraídos exitosamente", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+        numeroDocumentoIdentidad: result.numeroDocumentoIdentidad,
+        nombre: result.nombre,
+        direccionPrincipal: result.direccion,
       });
       document.getElementById("consultarApi").hidden = false;
       document.getElementById("nombreProveedor").focus();
     }
   };
-
   const TablasCcorriente = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ProveedorCuentaCorriente/FormularioTablas`
@@ -598,9 +573,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={HandleData}
                       className={
-                        modo == "Consultar"
-                          ? G.InputStyle
-                          : G.InputBoton
+                        modo == "Consultar" ? G.InputStyle : G.InputBoton
                       }
                     />
                     <button
@@ -608,11 +581,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       hidden={modo == "Consultar"}
                       onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={(e) => ValidarConsultarDocumento(e)}
-                      className={
-                        G.BotonBuscar +
-                        G.Anidado +
-                        G.BotonPrimary
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     >
                       <FaSearch></FaSearch>
                     </button>
@@ -672,10 +641,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputFull}>
-                    <label
-                      htmlFor="correoElectronico"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="correoElectronico" className={G.LabelStyle}>
                       Correo
                     </label>
                     <input
@@ -775,9 +741,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {habilitarCuentaCorriente && (
                   <div
                     className={
-                      G.ContenedorBasico +
-                      G.FondoContenedor +
-                      " pb-1 mb-2"
+                      G.ContenedorBasico + G.FondoContenedor + " pb-1 mb-2"
                     }
                   >
                     {tipoMen > 0 && (
@@ -932,9 +896,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {habilitarContacto && (
                   <div
                     className={
-                      G.ContenedorBasico +
-                      G.FondoContenedor +
-                      " pb-1 mb-2"
+                      G.ContenedorBasico + G.FondoContenedor + " pb-1 mb-2"
                     }
                   >
                     {tipoMen > 0 && (

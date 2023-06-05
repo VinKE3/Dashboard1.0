@@ -4,7 +4,7 @@ import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
+import { FaTrash, FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
 import * as G from "../Global";
@@ -176,12 +176,6 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
-  };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
       let row = document
@@ -247,9 +241,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + " border-none "
-              }
+              className={G.BotonModalBase + G.BotonAgregar + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -275,9 +267,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
           <button
             id="boton"
             onClick={() => EliminarFila(row.values.id)}
-            className={
-              G.BotonModalBase + G.BotonEliminar + "border-none"
-            }
+            className={G.BotonModalBase + G.BotonEliminar + "border-none"}
           >
             <FaTrash></FaTrash>
           </button>
@@ -292,10 +282,8 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Órdenes de Compra"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <button
@@ -309,11 +297,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
       >
         {
           <>
-            <div
-              className={
-                G.ContenedorBasico + G.FondoContenedor + " mb-2"
-              }
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
               <div className={G.ContenedorInputs + "mb-2"}>
                 <div className={G.InputMitad}>
                   <label htmlFor="fechaInicio" className={G.LabelStyle}>
@@ -327,7 +311,6 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     autoFocus
                     value={filtro.fechaInicio}
                     onChange={HandleData}
-                    onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />
                 </div>
@@ -342,7 +325,6 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
                     autoComplete="off"
                     value={filtro.fechaFin}
                     onChange={HandleData}
-                    onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />
                   {/* <button

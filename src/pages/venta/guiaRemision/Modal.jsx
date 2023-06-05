@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import FiltroCliente from "../../../components/filtro/FiltroCliente";
 import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
@@ -15,7 +16,7 @@ import moment from "moment";
 import { FaPlus, FaSearch, FaPen, FaTrashAlt, FaUndoAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -57,7 +58,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
   const [dataGlobal] = useState(store.session.get("global"));
   //Data General
-  //Tablas
+  //GetTablas
   const [dataConductor, setDataConductor] = useState([]);
   const [dataEmpresaTransporte, setDataEmpresaTransporte] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
@@ -66,7 +67,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataVehiculo, setDataVehiculo] = useState([]);
   const [dataVendedor, setDataVendedor] = useState([]);
   const [dataMotivoTraslado, setDataMotivoTraslado] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataCliente, setDataCliente] = useState([]);
   const [dataClienteDirec, setDataClienteDirec] = useState([]);
@@ -132,8 +133,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (modo != "Nuevo") {
       GetDireccion(data.clienteId);
     }
-    GetPorIdTipoCambio(data.fechaEmision);
-    Tablas();
+    TipoCambio(data.fechaEmision);
+    GetTablas();
   }, []);
   //#endregion
 
@@ -776,7 +777,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Venta/GuiaRemision/FormularioTablas`);
     setDataConductor(result.data.data.conductores);
     setDataEmpresaTransporte(result.data.data.empresasTransporte);
@@ -793,46 +794,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     );
     setDataMotivoTraslado(result.data.data.motivosTraslado);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje([
-          result.response.data.messages[0].textos,
-          ["No se podrán realizar las conversiones de precios."],
-        ]);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([
-          [result.message],
-          ["No se podrán realizar las conversiones de precios."],
-        ]);
-      }
-      setTipoCambio(0);
-    } else {
-      setTipoCambio(result.data.data.precioVenta);
-      if (modo != "Consultar") {
-        toast.info(
-          "El tipo de cambio del día " +
-            moment(data.fechaEmision).format("DD/MM/YYYY") +
-            " es: " +
-            result.data.data.precioVenta,
-          {
-            position: "bottom-right",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            toastId: "toastTipoCambio",
-          }
-        );
-      }
-      OcultarMensajes();
-    }
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "venta",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   const GetDireccion = async (id) => {
     const result = await ApiMasy.get(
@@ -1454,7 +1426,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(data.fechaEmision);
+                      TipoCambio(data.fechaEmision);
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>

@@ -52,7 +52,9 @@ const EntidadBancaria = () => {
     setCadena(`&nombre=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -64,6 +66,7 @@ const EntidadBancaria = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -224,7 +227,7 @@ const EntidadBancaria = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Entidades Bancarias</h2>
 
             {/* Filtro*/}

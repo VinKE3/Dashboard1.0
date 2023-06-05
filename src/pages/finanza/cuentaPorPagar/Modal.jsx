@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
@@ -10,7 +11,7 @@ import { FaPlus, FaUndoAlt, FaTrashAlt, FaEye } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -60,13 +61,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(objeto.abonos);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataTipoPago, setDataTipoPago] = useState([]);
   const [dataCtacte, setDataCtacte] = useState([]);
   const [dataAbono, setDataAbono] = useState([]);
-  //Tablas
+  //GetTablas
 
   const [totalSaldo, setTotalSaldo] = useState(objeto.saldo);
   const [nuevo, setNuevo] = useState(false);
@@ -163,7 +164,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const Abono = async (modo = "agregar") => {
     if (modo == "agregar") {
       setHabilitarCampo(true);
-      let tipoCambio = await GetPorIdTipoCambio(moment().format("yyyy-MM-DD"));
+      let tipoCambio = await TipoCambio(moment().format("yyyy-MM-DD"));
       let ultimoId = dataDetalle[dataDetalle.length - 1];
       setDetalleId(ultimoId.abonoId);
       setDataAbono({
@@ -318,38 +319,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     );
     setDataTipoPago(result.data.data.tiposPago);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      return 0;
-    } else {
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaEmision).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioVenta,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          toastId: "toastTipoCambio",
-        }
-      );
-      OcultarMensajes();
-      return result.data.data.precioVenta;
-    }
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "venta",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   const GetIsPermitido = async (compraId, abonoId, accion) => {
     const result = await ApiMasy.get(
@@ -504,11 +484,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           )}
 
           {/*Cabecera*/}
-          <div
-            className={
-              G.ContenedorBasico + G.FondoContenedor + " mb-2"
-            }
-          >
+          <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
             <div className={G.ContenedorInputs}>
               <div className={G.InputFull}>
                 <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
@@ -520,9 +496,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.tipoDocumentoId ?? ""}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={
-                    G.InputStyle
-                  }
+                  className={G.InputStyle}
                 >
                   {dataTipoDoc.map((map) => (
                     <option key={map.id} value={map.id}>
@@ -667,11 +641,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           {/*Cabecera*/}
 
           {/*Detalle*/}
-          <div
-            className={
-              G.ContenedorBasico + G.FondoContenedor + " mb-3"
-            }
-          >
+          <div className={G.ContenedorBasico + G.FondoContenedor + " mb-3"}>
             <div className="flex justify-between">
               <p className={G.Subtitulo + " h-full flex items-center"}>
                 Detalles de Abono
@@ -750,11 +720,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="consultarTipoCambio"
                   disabled={!habilitarCampo ? true : ""}
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={() => {
-                    GetPorIdTipoCambio(dataAbono.fecha);
+                    TipoCambio(dataAbono.fecha);
                   }}
                 >
                   <FaUndoAlt></FaUndoAlt>
@@ -784,10 +752,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               {dataAbono.tipoPagoId == "TR" || dataAbono.tipoPagoId == "DE" ? (
                 <>
                   <div className={G.InputFull}>
-                    <label
-                      htmlFor="cuentaCorrienteId"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="cuentaCorrienteId" className={G.LabelStyle}>
                       Cta. Cte.
                     </label>
                     <select
@@ -903,9 +868,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={!habilitarCampo ? true : ""}
                 value={dataAbono.concepto ?? ""}
                 onChange={ValidarDataAbono}
-                className={
-                  !habilitarCampo ? G.InputStyle : G.InputBoton
-                }
+                className={!habilitarCampo ? G.InputStyle : G.InputBoton}
               />
               <button
                 id="enviarDetalle"

@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { FaSearch, FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
 import * as G from "../Global";
@@ -77,12 +77,6 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
   };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
@@ -177,9 +171,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + "border-none"
-              }
+              className={G.BotonModalBase + G.BotonAgregar + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>
@@ -196,10 +188,8 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Cotizacion"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
@@ -238,7 +228,6 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoFocus
                   value={filtro.clienteNombre}
                   onChange={HandleData}
-                  onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
               </div>
@@ -253,7 +242,6 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   value={filtro.fechaInicio}
                   onChange={HandleData}
-                  onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
               </div>
@@ -268,7 +256,6 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   value={filtro.fechaFin}
                   onChange={HandleData}
-                  onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
                 {/* <button

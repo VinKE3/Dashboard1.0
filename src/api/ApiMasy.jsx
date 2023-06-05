@@ -28,11 +28,16 @@ ApiMasy.interceptors.response.use(
     return response;
   },
   (error) => {
-    let response = error;
     if (error.response.status === 401) {
       window.location.href = "/login";
     }
-    return response;
+    let retorna = "";
+    if (Object.entries(error.response.data).length > 0) {
+      retorna = error.response.data.messages[0];
+    } else {
+      retorna = [{ tipo: 1, textos: error.message }];
+    }
+    return retorna;
   }
 );
 

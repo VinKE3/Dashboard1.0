@@ -7,9 +7,9 @@ import Table from "../../../components/tabla/Table";
 import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import moment from "moment";
-import "react-toastify/dist/ReactToastify.css";
+ 
 import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
+ 
 import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`

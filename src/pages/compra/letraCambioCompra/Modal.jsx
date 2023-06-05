@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
 import FiltroConcepto from "../../../components/filtro/FiltroConcepto";
@@ -53,12 +54,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
   const [dataGlobal] = useState(store.session.get("global"));
   //Data General
-  //Tablas
+  //GetTablas
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataPlazos, setDataPlazos] = useState([]);
   const [dataTipoCompra, setDataTipoCompra] = useState([]);
   const [dataTipoPago, setDataTipoPago] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
   const [dataCabecera, setDataCabecera] = useState([]);
@@ -110,9 +111,9 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(data.fechaEmision);
+      TipoCambio(data.fechaEmision);
     }
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -415,7 +416,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy(
       `/api/Compra/LetraCambioCompra/FormularioTablas`
     );
@@ -424,43 +425,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoPago(result.data.data.tiposPago);
     setDataMoneda(result.data.data.monedas);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioCompra,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaEmision).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioCompra,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      OcultarMensajes();
-    }
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "compra",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   //#endregion
 
@@ -583,11 +558,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             )}
             {/* Cabecera */}
-            <div
-              className={
-                G.ContenedorBasico + " mb-4 " + G.FondoContenedor
-              }
-            >
+            <div className={G.ContenedorBasico + " mb-4 " + G.FondoContenedor}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
                   <label htmlFor="numeroLetra" className={G.LabelStyle}>
@@ -603,9 +574,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Nuevo" ? false : true}
                     value={data.numeroLetra ?? ""}
                     onChange={HandleData}
-                    className={
-                      G.InputStyle
-                    }
+                    className={G.InputStyle}
                   />
                 </div>
                 <div className={G.InputMitad}>
@@ -665,10 +634,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputTercio}>
-                  <label
-                    htmlFor="fechaVencimiento"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="fechaVencimiento" className={G.LabelStyle}>
                     Vencimiento
                   </label>
                   <input
@@ -707,10 +673,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="proveedorNombre"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="proveedorNombre" className={G.LabelStyle}>
                     Proveedor
                   </label>
                   <input
@@ -727,9 +690,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <button
                     id="consultarProveedor"
                     className={
-                      G.BotonBuscar +
-                      G.BotonPrimary +
-                      " !rounded-none"
+                      G.BotonBuscar + G.BotonPrimary + " !rounded-none"
                     }
                     hidden={modo == "Consultar"}
                     disabled={checkVarios}
@@ -816,10 +777,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </select>
                 </div>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="documentoReferencia"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="documentoReferencia" className={G.LabelStyle}>
                     Documento Referencia
                   </label>
                   <input
@@ -870,20 +828,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.tipoCambio ?? ""}
                     onChange={HandleData}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(data.fechaEmision);
+                      TipoCambio(data.fechaEmision);
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>
@@ -948,10 +902,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputFull}>
-                    <label
-                      htmlFor="avalDomicilio"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="avalDomicilio" className={G.LabelStyle}>
                       Domicilio
                     </label>
                     <input
@@ -1005,11 +956,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             {/* Cabecera */}
 
             {/* Detalles */}
-            <div
-              className={
-                G.ContenedorBasico + G.FondoContenedor + " mb-2"
-              }
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
                   <label htmlFor="concepto" className={G.LabelStyle}>
@@ -1071,9 +1018,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={dataCabecera.abono ?? ""}
                     onChange={ValidarDataConcepto}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button

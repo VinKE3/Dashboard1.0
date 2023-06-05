@@ -11,7 +11,7 @@ import moment from "moment";
 import { FaSearch, FaUndoAlt, FaPen } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
+ 
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -65,10 +65,10 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   const [dataLocal, setDataLocal] = useState(detalle);
   const [dataGlobal] = useState(store.session.get("global"));
   //Data General
-  //Tablas
+  //GetTablas
   const [dataVendedor, setDataVendedor] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataCabecera, setDataCabecera] = useState([]);
   //Data Modales Ayuda
@@ -115,9 +115,9 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(data.fechaRegistro);
+      TipoCambio(data.fechaRegistro);
     }
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -289,7 +289,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/CuadreStock/FormularioTablas`
     );
@@ -302,44 +302,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
     );
     setDataMoneda(result.data.data.monedas);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioVenta,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaRegistro).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioVenta,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          toastId: "toastTipoCambio",
-        }
-      );
-      OcultarMensajes();
-    }
+  const TipoCambio = async (id) => {
+  
   };
   //#endregion
 
@@ -752,7 +716,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     }
                     hidden={modo == "Consultar"}
                     onClick={() => {
-                      GetPorIdTipoCambio(data.fechaEmision);
+                      TipoCambio(data.fechaEmision);
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>

@@ -88,12 +88,6 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
-  };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
       let row = document
@@ -215,9 +209,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
             <button
               id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + "border-none"
-              }
+              className={G.BotonModalBase + G.BotonAgregar + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>
@@ -234,14 +226,12 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo={
           modo == "EG"
             ? "Buscar Cuentas por Pagar"
             : "Buscar Cuentas por Cobrar"
         }
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
@@ -267,7 +257,6 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                       autoFocus
                       value=""
                       onChange={ValidarTipo}
-                      onKeyDown={(e) => Key(e)}
                       checked={tipo === ""}
                     />
                   </div>
@@ -302,7 +291,6 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                       name="tipoDocumentoId"
                       value="07"
                       onChange={ValidarTipo}
-                      onKeyDown={(e) => Key(e)}
                       checked={tipo === "07"}
                     />
                   </div>
@@ -320,14 +308,10 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                       name="tipoDocumentoId"
                       value="LC"
                       onChange={ValidarTipo}
-                      onKeyDown={(e) => Key(e)}
                       checked={tipo === "LC"}
                     />
                   </div>
-                  <label
-                    htmlFor="letraCambio"
-                    className={G.LabelCheckStyle}
-                  >
+                  <label htmlFor="letraCambio" className={G.LabelCheckStyle}>
                     Letra de Cambio
                   </label>
                 </div>
@@ -346,15 +330,12 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   autoComplete="off"
                   autoFocus
                   onChange={HandleData}
-                  onKeyDown={(e) => Key(e)}
                   className={G.InputBoton}
                 />
                 <button
                   id="consultarCuentas"
                   onClick={Filtro}
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                 >
                   <FaSearch></FaSearch>
                 </button>

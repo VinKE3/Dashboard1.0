@@ -149,6 +149,7 @@ export const ConvertirPreciosAMoneda = async (
   return model;
 };
 
+
 export const Seleccionar = (e) => {
   let row = e.target.closest("tr");
   if (row != null) {
@@ -204,4 +205,3 @@ export const CerrarModal = async (e) => {
     return false;
   }
 };
-//#endregion

@@ -10,7 +10,7 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
@@ -51,7 +51,9 @@ const Vehiculo = () => {
     setCadena(`&numeroPlaca=${filtro.numeroPlaca}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -63,6 +65,7 @@ const Vehiculo = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -232,7 +235,7 @@ const Vehiculo = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Vehiculo</h2>
 
             {/* Filtro*/}

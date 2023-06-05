@@ -88,12 +88,6 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
-  };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
       let row = document
@@ -157,9 +151,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + " border-none "
-              }
+              className={G.BotonModalBase + G.BotonAgregar + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -176,10 +168,8 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Buscar Letra"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
@@ -208,7 +198,6 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
                   autoComplete="off"
                   autoFocus
                   onChange={HandleData}
-                  onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
                 {/* <button

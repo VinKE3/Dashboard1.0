@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
 import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
@@ -54,14 +55,14 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
   const [dataGlobal] = useState(store.session.get("global"));
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipo, setDataTipo] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataMotivoTraslado, setDataMotivoTraspado] = useState([]);
   const [dataConductor, setDataConductor] = useState([]);
   const [dataUbigeoPartida, setDataUbigeoPartida] = useState([]);
   const [dataUbigeoLlegada, setDataUbigeoLlegada] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
   const [dataFactura, setDataFactura] = useState([]);
@@ -144,8 +145,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [modalArt]);
   useEffect(() => {
-    GetPorIdTipoCambio(data.fechaEmision);
-    Tablas();
+    TipoCambio(data.fechaEmision);
+    GetTablas();
   }, []);
 
   //#endregion
@@ -583,53 +584,21 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Compra/GuiaCompra/FormularioTablas`);
     setDataMoneda(result.data.data.monedas);
     setDataMotivoTraspado(result.data.data.motivosTraslado);
     setDataTipo(result.data.data.tipos);
     setDataConductor(result.data.data.conductores);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje([
-          result.response.data.messages[0].textos,
-          ["No se podrán realizar las conversiones de precios."],
-        ]);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([
-          [result.message],
-          ["No se podrán realizar las conversiones de precios."],
-        ]);
-      }
-      setTipoCambio(0);
-    } else {
-      setTipoCambio(result.data.data.precioCompra);
-      if (modo != "Consultar") {
-        toast.info(
-          "El tipo de cambio del día " +
-            moment(data.fechaEmision).format("DD/MM/YYYY") +
-            " es: " +
-            result.data.data.precioCompra,
-          {
-            position: "bottom-right",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            toastId: "toastTipoCambio",
-          }
-        );
-      }
-      OcultarMensajes();
-    }
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "compra",
+      setTipoMensaje,
+      setMensaje
+    );
+    setTipoCambio(tipoCambio);
   };
   //#endregion
 
@@ -752,7 +721,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             objeto={data}
             modo={modo}
             menu={["Compra", "GuiaCompra"]}
-            titulo="Guia De Compra"
+            titulo="Guia de Compra"
             cerrar={false}
             foco={document.getElementById("tablaGuiaCompra")}
             tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
@@ -1130,7 +1099,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(data.fechaEmision);
+                      TipoCambio(data.fechaEmision);
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>

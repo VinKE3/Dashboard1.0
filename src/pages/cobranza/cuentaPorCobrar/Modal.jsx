@@ -10,7 +10,7 @@ import { FaPlus, FaUndoAlt, FaTrashAlt, FaEye } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
+ 
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -59,10 +59,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [data] = useState(objeto);
   const [dataDetalle] = useState(objeto.abonos);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipoDoc] = useState([objeto.tipoDocumento]);
   const [dataMoneda] = useState([objeto.moneda]);
-  //Tablas
+  //GetTablas
   //#endregion
 
   //#region Columnas

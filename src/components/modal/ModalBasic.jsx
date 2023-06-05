@@ -1,40 +1,50 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../Global";
 
 const ModalBasic = ({
+  id = "modalBasic",
+  setModal,
   children,
   childrenFooter,
-  setModal,
   titulo,
+  cabecera = true,
   cerrar = true,
+  foco,
   tamañoModal = [G.ModalPequeño, G.Form],
 }) => {
   //#region Funciones
   const CerrarModal = () => {
     setModal(false);
   };
-
+  const ModalKey = (e) => {
+    if (e.key == "Escape") {
+      foco.focus();
+      setModal(false);
+    }
+  };
   //#endregion
 
   //#region Render
   return (
     <>
-      <div className={G.FondoModal}>
+      <div tabIndex={0} onKeyDown={(e) => ModalKey(e)} className={G.FondoModal}>
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div id="modalBasic" className={G.ModalContent}>
+          <div id={id} className={G.ModalContent}>
             {/*header*/}
-            <div className={G.ModalHeader}>
-              <h3 className={G.TituloModal}>{titulo}</h3>
-              {cerrar && (
-                <button className={G.CerrarModal} onClick={CerrarModal}>
-                  <FontAwesomeIcon icon={faXmark} size="lg" />
-                </button>
-              )}
-            </div>
+            {cabecera && (
+              <div className={G.ModalHeader}>
+                <h3 className={G.TituloModal}>{titulo}</h3>
+                {cerrar && (
+                  <button className={G.CerrarModal} onClick={CerrarModal}>
+                    <FontAwesomeIcon icon={faXmark} size="lg" />
+                  </button>
+                )}
+              </div>
+            )}
             {/*header*/}
 
             {/*body*/}

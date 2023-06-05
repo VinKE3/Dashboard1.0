@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
@@ -9,7 +10,7 @@ import { FaSearch, FaUndoAlt, FaPen, FaTrashAlt, FaPlus } from "react-icons/fa";
 import { RadioButton } from "primereact/radiobutton";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -113,9 +114,9 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState([]);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataMoneda, setDataMoneda] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataCabecera, setDataCabecera] = useState({
     isRenovado: false,
@@ -173,9 +174,9 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
+      TipoCambio(moment().format("YYYY-MM-DD"));
     }
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -252,16 +253,8 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/GetSimplificado?isRenovado=${dataCabecera.isRenovado}&numero=${dataCabecera.numero}`
     );
-    if (result.name == "AxiosError") {
-      let error = "";
-      //Captura el mensaje de error
-      if (Object.entries(result.response.data).length > 0) {
-        error = String(result.response.data.messages[0].textos);
-      } else {
-        error = String(result.message);
-      }
-      //Captura el mensaje de error
-      return [false, error];
+    if (result.tipo == 1) {
+      return [false, result.textos[0]];
     } else {
       //Valida montos
       if (result.data.data.saldo <= 0) {
@@ -817,50 +810,23 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/FormularioTablas`
     );
     setDataMoneda(result.data.data.monedas);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioVenta,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaEmision).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioVenta,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          toastId: "toastTipoCambio",
-        }
-      );
-      OcultarMensajes();
-    }
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "venta",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   const GetCorrelativo = async () => {
     const result = await ApiMasy.get(
@@ -1117,10 +1083,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                         checked={dataCabecera.isRenovado === true}
                       />
                     </div>
-                    <label
-                      htmlFor="renovado"
-                      className={G.LabelCheckStyle}
-                    >
+                    <label htmlFor="renovado" className={G.LabelCheckStyle}>
                       Renovado
                     </label>
                   </div>
@@ -1130,7 +1093,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     Número Letra
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="numero"
                     name="numero"
                     placeholder="Buscar número de letra"
@@ -1144,9 +1107,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                   />
                   <button
                     id="consultarDocumento"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     disabled={!extras.habilitar}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
@@ -1160,10 +1121,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               <div className={G.ContenedorBasico + " mb-2"}>
                 <div className={G.ContenedorInputs}>
                   <div className={G.Input25pct}>
-                    <label
-                      htmlFor="porcentajeInteres"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="porcentajeInteres" className={G.LabelStyle}>
                       % Interés
                     </label>
                     <input
@@ -1197,10 +1155,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     />
                   </div>
                   <div className={G.Input25pct}>
-                    <label
-                      htmlFor="porcentajePago"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="porcentajePago" className={G.LabelStyle}>
                       % Pago
                     </label>
                     <input
@@ -1247,11 +1202,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </button>
                     <button
                       id="eliminarDocumentos"
-                      className={
-                        G.BotonBuscar +
-                        G.Anidado +
-                        G.BotonEliminar
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonEliminar}
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(0)}
                     >
@@ -1325,9 +1276,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     <p className={G.FilaContenido}>Total</p>
                   </div>
                   <div className={G.FilaFooter + G.FilaImporte}>
-                    <p className={G.FilaContenido}>
-                      {extras.total ?? "0.00"}
-                    </p>
+                    <p className={G.FilaContenido}>{extras.total ?? "0.00"}</p>
                   </div>
                   <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
@@ -1338,13 +1287,9 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
 
             {/* Cabecera Letra */}
             <div
-              className={
-                G.ContenedorBasico + " !gap-0 " + G.FondoContenedor
-              }
+              className={G.ContenedorBasico + " !gap-0 " + G.FondoContenedor}
             >
-              <p className={G.Subtitulo + " pb-1"}>
-                Letras por Renovación
-              </p>
+              <p className={G.Subtitulo + " pb-1"}>Letras por Renovación</p>
               <div className={G.ContenedorInputs + " mb-1.5"}>
                 <div className={G.InputTercio}>
                   <label htmlFor="numeroLetra" className={G.LabelStyle}>
@@ -1378,20 +1323,16 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     value={data.tipoCambio ?? ""}
                     onChange={DataCabecera}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
+                      TipoCambio(moment().format("YYYY-MM-DD"));
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>
@@ -1456,10 +1397,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     />
                   </div>
                   <div className={G.InputMitad}>
-                    <label
-                      htmlFor="fechaVencimiento"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="fechaVencimiento" className={G.LabelStyle}>
                       Fecha Vencimiento
                     </label>
                     <input
@@ -1508,11 +1446,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </button>
                     <button
                       id="eliminarDetalleLetra"
-                      className={
-                        G.BotonBuscar +
-                        G.Anidado +
-                        G.BotonEliminar
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonEliminar}
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(1)}
                     >

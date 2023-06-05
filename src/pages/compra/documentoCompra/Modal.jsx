@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
 import FiltroOrdenCompra from "../../../components/filtro/FiltroOrdenCompra";
@@ -63,7 +64,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataDetalle, setDataDetalle] = useState(objeto.detalles);
   const [dataGlobal] = useState(store.session.get("global"));
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataTipoCompra, setDataTipoCompra] = useState([]);
@@ -72,7 +73,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataCtacte, setDataCtacte] = useState([]);
   const [dataMotivoNota, setDataMotivoNota] = useState([]);
   const [dataDocRef, setDataDocRef] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataProveedor, setDataProveedor] = useState([]);
   const [dataOrdenCompra, setDataOrdenCompra] = useState([]);
@@ -144,10 +145,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(data.fechaEmision);
+      TipoCambio(data.fechaEmision);
     }
     GetCuentasCorrientes();
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -934,7 +935,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Compra/DocumentoCompra/FormularioTablas`
     );
@@ -945,43 +946,17 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataIgv(result.data.data.porcentajesIGV);
     setDataMotivoNota(result.data.data.motivosNota);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioCompra,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaEmision).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioCompra,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      OcultarMensajes();
-    }
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "compra",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   const GetCuentasCorrientes = async () => {
     const result = await ApiMasy.get(
@@ -1379,7 +1354,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(data.fechaEmision);
+                      TipoCambio(data.fechaEmision);
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>

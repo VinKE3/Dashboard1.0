@@ -60,7 +60,9 @@ const Proveedor = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -72,6 +74,7 @@ const Proveedor = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -243,7 +246,7 @@ const Proveedor = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Proveedor</h2>
 
             {/* Filtro*/}
@@ -281,9 +284,7 @@ const Proveedor = () => {
                 />
                 <button
                   id="buscar"
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />

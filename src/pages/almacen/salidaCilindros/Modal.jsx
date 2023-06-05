@@ -42,15 +42,15 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   const [data, setData] = useState(objeto);
   const [dataDetalle] = useState(objeto.detalles);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataPersonal, setDataPersonal] = useState([]);
   const [dataTipoSalida, setDataTipoSalida] = useState([]);
-  //Tablas
+  //GetTablas
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
 
   //#endregion
@@ -65,7 +65,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy(
       `/api/Almacen/SalidaCilindros/FormularioTablas`
     );

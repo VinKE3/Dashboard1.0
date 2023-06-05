@@ -162,12 +162,6 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
-  };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
       let row = document
@@ -226,9 +220,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + " border-none "
-              }
+              className={G.BotonModalBase + G.BotonAgregar + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -253,9 +245,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
         <div className="flex justify-center">
           <button
             onClick={() => EliminarFila(row.values.id)}
-            className={
-              G.BotonModalBase + G.BotonEliminar + "border-none"
-            }
+            className={G.BotonModalBase + G.BotonEliminar + "border-none"}
           >
             <FaTrash></FaTrash>
           </button>
@@ -270,10 +260,8 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Facturas"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <button
@@ -289,11 +277,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
           <>
             {/* Tabla Seleccion*/}
             {Object.entries(dataFacturaSeleccionada).length > 0 && (
-              <div
-                className={
-                  G.ContenedorBasico + G.FondoContenedor + " mb-2"
-                }
-              >
+              <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
                 <p className=" px-1 text-base text-light font-bold">
                   SELECCIONADOS
                 </p>
@@ -310,10 +294,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             )}
             {/* Tabla Seleccion*/}
 
-            <div
-              className={G.ContenedorBasico + G.FondoContenedor}
-              onKeyDown={(e) => Key(e)}
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor}>
               {/* Filtro*/}
               <FiltroBasico
                 textLabel={"N° Documento"}

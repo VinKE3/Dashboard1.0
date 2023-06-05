@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
 import Delete from "../../../components/funciones/Delete";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -9,7 +10,7 @@ import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
@@ -63,8 +64,12 @@ const MovimientoBancario = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     cuentaCorrienteId: "",
     tipoMovimientoId: "",
     concepto: "",
@@ -86,9 +91,10 @@ const MovimientoBancario = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -98,6 +104,7 @@ const MovimientoBancario = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -141,8 +148,12 @@ const MovimientoBancario = () => {
   };
   const FiltroBoton = async () => {
     setFiltro({
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       cuentaCorrienteId: "",
       tipoMovimientoId: "",
       concepto: "",
@@ -167,26 +178,6 @@ const MovimientoBancario = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Finanzas/MovimientoBancario/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Finanzas/MovimientoBancario/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   const GetCuentasCorrientes = async () => {
     const result = await ApiMasy.get(
@@ -261,7 +252,11 @@ const MovimientoBancario = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Finanzas/MovimientoBancario",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -269,7 +264,11 @@ const MovimientoBancario = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Finanzas/MovimientoBancario",
+            accion,
+            value
+          );
           if (valor) {
             await Delete(
               ["Finanzas", "MovimientoBancario"],
@@ -460,14 +459,12 @@ const MovimientoBancario = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Movimientos Bancarios</h2>
 
             {/* Filtro*/}
             <div
-              className={
-                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
@@ -537,9 +534,7 @@ const MovimientoBancario = () => {
                   />
                   <button
                     id="buscar"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />

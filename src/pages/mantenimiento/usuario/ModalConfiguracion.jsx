@@ -75,7 +75,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
 
   useEffect(() => {
     getMenu();
-    Tablas();
+    GetTablas();
     ListadoPermisos();
   }, []);
 
@@ -227,7 +227,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/UsuarioPermiso/FormularioTablas`
     );
@@ -347,7 +347,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                           key={item.id}
                           onClick={ValidarMenu}
                         >
-                          <button type="button" onClick={ValidarMenu}>
+                          <button type="button">
                             {item.nombre}
                           </button>
                         </li>

@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
-import { TabView, TabPanel } from "primereact/tabview";
-import * as G from "../../../components/Global";
-import Ubigeo from "../../../components/filtro/Ubigeo";
-import moment from "moment";
-import { Checkbox } from "primereact/checkbox";
 import ApiMasy from "../../../api/ApiMasy";
-import styled from "styled-components";
+import Update from "../../../components/funciones/Update";
+import { TabView, TabPanel } from "primereact/tabview";
+import Ubigeo from "../../../components/filtro/Ubigeo";
 import TableBasic from "../../../components/tabla/TableBasic";
-import { FaPen, FaTrashAlt } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { ToastContainer, toast } from "react-toastify";
 import BotonBasico from "../../../components/boton/BotonBasico";
+import Mensajes from "../../../components/funciones/Mensajes";
+import { Checkbox } from "primereact/checkbox";
 import Swal from "sweetalert2";
+import { ToastContainer } from "react-toastify";
+import moment from "moment";
+import { FaPen, FaTrashAlt } from "react-icons/fa";
+import styled from "styled-components";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -33,7 +35,9 @@ const DivTabla = styled.div`
 
 const Empresa = ({ modo }) => {
   //#region useState
-  const [dataGeneral, setDataGeneral] = useState([]);
+  const [data, setData] = useState([]);
+  const [tipoMensaje, setTipoMensaje] = useState(-1);
+  const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [checkboxes, setCheckboxes] = useState({
@@ -90,8 +94,8 @@ const Empresa = ({ modo }) => {
   //#region useEffect
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setDataGeneral({
-        ...dataGeneral,
+      setData({
+        ...data,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
@@ -104,7 +108,7 @@ const Empresa = ({ modo }) => {
       GuardarTodo(new Event("click"));
       setRefrescar(false);
     }
-  }, [dataGeneral, mesesHabilitados]);
+  }, [data, mesesHabilitados]);
 
   useEffect(() => {
     Configuracion();
@@ -140,28 +144,28 @@ const Empresa = ({ modo }) => {
   };
   const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setDataGeneral((prevState) => ({
+      setData((prevState) => ({
         ...prevState,
         [target.name]: target.value,
       }));
     } else {
-      setDataGeneral((prevState) => ({
+      setData((prevState) => ({
         ...prevState,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
-  const handleCheck = (mes, checked) => {
+  const HandleCheck = (mes, checked) => {
     setCheckboxes({ ...checkboxes, [mes]: checked });
     const index = meses[mes];
     if (mes !== undefined) {
       if (mes[1] > 11) {
         mesesHabilitados[mes[1]] = checked
-          ? dataGeneral.anioHabilitado2 + ("0" + (mes[0] + 1)).slice(-2)
+          ? data.anioHabilitado2 + ("0" + (mes[0] + 1)).slice(-2)
           : "";
       } else {
         mesesHabilitados[mes[1]] = checked
-          ? dataGeneral.anioHabilitado1 + ("0" + (mes[0] + 1)).slice(-2)
+          ? data.anioHabilitado1 + ("0" + (mes[0] + 1)).slice(-2)
           : "";
       }
       // if (mesesHabilitados[index] === "") {
@@ -171,12 +175,12 @@ const Empresa = ({ modo }) => {
     const filteredMesesHabilitados = mesesHabilitados.filter(
       (mes) => mes !== null && mes !== undefined && mes !== ""
     );
-    setDataGeneral({
-      ...dataGeneral,
+    setData({
+      ...data,
       mesesHabilitados: filteredMesesHabilitados.join(","),
     });
   };
-  const handleCheckAll = (event) => {
+  const HandleCheckAll = (event) => {
     const { checked } = event.target;
     setCheckboxes((prevState) => ({
       ...prevState,
@@ -194,8 +198,8 @@ const Empresa = ({ modo }) => {
       noviembre: checked,
       diciembre: checked,
     }));
-    setDataGeneral({
-      ...dataGeneral,
+    setData({
+      ...data,
       mesesHabilitados: checked
         ? [
             "202201",
@@ -214,7 +218,7 @@ const Empresa = ({ modo }) => {
         : [],
     });
   };
-  const handleCheckAll2 = (event) => {
+  const HandleCheckAll2 = (event) => {
     const { checked } = event.target;
     setCheckboxes2((prevState) => ({
       ...prevState,
@@ -232,8 +236,8 @@ const Empresa = ({ modo }) => {
       noviembre2: checked,
       diciembre2: checked,
     }));
-    setDataGeneral({
-      ...dataGeneral,
+    setData({
+      ...data,
       mesesHabilitados: checked
         ? [
             "202301",
@@ -251,6 +255,10 @@ const Empresa = ({ modo }) => {
           ]
         : [],
     });
+  };
+  const OcultarMensajes = async () => {
+    setMensaje([]);
+    setTipoMensaje(-1);
   };
   //#endregion
 
@@ -291,7 +299,7 @@ const Empresa = ({ modo }) => {
       .map((item) => ({ ...item, id: contadorPercepcion++ }));
 
     setMesesHabilitados(result.data.data.mesesHabilitados.split(","));
-    setDataGeneral(result.data.data);
+    setData(result.data.data);
     setPorcentajesIGV(igv);
     setPorcentajesRetencion(retencion);
     setPorcentajesDetraccion(detraccion);
@@ -300,90 +308,21 @@ const Empresa = ({ modo }) => {
   const GuardarTodo = async (e) => {
     if (e._reactName != "onClick") {
       if (e.key == "Enter") {
-        const result = await ApiMasy.put(
-          `api/Empresa/Configuracion`,
-          dataGeneral
+        await Update(
+          ["Empresa", "Configuracion"],
+          data,
+          setTipoMensaje,
+          setMensaje
         );
-        if (result.name == "AxiosError") {
-          if (Object.entries(result.response.data).length > 0) {
-            toast.error(result.response.data.messages[0].textos[0], {
-              position: "bottom-right",
-              autoClose: 300,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          } else {
-            toast.error(result.message, {
-              position: "bottom-right",
-              autoClose: 300,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          }
-        } else {
-          toast.success(result.data.messages[0].textos[0], {
-            position: "bottom-right",
-            autoClose: 300,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
-        }
       }
     } else {
-      const result = await ApiMasy.put(
-        `api/Empresa/Configuracion`,
-        dataGeneral
+      await Update(
+        ["Empresa", "Configuracion"],
+        data,
+        setTipoMensaje,
+        setMensaje
       );
-      if (result.name == "AxiosError") {
-        if (Object.entries(result.response.data).length > 0) {
-          toast.error(result.response.data.messages[0].textos[0], {
-            position: "bottom-right",
-            autoClose: 300,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
-        } else {
-          toast.error(result.message, {
-            position: "bottom-right",
-            autoClose: 300,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
-        }
-      } else {
-        toast.success(result.data.messages[0].textos[0], {
-          position: "bottom-right",
-          autoClose: 300,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      }
     }
-
     await Configuracion();
   };
   //#endregion
@@ -470,8 +409,8 @@ const Empresa = ({ modo }) => {
     } else {
       setObjetoIgv({
         id: id,
-        porcentaje: dataGeneral.porcentajesIGV[id].porcentaje,
-        default: dataGeneral.porcentajesIGV[id].default,
+        porcentaje: data.porcentajesIGV[id].porcentaje,
+        default: data.porcentajesIGV[id].default,
       });
     }
     setEstadoIgv(true);
@@ -488,8 +427,8 @@ const Empresa = ({ modo }) => {
         default: objetoIgv.default,
       });
     }
-    setDataGeneral({
-      ...dataGeneral,
+    setData({
+      ...data,
       porcentajesIGV,
     });
     setRefrescar(true);
@@ -511,8 +450,8 @@ const Empresa = ({ modo }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDataGeneral({
-          ...dataGeneral,
+        setData({
+          ...data,
           porcentajesIGV: model,
         });
       }
@@ -602,8 +541,8 @@ const Empresa = ({ modo }) => {
     } else {
       setObjetoRetencion({
         id: id,
-        porcentaje: dataGeneral.porcentajesRetencion[id].porcentaje,
-        default: dataGeneral.porcentajesRetencion[id].default,
+        porcentaje: data.porcentajesRetencion[id].porcentaje,
+        default: data.porcentajesRetencion[id].default,
       });
     }
     setEstadoRetencion(true);
@@ -620,8 +559,8 @@ const Empresa = ({ modo }) => {
         default: objetoRetencion.default,
       });
     }
-    setDataGeneral({
-      ...dataGeneral,
+    setData({
+      ...data,
       porcentajesRetencion,
     });
     setRefrescar(true);
@@ -643,8 +582,8 @@ const Empresa = ({ modo }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDataGeneral({
-          ...dataGeneral,
+        setData({
+          ...data,
           porcentajesRetencion: model,
         });
       }
@@ -737,8 +676,8 @@ const Empresa = ({ modo }) => {
     } else {
       setObjetoDetraccion({
         id: id,
-        porcentaje: dataGeneral.porcentajesDetraccion[id].porcentaje,
-        default: dataGeneral.porcentajesDetraccion[id].default,
+        porcentaje: data.porcentajesDetraccion[id].porcentaje,
+        default: data.porcentajesDetraccion[id].default,
       });
     }
     setEstadoDetraccion(true);
@@ -755,8 +694,8 @@ const Empresa = ({ modo }) => {
         default: objetoDetraccion.default,
       });
     }
-    setDataGeneral({
-      ...dataGeneral,
+    setData({
+      ...data,
       porcentajesDetraccion,
     });
     setRefrescar(true);
@@ -778,8 +717,8 @@ const Empresa = ({ modo }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDataGeneral({
-          ...dataGeneral,
+        setData({
+          ...data,
           porcentajesDetraccion: model,
         });
       }
@@ -872,8 +811,8 @@ const Empresa = ({ modo }) => {
     } else {
       setObjetoPercepcion({
         id: id,
-        porcentaje: dataGeneral.porcentajesPercepcion[id].porcentaje,
-        default: dataGeneral.porcentajesPercepcion[id].default,
+        porcentaje: data.porcentajesPercepcion[id].porcentaje,
+        default: data.porcentajesPercepcion[id].default,
       });
     }
     setEstadoPercepcion(true);
@@ -890,8 +829,8 @@ const Empresa = ({ modo }) => {
         default: objetoPercepcion.default,
       });
     }
-    setDataGeneral({
-      ...dataGeneral,
+    setData({
+      ...data,
       porcentajesPercepcion,
     });
     setRefrescar(true);
@@ -913,8 +852,8 @@ const Empresa = ({ modo }) => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        setDataGeneral({
-          ...dataGeneral,
+        setData({
+          ...data,
           porcentajesPercepcion: model,
         });
       }
@@ -925,8 +864,15 @@ const Empresa = ({ modo }) => {
   //#region Render
   return (
     <>
-      {Object.entries(dataGeneral).length > 0 && (
+      {Object.entries(data).length > 0 && (
         <div className={G.ContenedorPadre + " overflow-y-auto"}>
+          {tipoMensaje > -1 && (
+            <Mensajes
+              tipoMensaje={tipoMensaje}
+              mensaje={mensaje}
+              Click={() => OcultarMensajes()}
+            />
+          )}
           <TabView>
             <TabPanel
               header="Datos Principales"
@@ -949,7 +895,7 @@ const Empresa = ({ modo }) => {
                       placeholder="Número Documento Identidad"
                       autoComplete="off"
                       autoFocus
-                      value={dataGeneral.numeroDocumentoIdentidad ?? ""}
+                      value={data.numeroDocumentoIdentidad ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -964,7 +910,7 @@ const Empresa = ({ modo }) => {
                       name="nombre"
                       placeholder="Nombre"
                       autoComplete="off"
-                      value={dataGeneral.nombre ?? ""}
+                      value={data.nombre ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -981,16 +927,13 @@ const Empresa = ({ modo }) => {
                       name="telefono"
                       placeholder="Teléfono"
                       autoComplete="off"
-                      value={dataGeneral.telefono ?? ""}
+                      value={data.telefono ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
                   <div className={G.InputFull}>
-                    <label
-                      htmlFor="correoElectronico"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="correoElectronico" className={G.LabelStyle}>
                       Correo
                     </label>
                     <input
@@ -999,7 +942,7 @@ const Empresa = ({ modo }) => {
                       name="correoElectronico"
                       placeholder="Correo"
                       autoComplete="off"
-                      value={dataGeneral.correoElectronico ?? ""}
+                      value={data.correoElectronico ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1016,7 +959,7 @@ const Empresa = ({ modo }) => {
                       name="celular"
                       placeholder="Celular"
                       autoComplete="off"
-                      value={dataGeneral.celular ?? ""}
+                      value={data.celular ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1031,7 +974,7 @@ const Empresa = ({ modo }) => {
                       name="observacion"
                       placeholder="Observacion"
                       autoComplete="off"
-                      value={dataGeneral.observacion ?? ""}
+                      value={data.observacion ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1047,7 +990,7 @@ const Empresa = ({ modo }) => {
                     name="direccion"
                     placeholder="Dirección"
                     autoComplete="off"
-                    value={dataGeneral.direccion ?? ""}
+                    value={data.direccion ?? ""}
                     onChange={HandleData}
                     className={G.InputStyle}
                   />
@@ -1056,17 +999,14 @@ const Empresa = ({ modo }) => {
                   setDataUbigeo={setDataUbigeo}
                   id={["departamentoId", "provinciaId", "distritoId"]}
                   dato={{
-                    departamentoId: dataGeneral.departamentoId,
-                    provinciaId: dataGeneral.provinciaId,
-                    distritoId: dataGeneral.distritoId,
+                    departamentoId: data.departamentoId,
+                    provinciaId: data.provinciaId,
+                    distritoId: data.distritoId,
                   }}
                 ></Ubigeo>
                 <div className={G.ContenedorInputs}>
                   <div className={G.Input40pct}>
-                    <label
-                      htmlFor="concarEmpresaId"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="concarEmpresaId" className={G.LabelStyle}>
                       Id Concar
                     </label>
                     <input
@@ -1075,7 +1015,7 @@ const Empresa = ({ modo }) => {
                       name="concarEmpresaId"
                       placeholder="Número Concar Id"
                       autoComplete="off"
-                      value={dataGeneral.concarEmpresaId ?? ""}
+                      value={data.concarEmpresaId ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1093,7 +1033,7 @@ const Empresa = ({ modo }) => {
                       name="concarEmpresaNombre"
                       placeholder="Empresa Concar"
                       autoComplete="off"
-                      value={dataGeneral.concarEmpresaNombre ?? ""}
+                      value={data.concarEmpresaNombre ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1113,7 +1053,7 @@ const Empresa = ({ modo }) => {
                       name="concarUsuarioVenta"
                       placeholder="Usuario Venta"
                       autoComplete="off"
-                      value={dataGeneral.concarUsuarioVenta ?? ""}
+                      value={data.concarUsuarioVenta ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1131,7 +1071,7 @@ const Empresa = ({ modo }) => {
                       name="concarUsuarioCompra"
                       placeholder="Usuario Compra"
                       autoComplete="off"
-                      value={dataGeneral.concarUsuarioCompra ?? ""}
+                      value={data.concarUsuarioCompra ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1139,10 +1079,7 @@ const Empresa = ({ modo }) => {
                 </div>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputMitad}>
-                    <label
-                      htmlFor="concarUsuarioPago"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="concarUsuarioPago" className={G.LabelStyle}>
                       Usuario Pago
                     </label>
                     <input
@@ -1151,7 +1088,7 @@ const Empresa = ({ modo }) => {
                       name="concarUsuarioPago"
                       placeholder="Usuario Pago"
                       autoComplete="off"
-                      value={dataGeneral.concarUsuarioPago ?? ""}
+                      value={data.concarUsuarioPago ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1169,7 +1106,7 @@ const Empresa = ({ modo }) => {
                       name="concarUsuarioCobro"
                       placeholder="Usuario Cobro"
                       autoComplete="off"
-                      value={dataGeneral.concarUsuarioCobro ?? ""}
+                      value={data.concarUsuarioCobro ?? ""}
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
@@ -1177,10 +1114,7 @@ const Empresa = ({ modo }) => {
                 </div>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputMitad}>
-                    <label
-                      htmlFor="filtroFechaInicio"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="filtroFechaInicio" className={G.LabelStyle}>
                       Desde
                     </label>
                     <input
@@ -1189,21 +1123,16 @@ const Empresa = ({ modo }) => {
                       name="filtroFechaInicio"
                       autoComplete="off"
                       value={
-                        dataGeneral.filtroFechaInicio == null
+                        data.filtroFechaInicio == null
                           ? ""
-                          : moment(dataGeneral.filtroFechaInicio).format(
-                              "yyyy-MM-DD"
-                            )
+                          : moment(data.filtroFechaInicio).format("yyyy-MM-DD")
                       }
                       onChange={HandleData}
                       className={G.InputStyle}
                     />
                   </div>
                   <div className={G.InputMitad}>
-                    <label
-                      htmlFor="filtroFechaFin"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="filtroFechaFin" className={G.LabelStyle}>
                       Hasta
                     </label>
                     <input
@@ -1212,11 +1141,9 @@ const Empresa = ({ modo }) => {
                       name="filtroFechaFin"
                       autoComplete="off"
                       value={
-                        dataGeneral.filtroFechaFin == null
+                        data.filtroFechaFin == null
                           ? ""
-                          : moment(dataGeneral.filtroFechaFin).format(
-                              "yyyy-MM-DD"
-                            )
+                          : moment(data.filtroFechaFin).format("yyyy-MM-DD")
                       }
                       onChange={HandleData}
                       className={G.InputStyle}
@@ -1245,10 +1172,7 @@ const Empresa = ({ modo }) => {
               <div className={G.ContenedorBasico + " pt-5 rounded-t-none"}>
                 <div className={G.ContenedorRow + " !gap-x-0 mb-1"}>
                   <div className={G.InputFull}>
-                    <label
-                      htmlFor="anioHabilitado1"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="anioHabilitado1" className={G.LabelStyle}>
                       Año 1
                     </label>
                     <input
@@ -1259,7 +1183,7 @@ const Empresa = ({ modo }) => {
                       autoComplete="off"
                       min={0}
                       autoFocus
-                      value={dataGeneral.anioHabilitado1}
+                      value={data.anioHabilitado1}
                       onChange={HandleData}
                       className={G.InputBoton}
                     />
@@ -1271,7 +1195,7 @@ const Empresa = ({ modo }) => {
                         inputId="todos"
                         name="todos"
                         value={checkboxes.checked}
-                        onChange={handleCheckAll}
+                        onChange={HandleCheckAll}
                         checked={checkboxes.checked}
                       />
                     </div>
@@ -1289,7 +1213,7 @@ const Empresa = ({ modo }) => {
                         name="enero"
                         value={mesesHabilitados[0]}
                         onChange={(e) => {
-                          handleCheck([0, 0], e.target.checked);
+                          HandleCheck([0, 0], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             enero: e.target.checked,
@@ -1312,7 +1236,7 @@ const Empresa = ({ modo }) => {
                         name="febrero"
                         value={mesesHabilitados[1]}
                         onChange={(e) => {
-                          handleCheck([1, 1], e.target.checked);
+                          HandleCheck([1, 1], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             febrero: e.target.checked,
@@ -1335,7 +1259,7 @@ const Empresa = ({ modo }) => {
                         name="marzo"
                         value={mesesHabilitados[2]}
                         onChange={(e) => {
-                          handleCheck([2, 2], e.target.checked);
+                          HandleCheck([2, 2], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             marzo: e.target.checked,
@@ -1358,7 +1282,7 @@ const Empresa = ({ modo }) => {
                         name="abril"
                         value={mesesHabilitados[3]}
                         onChange={(e) => {
-                          handleCheck([3, 3], e.target.checked);
+                          HandleCheck([3, 3], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             abril: e.target.checked,
@@ -1383,7 +1307,7 @@ const Empresa = ({ modo }) => {
                         name="mayo"
                         value={mesesHabilitados[4]}
                         onChange={(e) => {
-                          handleCheck([4, 4], e.target.checked);
+                          HandleCheck([4, 4], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             mayo: e.target.checked,
@@ -1406,7 +1330,7 @@ const Empresa = ({ modo }) => {
                         name="junio"
                         value={mesesHabilitados[5]}
                         onChange={(e) => {
-                          handleCheck([5, 5], e.target.checked);
+                          HandleCheck([5, 5], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             junio: e.target.checked,
@@ -1429,7 +1353,7 @@ const Empresa = ({ modo }) => {
                         name="julio"
                         value={mesesHabilitados[6]}
                         onChange={(e) => {
-                          handleCheck([6, 6], e.target.checked);
+                          HandleCheck([6, 6], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             julio: e.target.checked,
@@ -1452,7 +1376,7 @@ const Empresa = ({ modo }) => {
                         name="agosto"
                         value={mesesHabilitados[7]}
                         onChange={(e) => {
-                          handleCheck([7, 7], e.target.checked);
+                          HandleCheck([7, 7], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             agosto: e.target.checked,
@@ -1477,7 +1401,7 @@ const Empresa = ({ modo }) => {
                         name="septiembre"
                         value={mesesHabilitados[8]}
                         onChange={(e) => {
-                          handleCheck([8, 8], e.target.checked);
+                          HandleCheck([8, 8], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             septiembre: e.target.checked,
@@ -1500,7 +1424,7 @@ const Empresa = ({ modo }) => {
                         name="octubre"
                         value={mesesHabilitados[9]}
                         onChange={(e) => {
-                          handleCheck([9, 9], e.target.checked);
+                          HandleCheck([9, 9], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             octubre: e.target.checked,
@@ -1523,7 +1447,7 @@ const Empresa = ({ modo }) => {
                         name="noviembre"
                         value={mesesHabilitados[10]}
                         onChange={(e) => {
-                          handleCheck([10, 10], e.target.checked);
+                          HandleCheck([10, 10], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             noviembre: e.target.checked,
@@ -1546,7 +1470,7 @@ const Empresa = ({ modo }) => {
                         name="diciembre"
                         value={mesesHabilitados[11]}
                         onChange={(e) => {
-                          handleCheck([11, 11], e.target.checked);
+                          HandleCheck([11, 11], e.target.checked);
                           setCheckboxes({
                             ...checkboxes,
                             diciembre: e.target.checked,
@@ -1566,10 +1490,7 @@ const Empresa = ({ modo }) => {
 
                 <div className={G.ContenedorRow + " !gap-x-0 mt-4 mb-1"}>
                   <div className={G.InputFull}>
-                    <label
-                      htmlFor="anioHabilitado2"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="anioHabilitado2" className={G.LabelStyle}>
                       Año 2
                     </label>
                     <input
@@ -1579,7 +1500,7 @@ const Empresa = ({ modo }) => {
                       autoComplete="off"
                       placeholder="año"
                       min={0}
-                      value={dataGeneral.anioHabilitado2}
+                      value={data.anioHabilitado2}
                       onChange={HandleData}
                       className={G.InputBoton}
                     />
@@ -1590,7 +1511,7 @@ const Empresa = ({ modo }) => {
                         inputId="todos2"
                         name="todos2"
                         value={checkboxes2.checked}
-                        onChange={handleCheckAll2}
+                        onChange={HandleCheckAll2}
                         checked={checkboxes2.checked}
                       />
                     </div>
@@ -1608,7 +1529,7 @@ const Empresa = ({ modo }) => {
                         name="enero2"
                         value={mesesHabilitados[12]}
                         onChange={(e) => {
-                          handleCheck([0, 12], e.target.checked);
+                          HandleCheck([0, 12], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             enero2: e.target.checked,
@@ -1631,7 +1552,7 @@ const Empresa = ({ modo }) => {
                         name="febrero2"
                         value={mesesHabilitados[13]}
                         onChange={(e) => {
-                          handleCheck([1, 13], e.target.checked);
+                          HandleCheck([1, 13], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             febrero2: e.target.checked,
@@ -1654,7 +1575,7 @@ const Empresa = ({ modo }) => {
                         name="marzo2"
                         value={mesesHabilitados[14]}
                         onChange={(e) => {
-                          handleCheck([2, 14], e.target.checked);
+                          HandleCheck([2, 14], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             marzo2: e.target.checked,
@@ -1677,7 +1598,7 @@ const Empresa = ({ modo }) => {
                         name="abril2"
                         value={mesesHabilitados[15]}
                         onChange={(e) => {
-                          handleCheck([3, 15], e.target.checked);
+                          HandleCheck([3, 15], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             abril2: e.target.checked,
@@ -1702,7 +1623,7 @@ const Empresa = ({ modo }) => {
                         name="mayo2"
                         value={mesesHabilitados[16]}
                         onChange={(e) => {
-                          handleCheck([4, 16], e.target.checked);
+                          HandleCheck([4, 16], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             mayo2: e.target.checked,
@@ -1725,7 +1646,7 @@ const Empresa = ({ modo }) => {
                         name="junio2"
                         value={mesesHabilitados[17]}
                         onChange={(e) => {
-                          handleCheck([5, 17], e.target.checked);
+                          HandleCheck([5, 17], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             junio2: e.target.checked,
@@ -1748,7 +1669,7 @@ const Empresa = ({ modo }) => {
                         name="julio2"
                         value={mesesHabilitados[18]}
                         onChange={(e) => {
-                          handleCheck([6, 18], e.target.checked);
+                          HandleCheck([6, 18], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             julio2: e.target.checked,
@@ -1771,7 +1692,7 @@ const Empresa = ({ modo }) => {
                         name="agosto2"
                         value={mesesHabilitados[19]}
                         onChange={(e) => {
-                          handleCheck([7, 19], e.target.checked);
+                          HandleCheck([7, 19], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             agosto2: e.target.checked,
@@ -1796,7 +1717,7 @@ const Empresa = ({ modo }) => {
                         name="septiembre2"
                         value={mesesHabilitados[20]}
                         onChange={(e) => {
-                          handleCheck([8, 20], e.target.checked);
+                          HandleCheck([8, 20], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             septiembre2: e.target.checked,
@@ -1819,7 +1740,7 @@ const Empresa = ({ modo }) => {
                         name="octubre2"
                         value={mesesHabilitados[21]}
                         onChange={(e) => {
-                          handleCheck([9, 21], e.target.checked);
+                          HandleCheck([9, 21], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             octubre2: e.target.checked,
@@ -1842,7 +1763,7 @@ const Empresa = ({ modo }) => {
                         name="noviembre2"
                         value={mesesHabilitados[22]}
                         onChange={(e) => {
-                          handleCheck([10, 22], e.target.checked);
+                          HandleCheck([10, 22], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             noviembre2: e.target.checked,
@@ -1865,7 +1786,7 @@ const Empresa = ({ modo }) => {
                         name="diciembre2"
                         value={mesesHabilitados[23]}
                         onChange={(e) => {
-                          handleCheck([11, 23], e.target.checked);
+                          HandleCheck([11, 23], e.target.checked);
                           setCheckboxes2({
                             ...checkboxes2,
                             diciembre2: e.target.checked,
@@ -1918,9 +1839,7 @@ const Empresa = ({ modo }) => {
                     {estadoIgv && (
                       <div
                         className={
-                          G.ContenedorBasico +
-                          G.FondoContenedor +
-                          " pb-2 mb-3"
+                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
                         }
                       >
                         <div className={G.ContenedorRow}>
@@ -1940,16 +1859,14 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                disabled={modo == "Consultar" }
+                                disabled={modo == "Consultar"}
                                 value={objetoIgv.porcentaje}
                                 onChange={ValidarDataIgv}
                                 className={G.InputBoton}
                               />
                             </div>
                             <div className={G.Input36}>
-                              <div
-                                className={G.CheckStyle + G.Anidado}
-                              >
+                              <div className={G.CheckStyle + G.Anidado}>
                                 <Checkbox
                                   inputId="defaultIgv"
                                   id="default"
@@ -2027,9 +1944,7 @@ const Empresa = ({ modo }) => {
                     {estadoRetencion && (
                       <div
                         className={
-                          G.ContenedorBasico +
-                          G.FondoContenedor +
-                          " pb-2 mb-3"
+                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
                         }
                       >
                         <div className={G.ContenedorRow}>
@@ -2049,16 +1964,14 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 autoFocus
                                 min={0}
-                                disabled={modo == "Consultar" }
+                                disabled={modo == "Consultar"}
                                 value={objetoRetencion.porcentaje}
                                 onChange={ValidarDataRetencion}
                                 className={G.InputBoton}
                               />
                             </div>
                             <div className={G.Input36}>
-                              <div
-                                className={G.CheckStyle + G.Anidado}
-                              >
+                              <div className={G.CheckStyle + G.Anidado}>
                                 <Checkbox
                                   inputId="defaultRetencion"
                                   id="default"
@@ -2136,9 +2049,7 @@ const Empresa = ({ modo }) => {
                     {estadoDetraccion && (
                       <div
                         className={
-                          G.ContenedorBasico +
-                          G.FondoContenedor +
-                          " pb-2 mb-3"
+                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
                         }
                       >
                         <div className={G.ContenedorRow}>
@@ -2158,16 +2069,14 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                disabled={modo == "Consultar" }
+                                disabled={modo == "Consultar"}
                                 value={objetoDetraccion.porcentaje}
                                 onChange={ValidarDataDetraccion}
                                 className={G.InputBoton}
                               />
                             </div>
                             <div className={G.Input36}>
-                              <div
-                                className={G.CheckStyle + G.Anidado}
-                              >
+                              <div className={G.CheckStyle + G.Anidado}>
                                 <Checkbox
                                   inputId="defaultDetraccion"
                                   id="default"
@@ -2245,9 +2154,7 @@ const Empresa = ({ modo }) => {
                     {estadoPercepcion && (
                       <div
                         className={
-                          G.ContenedorBasico +
-                          G.FondoContenedor +
-                          " pb-2 mb-3"
+                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
                         }
                       >
                         <div className={G.ContenedorRow}>
@@ -2267,16 +2174,14 @@ const Empresa = ({ modo }) => {
                                 autoComplete="off"
                                 min={0}
                                 autoFocus
-                                disabled={modo == "Consultar" }
+                                disabled={modo == "Consultar"}
                                 value={objetoPercepcion.porcentaje}
                                 onChange={ValidarDataPercepcion}
                                 className={G.InputBoton}
                               />
                             </div>
                             <div className={G.Input36}>
-                              <div
-                                className={G.CheckStyle + G.Anidado}
-                              >
+                              <div className={G.CheckStyle + G.Anidado}>
                                 <Checkbox
                                   inputId="defaultPercepcion"
                                   id="default"

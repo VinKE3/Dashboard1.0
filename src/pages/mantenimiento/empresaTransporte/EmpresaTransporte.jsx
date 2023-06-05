@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
+import Mensajes from "../../../components/funciones/Mensajes";
 import FiltroBasico from "../../../components/filtro/FiltroBasico";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -10,7 +11,7 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
@@ -52,7 +53,9 @@ const EmpresadeTransporte = () => {
     setCadena(`&nombre=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -64,6 +67,7 @@ const EmpresadeTransporte = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -248,7 +252,7 @@ const EmpresadeTransporte = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Empresa de Transporte</h2>
 
             {/* Filtro*/}

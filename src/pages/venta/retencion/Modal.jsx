@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import Get from "../../../components/funciones/Get";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import FiltroCliente from "../../../components/filtro/FiltroCliente";
 import Mensajes from "../../../components/funciones/Mensajes";
@@ -12,7 +14,7 @@ import moment from "moment";
 import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
+
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -70,20 +72,20 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataDetalle, setDataDetalle] = useState([]);
   const [dataGlobal] = useState(store.session.get("global"));
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipoDocumento, setDataTipoDocumento] = useState([]);
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   const [dataTipoVenta, setDataTipoVenta] = useState([]);
   const [dataTipoCobro, setDataTipoCobro] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataCliente, setDataCliente] = useState([]);
   const [dataCabecera, setDataCabecera] = useState({
     tipoDocumento: "01",
     porcentaje: 3,
     abonado: true,
-    fechaEmision: moment().format("YYYY-MM-DD")
+    fechaEmision: moment().format("YYYY-MM-DD"),
   });
   //Data Modales Ayuda
 
@@ -126,12 +128,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(data.fechaEmision);
+      TipoCambio(data.fechaEmision);
     } else {
       SepararDetalle(data.detalles);
       setHabilitarCampos(false);
     }
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -475,7 +477,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Venta/Retencion/FormularioTablas`);
     setDataTipoDocumento([{ id: "RE", descripcion: "Retención" }]);
     setDataTipoVenta(result.data.data.tiposVenta);
@@ -483,74 +485,28 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataMoneda(result.data.data.monedas);
     setDataTipoDoc(result.data.data.tiposDocumento);
   };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioVenta,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaEmision).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioVenta,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          toastId: "toastTipoCambio",
-        }
-      );
-      OcultarMensajes();
-    }
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "venta",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   const ConsultarDocumento = async () => {
     let respuesta = await ValidarConsulta("ConsultarDocumento");
     if (respuesta[0]) {
-      const result = await ApiMasy.get(
-        `api/Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`
+      const result = await Get(
+        `Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`
       );
-      if (result.name == "AxiosError") {
-        let err = "";
-        if (result.response.data == "") {
-          err = response.message;
-        } else {
-          err = String(result.response.data.messages[0].textos);
-        }
-        toast.error(String(err), {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+      if (result == undefined) {
         document.getElementById("serieCabecera").focus();
       } else {
-        let nuevoTotal = await ConvertirPrecio(
-          result.data.data.total,
-          result.data.data.monedaId
-        );
+        let nuevoTotal = await ConvertirPrecio(result.total, result.monedaId);
         if (nuevoTotal != undefined) {
           let monto = nuevoTotal * (dataCabecera.porcentaje / 100);
           setDataCabecera({
@@ -741,11 +697,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           />
         )}
         {/* Cabecera */}
-        <div
-          className={
-            G.ContenedorBasico + " mb-2 " + G.FondoContenedor
-          }
-        >
+        <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
           <div className={G.ContenedorInputs}>
             <div className={G.InputMitad}>
               <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
@@ -861,9 +813,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
               <button
                 id="consultarCliente"
-                className={
-                  G.BotonBuscar + G.BotonPrimary + " !rounded-none"
-                }
+                className={G.BotonBuscar + G.BotonPrimary + " !rounded-none"}
                 hidden={modo == "Consultar"}
                 disabled={checkVarios}
                 onKeyDown={(e) => Funciones.KeyClick(e)}
@@ -983,19 +933,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                 disabled={modo == "Consultar"}
                 value={data.tipoCambio ?? ""}
                 onChange={HandleData}
-                className={
-                  modo != "Consultar" ? G.InputBoton : G.InputStyle
-                }
+                className={modo != "Consultar" ? G.InputBoton : G.InputStyle}
               />
               <button
                 id="consultarTipoCambio"
-                className={
-                  G.BotonBuscar + G.Anidado + G.BotonPrimary
-                }
+                className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                 hidden={modo == "Consultar"}
                 onKeyDown={(e) => Funciones.KeyClick(e)}
                 onClick={() => {
-                  GetPorIdTipoCambio(data.fechaEmision);
+                  TipoCambio(data.fechaEmision);
                 }}
               >
                 <FaUndoAlt></FaUndoAlt>
@@ -1024,11 +970,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
         {/* Detalles */}
         {modo != "Consultar" && (
-          <div
-            className={
-              G.ContenedorBasico + G.FondoContenedor + " mb-2"
-            }
-          >
+          <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
             <div className={G.ContenedorInputs}>
               <div className={G.InputFull}>
                 <label htmlFor="tipoDocumento" className={G.LabelStyle}>
@@ -1040,9 +982,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onChange={ValidarDataCabecera}
                   disabled={habilitarCampos ? false : true}
                   value={dataCabecera.tipoDocumento ?? ""}
-                  className={
-                    G.InputStyle
-                  }
+                  className={G.InputStyle}
                 >
                   {dataTipoDoc.map((map) => (
                     <option key={map.id} value={map.id}>
@@ -1067,9 +1007,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   }
                   value={dataCabecera.serie ?? ""}
                   onChange={ValidarDataCabecera}
-                  className={
-                    habilitarCampos ? G.InputStyle : G.InputStyle
-                  }
+                  className={habilitarCampos ? G.InputStyle : G.InputStyle}
                 />
               </div>
               <div className={G.InputMitad}>
@@ -1089,9 +1027,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   }
                   value={dataCabecera.numero ?? ""}
                   onChange={ValidarDataCabecera}
-                  className={
-                    habilitarCampos ? G.InputBoton : G.InputBoton
-                  }
+                  className={habilitarCampos ? G.InputBoton : G.InputBoton}
                 />
                 <button
                   id="consultarDocumentoCabecera"
@@ -1169,9 +1105,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={true}
                   value={dataCabecera.monto ?? ""}
                   onChange={ValidarDataCabecera}
-                  className={
-                    modo != "Consultar" ? G.InputBoton : G.InputStyle
-                  }
+                  className={modo != "Consultar" ? G.InputBoton : G.InputStyle}
                 />
                 <button
                   id="enviarDetalle"

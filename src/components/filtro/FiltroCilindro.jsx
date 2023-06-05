@@ -90,12 +90,6 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
-  };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
       let row = document
@@ -229,9 +223,7 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + " border-none "
-              }
+              className={G.BotonModalBase + G.BotonAgregar + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -257,9 +249,7 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
           <button
             id="boton"
             onClick={() => EliminarFila(row.values.id)}
-            className={
-              G.BotonModalBase + G.BotonEliminar + "border-none"
-            }
+            className={G.BotonModalBase + G.BotonEliminar + "border-none"}
           >
             <FaTrash></FaTrash>
           </button>
@@ -274,10 +264,8 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Documentos"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
@@ -293,11 +281,7 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
       >
         {
           <>
-            <div
-              className={
-                G.ContenedorBasico + G.FondoContenedor + " mb-2"
-              }
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
               <div className={G.ContenedorInputs + " mb-2"}>
                 <div className={G.InputMitad}>
                   <label htmlFor="fechaInicio" className={G.LabelStyle}>
@@ -311,7 +295,6 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
                     autoFocus
                     value={filtro.fechaInicio}
                     onChange={HandleData}
-                    onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />
                 </div>
@@ -326,7 +309,6 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
                     autoComplete="off"
                     value={filtro.fechaFin}
                     onChange={HandleData}
-                    onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />
                   {/* <button
@@ -341,9 +323,7 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
                 </div>
               </div>
               {Object.entries(dataGuiasSeleccionada).length > 0 && (
-                <div
-                  className={G.ContenedorBasico + G.FondoContenedor}
-                >
+                <div className={G.ContenedorBasico + G.FondoContenedor}>
                   <p className=" px-1 text-base text-light font-bold">
                     SELECCIONADOS
                   </p>

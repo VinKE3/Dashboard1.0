@@ -15,10 +15,10 @@ export var ModalPequeño = "h-full w-full md:h-fit md:max-w-2xl lg:max-w-3xl ";
 //Tamaños de Modal
 
 export var ModalHeader =
-  "flex items-center justify-between pt-4 pb-2 px-5 rounded-tt ";
+  "flex items-center justify-between pt-3 pb-1.5 px-5 rounded-tt ";
 export var ModalBody = "h-full w-full overflow-y-auto overflow-x-hidden ";
 export var ModalFooter =
-  "flex items-center justify-end gap-x-2 p-3.5 px-5 rounded-bt ";
+  "flex items-center justify-end gap-x-2 py-2 px-5 rounded-bt ";
 export var Form = "w-full h-full py-1.5 px-5 ";
 //#endregion
 

@@ -29,7 +29,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
     ConsultarProvincia();
   }, [ubigeo]);
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -75,7 +75,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Cliente/FormularioTablas`
     );

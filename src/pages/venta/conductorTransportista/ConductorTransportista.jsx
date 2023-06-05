@@ -9,7 +9,7 @@ import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
+
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as G from "../../../components/Global";
 
@@ -53,9 +53,10 @@ const Conductor = () => {
     setCadena(`&nombre=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -65,6 +66,7 @@ const Conductor = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -244,7 +246,7 @@ const Conductor = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Conductores y Transportistas</h2>
 
             {/* Filtro*/}

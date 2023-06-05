@@ -17,7 +17,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
@@ -52,7 +52,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );

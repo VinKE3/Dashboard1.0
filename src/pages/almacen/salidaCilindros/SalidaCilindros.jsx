@@ -2,8 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
 import Delete from "../../../components/funciones/Delete";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -62,14 +64,19 @@ const SalidaCilindros = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Modificar");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
@@ -82,7 +89,9 @@ const SalidaCilindros = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
   useEffect(() => {
     if (visible) {
@@ -93,6 +102,7 @@ const SalidaCilindros = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -136,8 +146,12 @@ const SalidaCilindros = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("clienteNombre").focus();
@@ -160,26 +174,6 @@ const SalidaCilindros = () => {
     const result = await ApiMasy.get(`api/Almacen/SalidaCilindros/${id}`);
     setObjeto(result.data.data);
   };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Almacen/SalidaCilindros/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
   //#endregion
 
   //#region Funciones Modal
@@ -199,7 +193,11 @@ const SalidaCilindros = () => {
       setModo(modo);
       switch (accion) {
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/SalidaCilindros",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -207,7 +205,11 @@ const SalidaCilindros = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/SalidaCilindros",
+            accion,
+            value
+          );
           if (valor) {
             Delete(["Almacen", "SalidaCilindros"], value, setEliminar);
           }
@@ -224,7 +226,11 @@ const SalidaCilindros = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Almacen", "SalidaCilindros"], id);
+            let model = await Imprimir(["Almacen", "SalidaCilindros"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -396,7 +402,7 @@ const SalidaCilindros = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Salida de Cilindros</h2>
 
             {/* Filtro*/}
@@ -444,9 +450,7 @@ const SalidaCilindros = () => {
                 />
                 <button
                   id="buscar"
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -484,6 +488,13 @@ const SalidaCilindros = () => {
           </div>
 
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaSalidaCilindro")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

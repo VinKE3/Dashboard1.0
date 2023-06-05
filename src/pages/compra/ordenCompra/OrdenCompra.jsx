@@ -2,9 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
 import Imprimir from "../../../components/funciones/Imprimir";
-import Finalizar from "../../../components/funciones/Finalizar";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -72,8 +74,12 @@ const OrdenCompra = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     proveedorNombre: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     estado: "",
   });
   const [cadena, setCadena] = useState(
@@ -81,6 +87,7 @@ const OrdenCompra = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
@@ -93,7 +100,9 @@ const OrdenCompra = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -105,6 +114,7 @@ const OrdenCompra = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -148,8 +158,12 @@ const OrdenCompra = () => {
   const FiltroBoton = async () => {
     setFiltro({
       proveedorNombre: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       estado: "",
     });
     setIndex(0);
@@ -172,26 +186,6 @@ const OrdenCompra = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Compra/OrdenCompra/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   //#endregion
 
@@ -260,7 +254,7 @@ const OrdenCompra = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Compra/OrdenCompra", accion, value);
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -268,7 +262,7 @@ const OrdenCompra = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Compra/OrdenCompra", accion, value);
           if (valor) {
             await Delete(["Compra", "OrdenCompra"], value, setEliminar);
           }
@@ -285,7 +279,11 @@ const OrdenCompra = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Compra", "OrdenCompra"], id);
+            let model = await Imprimir(["Compra", "OrdenCompra"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -321,9 +319,9 @@ const OrdenCompra = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(1, id);
+                let valor = await GetIsPermitido("Compra/OrdenCompra", 1, id);
                 if (valor) {
-                  await Finalizar(["Compra", "OrdenCompra"], id, setEliminar);
+                  await Put(`Compra/OrdenCompra/Finalizar/${id}`, setEliminar);
                 }
               }
             });
@@ -481,9 +479,7 @@ const OrdenCompra = () => {
             {/* Filtro*/}
 
             <div
-              className={
-                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
               <div className={G.ContenedorInputsFiltro + " !my-0"}>
                 <div className={G.InputFull}>
@@ -529,9 +525,7 @@ const OrdenCompra = () => {
                   />
                   <button
                     id="buscar"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -640,6 +634,13 @@ const OrdenCompra = () => {
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaOrdenCompra")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

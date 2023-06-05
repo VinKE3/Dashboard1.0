@@ -2,9 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
-import Anular from "../../../components/funciones/Anular";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -77,8 +79,12 @@ const LetraCambioVenta = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     isCancelado: "",
   });
   const [cadena, setCadena] = useState(
@@ -86,6 +92,7 @@ const LetraCambioVenta = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modalCabecera, setModalCabecera] = useState(false);
   const [modalRefinanciacion, setModalRefinanciacion] = useState(false);
   const [modalRenovacion, setModalRenovacion] = useState(false);
@@ -102,9 +109,10 @@ const LetraCambioVenta = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -114,6 +122,7 @@ const LetraCambioVenta = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -157,8 +166,12 @@ const LetraCambioVenta = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       isCancelado: "",
     });
     setIndex(0);
@@ -181,26 +194,6 @@ const LetraCambioVenta = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Venta/LetraCambioVenta/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/LetraCambioVenta/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   //#endregion
 
@@ -230,7 +223,11 @@ const LetraCambioVenta = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Venta/LetraCambioVenta",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModalCabecera(true);
@@ -238,7 +235,11 @@ const LetraCambioVenta = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Venta/LetraCambioVenta",
+            accion,
+            value
+          );
           if (valor) {
             Delete(["Venta", "LetraCambioVenta"], value, setEliminar);
           }
@@ -270,9 +271,13 @@ const LetraCambioVenta = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, id);
+                let valor = await GetIsPermitido(
+                  "Venta/LetraCambioVenta",
+                  accion,
+                  id
+                );
                 if (valor) {
-                  await Anular(["Venta", "LetraCambioVenta"], id, setEliminar);
+                  await Put(`Venta/LetraCambioVenta/Anular/${id}`, setEliminar);
                 }
               }
             });
@@ -296,7 +301,11 @@ const LetraCambioVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Venta", "LetraCambioVenta"], id);
+            let model = await Imprimir(["Venta", "LetraCambioVenta"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -557,13 +566,11 @@ const LetraCambioVenta = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Letra Cambio Venta</h2>
             {/* Filtro*/}
             <div
-              className={
-                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
               <div className={G.ContenedorInputsFiltro + " !my-0"}>
                 <div className={G.InputFull}>
@@ -609,9 +616,7 @@ const LetraCambioVenta = () => {
                   />
                   <button
                     id="buscar"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -771,6 +776,13 @@ const LetraCambioVenta = () => {
               setModal={setModalDeshacer}
               modo={modo}
               foco={document.getElementById("tablaLetraCambioVenta")}
+            />
+          )}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaDocumentoVenta")}
             />
           )}
           <ToastContainer />

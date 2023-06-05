@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
+import Insert from "../funciones/Insert";
+import Update from "../funciones/Update";
 import Mensajes from "../funciones/Mensajes";
+import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import Swal from "sweetalert2";
-import Insert from "../funciones/Insert";
-import Update from "../funciones/Update";
 import * as G from "../Global";
 
 const ModalCrud = ({
@@ -16,6 +16,7 @@ const ModalCrud = ({
   menu,
   titulo,
   cerrar = true,
+  id = "modalCRUD",
   foco,
   tamañoModal = [G.ModalPequeño, G.Form],
 }) => {
@@ -31,15 +32,6 @@ const ModalCrud = ({
   //#endregion
 
   //#region Funciones
-  const Enviar = async (e) => {
-    if (e.key == "Enter") {
-      if (modo == "Nuevo") {
-        Nuevo(e);
-      } else {
-        Modificar(e);
-      }
-    }
-  };
   const RetornarMensaje = async () => {
     if (tipoMensaje == 0) {
       toast.success(mensaje, {
@@ -56,43 +48,32 @@ const ModalCrud = ({
       setModal(false);
     }
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
-  const CerrarModal = (e = null) => {
-    if (e._reactName != "onClick") {
-      if (e.key == "Escape") {
-        if (modo != "Consultar") {
-          Swal.fire({
-            title: "Cerrar Formulario",
-            text: "¿Desea cerrar el formulario?",
-            icon: "warning",
-            iconColor: "#F7BF3A",
-            showCancelButton: true,
-            color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
-            cancelButtonColor: "#d33",
-            cancelButtonText: "Cancelar",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              foco.focus();
-              setModal(false);
-            }
-          });
-        } else {
+  const CerrarModal = () => {
+    if (modo != "Consultar") {
+      Swal.fire({
+        title: "Cerrar Formulario",
+        text: "¿Desea cerrar el formulario?",
+        icon: "warning",
+        iconColor: "#F7BF3A",
+        showCancelButton: true,
+        color: "#fff",
+        background: "#1a1a2e",
+        confirmButtonColor: "#eea508",
+        confirmButtonText: "Aceptar",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
           foco.focus();
           setModal(false);
         }
-      }
+      });
     } else {
       foco.focus();
       setModal(false);
     }
   };
-  const CerrarModalKey = (e) => {
+  const ModalKey = (e) => {
     if (e.key == "Escape") {
       if (modo != "Consultar") {
         Swal.fire({
@@ -118,52 +99,30 @@ const ModalCrud = ({
         setModal(false);
       }
     }
-    if (e.key == "Enter") {
-      if (modo != "Consultar") {
-        Swal.fire({
-          title: "Cerrar Formulario",
-          text: "¿Desea cerrar el formulario?",
-          icon: "warning",
-          iconColor: "#F7BF3A",
-          showCancelButton: true,
-          color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            foco.focus();
-            setModal(false);
-          }
-        });
-      } else {
-        foco.focus();
-        setModal(false);
-      }
-    }
+  };
+  const OcultarMensajes = () => {
+    setMensaje([]);
+    setTipoMensaje(-1);
   };
   //#endregion
 
   //#region Funciones API
-  const Nuevo = async (e) => {
-    e.preventDefault();
-    await Insert(menu, objeto, setTipoMensaje, setMensaje);
-  };
-  const Modificar = async (e) => {
-    e.preventDefault();
-    await Update(menu, objeto, setTipoMensaje, setMensaje);
+  const Enviar = async () => {
+    if (modo == "Nuevo") {
+      await Insert(menu, objeto, setTipoMensaje, setMensaje);
+    } else {
+      await Update(menu, objeto, setTipoMensaje, setMensaje);
+    }
   };
   //#endregion
 
   //#region Render
   return (
     <>
-      <div className={G.FondoModal}>
+      <div tabIndex={0} onKeyDown={(e) => ModalKey(e)} className={G.FondoModal}>
         <div className={tamañoModal[0]}>
           {/*content*/}
-          <div id="modalCRUD" className={G.ModalContent}>
+          <div id={id} className={G.ModalContent}>
             {/*header*/}
             <div className={G.ModalHeader}>
               <h3 className={G.TituloModal}>
@@ -178,7 +137,7 @@ const ModalCrud = ({
             {/*header*/}
 
             {/*body*/}
-            <div className={G.ModalBody} onKeyDown={(e) => CerrarModal(e)}>
+            <div className={G.ModalBody}>
               <div className={tamañoModal[1]}>
                 {tipoMensaje > 0 && (
                   <Mensajes
@@ -201,20 +160,21 @@ const ModalCrud = ({
                   id="botonRegistrarModalCrud"
                   className={G.BotonModalBase + G.BotonOkModal}
                   type="button"
-                  onClick={
-                    modo == "Nuevo" ? (e) => Nuevo(e) : (e) => Modificar(e)
-                  }
-                  onKeyDown={(e) => Enviar(e)}
+                  onClick={() => Enviar()}
+                  onKeyDown={async (e) => {
+                    if (e.key == "Enter") {
+                      await Enviar();
+                    }
+                  }}
                 >
                   {modo == "Nuevo" ? "Registrar" : "Guardar Cambios"}
                 </button>
               )}
               <button
-                className={G.BotonModalBase + G.BotonCancelarModal}
                 type="button"
                 autoFocus={modo == "Consultar"}
                 onClick={CerrarModal}
-                onKeyDown={(e) => CerrarModalKey(e)}
+                className={G.BotonModalBase + G.BotonCancelarModal}
               >
                 CERRAR
               </button>

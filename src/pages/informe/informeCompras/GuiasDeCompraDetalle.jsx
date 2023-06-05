@@ -31,7 +31,7 @@ const GuiasDeCompraDetalle = ({ setModal }) => {
   };
   return (
     <>
-      <ModalBasic titulo="Guias De Compra Detalle" setModal={setModal}>
+      <ModalBasic titulo="Guias de Compra Detalle" setModal={setModal}>
         <div
           className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >

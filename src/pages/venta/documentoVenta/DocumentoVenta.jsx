@@ -2,11 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
-import Anular from "../../../components/funciones/Anular";
 import Imprimir from "../../../components/funciones/Imprimir";
 import ModalImprimir from "../../../components/filtro/ModalImprimir";
-import EnviarBloquear from "../../../components/funciones/EnviarBloquear";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -17,8 +17,8 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
-import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
+import { FaUndoAlt, FaCheck } from "react-icons/fa";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
 import * as G from "../../../components/Global";
 
@@ -65,8 +65,12 @@ const DocumentoVenta = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     isEnviado: "",
   });
   const [cadena, setCadena] = useState(
@@ -88,9 +92,10 @@ const DocumentoVenta = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -144,8 +149,12 @@ const DocumentoVenta = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       isEnviado: "",
     });
     setIndex(0);
@@ -168,26 +177,6 @@ const DocumentoVenta = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Venta/DocumentoVenta/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/DocumentoVenta/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   //#endregion
 
@@ -273,7 +262,11 @@ const DocumentoVenta = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Venta/DocumentoVenta",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -281,7 +274,11 @@ const DocumentoVenta = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Venta/DocumentoVenta",
+            accion,
+            value
+          );
           if (valor) {
             await Delete(["Venta", "DocumentoVenta"], value, setEliminar);
           }
@@ -313,9 +310,13 @@ const DocumentoVenta = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, id);
+                let valor = await GetIsPermitido(
+                  "Venta/DocumentoVenta",
+                  accion,
+                  id
+                );
                 if (valor) {
-                  await Anular(["Venta", "DocumentoVenta"], id, setEliminar);
+                  await Put(`Venta/DocumentoVenta/Anular/${id}`, setEliminar);
                 }
               }
             });
@@ -392,14 +393,10 @@ const DocumentoVenta = () => {
                 cancelButtonText: "Cancelar",
               }).then(async (res) => {
                 if (res.isConfirmed) {
-                  await EnviarBloquear(
-                    ["Venta", "DocumentoVenta", "Enviar"],
-                    {
-                      ids: [value.id],
-                      enviar: !value.isAutorizado,
-                    },
-                    setEliminar
-                  );
+                  await Put("Venta/DocumentoVenta/Enviar", setEliminar, {
+                    ids: [value.id],
+                    enviar: !value.isAutorizado,
+                  });
                 }
               });
             }
@@ -422,14 +419,10 @@ const DocumentoVenta = () => {
             cancelButtonText: "Cancelar",
           }).then(async (res) => {
             if (res.isConfirmed) {
-              await EnviarBloquear(
-                ["Venta", "DocumentoVenta", "Enviar"],
-                {
-                  ids: value.ids,
-                  enviar: !value.isAutorizado,
-                },
-                setEliminar
-              );
+              await Put("Venta/DocumentoVenta/Enviar", setEliminar, {
+                ids: value.ids,
+                enviar: !value.isAutorizado,
+              });
               setAutorizado(value.isAutorizado);
             } else {
               setAutorizado(!value.isAutorizado);

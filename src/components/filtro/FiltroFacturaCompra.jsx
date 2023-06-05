@@ -87,12 +87,6 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
     }, 200);
     setTimer(newTimer);
   };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
-  };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
       let row = document
@@ -150,9 +144,7 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
           <div className="flex justify-center">
             <button
               onClick={() => GetPorId(row.values.id)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + " border-none "
-              }
+              className={G.BotonModalBase + G.BotonAgregar + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -168,10 +160,8 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Facturas"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <button
@@ -185,10 +175,7 @@ const FiltroFacturaCompra = ({ setModal, id, setObjeto, foco }) => {
       >
         {
           <>
-            <div
-              className={G.ContenedorBasico + G.FondoContenedor}
-              onKeyDown={(e) => Key(e)}
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor}>
               {/* Filtro*/}
               <FiltroBasico
                 textLabel={"N° Documento"}

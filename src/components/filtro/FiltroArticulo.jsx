@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { FaUndoAlt, FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
@@ -56,7 +56,9 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
   useEffect(() => {
     Listar(cadena, 1);
@@ -76,12 +78,6 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
   };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
@@ -213,9 +209,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
-              className={
-                G.BotonModalBase + G.BotonAgregar + "border-none"
-              }
+              className={G.BotonModalBase + G.BotonAgregar + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>
@@ -232,10 +226,8 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Artículos"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
@@ -266,7 +258,6 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                     autoFocus
                     value={filtro.codigoBarras}
                     onChange={HandleData}
-                    onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />
                 </div>
@@ -282,7 +273,6 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                     autoComplete="off"
                     value={filtro.descripcion}
                     onChange={HandleData}
-                    onKeyDown={(e) => Key(e)}
                     className={G.InputStyle}
                   />
                   {/* <button

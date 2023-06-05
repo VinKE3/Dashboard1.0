@@ -2,9 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
-import Anular from "../../../components/funciones/Anular";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -60,14 +62,19 @@ const SalidaAlmacen = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     numeroDocumento: "",
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&numeroDocumento=${filtro.numeroDocumento}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
@@ -80,7 +87,9 @@ const SalidaAlmacen = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -92,6 +101,7 @@ const SalidaAlmacen = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -135,8 +145,12 @@ const SalidaAlmacen = () => {
   const FiltroBoton = async () => {
     setFiltro({
       numeroDocumento: "",
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("numeroDocumento").focus();
@@ -158,26 +172,6 @@ const SalidaAlmacen = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Almacen/SalidaAlmacen/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Almacen/SalidaAlmacen/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   //#endregion
 
@@ -232,7 +226,11 @@ const SalidaAlmacen = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/SalidaAlmacen",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -240,7 +238,11 @@ const SalidaAlmacen = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/SalidaAlmacen",
+            accion,
+            value
+          );
           if (valor) {
             Delete(["Almacen", "SalidaAlmacen"], value, setEliminar);
           }
@@ -272,9 +274,13 @@ const SalidaAlmacen = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, id);
+                let valor = await GetIsPermitido(
+                  "Almacen/SalidaAlmacen",
+                  accion,
+                  id
+                );
                 if (valor) {
-                  await Anular(["Almacen", "SalidaAlmacen"], id, setEliminar);
+                  await Put(`Almacen/SalidaAlmacen/Anular/${id}`, setEliminar);
                 }
               }
             });
@@ -298,7 +304,11 @@ const SalidaAlmacen = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Almacen", "SalidaAlmacen"], id);
+            let model = await Imprimir(["Almacen", "SalidaAlmacen"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -330,42 +340,9 @@ const SalidaAlmacen = () => {
               confirmButtonText: "Aceptar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                ApiMasy.put(`api/Almacen/SalidaAlmacen/Cerrar/${id}`).then(
-                  (response) => {
-                    if (response.name == "AxiosError") {
-                      let err = "";
-                      if (response.response.data == "") {
-                        err = response.message;
-                      } else {
-                        err = String(response.response.data.messages[0].textos);
-                      }
-                      toast.error(err, {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                      });
-                    } else {
-                      Listar(cadena, index + 1);
-                      toast.success(String(response.data.messages[0].textos), {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                      });
-                    }
-                  }
-                );
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                await Put(`Almacen/SalidaAlmacen/Cerrar/${id}`, setEliminar);
               }
             });
           } else {
@@ -537,7 +514,7 @@ const SalidaAlmacen = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Salida de Almacén</h2>
 
             {/* Filtro*/}
@@ -585,9 +562,7 @@ const SalidaAlmacen = () => {
                 />
                 <button
                   id="buscar"
-                  className={
-                    G.BotonBuscar + G.Anidado + G.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -652,6 +627,13 @@ const SalidaAlmacen = () => {
           </div>
 
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaSalidaAlmacen")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

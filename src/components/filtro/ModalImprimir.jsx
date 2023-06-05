@@ -31,12 +31,6 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
     }
     return filename;
   };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
-  };
   //#endregion
 
   //#region Render
@@ -44,11 +38,10 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo={"Reporte " + fileName.slice(0, fileName.length - 4)}
+        cabecera={false}
         cerrar={false}
+        foco={foco}
         tamañoModal={[G.ModalFull, G.Form]}
         childrenFooter={
           <>
@@ -57,18 +50,15 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
               href={pdf}
               download={fileName}
               className={
-                G.BotonModalBase +
-                G.BotonAgregar +
-                " !text-light border-none"
+                G.BotonModalBase + G.BotonAgregar + " !text-light border-none"
               }
             >
               DESCARGAR
             </a>
             <button
               type="button"
-              onClick={() => setModal(false)}
-              onKeyDown={(e) => Key(e)}
               autoFocus
+              onClick={() => setModal(false)}
               className={G.BotonModalBase + G.BotonCancelarModal}
             >
               CERRAR

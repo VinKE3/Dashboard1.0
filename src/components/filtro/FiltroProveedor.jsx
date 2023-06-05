@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { FaSearch, FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import * as G from "../Global";
 
@@ -64,12 +64,6 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
   };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
@@ -147,9 +141,7 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
           <button
             id="boton"
             onClick={() => GetPorId(row.values.id)}
-            className={
-              G.BotonModalBase + G.BotonAgregar + "border-none"
-            }
+            className={G.BotonModalBase + G.BotonAgregar + "border-none"}
           >
             <FaCheck></FaCheck>
           </button>
@@ -165,10 +157,8 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Proveedores"
+        foco={foco}
         tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
@@ -210,7 +200,6 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
                   autoFocus
                   value={filtro.numeroDocumentoIdentidad}
                   onChange={HandleData}
-                  onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
               </div>
@@ -226,7 +215,6 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   value={filtro.nombre}
                   onChange={HandleData}
-                  onKeyDown={(e) => Key(e)}
                   className={G.InputStyle}
                 />
                 {/* <button

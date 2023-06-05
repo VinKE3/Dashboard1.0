@@ -2,24 +2,28 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
+import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
+import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 import { FaUndoAlt } from "react-icons/fa";
 import {
   faPlus,
   faArrowAltCircleDown,
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
 import * as G from "../../../components/Global";
-import Swal from "sweetalert2";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -67,14 +71,19 @@ const CuadreStock = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [eliminar, setEliminar] = useState(false);
@@ -85,7 +94,9 @@ const CuadreStock = () => {
     setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
   useEffect(() => {
     if (visible) {
@@ -96,6 +107,7 @@ const CuadreStock = () => {
   }, [modal]);
   useEffect(() => {
     if (eliminar) {
+      setEliminar(false);
       Listar(cadena, index + 1);
     }
   }, [eliminar]);
@@ -137,8 +149,12 @@ const CuadreStock = () => {
   };
   const FiltroBoton = async () => {
     setFiltro({
-      fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("fechaInicio").focus();
@@ -166,26 +182,6 @@ const CuadreStock = () => {
       `api/Almacen/CuadreStock/GetDetalles?id=${id}`
     );
     setDetalle(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Almacen/CuadreStock/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   //#endregion
 
@@ -232,7 +228,11 @@ const CuadreStock = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/CuadreStock",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -240,7 +240,11 @@ const CuadreStock = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/CuadreStock",
+            accion,
+            value
+          );
           if (valor) {
             Delete(["Almacen", "CuadreStock"], value, setEliminar);
           }
@@ -257,7 +261,11 @@ const CuadreStock = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Almacen", "CuadreStock"], id);
+            let model = await Imprimir(["Almacen", "CuadreStock"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -294,42 +302,12 @@ const CuadreStock = () => {
               confirmButtonText: "Aceptar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                ApiMasy.put(
-                  `api/Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`
-                ).then((response) => {
-                  if (response.name == "AxiosError") {
-                    let err = "";
-                    if (response.response.data == "") {
-                      err = response.message;
-                    } else {
-                      err = String(response.response.data.messages[0].textos);
-                    }
-                    toast.error(err, {
-                      position: "bottom-right",
-                      autoClose: 3000,
-                      hideProgressBar: true,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "colored",
-                    });
-                  } else {
-                    Listar(cadena, index + 1);
-                    toast.success(String(response.data.messages[0].textos), {
-                      position: "bottom-right",
-                      autoClose: 3000,
-                      hideProgressBar: true,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "colored",
-                    });
-                  }
-                });
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                await Put(
+                  `Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`,
+                  setEliminar
+                );
               }
             });
           } else {
@@ -346,8 +324,9 @@ const CuadreStock = () => {
           }
           break;
         }
-        default:{
-          break;}
+        default: {
+          break;
+        }
       }
     }
   };
@@ -501,16 +480,14 @@ const CuadreStock = () => {
     <>
       {visible ? (
         <>
-           <div className={G.ContenedorPadre}>
+          <div className={G.ContenedorPadre}>
             <div className="flex items-center justify-between">
               <h2 className={G.TituloH2}>Cuadre de Stock</h2>
             </div>
 
             {/* Filtro*/}
             <div
-              className={
-                G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
               <div className={G.ContenedorInputsFiltro}>
                 <div className={G.InputFull}>
@@ -541,9 +518,7 @@ const CuadreStock = () => {
                   />
                   <button
                     id="buscar"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -602,6 +577,13 @@ const CuadreStock = () => {
               modo={modo}
               objeto={objeto}
               detalle={detalle}
+            />
+          )}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaCuadreStock")}
             />
           )}
           <ToastContainer />

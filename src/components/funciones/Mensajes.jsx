@@ -5,6 +5,9 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 const Mensajes = ({ tipoMensaje, mensaje, cerrar = true, Click }) => {
   //#region Funcion cambiar fondo del mensaje
   const FondoColor = (tipoMensaje) => {
+    if (tipoMensaje == 0) {
+      return "bg-green-600/90 ";
+    }
     if (tipoMensaje == 1) {
       return "bg-red-600/90 ";
     }
@@ -30,7 +33,10 @@ const Mensajes = ({ tipoMensaje, mensaje, cerrar = true, Click }) => {
       )}
       <h3 className="font-bold text-white ">Mensaje:</h3>
       {mensaje.map((msj) => (
-        <p key={msj} className="text-white"> {`• ${msj}`} </p>
+        <p key={msj} className="text-white">
+          {" "}
+          {`• ${msj}`}{" "}
+        </p>
       ))}
     </div>
   );
