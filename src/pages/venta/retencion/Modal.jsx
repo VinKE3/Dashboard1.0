@@ -45,17 +45,19 @@ const DivTabla = styled.div`
     width: 100px;
     text-align: center;
   }
+  & th:nth-child(6),
+  & th:nth-child(7),
   & th:nth-child(8),
   & th:nth-child(9) {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;
@@ -81,6 +83,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     tipoDocumento: "01",
     porcentaje: 3,
     abonado: true,
+    fechaEmision: moment().format("YYYY-MM-DD")
   });
   //Data Modales Ayuda
 

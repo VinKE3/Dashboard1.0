@@ -21,6 +21,10 @@ const DivTabla = styled.div`
     width: 40px;
     text-align: center;
   }
+  & th:nth-child(2) {
+    width: 40px;
+    text-align: center;
+  }
   & th:nth-child(3) {
     width: 120px;
   }
@@ -36,15 +40,15 @@ const DivTabla = styled.div`
     text-align: center;
   }
   & th:nth-child(7) {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;

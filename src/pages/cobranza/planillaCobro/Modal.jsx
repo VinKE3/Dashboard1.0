@@ -69,8 +69,8 @@ const DivTabla = styled.div`
   & th:nth-child(11),
   & th:nth-child(12) {
     background: linear-gradient(198deg, #196a24 0%, #19461d 100%);
-    min-width: 100px;
-    width: 100px;
+    min-width: 90px;
+    width: 90px;
     text-align: center;
   }
   & th:nth-child(10) {
@@ -82,15 +82,15 @@ const DivTabla = styled.div`
   & th:nth-child(13),
   & th:nth-child(14) {
     background: linear-gradient(198deg, #302579 0%, #222246 100%);
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;

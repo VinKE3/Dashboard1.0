@@ -31,23 +31,20 @@ const DivTabla = styled.div`
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(4),
-  & th:nth-child(5) {
-    width: 90px;
-    text-align: center;
-  }
 
+  & th:nth-child(4),
+  & th:nth-child(5),
   & th:nth-child(6),
   & th:nth-child(7) {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;

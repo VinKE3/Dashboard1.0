@@ -44,8 +44,8 @@ const DivTabla = styled.div`
   & th:nth-child(9),
   & th:nth-child(10),
   & th:nth-child(11) {
-    min-width: 90px;
-    width: 90px;
+    min-width: 85px;
+    width: 85px;
     text-align: right;
   }
   & th:last-child {

@@ -38,28 +38,27 @@ const DivTabla = styled.div`
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(4),
-  & th:nth-child(5) {
-    width: 90px;
+  & th:nth-child(4) {
+    width: 60px;
     text-align: center;
   }
 
+  & th:nth-child(5),
   & th:nth-child(6),
   & th:nth-child(7) {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-    text-align: center;
-  }
-  & th:last-child {
-    width: 75px;
+    width: 90px;
     min-width: 90px;
     max-width: 90px;
     text-align: center;
   }
+  & th:last-child {
+    width: 75px;
+    min-width: 75px;
+    max-width: 75px;
+    text-align: center;
+  }
 `;
 //#endregion
-
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   //Data General
@@ -521,7 +520,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   };
   //Artículos
-
   //#endregion
 
   //#region Funcion Detalles
@@ -1847,7 +1845,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className="flex">
                 <div className={G.FilaFooter + G.FilaVacia}></div>
-                <div className={G.FilaFooter + G.FilaImporte}>
+                <div className={G.FilaFooter + G.FilaInput}>
                   <label
                     htmlFor="porcentajeIGV"
                     className={G.FilaContenido + " !px-0"}
@@ -1887,7 +1885,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className="flex">
                 <div className={G.FilaFooter + G.FilaVacia}></div>
-                <div className={G.FilaFooter + G.FilaImporte}>
+                <div className={G.FilaFooter + G.FilaInput}>
                   <label
                     htmlFor="porcentajeRetencion"
                     className={G.FilaContenido + " !px-0"}
@@ -1918,7 +1916,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
               <div className="flex">
                 <div className={G.FilaFooter + G.FilaVacia}></div>
-                <div className={G.FilaFooter + G.FilaImporte}>
+                <div className={G.FilaFooter + G.FilaInput}>
                   <label
                     htmlFor="porcentajePercepcion"
                     className={G.FilaContenido + " !px-0"}

@@ -29,21 +29,19 @@ const DivTabla = styled.div`
     width: 40px;
     text-align: center;
   }
-  & th:nth-child(3) {
-    width: 90px;
-    text-align: center;
-  }
+
+  & th:nth-child(3),
   & th:nth-child(5),
   & th:nth-child(6) {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;
@@ -751,18 +749,11 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             )}
             {/* Cabecera */}
-            <div
-              className={
-                G.ContenedorBasico + " mb-4 " + G.FondoContenedor
-              }
-            >
+            <div className={G.ContenedorBasico + " mb-4 " + G.FondoContenedor}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
                   <div className={G.InputFull}>
-                    <label
-                      htmlFor="cuentaCorrienteId"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="cuentaCorrienteId" className={G.LabelStyle}>
                       Cuenta
                     </label>
                     <select
@@ -865,16 +856,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.tipoCambio ?? ""}
                     onChange={HandleData}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
@@ -885,10 +872,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </button>
                 </div>
                 <div className={G.InputTercio}>
-                  <label
-                    htmlFor="tipoMovimientoId"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="tipoMovimientoId" className={G.LabelStyle}>
                     Movimiento
                   </label>
                   <select
@@ -910,10 +894,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
               <div className={G.ContenedorInputs}>
                 <div className={G.InputTercio}>
-                  <label
-                    htmlFor="tipoOperacionId"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="tipoOperacionId" className={G.LabelStyle}>
                     Tipo
                   </label>
                   <select
@@ -933,15 +914,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div
                   className={
-                    data.tieneCuentaDestino
-                      ? G.InputTercio
-                      : G.Input66pct
+                    data.tieneCuentaDestino ? G.InputTercio : G.Input66pct
                   }
                 >
-                  <label
-                    htmlFor="numeroOperacion"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="numeroOperacion" className={G.LabelStyle}>
                     Número
                   </label>
                   <input
@@ -958,9 +934,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
                 <div
                   className={
-                    data.tieneCuentaDestino
-                      ? G.InputFull
-                      : G.Input + "w-12"
+                    data.tieneCuentaDestino ? G.InputFull : G.Input + "w-12"
                   }
                 >
                   <div className={G.Input + "w-36"}>
@@ -1139,10 +1113,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={G.ContenedorBasico + G.FondoContenedor}>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputMitad}>
-                    <label
-                      htmlFor="porcentajeITF"
-                      className={G.LabelStyle}
-                    >
+                    <label htmlFor="porcentajeITF" className={G.LabelStyle}>
                       ITF %
                     </label>
                     <input
@@ -1254,11 +1225,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             {/* Detalles */}
             {modo != "Consultar" && (
-              <div
-                className={
-                  G.ContenedorBasico + G.FondoContenedor + " mb-2"
-                }
-              >
+              <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputFull}>
                     <label htmlFor="concepto" className={G.LabelStyle}>
@@ -1320,9 +1287,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={dataCabecera.abono ?? ""}
                       onChange={ValidarDataConcepto}
                       className={
-                        modo != "Consultar"
-                          ? G.InputBoton
-                          : G.InputStyle
+                        modo != "Consultar" ? G.InputBoton : G.InputStyle
                       }
                     />
                     <button

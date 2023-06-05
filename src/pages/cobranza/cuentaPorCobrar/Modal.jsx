@@ -16,9 +16,12 @@ import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const DivTabla = styled.div`
-  & th:nth-child(1),
-  & th:nth-child(2) {
+  & th:nth-child(1) {
     width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(2) {
+    width: 60px;
     text-align: center;
   }
   & th:nth-child(3) {
@@ -36,15 +39,15 @@ const DivTabla = styled.div`
     text-align: center;
   }
   & th:nth-child(7) {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;
@@ -150,11 +153,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
         >
           {/*Cabecera*/}
-          <div
-            className={
-              G.ContenedorBasico + G.FondoContenedor + " mb-2"
-            }
-          >
+          <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
             <div className={G.ContenedorInputs}>
               <div className={G.InputFull}>
                 <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
@@ -166,9 +165,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.tipoDocumentoId ?? ""}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={
-                    G.InputStyle
-                  }
+                  className={G.InputStyle}
                 >
                   {dataTipoDoc.map((map) => (
                     <option key={map.id} value={map.id}>
