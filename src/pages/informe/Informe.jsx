@@ -45,9 +45,15 @@ import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidad
 import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
 import InformeGerenciaComprasArticulos from "./informeGerencia/InformeGerenciaComprasArticulos";
 import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
+
 const Informe = () => {
   //?INFORMES MODALES
   //#region Informe Modal Articulos
+  //?Informe Modal Sistemas
+  const [
+    modalSistemasReporteVendedoresClientes,
+    setModalSistemasReporteVendedoresClientes,
+  ] = useState(false);
   //?Informe Modal Articulos
   const [modalTomaInventario, setModalTomaInventario] = useState(false);
   const [modalStockValorizado, setModalStockValorizado] = useState(false);
@@ -189,7 +195,7 @@ const Informe = () => {
       id: 4,
       title: "Reporte de Vendedores y Cliente",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        setModalSistemasReporteVendedoresClientes(true);
       },
     },
   ];
