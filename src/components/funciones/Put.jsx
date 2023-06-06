@@ -21,7 +21,9 @@ const Put = async (menu, setEliminar, objeto = null) => {
         theme: "colored",
       });
     });
+    return result;
   } else {
+    console.log(result)
     result.data.messages[0].textos.map((map) => {
       toast.success(map, {
         position: "bottom-right",
@@ -35,6 +37,7 @@ const Put = async (menu, setEliminar, objeto = null) => {
       });
     });
     setEliminar(true);
+    return result;
   }
 };
 

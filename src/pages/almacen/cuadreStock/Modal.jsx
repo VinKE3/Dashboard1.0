@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Put from "../../../components/funciones/Put";
 import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalInventario from "./ModalInventario";
 import ModalCrud from "../../../components/modal/ModalCrud";
@@ -69,7 +70,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //GetTablas
   //Modales de Ayuda
   const [modalInventario, setModalInventario] = useState(false);
-  const [modoInventario, setModoInventario] = useState("Nuevo");
+  const [modoInventario] = useState("Nuevo");
   const [dataInventario, setDataInventario] = useState([]);
   //Modales de Ayuda
   //Filtro
@@ -220,6 +221,16 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
           theme: "colored",
         }
       );
+      toast.warn("Pulse el botón para recalcular el stock.", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
   //Data General
@@ -313,6 +324,23 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       ...prev,
       tipoCambio: tipoCambio,
     }));
+  };
+  const Recalculo = async (fecha) => {
+    let articulos = dataDetalle.map((map) => {
+      return {
+        linedaId: map.lineaId,
+        subLinedaId: map.subLineaId,
+        articuloId: map.articuloId,
+        stock: map.stockFinal,
+      };
+    });
+    const result = await Put(
+      "Almacen/CuadreStock/RecalcularStock",
+      setRefrescar,
+      { fecha: fecha, articulos: articulos }
+    );
+    await Inventario();
+    console.log(result);
   };
   //#endregion
 
@@ -660,7 +688,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
               <div className={G.ContenedorInputs}>
                 <div className={G.InputTercio}>
                   <label htmlFor="fechaRegistro" className={G.LabelStyle}>
-                    F. Registro
+                    Fecha Registro
                   </label>
                   <input
                     type="date"
@@ -674,8 +702,18 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     )}
                     onChange={HandleData}
                     onBlur={FechaEmision}
-                    className={G.InputStyle}
+                    className={G.InputBoton}
                   />
+                  <button
+                    id="consultarRecalculo"
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
+                    hidden={modo == "Consultar"}
+                    onClick={() => {
+                      Recalculo(data.fechaRegistro);
+                    }}
+                  >
+                    <FaUndoAlt></FaUndoAlt>
+                  </button>
                 </div>
                 <div className={G.InputTercio}>
                   <label htmlFor="monedaId" className={G.LabelStyle}>
