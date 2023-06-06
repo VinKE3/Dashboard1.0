@@ -1,7 +1,120 @@
-import React from "react";
+import React, { useState } from "react";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import ApiMasy from "../../../api/ApiMasy";
+import { useEffect } from "react";
+import * as Global from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import store from "store2";
+import moment from "moment";
 
-const InformeGerenciaVentasArticulos = () => {
-  return <div></div>;
+const InformeGerenciaVentasArticulos = ({ setModal }) => {
+  const [dataGlobal] = useState(store.session.get("global"));
+  const [data, setData] = useState({
+    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    tipoReporteId: "1",
+  });
+  const TipoReporte = [
+    {
+      id: 1,
+      nombre: "VENTA POR ARTICULO",
+    },
+    {
+      id: 2,
+      nombre: "SALIDA CON GUIAS",
+    },
+    {
+      id: 3,
+      nombre: "ARTICULOS MAS VENDIDO",
+    },
+    {
+      id: 4,
+      nombre: "SALIDA DE PRODUCCION",
+    },
+  ];
+
+  useEffect(() => {
+    data;
+    console.log(data);
+  }, [data]);
+
+  const ValidarData = async ({ target }) => {
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+  };
+
+  const Imprimir = async () => {
+    console.log("Imprimir");
+  };
+  return (
+    <>
+      <ModalBasic titulo="Informe Ventas por Articulos" setModal={setModal}>
+        <div
+          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+        >
+          <div className={Global.ContenedorFiltro + " !my-0"}>
+            <div className={Global.InputFull}>
+              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                Desde
+              </label>
+              <input
+                type="date"
+                id="fechaInicio"
+                name="fechaInicio"
+                value={data.fechaInicio ?? ""}
+                onChange={ValidarData}
+                className={Global.InputStyle}
+              />
+            </div>
+            <div className={Global.InputFull}>
+              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                Hasta
+              </label>
+              <input
+                type="date"
+                id="fechaFin"
+                name="fechaFin"
+                value={data.fechaFin ?? ""}
+                onChange={ValidarData}
+                className={Global.InputBoton}
+              />
+            </div>
+          </div>
+          <div className={Global.InputFull}>
+            <label htmlFor="tipoReporteId" className={Global.LabelStyle}>
+              Tipo de Reporte
+            </label>
+            <select
+              id="tipoReporteId"
+              name="tipoReporteId"
+              autoFocus
+              value={data.tipoReporteId ?? ""}
+              onChange={ValidarData}
+              className={Global.InputStyle}
+            >
+              {TipoReporte.map((reporte) => (
+                <option key={reporte.id} value={reporte.id}>
+                  {reporte.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mt-2">
+            <BotonBasico
+              botonText="ACEPTAR"
+              botonClass={Global.BotonAgregar}
+              botonIcon={faPlus}
+              click={() => Imprimir()}
+            />
+          </div>
+        </div>
+      </ModalBasic>
+    </>
+  );
 };
 
 export default InformeGerenciaVentasArticulos;

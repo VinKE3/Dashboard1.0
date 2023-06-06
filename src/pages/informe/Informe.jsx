@@ -45,6 +45,9 @@ import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidad
 import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
 import InformeGerenciaComprasArticulos from "./informeGerencia/InformeGerenciaComprasArticulos";
 import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
+import ReporteVendedoresClientes from "../informe/informeSistemas/ReporteVendedoresClientes";
+import InformeGerenciaVentasArticulos from "../informe/informeGerencia/InformeGerenciaVentasArticulos";
+import InformeGerenciaVentasPorMarcaArituculos from "../informe/informeGerencia/InformeGerenciaVentasPorMarcaArituculos";
 
 const Informe = () => {
   //?INFORMES MODALES
@@ -133,10 +136,6 @@ const Informe = () => {
   const [
     modalInformeGerenciaVentasArticulos,
     setModalInformeGerenciaVentasArticulos,
-  ] = useState(false);
-  const [
-    modalInformeGerenciaRegistroSalida,
-    setModalInformeGerenciaRegistroSalida,
   ] = useState(false);
   const [
     modalInformeGerenciaVentasPorVendedorCliente,
@@ -540,55 +539,48 @@ const Informe = () => {
     },
     {
       id: 6,
-      title: "Registro de Salida de Cilindros",
-      AbrirModal: () => {
-        setModalInformeGerenciaRegistroSalida(true);
-      },
-    },
-    {
-      id: 7,
       title: "Ventas por Vendedor y Cliente por Mes",
       AbrirModal: () => {
         setModalInformeGerenciaVentasPorVendedorCliente(true);
       },
     },
     {
-      id: 8,
+      id: 7,
       title: "Ventas por Marca y Articulo por Mes",
       AbrirModal: () => {
         setModalInformeGerenciaVentasPorMarcaArticulo(true);
       },
     },
     {
-      id: 9,
+      id: 8,
       title: "Ventas por Vendedor por mes",
       AbrirModal: () => {
         setModalInformeGerenciaVentasVendedorMes(true);
       },
     },
     {
-      id: 10,
+      id: 9,
       title: "Ventas por Vendedor por mes y dia",
       AbrirModal: () => {
         setModalInformeGerenciaVentasVendedorMesDia(true);
       },
     },
     {
-      id: 11,
+      id: 10,
       title: "Ventas por Articulo y Vendedor",
       AbrirModal: () => {
         setModalInformeGerenciaVentasArticuloVendedor(true);
       },
     },
     {
-      id: 12,
+      id: 11,
       title: "Orden de Compra Pendiente-Cronograma",
       AbrirModal: () => {
         setModalInformeGerenciaOrdenCompra(true);
       },
     },
     {
-      id: 13,
+      id: 12,
       title: "Registros de Compras por mes",
       AbrirModal: () => {
         setModalInformeGerenciaRegistroComprasMes(true);
@@ -809,6 +801,11 @@ const Informe = () => {
           </ul>
         </AccordionTab>
       </Accordion>
+      {modalSistemasReporteVendedoresClientes && (
+        <ReporteVendedoresClientes
+          setModal={setModalSistemasReporteVendedoresClientes}
+        />
+      )}
       {modalTomaInventario && (
         <TomaDeInventario setModal={setModalTomaInventario} />
       )}
@@ -944,9 +941,24 @@ const Informe = () => {
           setModal={setModalInformeGerenciaCostosProductos}
         />
       )}
+      {modalInformeGerenciaComprasArticulos && (
+        <InformeGerenciaComprasArticulos
+          setModal={setModalInformeGerenciaComprasArticulos}
+        />
+      )}
+      {modalInformeGerenciaVentasArticulos && (
+        <InformeGerenciaVentasArticulos
+          setModal={setModalInformeGerenciaVentasArticulos}
+        />
+      )}
       {modalInformeGerenciaVentasPorVendedorCliente && (
         <InformeGerenciaVentasPorVendedorClientes
           setModal={setModalInformeGerenciaVentasPorVendedorCliente}
+        />
+      )}
+      {modalInformeGerenciaVentasPorMarcaArticulo && (
+        <InformeGerenciaVentasPorMarcaArituculos
+          setModal={setModalInformeGerenciaVentasPorMarcaArticulo}
         />
       )}
     </div>

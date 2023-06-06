@@ -42,9 +42,9 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   const [data, setData] = useState({
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
-    personalId: "",
+    marcaId: "",
   });
-  const [personal, setPersonal] = useState([]);
+  const [marcas, setMarcas] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
   const [filtroLocal, setFiltroLocal] = useState({
     cliente: "",
@@ -56,7 +56,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Personal();
+    Marcas();
   }, []);
 
   const ValidarData = async ({ target }) => {
@@ -78,20 +78,14 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     }));
   };
 
-  const Personal = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
-      result.data.data.data.map((res) => ({
-        id: res.id,
-        personal:
-          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-      }))
-    );
+  const Marcas = async () => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
+    setMarcas(result.data.data.data);
   };
 
   return (
     <ModalBasic
-      titulo="Reporte Utilidades"
+      titulo="Lista de Ventas por Vendedor y Cliente"
       tamañoModal={[Global.ModalGrande, Global.Form]}
       setModal={setModal}
     >
@@ -126,23 +120,23 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
             />
           </div>
           <div className={Global.InputFull}>
-            <label htmlFor="personalId" className={Global.LabelStyle}>
-              Personal
+            <label htmlFor="marcaId" className={Global.LabelStyle}>
+              Marca
             </label>
             <select
-              id="personalId"
-              name="personalId"
+              id="marcaId"
+              name="marcaId"
               autoFocus
-              value={data.personalId ?? ""}
+              value={data.marcaId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {personal.map((personal) => (
-                <option key={personal.id} value={personal.id}>
-                  {personal.personal}
+              {marcas.map((marca) => (
+                <option key={marca.id} value={marca.id}>
+                  {marca.nombre}
                 </option>
               ))}
             </select>

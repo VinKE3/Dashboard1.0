@@ -13,7 +13,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
   const [data, setData] = useState({
     fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
     fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
-    marcaId: "",
+    tipoReporteId: "1",
   });
   const TipoReporte = [
     {
@@ -91,9 +91,6 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
               onChange={ValidarData}
               className={Global.InputStyle}
             >
-              <option key={-1} value={""}>
-                {"--TODOS--"}
-              </option>
               {TipoReporte.map((reporte) => (
                 <option key={reporte.id} value={reporte.id}>
                   {reporte.nombre}
