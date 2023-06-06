@@ -182,7 +182,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   //Data Cabecera
-  const DataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
       setData((prevState) => ({
         ...prevState,
@@ -259,30 +259,34 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
       //Valida montos
       if (result.data.data.saldo <= 0) {
         document.getElementById("numero").focus();
-        return [false, "El Documento de Venta se encuentra Cancelado."];
+        return [false, "El Documento se encuentra Cancelado."];
       }
       if (result.data.data.isAnulado) {
         document.getElementById("numero").focus();
-        return [false, "El Documento de Venta se encuentra Anulado."];
+        return [false, "El Documento se encuentra Anulado."];
       }
       if (result.data.data.isBloqueado) {
         document.getElementById("numero").focus();
-        return [false, "El Documento de Venta se encuentra Bloqueado."];
+        return [false, "El Documento se encuentra Bloqueado."];
       }
       if (!result.data.data.existeNotaDebitoRelacionada) {
         document.getElementById("numero").focus();
         return [
           false,
-          "El Documento de Venta no cuenta con una Nota de Débito relacionada.",
+          "El Documento no cuenta con una Nota de Débito relacionada.",
         ];
       }
       let duplicado = dataDetalle.find((map) => map.id == result.data.data.id);
       if (duplicado != undefined) {
         document.getElementById("numero").focus();
-        return [
-          false,
-          "El Documento de Venta se encuentra registrado en el detalle.",
-        ];
+        return [false, "El Documento se encuentra registrado en el detalle."];
+      }
+
+      let moneda = dataDetalle.find(
+        (map) => map.monedaId != result.data.data.monedaId
+      );
+      if (moneda != undefined) {
+        return [false, "El Documento tiene una moneda distinta a la añadida."];
       }
       //Valida montos
     }
@@ -432,10 +436,6 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
     }
     setRefrescar(true);
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data Cabecera
 
   //Calculos
@@ -557,7 +557,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones Detalles
-  const DataCabeceraLetra = async ({ target }) => {
+  const HandleDataCabeceraLetra = async ({ target }) => {
     setDataLetra((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -674,7 +674,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
           correlativo++;
         }
         //Itera en base al n° de letras asignadas
-        OcultarMensajes();
+        Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
         setDataLetraDetalle(dataDetalleMod);
       }
 
@@ -815,6 +815,16 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
       `api/Venta/LetraCambioVenta/FormularioTablas`
     );
     setDataMoneda(result.data.data.monedas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        monedaId: monedas.id,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -1042,7 +1052,9 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera Documento */}
@@ -1062,7 +1074,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                         name="isRenovado"
                         autoFocus
                         value={false}
-                        onChange={(e) => DataCabecera(e)}
+                        onChange={(e) => HandleDataCabecera(e)}
                         checked={dataCabecera.isRenovado === false}
                       />
                     </div>
@@ -1079,7 +1091,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                         inputId="renovado"
                         name="isRenovado"
                         value={true}
-                        onChange={(e) => DataCabecera(e)}
+                        onChange={(e) => HandleDataCabecera(e)}
                         checked={dataCabecera.isRenovado === true}
                       />
                     </div>
@@ -1102,7 +1114,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     autoFocus
                     disabled={!extras.habilitar}
                     value={dataCabecera.numero ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={G.InputBoton}
                   />
                   <button
@@ -1304,7 +1316,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={modo == "Consultar" || !extras.habilitarDetalle}
                     value={dataCabecera.numeroLetra ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={G.InputStyle}
                   />
                 </div>
@@ -1321,7 +1333,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={true}
                     value={data.tipoCambio ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={
                       modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
@@ -1346,7 +1358,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -1375,7 +1387,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       value={moment(dataLetra.fechaEmision ?? "").format(
                         "yyyy-MM-DD"
                       )}
-                      onChange={DataCabeceraLetra}
+                      onChange={HandleDataCabeceraLetra}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1427,7 +1439,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={modo == "Consultar"}
                       value={dataLetra.aval ?? ""}
-                      onChange={DataCabeceraLetra}
+                      onChange={HandleDataCabeceraLetra}
                       className={G.InputBoton}
                     />
                     <button

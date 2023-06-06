@@ -151,7 +151,7 @@ const Cliente = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          tipoDocumentoIdentidadId: "1",
+          tipoDocumentoIdentidadId: "",
           numeroDocumentoIdentidad: "",
           nombre: "",
           telefono: "",
@@ -162,8 +162,8 @@ const Cliente = () => {
           provinciaId: "01",
           distritoId: "01",
           zonaId: "",
-          tipoVentaId: "CO",
-          tipoCobroId: "CP",
+          tipoVentaId: "",
+          tipoCobroId: "",
           maximoCreditoUSD: 0,
           maximoCreditoPEN: 0,
           observacion: "",

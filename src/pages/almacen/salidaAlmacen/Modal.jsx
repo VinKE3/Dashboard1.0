@@ -208,14 +208,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Cabecera
-  const ValidarDataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -571,16 +567,28 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Venta/DocumentoVenta/FormularioTablas`
+      `api/Almacen/SalidaAlmacen/FormularioTablas`
     );
     setDataVendedor(
-      result.data.data.vendedores.map((res) => ({
+      result.data.data.personal.map((res) => ({
         id: res.id,
         nombre:
           res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
     setDataMoneda(result.data.data.monedas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let personal = result.data.data.personal.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        personalId: personal.id,
+        monedaId: monedas.id,
+      }));
+    }
   };
   //#endregion
 
@@ -708,7 +716,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}
@@ -1097,7 +1107,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.descripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={
                         modo == "Consultar" ? G.InputStyle : G.InputBoton
                       }
@@ -1127,7 +1137,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.stock ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1148,7 +1158,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1166,7 +1176,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1186,7 +1196,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1206,7 +1216,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={

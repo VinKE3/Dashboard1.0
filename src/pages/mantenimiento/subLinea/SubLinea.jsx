@@ -144,7 +144,7 @@ const SubLineas = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          lineaId: "00",
+          lineaId: "",
           subLineaId: "",
           descripcion: "",
         });

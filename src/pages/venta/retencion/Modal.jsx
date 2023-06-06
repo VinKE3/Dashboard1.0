@@ -206,14 +206,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Artículos
-  const ValidarDataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -484,6 +480,26 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoCobro(result.data.data.tiposCobro);
     setDataMoneda(result.data.data.monedas);
     setDataTipoDoc(result.data.data.tiposDocumento);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposVenta = result.data.data.tiposVenta.find((map) => map);
+      let tiposCobro = result.data.data.tiposCobro.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      let tiposDocumento = result.data.data.tiposDocumento.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoVentaId: tiposVenta.id,
+        tipoCobroId: tiposCobro.id,
+        monedaId: monedas.id,
+      }));
+
+      setDataCabecera((prev) => ({
+        ...prev,
+        tipoDocumentoId: tiposDocumento.id,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -501,7 +517,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     let respuesta = await ValidarConsulta("ConsultarDocumento");
     if (respuesta[0]) {
       const result = await Get(
-        `Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`
+        `Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`, "Documento: Consultado exitosamente"
       );
       if (result == undefined) {
         document.getElementById("serieCabecera").focus();
@@ -511,9 +527,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           let monto = nuevoTotal * (dataCabecera.porcentaje / 100);
           setDataCabecera({
             ...dataCabecera,
-            documentoVentaId: result.data.data.id,
-            numero: result.data.data.numero,
-            fechaEmision: result.data.data.fechaEmision,
+            documentoVentaId: result.id,
+            numero: result.numero,
+            fechaEmision: result.fechaEmision,
             total: Funciones.RedondearNumero(nuevoTotal, 2),
             monto: Funciones.RedondearNumero(monto, 2),
           });
@@ -693,7 +709,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           <Mensajes
             tipoMensaje={tipoMensaje}
             mensaje={mensaje}
-            Click={() => OcultarMensajes()}
+            Click={() => Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
           />
         )}
         {/* Cabecera */}
@@ -979,7 +995,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="tipoDocumento"
                   name="tipoDocumento"
-                  onChange={ValidarDataCabecera}
+                  onChange={HandleDataCabecera}
                   disabled={habilitarCampos ? false : true}
                   value={dataCabecera.tipoDocumento ?? ""}
                   className={G.InputStyle}
@@ -1006,7 +1022,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     !habilitarCampos || modo == "Consultar" ? true : false
                   }
                   value={dataCabecera.serie ?? ""}
-                  onChange={ValidarDataCabecera}
+                  onChange={HandleDataCabecera}
                   className={habilitarCampos ? G.InputStyle : G.InputStyle}
                 />
               </div>
@@ -1026,7 +1042,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     !habilitarCampos || modo == "Consultar" ? true : false
                   }
                   value={dataCabecera.numero ?? ""}
-                  onChange={ValidarDataCabecera}
+                  onChange={HandleDataCabecera}
                   className={habilitarCampos ? G.InputBoton : G.InputBoton}
                 />
                 <button
@@ -1054,7 +1070,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   value={moment(dataCabecera.fechaEmision ?? "").format(
                     "yyyy-MM-DD"
                   )}
-                  onChange={ValidarDataCabecera}
+                  onChange={HandleDataCabecera}
                   className={G.InputStyle}
                 />
               </div>
@@ -1070,7 +1086,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoComplete="off"
                   disabled={true}
                   value={dataCabecera.total ?? ""}
-                  onChange={ValidarDataCabecera}
+                  onChange={HandleDataCabecera}
                   className={G.InputStyle}
                 />
               </div>
@@ -1087,7 +1103,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   min={0}
                   disabled={modo == "Consultar"}
                   value={dataCabecera.porcentaje ?? ""}
-                  onChange={ValidarDataCabecera}
+                  onChange={HandleDataCabecera}
                   className={G.InputStyle}
                 />
               </div>
@@ -1104,7 +1120,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   min={0}
                   disabled={true}
                   value={dataCabecera.monto ?? ""}
-                  onChange={ValidarDataCabecera}
+                  onChange={HandleDataCabecera}
                   className={modo != "Consultar" ? G.InputBoton : G.InputStyle}
                 />
                 <button

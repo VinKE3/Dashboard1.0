@@ -376,7 +376,7 @@ const Usuario = () => {
       {visible ? (
         <>
           <div className={G.ContenedorPadre}>
-            <h2 className={G.TituloH2}>Usuario</h2>
+            <h2 className={G.TituloH2}>Usuarios</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -405,7 +405,7 @@ const Usuario = () => {
               {permisos[0] && (
                 <BotonBasico
                   botonText="Configuracion"
-                  botonClass={G.BotonConfigurar}
+                  botonClass={G.BotonMorado}
                   botonIcon={faGear}
                   click={() => AbrirModalConfigurar()}
                   contenedor=""
@@ -414,7 +414,7 @@ const Usuario = () => {
               {permisos[0] && (
                 <BotonBasico
                   botonText="Cambiar Contraseña"
-                  botonClass={G.BotonAgregar}
+                  botonClass={G.BotonNaranja}
                   botonIcon={faKey}
                   click={() => AbrirModalClave()}
                   contenedor=""

@@ -143,8 +143,8 @@ const Distrito = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          departamentoId: "01",
-          provinciaId: "01",
+          departamentoId: "",
+          provinciaId: "",
           distritoId: "",
           nombre: "",
         });

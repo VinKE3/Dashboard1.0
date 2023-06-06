@@ -192,16 +192,11 @@ const GuiaRemision = () => {
       setModo(modo);
       switch (accion) {
         case 0: {
-          //Consulta Correlativo
-          const result = await ApiMasy.get(
-            `api/Mantenimiento/Correlativo/09/0002`
-          );
-          //Consulta Correlativo
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "09",
-            serie: "0002",
-            numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
+            serie: "",
+            numero: "",
             fechaEmision: moment().format("YYYY-MM-DD"),
             fechaTraslado: moment().format("YYYY-MM-DD"),
             clienteId: "",
@@ -211,24 +206,23 @@ const GuiaRemision = () => {
             clienteDireccion: "",
             direccionPartida: "",
             personalId: "",
-            empresaTransporteId: "0001  ",
+            empresaTransporteId: "",
             costoMinimo: 0,
-            conductorId: "000000",
+            conductorId: "",
             licenciaConducir: "",
-            vehiculoId: "004",
+            vehiculoId: "",
             constanciaInscripcion: "",
-            motivoTrasladoId: "01",
+            motivoTrasladoId: "",
             motivoSustento: "",
-            ingresoEgresoStock: "-",
+            ingresoEgresoStock: "",
             numeroFactura: "",
             ordenPedido: "",
             observacion: "",
-            monedaId: "S",
+            monedaId: "",
             afectarStock: true,
             documentoRelacionadoId: "",
             detalles: [],
             documentosRelacionados: [],
-            // numeroDocumento: "",
           });
           setModal(true);
           break;

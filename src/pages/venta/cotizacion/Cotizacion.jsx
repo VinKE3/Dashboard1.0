@@ -196,7 +196,7 @@ const Cotizacion = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "CO",
             serie: "",
             numero: "",
@@ -219,10 +219,10 @@ const Cotizacion = () => {
             contactoCargoDescripcion: "",
             contactoCelular: "",
             personalId: "",
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
-            tipoVentaId: "CO",
-            tipoCobroId: "EF",
+            tipoVentaId: "",
+            tipoCobroId: "",
             numeroOperacion: "",
             cuentaCorrienteDescripcion: "",
             validez: "",
@@ -233,7 +233,7 @@ const Cotizacion = () => {
             montoRetencion: 0,
             montoPercepcion: 0,
             total: 0,
-            porcentajeIGV: dataGlobal.porcentajeIGV,
+            porcentajeIGV: 0,
             porcentajeRetencion: 0,
             porcentajePercepcion: 0,
             incluyeIGV: false,

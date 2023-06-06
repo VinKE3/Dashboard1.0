@@ -322,7 +322,7 @@ const LetraCambioVenta = () => {
         }
         case 6: {
           setObjeto({
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
             documentosReferencia: [],
             detalles: [],

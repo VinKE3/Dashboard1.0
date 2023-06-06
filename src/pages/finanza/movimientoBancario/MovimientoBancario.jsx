@@ -221,14 +221,14 @@ const MovimientoBancario = () => {
           }
           setObjeto({
             id: "",
-            empresaId: "01",
+            empresaId: "",
             cuentaCorrienteId:
               filtro.cuentaCorrienteId == ""
                 ? dataCtacte[0].cuentaCorrienteId
                 : filtro.cuentaCorrienteId,
             fechaEmision: moment().format("YYYY-MM-DD"),
             tipoCambio: 0,
-            tipoMovimientoId: "IN",
+            tipoMovimientoId: "",
             tipoOperacionId: "",
             numeroOperacion: "",
             isCierreCaja: false,

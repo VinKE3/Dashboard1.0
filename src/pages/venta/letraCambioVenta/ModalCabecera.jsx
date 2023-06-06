@@ -170,10 +170,6 @@ const ModalCabecera = ({ setModal, modo, objeto }) => {
           : dataCliente.personalId,
     });
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
   //#endregion
 
@@ -287,7 +283,7 @@ const ModalCabecera = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
               />
             )}
             {/* Cabecera */}

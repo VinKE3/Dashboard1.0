@@ -45,7 +45,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       let model = dataSubLinea.find((map) => map.lineaId == target.value);
       setData((prevData) => ({
         ...prevData,
-        subLineaId: model.subLineaId,
+        subLineaId: model == undefined ? "" : model.subLineaId,
       }));
     }
   };
@@ -62,6 +62,27 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataMarca(result.data.data.marcas);
     setDataUnidadMedida(result.data.data.unidadesMedida);
     setDataMoneda(result.data.data.monedas);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposExistencia = result.data.data.tiposExistencia.find((map) => map);
+      let lineas = result.data.data.lineas.find((map) => map);
+      let subLineas = result.data.data.subLineas.find(
+        (map) => map.lineaId == lineas.id
+      );
+      let marcas = result.data.data.marcas.find((map) => map);
+      let unidadesMedida = result.data.data.unidadesMedida.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoExistenciaId: tiposExistencia.id,
+        lineaId: lineas.id,
+        subLineaId: subLineas.subLineaId,
+        marcaId: marcas.id,
+        unidadMedidaId: unidadesMedida.id,
+        monedaId: monedas.id,
+      }));
+    }
   };
   //#endregion
 
@@ -77,9 +98,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       foco={document.getElementById("tablaArticulo")}
       tamañoModal={[G.ModalFull, G.Form]}
     >
-      <div
-        className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}
-      >
+      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
         <div className={G.ContenedorInputs}>
           <div className={G.InputMitad}>
             <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
@@ -89,7 +108,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               id="tipoExistenciaId"
               name="tipoExistenciaId"
               autoFocus
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.tipoExistenciaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -108,7 +127,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="marcaId"
               name="marcaId"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.marcaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -132,9 +151,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               value={data.lineaId ?? ""}
               onChange={HandleData}
               disabled={modo != "Nuevo" ? true : ""}
-              className={
-                modo != "Nuevo" ? G.InputStyle : G.InputStyle
-              }
+              className={modo != "Nuevo" ? G.InputStyle : G.InputStyle}
             >
               {dataLinea.map((map) => (
                 <option key={map.id} value={map.id}>
@@ -153,9 +170,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               value={data.subLineaId ?? ""}
               onChange={HandleData}
               disabled={modo != "Nuevo" ? true : ""}
-              className={
-                modo != "Nuevo" ? G.InputStyle : G.InputStyle
-              }
+              className={modo != "Nuevo" ? G.InputStyle : G.InputStyle}
             >
               <option value="">--SELECCIONAR--</option>
               {dataSubLinea
@@ -171,7 +186,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         <div className={G.ContenedorInputs}>
           <div className={G.InputMitad}>
             <label htmlFor="codigoBarras" className={G.LabelStyle}>
-              Cod. Barras
+              Código de Barras
             </label>
             <input
               type="text"
@@ -185,7 +200,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               className={G.InputStyle}
             />
           </div>
-          <div className={G.InputFull}>
+          <div className={G.InputMitad}>
             <label htmlFor="descripcion" className={G.LabelStyle}>
               Descripción
             </label>
@@ -195,7 +210,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="descripcion"
               autoComplete="off"
               placeholder="Descripción"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.descripcion}
               onChange={HandleData}
               className={G.InputStyle}
@@ -210,7 +225,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="unidadMedidaId"
               name="unidadMedidaId"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.unidadMedidaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -233,7 +248,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Peso"
               autoComplete="off"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.peso ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -265,7 +280,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="stockMinimo"
               autoComplete="off"
               placeholder="Stock Mínimo"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.stockMinimo ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -273,93 +288,89 @@ const Modal = ({ setModal, modo, objeto }) => {
           </div>
         </div>
       </div>
-      <div
-        className={G.ContenedorBasico + " mb-3 " + G.FondoContenedor}
-      >
+      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
         <p className={G.Subtitulo}>Precio Compra</p>
         <div className={G.ContenedorInputs}>
-          <div className={G.Input36}>
-            <div className={G.LabelStyle}>
-              <Checkbox
-                inputId="precioIncluyeIGV"
-                name="precioIncluyeIGV"
-                disabled={modo == "Consultar" }
-                value={data.precioIncluyeIGV}
-                onChange={(e) => {
-                  HandleData(e);
-                }}
-                checked={data.precioIncluyeIGV ? true : ""}
-              ></Checkbox>
+          <div className={G.InputMitad}>
+            <div className={G.InputFull}>
+              <label htmlFor="precioCompra" className={G.LabelStyle}>
+                Costo del Producto
+              </label>
+              <input
+                type="number"
+                id="precioCompra"
+                name="precioCompra"
+                autoComplete="off"
+                placeholder="Costo del Producto"
+                min={0}
+                disabled={modo == "Consultar"}
+                value={data.precioCompra ?? ""}
+                onChange={HandleData}
+                className={G.InputBoton}
+              />
             </div>
-            <label htmlFor="precioIncluyeIGV" className={G.InputStyle}>
-              Incluye IGV
-            </label>
-          </div>
-          <div className={G.Input25pct}>
-            <label htmlFor="precioCompra" className={G.LabelStyle}>
-              Costo del Producto
-            </label>
-            <input
-              type="number"
-              id="precioCompra"
-              name="precioCompra"
-              autoComplete="off"
-              placeholder="Costo del Producto"
-              min={0}
-              disabled={modo == "Consultar" }
-              value={data.precioCompra ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
-            />
-          </div>
-          <div className={G.Input20pct}>
-            <div className={G.LabelStyle}>
-              <Checkbox
-                inputId="activarCostoDescuento"
-                name="activarCostoDescuento"
-                disabled={modo == "Consultar" }
-                value={data.activarCostoDescuento}
-                onChange={(e) => {
-                  HandleData(e);
-                }}
-                checked={data.activarCostoDescuento ? true : ""}
-              ></Checkbox>
+            <div className={G.Input + " w-48"}>
+              <div className={G.CheckStyle + G.Anidado}>
+                <Checkbox
+                  inputId="precioIncluyeIGV"
+                  name="precioIncluyeIGV"
+                  disabled={modo == "Consultar"}
+                  value={data.precioIncluyeIGV}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.precioIncluyeIGV ? true : ""}
+                ></Checkbox>
+              </div>
+              <label htmlFor="precioIncluyeIGV" className={G.LabelCheckStyle}>
+                Incluye IGV
+              </label>
             </div>
-            <label
-              htmlFor="activarCostoDescuento"
-              className={G.InputStyle}
-            >
-              Costo Descuento
-            </label>
           </div>
-          <div className={G.Input25pct}>
-            <label
-              htmlFor="precioCompraDescuento"
-              className={G.LabelStyle}
-            >
-              Costo con Descto.
-            </label>
-            <input
-              type="number"
-              id="precioCompraDescuento"
-              name="precioCompraDescuento"
-              autoComplete="off"
-              placeholder="Costo con Descto"
-              min={0}
-              disabled={modo == "Consultar" }
-              value={data.precioCompraDescuento ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
-            />
+
+          <div className={G.InputMitad}>
+            <div className={G.InputFull}>
+              <label htmlFor="precioCompraDescuento" className={G.LabelStyle}>
+                Costo con Descto.
+              </label>
+              <input
+                type="number"
+                id="precioCompraDescuento"
+                name="precioCompraDescuento"
+                autoComplete="off"
+                placeholder="Costo con Descto"
+                min={0}
+                disabled={modo == "Consultar"}
+                value={data.precioCompraDescuento ?? ""}
+                onChange={HandleData}
+                className={G.InputBoton}
+              />
+            </div>
+            <div className={G.Input + " w-64"}>
+              <div className={G.CheckStyle + G.Anidado}>
+                <Checkbox
+                  inputId="activarCostoDescuento"
+                  name="activarCostoDescuento"
+                  disabled={modo == "Consultar"}
+                  value={data.activarCostoDescuento}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.activarCostoDescuento ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="activarCostoDescuento"
+                className={G.LabelCheckStyle}
+              >
+                Costo Descuento
+              </label>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}
-      >
-        <p className={"my-0 py-0 font-bold text-base text-light"}>
-          Precio Venta
-        </p>
+      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
+        <p className={G.Subtitulo}>Precio Venta</p>
         <div className={G.ContenedorInputs}>
           <div className={G.InputFull}>
             <label htmlFor="monedaId" className={G.LabelStyle}>
@@ -368,7 +379,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="monedaId"
               name="monedaId"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -393,7 +404,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad1 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -410,7 +421,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad2 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -428,7 +439,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad3 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -445,7 +456,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad4 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -464,7 +475,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta1 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -481,7 +492,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta2 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -499,7 +510,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta3 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -516,7 +527,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta4 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -535,7 +546,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             name="observacion"
             autoComplete="off"
             placeholder="Observacion"
-            disabled={modo == "Consultar" }
+            disabled={modo == "Consultar"}
             value={data.observacion ?? ""}
             onChange={HandleData}
             className={G.InputStyle}
@@ -543,58 +554,66 @@ const Modal = ({ setModal, modo, objeto }) => {
         </div>
         <div className={G.ContenedorInputs}>
           <div className={G.InputFull}>
-            <div className={G.LabelStyle}>
-              <Checkbox
-                inputId="isActivo"
-                name="isActivo"
-                disabled={modo == "Consultar" }
-                value={data.isActivo}
-                onChange={(e) => {
-                  HandleData(e);
-                }}
-                checked={data.isActivo ? true : ""}
-              ></Checkbox>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle}>
+                <Checkbox
+                  inputId="isActivo"
+                  name="isActivo"
+                  disabled={modo == "Consultar"}
+                  value={data.isActivo}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.isActivo ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="isActivo"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Activo
+              </label>
             </div>
-            <label htmlFor="isActivo" className={G.InputStyle}>
-              Activo
-            </label>
-          </div>
-          <div className={G.InputFull}>
-            <div className={G.LabelStyle}>
-              <Checkbox
-                inputId="controlarStock"
-                name="controlarStock"
-                disabled={modo == "Consultar" }
-                value={data.controlarStock}
-                onChange={(e) => {
-                  HandleData(e);
-                }}
-                checked={data.controlarStock ? true : ""}
-              ></Checkbox>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle + " rounded-l-none"}>
+                <Checkbox
+                  inputId="controlarStock"
+                  name="controlarStock"
+                  disabled={modo == "Consultar"}
+                  value={data.controlarStock}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.controlarStock ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="controlarStock"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Control De Stock
+              </label>
             </div>
-            <label htmlFor="controlarStock" className={G.InputStyle}>
-              Control De Stock
-            </label>
-          </div>
-          <div className={G.InputFull}>
-            <div className={G.LabelStyle}>
-              <Checkbox
-                inputId="actualizarPrecioCompra"
-                name="actualizarPrecioCompra"
-                disabled={modo == "Consultar" }
-                value={data.actualizarPrecioCompra}
-                onChange={(e) => {
-                  HandleData(e);
-                }}
-                checked={data.actualizarPrecioCompra ? true : ""}
-              ></Checkbox>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle + " rounded-l-none"}>
+                <Checkbox
+                  inputId="actualizarPrecioCompra"
+                  name="actualizarPrecioCompra"
+                  disabled={modo == "Consultar"}
+                  value={data.actualizarPrecioCompra}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.actualizarPrecioCompra ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="actualizarPrecioCompra"
+                className={G.LabelCheckStyle}
+              >
+                Actualizar Precio
+              </label>
             </div>
-            <label
-              htmlFor="actualizarPrecioCompra"
-              className={G.InputStyle}
-            >
-              Actualizar Precio
-            </label>
           </div>
         </div>
       </div>

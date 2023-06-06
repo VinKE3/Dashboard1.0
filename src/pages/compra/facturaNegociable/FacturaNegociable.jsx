@@ -197,12 +197,12 @@ const FacturaNegociable = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             proveedorId: "",
             tipoDocumentoId: "FN",
             serie: "0001",
             numero: "",
-            clienteId: "000000",
+            clienteId: "",
             numeroFactura: "",
             fechaRegistro: moment().format("yyyy-MM-DD"),
             fechaEmision: moment().format("yyyy-MM-DD"),
@@ -213,7 +213,7 @@ const FacturaNegociable = () => {
             plazo: 0,
             tipoCompraId: "CR",
             tipoPagoId: "EI",
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
             total: 0,
             documentoReferencia: "",

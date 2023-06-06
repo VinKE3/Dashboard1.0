@@ -19,7 +19,7 @@ const GetTipoCambio = async (fecha, tipo, setTipoMensaje, setMensaje) => {
     }
     const titulo = `El tipo de cambio del día ${moment(fecha).format(
       "DD/MM/YYYY"
-    )} es ${cambio};`;
+    )} es ${cambio}`;
 
     toast.info(titulo, {
       position: "bottom-right",

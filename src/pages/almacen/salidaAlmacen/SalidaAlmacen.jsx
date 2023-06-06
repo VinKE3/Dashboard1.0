@@ -193,7 +193,7 @@ const SalidaAlmacen = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "SA",
             serie: "0001",
             numero: "00000001",
@@ -202,9 +202,9 @@ const SalidaAlmacen = () => {
             clienteId: "",
             clienteNombre: "",
             clienteNumeroDocumentoIdentidad: "",
-            monedaId: "D",
+            monedaId: "",
             tipoCambio: 0,
-            personalId: "<<NI>>01",
+            personalId: "",
             lineaProduccion: "",
             envasado: "",
             numeroLote: "",

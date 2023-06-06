@@ -126,7 +126,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (Object.keys(dataFactura).length > 0) {
       Factura();
       setDataDetalle(dataFactura.detalles);
-      OcultarMensajes();
+      Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
     }
   }, [dataFactura]);
   useEffect(() => {
@@ -266,14 +266,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       afectarStock: false,
     });
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Artículos
-  const ValidarDataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -590,6 +586,24 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataMotivoTraspado(result.data.data.motivosTraslado);
     setDataTipo(result.data.data.tipos);
     setDataConductor(result.data.data.conductores);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let monedas = result.data.data.monedas.find((map) => map);
+      let motivosTraslado = result.data.data.motivosTraslado.find((map) => map);
+      let tipos = result.data.data.tipos.find(
+        (map) => map.valor == motivosTraslado.tipo
+      );
+      let conductores = result.data.data.conductores.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        monedaId: monedas.id,
+        motivoTrasladoId: motivosTraslado.id,
+        ingresoEgresoStock: tipos.valor,
+        transportistaId: conductores.id,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -730,7 +744,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}
@@ -1219,7 +1235,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.descripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={
                         modo == "Consultar" ? G.InputStyle : G.InputBoton
                       }
@@ -1249,7 +1265,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.stock ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1270,7 +1286,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1288,7 +1304,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1308,7 +1324,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1328,7 +1344,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={

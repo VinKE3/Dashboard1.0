@@ -157,16 +157,13 @@ const CuentaCorriente = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          id: "",
-          cuentaCorrienteId: "0000",
-          empresaId: "01",
-          entidadBancaria: "",
-          entidadBancariaId: 1,
-          moneda: "",
-          monedaId: "S",
+          empresaId: "",
+          cuentaCorrienteId: "",
+          entidadBancariaId: 0,
           numero: "",
+          tipoCuentaDescripcion: "",
+          monedaId: "",
           observacion: "",
-          tipoCuentaDescripcion: "CORRIENTE",
         });
       } else {
         await GetPorId(value);

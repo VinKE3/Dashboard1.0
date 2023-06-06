@@ -6,7 +6,7 @@ import * as G from "../../../components/Global";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setDataModal] = useState([]);
+  const [dataEmpTransporte, setDataEmpTransporte] = useState([]);
   //#endregion
 
   //#region useEffect.
@@ -29,14 +29,23 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/EmpresaTransporte/Listar`
     );
-    setDataModal(result.data.data.data);
+    setDataEmpTransporte(result.data.data.data);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let empresasTransporte = result.data.data.data.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipo: empresasTransporte.empresaTransporteId,
+      }));
+    }
   };
   //#endregion
 
   //#region Render
   return (
     <>
-      {Object.entries(dataModal).length > 0 && (
+      {Object.entries(dataEmpTransporte).length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -48,26 +57,25 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={G.ContenedorBasico}>
             <div className={G.ContenedorInputs}>
-              <div className={G.Input48}>
-                <label htmlFor="subLineaId" className={G.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="subLineaId"
-                  name="subLineaId"
-                  placeholder="Código"
-                  autoComplete="off"
-                  value={data.id ?? ""}
-                  disabled={true}
-                  className={G.InputStyle}
-                />
-              </div>
+              {modo != "Nuevo" && (
+                <div className={G.Input48}>
+                  <label htmlFor="subLineaId" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="subLineaId"
+                    name="subLineaId"
+                    placeholder="Código"
+                    autoComplete="off"
+                    value={data.id ?? ""}
+                    disabled={true}
+                    className={G.InputStyle}
+                  />
+                </div>
+              )}
               <div className={G.InputFull}>
-                <label
-                  htmlFor="empresaTransporteId"
-                  className={G.LabelStyle}
-                >
+                <label htmlFor="empresaTransporteId" className={G.LabelStyle}>
                   Empresa Transporte
                 </label>
                 <select
@@ -79,7 +87,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
-                  {dataModal.map((empresa) => (
+                  {dataEmpTransporte.map((empresa) => (
                     <option
                       key={empresa.empresaTransporteId}
                       value={empresa.empresaTransporteId}
@@ -139,10 +147,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               />
             </div>
             <div className="flex">
-              <label
-                htmlFor="certificadoInscripcion"
-                className={G.LabelStyle}
-              >
+              <label htmlFor="certificadoInscripcion" className={G.LabelStyle}>
                 Certificado Inscripción
               </label>
               <input

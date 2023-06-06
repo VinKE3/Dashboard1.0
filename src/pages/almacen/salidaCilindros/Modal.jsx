@@ -76,6 +76,18 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       }))
     );
     setDataTipoSalida(result.data.data.tiposSalida);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let personal = result.data.data.personal.find((map) => map);
+      let tiposSalida = result.data.data.tiposSalida.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        personalId: personal.id,
+        tipoSalidaId: tiposSalida.id,
+      }));
+    }
   };
   //#endregion
 
@@ -138,11 +150,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           foco={document.getElementById("tablaSalidaCilindro")}
           tamañoModal={[G.ModalFull, G.Form]}
         >
-          <div
-            className={
-              G.ContenedorBasico + G.FondoContenedor + " mb-2"
-            }
-          >
+          <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
             <div className={G.ContenedorInputs}>
               <div className={G.InputTercio}>
                 <label htmlFor="serie" className={G.LabelStyle}>

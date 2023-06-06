@@ -153,7 +153,7 @@ const EmpresadeTransporte = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          empresaId: "01",
+          empresaId: "",
           empresaTransporteId: "00",
           numeroDocumentoIdentidad: "",
           nombre: "",
@@ -253,7 +253,7 @@ const EmpresadeTransporte = () => {
       {visible ? (
         <>
           <div className={G.ContenedorPadre}>
-            <h2 className={G.TituloH2}>Empresa de Transporte</h2>
+            <h2 className={G.TituloH2}>Empresas de Transporte</h2>
 
             {/* Filtro*/}
             <FiltroBasico

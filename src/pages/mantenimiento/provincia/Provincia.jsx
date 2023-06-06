@@ -144,7 +144,7 @@ const Provincia = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          departamentoId: "01",
+          departamentoId: "",
           provinciaId: "",
           nombre: "",
         });
@@ -227,7 +227,7 @@ const Provincia = () => {
       {visible ? (
         <>
           <div className={G.ContenedorPadre}>
-            <h2 className={G.TituloH2}>Provincia</h2>
+            <h2 className={G.TituloH2}>Provincias</h2>
 
             {/* Filtro*/}
             <FiltroBasico

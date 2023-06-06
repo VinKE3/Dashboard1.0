@@ -202,12 +202,12 @@ const Cef = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             proveedorId: "",
             tipoDocumentoId: "CF",
             serie: "0001",
             numero: "",
-            clienteId: "000000",
+            clienteId: "",
             numeroLetra: "",
             fechaRegistro: moment().format("yyyy-MM-DD"),
             fechaEmision: moment().format("yyyy-MM-DD"),

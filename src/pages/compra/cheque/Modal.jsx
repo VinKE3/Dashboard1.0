@@ -178,14 +178,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       .format("YYYY-MM-DD");
     return fecha;
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Concepto
-  const ValidarDataConcepto = async ({ target }) => {
+  const HandleDataConcepto = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -420,6 +416,18 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoCompra(result.data.data.tiposCompra);
     setDataTipoPago(result.data.data.tiposPago);
     setDataMoneda(result.data.data.monedas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let plazos = result.data.data.plazos.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        plazos: plazos.valor,
+        monedaId: monedas.id,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -550,15 +558,13 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}
-            <div
-              className={
-                G.ContenedorBasico + " mb-4 " + G.FondoContenedor
-              }
-            >
+            <div className={G.ContenedorBasico + " mb-4 " + G.FondoContenedor}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
                   <label htmlFor="numeroFactura" className={G.LabelStyle}>
@@ -574,9 +580,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     disabled={modo == "Nuevo" ? false : true}
                     value={data.numeroFactura ?? ""}
                     onChange={HandleData}
-                    className={
-                      G.InputStyle
-                    }
+                    className={G.InputStyle}
                   />
                 </div>
                 <div className={G.InputMitad}>
@@ -635,10 +639,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputTercio}>
-                  <label
-                    htmlFor="fechaVencimiento"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="fechaVencimiento" className={G.LabelStyle}>
                     Vencimiento
                   </label>
                   <input
@@ -676,10 +677,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="proveedorNombre"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="proveedorNombre" className={G.LabelStyle}>
                     Proveedor
                   </label>
                   <input
@@ -696,9 +694,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <button
                     id="consultarProveedor"
                     className={
-                      G.BotonBuscar +
-                      G.BotonPrimary +
-                      " !rounded-none"
+                      G.BotonBuscar + G.BotonPrimary + " !rounded-none"
                     }
                     hidden={modo == "Consultar"}
                     disabled={checkVarios}
@@ -784,10 +780,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </select>
                 </div>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="documentoReferencia"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="documentoReferencia" className={G.LabelStyle}>
                     Documento Referencia
                   </label>
                   <input
@@ -838,16 +831,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     value={data.tipoCambio ?? ""}
                     onChange={HandleData}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
@@ -880,11 +869,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             {/* Detalles */}
             {modo != "Consultar" && (
-              <div
-                className={
-                  G.ContenedorBasico + G.FondoContenedor + " mb-2"
-                }
-              >
+              <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputFull}>
                     <label htmlFor="concepto" className={G.LabelStyle}>
@@ -898,7 +883,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={true}
                       placeholder="Buscar Concepto"
                       value={dataCabecera.concepto ?? ""}
-                      onChange={ValidarDataConcepto}
+                      onChange={HandleDataConcepto}
                       className={G.InputBoton}
                     />
                     <button
@@ -927,7 +912,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={true}
                       value={dataCabecera.saldo ?? ""}
-                      onChange={ValidarDataConcepto}
+                      onChange={HandleDataConcepto}
                       className={G.InputStyle}
                     />
                   </div>
@@ -944,11 +929,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={modo == "Consultar"}
                       value={dataCabecera.abono ?? ""}
-                      onChange={ValidarDataConcepto}
+                      onChange={HandleDataConcepto}
                       className={
-                        modo != "Consultar"
-                          ? G.InputBoton
-                          : G.InputStyle
+                        modo != "Consultar" ? G.InputBoton : G.InputStyle
                       }
                     />
                     <button

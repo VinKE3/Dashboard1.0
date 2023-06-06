@@ -125,7 +125,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalles
       DetallesOrdenCompra(dataOrdenCompra.accion);
       //Detalles
-      OcultarMensajes();
+      Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
     }
   }, [dataOrdenCompra]);
   useEffect(() => {
@@ -386,14 +386,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Artículos
-  const ValidarDataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     //Valida Articulos Varios
     if (target.name == "productos") {
       setCheckFiltro(target.name);
@@ -945,6 +941,28 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoPago(result.data.data.tiposPago);
     setDataIgv(result.data.data.porcentajesIGV);
     setDataMotivoNota(result.data.data.motivosNota);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposDocumento = result.data.data.tiposDocumento.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      let tiposCompra = result.data.data.tiposCompra.find((map) => map);
+      let tiposPago = result.data.data.tiposPago.find(
+        (map) => map.tipoVentaCompraId == tiposCompra.id
+      );
+      let porcentajesIGV = result.data.data.porcentajesIGV.find(
+        (map) => map.default == true
+      );
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoDocumentoId: tiposDocumento.id,
+        monedaId: monedas.id,
+        tipoCompraId: tiposCompra.id,
+        tipoPagoId: tiposPago.id,
+        porcentajeIGV: porcentajesIGV.porcentaje,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -1110,7 +1128,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
 
@@ -1680,7 +1700,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value="productos"
                           disabled={modo == "Consultar"}
                           onChange={(e) => {
-                            ValidarDataCabecera(e);
+                            HandleDataCabecera(e);
                           }}
                           checked={checkFiltro === "productos"}
                         ></RadioButton>
@@ -1700,7 +1720,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value="variosFiltro"
                           disabled={modo == "Consultar"}
                           onChange={(e) => {
-                            ValidarDataCabecera(e);
+                            HandleDataCabecera(e);
                           }}
                           checked={checkFiltro === "variosFiltro"}
                         ></RadioButton>
@@ -1728,7 +1748,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={!habilitarFiltro ? true : false}
                       value={dataCabecera.descripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={!habilitarFiltro ? G.InputBoton : G.InputBoton}
                     />
                     <button
@@ -1757,7 +1777,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.stock ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1778,7 +1798,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1796,7 +1816,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1816,7 +1836,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1836,7 +1856,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={

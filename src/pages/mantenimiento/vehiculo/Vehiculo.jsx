@@ -144,8 +144,8 @@ const Vehiculo = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          empresaId: "01",
-          empresaTransporteId: "0001",
+          empresaId: "",
+          empresaTransporteId: "",
           numeroPlaca: "",
           marca: "",
           modelo: "",
@@ -236,7 +236,7 @@ const Vehiculo = () => {
       {visible ? (
         <>
           <div className={G.ContenedorPadre}>
-            <h2 className={G.TituloH2}>Vehiculo</h2>
+            <h2 className={G.TituloH2}>Vehículos</h2>
 
             {/* Filtro*/}
             <FiltroBasico

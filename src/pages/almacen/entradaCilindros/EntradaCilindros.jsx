@@ -190,15 +190,15 @@ const EntradaCilindros = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
-            proveedorId: "000000",
+            empresaId: "",
+            proveedorId: "",
             tipoDocumentoId: "EC",
             serie: "",
             numero: "",
             clienteId: "",
             clienteNombre: "",
             fechaEmision: moment().format("YYYY-MM-DD"),
-            personalId: "<<NI>>01",
+            personalId: "",
             isSobrante: true,
             isVenta: true,
             totalCilindros: 0,

@@ -172,7 +172,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   //Data Cabecera
-  const DataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
       setData((prevState) => ({
         ...prevState,
@@ -272,6 +272,15 @@ const Modal = ({ setModal, modo, objeto }) => {
         "El Documento de Venta se encuentra registrado en el detalle.",
       ];
     }
+    let moneda = dataDetalle.find(
+      (map) => map.monedaId != result.data.data.monedaId
+    );
+    if (moneda != undefined) {
+      return [
+        false,
+        "El Documento de Venta tiene una moneda distinta a la añadida.",
+      ];
+    }
     //Valida montos
     return [true, "", result.data.data];
   };
@@ -335,10 +344,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     setRefrescar(true);
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data Cabecera
 
   //Calculos
@@ -356,7 +361,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones Detalles
-  const DataCabeceraLetra = async ({ target }) => {
+  const HandleDataCabeceraLetra = async ({ target }) => {
     setDataLetra((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -471,7 +476,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           correlativo++;
         }
         //Itera en base al n° de letras asignadas
-        OcultarMensajes();
+        Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
         setDataLetraDetalle(dataDetalleMod);
       }
 
@@ -613,6 +618,18 @@ const Modal = ({ setModal, modo, objeto }) => {
     );
     setDataTipoDoc(result.data.data.tiposDocumento);
     setDataMoneda(result.data.data.monedas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposDocumento = result.data.data.tiposDocumento.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoDocumentoId: tiposDocumento.id,
+        monedaId: monedas.id,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -818,7 +835,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera Documento */}
@@ -837,7 +856,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoDocumentoId"
                     autoFocus
                     value={dataCabecera.tipoDocumentoId ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     disabled={modo == "Nuevo" ? false : true}
                     className={G.InputStyle}
                   >
@@ -861,7 +880,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="4"
                     disabled={modo == "Nuevo" ? false : true}
                     value={dataCabecera.serie ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={G.InputStyle}
                   />
                 </div>
@@ -878,7 +897,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="10"
                     disabled={modo == "Nuevo" ? false : true}
                     value={dataCabecera.numero ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={G.InputBoton}
                   />
                   <button
@@ -963,7 +982,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={modo == "Consultar" || !habilitar}
                     value={dataCabecera.numeroLetra ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={G.InputStyle}
                   />
                 </div>
@@ -980,7 +999,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={true}
                     value={data.tipoCambio ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={
                       modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
@@ -1005,7 +1024,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
                   >
@@ -1034,7 +1053,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={moment(dataLetra.fechaEmision ?? "").format(
                         "yyyy-MM-DD"
                       )}
-                      onChange={DataCabeceraLetra}
+                      onChange={HandleDataCabeceraLetra}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1086,7 +1105,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={modo == "Consultar"}
                       value={dataLetra.aval ?? ""}
-                      onChange={DataCabeceraLetra}
+                      onChange={HandleDataCabeceraLetra}
                       className={G.InputBoton}
                     />
                     <button

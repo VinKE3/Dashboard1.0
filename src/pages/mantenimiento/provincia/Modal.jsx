@@ -26,8 +26,19 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones API
   const GetTablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Departamento/Listar`);
-    setDataDepartamento(result.data.data.data);
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/Provincia/FormularioTablas`
+    );
+    setDataDepartamento(result.data.data.departamentos);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let departamentos = result.data.data.departamentos.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        departamentoId: departamentos.id,
+      }));
+    }
   };
   //#endregion
 

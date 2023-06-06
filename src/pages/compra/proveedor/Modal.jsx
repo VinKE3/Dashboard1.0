@@ -223,6 +223,17 @@ const Modal = ({ setModal, modo, objeto }) => {
       `api/Mantenimiento/Proveedor/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposDocumentoIdentidad =
+        result.data.data.tiposDocumentoIdentidad.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoDocumentoIdentidadId: tiposDocumentoIdentidad.id,
+      }));
+    }
   };
   const GetDocumento = async (tipo, documento) => {
     document.getElementById("consultarApi").hidden = true;
@@ -482,23 +493,25 @@ const Modal = ({ setModal, modo, objeto }) => {
             >
               <div className={G.ContenedorBasico + " mt-4"}>
                 <div className={G.ContenedorInputs}>
-                  <div className={G.InputTercio}>
-                    <label htmlFor="id" className={G.LabelStyle}>
-                      Código
-                    </label>
-                    <input
-                      type="text"
-                      id="id"
-                      name="id"
-                      placeholder="Código"
-                      autoComplete="off"
-                      value={data.id ?? ""}
-                      onChange={HandleData}
-                      disabled={true}
-                      className={G.InputStyle}
-                    />
-                  </div>
-                  <div className={G.InputTercio}>
+                  {modo != "Nuevo" && (
+                    <div className={G.InputMitad}>
+                      <label htmlFor="id" className={G.LabelStyle}>
+                        Código
+                      </label>
+                      <input
+                        type="text"
+                        id="id"
+                        name="id"
+                        placeholder="Código"
+                        autoComplete="off"
+                        value={data.id ?? ""}
+                        onChange={HandleData}
+                        disabled={true}
+                        className={G.InputStyle}
+                      />
+                    </div>
+                  )}
+                  <div className={G.InputFull}>
                     <label htmlFor="condicion" className={G.LabelStyle}>
                       Condición
                     </label>
@@ -515,7 +528,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       className={G.InputStyle}
                     />
                   </div>
-                  <div className={G.InputTercio}>
+                  <div className={G.InputFull}>
                     <label htmlFor="estado" className={G.LabelStyle}>
                       Estado
                     </label>

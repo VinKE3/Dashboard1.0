@@ -246,14 +246,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       clienteDireccion: dataCliente.clienteDireccion,
     });
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Artículos
-  const ValidarDataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     if (target.name == "interes") {
       setCheckInteres(target.checked);
       if (!target.checked) {
@@ -739,6 +735,24 @@ const Modal = ({ setModal, modo, objeto }) => {
             : res.numero + " | " + res.entidadBancariaNombre + " |  [S/.]",
       }))
     );
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let vendedores = result.data.data.vendedores.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      let tiposCobro = result.data.data.tiposCobro.find((map) => map);
+      let cuentasCorrientes = result.data.data.cuentasCorrientes.find(
+        (map) => map
+      );
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        personalId: vendedores.id,
+        monedaId: monedas.id,
+        tipoCobroId: tiposCobro.id,
+        cuentaCorrienteId: cuentasCorrientes.cuentaCorrienteId,
+      }));
+    }
   };
   const TipoCambio = async (fecha, origen = "") => {
     let tipoCambio = await GetTipoCambio(
@@ -941,7 +955,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}
@@ -1256,7 +1272,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.numeroDocumento ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputBoton}
                     />
                     <button
@@ -1380,7 +1396,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         value={moment(
                           dataCabecera.fechaAbono ?? moment()
                         ).format("yyyy-MM-DD")}
-                        onChange={ValidarDataCabecera}
+                        onChange={HandleDataCabecera}
                         className={G.InputStyle}
                       />
                     </div>
@@ -1461,7 +1477,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         id="tipoCobroId"
                         name="tipoCobroId"
                         value={dataCabecera.tipoCobroId ?? ""}
-                        onChange={ValidarDataCabecera}
+                        onChange={HandleDataCabecera}
                         disabled={
                           modo == "Consultar" || dataCabecera.saldo == undefined
                             ? true
@@ -1524,7 +1540,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             : false
                         }
                         value={dataCabecera.numeroOperacion ?? ""}
-                        onChange={ValidarDataCabecera}
+                        onChange={HandleDataCabecera}
                         className={G.InputStyle}
                       />
                     </div>
@@ -1541,7 +1557,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                                 ? true
                                 : false
                             }
-                            onChange={ValidarDataCabecera}
+                            onChange={HandleDataCabecera}
                             checked={checkInteres ? true : ""}
                           ></Checkbox>
                         </div>
@@ -1623,7 +1639,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         min={0}
                         disabled={true}
                         value={dataCabecera.abono ?? ""}
-                        onChange={ValidarDataCabecera}
+                        onChange={HandleDataCabecera}
                         className={G.InputStyle}
                       />
                     </div>
@@ -1640,7 +1656,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         min={0}
                         disabled={true}
                         value={dataCabecera.nuevoSaldo ?? ""}
-                        onChange={ValidarDataCabecera}
+                        onChange={HandleDataCabecera}
                         className={
                           modo == "Consultar" ? G.InputStyle : G.InputBoton
                         }

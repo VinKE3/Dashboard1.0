@@ -322,6 +322,25 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataZona(result.data.data.zonas);
     setDataTipoVenta(result.data.data.tiposVenta);
     setDataTipoCobro(result.data.data.tiposCobro);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposDocumentoIdentidad =
+        result.data.data.tiposDocumentoIdentidad.find((map) => map);
+      let zonas = result.data.data.zonas.find((map) => map);
+      let tiposVenta = result.data.data.tiposVenta.find((map) => map);
+      let tiposCobro = result.data.data.tiposCobro.find(
+        (map) => map.tipoVentaCompraId == tiposVenta.id
+      );
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoDocumentoIdentidadId: tiposDocumentoIdentidad.id,
+        zonaId: zonas.id,
+        tipoVentaId: tiposVenta.id,
+        tipoCobroId: tiposCobro.id,
+      }));
+    }
   };
   const GetDocumento = async (tipo, documento) => {
     document.getElementById("consultarApi").hidden = true;
@@ -714,29 +733,31 @@ const Modal = ({ setModal, modo, objeto }) => {
             >
               <div className={G.ContenedorBasico + " mt-4"}>
                 <div className={G.ContenedorInputs}>
-                  <div className={G.Input25pct}>
-                    <label htmlFor="id" className={G.LabelStyle}>
-                      Código
-                    </label>
-                    <input
-                      type="text"
-                      id="id"
-                      name="id"
-                      placeholder="Código"
-                      autoComplete="off"
-                      disabled={true}
-                      autoFocus={modo == "Consultar"}
-                      value={data.id ?? ""}
-                      onChange={HandleData}
-                      className={G.InputStyle}
-                    />
-                  </div>
+                  {modo != "Nuevo" && (
+                    <div className={G.Input25pct}>
+                      <label htmlFor="id" className={G.LabelStyle}>
+                        Código
+                      </label>
+                      <input
+                        type="text"
+                        id="id"
+                        name="id"
+                        placeholder="Código"
+                        autoComplete="off"
+                        disabled={true}
+                        autoFocus={modo == "Consultar"}
+                        value={data.id ?? ""}
+                        onChange={HandleData}
+                        className={G.InputStyle}
+                      />
+                    </div>
+                  )}
                   <div className={G.InputMitad}>
                     <label
                       htmlFor="tipoDocumentoIdentidadId"
                       className={G.LabelStyle}
                     >
-                      T. Documento
+                      Tipo Documento
                     </label>
                     <select
                       id="tipoDocumentoIdentidadId"
@@ -759,7 +780,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       htmlFor="numeroDocumentoIdentidad"
                       className={G.LabelStyle}
                     >
-                      Número Doc
+                      Número Documento
                     </label>
                     <input
                       type="text"

@@ -196,17 +196,17 @@ const EntradaAlmacen = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             proveedorId: "",
             tipoDocumentoId: "EN",
             serie: "",
             numero: "",
-            clienteId: "000000",
+            clienteId: "",
             proveedorNumeroDocumentoIdentidad: "",
             proveedorDireccion: "",
             personalId: dataGlobal.personalId,
             fechaEmision: moment().format("YYYY-MM-DD"),
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
             numeroOP: "",
             observacion: "",

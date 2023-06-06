@@ -191,12 +191,12 @@ const GuiaCompra = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             proveedorId: "",
             tipoDocumentoId: "09",
             serie: "",
             numero: "",
-            clienteId: "000000",
+            clienteId: "",
             fechaEmision: moment().format("YYYY-MM-DD"),
             direccionPartida: "",
             departamentoPartidaId: null,
@@ -222,12 +222,12 @@ const GuiaCompra = () => {
             transportistaCertificadoInscripcion: "",
             transportistaLicenciaConducir: "",
             marcaPlaca: "",
-            motivoTrasladoId: "02",
+            motivoTrasladoId: "",
             motivoTrasladoSustento: "",
             ingresoEgresoStock: "",
             observacion: "",
             documentoReferencia: "",
-            monedaId: "S",
+            monedaId: "",
             afectarStock: false,
             detalles: [],
           });

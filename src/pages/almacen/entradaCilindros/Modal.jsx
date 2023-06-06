@@ -85,7 +85,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       //Detalles
       DetallesGuias(dataCilindro.accion);
       //Detalles
-      OcultarMensajes();
+      Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
     }
   }, [dataCilindro]);
   useEffect(() => {
@@ -223,10 +223,6 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       clienteNombre: "",
       guiasRelacionadas: [],
     }));
-  };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
   };
   //#endregion
 
@@ -543,6 +539,15 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         ...res,
       }))
     );
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let personal = result.data.data.personal.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        personalId: personal.id,
+      }));
+    }
   };
   //#endregion
 
@@ -646,16 +651,14 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
 
             {/* Cabecera */}
-            <div
-              className={
-                G.ContenedorBasico + G.FondoContenedor + " mb-3"
-              }
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor + " mb-3"}>
               <div className={G.ContenedorInputs}>
                 <div className={G.InputTercio}>
                   <label htmlFor="serie" className={G.LabelStyle}>
@@ -788,9 +791,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                   />
                   <button
                     id="consultarFactura"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => AbrirFiltroCilindro()}
@@ -821,11 +822,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
             {/* Detalles */}
             {modo != "Consultar" && (
-              <div
-                className={
-                  G.ContenedorBasico + G.FondoContenedor + " mb-2"
-                }
-              >
+              <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
                 <div className={G.ContenedorInputs}>
                   <div className={G.InputFull}>
                     <label htmlFor="descripcion" className={G.LabelStyle}>
@@ -880,11 +877,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
                     />
                     <button
                       id="enviarDetalle"
-                      className={
-                        G.BotonBuscar +
-                        G.Anidado +
-                        G.BotonPrimary
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                       hidden={modo == "Consultar"}
                       onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={() => AgregarDetalle()}

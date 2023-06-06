@@ -118,7 +118,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalles
       DetallesFactura(dataFactura.accion);
       //Detalles
-      OcultarMensajes();
+      Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
     }
   }, [dataFactura]);
   useEffect(() => {
@@ -154,15 +154,12 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     if (target.name == "serie") {
       //Obtiene el correlativo
-      let correlativo = await GetCorrelativo(
-        data.tipoDocumentoId,
-        target.value
-      );
-      correlativo = correlativo != undefined ? correlativo : "";
+      let numero = await GetCorrelativo(data.tipoDocumentoId, target.value);
+      numero = numero != undefined ? numero : "";
       //Obtiene el correlativo
       setData((prevState) => ({
         ...prevState,
-        numero: ("0000000000" + String(correlativo)).slice(-10),
+        numero: numero,
       }));
     }
     if (target.name == "motivoTrasladoId") {
@@ -263,14 +260,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Artículos
-  const ValidarDataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     //Valida Articulos Varios
     if (target.name == "productos") {
       setCheckFiltro(target.name);
@@ -779,10 +772,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Venta/GuiaRemision/FormularioTablas`);
+    setDataSerie(result.data.data.series);
     setDataConductor(result.data.data.conductores);
     setDataEmpresaTransporte(result.data.data.empresasTransporte);
     setDataMoneda(result.data.data.monedas);
-    setDataSerie(result.data.data.series);
     setDataTipo(result.data.data.tipos);
     setDataVehiculo(result.data.data.vehiculos);
     setDataVendedor(
@@ -793,6 +786,37 @@ const Modal = ({ setModal, modo, objeto }) => {
       }))
     );
     setDataMotivoTraslado(result.data.data.motivosTraslado);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let series = result.data.data.series.find((map) => map);
+      //Consulta Correlativo
+      let numero = await GetCorrelativo(data.tipoDocumentoId, series.serie);
+      //Consulta Correlativo
+      let conductores = result.data.data.conductores.find((map) => map);
+      let empresasTransporte = result.data.data.empresasTransporte.find(
+        (map) => map
+      );
+      let monedas = result.data.data.monedas.find((map) => map);
+      let motivosTraslado = result.data.data.motivosTraslado.find((map) => map);
+      let tipos = result.data.data.tipos.find(
+        (map) => map.valor == motivosTraslado.tipo
+      );
+      let vehiculos = result.data.data.vehiculos.find((map) => map);
+      let vendedores = result.data.data.vendedores.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        serie: series.serie,
+        numero: numero,
+        conductorId: conductores.id,
+        empresaTransporteId: empresasTransporte.empresaTransporteId,
+        monedaId: monedas.id,
+        ingresoEgresoStock: tipos.valor,
+        vehiculoId: vehiculos.id,
+        personalId: vendedores.id,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -801,10 +825,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setTipoMensaje,
       setMensaje
     );
-    setData((prev) => ({
-      ...prev,
-      tipoCambio: tipoCambio,
-    }));
+    setTipoCambio(tipoCambio);
   };
   const GetDireccion = async (id) => {
     const result = await ApiMasy.get(
@@ -817,7 +838,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       const result = await ApiMasy.get(
         `api/Mantenimiento/Correlativo/${tipoDocumento}/${serie}`
       );
-      return result.data.data.numero;
+      return ("0000000000" + String(result.data.data.numero)).slice(-10);
     } else {
       return "";
     }
@@ -951,7 +972,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
 
@@ -1491,7 +1514,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value="productos"
                           disabled={modo == "Consultar"}
                           onChange={(e) => {
-                            ValidarDataCabecera(e);
+                            HandleDataCabecera(e);
                           }}
                           checked={checkFiltro === "productos"}
                         ></RadioButton>
@@ -1511,7 +1534,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value="variosFiltro"
                           disabled={modo == "Consultar"}
                           onChange={(e) => {
-                            ValidarDataCabecera(e);
+                            HandleDataCabecera(e);
                           }}
                           checked={checkFiltro === "variosFiltro"}
                         ></RadioButton>
@@ -1538,7 +1561,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={!habilitarFiltro ? true : false}
                       value={dataCabecera.descripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={!habilitarFiltro ? G.InputBoton : G.InputBoton}
                     />
                     <button
@@ -1567,7 +1590,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.stock ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1588,7 +1611,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={true}
                       value={dataCabecera.unidadMedidaDescripcion ?? ""}
-                      onChange={ValidarDataCabecera}
+                      onChange={HandleDataCabecera}
                       className={G.InputStyle}
                     />
                   </div>
@@ -1606,7 +1629,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.cantidad ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1626,7 +1649,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.precioUnitario ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={G.InputStyle}
@@ -1646,7 +1669,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.importe ?? ""}
                       onChange={(e) => {
-                        ValidarDataCabecera(e);
+                        HandleDataCabecera(e);
                         CalcularImporte(e.target.name);
                       }}
                       className={

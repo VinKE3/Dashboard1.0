@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import * as G from "../Global";
+import * as Funciones from "../funciones/Validaciones";
 
 const ModalCrud = ({
   children,
@@ -21,20 +22,20 @@ const ModalCrud = ({
   tamañoModal = [G.ModalPequeño, G.Form],
 }) => {
   //#region useState
-  const [tipoMensaje, setTipoMensaje] = useState(-1);
-  const [mensaje, setMensaje] = useState([]);
+  const [tipo, setTipo] = useState(-1);
+  const [mensajes, setMensajes] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
     RetornarMensaje();
-  }, [tipoMensaje]);
+  }, [tipo]);
   //#endregion
 
   //#region Funciones
   const RetornarMensaje = async () => {
-    if (tipoMensaje == 0) {
-      toast.success(mensaje, {
+    if (tipo == 0) {
+      toast.success(mensajes, {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,
@@ -100,18 +101,14 @@ const ModalCrud = ({
       }
     }
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //#endregion
 
   //#region Funciones API
   const Enviar = async () => {
     if (modo == "Nuevo") {
-      await Insert(menu, objeto, setTipoMensaje, setMensaje);
+      await Insert(menu, objeto, setTipo, setMensajes);
     } else {
-      await Update(menu, objeto, setTipoMensaje, setMensaje);
+      await Update(menu, objeto, setTipo, setMensajes);
     }
   };
   //#endregion
@@ -139,11 +136,13 @@ const ModalCrud = ({
             {/*body*/}
             <div className={G.ModalBody}>
               <div className={tamañoModal[1]}>
-                {tipoMensaje > 0 && (
+                {tipo > 0 && (
                   <Mensajes
-                    tipoMensaje={tipoMensaje}
-                    mensaje={mensaje}
-                    Click={() => OcultarMensajes()}
+                    tipoMensaje={tipo}
+                    mensaje={mensajes}
+                    Click={() =>
+                      Funciones.OcultarMensajes(setTipo, setMensajes)
+                    }
                   />
                 )}
                 {children}

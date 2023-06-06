@@ -12,10 +12,17 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
-      [target.name]: target.value,
-    }));
+    if (target.name == "id") {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value,
+      }));
+    } else {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: Number(target.value),
+      }));
+    }
   };
   //#endregion
 
@@ -52,7 +59,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       <div className={G.ContenedorBasico}>
         <div className="flex">
           <label htmlFor="id" className={G.LabelStyle}>
-            Tipo
+            Fecha
           </label>
           <input
             type="date"
@@ -81,7 +88,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         <div className={G.ContenedorInputs}>
           <div className={G.InputFull}>
             <label htmlFor="precioCompra" className={G.LabelStyle}>
-              P. Compra
+              Precio Compra
             </label>
             <input
               type="number"
@@ -97,7 +104,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           </div>
           <div className={G.InputFull}>
             <label htmlFor="precioVenta" className={G.LabelStyle}>
-              P. Venta
+              Precio Venta
             </label>
             <input
               type="number"

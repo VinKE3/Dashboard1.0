@@ -200,12 +200,12 @@ const LetraCambioCompra = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             proveedorId: "",
             tipoDocumentoId: "LC",
             serie: "0001",
             numero: "",
-            clienteId: "000000",
+            clienteId: "",
             numeroLetra: "",
             fechaRegistro: moment().format("YYYY-MM-DD"),
             fechaEmision: moment().format("YYYY-MM-DD"),
@@ -216,7 +216,7 @@ const LetraCambioCompra = () => {
             lugarGiro: "",
             tipoCompraId: "CR",
             tipoPagoId: "EI",
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
             total: 0,
             documentoReferencia: "",

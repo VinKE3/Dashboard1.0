@@ -60,6 +60,30 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataEntidad(result.data.data.entidadesBancaria);
     setDataTipoCuenta(result.data.data.tiposCuentaBancaria);
     setDataMoneda(result.data.data.monedas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let sexos = result.data.data.sexos.find((map) => map);
+      let estadosCivil = result.data.data.estadosCivil.find((map) => map);
+      let cargos = result.data.data.cargos.find((map) => map);
+      let entidadesBancaria = result.data.data.entidadesBancaria.find(
+        (map) => map
+      );
+      let tiposCuentaBancaria = result.data.data.tiposCuentaBancaria.find(
+        (map) => map
+      );
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        sexoId: sexos.id,
+        estadoCivilId: estadosCivil.id,
+        cargoId: cargos.id,
+        entidadBancariaId: entidadesBancaria.id,
+        tipoCuentaBancariaId: tiposCuentaBancaria.id,
+        monedaId: monedas.id,
+      }));
+    }
   };
   //#endregion
 
@@ -78,62 +102,83 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={G.ContenedorBasico}>
             <div className={G.ContenedorInputs}>
-              <div className={G.InputTercio}>
-                <label htmlFor="id" className={G.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  placeholder="Código"
-                  autoComplete="off"
-                  disabled={true}
-                  value={data.id ?? ""}
-                  onChange={HandleData}
-                  className={G.InputStyle}
-                />
-              </div>
-              <div className={G.InputTercio}>
-                <label
-                  htmlFor="numeroDocumentoIdentidad"
-                  className={G.LabelStyle}
-                >
-                  DNI
-                </label>
-                <input
-                  type="text"
-                  id="numeroDocumentoIdentidad"
-                  name="numeroDocumentoIdentidad"
-                  placeholder="DNI"
-                  autoComplete="off"
-                  maxLength="8"
-                  autoFocus
-                  disabled={modo == "Consultar" }
-                  value={data.numeroDocumentoIdentidad ?? ""}
-                  onChange={HandleData}
-                  className={G.InputStyle}
-                />
-              </div>
-              <div className={G.InputTercio}>
-                <div className={G.CheckStyle}>
-                  <Checkbox
-                    inputId="isActivo"
-                    name="isActivo"
-                    disabled={modo == "Consultar" }
-                    value={data.isActivo}
-                    onChange={(e) => {
-                      HandleData(e);
-                    }}
-                    checked={data.isActivo ? true : ""}
-                  ></Checkbox>
+              {modo != "Nuevo" && (
+                <div className={G.InputTercio}>
+                  <label htmlFor="id" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    placeholder="Código"
+                    autoComplete="off"
+                    disabled={true}
+                    value={data.id ?? ""}
+                    onChange={HandleData}
+                    className={G.InputStyle}
+                  />
                 </div>
-                <label
-                  htmlFor="isActivo"
-                  className={G.LabelCheckStyle}
-                >
-                  Activo
+              )}
+              <div className={G.InputFull}>
+                {" "}
+                <div className={G.InputFull}>
+                  <label
+                    htmlFor="numeroDocumentoIdentidad"
+                    className={G.LabelStyle}
+                  >
+                    DNI
+                  </label>
+                  <input
+                    type="text"
+                    id="numeroDocumentoIdentidad"
+                    name="numeroDocumentoIdentidad"
+                    placeholder="Número Documento Identidad"
+                    autoComplete="off"
+                    maxLength="8"
+                    autoFocus
+                    disabled={modo == "Consultar"}
+                    value={data.numeroDocumentoIdentidad ?? ""}
+                    onChange={HandleData}
+                    className={G.InputBoton}
+                  />
+                </div>
+                <div className={G.Input + " w-36"}>
+                  <div className={G.CheckStyle + G.Anidado}>
+                    <Checkbox
+                      inputId="isActivo"
+                      name="isActivo"
+                      disabled={modo == "Consultar"}
+                      value={data.isActivo}
+                      onChange={(e) => {
+                        HandleData(e);
+                      }}
+                      checked={data.isActivo ? true : ""}
+                    ></Checkbox>
+                  </div>
+                  <label htmlFor="isActivo" className={G.LabelCheckStyle}>
+                    Activo
+                  </label>
+                </div>
+              </div>
+              <div className={G.InputMitad}>
+                <label htmlFor="cargoId" className={G.LabelStyle}>
+                  Cargo
                 </label>
+                <select
+                  id="cargoId"
+                  name="cargoId"
+                  value={data.cargoId ?? ""}
+                  onChange={HandleData}
+                  disabled={modo == "Consultar"}
+                  className={G.InputStyle}
+                >
+                  {dataCargo.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -148,7 +193,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="apellidoPaterno"
                   placeholder="Apellido Paterno"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.apellidoPaterno ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -164,7 +209,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="apellidoMaterno"
                   placeholder="Apellido Materno"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.apellidoMaterno ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -180,7 +225,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="nombres"
                   placeholder="Nombres"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.nombres ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -210,7 +255,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="direccion"
                   placeholder="Dirección"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.direccion ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -226,7 +271,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="telefono"
                   placeholder="Teléfono"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.telefono ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -242,7 +287,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="celular"
                   placeholder="Celular"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.celular ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -260,7 +305,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="fechaNacimiento"
                   name="fechaNacimiento"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={moment(data.fechaNacimiento ?? "").format(
                     "yyyy-MM-DD"
                   )}
@@ -277,7 +322,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="sexoId"
                   value={data.sexoId ?? ""}
                   onChange={HandleData}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
                   {dataSexo.map((map) => (
@@ -296,7 +341,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="estadoCivilId"
                   value={data.estadoCivilId ?? ""}
                   onChange={HandleData}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
                   {dataEstadoCivil.map((map) => (
@@ -310,10 +355,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             <div className={G.ContenedorInputs}>
               <div className={G.InputFull}>
-                <label
-                  htmlFor="correoElectronico"
-                  className={G.LabelStyle}
-                >
+                <label htmlFor="correoElectronico" className={G.LabelStyle}>
                   Correo Electrónico
                 </label>
                 <input
@@ -322,47 +364,25 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="correoElectronico"
                   placeholder="Correo Electrónico"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.correoElectronico ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
-              <div className={G.InputMitad}>
-                <label htmlFor="cargoId" className={G.LabelStyle}>
-                  Cargo
-                </label>
-                <select
-                  id="cargoId"
-                  name="cargoId"
-                  value={data.cargoId ?? ""}
-                  onChange={HandleData}
-                  disabled={modo == "Consultar" }
-                  className={G.InputStyle}
-                >
-                  {dataCargo.map((map) => (
-                    <option key={map.id} value={map.id}>
-                      {map.descripcion}
-                    </option>
-                  ))}
-                </select>
-              </div>
             </div>
 
             <div className={G.ContenedorInputs}>
               <div className={G.InputFull}>
-                <label
-                  htmlFor="entidadBancariaId"
-                  className={G.LabelStyle}
-                >
-                  E.Bancaria
+                <label htmlFor="entidadBancariaId" className={G.LabelStyle}>
+                  Entidad Bancaria
                 </label>
                 <select
                   id="entidadBancariaId"
                   name="entidadBancariaId"
                   value={data.entidadBancariaId ?? ""}
                   onChange={HandleData}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
                   {dataEntidad.map((map) => (
@@ -373,18 +393,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </select>
               </div>
               <div className={G.Input60pct}>
-                <label
-                  htmlFor="tipoCuentaBancariaId"
-                  className={G.LabelStyle}
-                >
-                  T.Cuenta
+                <label htmlFor="tipoCuentaBancariaId" className={G.LabelStyle}>
+                  Tipo Cuenta
                 </label>
                 <select
                   id="tipoCuentaBancariaId"
                   name="tipoCuentaBancariaId"
                   value={data.tipoCuentaBancariaId ?? ""}
                   onChange={HandleData}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
                   {dataTipoCuenta.map((map) => (
@@ -403,7 +420,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="monedaId"
                   value={data.monedaId ?? ""}
                   onChange={HandleData}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
                   {dataMoneda.map((map) => (
@@ -424,7 +441,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="cuentaCorriente"
                 placeholder="N° Cuenta Corriente"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.cuentaCorriente ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -440,7 +457,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.observacion ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}

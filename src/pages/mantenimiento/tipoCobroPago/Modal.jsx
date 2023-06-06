@@ -6,7 +6,7 @@ import * as G from "../../../components/Global";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setdataModal] = useState([]);
+  const [dataTipoVentaCompra, setDataTipoVentaCompra] = useState([]);
   //#endregion
 
   //#region useEffect
@@ -29,14 +29,25 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/TipoCobroPago/FormularioTablas`
     );
-    setdataModal(result.data.data.tiposVentaCompra);
+    setDataTipoVentaCompra(result.data.data.tiposVentaCompra);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposVentaCompra = result.data.data.tiposVentaCompra.find(
+        (map) => map
+      );
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoVentaCompraId: tiposVentaCompra.id,
+      }));
+    }
   };
   //#endregion
 
   //#region Render
   return (
     <>
-      {Object.entries(dataModal).length > 0 && (
+      {Object.entries(dataTipoVentaCompra).length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -59,7 +70,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Descripción"
                   autoComplete="off"
                   autoFocus
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.descripcion ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -75,7 +86,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="abreviatura"
                   placeholder="Abreviatura"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.abreviatura ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -84,10 +95,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             </div>
             <div className={G.ContenedorInputs}>
               <div className={G.InputFull}>
-                <label
-                  htmlFor="tipoVentaCompraId"
-                  className={G.LabelStyle}
-                >
+                <label htmlFor="tipoVentaCompraId" className={G.LabelStyle}>
                   Forma Pago
                 </label>
                 <select
@@ -98,7 +106,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onChange={HandleData}
                   className={G.InputStyle}
                 >
-                  {dataModal.map((forma) => (
+                  {dataTipoVentaCompra.map((forma) => (
                     <option key={forma.id} value={forma.id}>
                       {forma.descripcion}
                     </option>
@@ -115,7 +123,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="plazo"
                   min={0}
                   value={data.plazo ?? ""}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   onChange={HandleData}
                   className={G.InputStyle}
                 />

@@ -28,6 +28,15 @@ const Modal = ({ setModal, modo, objeto }) => {
           res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let personal = result.data.data.personal.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipo: personal.id,
+      }));
+    }
   };
   //#endregion
 
@@ -59,24 +68,30 @@ const Modal = ({ setModal, modo, objeto }) => {
           <div className={G.ContenedorBasico}>
             <div className={G.ContenedorInputs}>
               <div className={G.InputFull}>
+                {modo != "Nuevo" && (
+                  <div className={G.InputFull}>
+                    <label htmlFor="id" className={G.LabelStyle}>
+                      Código
+                    </label>
+                    <input
+                      type="text"
+                      id="id"
+                      name="id"
+                      placeholder="Código"
+                      autoComplete="off"
+                      value={data.id ?? ""}
+                      onChange={HandleData}
+                      disabled={true}
+                      className={G.InputBoton}
+                    />
+                  </div>
+                )}
                 <div className={G.InputFull}>
-                  <label htmlFor="id" className={G.LabelStyle}>
-                    Código
-                  </label>
-                  <input
-                    type="text"
-                    id="id"
-                    name="id"
-                    placeholder="Código"
-                    autoComplete="off"
-                    value={data.id ?? ""}
-                    onChange={HandleData}
-                    disabled={true}
-                    className={G.InputBoton}
-                  />
-                </div>
-                <div className={G.InputFull}>
-                  <div className={G.CheckStyle + G.Anidado}>
+                  <div
+                    className={
+                      modo == "Nuevo" ? G.CheckStyle : G.CheckStyle + G.Anidado
+                    }
+                  >
                     <Checkbox
                       inputId="isActivo"
                       name="isActivo"
@@ -174,10 +189,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   />
                 </div>
                 <div className={G.InputFull}>
-                  <label
-                    htmlFor="claveConfirmacion"
-                    className={G.LabelStyle}
-                  >
+                  <label htmlFor="claveConfirmacion" className={G.LabelStyle}>
                     Repetir Clave
                   </label>
                   <input

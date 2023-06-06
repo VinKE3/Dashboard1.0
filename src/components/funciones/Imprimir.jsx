@@ -6,8 +6,8 @@ const Imprimir = async (menu, id) => {
   const result = await Api.get(`api/${menu[0]}/${menu[1]}/Imprimir/${id}`);
   if (result.name == "AxiosError") {
     const res = await ApiMasy.get(`api/${menu[0]}/${menu[1]}/Imprimir/${id}`);
-    res.textos.map((map) => {
-      toast.error(map, {
+    res.map((map) => {
+      toast.error(map.textos, {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,

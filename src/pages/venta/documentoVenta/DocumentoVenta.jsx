@@ -197,16 +197,11 @@ const DocumentoVenta = () => {
       setModo(modo);
       switch (accion) {
         case 0: {
-          //Consulta Correlativo
-          const result = await ApiMasy.get(
-            `api/Mantenimiento/Correlativo/01/F001`
-          );
-          //Consulta Correlativo
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "01",
             serie: "F001",
-            numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
+            numero: "",
             fechaEmision: moment().format("YYYY-MM-DD"),
             fechaVencimiento: moment().format("YYYY-MM-DD"),
             cotizacion: "",
@@ -220,10 +215,10 @@ const DocumentoVenta = () => {
             personalId: "",
             letra: "",
             letraId: "",
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
-            tipoVentaId: "CO",
-            tipoCobroId: "CP",
+            tipoVentaId: "",
+            tipoCobroId: "",
             numeroOperacion: "",
             cuentaCorrienteId: "",
             documentoReferenciaId: "",
@@ -249,7 +244,7 @@ const DocumentoVenta = () => {
             montoDetraccion: 0,
             montoImpuestoBolsa: 0,
             total: 0,
-            porcentajeIGV: dataGlobal.porcentajeIGV,
+            porcentajeIGV: 0,
             porcentajeRetencion: 0,
             porcentajeDetraccion: 0,
             factorImpuestoBolsa: 0.5,

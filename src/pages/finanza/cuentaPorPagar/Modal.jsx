@@ -155,10 +155,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       monedaId: target.value,
     }));
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
   //Abonos
   const Abono = async (modo = "agregar") => {
@@ -479,7 +475,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <Mensajes
               tipoMensaje={tipoMensaje}
               mensaje={mensaje}
-              Click={() => OcultarMensajes()}
+              Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
             />
           )}
 

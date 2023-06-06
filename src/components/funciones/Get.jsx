@@ -1,7 +1,7 @@
 import ApiMasy from "../../api/ApiMasy";
 import { toast } from "react-toastify";
 
-const Get = async (menu, mensaje = "") => {
+const Get = async (menu, mensaje = "Consultado Exitosamente") => {
   const result = await ApiMasy.get(`api/${menu}`);
   if (result.tipo == 1) {
     result.textos.map((map) => {

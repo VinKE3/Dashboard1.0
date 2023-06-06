@@ -256,10 +256,6 @@ const Empresa = ({ modo }) => {
         : [],
     });
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //#endregion
 
   //#region Funciones API
@@ -869,8 +865,8 @@ const Empresa = ({ modo }) => {
           {tipoMensaje > -1 && (
             <Mensajes
               tipoMensaje={tipoMensaje}
-              mensaje={mensaje}
-              Click={() => OcultarMensajes()}
+              mensaje={mensaje}f
+              Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
             />
           )}
           <TabView>

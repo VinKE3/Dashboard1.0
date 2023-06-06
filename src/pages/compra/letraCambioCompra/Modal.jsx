@@ -178,14 +178,10 @@ const Modal = ({ setModal, modo, objeto }) => {
       .format("YYYY-MM-DD");
     return fecha;
   };
-  const OcultarMensajes = () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
 
   //Concepto
-  const ValidarDataConcepto = async ({ target }) => {
+  const HandleDataConcepto = async ({ target }) => {
     setDataCabecera((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -424,6 +420,18 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataTipoCompra(result.data.data.tiposCompra);
     setDataTipoPago(result.data.data.tiposPago);
     setDataMoneda(result.data.data.monedas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let plazos = result.data.data.plazos.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        plazos: plazos.valor,
+        monedaId: monedas.id,
+      }));
+    }
   };
   const TipoCambio = async (fecha) => {
     let tipoCambio = await GetTipoCambio(
@@ -554,7 +562,9 @@ const Modal = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}
@@ -969,7 +979,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     placeholder="Buscar Concepto"
                     autoComplete="off"
                     value={dataCabecera.concepto ?? ""}
-                    onChange={ValidarDataConcepto}
+                    onChange={HandleDataConcepto}
                     disabled={true}
                     className={G.InputBoton}
                   />
@@ -999,7 +1009,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={true}
                     value={dataCabecera.saldo ?? ""}
-                    onChange={ValidarDataConcepto}
+                    onChange={HandleDataConcepto}
                     className={G.InputStyle}
                   />
                 </div>
@@ -1016,7 +1026,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={modo == "Consultar"}
                     value={dataCabecera.abono ?? ""}
-                    onChange={ValidarDataConcepto}
+                    onChange={HandleDataConcepto}
                     className={
                       modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }

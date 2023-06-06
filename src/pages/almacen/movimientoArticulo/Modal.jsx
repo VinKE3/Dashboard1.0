@@ -3,7 +3,6 @@ import ModalBasic from "../../../components/modal/ModalBasic";
 import TableBasic from "../../../components/tabla/TableBasic";
 import styled from "styled-components";
 import moment from "moment";
-import Swal from "sweetalert2";
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -84,6 +83,7 @@ const Modal = ({ setModal, objeto, foco }) => {
     }
   };
   //#endregion
+  
   //#region Columnas
   const columnasDetalles = [
     {

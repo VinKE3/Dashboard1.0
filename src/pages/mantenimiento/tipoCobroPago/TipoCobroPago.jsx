@@ -145,10 +145,10 @@ const TipoCobroPago = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          tipoVentaCompraId: "CO",
+          tipoVentaCompraId: "",
           descripcion: "",
           abreviatura: "",
-          plazo: "0",
+          plazo: "",
         });
       } else {
         await GetPorId(value);
@@ -237,7 +237,7 @@ const TipoCobroPago = () => {
       {visible ? (
         <>
           <div className={G.ContenedorPadre}>
-            <h2 className={G.TituloH2}>Tipo de Pago</h2>
+            <h2 className={G.TituloH2}>Tipos de Pago</h2>
 
             {/* Filtro*/}
             <FiltroBasico

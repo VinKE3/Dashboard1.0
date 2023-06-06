@@ -31,22 +31,24 @@ const Modal = ({ setModal, modo, objeto }) => {
     >
       <div className={G.ContenedorBasico}>
         <div className={G.ContenedorInputs}>
-          <div className={G.InputMitad}>
-            <label htmlFor="id" className={G.LabelStyle}>
-              Código
-            </label>
-            <input
-              type="text"
-              id="id"
-              name="id"
-              placeholder="Código"
-              autoComplete="off"
-              value={data.id ?? ""}
-              onChange={HandleData}
-              disabled
-              className={G.InputStyle}
-            />
-          </div>
+          {modo != "Nuevo" && (
+            <div className={G.InputMitad}>
+              <label htmlFor="id" className={G.LabelStyle}>
+                Código
+              </label>
+              <input
+                type="text"
+                id="id"
+                name="id"
+                placeholder="Código"
+                autoComplete="off"
+                value={data.id ?? ""}
+                onChange={HandleData}
+                disabled={true}
+                className={G.InputStyle}
+              />
+            </div>
+          )}
           <div className={G.InputFull}>
             <label htmlFor="codigoSunat" className={G.LabelStyle}>
               Código SUNAT

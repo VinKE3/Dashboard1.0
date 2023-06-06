@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalInventario from "./ModalInventario";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
@@ -8,10 +8,9 @@ import Table from "../../../components/tabla/Table";
 import { toast } from "react-toastify";
 import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
-import { FaSearch, FaUndoAlt, FaPen } from "react-icons/fa";
+import { FaUndoAlt, FaPen } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
- 
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -63,15 +62,11 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(detalle);
   const [dataLocal, setDataLocal] = useState(detalle);
-  const [dataGlobal] = useState(store.session.get("global"));
   //Data General
   //GetTablas
   const [dataVendedor, setDataVendedor] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
   //GetTablas
-  //Data Modales Ayuda
-  const [dataCabecera, setDataCabecera] = useState([]);
-  //Data Modales Ayuda
   //Modales de Ayuda
   const [modalInventario, setModalInventario] = useState(false);
   const [modoInventario, setModoInventario] = useState("Nuevo");
@@ -86,8 +81,6 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   const [total, setTotal] = useState(detalle.length);
   const [index, setIndex] = useState(0);
   //Filtro
-
-  const [detalleId, setDetalleId] = useState(1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
@@ -122,7 +115,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarDataFiltro = async ({ target }) => {
+  const HandleFiltro = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -229,10 +222,6 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       );
     }
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data General
   //#endregion
 
@@ -301,32 +290,54 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       }))
     );
     setDataMoneda(result.data.data.monedas);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let vendedores = result.data.data.vendedores.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        responsableId: vendedores.id,
+        monedaId: monedas.id,
+      }));
+    }
   };
-  const TipoCambio = async (id) => {
-  
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "compra",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   //#endregion
 
   //#region Funciones Modal
   const AccionModal = async (value, click = false) => {
-    if (click) {
-      let row = value.target.closest("tr");
-      let detalleId = row.lastChild.innerText;
-      let descripcion = row.children[2].innerText;
-      let inventario = row.children[5].innerText;
-      setDataInventario({
-        detalleId: detalleId,
-        inventario: inventario,
-        descripcion: descripcion,
-      });
-      setModalInventario(true);
-    } else {
-      setDataInventario({
-        detalleId: value.detalleId,
-        inventario: value.inventario,
-        descripcion: value.descripcion,
-      });
-      setModalInventario(true);
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let detalleId = row.lastChild.innerText;
+        let descripcion = row.children[2].innerText;
+        let inventario = row.children[5].innerText;
+        setDataInventario({
+          detalleId: detalleId,
+          inventario: inventario,
+          descripcion: descripcion,
+        });
+        setModalInventario(true);
+      } else {
+        setDataInventario({
+          detalleId: value.detalleId,
+          inventario: value.inventario,
+          descripcion: value.descripcion,
+        });
+        setModalInventario(true);
+      }
     }
   };
   // const ModalKey = async (e) => {
@@ -600,15 +611,13 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}
-            <div
-              className={
-                G.ContenedorBasico + " mb-4 " + G.FondoContenedor
-              }
-            >
+            <div className={G.ContenedorBasico + " mb-4 " + G.FondoContenedor}>
               <div className={G.ContenedorInputs}>
                 {data.id != undefined ? (
                   <div className={G.InputMitad}>
@@ -630,9 +639,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                   <></>
                 )}
                 <div
-                  className={
-                    data.id != undefined ? G.InputMitad : G.InputFull
-                  }
+                  className={data.id != undefined ? G.InputMitad : G.InputFull}
                 >
                   <label htmlFor="numero" className={G.LabelStyle}>
                     Cuadre de Stock N°
@@ -704,16 +711,12 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     value={data.tipoCambio ?? ""}
                     onChange={HandleData}
                     className={
-                      modo != "Consultar"
-                        ? G.InputBoton
-                        : G.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      G.BotonBuscar + G.Anidado + G.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onClick={() => {
                       TipoCambio(data.fechaEmision);
@@ -726,13 +729,13 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
               <div className={G.ContenedorInputs}>
                 <div className={G.InputFull}>
-                  <label htmlFor="personalId" className={G.LabelStyle}>
+                  <label htmlFor="responsableId" className={G.LabelStyle}>
                     Responsable
                   </label>
                   <select
-                    id="personalId"
-                    name="personalId"
-                    value={data.personalId ?? ""}
+                    id="responsableId"
+                    name="responsableId"
+                    value={data.responsableId ?? ""}
                     onChange={HandleData}
                     disabled={modo == "Consultar"}
                     className={G.InputStyle}
@@ -788,9 +791,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             {/* Detalles */}
             <div
               className={
-                G.ContenedorBasico +
-                G.FondoContenedor +
-                " mb-2 overflow-x-auto"
+                G.ContenedorBasico + G.FondoContenedor + " mb-2 overflow-x-auto"
               }
             >
               <div className={G.ContenedorInputs}>
@@ -806,7 +807,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     autoComplete="off"
                     autoFocus={modo == "Modificar"}
                     value={filtro.marca}
-                    onChange={ValidarDataFiltro}
+                    onChange={HandleFiltro}
                     className={G.InputStyle}
                   />
                 </div>
@@ -821,7 +822,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     placeholder="Descripción"
                     autoComplete="off"
                     value={filtro.descripcion}
-                    onChange={ValidarDataFiltro}
+                    onChange={HandleFiltro}
                     className={G.InputStyle}
                   />
                 </div>
@@ -836,7 +837,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         value={""}
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === ""}
                       ></RadioButton>
@@ -856,7 +857,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         value={"01"}
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "01"}
                       ></RadioButton>
@@ -876,7 +877,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         value="02"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "02"}
                       ></RadioButton>
@@ -896,7 +897,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         value="03"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "03"}
                       ></RadioButton>
@@ -916,7 +917,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         value="04"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "04"}
                       ></RadioButton>
@@ -936,7 +937,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                         value="99"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "99"}
                       ></RadioButton>
@@ -984,9 +985,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                   <p className={G.FilaContenido}>Total Sobra</p>
                 </div>
                 <div className={G.FilaFooter + G.FilaImporte}>
-                  <p className={G.FilaContenido}>
-                    {data.totalSobra ?? "0.00"}
-                  </p>
+                  <p className={G.FilaContenido}>{data.totalSobra ?? "0.00"}</p>
                 </div>
                 <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>
@@ -996,9 +995,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                   <p className={G.FilaContenido}>Total Falta</p>
                 </div>
                 <div className={G.FilaFooter + G.FilaImporte}>
-                  <p className={G.FilaContenido}>
-                    {data.totalFalta ?? "0.00"}
-                  </p>
+                  <p className={G.FilaContenido}>{data.totalFalta ?? "0.00"}</p>
                 </div>
                 <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>
@@ -1008,9 +1005,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                   <p className={G.FilaContenido}>Saldo Total</p>
                 </div>
                 <div className={G.FilaFooter + G.FilaImporte}>
-                  <p className={G.FilaContenido}>
-                    {data.saldoTotal ?? "0.00"}
-                  </p>
+                  <p className={G.FilaContenido}>{data.saldoTotal ?? "0.00"}</p>
                 </div>
                 <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>

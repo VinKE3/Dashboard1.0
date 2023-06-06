@@ -7,7 +7,7 @@ import Ubigeo from "../../../components/filtro/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setDataModal] = useState([]);
+  const [dataEmpresaTrans, setDataEmpresaTrans] = useState([]);
   const [dataUbigeo, setDataUbigeo] = useState([]);
   //#endregion
 
@@ -48,18 +48,28 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/EmpresaTransporte/Listar`
     );
-    let model = result.data.data.data.map((resultado) => ({
-      id: resultado.empresaTransporteId,
-      descripcion: resultado.nombre,
+    let model = result.data.data.data.map((map) => ({
+      id: map.empresaTransporteId,
+      descripcion: map.nombre,
     }));
-    setDataModal(model);
+    setDataEmpresaTrans(model);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let empresasTransporte = model.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        empresaTransporteId: empresasTransporte.id,
+      }));
+    }
   };
   //#endregion
 
   //#region  Render
   return (
     <>
-      {Object.entries(dataModal).length > 0 && (
+      {Object.entries(dataEmpresaTrans).length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -71,62 +81,63 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={G.ContenedorBasico}>
             <div className={G.ContenedorInputs}>
-              <div className={G.Input60pct}>
-                <label htmlFor="id" className={G.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  placeholder="id"
-                  autoComplete="off"
-                  autoFocus={modo == "Consultar"}
-                  disabled={true}
-                  value={data.id ?? ""}
-                  onChange={HandleData}
-                  className={G.InputStyle}
-                />
-              </div>
-              <div className={G.Input33pct}>
-                <div className={G.LabelStyle}>
-                  <Checkbox
-                    inputId="isActivo"
-                    name="isActivo"
-                    disabled={modo == "Consultar" }
-                    value={data.isActivo ?? ""}
-                    onChange={(e) => {
-                      HandleData(e);
-                    }}
-                    checked={data.isActivo ? true : ""}
-                  ></Checkbox>
+              {modo != "Nuevo" && (
+                <div className={G.Input60pct}>
+                  <label htmlFor="id" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    placeholder="Código"
+                    autoComplete="off"
+                    autoFocus={modo == "Consultar"}
+                    disabled={true}
+                    value={data.id ?? ""}
+                    onChange={HandleData}
+                    className={G.InputStyle}
+                  />
                 </div>
-                <label htmlFor="isActivo" className={G.InputStyle}>
-                  Activo
-                </label>
-              </div>
+              )}
               <div className={G.InputFull}>
-                <label
-                  htmlFor="empresaTransporteId"
-                  className={G.LabelStyle}
-                >
-                  Emp. Transporte
-                </label>
-                <select
-                  id="empresaTransporteId"
-                  name="empresaTransporteId"
-                  autoFocus
-                  value={data.empresaTransporteId ?? ""} 
-                  onChange={HandleData}
-                  disabled={modo != "Consultar" ? false : true}
-                  className={G.InputStyle}
-                >
-                  {dataModal.map((map) => (
-                    <option key={map.id} value={map.id}>
-                      {map.descripcion}
-                    </option>
-                  ))}
-                </select>
+                <div className={G.InputFull}>
+                  <label htmlFor="empresaTransporteId" className={G.LabelStyle}>
+                    Emp. Transporte
+                  </label>
+                  <select
+                    id="empresaTransporteId"
+                    name="empresaTransporteId"
+                    autoFocus
+                    value={data.empresaTransporteId ?? ""}
+                    onChange={HandleData}
+                    disabled={modo != "Consultar" ? false : true}
+                    className={G.InputBoton}
+                  >
+                    {dataEmpresaTrans.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={G.Input33pct}>
+                  <div className={G.CheckStyle + G.Anidado}>
+                    <Checkbox
+                      inputId="isActivo"
+                      name="isActivo"
+                      disabled={modo == "Consultar"}
+                      value={data.isActivo ?? ""}
+                      onChange={(e) => {
+                        HandleData(e);
+                      }}
+                      checked={data.isActivo ? true : ""}
+                    ></Checkbox>
+                  </div>
+                  <label htmlFor="isActivo" className={G.LabelCheckStyle}>
+                    Activo
+                  </label>
+                </div>
               </div>
             </div>
             <div className="flex">
@@ -139,7 +150,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Nombre Conductor"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -159,7 +170,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="numeroDocumentoIdentidad"
                   placeholder="D.N.I"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -175,7 +186,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="licenciaConducir"
                   placeholder="Licencia de Conducir"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.licenciaConducir ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -193,7 +204,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="telefono"
                   placeholder="Telefono"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.telefono ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -209,7 +220,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="celular"
                   placeholder="Celular"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.celular ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -226,7 +237,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="correoElectronico"
                 placeholder="Email"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.correoElectronico ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -240,9 +251,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="text"
                 id="direccion"
                 name="direccion"
-                placeholder="Direccion"
+                placeholder="Dirección"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.direccion ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -268,7 +279,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.observacion ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}

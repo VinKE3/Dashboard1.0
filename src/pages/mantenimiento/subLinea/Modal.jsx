@@ -6,7 +6,7 @@ import * as G from "../../../components/Global";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setDataModal] = useState([]);
+  const [dataLinea, setDataLinea] = useState([]);
   //#endregion
 
   //#region useEffect.
@@ -26,15 +26,27 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region API
   const GetTablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Linea/Listar`);
-    setDataModal(result.data.data.data);
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/SubLinea/FormularioTablas`
+    );
+    setDataLinea(result.data.data.lineas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let lineas = result.data.data.lineas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        lineaId: lineas.id,
+      }));
+    }
   };
   //#endregion
 
   //#region Render
   return (
     <>
-      {Object.entries(dataModal).length > 0 && (
+      {Object.entries(dataLinea).length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -76,7 +88,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Nuevo" ? false : true}
                   className={G.InputStyle}
                 >
-                  {dataModal.map((linea) => (
+                  {dataLinea.map((linea) => (
                     <option key={linea.id} value={linea.id}>
                       {linea.descripcion}
                     </option>

@@ -6,7 +6,7 @@ import * as G from "../../../components/Global";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setdataModal] = useState([]);
+  const [dataEntidadBancaria, setDataEntidadBancaria] = useState([]);
   //#endregion
 
   //#region useEffect
@@ -29,13 +29,23 @@ const Modal = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/EntidadBancaria/FormularioTablas`
     );
-    setdataModal(result.data.data.tiposEntidadesBancarias);
+    setDataEntidadBancaria(result.data.data.tiposEntidadesBancarias);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposEntidadesBancarias =
+        result.data.data.tiposEntidadesBancarias.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipo: tiposEntidadesBancarias.id,
+      }));
+    }
   };
   //#endregion
 
   return (
     <>
-      {dataModal.length > 0 && (
+      {dataEntidadBancaria.length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -47,23 +57,25 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={G.ContenedorBasico}>
             <div className={G.ContenedorInputs}>
-              <div className={G.Input40pct}>
-                <label htmlFor="id" className={G.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  placeholder="Código"
-                  autoComplete="off"
-                  value={data.id ?? ""}
-                  onChange={HandleData}
-                  disabled={true}
-                  className={G.InputStyle}
-                />
-              </div>
-              <div className={G.InputFull}>
+              {modo != "Nuevo" && (
+                <div className={G.Input72}>
+                  <label htmlFor="id" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    placeholder="Código"
+                    autoComplete="off"
+                    value={data.id ?? ""}
+                    onChange={HandleData}
+                    disabled={true}
+                    className={G.InputStyle}
+                  />
+                </div>
+              )}
+              <div className={G.InputMitad}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
                   className={G.LabelStyle}
@@ -74,7 +86,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="numeroDocumentoIdentidad"
                   name="numeroDocumentoIdentidad"
-                  placeholder="00000000000"
+                  placeholder="Documento Identidad"
                   autoComplete="off"
                   maxLength="11"
                   autoFocus
@@ -96,7 +108,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 >
-                  {dataModal.map((tipo) => (
+                  {dataEntidadBancaria.map((tipo) => (
                     <option key={tipo.id} value={tipo.id}>
                       {tipo.descripcion}
                     </option>

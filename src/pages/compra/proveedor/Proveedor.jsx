@@ -153,8 +153,8 @@ const Proveedor = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          id: "000000",
-          tipoDocumentoIdentidadId: "1",
+          id: "",
+          tipoDocumentoIdentidadId: "",
           numeroDocumentoIdentidad: "",
           nombre: "",
           telefono: "",

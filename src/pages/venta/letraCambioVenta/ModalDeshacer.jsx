@@ -91,6 +91,19 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
   };
   const ConsultarDocumento = async () => {
     const result = await ApiMasy.get(`api/Venta/ProcesoLetra/Listar?${cadena}`);
+    if (result.data.data.total == 0) {
+      document.getElementById("serie").focus();
+      toast.warning("No se encontraron registros", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
     setDataDetalle(
       result.data.data.data.map((map, i = 0) => {
         return {
@@ -114,10 +127,6 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
         };
       })
     );
-  };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
   };
   const RetornarMensaje = async () => {
     if (tipoMensaje == 0) {
@@ -298,7 +307,9 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera Documento */}

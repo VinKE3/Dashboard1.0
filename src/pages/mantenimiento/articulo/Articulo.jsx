@@ -177,17 +177,17 @@ const Articulo = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          lineaId: "00",
+          lineaId: "",
           subLineaId: "",
           articuloId: "",
-          tipoExistenciaId: "01",
-          unidadMedidaId: "1",
-          marcaId: "36",
+          tipoExistenciaId: "",
+          unidadMedidaId: "",
+          marcaId: "",
           descripcion: "",
           observacion: "",
           codigoBarras: "",
           peso: 0,
-          monedaId: "S",
+          monedaId: "",
           precioCompra: 0,
           precioCompraDescuento: 0,
           precioVenta1: 0,

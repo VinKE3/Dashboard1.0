@@ -54,6 +54,20 @@ const Modal = ({ setModal, objeto, modo }) => {
         provincias: res.provincias,
       }))
     );
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let departamentos = result.data.data.departamentos.find((map) => map);
+      let provincias = departamentos.provincias.map((res) => ({
+        id: res.id,
+        nombre: res.nombre,
+      }));
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        departamentoId: departamentos.id,
+        provinciaId: provincias[0].id,
+      }));
+    }
   };
   const ConsultarProvincia = async () => {
     if (dataDepartamento.length > 0) {

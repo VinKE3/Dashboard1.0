@@ -191,7 +191,7 @@ const PlanillaCobro = () => {
           );
           //Consulta Correlativo
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "PL",
             serie: "0001",
             numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
@@ -203,8 +203,8 @@ const PlanillaCobro = () => {
             clienteDireccion: "",
             personalId: "",
             tipoCambio: 0,
-            monedaId: "S",
-            tipoCobroId: "CP",
+            monedaId: "",
+            tipoCobroId: "",
             nombreBanco: "",
             documentosReferencia: "",
             observacion: "",

@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
+import React, { useState } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { toast } from "react-toastify";
 import moment from "moment";
-import { FaPlus, FaUndoAlt, FaTrashAlt, FaEye } from "react-icons/fa";
 import styled from "styled-components";
-import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
 import "primeicons/primeicons.css";
- 
+
 import * as G from "../../../components/Global";
-import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const DivTabla = styled.div`

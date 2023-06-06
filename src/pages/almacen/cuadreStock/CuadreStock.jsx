@@ -208,15 +208,15 @@ const CuadreStock = () => {
           );
           //Consulta Correlativo
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "01",
             serie: "0001",
             numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
             fechaRegistro: moment().format("YYYY-MM-DD"),
             horaRegistro: "",
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
-            responsableId: "<<NI>>01",
+            responsableId: "",
             observacion: "",
             totalSobra: 0,
             totalFalta: 0,

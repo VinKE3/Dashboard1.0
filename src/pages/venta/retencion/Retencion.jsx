@@ -201,7 +201,7 @@ const Retencion = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "RE",
             serie: "",
             numero: "",
@@ -210,9 +210,9 @@ const Retencion = () => {
             clienteNumeroDocumentoIdentidad: "",
             clienteNombre: "",
             clienteDireccion: "",
-            tipoVentaId: "CO",
-            tipoCobroId: "DE",
-            monedaId: "S",
+            tipoVentaId: "",
+            tipoCobroId: "",
+            monedaId: "",
             tipoCambio: 0,
             observacion: "",
             total: 0,

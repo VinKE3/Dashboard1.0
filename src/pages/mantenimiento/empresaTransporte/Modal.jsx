@@ -45,22 +45,24 @@ const Modal = ({ setModal, modo, objeto }) => {
         >
           <div className={G.ContenedorBasico}>
             <div className={G.ContenedorInputs}>
-              <div className={G.Input72}>
-                <label htmlFor="id" className={G.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  placeholder="id"
-                  autoComplete="off"
-                  value={data.id ?? ""}
-                  onChange={HandleData}
-                  disabled={true}
-                  className={G.InputStyle}
-                />
-              </div>
+              {modo != "Nuevo" && (
+                <div className={G.Input72}>
+                  <label htmlFor="id" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    placeholder="Código"
+                    autoComplete="off"
+                    value={data.id ?? ""}
+                    onChange={HandleData}
+                    disabled={true}
+                    className={G.InputStyle}
+                  />
+                </div>
+              )}
               <div className={G.InputFull}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
@@ -78,7 +80,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.numeroDocumentoIdentidad ?? ""}
                   onChange={HandleData}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   className={G.InputStyle}
                 />
               </div>
@@ -93,7 +95,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Razón Social"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -111,7 +113,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Telefono"
                   autoComplete="off"
                   maxLength={20}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.telefono ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -127,7 +129,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="celular"
                   placeholder="Celular"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.celular ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -144,7 +146,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="correoElectronico"
                 placeholder="Email"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.correoElectronico ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -160,7 +162,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="direccion"
                 placeholder="Direccion"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.direccion ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -187,7 +189,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.observacion ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}

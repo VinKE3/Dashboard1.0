@@ -144,9 +144,9 @@ const Conductor = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          id: "00",
-          empresaId: "01",
-          empresaTransporteId: "0001  ",
+          id: "",
+          empresaId: "",
+          empresaTransporteId: "",
           nombre: "",
           numeroDocumentoIdentidad: "",
           licenciaConducir: "",

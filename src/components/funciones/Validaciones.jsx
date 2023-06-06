@@ -149,7 +149,6 @@ export const ConvertirPreciosAMoneda = async (
   return model;
 };
 
-
 export const Seleccionar = (e) => {
   let row = e.target.closest("tr");
   if (row != null) {
@@ -204,4 +203,9 @@ export const CerrarModal = async (e) => {
   if (e.key == "Escape") {
     return false;
   }
+};
+
+export const OcultarMensajes = async (setTipoMensaje, setMensaje) => {
+  setMensaje([]);
+  setTipoMensaje(-1);
 };

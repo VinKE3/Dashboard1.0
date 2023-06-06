@@ -84,11 +84,6 @@ const PagosPendientes = ({ setModal }) => {
     }
   };
 
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
-
   const Monedas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
@@ -111,7 +106,7 @@ const PagosPendientes = ({ setModal }) => {
           <Mensajes
             tipoMensaje={tipoMensaje}
             mensaje={mensaje}
-            Click={() => OcultarMensajes()}
+            Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
           />
         )}
         <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
