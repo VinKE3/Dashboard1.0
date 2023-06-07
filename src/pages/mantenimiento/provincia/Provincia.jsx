@@ -10,11 +10,11 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:last-child {
     text-align: center;
     width: 100px;
@@ -39,7 +39,7 @@ const Provincia = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -47,7 +47,9 @@ const Provincia = () => {
     setCadena(`&nombre=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -58,10 +60,11 @@ const Provincia = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -104,7 +107,7 @@ const Provincia = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -141,7 +144,7 @@ const Provincia = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          departamentoId: "01",
+          departamentoId: "",
           provinciaId: "",
           nombre: "",
         });
@@ -170,7 +173,7 @@ const Provincia = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Provincia"], id, setEliminar);
+        Delete(["Mantenimiento", "Provincia"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -204,7 +207,7 @@ const Provincia = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "Provincia"]}
             id={row.values.Id}
@@ -223,8 +226,8 @@ const Provincia = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Provincia</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Provincias</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -233,7 +236,7 @@ const Provincia = () => {
               name={"nombre"}
               maxLength={"200"}
               value={filtro.nombre}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />
@@ -243,7 +246,7 @@ const Provincia = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -252,7 +255,7 @@ const Provincia = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaProvincia"}
                 columnas={columnas}
@@ -263,7 +266,7 @@ const Provincia = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

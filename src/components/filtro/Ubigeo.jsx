@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../api/ApiMasy";
-import * as Global from "../Global";
+import * as G from "../Global";
 const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#region useState
   const [ubigeo, setUbigeo] = useState(dato);
@@ -29,12 +29,12 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
     ConsultarProvincia();
   }, [ubigeo]);
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == id[0]) {
       await ConsultarProvincia();
       document.getElementById(id[1]).selectedIndex = 0;
@@ -75,7 +75,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Cliente/FormularioTablas`
     );
@@ -112,17 +112,17 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region Render
   return (
-    <div className={Global.ContenedorInputs}>
-      <div className={Global.InputTercio}>
-        <label htmlFor={id[0]} className={Global.LabelStyle}>
+    <div className={G.ContenedorInputs}>
+      <div className={G.InputTercio}>
+        <label htmlFor={id[0]} className={G.LabelStyle}>
           Dep.
         </label>
         <select
           id={id[0]}
           name={id[0]}
-          onChange={ValidarData}
+          onChange={HandleData}
           disabled={modo == "Consultar"}
-          className={Global.InputStyle}
+          className={G.InputStyle}
         >
           {dataDep.map((departamento) => (
             <option key={departamento.id} value={departamento.id}>
@@ -131,16 +131,16 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           ))}
         </select>
       </div>
-      <div className={Global.InputTercio}>
-        <label htmlFor={id[1]} className={Global.LabelStyle}>
+      <div className={G.InputTercio}>
+        <label htmlFor={id[1]} className={G.LabelStyle}>
           Prov.
         </label>
         <select
           id={id[1]}
           name={id[1]}
-          onChange={ValidarData}
+          onChange={HandleData}
           disabled={modo == "Consultar"}
-          className={Global.InputStyle}
+          className={G.InputStyle}
         >
           {dataProv.map((provincia) => (
             <option key={provincia.id} value={provincia.id}>
@@ -149,16 +149,16 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
           ))}
         </select>
       </div>
-      <div className={Global.InputTercio}>
-        <label htmlFor={id[2]} className={Global.LabelStyle}>
+      <div className={G.InputTercio}>
+        <label htmlFor={id[2]} className={G.LabelStyle}>
           Dist.
         </label>
         <select
           id={id[2]}
           name={id[2]}
-          onChange={ValidarData}
+          onChange={HandleData}
           disabled={modo == "Consultar"}
-          className={Global.InputStyle}
+          className={G.InputStyle}
         >
           {Object.entries(dataDist).length > 0 &&
             dataDist.map((distrito) => (

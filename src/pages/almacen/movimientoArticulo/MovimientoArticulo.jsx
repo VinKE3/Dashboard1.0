@@ -11,11 +11,10 @@ import { FaUndoAlt } from "react-icons/fa";
 import moment from "moment";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -54,8 +53,12 @@ const MovimientoArticulo = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     tipoExistenciaId: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     conStock: false,
   });
   const [filtroLocal, setFiltroLocal] = useState({
@@ -68,7 +71,7 @@ const MovimientoArticulo = () => {
   //Modal
   const [modal, setModal] = useState(false);
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -94,7 +97,7 @@ const MovimientoArticulo = () => {
       ) {
         setVisible(false);
       } else {
-        TipoDeDocumentos();
+        GetTablas();
         setVisible(true);
         Listar(cadena, 1);
       }
@@ -126,7 +129,7 @@ const MovimientoArticulo = () => {
     );
     setObjeto(result.data.data);
   };
-  const TipoDeDocumentos = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );
@@ -201,8 +204,12 @@ const MovimientoArticulo = () => {
   const FiltroBoton = async () => {
     setFiltro({
       tipoExistenciaId: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       conStock: false,
     });
     setIndex(0);
@@ -388,7 +395,7 @@ const MovimientoArticulo = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickModificar={() => {}}
             ClickConsultar={() => AccionModal(row.values.Id, "Consultar", 3)}
@@ -406,18 +413,16 @@ const MovimientoArticulo = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Movimiento de Artículos</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Movimiento de Artículos</h2>
 
             {/* Filtro*/}
             <div
-              className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="tipoExistenciaId" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="tipoExistenciaId" className={G.LabelStyle}>
                     Tipo de Existencia
                   </label>
                   <select
@@ -426,7 +431,7 @@ const MovimientoArticulo = () => {
                     autoFocus
                     value={filtro.tipoExistenciaId ?? ""}
                     onChange={ValidarFiltro}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     <option key={-1} value={""}>
                       {"--TODOS--"}
@@ -439,8 +444,8 @@ const MovimientoArticulo = () => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -449,11 +454,11 @@ const MovimientoArticulo = () => {
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
                     onChange={ValidarFiltro}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -462,13 +467,11 @@ const MovimientoArticulo = () => {
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
                     onChange={ValidarFiltro}
-                    className={Global.InputBoton}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={Filtro}
                   >
                     <FaUndoAlt />
@@ -476,10 +479,10 @@ const MovimientoArticulo = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico}>
-                <div className={Global.ContenedorFiltro + " !my-0"}>
-                  <div className={Global.InputFull}>
-                    <label name="descripcion" className={Global.LabelStyle}>
+              <div className={G.ContenedorBasico}>
+                <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                  <div className={G.InputFull}>
+                    <label name="descripcion" className={G.LabelStyle}>
                       Descripción
                     </label>
                     <input
@@ -489,11 +492,11 @@ const MovimientoArticulo = () => {
                       placeholder="Descripción"
                       value={filtroLocal.descripcion ?? ""}
                       onChange={ValidarFiltroLocal}
-                      className={Global.InputBoton}
+                      className={G.InputBoton}
                     />
-                    <div className={Global.ContenedorFiltro + " !my-0"}>
-                      <div className={Global.Input + "w-32"}>
-                        <div className={Global.CheckStyle + " rounded-l-none"}>
+                    <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                      <div className={G.Input + "w-32"}>
+                        <div className={G.CheckStyle + " rounded-l-none"}>
                           <Checkbox
                             inputId="conStock"
                             name="conStock"
@@ -503,10 +506,7 @@ const MovimientoArticulo = () => {
                             checked={filtroLocal.conStock ? true : ""}
                           ></Checkbox>
                         </div>
-                        <label
-                          htmlFor="conStock"
-                          className={Global.LabelCheckStyle}
-                        >
+                        <label htmlFor="conStock" className={G.LabelCheckStyle}>
                           Con Stock
                         </label>
                       </div>
@@ -518,7 +518,7 @@ const MovimientoArticulo = () => {
             {/* Filtro*/}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaMovimientoArticulo"}
                 columnas={columnas}
@@ -529,7 +529,7 @@ const MovimientoArticulo = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Consultar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && (

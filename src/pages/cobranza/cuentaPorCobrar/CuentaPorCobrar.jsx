@@ -3,6 +3,7 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -14,11 +15,11 @@ import moment from "moment";
 import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -66,8 +67,12 @@ const CuentaPorCobrar = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     isCancelado: "",
   });
   const [cadena, setCadena] = useState(
@@ -75,9 +80,10 @@ const CuentaPorCobrar = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo] = useState("Consultar");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
 
   //#endregion
 
@@ -88,7 +94,9 @@ const CuentaPorCobrar = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -99,10 +107,11 @@ const CuentaPorCobrar = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -126,7 +135,7 @@ const CuentaPorCobrar = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -143,8 +152,12 @@ const CuentaPorCobrar = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       isCancelado: "",
     });
     setIndex(0);
@@ -190,7 +203,11 @@ const CuentaPorCobrar = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Finanza", "CuentaPorCobrar"], id);
+            let model = await Imprimir(["Finanzas", "CuentaPorCobrar"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -217,7 +234,7 @@ const CuentaPorCobrar = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        AccionModal(id, "Consultar", 3);
+        AccionModal(id, 3);
       }
     }
     if (e.key === "p") {
@@ -226,7 +243,7 @@ const CuentaPorCobrar = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        AccionModal(id, "Imprimir", 5);
+        AccionModal(id, 5);
       }
     }
   };
@@ -308,12 +325,12 @@ const CuentaPorCobrar = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Finanzas", "CuentaPorCobrar"]}
             id={row.values.id}
-            ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
-            ClickModificar={() => AccionModal(row.values.id, "Consultar", 3)}
+            ClickConsultar={() => AccionModal(row.values.id, 3)}
+            ClickModificar={() => AccionModal(row.values.id, 3)}
           />
         ),
       },
@@ -327,18 +344,16 @@ const CuentaPorCobrar = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Cuentas por Cobrar</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Cuentas por Cobrar</h2>
 
             {/* Filtro*/}
             <div
-              className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="clienteNombre" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="clienteNombre" className={G.LabelStyle}>
                     Cliente
                   </label>
                   <input
@@ -348,12 +363,12 @@ const CuentaPorCobrar = () => {
                     placeholder="Cliente"
                     autoComplete="off"
                     value={filtro.clienteNombre ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -361,12 +376,12 @@ const CuentaPorCobrar = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -374,14 +389,12 @@ const CuentaPorCobrar = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputBoton}
+                    onChange={HandleData}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -389,55 +402,55 @@ const CuentaPorCobrar = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputMitad}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="todos"
                         name="isCancelado"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === ""}
                       />
                     </div>
                     <label
                       htmlFor="todos"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                      className={G.LabelCheckStyle + " rounded-r-none "}
                     >
                       Todos
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="soloDeuda"
                         name="isCancelado"
                         value={false}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === false}
                       />
                     </div>
                     <label
                       htmlFor="soloDeuda"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                      className={G.LabelCheckStyle + " rounded-r-none"}
                     >
                       Deudas
                     </label>
                   </div>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="soloCancelado"
                         name="isCancelado"
                         value={true}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === true}
                       />
                     </div>
                     <label
                       htmlFor="soloCancelado"
-                      className={Global.LabelCheckStyle + "font-semibold"}
+                      className={G.LabelCheckStyle + "font-semibold"}
                     >
                       Cancelados
                     </label>
@@ -448,19 +461,19 @@ const CuentaPorCobrar = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={G.ContenedorBotones}>
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
-                click={() => AccionModal(null, "Imprimir", 5)}
+                click={() => AccionModal(null, 5)}
                 contenedor=""
               />
             </div>
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCuentaPorCobrar"}
                 columnas={columnas}
@@ -471,10 +484,17 @@ const CuentaPorCobrar = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaCuentaPorCobrar")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

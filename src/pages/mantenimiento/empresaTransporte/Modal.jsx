@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import Ubigeo from "../../../components/filtro/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -22,7 +22,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -41,30 +41,32 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "EmpresaTransporte"]}
           titulo="Empresa Transporte"
           foco={document.getElementById("tablaEmpresaTransporte")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input72}>
-                <label htmlFor="id" className={Global.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  placeholder="id"
-                  autoComplete="off"
-                  value={data.id ?? ""}
-                  onChange={ValidarData}
-                  disabled={true}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              {modo != "Nuevo" && (
+                <div className={G.Input72}>
+                  <label htmlFor="id" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    placeholder="Código"
+                    autoComplete="off"
+                    value={data.id ?? ""}
+                    onChange={HandleData}
+                    disabled={true}
+                    className={G.InputStyle}
+                  />
+                </div>
+              )}
+              <div className={G.InputFull}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   RUC N°
                 </label>
@@ -77,14 +79,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   maxLength={11}
                   autoFocus
                   value={data.numeroDocumentoIdentidad ?? ""}
-                  onChange={ValidarData}
-                  disabled={modo == "Consultar" }
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  disabled={modo == "Consultar"}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
+              <label htmlFor="nombre" className={G.LabelStyle}>
                 Razón Social
               </label>
               <input
@@ -93,15 +95,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Razón Social"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
-                <label htmlFor="telefono" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputMitad}>
+                <label htmlFor="telefono" className={G.LabelStyle}>
                   Telefono
                 </label>
                 <input
@@ -111,14 +113,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Telefono"
                   autoComplete="off"
                   maxLength={20}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.telefono ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="celular" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="celular" className={G.LabelStyle}>
                   Celular
                 </label>
                 <input
@@ -127,15 +129,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="celular"
                   placeholder="Celular"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.celular ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="correoElectronico" className={Global.LabelStyle}>
+              <label htmlFor="correoElectronico" className={G.LabelStyle}>
                 Email
               </label>
               <input
@@ -144,14 +146,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="correoElectronico"
                 placeholder="Email"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.correoElectronico ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
             <div className="flex">
-              <label htmlFor="direccion" className={Global.LabelStyle}>
+              <label htmlFor="direccion" className={G.LabelStyle}>
                 Dirección
               </label>
               <input
@@ -160,10 +162,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="direccion"
                 placeholder="Direccion"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.direccion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
             <Ubigeo
@@ -178,7 +180,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ></Ubigeo>
 
             <div className="flex">
-              <label htmlFor="observacion" className={Global.LabelStyle}>
+              <label htmlFor="observacion" className={G.LabelStyle}>
                 Observación
               </label>
               <input
@@ -187,10 +189,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.observacion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
           </div>

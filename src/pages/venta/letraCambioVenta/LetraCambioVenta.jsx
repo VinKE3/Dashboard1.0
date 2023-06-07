@@ -2,9 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
-import Anular from "../../../components/funciones/Anular";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -22,10 +24,10 @@ import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -77,8 +79,12 @@ const LetraCambioVenta = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     isCancelado: "",
   });
   const [cadena, setCadena] = useState(
@@ -86,13 +92,14 @@ const LetraCambioVenta = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modalCabecera, setModalCabecera] = useState(false);
   const [modalRefinanciacion, setModalRefinanciacion] = useState(false);
   const [modalRenovacion, setModalRenovacion] = useState(false);
   const [modalDeshacer, setModalDeshacer] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -102,21 +109,51 @@ const LetraCambioVenta = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar(cadena, index + 1);
+        setListar(true);
       }
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (visible) {
+      if (!modalCabecera) {
+        setListar(true);
+      }
+    }
+  }, [modalCabecera]);
+  useEffect(() => {
+    if (visible) {
+      if (!modalRefinanciacion) {
+        setListar(true);
+      }
+    }
+  }, [modalRefinanciacion]);
+  useEffect(() => {
+    if (visible) {
+      if (!modalRenovacion) {
+        setListar(true);
+      }
+    }
+  }, [modalRenovacion]);
+  useEffect(() => {
+    if (visible) {
+      if (!modalDeshacer) {
+        setListar(true);
+      }
+    }
+  }, [modalDeshacer]);
+  useEffect(() => {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -140,7 +177,7 @@ const LetraCambioVenta = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -157,8 +194,12 @@ const LetraCambioVenta = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       isCancelado: "",
     });
     setIndex(0);
@@ -181,26 +222,6 @@ const LetraCambioVenta = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Venta/LetraCambioVenta/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/LetraCambioVenta/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   //#endregion
 
@@ -230,7 +251,11 @@ const LetraCambioVenta = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Venta/LetraCambioVenta",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModalCabecera(true);
@@ -238,9 +263,13 @@ const LetraCambioVenta = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Venta/LetraCambioVenta",
+            accion,
+            value
+          );
           if (valor) {
-            Delete(["Venta", "LetraCambioVenta"], value, setEliminar);
+            Delete(["Venta", "LetraCambioVenta"], value, setListar);
           }
           break;
         }
@@ -255,7 +284,7 @@ const LetraCambioVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let documento = row.children[2].innerHTML;
+            let documento = row.children[3].innerHTML;
             Swal.fire({
               title: "¿Desea Anular el documento?",
               text: documento,
@@ -270,9 +299,13 @@ const LetraCambioVenta = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, id);
+                let valor = await GetIsPermitido(
+                  "Venta/LetraCambioVenta",
+                  accion,
+                  id
+                );
                 if (valor) {
-                  await Anular(["Venta", "LetraCambioVenta"], id, setEliminar);
+                  await Put(`Venta/LetraCambioVenta/Anular/${id}`, setListar);
                 }
               }
             });
@@ -296,7 +329,11 @@ const LetraCambioVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Venta", "LetraCambioVenta"], id);
+            let model = await Imprimir(["Venta", "LetraCambioVenta"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -313,7 +350,7 @@ const LetraCambioVenta = () => {
         }
         case 6: {
           setObjeto({
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
             documentosReferencia: [],
             detalles: [],
@@ -539,7 +576,7 @@ const LetraCambioVenta = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -557,17 +594,15 @@ const LetraCambioVenta = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Letra Cambio Venta</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Letra Cambio Venta</h2>
             {/* Filtro*/}
             <div
-              className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="clienteNombre" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="clienteNombre" className={G.LabelStyle}>
                     Cliente
                   </label>
                   <input
@@ -578,12 +613,12 @@ const LetraCambioVenta = () => {
                     autoComplete="off"
                     autoFocus
                     value={filtro.clienteNombre ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -591,12 +626,12 @@ const LetraCambioVenta = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -604,14 +639,12 @@ const LetraCambioVenta = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputBoton}
+                    onChange={HandleData}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -619,55 +652,55 @@ const LetraCambioVenta = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-40"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputMitad}>
+                  <div className={G.Input + "w-40"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="isEnviadoTodos"
                         name="isCancelado"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === ""}
                       />
                     </div>
                     <label
                       htmlFor="isEnviadoTodos"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                      className={G.LabelCheckStyle + " rounded-r-none "}
                     >
                       Todas las Letras
                     </label>
                   </div>
-                  <div className={Global.Input + "w-36"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-36"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="isEnviadoPendiente"
                         name="isCancelado"
                         value={false}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === false}
                       />
                     </div>
                     <label
                       htmlFor="isEnviadoPendiente"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                      className={G.LabelCheckStyle + " rounded-r-none"}
                     >
                       Solo Deudas
                     </label>
                   </div>
-                  <div className={Global.Input + "w-40"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-40"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="isCancelado"
                         name="isCancelado"
                         value={true}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.isCancelado === true}
                       />
                     </div>
                     <label
                       htmlFor="isCancelado"
-                      className={Global.LabelCheckStyle + "font-semibold"}
+                      className={G.LabelCheckStyle + "font-semibold"}
                     >
                       Solo Cancelados
                     </label>
@@ -678,11 +711,11 @@ const LetraCambioVenta = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -690,21 +723,21 @@ const LetraCambioVenta = () => {
               )}
               <BotonBasico
                 botonText="Refinanciamiento"
-                botonClass={Global.BotonNaranja}
+                botonClass={G.BotonNaranja}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 6)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Renovación"
-                botonClass={Global.BotonMorado}
+                botonClass={G.BotonMorado}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 7)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Deshacer Emisión"
-                botonClass={Global.BotonRosa}
+                botonClass={G.BotonRosa}
                 botonIcon={faBan}
                 click={() => AccionModal(null, "Nuevo", 8)}
                 contenedor=""
@@ -713,15 +746,15 @@ const LetraCambioVenta = () => {
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
-                  botonClass={Global.BotonEliminar}
+                  botonClass={G.BotonRojo}
                   botonIcon={faBan}
-                  click={() => Anular()}
+                  click={() => AccionModal(null, "Anular", 4)}
                   contenedor=""
                 />
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""
@@ -730,7 +763,7 @@ const LetraCambioVenta = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaLetraCambioVenta"}
                 columnas={columnas}
@@ -741,7 +774,7 @@ const LetraCambioVenta = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
@@ -771,6 +804,13 @@ const LetraCambioVenta = () => {
               setModal={setModalDeshacer}
               modo={modo}
               foco={document.getElementById("tablaLetraCambioVenta")}
+            />
+          )}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaDocumentoVenta")}
             />
           )}
           <ToastContainer />

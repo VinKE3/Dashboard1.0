@@ -2,8 +2,9 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
-import Anular from "../../../components/funciones/Anular";
 import Imprimir from "../../../components/funciones/Imprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -14,14 +15,13 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import moment from "moment";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 import { FaUndoAlt } from "react-icons/fa";
-import "react-toastify/dist/ReactToastify.css";
 import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -68,8 +68,12 @@ const Retencion = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     clienteNombre: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&clienteNombre=${filtro.clienteNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
@@ -78,7 +82,7 @@ const Retencion = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -91,7 +95,9 @@ const Retencion = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -102,10 +108,11 @@ const Retencion = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -129,7 +136,7 @@ const Retencion = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -146,8 +153,12 @@ const Retencion = () => {
   const FiltroBoton = async () => {
     setFiltro({
       clienteNombre: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("clienteNombre").focus();
@@ -170,26 +181,6 @@ const Retencion = () => {
     const result = await ApiMasy.get(`api/Venta/Retencion/${id}`);
     setObjeto(result.data.data);
   };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Venta/Retencion/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
   //#endregion
 
   //#region Funciones Modal
@@ -210,7 +201,7 @@ const Retencion = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "RE",
             serie: "",
             numero: "",
@@ -219,9 +210,9 @@ const Retencion = () => {
             clienteNumeroDocumentoIdentidad: "",
             clienteNombre: "",
             clienteDireccion: "",
-            tipoVentaId: "CO",
-            tipoCobroId: "DE",
-            monedaId: "S",
+            tipoVentaId: "",
+            tipoCobroId: "",
+            monedaId: "",
             tipoCambio: 0,
             observacion: "",
             total: 0,
@@ -231,7 +222,7 @@ const Retencion = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Venta/Retencion", accion, value);
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -239,9 +230,9 @@ const Retencion = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Venta/Retencion", accion, value);
           if (valor) {
-            await Delete(["Venta", "DocumentoVenta"], value, setEliminar);
+            await Delete(["Venta", "DocumentoVenta"], value, setListar);
           }
           break;
         }
@@ -271,9 +262,9 @@ const Retencion = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, id);
+                let valor = await GetIsPermitido("Venta/Retencion", accion, id);
                 if (valor) {
-                  await Anular(["Venta", "DocumentoVenta"], id, setEliminar);
+                  await Put(`Venta/DocumentVenta/Anular/${id}`, setListar);
                 }
               }
             });
@@ -448,7 +439,7 @@ const Retencion = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -466,13 +457,13 @@ const Retencion = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Retenciones</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Retenciones</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputFull}>
-                <label name="clienteNombre" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.InputFull}>
+                <label name="clienteNombre" className={G.LabelStyle}>
                   Razón Social
                 </label>
                 <input
@@ -483,12 +474,12 @@ const Retencion = () => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.clienteNombre ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="fechaInicio" className={G.LabelStyle}>
                   Desde
                 </label>
                 <input
@@ -496,12 +487,12 @@ const Retencion = () => {
                   id="fechaInicio"
                   name="fechaInicio"
                   value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="fechaFin" className={G.LabelStyle}>
                   Hasta
                 </label>
                 <input
@@ -509,14 +500,12 @@ const Retencion = () => {
                   id="fechaFin"
                   name="fechaFin"
                   value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onChange={HandleData}
+                  className={G.InputBoton}
                 />
                 <button
                   id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -526,11 +515,11 @@ const Retencion = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -540,7 +529,7 @@ const Retencion = () => {
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
-                  botonClass={Global.BotonEliminar}
+                  botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => Anulacion()}
                   contenedor=""
@@ -548,7 +537,7 @@ const Retencion = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""
@@ -557,7 +546,7 @@ const Retencion = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaRetencion"}
                 columnas={columnas}
@@ -568,7 +557,7 @@ const Retencion = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Get from "../../../components/funciones/Get";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import TableBasic from "../../../components/tabla/TableBasic";
@@ -14,11 +15,11 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -29,7 +30,7 @@ const TablaStyle = styled.div`
     width: 90px;
   }
   & th:last-child {
-    width: 130px;
+    width: 100px;
     text-align: center;
   }
 `;
@@ -41,7 +42,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [tipoMen, setTipoMen] = useState(-1);
   const [men, setMen] = useState([]);
-  const [respuesta, setEliminar] = useState(false);
+  const [respuesta, setListar] = useState(false);
 
   const [dataCcorriente, setDataCcorriente] = useState([]);
   const [dataCcorrienteMoneda, setDataCcorrienteMoneda] = useState([]);
@@ -59,7 +60,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     if (tipoMen == 0) {
-      setEliminar(true);
+      setListar(true);
     }
   }, [tipoMen]);
   useEffect(() => {
@@ -78,7 +79,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataUbigeo]);
   useEffect(() => {
-    Tablas();
+    GetTablas();
     if (modo != "Nuevo") {
       ListarCcorriente();
       ListarContacto();
@@ -89,7 +90,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
       setData((prevState) => ({
         ...prevState,
@@ -124,7 +125,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     } else {
       tipo = "";
     }
-    GetDocumento(`?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`);
+    GetDocumento(tipo, documento);
   };
   const AgregarCuentaCorriente = async (value = 0, e = null, click = false) => {
     if (modo != "Consultar") {
@@ -169,7 +170,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const Limpiar = async () => {
     setMen([]);
     setTipoMen(-1);
-    setEliminar(false);
+    setListar(false);
   };
   const LimpiarCcorriente = async () => {
     setObjetoCcorriente({
@@ -217,58 +218,43 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Proveedor/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumentoIdentidad);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposDocumentoIdentidad =
+        result.data.data.tiposDocumentoIdentidad.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoDocumentoIdentidadId: tiposDocumentoIdentidad.id,
+      }));
+    }
   };
-  const GetDocumento = async (filtroApi = "") => {
+  const GetDocumento = async (tipo, documento) => {
     document.getElementById("consultarApi").hidden = true;
-    const result = await ApiMasy.get(
-      `api/Servicio/ConsultarRucDni${filtroApi}`
+    const result = await Get(
+      `Servicio/ConsultarRucDni?tipo=${tipo}&numeroDocumentoIdentidad=${documento}`,
+      "Datos extraídos exitosamente."
     );
-    if (result.name == "AxiosError") {
-      let err = "";
-      if (result.response.data == "") {
-        err = result.message;
-      } else {
-        err = String(result.response.data.messages[0].textos);
-      }
-      toast.error(err, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    if (result == undefined) {
       document.getElementById("consultarApi").hidden = false;
       document.getElementById("numeroDocumentoIdentidad").focus();
     } else {
       setData({
         ...data,
-        numeroDocumentoIdentidad: result.data.data.numeroDocumentoIdentidad,
-        nombre: result.data.data.nombre,
-        direccionPrincipal: result.data.data.direccion,
-      });
-      toast.info("Datos extraídos exitosamente", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+        numeroDocumentoIdentidad: result.numeroDocumentoIdentidad,
+        nombre: result.nombre,
+        direccionPrincipal: result.direccion,
       });
       document.getElementById("consultarApi").hidden = false;
       document.getElementById("nombreProveedor").focus();
     }
   };
-
   const TablasCcorriente = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/ProveedorCuentaCorriente/FormularioTablas`
@@ -397,7 +383,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ""
           ) : (
             <>
-              <div className={Global.TablaBotonModificar}>
+              <div className={G.TablaBotonModificar}>
                 <button
                   id="boton"
                   onClick={(e) => AgregarCuentaCorriente(row.values.id, e)}
@@ -408,18 +394,18 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </button>
               </div>
 
-              <div className={Global.TablaBotonEliminar}>
+              <div className={G.TablaBotonEliminar}>
                 <button
-                  id="boton-eliminar"
+                  id="botonEliminarFila"
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ProveedorCuentaCorriente"],
                       row.values.id,
-                      setEliminar
+                      setListar
                     );
                   }}
                   className="p-0 px-1"
-                  title="Click para eliminar registro"
+                  title="Click para Eliminar registro"
                 >
                   <FaTrashAlt></FaTrashAlt>
                 </button>
@@ -451,7 +437,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ""
           ) : (
             <>
-              <div className={Global.TablaBotonModificar}>
+              <div className={G.TablaBotonModificar}>
                 <button
                   id="boton"
                   onClick={(e) => AgregarContacto(row.values.id, e)}
@@ -462,18 +448,18 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </button>
               </div>
 
-              <div className={Global.TablaBotonEliminar}>
+              <div className={G.TablaBotonEliminar}>
                 <button
-                  id="boton-eliminar"
+                  id="botonEliminarFila"
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ProveedorContacto"],
                       row.values.id,
-                      setEliminar
+                      setListar
                     );
                   }}
                   className="p-0 px-1"
-                  title="Click para eliminar registro"
+                  title="Click para Eliminar registro"
                 >
                   <FaTrashAlt></FaTrashAlt>
                 </button>
@@ -497,7 +483,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "Proveedor"]}
           titulo="Proveedor"
           foco={document.getElementById("tablaProveedor")}
-          tamañoModal={[Global.ModalMediano, Global.Form + "pt-0 "]}
+          tamañoModal={[G.ModalMediano, G.Form + "pt-0 "]}
         >
           <TabView>
             <TabPanel
@@ -505,26 +491,28 @@ const Modal = ({ setModal, modo, objeto }) => {
               leftIcon="pi pi-user mr-2"
               style={{ color: "green" }}
             >
-              <div className={Global.ContenedorBasico + " mt-4"}>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputTercio}>
-                    <label htmlFor="id" className={Global.LabelStyle}>
-                      Código
-                    </label>
-                    <input
-                      type="text"
-                      id="id"
-                      name="id"
-                      placeholder="Código"
-                      autoComplete="off"
-                      value={data.id ?? ""}
-                      onChange={ValidarData}
-                      disabled={true}
-                      className={Global.InputStyle}
-                    />
-                  </div>
-                  <div className={Global.InputTercio}>
-                    <label htmlFor="condicion" className={Global.LabelStyle}>
+              <div className={G.ContenedorBasico + " mt-4"}>
+                <div className={G.ContenedorInputs}>
+                  {modo != "Nuevo" && (
+                    <div className={G.InputMitad}>
+                      <label htmlFor="id" className={G.LabelStyle}>
+                        Código
+                      </label>
+                      <input
+                        type="text"
+                        id="id"
+                        name="id"
+                        placeholder="Código"
+                        autoComplete="off"
+                        value={data.id ?? ""}
+                        onChange={HandleData}
+                        disabled={true}
+                        className={G.InputStyle}
+                      />
+                    </div>
+                  )}
+                  <div className={G.InputFull}>
+                    <label htmlFor="condicion" className={G.LabelStyle}>
                       Condición
                     </label>
                     <input
@@ -536,12 +524,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoFocus
                       disabled={modo == "Consultar"}
                       value={data.condicion ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputTercio}>
-                    <label htmlFor="estado" className={Global.LabelStyle}>
+                  <div className={G.InputFull}>
+                    <label htmlFor="estado" className={G.LabelStyle}>
                       Estado
                     </label>
                     <input
@@ -552,16 +540,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.estado ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputMitad}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputMitad}>
                     <label
                       htmlFor="tipoDocumentoIdentidadId"
-                      className={Global.LabelStyle}
+                      className={G.LabelStyle}
                     >
                       Tipo Doc
                     </label>
@@ -569,9 +557,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       id="tipoDocumentoIdentidadId"
                       name="tipoDocumentoIdentidadId"
                       value={data.tipoDocumentoIdentidadId ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       disabled={modo == "Consultar"}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     >
                       {dataTipoDoc.map((map) => (
                         <option key={map.id} value={map.id}>
@@ -580,10 +568,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                       ))}
                     </select>
                   </div>
-                  <div className={Global.InputMitad}>
+                  <div className={G.InputMitad}>
                     <label
                       htmlFor="numeroDocumentoIdentidad"
-                      className={Global.LabelStyle}
+                      className={G.LabelStyle}
                     >
                       Número Doc
                     </label>
@@ -596,11 +584,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       maxLength={data.tipoDocumentoIdentidadId == "1" ? 8 : 12}
                       disabled={modo == "Consultar"}
                       value={data.numeroDocumentoIdentidad ?? ""}
-                      onChange={ValidarData}
+                      onChange={HandleData}
                       className={
-                        modo == "Consultar"
-                          ? Global.InputStyle
-                          : Global.InputBoton
+                        modo == "Consultar" ? G.InputStyle : G.InputBoton
                       }
                     />
                     <button
@@ -608,19 +594,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                       hidden={modo == "Consultar"}
                       onKeyDown={(e) => Funciones.KeyClick(e)}
                       onClick={(e) => ValidarConsultarDocumento(e)}
-                      className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonPrimary
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     >
                       <FaSearch></FaSearch>
                     </button>
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <label htmlFor="nombre" className={Global.LabelStyle}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputFull}>
+                    <label htmlFor="nombre" className={G.LabelStyle}>
                       Nombre
                     </label>
                     <input
@@ -631,14 +613,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.nombre ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="telefono" className={Global.LabelStyle}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="telefono" className={G.LabelStyle}>
                       Teléfono
                     </label>
                     <input
@@ -649,12 +631,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.telefono ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="celular" className={Global.LabelStyle}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="celular" className={G.LabelStyle}>
                       Telef. Fax. N°
                     </label>
                     <input
@@ -665,17 +647,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.celular ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <label
-                      htmlFor="correoElectronico"
-                      className={Global.LabelStyle}
-                    >
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputFull}>
+                    <label htmlFor="correoElectronico" className={G.LabelStyle}>
                       Correo
                     </label>
                     <input
@@ -686,16 +665,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.correoElectronico ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputFull}>
                     <label
                       htmlFor="direccionPrincipal"
-                      className={Global.LabelStyle}
+                      className={G.LabelStyle}
                     >
                       Dirección
                     </label>
@@ -707,8 +686,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.direccionPrincipal ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
@@ -722,9 +701,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     distritoId: data.distritoId,
                   }}
                 ></Ubigeo>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <label htmlFor="observacion" className={Global.LabelStyle}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputFull}>
+                    <label htmlFor="observacion" className={G.LabelStyle}>
                       Observación
                     </label>
                     <input
@@ -735,8 +714,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       autoComplete="off"
                       disabled={modo == "Consultar"}
                       value={data.observacion ?? ""}
-                      onChange={ValidarData}
-                      className={Global.InputStyle}
+                      onChange={HandleData}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
@@ -754,12 +733,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <div className="my-4">
                     <Mensajes
                       tipoMensaje={2}
-                      mensaje={[Global.MensajeInformacion]}
+                      mensaje={[G.MensajeInformacion]}
                       cerrar={false}
                     />
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={Global.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       autoFoco={true}
                       click={(e) => {
@@ -775,9 +754,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {habilitarCuentaCorriente && (
                   <div
                     className={
-                      Global.ContenedorBasico +
-                      Global.FondoContenedor +
-                      " pb-1 mb-2"
+                      G.ContenedorBasico + G.FondoContenedor + " pb-1 mb-2"
                     }
                   >
                     {tipoMen > 0 && (
@@ -791,9 +768,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     )}
 
-                    <div className={Global.ContenedorInputs}>
-                      <div className={Global.Input40pct}>
-                        <label htmlFor="monedaId" className={Global.LabelStyle}>
+                    <div className={G.ContenedorInputs}>
+                      <div className={G.Input40pct}>
+                        <label htmlFor="monedaId" className={G.LabelStyle}>
                           Moneda
                         </label>
                         <select
@@ -803,7 +780,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value={objetoCcorriente.monedaId ?? ""}
                           onChange={ValidarDataCcorriente}
                           disabled={modo == "Consultar"}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         >
                           {dataCcorrienteMoneda.map((map) => (
                             <option key={map.id} value={map.id}>
@@ -812,8 +789,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           ))}
                         </select>
                       </div>
-                      <div className={Global.InputFull}>
-                        <label htmlFor="numero" className={Global.LabelStyle}>
+                      <div className={G.InputFull}>
+                        <label htmlFor="numero" className={G.LabelStyle}>
                           Número
                         </label>
                         <input
@@ -826,14 +803,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                           disabled={modo == "Consultar"}
                           value={objetoCcorriente.numero ?? ""}
                           onChange={ValidarDataCcorriente}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         />
                       </div>
                     </div>
                     <div className="flex">
                       <label
                         htmlFor="entidadBancariaId"
-                        className={Global.LabelStyle}
+                        className={G.LabelStyle}
                       >
                         E.B.
                       </label>
@@ -843,7 +820,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         value={objetoCcorriente.entidadBancariaId ?? ""}
                         onChange={ValidarDataCcorriente}
                         disabled={modo == "Consultar"}
-                        className={Global.InputStyle}
+                        className={G.InputStyle}
                       >
                         {dataCcorrienteEntidad.map((map) => (
                           <option key={map.id} value={map.id}>
@@ -862,8 +839,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarCcorriente}
                           className={
-                            Global.BotonModalBase +
-                            Global.BotonOkModal +
+                            G.BotonModalBase +
+                            G.BotonOkModal +
                             " py-2 sm:py-1 px-3"
                           }
                         >
@@ -873,8 +850,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                       <button
                         type="button"
                         className={
-                          Global.BotonModalBase +
-                          Global.BotonCancelarModal +
+                          G.BotonModalBase +
+                          G.BotonCerrarModal +
                           " py-2 sm:py-1  px-3"
                         }
                         onKeyDown={(e) => Funciones.KeyClick(e)}
@@ -889,14 +866,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Form Cuenta Corriente */}
 
                 {/* Tabla */}
-                <TablaStyle>
+                <DivTabla>
                   <TableBasic
                     id="tablaCuentaCorrienteProveedor"
                     columnas={colCcorriente}
                     datos={dataCcorriente}
                     DobleClick={(e) => AgregarCuentaCorriente(e, null, true)}
                   />
-                </TablaStyle>
+                </DivTabla>
                 {/* Tabla */}
               </TabPanel>
             ) : (
@@ -911,12 +888,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <div className="my-4">
                     <Mensajes
                       tipoMensaje={2}
-                      mensaje={[Global.MensajeInformacion]}
+                      mensaje={[G.MensajeInformacion]}
                       cerrar={false}
                     />
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={Global.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       autoFoco={true}
                       click={(e) => {
@@ -932,9 +909,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {habilitarContacto && (
                   <div
                     className={
-                      Global.ContenedorBasico +
-                      Global.FondoContenedor +
-                      " pb-1 mb-2"
+                      G.ContenedorBasico + G.FondoContenedor + " pb-1 mb-2"
                     }
                   >
                     {tipoMen > 0 && (
@@ -948,9 +923,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     )}
 
-                    <div className={Global.ContenedorInputs}>
-                      <div className={Global.InputFull}>
-                        <label htmlFor="nombres" className={Global.LabelStyle}>
+                    <div className={G.ContenedorInputs}>
+                      <div className={G.InputFull}>
+                        <label htmlFor="nombres" className={G.LabelStyle}>
                           Nombres
                         </label>
                         <input
@@ -963,13 +938,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                           disabled={modo == "Consultar"}
                           value={objetoContacto.nombres ?? ""}
                           onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         />
                       </div>
-                      <div className={Global.Input96}>
+                      <div className={G.Input96}>
                         <label
                           htmlFor="numeroDocumentoIdentidad"
-                          className={Global.LabelStyle}
+                          className={G.LabelStyle}
                         >
                           DNI
                         </label>
@@ -983,14 +958,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                           disabled={modo == "Consultar"}
                           value={objetoContacto.numeroDocumentoIdentidad ?? ""}
                           onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         />
                       </div>
                     </div>
 
-                    <div className={Global.ContenedorInputs}>
-                      <div className={Global.InputFull}>
-                        <label htmlFor="cargoId" className={Global.LabelStyle}>
+                    <div className={G.ContenedorInputs}>
+                      <div className={G.InputFull}>
+                        <label htmlFor="cargoId" className={G.LabelStyle}>
                           Cargo
                         </label>
                         <select
@@ -999,7 +974,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           value={objetoContacto.cargoId ?? ""}
                           onChange={ValidarDataContacto}
                           disabled={modo == "Consultar"}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         >
                           {dataContactoCargo.map((cargo) => (
                             <option key={cargo.id} value={cargo.id}>
@@ -1008,8 +983,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           ))}
                         </select>
                       </div>
-                      <div className={Global.Input96}>
-                        <label htmlFor="celular" className={Global.LabelStyle}>
+                      <div className={G.Input96}>
+                        <label htmlFor="celular" className={G.LabelStyle}>
                           Celular
                         </label>
                         <input
@@ -1022,14 +997,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                           disabled={modo == "Consultar"}
                           value={objetoContacto.celular ?? ""}
                           onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         />
                       </div>
                     </div>
 
-                    <div className={Global.ContenedorInputs}>
-                      <div className={Global.Input96}>
-                        <label htmlFor="telefono" className={Global.LabelStyle}>
+                    <div className={G.ContenedorInputs}>
+                      <div className={G.Input96}>
+                        <label htmlFor="telefono" className={G.LabelStyle}>
                           Telefono
                         </label>
                         <input
@@ -1042,11 +1017,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                           disabled={modo == "Consultar"}
                           value={objetoContacto.telefono ?? ""}
                           onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         />
                       </div>
-                      <div className={Global.InputFull}>
-                        <label htmlFor="correo" className={Global.LabelStyle}>
+                      <div className={G.InputFull}>
+                        <label htmlFor="correo" className={G.LabelStyle}>
                           Correo
                         </label>
                         <input
@@ -1058,13 +1033,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                           disabled={modo == "Consultar"}
                           value={objetoContacto.correo ?? ""}
                           onChange={ValidarDataContacto}
-                          className={Global.InputStyle}
+                          className={G.InputStyle}
                         />
                       </div>
                     </div>
 
                     <div className="flex">
-                      <label htmlFor="direccion" className={Global.LabelStyle}>
+                      <label htmlFor="direccion" className={G.LabelStyle}>
                         Dirección
                       </label>
                       <input
@@ -1076,7 +1051,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         disabled={modo == "Consultar"}
                         value={objetoContacto.direccion ?? ""}
                         onChange={ValidarDataContacto}
-                        className={Global.InputStyle}
+                        className={G.InputStyle}
                       />
                     </div>
                     {/*footer*/}
@@ -1089,8 +1064,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                           onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarContacto}
                           className={
-                            Global.BotonModalBase +
-                            Global.BotonOkModal +
+                            G.BotonModalBase +
+                            G.BotonOkModal +
                             " py-2 sm:py-1 px-3"
                           }
                         >
@@ -1102,8 +1077,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                         onKeyDown={(e) => Funciones.KeyClick(e)}
                         onClick={() => setHabilitarContacto(false)}
                         className={
-                          Global.BotonModalBase +
-                          Global.BotonCancelarModal +
+                          G.BotonModalBase +
+                          G.BotonCerrarModal +
                           " py-2 sm:py-1  px-3"
                         }
                       >
@@ -1116,14 +1091,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {/* Form Contactos */}
 
                 {/* Tabla */}
-                <TablaStyle>
+                <DivTabla>
                   <TableBasic
                     id="tablaContactoProveedor"
                     columnas={colContacto}
                     datos={dataContacto}
                     DobleClick={(e) => AgregarContacto(e, null, true)}
                   />
-                </TablaStyle>
+                </DivTabla>
                 {/* Tabla */}
               </TabPanel>
             ) : (

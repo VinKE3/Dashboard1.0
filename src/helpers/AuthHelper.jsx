@@ -45,14 +45,14 @@ const borrarTokens = () => {
   store.session.remove("usuarioId");
   store.session.remove("personalId");
   store.session.remove("afectarStock");
-  store.session.remove("global");
+  // store.session.remove("global");
 
   store.local.remove("access_token");
   store.local.remove("usuario");
   store.local.remove("usuarioId");
   store.local.remove("personalId");
   store.local.remove("afectarStock");
-  store.local.remove("global");
+  // store.local.remove("global");
 };
 
 function borrarTodosLosTokens() {

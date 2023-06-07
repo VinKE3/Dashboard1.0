@@ -11,10 +11,10 @@ import moment from "moment";
 import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:last-child {
     text-align: center;
     width: 100px;
@@ -42,7 +42,7 @@ const TipodeCambio = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //Modal
   //#endregion
 
@@ -51,7 +51,9 @@ const TipodeCambio = () => {
     setCadena(`&anio=${filtro.anio}&mes=${filtro.mes}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -62,10 +64,11 @@ const TipodeCambio = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -103,7 +106,7 @@ const TipodeCambio = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -176,7 +179,7 @@ const TipodeCambio = () => {
         let id = moment(row.firstChild.innerText, "DD/MM/YYYY").format(
           "YYYY-MM-DD"
         );
-        Delete(["Mantenimiento", "TipoCambio"], id, setEliminar);
+        Delete(["Mantenimiento", "TipoCambio"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -217,7 +220,7 @@ const TipodeCambio = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "TipoCambio"]}
             id={row.values.id}
@@ -291,13 +294,13 @@ const TipodeCambio = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Tipo de Cambio</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Tipo de Cambio</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputsFiltro}>
-                <label htmlFor="anio" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.InputsFiltro}>
+                <label htmlFor="anio" className={G.LabelStyle}>
                   Año:
                 </label>
                 <input
@@ -307,21 +310,21 @@ const TipodeCambio = () => {
                   autoFocus
                   min={0}
                   value={filtro.anio}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
 
-              <div className={Global.InputsFiltro}>
-                <label id="mes" className={Global.LabelStyle}>
+              <div className={G.InputsFiltro}>
+                <label id="mes" className={G.LabelStyle}>
                   Mes:
                 </label>
                 <select
                   id="mes"
                   name="mes"
                   value={filtro.mes}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onChange={HandleData}
+                  className={G.InputBoton}
                 >
                   {meses.map((map) => (
                     <option key={map.numero} value={map.numero}>
@@ -331,9 +334,7 @@ const TipodeCambio = () => {
                 </select>
                 <button
                   id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -346,7 +347,7 @@ const TipodeCambio = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -355,7 +356,7 @@ const TipodeCambio = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaTipoCambio"}
                 columnas={columnas}
@@ -366,7 +367,7 @@ const TipodeCambio = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}

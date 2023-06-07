@@ -28,7 +28,7 @@ const LayoutAdmin = () => {
       <div className="xl:col-span-5">
         <Header />
         <Enter>
-          <div className="h-[78vh] md:h-[84vh] overflow-y-scroll px-0 md:px-4">
+          <div className="h-[78vh] md:h-[86vh] w-full overflow-y-auto">
             <Outlet />
           </div>
         </Enter>

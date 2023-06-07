@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const ModalClave = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -11,7 +11,7 @@ const ModalClave = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = ({ target }) => {
+  const HandleData = ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -27,11 +27,11 @@ const ModalClave = ({ setModal, modo, objeto }) => {
       menu={["Mantenimiento", "Usuario/CambiarClave"]}
       titulo="Contraseña"
       foco={document.getElementById("tablaUsuario")}
-      tamañoModal={[Global.ModalPequeño, Global.Form]}
+      tamañoModal={[G.ModalPequeño, G.Form]}
     >
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.InputFull}>
-          <label htmlFor="claveAnterior" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico}>
+        <div className={G.InputFull}>
+          <label htmlFor="claveAnterior" className={G.LabelStyle}>
             Clave Anterior
           </label>
           <input
@@ -42,12 +42,12 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             autoComplete="off"
             autoFocus
             value={data.claveAnterior ?? ""}
-            onChange={ValidarData}
-            className={Global.InputStyle}
+            onChange={HandleData}
+            className={G.InputStyle}
           />
         </div>
-        <div className={Global.InputFull}>
-          <label htmlFor="claveNueva" className={Global.LabelStyle}>
+        <div className={G.InputFull}>
+          <label htmlFor="claveNueva" className={G.LabelStyle}>
             Clave Nueva
           </label>
           <input
@@ -57,12 +57,12 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             placeholder="Clave Nueva"
             autoComplete="off"
             value={data.claveNueva ?? ""}
-            onChange={ValidarData}
-            className={Global.InputStyle}
+            onChange={HandleData}
+            className={G.InputStyle}
           />
         </div>
-        <div className={Global.InputFull}>
-          <label htmlFor="claveNuevaConfirmacion" className={Global.LabelStyle}>
+        <div className={G.InputFull}>
+          <label htmlFor="claveNuevaConfirmacion" className={G.LabelStyle}>
             Confirmar Clave Nueva
           </label>
           <input
@@ -72,8 +72,8 @@ const ModalClave = ({ setModal, modo, objeto }) => {
             placeholder="Confirmar Clave Nueva"
             autoComplete="off"
             value={data.claveNuevaConfirmacion ?? ""}
-            onChange={ValidarData}
-            className={Global.InputStyle}
+            onChange={HandleData}
+            className={G.InputStyle}
           />
         </div>
       </div>

@@ -10,10 +10,10 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -43,7 +43,7 @@ const Vehiculo = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -51,7 +51,9 @@ const Vehiculo = () => {
     setCadena(`&numeroPlaca=${filtro.numeroPlaca}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -62,10 +64,11 @@ const Vehiculo = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -103,7 +106,7 @@ const Vehiculo = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -141,8 +144,8 @@ const Vehiculo = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          empresaId: "01",
-          empresaTransporteId: "0001",
+          empresaId: "",
+          empresaTransporteId: "",
           numeroPlaca: "",
           marca: "",
           modelo: "",
@@ -174,7 +177,7 @@ const Vehiculo = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Vehiculo"], id, setEliminar);
+        Delete(["Mantenimiento", "Vehiculo"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -215,7 +218,7 @@ const Vehiculo = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "Vehiculo"]}
             id={row.values.id}
@@ -232,8 +235,8 @@ const Vehiculo = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Vehiculo</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Vehículos</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -243,7 +246,7 @@ const Vehiculo = () => {
               name={"numeroPlaca"}
               maxLength={"200"}
               value={filtro.numeroPlaca}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />
@@ -253,7 +256,7 @@ const Vehiculo = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -262,7 +265,7 @@ const Vehiculo = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaVehiculo"}
                 columnas={columnas}
@@ -273,7 +276,7 @@ const Vehiculo = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

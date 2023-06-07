@@ -2,8 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
 import Delete from "../../../components/funciones/Delete";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -15,10 +17,10 @@ import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -69,17 +71,22 @@ const Cef = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     proveedorNombre: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -89,7 +96,9 @@ const Cef = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -100,10 +109,11 @@ const Cef = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -138,30 +148,10 @@ const Cef = () => {
     const result = await ApiMasy.get(`api/Compra/CEF/${id}`);
     setObjeto(result.data.data);
   };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Compra/CEF/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -178,8 +168,12 @@ const Cef = () => {
   const FiltroBoton = async () => {
     setFiltro({
       proveedorNombre: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("proveedorNombre").focus();
@@ -208,12 +202,12 @@ const Cef = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             proveedorId: "",
             tipoDocumentoId: "CF",
             serie: "0001",
             numero: "",
-            clienteId: "000000",
+            clienteId: "",
             numeroLetra: "",
             fechaRegistro: moment().format("yyyy-MM-DD"),
             fechaEmision: moment().format("yyyy-MM-DD"),
@@ -233,7 +227,7 @@ const Cef = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Compra/CEF", accion, value);
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -241,9 +235,9 @@ const Cef = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Compra/CEF", accion, value);
           if (valor) {
-            await Delete(["Compra", "CEF"], value, setEliminar);
+            await Delete(["Compra", "CEF"], value, setListar);
           }
           break;
         }
@@ -258,7 +252,11 @@ const Cef = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Compra", "CEF"], id);
+            let model = await Imprimir(["Compra", "CEF"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -419,7 +417,7 @@ const Cef = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -435,13 +433,13 @@ const Cef = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>C.E.F</h2>
+      <div className={G.ContenedorPadre}>
+        <h2 className={G.TituloH2}>C.E.F</h2>
 
         {/* Filtro*/}
-        <div className={Global.ContenedorFiltro}>
-          <div className={Global.InputFull}>
-            <label name="proveedorNombre" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputsFiltro}>
+          <div className={G.InputFull}>
+            <label name="proveedorNombre" className={G.LabelStyle}>
               Proveedor
             </label>
             <input
@@ -452,12 +450,12 @@ const Cef = () => {
               autoComplete="off"
               autoFocus
               value={filtro.proveedorNombre ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.Input42pct}>
+            <label htmlFor="fechaInicio" className={G.LabelStyle}>
               Desde
             </label>
             <input
@@ -465,12 +463,12 @@ const Cef = () => {
               id="fechaInicio"
               name="fechaInicio"
               value={filtro.fechaInicio ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaFin" className={Global.LabelStyle}>
+          <div className={G.Input42pct}>
+            <label htmlFor="fechaFin" className={G.LabelStyle}>
               Hasta
             </label>
             <input
@@ -478,14 +476,12 @@ const Cef = () => {
               id="fechaFin"
               name="fechaFin"
               value={filtro.fechaFin ?? ""}
-              onChange={ValidarData}
-              className={Global.InputBoton}
+              onChange={HandleData}
+              className={G.InputBoton}
             />
             <button
               id="buscar"
-              className={
-                Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-              }
+              className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
               onClick={FiltroBoton}
             >
               <FaUndoAlt />
@@ -495,11 +491,11 @@ const Cef = () => {
         {/* Filtro*/}
 
         {/* Boton */}
-        <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+        <div className={G.ContenedorBotones}>
           {permisos[0] && (
             <BotonBasico
               botonText="Nuevo"
-              botonClass={Global.BotonRegistrar}
+              botonClass={G.BotonAzul}
               botonIcon={faPlus}
               click={() => AccionModal()}
               contenedor=""
@@ -507,7 +503,7 @@ const Cef = () => {
           )}
           <BotonBasico
             botonText="Imprimir"
-            botonClass={Global.BotonAgregar}
+            botonClass={G.BotonVerde}
             botonIcon={faPrint}
             click={() => AccionModal(null, "Imprimir", 5)}
             contenedor=""
@@ -516,7 +512,7 @@ const Cef = () => {
         {/* Boton */}
 
         {/* Tabla */}
-        <TablaStyle>
+        <DivTabla>
           <Table
             id={"tablaCEF"}
             columnas={columnas}
@@ -527,11 +523,18 @@ const Cef = () => {
             DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
             KeyDown={(e) => ModalKey(e, "Modificar")}
           />
-        </TablaStyle>
+        </DivTabla>
         {/* Tabla */}
       </div>
 
       {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+      {modalImprimir && (
+        <ModalImprimir
+          objeto={objeto}
+          setModal={setModalImprimir}
+          foco={document.getElementById("tablaCEF")}
+        />
+      )}
       <ToastContainer />
     </>
   );

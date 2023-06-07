@@ -10,10 +10,10 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -44,7 +44,7 @@ const TipoCobroPago = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -52,7 +52,9 @@ const TipoCobroPago = () => {
     setCadena(`&descripcion=${filtro.descripcion}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -63,10 +65,11 @@ const TipoCobroPago = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -104,7 +107,7 @@ const TipoCobroPago = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -142,10 +145,10 @@ const TipoCobroPago = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          tipoVentaCompraId: "CO",
+          tipoVentaCompraId: "",
           descripcion: "",
           abreviatura: "",
-          plazo: "0",
+          plazo: "",
         });
       } else {
         await GetPorId(value);
@@ -172,7 +175,7 @@ const TipoCobroPago = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "TipoCobroPago"], id, setEliminar);
+        Delete(["Mantenimiento", "TipoCobroPago"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -214,7 +217,7 @@ const TipoCobroPago = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "TipoCobroPago"]}
             id={row.values.id}
@@ -233,8 +236,8 @@ const TipoCobroPago = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Tipo de Pago</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Tipos de Pago</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -243,7 +246,7 @@ const TipoCobroPago = () => {
               name={"descripcion"}
               maxLength={"200"}
               value={filtro.descripcion}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />
@@ -253,7 +256,7 @@ const TipoCobroPago = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -262,7 +265,7 @@ const TipoCobroPago = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCobroPago"}
                 columnas={columnas}
@@ -273,7 +276,7 @@ const TipoCobroPago = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

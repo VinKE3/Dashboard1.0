@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -12,8 +12,8 @@ import moment from "moment";
 const VentaTipoDocumento = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     monedaId: "S",
     cargoId: "",
     personalId: "",
@@ -37,7 +37,7 @@ const VentaTipoDocumento = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.name === "facturas" ||
       target.name === "boletas" ||
@@ -86,10 +86,10 @@ const VentaTipoDocumento = ({ setModal }) => {
     <>
       <ModalBasic titulo="Ventas Por Tipo de Documento" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="tiendaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="tiendaId" className={G.LabelStyle}>
               Cargo
             </label>
             <select
@@ -97,8 +97,8 @@ const VentaTipoDocumento = ({ setModal }) => {
               name="cargoId"
               autoFocus
               value={data.cargoId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -110,8 +110,8 @@ const VentaTipoDocumento = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="personalId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="personalId" className={G.LabelStyle}>
               Personal
             </label>
             <select
@@ -119,8 +119,8 @@ const VentaTipoDocumento = ({ setModal }) => {
               name="personalId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -132,9 +132,9 @@ const VentaTipoDocumento = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -142,12 +142,12 @@ const VentaTipoDocumento = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -155,14 +155,14 @@ const VentaTipoDocumento = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
+                onChange={HandleData}
+                className={G.InputBoton}
               />
             </div>
           </div>
 
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
             </label>
             <select
@@ -170,8 +170,8 @@ const VentaTipoDocumento = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {moneda.map((moneda) => (
                 <option key={moneda.id} value={moneda.id}>
@@ -181,81 +181,81 @@ const VentaTipoDocumento = ({ setModal }) => {
             </select>
           </div>
 
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.Input + " w-25"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + " w-25"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <Checkbox
                     inputId="facturas"
                     name="facturas"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.facturas ? true : ""}
                   />
                 </div>
-                <label htmlFor="facturas" className={Global.InputBoton}>
+                <label htmlFor="facturas" className={G.InputBoton}>
                   Facturas
                 </label>
               </div>
-              <div className={Global.Input + " w-25"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + " w-25"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <Checkbox
                     inputId="boletas"
                     name="boletas"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.boletas ? true : ""}
                   />
                 </div>
-                <label htmlFor="boletas" className={Global.InputBoton}>
+                <label htmlFor="boletas" className={G.InputBoton}>
                   Boletas
                 </label>
               </div>
-              <div className={Global.Input + " w-25"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + " w-25"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <Checkbox
                     inputId="guiasRemision"
                     name="guiasRemision"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.guiasRemision ? true : ""}
                   />
                 </div>
-                <label htmlFor="guiasRemision" className={Global.InputBoton}>
+                <label htmlFor="guiasRemision" className={G.InputBoton}>
                   Guias Remision
                 </label>
               </div>
-              <div className={Global.Input + " w-25"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + " w-25"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <Checkbox
                     inputId="notasCredito"
                     name="notasCredito"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.notasCredito ? true : ""}
                   />
                 </div>
-                <label htmlFor="notasCredito" className={Global.InputBoton}>
+                <label htmlFor="notasCredito" className={G.InputBoton}>
                   Notas Credito
                 </label>
               </div>
             </div>
-            <div className={Global.Input + " w-60"}>
-              <div className={Global.CheckStyle + Global.Anidado}>
+            <div className={G.Input + " w-60"}>
+              <div className={G.CheckStyle + G.Anidado}>
                 <Checkbox
                   inputId="agruparPersonal"
                   name="agruparPersonal"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.agruparPersonal ? true : ""}
                 />
               </div>
-              <label htmlFor="agruparPersonal" className={Global.InputBoton}>
+              <label htmlFor="agruparPersonal" className={G.InputBoton}>
                 Agrupar Personal
               </label>
             </div>
@@ -263,9 +263,10 @@ const VentaTipoDocumento = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
+contenedor=""
             />
           </div>
         </div>

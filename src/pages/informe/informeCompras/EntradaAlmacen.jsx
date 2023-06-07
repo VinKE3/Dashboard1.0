@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import store from "store2";
@@ -10,8 +10,8 @@ import moment from "moment";
 const EntradaAlmacen = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
   });
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const EntradaAlmacen = ({ setModal }) => {
     console.log(data);
   }, [data]);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -33,11 +33,11 @@ const EntradaAlmacen = ({ setModal }) => {
     <>
       <ModalBasic titulo="Entrada Almacen" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -45,12 +45,12 @@ const EntradaAlmacen = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -58,8 +58,8 @@ const EntradaAlmacen = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
+                onChange={HandleData}
+                className={G.InputBoton}
               />
             </div>
           </div>
@@ -67,9 +67,10 @@ const EntradaAlmacen = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
+contenedor=""
             />
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import ApiMasy from "../../../api/ApiMasy";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { SelectButton } from "primereact/selectbutton";
@@ -80,7 +80,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
 
   useEffect(() => {
     getMenu();
-    Tablas();
+    GetTablas();
     ListadoPermisos();
   }, []);
 
@@ -110,7 +110,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
     });
   }, [data, setPermisos]);
 
-  const ValidarData = ({ target }) => {
+  const HandleData = ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -232,7 +232,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/UsuarioPermiso/FormularioTablas`
     );
@@ -250,7 +250,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
           modo={modo}
           menu={["Mantenimiento", "UsuarioPermiso"]}
           titulo="Configuración de Permisos"
-          tamañoModal={[Global.ModalMediano, Global.Form]}
+          tamañoModal={[G.ModalMediano, G.Form]}
           foco={document.getElementById("nickFiltro")}
         >
           <Mensajes
@@ -265,10 +265,10 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
             cerrar={false}
           />
 
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
-                <label htmlFor="tipoUsuarioId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputMitad}>
+                <label htmlFor="tipoUsuarioId" className={G.LabelStyle}>
                   Tipo de Usuario
                 </label>
                 <select
@@ -276,8 +276,8 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   name="tipoUsuarioId"
                   value={data.tipoUsuarioId ?? ""}
                   autoFocus
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 >
                   {dataTipoUsuario.map((map) => (
                     <option key={map.id} value={map.id}>
@@ -286,8 +286,8 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="menus" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="menus" className={G.LabelStyle}>
                   Menú:
                 </label>
                 <input
@@ -295,8 +295,8 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                   id="menus"
                   name="menus"
                   value={selectedMenu}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
@@ -317,8 +317,8 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                 }}
               />
 
-              <div className={Global.Input}>
-                <div className={Global.CheckStyle}>
+              <div className={G.Input}>
+                <div className={G.CheckStyle}>
                   <Checkbox
                     disabled={data.tipoUsuarioId != "PE"}
                     inputId="all"
@@ -329,7 +329,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                     checked={checked}
                   />
                 </div>
-                <label htmlFor="all" className={Global.LabelCheckStyle}>
+                <label htmlFor="all" className={G.LabelCheckStyle}>
                   Todos
                 </label>
               </div>
@@ -352,7 +352,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                           key={item.id}
                           onClick={ValidarMenu}
                         >
-                          <button type="button" onClick={ValidarMenu}>
+                          <button type="button">
                             {item.nombre}
                           </button>
                         </li>

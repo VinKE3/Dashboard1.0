@@ -7,9 +7,9 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FaTrash, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -140,7 +140,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
         setObjeto({
           detalles: res.data.data.detalles,
           documentosRelacionados: model,
-          accion: "eliminar",
+          accion: "Eliminar",
         });
         setModal(false);
       }
@@ -149,7 +149,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -161,12 +161,6 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
   };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
@@ -226,9 +220,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={
-                Global.BotonModalBase + Global.BotonAgregar + " border-none "
-              }
+              className={G.BotonModalBase + G.BotonVerde + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -253,9 +245,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
         <div className="flex justify-center">
           <button
             onClick={() => EliminarFila(row.values.id)}
-            className={
-              Global.BotonModalBase + Global.BotonEliminar + "border-none"
-            }
+            className={G.BotonModalBase + G.BotonRojo + "border-none"}
           >
             <FaTrash></FaTrash>
           </button>
@@ -270,16 +260,14 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Facturas"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        foco={foco}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <button
             type="button"
             onClick={() => setModal(false)}
-            className={Global.BotonModalBase + Global.BotonCancelarModal}
+            className={G.BotonModalBase + G.BotonCerrarModal}
           >
             CERRAR
           </button>
@@ -289,11 +277,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
           <>
             {/* Tabla Seleccion*/}
             {Object.entries(dataFacturaSeleccionada).length > 0 && (
-              <div
-                className={
-                  Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
-                }
-              >
+              <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
                 <p className=" px-1 text-base text-light font-bold">
                   SELECCIONADOS
                 </p>
@@ -310,10 +294,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             )}
             {/* Tabla Seleccion*/}
 
-            <div
-              className={Global.ContenedorBasico + Global.FondoContenedor}
-              onKeyDown={(e) => Key(e)}
-            >
+            <div className={G.ContenedorBasico + G.FondoContenedor}>
               {/* Filtro*/}
               <FiltroBasico
                 textLabel={"N° Documento"}
@@ -321,14 +302,14 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
                 name={"numeroDocumento"}
                 maxLength={"20"}
                 value={filtro.numeroDocumento}
-                onChange={ValidarData}
+                onChange={HandleData}
                 botonId={"buscar"}
                 onClick={Filtro}
               />
               {/* Filtro*/}
 
               {/* Tabla */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id={"tablaFiltroFactura"}
                   columnas={columnas}
@@ -336,7 +317,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
                   DobleClick={(e) => KeyTabla(e, true)}
                   KeyDown={(e) => KeyTabla(e)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla */}
             </div>
           </>

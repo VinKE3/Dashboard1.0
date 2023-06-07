@@ -6,11 +6,11 @@ import { RadioButton } from "primereact/radiobutton";
 import { FaSearch, FaCheck } from "react-icons/fa";
 import styled from "styled-components";
 import moment from "moment";
-import * as Global from "../Global";
+import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -68,7 +68,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -87,12 +87,6 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
   };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
@@ -215,9 +209,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
             <button
               id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
-              className={
-                Global.BotonModalBase + Global.BotonAgregar + "border-none"
-              }
+              className={G.BotonModalBase + G.BotonVerde + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>
@@ -234,19 +226,17 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo={
           modo == "EG"
             ? "Buscar Cuentas por Pagar"
             : "Buscar Cuentas por Cobrar"
         }
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        foco={foco}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             <button
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -256,30 +246,29 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle}>
                     <RadioButton
                       inputId="todos"
                       name="tipoDocumentoId"
                       autoFocus
                       value=""
                       onChange={ValidarTipo}
-                      onKeyDown={(e) => Key(e)}
                       checked={tipo === ""}
                     />
                   </div>
                   <label
                     htmlFor="todos"
-                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                    className={G.LabelCheckStyle + "rounded-r-none"}
                   >
                     Todos
                   </label>
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <RadioButton
                       inputId="factura"
                       name="tipoDocumentoId"
@@ -290,52 +279,47 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   </div>
                   <label
                     htmlFor="factura"
-                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                    className={G.LabelCheckStyle + "rounded-r-none"}
                   >
                     Factura
                   </label>
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <RadioButton
                       inputId="notaCredito"
                       name="tipoDocumentoId"
                       value="07"
                       onChange={ValidarTipo}
-                      onKeyDown={(e) => Key(e)}
                       checked={tipo === "07"}
                     />
                   </div>
                   <label
                     htmlFor="notaCredito"
-                    className={Global.LabelCheckStyle + "rounded-r-none"}
+                    className={G.LabelCheckStyle + "rounded-r-none"}
                   >
                     Nota Credito
                   </label>
                 </div>
-                <div className={Global.InputFull}>
-                  <div className={Global.CheckStyle + Global.Anidado}>
+                <div className={G.InputFull}>
+                  <div className={G.CheckStyle + G.Anidado}>
                     <RadioButton
                       inputId="letraCambio"
                       name="tipoDocumentoId"
                       value="LC"
                       onChange={ValidarTipo}
-                      onKeyDown={(e) => Key(e)}
                       checked={tipo === "LC"}
                     />
                   </div>
-                  <label
-                    htmlFor="letraCambio"
-                    className={Global.LabelCheckStyle}
-                  >
+                  <label htmlFor="letraCambio" className={G.LabelCheckStyle}>
                     Letra de Cambio
                   </label>
                 </div>
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="numeroDocumento" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="numeroDocumento" className={G.LabelStyle}>
                   Número de Documento
                 </label>
                 <input
@@ -345,16 +329,13 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                   placeholder="Número de Documento"
                   autoComplete="off"
                   autoFocus
-                  onChange={ValidarData}
-                  onKeyDown={(e) => Key(e)}
-                  className={Global.InputBoton}
+                  onChange={HandleData}
+                  className={G.InputBoton}
                 />
                 <button
                   id="consultarCuentas"
                   onClick={Filtro}
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                 >
                   <FaSearch></FaSearch>
                 </button>
@@ -362,7 +343,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
             </div>
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 id={"tablaFiltroConcepto"}
                 columnas={columnas}
@@ -370,7 +351,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
                 DobleClick={(e) => KeyTabla(e, true)}
                 KeyDown={(e) => KeyTabla(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
         }

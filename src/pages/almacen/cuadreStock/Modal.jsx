@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from "react";
-import store from "store2";
+import React, { useState, useEffect, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Put from "../../../components/funciones/Put";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalInventario from "./ModalInventario";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
 import Table from "../../../components/tabla/Table";
 import { toast } from "react-toastify";
 import { RadioButton } from "primereact/radiobutton";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Dialog } from "primereact/dialog";
 import moment from "moment";
-import { FaSearch, FaUndoAlt, FaPen } from "react-icons/fa";
+import { FaUndoAlt, FaPen } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   max-width: 100%;
   overflow-x: auto;
   & th:first-child {
@@ -44,8 +46,8 @@ const TablaStyle = styled.div`
   & th:nth-child(9),
   & th:nth-child(10),
   & th:nth-child(11) {
-    min-width: 90px;
-    width: 90px;
+    min-width: 85px;
+    width: 85px;
     text-align: right;
   }
   & th:last-child {
@@ -63,18 +65,14 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState(detalle);
   const [dataLocal, setDataLocal] = useState(detalle);
-  const [dataGlobal] = useState(store.session.get("global"));
   //Data General
-  //Tablas
+  //GetTablas
   const [dataVendedor, setDataVendedor] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  //Tablas
-  //Data Modales Ayuda
-  const [dataCabecera, setDataCabecera] = useState([]);
-  //Data Modales Ayuda
+  //GetTablas
   //Modales de Ayuda
   const [modalInventario, setModalInventario] = useState(false);
-  const [modoInventario, setModoInventario] = useState("Nuevo");
+  const [modoInventario] = useState("Nuevo");
   const [dataInventario, setDataInventario] = useState([]);
   //Modales de Ayuda
   //Filtro
@@ -86,11 +84,10 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   const [total, setTotal] = useState(detalle.length);
   const [index, setIndex] = useState(0);
   //Filtro
-
-  const [detalleId, setDetalleId] = useState(1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
+  const [loading, setLoading] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -115,14 +112,14 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(data.fechaRegistro);
+      TipoCambio(data.fechaRegistro);
     }
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarDataFiltro = async ({ target }) => {
+  const HandleFiltro = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -165,7 +162,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
   //#region Funciones
   //Data General
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.name == "incluyeIGV" ||
       target.name == "afectarStock" ||
@@ -227,11 +224,17 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
           theme: "colored",
         }
       );
+      toast.warn("Pulse el botón para recalcular el stock.", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
-  };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
   };
   //Data General
   //#endregion
@@ -289,7 +292,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/CuadreStock/FormularioTablas`
     );
@@ -301,68 +304,124 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       }))
     );
     setDataMoneda(result.data.data.monedas);
-  };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioVenta,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaRegistro).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioVenta,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          toastId: "toastTipoCambio",
-        }
-      );
-      OcultarMensajes();
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let vendedores = result.data.data.vendedores.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        responsableId: vendedores.id,
+        monedaId: monedas.id,
+      }));
     }
+  };
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "compra",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
+  };
+  const Recalculo = async (fecha) => {
+    //Almacena el detalle
+    let dataDetalleMod = Object.assign([], dataDetalle);
+    //Almacena el detalle
+    setLoading(true);
+    const result = await Put(
+      "Almacen/CuadreStock/RecalcularStock",
+      setRefrescar,
+      {
+        fecha: fecha,
+        articulos: dataDetalle.map((map) => {
+          return {
+            lineaId: map.lineaId,
+            subLineaId: map.subLineaId,
+            articuloId: map.articuloId,
+            stock: map.stockFinal,
+          };
+        }),
+      },
+      ["Cuadre recalculado exitosamente"],
+      false
+    );
+
+    //Mapeamos lo que retorna el api
+    result.data.data.articulos.map((res) => {
+      //Modifica registro en base al id
+      dataDetalleMod = dataDetalleMod.map((map) => {
+        if (
+          map.articuloId == res.articuloId &&
+          map.lineaId == res.lineaId &&
+          map.subLineaId == res.subLineaId
+        ) {
+          //Calculos
+          let inventario = modo == "Nuevo" ? res.stock : map.inventario;
+          let stockFinal = res.stock;
+          let cantidad = stockFinal - inventario;
+          let precioUnitario = map.precioUnitario;
+          let cantidadSobra = 0;
+          let cantidadFalta = 0;
+          if (cantidad < 0) {
+            cantidadSobra = cantidad;
+          } else {
+            cantidadFalta = cantidad;
+          }
+          let totalSobra = cantidadSobra * precioUnitario;
+          let totalFalta = cantidadFalta * precioUnitario;
+          //Calculos
+          return {
+            ...map,
+            stockFinal: Funciones.RedondearNumero(stockFinal, 2),
+            inventario: Funciones.RedondearNumero(inventario, 2),
+            cantidadSobra: Math.abs(
+              Funciones.RedondearNumero(cantidadSobra, 2)
+            ),
+            cantidadFalta: Math.abs(
+              Funciones.RedondearNumero(cantidadFalta, 2)
+            ),
+            totalSobra: Math.abs(Funciones.RedondearNumero(totalSobra, 2)),
+            totalFalta: Math.abs(Funciones.RedondearNumero(totalFalta, 2)),
+          };
+        } else {
+          return map;
+        }
+      });
+      //Modifica registro en base al id
+    });
+    //Mapeamos lo que retorna el api
+    setDataDetalle(dataDetalleMod);
+    setLoading(false);
   };
   //#endregion
 
   //#region Funciones Modal
   const AccionModal = async (value, click = false) => {
-    if (click) {
-      let row = value.target.closest("tr");
-      let detalleId = row.lastChild.innerText;
-      let descripcion = row.children[2].innerText;
-      let inventario = row.children[5].innerText;
-      setDataInventario({
-        detalleId: detalleId,
-        inventario: inventario,
-        descripcion: descripcion,
-      });
-      setModalInventario(true);
-    } else {
-      setDataInventario({
-        detalleId: value.detalleId,
-        inventario: value.inventario,
-        descripcion: value.descripcion,
-      });
-      setModalInventario(true);
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let detalleId = row.lastChild.innerText;
+        let descripcion = row.children[2].innerText;
+        let inventario = row.children[5].innerText;
+        setDataInventario({
+          detalleId: detalleId,
+          inventario: inventario,
+          descripcion: descripcion,
+        });
+        setModalInventario(true);
+      } else {
+        setDataInventario({
+          detalleId: value.detalleId,
+          inventario: value.inventario,
+          descripcion: value.descripcion,
+        });
+        setModalInventario(true);
+      }
     }
   };
   // const ModalKey = async (e) => {
@@ -384,237 +443,246 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "Item",
-      accessor: "articuloId",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-center text-yellow-400 font-semibold">{value}</p>
-          );
-        } else {
-          return <p className="text-center">{value}</p>;
-        }
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "Item",
+        accessor: "articuloId",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-center text-yellow-400 font-semibold">
+                {value}
+              </p>
+            );
+          } else {
+            return <p className="text-center">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Marca",
-      accessor: "marcaNombre",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-center text-yellow-400 font-semibold">{value}</p>
-          );
-        } else {
-          return <p className="text-center">{value}</p>;
-        }
+      {
+        Header: "Marca",
+        accessor: "marcaNombre",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-center text-yellow-400 font-semibold">
+                {value}
+              </p>
+            );
+          } else {
+            return <p className="text-center">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Descripcion",
-      accessor: "descripcion",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return <p className="text-yellow-400 font-semibold">{value}</p>;
-        } else {
-          return <p className="">{value}</p>;
-        }
+      {
+        Header: "Descripcion",
+        accessor: "descripcion",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return <p className="text-yellow-400 font-semibold">{value}</p>;
+          } else {
+            return <p className="">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Unidad",
-      accessor: "unidadMedidaDescripcion",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-center text-yellow-400 font-semibold">{value}</p>
-          );
-        } else {
-          return <p className="text-center">{value}</p>;
-        }
+      {
+        Header: "Unidad",
+        accessor: "unidadMedidaDescripcion",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-center text-yellow-400 font-semibold">
+                {value}
+              </p>
+            );
+          } else {
+            return <p className="text-center">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Stock Final",
-      accessor: "stockFinal",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
-      },
-    },
-    {
-      Header: "Inventario",
-      accessor: "inventario",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <div className="flex">
-              <p className="w-full text-right text-yellow-400 font-semibold">
+      {
+        Header: "Stock Final",
+        accessor: "stockFinal",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
                 {Funciones.RedondearNumero(value, 2)}
               </p>
-              {modo != "Consultar" && (
-                <button
-                  id={"botonInventario"}
-                  onClick={() =>
-                    AccionModal({
-                      detalleId: row.values.detalleId,
-                      descripcion: row.values.descripcion,
-                      inventario: row.values.inventario,
-                    })
-                  }
-                  className={
-                    Global.BotonBuscar +
-                    Global.BotonRegistrar +
-                    " ml-2 !px-1.5 !rounded-sm"
-                  }
-                >
-                  <FaPen></FaPen>
-                </button>
-              )}
-            </div>
-          );
-        } else {
-          return (
-            <div className="flex">
-              <p className="text-right font-semibold w-full">
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
                 {Funciones.RedondearNumero(value, 2)}
               </p>
-              {modo != "Consultar" && (
-                <button
-                  id={"botonInventario"}
-                  onClick={() =>
-                    AccionModal({
-                      detalleId: row.values.detalleId,
-                      descripcion: row.values.descripcion,
-                      inventario: row.values.inventario,
-                    })
-                  }
-                  className={
-                    Global.BotonBuscar +
-                    Global.BotonRegistrar +
-                    " ml-2 !px-1.5 !rounded-sm"
-                  }
-                >
-                  <FaPen></FaPen>
-                </button>
-              )}
-            </div>
-          );
-        }
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "P. Unitario",
-      accessor: "precioUnitario",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "Inventario",
+        accessor: "inventario",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <div className="flex">
+                <p className="w-full text-right text-yellow-400 font-semibold">
+                  {Funciones.RedondearNumero(value, 2)}
+                </p>
+                {modo != "Consultar" && (
+                  <button
+                    id={"botonInventario"}
+                    onClick={() =>
+                      AccionModal({
+                        detalleId: row.values.detalleId,
+                        descripcion: row.values.descripcion,
+                        inventario: row.values.inventario,
+                      })
+                    }
+                    className={
+                      G.BotonBuscar +
+                      G.BotonAzul +
+                      " ml-2 !px-1.5 !rounded-sm"
+                    }
+                  >
+                    <FaPen></FaPen>
+                  </button>
+                )}
+              </div>
+            );
+          } else {
+            return (
+              <div className="flex">
+                <p className="text-right font-semibold w-full">
+                  {Funciones.RedondearNumero(value, 2)}
+                </p>
+                {modo != "Consultar" && (
+                  <button
+                    id={"botonInventario"}
+                    onClick={() =>
+                      AccionModal({
+                        detalleId: row.values.detalleId,
+                        descripcion: row.values.descripcion,
+                        inventario: row.values.inventario,
+                      })
+                    }
+                    className={
+                      G.BotonBuscar +
+                      G.BotonAzul +
+                      " ml-2 !px-1.5 !rounded-sm"
+                    }
+                  >
+                    <FaPen></FaPen>
+                  </button>
+                )}
+              </div>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "Can. Falta",
-      accessor: "cantidadFalta",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "P. Unitario",
+        accessor: "precioUnitario",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "T. Falta",
-      accessor: "totalFalta",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "Can. Falta",
+        accessor: "cantidadFalta",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "Can. Sobra",
-      accessor: "cantidadSobra",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "T. Falta",
+        accessor: "totalFalta",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "T. Sobra",
-      accessor: "totalSobra",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "Can. Sobra",
+        accessor: "cantidadSobra",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "Item",
-      accessor: "detalleId",
-    },
-  ];
+      {
+        Header: "T. Sobra",
+        accessor: "totalSobra",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
+      },
+      {
+        Header: "Item",
+        accessor: "detalleId",
+      },
+    ],
+    [dataDetalle]
+  );
   //#endregion
 
   //#region Render
@@ -629,26 +697,24 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             menu={["Almacen", "CuadreStock"]}
             titulo="Cuadre de Stock"
             foco={document.getElementById("tablaCuadreStock")}
-            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
             cerrar={false}
           >
             {tipoMensaje > 0 && (
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}
-            <div
-              className={
-                Global.ContenedorBasico + " mb-4 " + Global.FondoContenedor
-              }
-            >
-              <div className={Global.ContenedorInputs}>
+            <div className={G.ContenedorBasico + " mb-4 " + G.FondoContenedor}>
+              <div className={G.ContenedorInputs}>
                 {data.id != undefined ? (
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="id" className={Global.LabelStyle}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="id" className={G.LabelStyle}>
                       Código de Registro
                     </label>
                     <input
@@ -659,18 +725,16 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                       autoComplete="off"
                       disabled={true}
                       value={data.id ?? ""}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
                 ) : (
                   <></>
                 )}
                 <div
-                  className={
-                    data.id != undefined ? Global.InputMitad : Global.InputFull
-                  }
+                  className={data.id != undefined ? G.InputMitad : G.InputFull}
                 >
-                  <label htmlFor="numero" className={Global.LabelStyle}>
+                  <label htmlFor="numero" className={G.LabelStyle}>
                     Cuadre de Stock N°
                   </label>
                   <input
@@ -682,14 +746,14 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     maxLength="10"
                     disabled={true}
                     value={data.numero ?? ""}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   />
                 </div>
               </div>
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="fechaRegistro" className={Global.LabelStyle}>
-                    F. Registro
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="fechaRegistro" className={G.LabelStyle}>
+                    Fecha Registro
                   </label>
                   <input
                     type="date"
@@ -701,22 +765,32 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     value={moment(data.fechaRegistro ?? "").format(
                       "yyyy-MM-DD"
                     )}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     onBlur={FechaEmision}
-                    className={Global.InputStyle}
+                    className={G.InputBoton}
                   />
+                  <button
+                    id="consultarRecalculo"
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
+                    hidden={modo == "Consultar"}
+                    onClick={() => {
+                      Recalculo(data.fechaRegistro);
+                    }}
+                  >
+                    <FaUndoAlt></FaUndoAlt>
+                  </button>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="monedaId" className={G.LabelStyle}>
                     Moneda
                   </label>
                   <select
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     {dataMoneda.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -725,8 +799,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="tipoCambio" className={G.LabelStyle}>
                     Tipo Cambio
                   </label>
                   <input
@@ -738,21 +812,17 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     min={0}
                     disabled={modo == "Consultar"}
                     value={data.tipoCambio ?? ""}
-                    onChange={ValidarData}
+                    onChange={HandleData}
                     className={
-                      modo != "Consultar"
-                        ? Global.InputBoton
-                        : Global.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onClick={() => {
-                      GetPorIdTipoCambio(data.fechaEmision);
+                      TipoCambio(data.fechaEmision);
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>
@@ -760,18 +830,18 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="personalId" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputFull}>
+                  <label htmlFor="responsableId" className={G.LabelStyle}>
                     Responsable
                   </label>
                   <select
-                    id="personalId"
-                    name="personalId"
-                    value={data.personalId ?? ""}
-                    onChange={ValidarData}
+                    id="responsableId"
+                    name="responsableId"
+                    value={data.responsableId ?? ""}
+                    onChange={HandleData}
                     disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     {dataVendedor.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -780,8 +850,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="monedaId" className={G.LabelStyle}>
                     Estado
                   </label>
                   <select
@@ -789,7 +859,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     name="monedaId"
                     value={data.monedaId ?? ""}
                     disabled={true}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     {dataMoneda.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -800,9 +870,9 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="observacion" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputFull}>
+                  <label htmlFor="observacion" className={G.LabelStyle}>
                     Observación
                   </label>
                   <input
@@ -813,8 +883,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={data.observacion ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
               </div>
@@ -824,14 +894,12 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             {/* Detalles */}
             <div
               className={
-                Global.ContenedorBasico +
-                Global.FondoContenedor +
-                " mb-2 overflow-x-auto"
+                G.ContenedorBasico + G.FondoContenedor + " mb-2 overflow-x-auto"
               }
             >
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.Input60pct}>
-                  <label htmlFor="marca" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.Input60pct}>
+                  <label htmlFor="marca" className={G.LabelStyle}>
                     Marca
                   </label>
                   <input
@@ -842,12 +910,12 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     autoComplete="off"
                     autoFocus={modo == "Modificar"}
                     value={filtro.marca}
-                    onChange={ValidarDataFiltro}
-                    className={Global.InputStyle}
+                    onChange={HandleFiltro}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputFull}>
-                  <label htmlFor="descripcion" className={Global.LabelStyle}>
+                <div className={G.InputFull}>
+                  <label htmlFor="descripcion" className={G.LabelStyle}>
                     Descripción
                   </label>
                   <input
@@ -857,129 +925,129 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     placeholder="Descripción"
                     autoComplete="off"
                     value={filtro.descripcion}
-                    onChange={ValidarDataFiltro}
-                    className={Global.InputStyle}
+                    onChange={HandleFiltro}
+                    className={G.InputStyle}
                   />
                 </div>
               </div>
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <div className={Global.Input + "w-32"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputFull}>
+                  <div className={G.Input + "w-32"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="todos"
                         name="tipoExistenciaId"
                         value={""}
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === ""}
                       ></RadioButton>
                     </div>
                     <label
                       htmlFor="todos"
-                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                      className={G.LabelCheckStyle + "rounded-r-none"}
                     >
                       Todos
                     </label>
                   </div>
-                  <div className={Global.Input + "w-44"}>
-                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                  <div className={G.Input + "w-44"}>
+                    <div className={G.CheckStyle + "rounded-l-none"}>
                       <RadioButton
                         inputId="mercaderia"
                         name="tipoExistenciaId"
                         value={"01"}
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "01"}
                       ></RadioButton>
                     </div>
                     <label
                       htmlFor="mercaderia"
-                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                      className={G.LabelCheckStyle + "rounded-r-none"}
                     >
                       Mercadería
                     </label>
                   </div>
-                  <div className={Global.InputTercio}>
-                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                  <div className={G.InputTercio}>
+                    <div className={G.CheckStyle + "rounded-l-none"}>
                       <RadioButton
                         inputId="productoTerminado"
                         name="tipoExistenciaId"
                         value="02"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "02"}
                       ></RadioButton>
                     </div>
                     <label
                       htmlFor="productoTerminado"
-                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                      className={G.LabelCheckStyle + "rounded-r-none"}
                     >
                       Producto Terminado
                     </label>
                   </div>
-                  <div className={Global.InputTercio}>
-                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                  <div className={G.InputTercio}>
+                    <div className={G.CheckStyle + "rounded-l-none"}>
                       <RadioButton
                         inputId="materiaPrima"
                         name="tipoExistenciaId"
                         value="03"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "03"}
                       ></RadioButton>
                     </div>
                     <label
                       htmlFor="materiaPrima"
-                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                      className={G.LabelCheckStyle + "rounded-r-none"}
                     >
                       Materia Prima
                     </label>
                   </div>
-                  <div className={Global.InputTercio}>
-                    <div className={Global.CheckStyle + "rounded-l-none"}>
+                  <div className={G.InputTercio}>
+                    <div className={G.CheckStyle + "rounded-l-none"}>
                       <RadioButton
                         inputId="envasesEmbalajes"
                         name="tipoExistenciaId"
                         value="04"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "04"}
                       ></RadioButton>
                     </div>
                     <label
                       htmlFor="envasesEmbalajes"
-                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                      className={G.LabelCheckStyle + "rounded-r-none"}
                     >
                       Embases y Embalajes
                     </label>
                   </div>
-                  <div className={Global.Input + "w-32"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-32"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="otros"
                         name="tipoExistenciaId"
                         value="99"
                         disabled={modo == "Consultar"}
                         onChange={(e) => {
-                          ValidarDataFiltro(e);
+                          HandleFiltro(e);
                         }}
                         checked={filtro.tipoExistenciaId === "99"}
                       ></RadioButton>
                     </div>
                     <label
                       htmlFor="otros"
-                      className={Global.LabelCheckStyle + " !py-1 "}
+                      className={G.LabelCheckStyle + " !py-1 "}
                     >
                       Otros
                     </label>
@@ -990,7 +1058,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             {/* Detalles */}
 
             {/* Tabla Detalle */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCuadreStockModal"}
                 columnas={columnas}
@@ -1009,50 +1077,69 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                 Click={(e) => FiltradoPaginado(e)}
                 DobleClick={(e) => AccionModal(e, true)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla Detalle */}
 
             {/*Tabla Footer*/}
-            <div className={Global.ContenedorFooter}>
+            <div className={G.ContenedorFooter}>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
-                  <p className={Global.FilaContenido}>Total Sobra</p>
+                <div className={G.FilaFooter + G.FilaVacia}></div>
+                <div className={G.FilaFooter + G.FilaPrecio}>
+                  <p className={G.FilaContenido}>Total Sobra</p>
                 </div>
-                <div className={Global.FilaImporte}>
-                  <p className={Global.FilaContenido}>
-                    {data.totalSobra ?? "0.00"}
-                  </p>
+                <div className={G.FilaFooter + G.FilaImporte}>
+                  <p className={G.FilaContenido}>{data.totalSobra ?? "0.00"}</p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
-                  <p className={Global.FilaContenido}>Total Falta</p>
+                <div className={G.FilaFooter + G.FilaVacia}></div>
+                <div className={G.FilaFooter + G.FilaPrecio}>
+                  <p className={G.FilaContenido}>Total Falta</p>
                 </div>
-                <div className={Global.FilaImporte}>
-                  <p className={Global.FilaContenido}>
-                    {data.totalFalta ?? "0.00"}
-                  </p>
+                <div className={G.FilaFooter + G.FilaImporte}>
+                  <p className={G.FilaContenido}>{data.totalFalta ?? "0.00"}</p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>
               <div className="flex">
-                <div className={Global.FilaVacia}></div>
-                <div className={Global.FilaPrecio}>
-                  <p className={Global.FilaContenido}>Saldo Total</p>
+                <div className={G.FilaFooter + G.FilaVacia}></div>
+                <div className={G.FilaFooter + G.FilaPrecio}>
+                  <p className={G.FilaContenido}>Saldo Total</p>
                 </div>
-                <div className={Global.FilaImporte}>
-                  <p className={Global.FilaContenido}>
-                    {data.saldoTotal ?? "0.00"}
-                  </p>
+                <div className={G.FilaFooter + G.FilaImporte}>
+                  <p className={G.FilaContenido}>{data.saldoTotal ?? "0.00"}</p>
                 </div>
-                <div className={Global.UltimaFila}></div>
+                <div className={G.FilaFooter + G.UltimaFila}></div>
               </div>
             </div>
             {/*Tabla Footer*/}
           </ModalCrud>
+          <Dialog
+            showHeader={false}
+            closeOnEscape={false}
+            closable={false}
+            modal={true}
+            visible={loading}
+            pt={{
+              root: { className: "w-12" },
+              content: { className: "p-4 flex items-center justify-center" },
+            }}
+          >
+            <ProgressSpinner
+              pt={{
+                spinner: { style: { animationDuration: "0s" } },
+                circle: {
+                  style: {
+                    stroke: "#F59E0B",
+                    strokeWidth: 3,
+                    animation: "none",
+                  },
+                },
+              }}
+            ></ProgressSpinner>
+            <p className="pt-4 font-semibold">Recalculando</p>
+          </Dialog>
           {modalInventario && (
             <ModalInventario
               setModal={setModalInventario}

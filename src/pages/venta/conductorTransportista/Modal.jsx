@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
 import Ubigeo from "../../../components/filtro/Ubigeo";
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setDataModal] = useState([]);
+  const [dataEmpresaTrans, setDataEmpresaTrans] = useState([]);
   const [dataUbigeo, setDataUbigeo] = useState([]);
   //#endregion
 
@@ -23,12 +23,12 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
   }, [dataUbigeo]);
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "isActivo") {
       setData((prevState) => ({
         ...prevState,
@@ -44,22 +44,32 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/EmpresaTransporte/Listar`
     );
-    let model = result.data.data.data.map((resultado) => ({
-      id: resultado.empresaTransporteId,
-      descripcion: resultado.nombre,
+    let model = result.data.data.data.map((map) => ({
+      id: map.empresaTransporteId,
+      descripcion: map.nombre,
     }));
-    setDataModal(model);
+    setDataEmpresaTrans(model);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let empresasTransporte = model.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        empresaTransporteId: empresasTransporte.id,
+      }));
+    }
   };
   //#endregion
 
   //#region  Render
   return (
     <>
-      {Object.entries(dataModal).length > 0 && (
+      {Object.entries(dataEmpresaTrans).length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -67,70 +77,71 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "Conductor"]}
           titulo="Conductor"
           foco={document.getElementById("tablaTransportista")}
-          tamañoModal={[Global.ModalMediano, Global.Form]}
+          tamañoModal={[G.ModalMediano, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input60pct}>
-                <label htmlFor="id" className={Global.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  placeholder="id"
-                  autoComplete="off"
-                  autoFocus={modo == "Consultar"}
-                  disabled={true}
-                  value={data.id ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.Input33pct}>
-                <div className={Global.LabelStyle}>
-                  <Checkbox
-                    inputId="isActivo"
-                    name="isActivo"
-                    disabled={modo == "Consultar" }
-                    value={data.isActivo ?? ""}
-                    onChange={(e) => {
-                      ValidarData(e);
-                    }}
-                    checked={data.isActivo ? true : ""}
-                  ></Checkbox>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              {modo != "Nuevo" && (
+                <div className={G.Input60pct}>
+                  <label htmlFor="id" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    placeholder="Código"
+                    autoComplete="off"
+                    autoFocus={modo == "Consultar"}
+                    disabled={true}
+                    value={data.id ?? ""}
+                    onChange={HandleData}
+                    className={G.InputStyle}
+                  />
                 </div>
-                <label htmlFor="isActivo" className={Global.InputStyle}>
-                  Activo
-                </label>
-              </div>
-              <div className={Global.InputFull}>
-                <label
-                  htmlFor="empresaTransporteId"
-                  className={Global.LabelStyle}
-                >
-                  Emp. Transporte
-                </label>
-                <select
-                  id="empresaTransporteId"
-                  name="empresaTransporteId"
-                  autoFocus
-                  value={data.empresaTransporteId ?? ""} 
-                  onChange={ValidarData}
-                  disabled={modo != "Consultar" ? false : true}
-                  className={Global.InputStyle}
-                >
-                  {dataModal.map((map) => (
-                    <option key={map.id} value={map.id}>
-                      {map.descripcion}
-                    </option>
-                  ))}
-                </select>
+              )}
+              <div className={G.InputFull}>
+                <div className={G.InputFull}>
+                  <label htmlFor="empresaTransporteId" className={G.LabelStyle}>
+                    Emp. Transporte
+                  </label>
+                  <select
+                    id="empresaTransporteId"
+                    name="empresaTransporteId"
+                    autoFocus
+                    value={data.empresaTransporteId ?? ""}
+                    onChange={HandleData}
+                    disabled={modo != "Consultar" ? false : true}
+                    className={G.InputBoton}
+                  >
+                    {dataEmpresaTrans.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={G.Input33pct}>
+                  <div className={G.CheckStyle + G.Anidado}>
+                    <Checkbox
+                      inputId="isActivo"
+                      name="isActivo"
+                      disabled={modo == "Consultar"}
+                      value={data.isActivo ?? ""}
+                      onChange={(e) => {
+                        HandleData(e);
+                      }}
+                      checked={data.isActivo ? true : ""}
+                    ></Checkbox>
+                  </div>
+                  <label htmlFor="isActivo" className={G.LabelCheckStyle}>
+                    Activo
+                  </label>
+                </div>
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
+              <label htmlFor="nombre" className={G.LabelStyle}>
                 Nombre
               </label>
               <input
@@ -139,17 +150,17 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="nombre"
                 placeholder="Nombre Conductor"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input42pct}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input42pct}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   D.N.I
                 </label>
@@ -159,14 +170,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="numeroDocumentoIdentidad"
                   placeholder="D.N.I"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.numeroDocumentoIdentidad ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="licenciaConducir" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="licenciaConducir" className={G.LabelStyle}>
                   Licencia de Conducir
                 </label>
                 <input
@@ -175,16 +186,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="licenciaConducir"
                   placeholder="Licencia de Conducir"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.licenciaConducir ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputMitad}>
-                <label htmlFor="telefono" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputMitad}>
+                <label htmlFor="telefono" className={G.LabelStyle}>
                   Telefono
                 </label>
                 <input
@@ -193,14 +204,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="telefono"
                   placeholder="Telefono"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.telefono ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="celular" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="celular" className={G.LabelStyle}>
                   Celular
                 </label>
                 <input
@@ -209,15 +220,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="celular"
                   placeholder="Celular"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.celular ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="correoElectronico" className={Global.LabelStyle}>
+              <label htmlFor="correoElectronico" className={G.LabelStyle}>
                 Email
               </label>
               <input
@@ -226,26 +237,26 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="correoElectronico"
                 placeholder="Email"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.correoElectronico ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
             <div className="flex">
-              <label htmlFor="direccion" className={Global.LabelStyle}>
+              <label htmlFor="direccion" className={G.LabelStyle}>
                 Dirección
               </label>
               <input
                 type="text"
                 id="direccion"
                 name="direccion"
-                placeholder="Direccion"
+                placeholder="Dirección"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.direccion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
             <Ubigeo
@@ -259,7 +270,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               }}
             ></Ubigeo>
             <div className="flex">
-              <label htmlFor="observacion" className={Global.LabelStyle}>
+              <label htmlFor="observacion" className={G.LabelStyle}>
                 Observación
               </label>
               <input
@@ -268,10 +279,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 name="observacion"
                 placeholder="Observación"
                 autoComplete="off"
-                disabled={modo == "Consultar" }
+                disabled={modo == "Consultar"}
                 value={data.observacion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
           </div>

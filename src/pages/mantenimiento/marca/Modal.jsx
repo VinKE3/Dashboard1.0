@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -11,7 +11,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -28,12 +28,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       menu={["Mantenimiento", "Marca"]}
       titulo="Marca"
       foco={document.getElementById("tablaMarca")}
-      tamañoModal={[Global.ModalPequeño, Global.Form]}
+      tamañoModal={[G.ModalPequeño, G.Form]}
     >
-      <div className={Global.ContenedorBasico}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.Input56}>
-            <label htmlFor="id" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.Input56}>
+            <label htmlFor="id" className={G.LabelStyle}>
               Código
             </label>
             <input
@@ -46,12 +46,12 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoFocus
               disabled={modo == "Nuevo" ? false : true}
               value={data.id ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="nombre" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="nombre" className={G.LabelStyle}>
               Descripción
             </label>
             <input
@@ -63,8 +63,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoFocus={modo == "Modificar"}
               disabled={modo == "Consultar"}
               value={data.nombre ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
         </div>

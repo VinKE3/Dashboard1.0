@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setDataModal] = useState([]);
+  const [dataLinea, setDataLinea] = useState([]);
   //#endregion
 
   //#region useEffect.
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -25,16 +25,28 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Linea/Listar`);
-    setDataModal(result.data.data.data);
+  const GetTablas = async () => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/SubLinea/FormularioTablas`
+    );
+    setDataLinea(result.data.data.lineas);
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let lineas = result.data.data.lineas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        lineaId: lineas.id,
+      }));
+    }
   };
   //#endregion
 
   //#region Render
   return (
     <>
-      {Object.entries(dataModal).length > 0 && (
+      {Object.entries(dataLinea).length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -42,12 +54,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "SubLinea"]}
           titulo="Sublinea"
           foco={document.getElementById("tablaSubLinea")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input48}>
-                <label htmlFor="subLineaId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input48}>
+                <label htmlFor="subLineaId" className={G.LabelStyle}>
                   Código
                 </label>
                 <input
@@ -59,24 +71,24 @@ const Modal = ({ setModal, modo, objeto }) => {
                   maxLength="2"
                   autoFocus
                   value={data.subLineaId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="lineaId" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="lineaId" className={G.LabelStyle}>
                   Línea
                 </label>
                 <select
                   id="lineaId"
                   name="lineaId"
                   value={data.lineaId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
-                  {dataModal.map((linea) => (
+                  {dataLinea.map((linea) => (
                     <option key={linea.id} value={linea.id}>
                       {linea.descripcion}
                     </option>
@@ -85,7 +97,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="descripcion" className={Global.LabelStyle}>
+              <label htmlFor="descripcion" className={G.LabelStyle}>
                 Descripción
               </label>
               <input
@@ -97,8 +109,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoFocus={modo == "Modificar"}
                 disabled={modo == "Consultar"}
                 value={data.descripcion ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
           </div>

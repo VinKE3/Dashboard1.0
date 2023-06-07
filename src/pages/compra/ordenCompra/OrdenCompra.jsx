@@ -2,9 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
 import Imprimir from "../../../components/funciones/Imprimir";
-import Finalizar from "../../../components/funciones/Finalizar";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -21,10 +23,10 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -72,8 +74,12 @@ const OrdenCompra = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     proveedorNombre: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     estado: "",
   });
   const [cadena, setCadena] = useState(
@@ -81,9 +87,10 @@ const OrdenCompra = () => {
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -93,7 +100,9 @@ const OrdenCompra = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -104,10 +113,11 @@ const OrdenCompra = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -131,7 +141,7 @@ const OrdenCompra = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -148,8 +158,12 @@ const OrdenCompra = () => {
   const FiltroBoton = async () => {
     setFiltro({
       proveedorNombre: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       estado: "",
     });
     setIndex(0);
@@ -172,26 +186,6 @@ const OrdenCompra = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Compra/OrdenCompra/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Compra/OrdenCompra/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   //#endregion
 
@@ -218,26 +212,26 @@ const OrdenCompra = () => {
           );
           //Consulta Correlativo
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             proveedorId: "",
             tipoDocumentoId: "OC",
             serie: "0001",
             numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
-            clienteId: "000000",
+            clienteId: "",
             fechaEmision: moment().format("YYYY-MM-DD"),
             fechaContable: moment().format("YYYY-MM-DD"),
             fechaVencimiento: moment().format("YYYY-MM-DD"),
             proveedorNombre: "",
             proveedorNumeroDocumentoIdentidad: "",
             proveedorDireccion: "",
-            responsable1Id: "<<NI>>01",
-            responsable2Id: "<<NI>>01",
-            responsable3Id: "<<NI>>01",
+            responsable1Id: "",
+            responsable2Id: "",
+            responsable3Id: "",
             proveedorContactoId: "",
-            tipoCompraId: "CO",
-            monedaId: "S",
+            tipoCompraId: "",
+            monedaId: "",
             tipoCambio: 0,
-            tipoPagoId: "EF",
+            tipoPagoId: "",
             numeroOperacion: "",
             cuentaCorrienteId: "",
             lugarEntrega: "",
@@ -245,7 +239,7 @@ const OrdenCompra = () => {
             proveedorCuentaCorriente2Id: "",
             observacion: "",
             subTotal: 0,
-            porcentajeIGV: dataGlobal.porcentajeIGV,
+            porcentajeIGV: 0,
             montoIGV: 0,
             totalNeto: 0,
             porcentajeRetencion: 0,
@@ -260,7 +254,7 @@ const OrdenCompra = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Compra/OrdenCompra", accion, value);
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -268,9 +262,9 @@ const OrdenCompra = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido("Compra/OrdenCompra", accion, value);
           if (valor) {
-            await Delete(["Compra", "OrdenCompra"], value, setEliminar);
+            await Delete(["Compra", "OrdenCompra"], value, setListar);
           }
           break;
         }
@@ -285,7 +279,11 @@ const OrdenCompra = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Compra", "OrdenCompra"], id);
+            let model = await Imprimir(["Compra", "OrdenCompra"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -321,9 +319,9 @@ const OrdenCompra = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(1, id);
+                let valor = await GetIsPermitido("Compra/OrdenCompra", 1, id);
                 if (valor) {
-                  await Finalizar(["Compra", "OrdenCompra"], id, setEliminar);
+                  await Put(`Compra/OrdenCompra/Finalizar/${id}`, setListar);
                 }
               }
             });
@@ -457,7 +455,7 @@ const OrdenCompra = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -476,18 +474,16 @@ const OrdenCompra = () => {
       {visible ? (
         <>
           <div className="h-full px-2">
-            <h2 className={Global.TituloH2}>Órdenes de Compra</h2>
+            <h2 className={G.TituloH2}>Órdenes de Compra</h2>
 
             {/* Filtro*/}
 
             <div
-              className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputFull}>
-                  <label name="proveedorNombre" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputFull}>
+                  <label name="proveedorNombre" className={G.LabelStyle}>
                     Proveedor
                   </label>
                   <input
@@ -498,12 +494,12 @@ const OrdenCompra = () => {
                     autoComplete="off"
                     autoFocus
                     value={filtro.proveedorNombre ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -511,12 +507,12 @@ const OrdenCompra = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -524,69 +520,67 @@ const OrdenCompra = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputBoton}
+                    onChange={HandleData}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
                   </button>
                 </div>
               </div>
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-44"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputMitad}>
+                  <div className={G.Input + "w-44"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="TODOS"
                         name="estado"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.estado === ""}
                       />
                     </div>
                     <label
                       htmlFor="TODOS"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                      className={G.LabelCheckStyle + " rounded-r-none "}
                     >
                       Todas las Órdenes
                     </label>
                   </div>
-                  <div className={Global.Input + "w-40"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-40"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="N"
                         name="estado"
                         value={"N"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.estado == "N"}
                       />
                     </div>
                     <label
                       htmlFor="N"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                      className={G.LabelCheckStyle + " rounded-r-none"}
                     >
                       Solo Pendientes
                     </label>
                   </div>
-                  <div className={Global.Input + "w-44"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-44"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="S"
                         name="estado"
                         value={"S"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.estado == "S"}
                       />
                     </div>
                     <label
                       htmlFor="S"
-                      className={Global.LabelCheckStyle + "font-semibold"}
+                      className={G.LabelCheckStyle + "font-semibold"}
                     >
                       Solo Entregados
                     </label>
@@ -597,11 +591,11 @@ const OrdenCompra = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -609,14 +603,14 @@ const OrdenCompra = () => {
               )}
               <BotonBasico
                 botonText="Finalizar"
-                botonClass={Global.BotonMorado}
+                botonClass={G.BotonMorado}
                 botonIcon={faArrowAltCircleDown}
                 click={() => AccionModal(null, "Finalizar", 6)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""
@@ -625,7 +619,7 @@ const OrdenCompra = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaOrdenCompra"}
                 columnas={columnas}
@@ -636,10 +630,17 @@ const OrdenCompra = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaOrdenCompra")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

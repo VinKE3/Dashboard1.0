@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
@@ -9,12 +10,12 @@ import { FaSearch, FaUndoAlt, FaPen, FaTrashAlt, FaPlus } from "react-icons/fa";
 import { RadioButton } from "primereact/radiobutton";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   max-width: 100%;
   overflow-x: auto;
   & th:first-child {
@@ -54,19 +55,19 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:nth-child(10) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
-    text-align: center;
-  }
-  & th:last-child {
-    width: 75px;
+    width: 90px;
     min-width: 90px;
     max-width: 90px;
     text-align: center;
   }
+  & th:last-child {
+    width: 75px;
+    min-width: 75px;
+    max-width: 75px;
+    text-align: center;
+  }
 `;
-const TablaDetalleStyle = styled.div`
+const DivDetalle = styled.div`
   & th:nth-child(2) {
     width: 100px;
     min-width: 100px;
@@ -93,15 +94,15 @@ const TablaDetalleStyle = styled.div`
   }
 
   & th:nth-child(8) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;
@@ -113,9 +114,9 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState([]);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataMoneda, setDataMoneda] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataCabecera, setDataCabecera] = useState({
     isRenovado: false,
@@ -173,15 +174,15 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
+      TipoCambio(moment().format("YYYY-MM-DD"));
     }
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
   //Data Cabecera
-  const DataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
       setData((prevState) => ({
         ...prevState,
@@ -252,44 +253,40 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/GetSimplificado?isRenovado=${dataCabecera.isRenovado}&numero=${dataCabecera.numero}`
     );
-    if (result.name == "AxiosError") {
-      let error = "";
-      //Captura el mensaje de error
-      if (Object.entries(result.response.data).length > 0) {
-        error = String(result.response.data.messages[0].textos);
-      } else {
-        error = String(result.message);
-      }
-      //Captura el mensaje de error
-      return [false, error];
+    if (result.tipo == 1) {
+      return [false, result.textos[0]];
     } else {
       //Valida montos
       if (result.data.data.saldo <= 0) {
         document.getElementById("numero").focus();
-        return [false, "El Documento de Venta se encuentra Cancelado."];
+        return [false, "El Documento se encuentra Cancelado."];
       }
       if (result.data.data.isAnulado) {
         document.getElementById("numero").focus();
-        return [false, "El Documento de Venta se encuentra Anulado."];
+        return [false, "El Documento se encuentra Anulado."];
       }
       if (result.data.data.isBloqueado) {
         document.getElementById("numero").focus();
-        return [false, "El Documento de Venta se encuentra Bloqueado."];
+        return [false, "El Documento se encuentra Bloqueado."];
       }
       if (!result.data.data.existeNotaDebitoRelacionada) {
         document.getElementById("numero").focus();
         return [
           false,
-          "El Documento de Venta no cuenta con una Nota de Débito relacionada.",
+          "El Documento no cuenta con una Nota de Débito relacionada.",
         ];
       }
       let duplicado = dataDetalle.find((map) => map.id == result.data.data.id);
       if (duplicado != undefined) {
         document.getElementById("numero").focus();
-        return [
-          false,
-          "El Documento de Venta se encuentra registrado en el detalle.",
-        ];
+        return [false, "El Documento se encuentra registrado en el detalle."];
+      }
+
+      let moneda = dataDetalle.find(
+        (map) => map.monedaId != result.data.data.monedaId
+      );
+      if (moneda != undefined) {
+        return [false, "El Documento tiene una moneda distinta a la añadida."];
       }
       //Valida montos
     }
@@ -439,10 +436,6 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
     }
     setRefrescar(true);
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data Cabecera
 
   //Calculos
@@ -564,7 +557,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones Detalles
-  const DataCabeceraLetra = async ({ target }) => {
+  const HandleDataCabeceraLetra = async ({ target }) => {
     setDataLetra((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -681,7 +674,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
           correlativo++;
         }
         //Itera en base al n° de letras asignadas
-        OcultarMensajes();
+        Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
         setDataLetraDetalle(dataDetalleMod);
       }
 
@@ -746,29 +739,64 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   };
   //Calculos
   const TotalDetalle = async (total) => {
+    let moneda = dataDetalle[0].monedaId;
+    let totalPEN,
+      totalPENDividido,
+      totalPENUltimaFila,
+      totalUSD,
+      totalUSDDividido,
+      totalUSDUltimaFila;
     //Totales
-    //Soles
-    let totalPEN = Funciones.RedondearNumero(total, 2);
-    let totalPENDividido = Funciones.RedondearNumero(
-      totalPEN / dataCabecera.numeroLetra,
-      2
-    );
-    let totalPENUltimaFila = Funciones.RedondearNumero(
-      totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Soles
-    //Dolares
-    let totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
-    let totalUSDDividido = Funciones.RedondearNumero(
-      totalUSD / dataCabecera.numeroLetra,
-      2
-    );
-    let totalUSDUltimaFila = Funciones.RedondearNumero(
-      totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Dolares
+    if (moneda == "S") {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra,
+        2
+      );
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra,
+        2
+      );
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Dolares
+    } else {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total * data.tipoCambio, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra,
+        2
+      );
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra,
+        2
+      );
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Dolares
+    }
+
     //Totales
 
     return {
@@ -782,50 +810,33 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/FormularioTablas`
     );
     setDataMoneda(result.data.data.monedas);
-  };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioVenta,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaEmision).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioVenta,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          toastId: "toastTipoCambio",
-        }
-      );
-      OcultarMensajes();
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        monedaId: monedas.id,
+      }));
     }
+  };
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "venta",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   const GetCorrelativo = async () => {
     const result = await ApiMasy.get(
@@ -909,7 +920,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <div className="flex item-center justify-center">
-          <div className={Global.TablaBotonModificar}>
+          <div className={G.TablaBotonModificar}>
             <button
               id="boton-modificar"
               onClick={() => {
@@ -921,14 +932,14 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               <FaPen></FaPen>
             </button>
           </div>
-          <div className={Global.TablaBotonEliminar}>
+          <div className={G.TablaBotonEliminar}>
             <button
-              id="boton-eliminar"
+              id="botonEliminarFila"
               onClick={() => {
                 EliminarDocumentoReferencia(row.values.id);
               }}
               className="p-0 px-1"
-              title="Click para eliminar registro"
+              title="Click para Eliminar registro"
             >
               <FaTrashAlt></FaTrashAlt>
             </button>
@@ -1004,7 +1015,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             ""
           ) : (
             <>
-              <div className={Global.TablaBotonModificar}>
+              <div className={G.TablaBotonModificar}>
                 <button
                   id="boton"
                   onClick={() => CargarDetalleLetra(row.values.id)}
@@ -1035,83 +1046,80 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             titulo="Refinanciamiento de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
-            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera Documento */}
             <div
               className={
-                Global.ContenedorBasico +
+                G.ContenedorBasico +
                 " mb-2 !gap-0 !overflow-x-auto" +
-                Global.FondoContenedor
+                G.FondoContenedor
               }
             >
-              <div className={Global.ContenedorInputs + " mb-2"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.InputFull}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputs + " mb-2"}>
+                <div className={G.InputMitad}>
+                  <div className={G.InputFull}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="normal"
                         name="isRenovado"
                         autoFocus
                         value={false}
-                        onChange={(e) => DataCabecera(e)}
+                        onChange={(e) => HandleDataCabecera(e)}
                         checked={dataCabecera.isRenovado === false}
                       />
                     </div>
                     <label
                       htmlFor="normal"
-                      className={Global.LabelCheckStyle + "rounded-r-none"}
+                      className={G.LabelCheckStyle + "rounded-r-none"}
                     >
                       Normal
                     </label>
                   </div>
-                  <div className={Global.InputFull}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.InputFull}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="renovado"
                         name="isRenovado"
                         value={true}
-                        onChange={(e) => DataCabecera(e)}
+                        onChange={(e) => HandleDataCabecera(e)}
                         checked={dataCabecera.isRenovado === true}
                       />
                     </div>
-                    <label
-                      htmlFor="renovado"
-                      className={Global.LabelCheckStyle}
-                    >
+                    <label htmlFor="renovado" className={G.LabelCheckStyle}>
                       Renovado
                     </label>
                   </div>
                 </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="numero" className={Global.LabelStyle}>
-                    Número
+                <div className={G.InputMitad}>
+                  <label htmlFor="numero" className={G.LabelStyle}>
+                    Número Letra
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="numero"
                     name="numero"
-                    placeholder="Número"
+                    placeholder="Buscar número de letra"
                     autoComplete="off"
                     maxLength="10"
                     autoFocus
                     disabled={!extras.habilitar}
                     value={dataCabecera.numero ?? ""}
-                    onChange={DataCabecera}
-                    className={Global.InputBoton}
+                    onChange={HandleDataCabecera}
+                    className={G.InputBoton}
                   />
                   <button
                     id="consultarDocumento"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     disabled={!extras.habilitar}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
@@ -1122,13 +1130,10 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico + " mb-2"}>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.Input25pct}>
-                    <label
-                      htmlFor="porcentajeInteres"
-                      className={Global.LabelStyle}
-                    >
+              <div className={G.ContenedorBasico + " mb-2"}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.Input25pct}>
+                    <label htmlFor="porcentajeInteres" className={G.LabelStyle}>
                       % Interés
                     </label>
                     <input
@@ -1141,11 +1146,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.porcentajeInteres ?? ""}
                       onChange={PorcentajesCabecera}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.Input25pct}>
-                    <label htmlFor="montoInteres" className={Global.LabelStyle}>
+                  <div className={G.Input25pct}>
+                    <label htmlFor="montoInteres" className={G.LabelStyle}>
                       Monto Interés
                     </label>
                     <input
@@ -1158,14 +1163,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.montoInteres ?? ""}
                       onChange={PorcentajesCabecera}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.Input25pct}>
-                    <label
-                      htmlFor="porcentajePago"
-                      className={Global.LabelStyle}
-                    >
+                  <div className={G.Input25pct}>
+                    <label htmlFor="porcentajePago" className={G.LabelStyle}>
                       % Pago
                     </label>
                     <input
@@ -1178,11 +1180,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataCabecera.porcentajePago ?? ""}
                       onChange={PorcentajesCabecera}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="montoPago" className={Global.LabelStyle}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="montoPago" className={G.LabelStyle}>
                       Monto Pago
                     </label>
                     <input
@@ -1194,14 +1196,14 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={true}
                       value={dataCabecera.montoPago ?? ""}
-                      className={Global.InputBoton}
+                      className={G.InputBoton}
                     />
                     <button
                       id="enviarDocumento"
                       className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonPrimary +
+                        G.BotonBuscar +
+                        G.Anidado +
+                        G.BotonPrimary +
                         " rounded-r-none"
                       }
                       hidden={modo == "Consultar"}
@@ -1212,11 +1214,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </button>
                     <button
                       id="eliminarDocumentos"
-                      className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonEliminar
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonRojo}
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(0)}
                     >
@@ -1227,7 +1225,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id="tablaDocumento"
                   columnas={columnas}
@@ -1243,58 +1241,56 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                   ]}
                   DobleClick={(e) => CargarDocumentoReferencia(e, true)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
-              <div className={Global.ContenedorFooter}>
+              <div className={G.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total Saldo</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total Saldo</p>
                   </div>
-                  <div className={Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalSaldo ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total Interés</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total Interés</p>
                   </div>
-                  <div className={Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalInteres ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total Pago</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total Pago</p>
                   </div>
-                  <div className={Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalPago ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
-                      {extras.total ?? "0.00"}
-                    </p>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>{extras.total ?? "0.00"}</p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}
@@ -1303,16 +1299,12 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
 
             {/* Cabecera Letra */}
             <div
-              className={
-                Global.ContenedorBasico + " !gap-0 " + Global.FondoContenedor
-              }
+              className={G.ContenedorBasico + " !gap-0 " + G.FondoContenedor}
             >
-              <p className={Global.Subtitulo + " pb-1"}>
-                Letras por Renovación
-              </p>
-              <div className={Global.ContenedorInputs + " mb-1.5"}>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="numeroLetra" className={Global.LabelStyle}>
+              <p className={G.Subtitulo + " pb-1"}>Letras por Renovación</p>
+              <div className={G.ContenedorInputs + " mb-1.5"}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="numeroLetra" className={G.LabelStyle}>
                     N° Letras
                   </label>
                   <input
@@ -1324,12 +1316,12 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={modo == "Consultar" || !extras.habilitarDetalle}
                     value={dataCabecera.numeroLetra ?? ""}
-                    onChange={DataCabecera}
-                    className={Global.InputStyle}
+                    onChange={HandleDataCabecera}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="tipoCambio" className={G.LabelStyle}>
                     Tipo Cambio
                   </label>
                   <input
@@ -1341,38 +1333,34 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={true}
                     value={data.tipoCambio ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={
-                      modo != "Consultar"
-                        ? Global.InputBoton
-                        : Global.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
+                      TipoCambio(moment().format("YYYY-MM-DD"));
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>
                   </button>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="monedaId" className={G.LabelStyle}>
                     Moneda
                   </label>
                   <select
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     {dataMoneda.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -1383,10 +1371,10 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico + " mb-2"}>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+              <div className={G.ContenedorBasico + " mb-2"}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="fechaEmision" className={G.LabelStyle}>
                       Fecha Emisión
                     </label>
                     <input
@@ -1399,12 +1387,12 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       value={moment(dataLetra.fechaEmision ?? "").format(
                         "yyyy-MM-DD"
                       )}
-                      onChange={DataCabeceraLetra}
-                      className={Global.InputStyle}
+                      onChange={HandleDataCabeceraLetra}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputTercio}>
-                    <label htmlFor="dias" className={Global.LabelStyle}>
+                  <div className={G.InputTercio}>
+                    <label htmlFor="dias" className={G.LabelStyle}>
                       Días
                     </label>
                     <input
@@ -1417,14 +1405,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataLetra.dias ?? ""}
                       onChange={FechaVencimiento}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputMitad}>
-                    <label
-                      htmlFor="fechaVencimiento"
-                      className={Global.LabelStyle}
-                    >
+                  <div className={G.InputMitad}>
+                    <label htmlFor="fechaVencimiento" className={G.LabelStyle}>
                       Fecha Vencimiento
                     </label>
                     <input
@@ -1436,13 +1421,13 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       value={moment(dataLetra.fechaVencimiento ?? "").format(
                         "yyyy-MM-DD"
                       )}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <label htmlFor="aval" className={Global.LabelStyle}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputFull}>
+                    <label htmlFor="aval" className={G.LabelStyle}>
                       Aval
                     </label>
                     <input
@@ -1454,15 +1439,15 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={modo == "Consultar"}
                       value={dataLetra.aval ?? ""}
-                      onChange={DataCabeceraLetra}
-                      className={Global.InputBoton}
+                      onChange={HandleDataCabeceraLetra}
+                      className={G.InputBoton}
                     />
                     <button
                       id="enviarDetalleLetra"
                       className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonPrimary +
+                        G.BotonBuscar +
+                        G.Anidado +
+                        G.BotonPrimary +
                         " rounded-r-none"
                       }
                       hidden={modo == "Consultar"}
@@ -1473,11 +1458,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </button>
                     <button
                       id="eliminarDetalleLetra"
-                      className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonEliminar
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonRojo}
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(1)}
                     >
@@ -1488,7 +1469,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaDetalleStyle>
+              <DivDetalle>
                 <TableBasic
                   id="tablaDetalle"
                   columnas={columnasDetalle}
@@ -1504,22 +1485,22 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                   ]}
                   DobleClick={(e) => CargarDetalleLetra(e, true)}
                 />
-              </TablaDetalleStyle>
+              </DivDetalle>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
-              <div className={Global.ContenedorFooter}>
+              <div className={G.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {extras.totalDetalle ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}

@@ -2,27 +2,31 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
+import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
+import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
 import { FaUndoAlt } from "react-icons/fa";
 import {
   faPlus,
   faArrowAltCircleDown,
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
-import Swal from "sweetalert2";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -67,17 +71,22 @@ const CuadreStock = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -85,7 +94,9 @@ const CuadreStock = () => {
     setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
   useEffect(() => {
     if (visible) {
@@ -95,10 +106,11 @@ const CuadreStock = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -121,7 +133,7 @@ const CuadreStock = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -137,8 +149,12 @@ const CuadreStock = () => {
   };
   const FiltroBoton = async () => {
     setFiltro({
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("fechaInicio").focus();
@@ -167,26 +183,6 @@ const CuadreStock = () => {
     );
     setDetalle(result.data.data);
   };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Almacen/CuadreStock/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
   //#endregion
 
   //#region Funciones Modal
@@ -212,15 +208,15 @@ const CuadreStock = () => {
           );
           //Consulta Correlativo
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "01",
             serie: "0001",
             numero: ("0000000000" + String(result.data.data.numero)).slice(-10),
             fechaRegistro: moment().format("YYYY-MM-DD"),
             horaRegistro: "",
-            monedaId: "S",
+            monedaId: "",
             tipoCambio: 0,
-            responsableId: "<<NI>>01",
+            responsableId: "",
             observacion: "",
             totalSobra: 0,
             totalFalta: 0,
@@ -232,7 +228,11 @@ const CuadreStock = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/CuadreStock",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -240,9 +240,13 @@ const CuadreStock = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/CuadreStock",
+            accion,
+            value
+          );
           if (valor) {
-            Delete(["Almacen", "CuadreStock"], value, setEliminar);
+            Delete(["Almacen", "CuadreStock"], value, setListar);
           }
           break;
         }
@@ -257,7 +261,11 @@ const CuadreStock = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Almacen", "CuadreStock"], id);
+            let model = await Imprimir(["Almacen", "CuadreStock"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -294,42 +302,12 @@ const CuadreStock = () => {
               confirmButtonText: "Aceptar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                ApiMasy.put(
-                  `api/Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`
-                ).then((response) => {
-                  if (response.name == "AxiosError") {
-                    let err = "";
-                    if (response.response.data == "") {
-                      err = response.message;
-                    } else {
-                      err = String(response.response.data.messages[0].textos);
-                    }
-                    toast.error(err, {
-                      position: "bottom-right",
-                      autoClose: 3000,
-                      hideProgressBar: true,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "colored",
-                    });
-                  } else {
-                    Listar(cadena, index + 1);
-                    toast.success(String(response.data.messages[0].textos), {
-                      position: "bottom-right",
-                      autoClose: 3000,
-                      hideProgressBar: true,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "colored",
-                    });
-                  }
-                });
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                await Put(
+                  `Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`,
+                  setListar
+                );
               }
             });
           } else {
@@ -346,8 +324,9 @@ const CuadreStock = () => {
           }
           break;
         }
-        default:{
-          break;}
+        default: {
+          break;
+        }
       }
     }
   };
@@ -483,7 +462,7 @@ const CuadreStock = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -501,20 +480,18 @@ const CuadreStock = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
+          <div className={G.ContenedorPadre}>
             <div className="flex items-center justify-between">
-              <h2 className={Global.TituloH2}>Cuadre de Stock</h2>
+              <h2 className={G.TituloH2}>Cuadre de Stock</h2>
             </div>
 
             {/* Filtro*/}
             <div
-              className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
-              <div className={Global.ContenedorFiltro}>
-                <div className={Global.InputFull}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputsFiltro}>
+                <div className={G.InputFull}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -523,12 +500,12 @@ const CuadreStock = () => {
                     name="fechaInicio"
                     autoFocus
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputFull}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.InputFull}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -536,14 +513,12 @@ const CuadreStock = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputBoton}
+                    onChange={HandleData}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -554,11 +529,11 @@ const CuadreStock = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -566,14 +541,14 @@ const CuadreStock = () => {
               )}
               <BotonBasico
                 botonText="Cerrar / Abrir"
-                botonClass={Global.BotonMorado}
+                botonClass={G.BotonMorado}
                 botonIcon={faArrowAltCircleDown}
                 click={() => AccionModal(null, "AbrirCerrar", 6)}
                 contenedor=""
               />
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""
@@ -582,7 +557,7 @@ const CuadreStock = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCuadreStock"}
                 columnas={columnas}
@@ -593,7 +568,7 @@ const CuadreStock = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && (
@@ -602,6 +577,13 @@ const CuadreStock = () => {
               modo={modo}
               objeto={objeto}
               detalle={detalle}
+            />
+          )}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaCuadreStock")}
             />
           )}
           <ToastContainer />

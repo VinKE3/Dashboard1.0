@@ -1,21 +1,23 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
-import * as Global from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import * as G from "../../../components/Global";
 
 const TomaDeInventario = ({ setModal }) => {
+  //#region useState
   const [data, setData] = useState([]);
   const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    TipoDeDocumentos();
+    GetTablas();
   }, []);
+  //#endregion
 
-  const ValidarData = async ({ target }) => {
+  //#region Funciones
+  const HandleData = async ({ target }) => {
     if (target.name == "conStock") {
       setData((prevState) => ({
         ...prevState,
@@ -28,32 +30,65 @@ const TomaDeInventario = ({ setModal }) => {
       }));
     }
   };
+  //#endregion
 
-  const TipoDeDocumentos = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );
     setTipoDeExistencia(result.data.data.tiposExistencia);
   };
-  const Imprimir = async () => {
-    console.log("Imprimir");
+  const Imprimir = async (origen) => {
+    console.log(origen);
   };
+  //#endregion
 
   return (
     <>
-      <ModalBasic titulo="Toma de Inventario" setModal={setModal}>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoExistenciaId" className={Global.LabelStyle}>
-              Tipo
+      <ModalBasic
+        setModal={setModal}
+        titulo="Toma de Inventarios"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño + " !max-w-2xl", G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Imprimir("pdf")}
+              className={G.BotonModalBase + G.BotonRojo + " border-gray-200"}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Imprimir("excel")}
+              className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
+              Tipo de Existencia
             </label>
             <select
               id="tipoExistenciaId"
               name="tipoExistenciaId"
               autoFocus
               value={data.tipoExistenciaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputBoton}
+              onChange={HandleData}
+              className={G.InputBoton}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -64,32 +99,22 @@ const TomaDeInventario = ({ setModal }) => {
                 </option>
               ))}
             </select>
-
-            <div className={Global.Input + " w-25"}>
-              <div className={Global.CheckStyle + Global.Anidado}>
+            <div className={G.Input + " w-25"}>
+              <div className={G.CheckStyle + G.Anidado}>
                 <Checkbox
                   inputId="conStock"
                   name="conStock"
-                  value="New York"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.conStock ? true : ""}
                 />
               </div>
-              <label htmlFor="abonar" className={Global.LabelCheckStyle}>
+              <label htmlFor="conStock" className={G.LabelCheckStyle}>
                 Con Stock
               </label>
             </div>
           </div>
-        </div>
-        <div className="mt-2">
-          <BotonBasico
-            botonText="ACEPTAR"
-            botonClass={Global.BotonAgregar}
-            botonIcon={faPlus}
-            click={() => Imprimir()}
-          />
         </div>
       </ModalBasic>
     </>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import store from "store2";
@@ -11,8 +11,8 @@ import moment from "moment";
 const VentasPorClienteDocumento = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     clienteId: "",
     tipoDocumentoId: "",
     monedaId: "S",
@@ -31,7 +31,7 @@ const VentasPorClienteDocumento = ({ setModal }) => {
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
         ...prevState,
@@ -71,10 +71,10 @@ const VentasPorClienteDocumento = ({ setModal }) => {
     <>
       <ModalBasic titulo="Ventas Por Cliente Documento" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="clienteId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="clienteId" className={G.LabelStyle}>
               Cliente
             </label>
             <select
@@ -82,8 +82,8 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               name="clienteId"
               autoFocus
               value={data.clienteId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -95,8 +95,8 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
               Tipo Documento
             </label>
             <select
@@ -104,8 +104,8 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               name="tipoDocumentoId"
               autoFocus
               value={data.tipoDocumentoId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -117,9 +117,9 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -127,12 +127,12 @@ const VentasPorClienteDocumento = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -140,13 +140,13 @@ const VentasPorClienteDocumento = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
+                onChange={HandleData}
+                className={G.InputBoton}
               />
             </div>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
             </label>
             <select
@@ -154,8 +154,8 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {monedas.map((moneda) => (
                 <option key={moneda.id} value={moneda.id}>
@@ -164,13 +164,14 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorInputs}>
+          <div className={G.ContenedorInputs}>
             <div className="mt-2">
               <BotonBasico
                 botonText="ACEPTAR"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPlus}
                 click={() => Imprimir()}
+contenedor=""
               />
             </div>
           </div>

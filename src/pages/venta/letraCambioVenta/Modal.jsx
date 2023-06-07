@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
@@ -8,12 +9,12 @@ import moment from "moment";
 import { FaSearch, FaUndoAlt, FaPen, FaTrashAlt, FaPlus } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -49,19 +50,19 @@ const TablaStyle = styled.div`
   }
   & th:nth-child(8),
   & th:nth-child(9) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
-    text-align: center;
-  }
-  & th:last-child {
-    width: 75px;
+    width: 90px;
     min-width: 90px;
     max-width: 90px;
     text-align: center;
   }
+  & th:last-child {
+    width: 75px;
+    min-width: 75px;
+    max-width: 75px;
+    text-align: center;
+  }
 `;
-const TablaDetalleStyle = styled.div`
+const DivDetalle = styled.div`
   & th:nth-child(2) {
     width: 100px;
     min-width: 100px;
@@ -88,30 +89,30 @@ const TablaDetalleStyle = styled.div`
   }
 
   & th:nth-child(8) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;
 //#endregion
 
-const Modal = ({ setModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto, setActualizar }) => {
   //#region useState
   //Data General
   const [data, setData] = useState(objeto);
   const [dataDetalle, setDataDetalle] = useState([]);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipoDoc, setDataTipoDoc] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
-  //Tablas
+  //GetTablas
   //Data Modales Ayuda
   const [dataCabecera, setDataCabecera] = useState({
     tipoDocumentoId: "01",
@@ -163,15 +164,15 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [refrescar]);
   useEffect(() => {
     if (modo == "Nuevo") {
-      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
+      TipoCambio(moment().format("YYYY-MM-DD"));
     }
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
   //Data Cabecera
-  const DataCabecera = async ({ target }) => {
+  const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
       setData((prevState) => ({
         ...prevState,
@@ -233,6 +234,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         break;
       }
     }
+    setRefrescar(true);
   };
   const ValidarDocumentoReferencia = async () => {
     if (Object.entries(dataCabecera).length == 0) {
@@ -268,6 +270,15 @@ const Modal = ({ setModal, modo, objeto }) => {
       return [
         false,
         "El Documento de Venta se encuentra registrado en el detalle.",
+      ];
+    }
+    let moneda = dataDetalle.find(
+      (map) => map.monedaId != result.data.data.monedaId
+    );
+    if (moneda != undefined) {
+      return [
+        false,
+        "El Documento de Venta tiene una moneda distinta a la añadida.",
       ];
     }
     //Valida montos
@@ -333,10 +344,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     setRefrescar(true);
   };
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
-  };
   //Data Cabecera
 
   //Calculos
@@ -354,7 +361,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones Detalles
-  const DataCabeceraLetra = async ({ target }) => {
+  const HandleDataCabeceraLetra = async ({ target }) => {
     setDataLetra((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -469,7 +476,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           correlativo++;
         }
         //Itera en base al n° de letras asignadas
-        OcultarMensajes();
+        Funciones.OcultarMensajes(setTipoMensaje, setMensaje);
         setDataLetraDetalle(dataDetalleMod);
       }
 
@@ -534,29 +541,64 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   //Calculos
   const TotalDetalle = async (total) => {
+    let moneda = dataDetalle[0].monedaId;
+    let totalPEN,
+      totalPENDividido,
+      totalPENUltimaFila,
+      totalUSD,
+      totalUSDDividido,
+      totalUSDUltimaFila;
     //Totales
-    //Soles
-    let totalPEN = Funciones.RedondearNumero(total, 2);
-    let totalPENDividido = Funciones.RedondearNumero(
-      totalPEN / dataCabecera.numeroLetra,
-      2
-    );
-    let totalPENUltimaFila = Funciones.RedondearNumero(
-      totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Soles
-    //Dolares
-    let totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
-    let totalUSDDividido = Funciones.RedondearNumero(
-      totalUSD / dataCabecera.numeroLetra,
-      2
-    );
-    let totalUSDUltimaFila = Funciones.RedondearNumero(
-      totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
-      2
-    );
-    //Dolares
+    if (moneda == "S") {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra,
+        2
+      );
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total / data.tipoCambio, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra,
+        2
+      );
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Dolares
+    } else {
+      //Soles
+      totalPEN = Funciones.RedondearNumero(total * data.tipoCambio, 2);
+      totalPENDividido = Funciones.RedondearNumero(
+        totalPEN / dataCabecera.numeroLetra,
+        2
+      );
+      totalPENUltimaFila = Funciones.RedondearNumero(
+        totalPEN - totalPENDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Soles
+
+      //Dolares
+      totalUSD = Funciones.RedondearNumero(total, 2);
+      totalUSDDividido = Funciones.RedondearNumero(
+        totalUSD / dataCabecera.numeroLetra,
+        2
+      );
+      totalUSDUltimaFila = Funciones.RedondearNumero(
+        totalUSD - totalUSDDividido * (dataCabecera.numeroLetra - 1),
+        2
+      );
+      //Dolares
+    }
+
     //Totales
 
     return {
@@ -570,51 +612,36 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Venta/LetraCambioVenta/FormularioTablas`
     );
     setDataTipoDoc(result.data.data.tiposDocumento);
     setDataMoneda(result.data.data.monedas);
-  };
-  const GetPorIdTipoCambio = async (id) => {
-    const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
-    if (result.name == "AxiosError") {
-      if (Object.entries(result.response.data).length > 0) {
-        setTipoMensaje(result.response.data.messages[0].tipo);
-        setMensaje(result.response.data.messages[0].textos);
-      } else {
-        setTipoMensaje(1);
-        setMensaje([result.message]);
-      }
-      setData({
-        ...data,
-        tipoCambio: 0,
-      });
-    } else {
-      setData({
-        ...data,
-        tipoCambio: result.data.data.precioVenta,
-      });
-      toast.info(
-        "El tipo de cambio del día " +
-          moment(data.fechaEmision).format("DD/MM/YYYY") +
-          " es: " +
-          result.data.data.precioVenta,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          toastId: "toastTipoCambio",
-        }
-      );
-      OcultarMensajes();
+
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposDocumento = result.data.data.tiposDocumento.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoDocumentoId: tiposDocumento.id,
+        monedaId: monedas.id,
+      }));
     }
+  };
+  const TipoCambio = async (fecha) => {
+    let tipoCambio = await GetTipoCambio(
+      fecha,
+      "venta",
+      setTipoMensaje,
+      setMensaje
+    );
+    setData((prev) => ({
+      ...prev,
+      tipoCambio: tipoCambio,
+    }));
   };
   const GetCorrelativo = async () => {
     const result = await ApiMasy.get(
@@ -688,14 +715,14 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Acciones",
       Cell: ({ row }) => (
         <div className="flex item-center justify-center">
-          <div className={Global.TablaBotonEliminar}>
+          <div className={G.TablaBotonEliminar}>
             <button
-              id="boton-eliminar"
+              id="botonEliminarFila"
               onClick={() => {
                 EliminarDocumentoReferencia(row.values.id);
               }}
               className="p-0 px-1"
-              title="Click para eliminar registro"
+              title="Click para Eliminar registro"
             >
               <FaTrashAlt></FaTrashAlt>
             </button>
@@ -771,7 +798,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             ""
           ) : (
             <>
-              <div className={Global.TablaBotonModificar}>
+              <div className={G.TablaBotonModificar}>
                 <button
                   id="boton"
                   onClick={() => CargarDetalleLetra(row.values.id)}
@@ -802,29 +829,26 @@ const Modal = ({ setModal, modo, objeto }) => {
             titulo="Emisión de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
-            tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() => OcultarMensajes()}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera Documento */}
             <div
               className={
-                Global.ContenedorBasico +
-                " mb-2 !gap-0 " +
-                Global.FondoContenedor
+                G.ContenedorBasico + " mb-2 !gap-0 " + G.FondoContenedor
               }
             >
-              <div className={Global.ContenedorInputs + " mb-2"}>
-                <div className={Global.InputFull}>
-                  <label
-                    htmlFor="tipoDocumentoId"
-                    className={Global.LabelStyle}
-                  >
+              <div className={G.ContenedorInputs + " mb-2"}>
+                <div className={G.InputFull}>
+                  <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
                     Tipo Doc.
                   </label>
                   <select
@@ -832,9 +856,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                     name="tipoDocumentoId"
                     autoFocus
                     value={dataCabecera.tipoDocumentoId ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     disabled={modo == "Nuevo" ? false : true}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     {dataTipoDoc.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -843,8 +867,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="serie" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="serie" className={G.LabelStyle}>
                     Serie
                   </label>
                   <input
@@ -856,16 +880,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="4"
                     disabled={modo == "Nuevo" ? false : true}
                     value={dataCabecera.serie ?? ""}
-                    onChange={DataCabecera}
-                    className={Global.InputStyle}
+                    onChange={HandleDataCabecera}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputMitad}>
-                  <label htmlFor="numero" className={Global.LabelStyle}>
+                <div className={G.InputMitad}>
+                  <label htmlFor="numero" className={G.LabelStyle}>
                     Número
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="numero"
                     name="numero"
                     placeholder="Número"
@@ -873,15 +897,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                     maxLength="10"
                     disabled={modo == "Nuevo" ? false : true}
                     value={dataCabecera.numero ?? ""}
-                    onChange={DataCabecera}
-                    className={Global.InputBoton}
+                    onChange={HandleDataCabecera}
+                    className={G.InputBoton}
                   />
                   <button
                     id="consultarDocumento"
                     className={
-                      Global.BotonBuscar +
-                      Global.Anidado +
-                      Global.BotonPrimary +
+                      G.BotonBuscar +
+                      G.Anidado +
+                      G.BotonPrimary +
                       " rounded-r-none"
                     }
                     hidden={modo == "Consultar"}
@@ -892,9 +916,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   </button>
                   <button
                     id="eliminarDocumentos"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonEliminar
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonRojo}
                     hidden={modo == "Consultar"}
                     onClick={() => LimpiarCabecera(0)}
                   >
@@ -904,7 +926,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id="tablaDocumento"
                   columnas={columnas}
@@ -919,22 +941,22 @@ const Modal = ({ setModal, modo, objeto }) => {
                     "border",
                   ]}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
-              <div className={Global.ContenedorFooter}>
+              <div className={G.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>
                       {totalDocumento ?? "0.00"}
                     </p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}
@@ -943,14 +965,12 @@ const Modal = ({ setModal, modo, objeto }) => {
 
             {/* Cabecera Letra */}
             <div
-              className={
-                Global.ContenedorBasico + " !gap-0 " + Global.FondoContenedor
-              }
+              className={G.ContenedorBasico + " !gap-0 " + G.FondoContenedor}
             >
-              <p className={Global.Subtitulo + " pb-1"}>Letras por Factura</p>
-              <div className={Global.ContenedorInputs + " mb-1.5"}>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="numeroLetra" className={Global.LabelStyle}>
+              <p className={G.Subtitulo + " pb-1"}>Letras por Factura</p>
+              <div className={G.ContenedorInputs + " mb-1.5"}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="numeroLetra" className={G.LabelStyle}>
                     N° Letras
                   </label>
                   <input
@@ -962,12 +982,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={modo == "Consultar" || !habilitar}
                     value={dataCabecera.numeroLetra ?? ""}
-                    onChange={DataCabecera}
-                    className={Global.InputStyle}
+                    onChange={HandleDataCabecera}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="tipoCambio" className={G.LabelStyle}>
                     Tipo Cambio
                   </label>
                   <input
@@ -979,38 +999,34 @@ const Modal = ({ setModal, modo, objeto }) => {
                     min={0}
                     disabled={true}
                     value={data.tipoCambio ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     className={
-                      modo != "Consultar"
-                        ? Global.InputBoton
-                        : Global.InputStyle
+                      modo != "Consultar" ? G.InputBoton : G.InputStyle
                     }
                   />
                   <button
                     id="consultarTipoCambio"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     hidden={modo == "Consultar"}
                     onKeyDown={(e) => Funciones.KeyClick(e)}
                     onClick={() => {
-                      GetPorIdTipoCambio(moment().format("YYYY-MM-DD"));
+                      TipoCambio(moment().format("YYYY-MM-DD"));
                     }}
                   >
                     <FaUndoAlt></FaUndoAlt>
                   </button>
                 </div>
-                <div className={Global.InputTercio}>
-                  <label htmlFor="monedaId" className={Global.LabelStyle}>
+                <div className={G.InputTercio}>
+                  <label htmlFor="monedaId" className={G.LabelStyle}>
                     Moneda
                   </label>
                   <select
                     id="monedaId"
                     name="monedaId"
                     value={data.monedaId ?? ""}
-                    onChange={DataCabecera}
+                    onChange={HandleDataCabecera}
                     disabled={modo == "Consultar"}
-                    className={Global.InputStyle}
+                    className={G.InputStyle}
                   >
                     {dataMoneda.map((map) => (
                       <option key={map.id} value={map.id}>
@@ -1021,10 +1037,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorBasico + " mb-2"}>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputMitad}>
-                    <label htmlFor="fechaEmision" className={Global.LabelStyle}>
+              <div className={G.ContenedorBasico + " mb-2"}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputMitad}>
+                    <label htmlFor="fechaEmision" className={G.LabelStyle}>
                       Fecha Emisión
                     </label>
                     <input
@@ -1037,12 +1053,12 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={moment(dataLetra.fechaEmision ?? "").format(
                         "yyyy-MM-DD"
                       )}
-                      onChange={DataCabeceraLetra}
-                      className={Global.InputStyle}
+                      onChange={HandleDataCabeceraLetra}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputTercio}>
-                    <label htmlFor="dias" className={Global.LabelStyle}>
+                  <div className={G.InputTercio}>
+                    <label htmlFor="dias" className={G.LabelStyle}>
                       Días
                     </label>
                     <input
@@ -1055,14 +1071,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                       disabled={modo == "Consultar"}
                       value={dataLetra.dias ?? ""}
                       onChange={FechaVencimiento}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
-                  <div className={Global.InputMitad}>
-                    <label
-                      htmlFor="fechaVencimiento"
-                      className={Global.LabelStyle}
-                    >
+                  <div className={G.InputMitad}>
+                    <label htmlFor="fechaVencimiento" className={G.LabelStyle}>
                       Fecha Vencimiento
                     </label>
                     <input
@@ -1074,13 +1087,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                       value={moment(dataLetra.fechaVencimiento ?? "").format(
                         "yyyy-MM-DD"
                       )}
-                      className={Global.InputStyle}
+                      className={G.InputStyle}
                     />
                   </div>
                 </div>
-                <div className={Global.ContenedorInputs}>
-                  <div className={Global.InputFull}>
-                    <label htmlFor="aval" className={Global.LabelStyle}>
+                <div className={G.ContenedorInputs}>
+                  <div className={G.InputFull}>
+                    <label htmlFor="aval" className={G.LabelStyle}>
                       Aval
                     </label>
                     <input
@@ -1092,15 +1105,15 @@ const Modal = ({ setModal, modo, objeto }) => {
                       min={0}
                       disabled={modo == "Consultar"}
                       value={dataLetra.aval ?? ""}
-                      onChange={DataCabeceraLetra}
-                      className={Global.InputBoton}
+                      onChange={HandleDataCabeceraLetra}
+                      className={G.InputBoton}
                     />
                     <button
                       id="enviarDetalleLetra"
                       className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonPrimary +
+                        G.BotonBuscar +
+                        G.Anidado +
+                        G.BotonPrimary +
                         " rounded-r-none"
                       }
                       hidden={modo == "Consultar"}
@@ -1111,11 +1124,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     </button>
                     <button
                       id="eliminarDetalleLetra"
-                      className={
-                        Global.BotonBuscar +
-                        Global.Anidado +
-                        Global.BotonEliminar
-                      }
+                      className={G.BotonBuscar + G.Anidado + G.BotonRojo}
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(1)}
                     >
@@ -1126,7 +1135,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
 
               {/* Tabla Detalle */}
-              <TablaDetalleStyle>
+              <DivDetalle>
                 <TableBasic
                   id="tablaDetalle"
                   columnas={columnasDetalle}
@@ -1142,22 +1151,20 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ]}
                   DobleClick={(e) => CargarDetalleLetra(e, true)}
                 />
-              </TablaDetalleStyle>
+              </DivDetalle>
               {/* Tabla Detalle */}
 
               {/*Tabla Footer*/}
-              <div className={Global.ContenedorFooter}>
+              <div className={G.ContenedorFooter}>
                 <div className="flex">
-                  <div className={Global.FilaVacia}></div>
-                  <div className={Global.FilaPrecio}>
-                    <p className={Global.FilaContenido}>Total</p>
+                  <div className={G.FilaFooter + G.FilaVacia}></div>
+                  <div className={G.FilaFooter + G.FilaPrecio}>
+                    <p className={G.FilaContenido}>Total</p>
                   </div>
-                  <div className={Global.FilaImporte}>
-                    <p className={Global.FilaContenido}>
-                      {totalDetalle ?? "0.00"}
-                    </p>
+                  <div className={G.FilaFooter + G.FilaImporte}>
+                    <p className={G.FilaContenido}>{totalDetalle ?? "0.00"}</p>
                   </div>
-                  <div className={Global.UltimaFila}></div>
+                  <div className={G.FilaFooter + G.UltimaFila}></div>
                 </div>
               </div>
               {/*Tabla Footer*/}

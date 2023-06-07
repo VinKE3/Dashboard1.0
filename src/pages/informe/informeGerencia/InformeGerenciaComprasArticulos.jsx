@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import store from "store2";
@@ -11,9 +11,13 @@ import moment from "moment";
 const InformeGerenciaComprasArticulos = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
-    tipoReporteId: "1",
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
+    marcaId: "",
   });
   const TipoReporte = [
     {
@@ -35,7 +39,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
     console.log(data);
   }, [data]);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -48,12 +52,10 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
   return (
     <>
       <ModalBasic titulo="Informe Compras Articulos" setModal={setModal}>
-        <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
-        >
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -61,12 +63,12 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -74,13 +76,13 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
+                onChange={HandleData}
+                className={G.InputBoton}
               />
             </div>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoReporteId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="tipoReporteId" className={G.LabelStyle}>
               Tipo de Reporte
             </label>
             <select
@@ -88,8 +90,8 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
               name="tipoReporteId"
               autoFocus
               value={data.tipoReporteId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {TipoReporte.map((reporte) => (
                 <option key={reporte.id} value={reporte.id}>
@@ -102,9 +104,10 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
+              contenedor=""
             />
           </div>
         </div>

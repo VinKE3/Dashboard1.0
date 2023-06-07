@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Delete from "../../../components/funciones/Delete";
+import Mensajes from "../../../components/funciones/Mensajes";
 import FiltroBasico from "../../../components/filtro/FiltroBasico";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -10,10 +11,10 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -44,7 +45,7 @@ const EmpresadeTransporte = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -52,7 +53,9 @@ const EmpresadeTransporte = () => {
     setCadena(`&nombre=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -63,10 +66,11 @@ const EmpresadeTransporte = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -111,7 +115,7 @@ const EmpresadeTransporte = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -149,7 +153,7 @@ const EmpresadeTransporte = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          empresaId: "01",
+          empresaId: "",
           empresaTransporteId: "00",
           numeroDocumentoIdentidad: "",
           nombre: "",
@@ -187,7 +191,7 @@ const EmpresadeTransporte = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "EmpresaTransporte"], id, setEliminar);
+        Delete(["Mantenimiento", "EmpresaTransporte"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -229,7 +233,7 @@ const EmpresadeTransporte = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "EmpresaTransporte"]}
             id={row.values.id}
@@ -248,8 +252,8 @@ const EmpresadeTransporte = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Empresa de Transporte</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Empresas de Transporte</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -258,7 +262,7 @@ const EmpresadeTransporte = () => {
               name={"nombre"}
               value={filtro.nombre}
               maxLength={"200"}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />
@@ -268,7 +272,7 @@ const EmpresadeTransporte = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -277,7 +281,7 @@ const EmpresadeTransporte = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaEmpresaTransporte"}
                 columnas={columnas}
@@ -288,7 +292,7 @@ const EmpresadeTransporte = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

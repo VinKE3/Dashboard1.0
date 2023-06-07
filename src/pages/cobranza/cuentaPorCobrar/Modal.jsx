@@ -1,24 +1,20 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
+import React, { useState } from "react";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import Mensajes from "../../../components/funciones/Mensajes";
 import TableBasic from "../../../components/tabla/TableBasic";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { toast } from "react-toastify";
 import moment from "moment";
-import { FaPlus, FaUndoAlt, FaTrashAlt, FaEye } from "react-icons/fa";
 import styled from "styled-components";
-import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
 import "primeicons/primeicons.css";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
-import * as Funciones from "../../../components/funciones/Validaciones";
+
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
-  & th:nth-child(1),
-  & th:nth-child(2) {
+const DivTabla = styled.div`
+  & th:nth-child(1) {
     width: 40px;
+    text-align: center;
+  }
+  & th:nth-child(2) {
+    width: 60px;
     text-align: center;
   }
   & th:nth-child(3) {
@@ -36,15 +32,15 @@ const TablaStyle = styled.div`
     text-align: center;
   }
   & th:nth-child(7) {
-    width: 130px;
-    min-width: 130px;
-    max-width: 130px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
     text-align: center;
   }
   & th:last-child {
     width: 75px;
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 75px;
+    max-width: 75px;
     text-align: center;
   }
 `;
@@ -56,10 +52,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [data] = useState(objeto);
   const [dataDetalle] = useState(objeto.abonos);
   //Data General
-  //Tablas
+  //GetTablas
   const [dataTipoDoc] = useState([objeto.tipoDocumento]);
   const [dataMoneda] = useState([objeto.moneda]);
-  //Tablas
+  //GetTablas
   //#endregion
 
   //#region Columnas
@@ -147,17 +143,13 @@ const Modal = ({ setModal, modo, objeto }) => {
           titulo="Cuentas Por Cobrar"
           cerrar={false}
           foco={document.getElementById("tablaCuentaPorCobrar")}
-          tamañoModal={[Global.ModalFull, Global.Form + " px-10 "]}
+          tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
         >
           {/*Cabecera*/}
-          <div
-            className={
-              Global.ContenedorBasico + Global.FondoContenedor + " mb-2"
-            }
-          >
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
                   Tipo Doc.
                 </label>
                 <select
@@ -166,9 +158,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   value={data.tipoDocumentoId ?? ""}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={
-                    Global.InputStyle
-                  }
+                  className={G.InputStyle}
                 >
                   {dataTipoDoc.map((map) => (
                     <option key={map.id} value={map.id}>
@@ -177,8 +167,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.InputTercio}>
-                <label htmlFor="serie" className={Global.LabelStyle}>
+              <div className={G.InputTercio}>
+                <label htmlFor="serie" className={G.LabelStyle}>
                   Serie
                 </label>
                 <input
@@ -190,11 +180,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   maxLength="4"
                   disabled={true}
                   value={data.serie ?? ""}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="numero" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="numero" className={G.LabelStyle}>
                   Número
                 </label>
                 <input
@@ -206,13 +196,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   maxLength="10"
                   disabled={true}
                   value={data.numero ?? ""}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="fechaContable" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="fechaContable" className={G.LabelStyle}>
                   Fecha
                 </label>
                 <input
@@ -223,17 +213,17 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="fechaContable"
                   disabled={true}
                   value={moment(data.fechaContable).format("DD/MM/YYYY") ?? ""}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="monedaId" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="monedaId" className={G.LabelStyle}>
                   Moneda
                 </label>
                 <select
                   id="monedaId"
                   name="monedaId"
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                   disabled={true}
                   value={data.monedaId ?? ""}
                 >
@@ -245,9 +235,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                 </select>
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="total" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="total" className={G.LabelStyle}>
                   Total a Pagar
                 </label>
                 <input
@@ -258,11 +248,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Total a Pagar"
                   disabled={true}
                   value={data.total ?? ""}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="abonado" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="abonado" className={G.LabelStyle}>
                   Abonado
                 </label>
                 <input
@@ -273,11 +263,11 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Abonado"
                   disabled={true}
                   value={data.abonado ?? ""}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="saldo" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="saldo" className={G.LabelStyle}>
                   Saldo Total
                 </label>
                 <input
@@ -288,13 +278,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Saldo Total"
                   disabled={true}
                   value={data.saldo ?? ""}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="observacion" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="observacion" className={G.LabelStyle}>
                   Observación
                 </label>
                 <input
@@ -305,7 +295,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Observación"
                   disabled={true}
                   value={data.observacion ?? ""}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
@@ -313,7 +303,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           {/*Cabecera*/}
 
           {/* Tabla Detalle */}
-          <TablaStyle>
+          <DivTabla>
             <TableBasic
               columnas={columnas}
               datos={dataDetalle}
@@ -327,7 +317,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 "border",
               ]}
             />
-          </TablaStyle>
+          </DivTabla>
           {/* Tabla Detalle */}
         </ModalCrud>
       )}

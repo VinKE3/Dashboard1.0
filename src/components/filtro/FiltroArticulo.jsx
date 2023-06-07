@@ -2,12 +2,12 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { FaUndoAlt, FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -56,7 +56,9 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
   useEffect(() => {
     Listar(cadena, 1);
@@ -64,7 +66,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -76,12 +78,6 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
   };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
@@ -213,9 +209,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
-              className={
-                Global.BotonModalBase + Global.BotonAgregar + "border-none"
-              }
+              className={G.BotonModalBase + G.BotonVerde + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>
@@ -232,17 +226,15 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Artículos"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        foco={foco}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             <button
               type="button"
               onClick={() => setModal(false)}
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
             >
               CERRAR
             </button>
@@ -251,10 +243,10 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
       >
         {
           <>
-            <div className={Global.ContenedorBasico}>
-              <div className={Global.ContenedorInputs + "mb-2"}>
-                <div className={Global.Input60pct}>
-                  <label htmlFor="codigoBarras" className={Global.LabelStyle}>
+            <div className={G.ContenedorBasico}>
+              <div className={G.ContenedorInputs + "mb-2"}>
+                <div className={G.Input60pct}>
+                  <label htmlFor="codigoBarras" className={G.LabelStyle}>
                     Cod. Barras
                   </label>
                   <input
@@ -265,13 +257,12 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                     autoComplete="off"
                     autoFocus
                     value={filtro.codigoBarras}
-                    onChange={ValidarData}
-                    onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.InputFull}>
-                  <label htmlFor="descripcion" className={Global.LabelStyle}>
+                <div className={G.InputFull}>
+                  <label htmlFor="descripcion" className={G.LabelStyle}>
                     Descripción
                   </label>
                   <input
@@ -281,15 +272,14 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                     placeholder="Descripción"
                     autoComplete="off"
                     value={filtro.descripcion}
-                    onChange={ValidarData}
-                    onKeyDown={(e) => Key(e)}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                   {/* <button
                     id="consultarArticuloFiltro"
                     onClick={Filtro}
                     className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                      G.BotonBuscar + G.Anidado + G.BotonPrimary
                     }
                   >
                     <FaUndoAlt></FaUndoAlt>
@@ -298,7 +288,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
               </div>
 
               {/* Tabla */}
-              <TablaStyle>
+              <DivTabla>
                 <TableBasic
                   id={"tablaFiltroArticulo"}
                   columnas={columnas}
@@ -306,7 +296,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
                   DobleClick={(e) => KeyTabla(e, true)}
                   KeyDown={(e) => KeyTabla(e)}
                 />
-              </TablaStyle>
+              </DivTabla>
               {/* Tabla */}
             </div>
           </>

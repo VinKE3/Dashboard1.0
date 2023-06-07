@@ -12,10 +12,10 @@ import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../components/Global";
+
+import * as G from "../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -50,7 +50,7 @@ const Personal = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //Modal
   //#endregion
 
@@ -59,7 +59,9 @@ const Personal = () => {
     setCadena(`&nombreCompleto=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -70,10 +72,11 @@ const Personal = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -117,7 +120,7 @@ const Personal = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -166,14 +169,14 @@ const Personal = () => {
           telefono: "",
           celular: "",
           fechaNacimiento: moment().format("YYYY-MM-DD"),
-          sexoId: "V",
-          estadoCivilId: "SO",
+          sexoId: "",
+          estadoCivilId: "",
           correoElectronico: "",
-          cargoId: 2,
+          cargoId: 0,
           observacion: "",
-          entidadBancariaId: 1,
-          tipoCuentaBancariaId: "AHORRO",
-          monedaId: "S",
+          entidadBancariaId: 0,
+          tipoCuentaBancariaId: "",
+          monedaId: "",
           cuentaCorriente: "",
           isActivo: true,
         });
@@ -202,7 +205,7 @@ const Personal = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Cliente"], id, setEliminar);
+        Delete(["Mantenimiento", "Cliente"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -251,7 +254,7 @@ const Personal = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "Personal"]}
             id={row.values.id}
@@ -270,8 +273,8 @@ const Personal = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Personal</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Personal</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -280,7 +283,7 @@ const Personal = () => {
               maxLength={"200"}
               placeHolder={"Nombre"}
               value={filtro.nombre}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />
@@ -290,7 +293,7 @@ const Personal = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -299,7 +302,7 @@ const Personal = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaPersonal"}
                 columnas={columnas}
@@ -310,7 +313,7 @@ const Personal = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}

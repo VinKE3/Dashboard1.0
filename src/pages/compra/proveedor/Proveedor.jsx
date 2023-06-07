@@ -11,9 +11,9 @@ import { FaUndoAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -50,7 +50,7 @@ const Proveedor = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -60,7 +60,9 @@ const Proveedor = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -71,10 +73,11 @@ const Proveedor = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -112,7 +115,7 @@ const Proveedor = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -150,8 +153,8 @@ const Proveedor = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          id: "000000",
-          tipoDocumentoIdentidadId: "1",
+          id: "",
+          tipoDocumentoIdentidadId: "",
           numeroDocumentoIdentidad: "",
           nombre: "",
           telefono: "",
@@ -190,7 +193,7 @@ const Proveedor = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Proveedor"], id, setEliminar);
+        Delete(["Mantenimiento", "Proveedor"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -224,7 +227,7 @@ const Proveedor = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "Proveedor"]}
             id={row.values.id}
@@ -243,13 +246,13 @@ const Proveedor = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Proveedor</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Proveedor</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.Input96}>
-                <label htmlFor="documento" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.Input96}>
+                <label htmlFor="documento" className={G.LabelStyle}>
                   N° Documento
                 </label>
                 <input
@@ -260,13 +263,13 @@ const Proveedor = () => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.documento}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
 
-              <div className={Global.InputsFiltro}>
-                <label htmlFor="nombre" className={Global.LabelStyle}>
+              <div className={G.InputsFiltro}>
+                <label htmlFor="nombre" className={G.LabelStyle}>
                   Nombre:
                 </label>
                 <input
@@ -276,14 +279,12 @@ const Proveedor = () => {
                   autoComplete="off"
                   placeholder="Nombre"
                   value={filtro.nombre}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onChange={HandleData}
+                  className={G.InputBoton}
                 />
                 <button
                   id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -296,7 +297,7 @@ const Proveedor = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -305,7 +306,7 @@ const Proveedor = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaProveedor"}
                 columnas={columnas}
@@ -316,7 +317,7 @@ const Proveedor = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

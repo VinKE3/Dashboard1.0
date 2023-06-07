@@ -2,9 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
-import Anular from "../../../components/funciones/Anular";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import Put from "../../../components/funciones/Put";
 import Delete from "../../../components/funciones/Delete";
 import Imprimir from "../../../components/funciones/Imprimir";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
@@ -22,10 +24,10 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -60,17 +62,22 @@ const SalidaAlmacen = () => {
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
     numeroDocumento: "",
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
   });
   const [cadena, setCadena] = useState(
     `&numeroDocumento=${filtro.numeroDocumento}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
+  const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -80,7 +87,9 @@ const SalidaAlmacen = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -91,10 +100,11 @@ const SalidaAlmacen = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -118,7 +128,7 @@ const SalidaAlmacen = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -135,8 +145,12 @@ const SalidaAlmacen = () => {
   const FiltroBoton = async () => {
     setFiltro({
       numeroDocumento: "",
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
     });
     setIndex(0);
     document.getElementById("numeroDocumento").focus();
@@ -159,26 +173,6 @@ const SalidaAlmacen = () => {
     const result = await ApiMasy.get(`api/Almacen/SalidaAlmacen/${id}`);
     setObjeto(result.data.data);
   };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Almacen/SalidaAlmacen/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
-  };
   //#endregion
 
   //#region Funciones Modal
@@ -199,7 +193,7 @@ const SalidaAlmacen = () => {
       switch (accion) {
         case 0: {
           setObjeto({
-            empresaId: "01",
+            empresaId: "",
             tipoDocumentoId: "SA",
             serie: "0001",
             numero: "00000001",
@@ -208,9 +202,9 @@ const SalidaAlmacen = () => {
             clienteId: "",
             clienteNombre: "",
             clienteNumeroDocumentoIdentidad: "",
-            monedaId: "D",
+            monedaId: "",
             tipoCambio: 0,
-            personalId: "<<NI>>01",
+            personalId: "",
             lineaProduccion: "",
             envasado: "",
             numeroLote: "",
@@ -232,7 +226,11 @@ const SalidaAlmacen = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/SalidaAlmacen",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -240,9 +238,13 @@ const SalidaAlmacen = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Almacen/SalidaAlmacen",
+            accion,
+            value
+          );
           if (valor) {
-            Delete(["Almacen", "SalidaAlmacen"], value, setEliminar);
+            Delete(["Almacen", "SalidaAlmacen"], value, setListar);
           }
           break;
         }
@@ -272,9 +274,13 @@ const SalidaAlmacen = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                let valor = await GetIsPermitido(accion, id);
+                let valor = await GetIsPermitido(
+                  "Almacen/SalidaAlmacen",
+                  accion,
+                  id
+                );
                 if (valor) {
-                  await Anular(["Almacen", "SalidaAlmacen"], id, setEliminar);
+                  await Put(`Almacen/SalidaAlmacen/Anular/${id}`, setListar);
                 }
               }
             });
@@ -298,7 +304,11 @@ const SalidaAlmacen = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Almacen", "SalidaAlmacen"], id);
+            let model = await Imprimir(["Almacen", "SalidaAlmacen"], id);
+            if (model != null) {
+              setObjeto(model);
+              setModalImprimir(true);
+            }
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -330,42 +340,9 @@ const SalidaAlmacen = () => {
               confirmButtonText: "Aceptar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                ApiMasy.put(`api/Almacen/SalidaAlmacen/Cerrar/${id}`).then(
-                  (response) => {
-                    if (response.name == "AxiosError") {
-                      let err = "";
-                      if (response.response.data == "") {
-                        err = response.message;
-                      } else {
-                        err = String(response.response.data.messages[0].textos);
-                      }
-                      toast.error(err, {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                      });
-                    } else {
-                      Listar(cadena, index + 1);
-                      toast.success(String(response.data.messages[0].textos), {
-                        position: "bottom-right",
-                        autoClose: 2000,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                      });
-                    }
-                  }
-                );
+            }).then(async (res) => {
+              if (res.isConfirmed) {
+                await Put(`Almacen/SalidaAlmacen/Cerrar/${id}`, setListar);
               }
             });
           } else {
@@ -519,7 +496,7 @@ const SalidaAlmacen = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -537,13 +514,13 @@ const SalidaAlmacen = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Salida de Almacén</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Salida de Almacén</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.InputFull}>
-                <label name="numeroDocumento" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.InputFull}>
+                <label name="numeroDocumento" className={G.LabelStyle}>
                   Número Documento
                 </label>
                 <input
@@ -554,12 +531,12 @@ const SalidaAlmacen = () => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.numeroDocumento ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="fechaInicio" className={G.LabelStyle}>
                   Desde
                 </label>
                 <input
@@ -567,12 +544,12 @@ const SalidaAlmacen = () => {
                   id="fechaInicio"
                   name="fechaInicio"
                   value={filtro.fechaInicio ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="fechaFin" className={G.LabelStyle}>
                   Hasta
                 </label>
                 <input
@@ -580,14 +557,12 @@ const SalidaAlmacen = () => {
                   id="fechaFin"
                   name="fechaFin"
                   value={filtro.fechaFin ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onChange={HandleData}
+                  className={G.InputBoton}
                 />
                 <button
                   id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -597,11 +572,11 @@ const SalidaAlmacen = () => {
             {/* Filtro*/}
 
             {/* Boton */}
-            <div className="sticky top-2 z-20 flex gap-2 bg-black/30">
+            <div className={G.ContenedorBotones}>
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={Global.BotonRegistrar}
+                  botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -610,7 +585,7 @@ const SalidaAlmacen = () => {
 
               <BotonBasico
                 botonText="Cerrar"
-                botonClass={Global.BotonMorado}
+                botonClass={G.BotonMorado}
                 botonIcon={faArrowAltCircleDown}
                 click={() => AccionModal(null, "AbrirCerrar", 6)}
                 contenedor=""
@@ -619,7 +594,7 @@ const SalidaAlmacen = () => {
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
-                  botonClass={Global.BotonEliminar}
+                  botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
                   contenedor=""
@@ -627,7 +602,7 @@ const SalidaAlmacen = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={Global.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""
@@ -636,7 +611,7 @@ const SalidaAlmacen = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaSalidaAlmacen"}
                 columnas={columnas}
@@ -647,11 +622,18 @@ const SalidaAlmacen = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          {modalImprimir && (
+            <ModalImprimir
+              objeto={objeto}
+              setModal={setModalImprimir}
+              foco={document.getElementById("tablaSalidaAlmacen")}
+            />
+          )}
           <ToastContainer />
         </>
       ) : (

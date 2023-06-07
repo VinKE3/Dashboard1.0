@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import store from "store2";
@@ -11,8 +11,8 @@ import moment from "moment";
 const InformeGerenciaCostosProductos = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     marcaId: "",
   });
   const [marcas, setMarcas] = useState([]);
@@ -26,7 +26,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
     Marcas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -45,10 +45,10 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
     <>
       <ModalBasic titulo="Informe Costos Productos" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="marcaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="marcaId" className={G.LabelStyle}>
               Marcas
             </label>
             <select
@@ -56,8 +56,8 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
               name="marcaId"
               autoFocus
               value={data.marcaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -73,9 +73,10 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
+contenedor=""
             />
           </div>
         </div>

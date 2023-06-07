@@ -10,10 +10,10 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -44,7 +44,7 @@ const EntidadBancaria = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -52,7 +52,9 @@ const EntidadBancaria = () => {
     setCadena(`&nombre=${filtro.nombre}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -63,10 +65,11 @@ const EntidadBancaria = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -104,7 +107,7 @@ const EntidadBancaria = () => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -171,7 +174,7 @@ const EntidadBancaria = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "EntidadBancaria"], id, setEliminar);
+        Delete(["Mantenimiento", "EntidadBancaria"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -205,7 +208,7 @@ const EntidadBancaria = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "EntidadBancaria"]}
             id={row.values.id}
@@ -224,8 +227,8 @@ const EntidadBancaria = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Entidades Bancarias</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Entidades Bancarias</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -234,7 +237,7 @@ const EntidadBancaria = () => {
               name={"nombre"}
               maxLength={"200"}
               value={filtro.nombre}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />
@@ -244,7 +247,7 @@ const EntidadBancaria = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -253,7 +256,7 @@ const EntidadBancaria = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaEntidadBancaria"}
                 columnas={columnas}
@@ -264,7 +267,7 @@ const EntidadBancaria = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

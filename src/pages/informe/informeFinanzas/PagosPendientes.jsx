@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import ApiMasy from "../../../api/ApiMasy";
 import { useEffect } from "react";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 import { RadioButton } from "primereact/radiobutton";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -10,13 +10,17 @@ import store from "store2";
 import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import Mensajes from "../../../components/funciones/Mensajes";
-import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
+import { FaUndoAlt } from "react-icons/fa";
 
 const PagosPendientes = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     proveedorId: "",
     checkFiltro: "porFecha",
     tipoCambio: 0,
@@ -33,12 +37,12 @@ const PagosPendientes = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    GetPorIdTipoCambio(data.fechaFin);
+    TipoCambio(data.fechaFin);
     Proveedores();
     Monedas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "porFecha" ||
       target.value === "porProveedor" ||
@@ -63,7 +67,7 @@ const PagosPendientes = ({ setModal }) => {
     }));
   };
 
-  const GetPorIdTipoCambio = async (id) => {
+  const TipoCambio = async (id) => {
     const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${id}`);
     if (result.name == "AxiosError") {
       if (Object.entries(result.response.data).length > 0) {
@@ -78,11 +82,6 @@ const PagosPendientes = ({ setModal }) => {
         tipoCambio: 0,
       });
     }
-  };
-
-  const OcultarMensajes = async () => {
-    setMensaje([]);
-    setTipoMensaje(-1);
   };
 
   const Monedas = async () => {
@@ -107,71 +106,66 @@ const PagosPendientes = ({ setModal }) => {
           <Mensajes
             tipoMensaje={tipoMensaje}
             mensaje={mensaje}
-            Click={() => OcultarMensajes()}
+            Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
           />
         )}
-        <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
-        >
-          <div className={Global.InputFull}>
-            <div className={Global.CheckStyle}>
+        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
+          <div className={G.InputFull}>
+            <div className={G.CheckStyle}>
               <RadioButton
                 inputId="porFecha"
                 name="agrupar"
                 value="porFecha"
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.checkFiltro === "porFecha"}
               />
             </div>
-            <label
-              htmlFor="porFecha"
-              className={Global.LabelCheckStyle + +" !my-0"}
-            >
+            <label htmlFor="porFecha" className={G.LabelCheckStyle + +" !my-0"}>
               Cronograma de Pagos pendientes (Por Fecha)
             </label>
           </div>
-          <div className={Global.InputFull}>
-            <div className={Global.CheckStyle}>
+          <div className={G.InputFull}>
+            <div className={G.CheckStyle}>
               <RadioButton
                 inputId="porProveedor"
                 name="agrupar"
                 value="porProveedor"
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.checkFiltro === "porProveedor"}
               />
             </div>
             <label
               htmlFor="porProveedor"
-              className={Global.LabelCheckStyle + +" !my-0"}
+              className={G.LabelCheckStyle + +" !my-0"}
             >
               Cronograma de Pagos pendientes (Por Proveedor)
             </label>
           </div>
-          <div className={Global.InputFull}>
-            <div className={Global.CheckStyle}>
+          <div className={G.InputFull}>
+            <div className={G.CheckStyle}>
               <RadioButton
                 inputId="pagosRealizados"
                 name="agrupar"
                 value="pagosRealizados"
                 onChange={(e) => {
-                  ValidarData(e);
+                  HandleData(e);
                 }}
                 checked={data.checkFiltro === "pagosRealizados"}
               />
             </div>
             <label
               htmlFor="pagosRealizados"
-              className={Global.LabelCheckStyle + +" !my-0"}
+              className={G.LabelCheckStyle + +" !my-0"}
             >
               Historial de Pagos Realizados
             </label>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="proveedorId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="proveedorId" className={G.LabelStyle}>
               Proveedores
             </label>
             <select
@@ -179,8 +173,8 @@ const PagosPendientes = ({ setModal }) => {
               name="proveedorId"
               autoFocus
               value={data.proveedorId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -192,9 +186,9 @@ const PagosPendientes = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorFiltro + " !my-0"}>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
               <input
@@ -202,12 +196,12 @@ const PagosPendientes = ({ setModal }) => {
                 id="fechaInicio"
                 name="fechaInicio"
                 value={data.fechaInicio ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
-            <div className={Global.InputFull}>
-              <label htmlFor="fechaFin" className={Global.LabelStyle}>
+            <div className={G.InputFull}>
+              <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
               <input
@@ -215,14 +209,14 @@ const PagosPendientes = ({ setModal }) => {
                 id="fechaFin"
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
+                onChange={HandleData}
+                className={G.InputBoton}
               />
             </div>
           </div>
 
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
             </label>
             <select
@@ -230,8 +224,8 @@ const PagosPendientes = ({ setModal }) => {
               name="monedaId"
               autoFocus
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {moneda.map((moneda) => (
                 <option key={moneda.id} value={moneda.id}>
@@ -240,9 +234,9 @@ const PagosPendientes = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputTercio}>
-              <label htmlFor="tipoCambio" className={Global.LabelStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputTercio}>
+              <label htmlFor="tipoCambio" className={G.LabelStyle}>
                 T. Cambio
               </label>
               <input
@@ -253,33 +247,31 @@ const PagosPendientes = ({ setModal }) => {
                 autoComplete="off"
                 min={0}
                 value={data.tipoCambio ?? ""}
-                onChange={ValidarData}
-                className={Global.InputBoton}
+                onChange={HandleData}
+                className={G.InputBoton}
               />
               <button
                 id="consultarTipoCambio"
-                className={
-                  Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                }
+                className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                 onClick={() => {
-                  GetPorIdTipoCambio(data.fechaFin);
+                  TipoCambio(data.fechaFin);
                 }}
               >
                 <FaUndoAlt></FaUndoAlt>
               </button>
             </div>
-            <div className={Global.Input + " w-25"}>
-              <div className={Global.CheckStyle + Global.Anidado}>
+            <div className={G.Input + " w-25"}>
+              <div className={G.CheckStyle + G.Anidado}>
                 <Checkbox
                   inputId="detallado"
                   name="detallado"
                   onChange={(e) => {
-                    ValidarData(e);
+                    HandleData(e);
                   }}
                   checked={data.detallado ? true : ""}
                 />
               </div>
-              <label htmlFor="detallado" className={Global.InputBoton}>
+              <label htmlFor="detallado" className={G.InputBoton}>
                 Detallado
               </label>
             </div>
@@ -288,9 +280,10 @@ const PagosPendientes = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
+contenedor=""
             />
           </div>
         </div>

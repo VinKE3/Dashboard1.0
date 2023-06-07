@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import { Checkbox } from "primereact/checkbox";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -17,12 +17,12 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.name == "isActivo" ||
       target.name == "precioIncluyeIGV" ||
@@ -45,14 +45,14 @@ const Modal = ({ setModal, modo, objeto }) => {
       let model = dataSubLinea.find((map) => map.lineaId == target.value);
       setData((prevData) => ({
         ...prevData,
-        subLineaId: model.subLineaId,
+        subLineaId: model == undefined ? "" : model.subLineaId,
       }));
     }
   };
   //#endregion
 
   //#region Funciones API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
@@ -62,6 +62,27 @@ const Modal = ({ setModal, modo, objeto }) => {
     setDataMarca(result.data.data.marcas);
     setDataUnidadMedida(result.data.data.unidadesMedida);
     setDataMoneda(result.data.data.monedas);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposExistencia = result.data.data.tiposExistencia.find((map) => map);
+      let lineas = result.data.data.lineas.find((map) => map);
+      let subLineas = result.data.data.subLineas.find(
+        (map) => map.lineaId == lineas.id
+      );
+      let marcas = result.data.data.marcas.find((map) => map);
+      let unidadesMedida = result.data.data.unidadesMedida.find((map) => map);
+      let monedas = result.data.data.monedas.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoExistenciaId: tiposExistencia.id,
+        lineaId: lineas.id,
+        subLineaId: subLineas.subLineaId,
+        marcaId: marcas.id,
+        unidadMedidaId: unidadesMedida.id,
+        monedaId: monedas.id,
+      }));
+    }
   };
   //#endregion
 
@@ -75,24 +96,22 @@ const Modal = ({ setModal, modo, objeto }) => {
       menu={["Mantenimiento", "Articulo"]}
       cerrar={false}
       foco={document.getElementById("tablaArticulo")}
-      tamañoModal={[Global.ModalFull, Global.Form]}
+      tamañoModal={[G.ModalFull, G.Form]}
     >
-      <div
-        className={Global.ContenedorBasico + " mb-2 " + Global.FondoContenedor}
-      >
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputMitad}>
-            <label htmlFor="tipoExistenciaId" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputMitad}>
+            <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
               Tipo de Existencia
             </label>
             <select
               id="tipoExistenciaId"
               name="tipoExistenciaId"
               autoFocus
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.tipoExistenciaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {dataTipoExistencia.map((map) => (
                 <option key={map.id} value={map.id}>
@@ -101,17 +120,17 @@ const Modal = ({ setModal, modo, objeto }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputMitad}>
-            <label htmlFor="marcaId" className={Global.LabelStyle}>
+          <div className={G.InputMitad}>
+            <label htmlFor="marcaId" className={G.LabelStyle}>
               Marca
             </label>
             <select
               id="marcaId"
               name="marcaId"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.marcaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {dataMarca.map((map) => (
                 <option key={map.id} value={map.id}>
@@ -121,20 +140,18 @@ const Modal = ({ setModal, modo, objeto }) => {
             </select>
           </div>
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputMitad}>
-            <label htmlFor="lineaId" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputMitad}>
+            <label htmlFor="lineaId" className={G.LabelStyle}>
               Linea
             </label>
             <select
               id="lineaId"
               name="lineaId"
               value={data.lineaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               disabled={modo != "Nuevo" ? true : ""}
-              className={
-                modo != "Nuevo" ? Global.InputStyle : Global.InputStyle
-              }
+              className={modo != "Nuevo" ? G.InputStyle : G.InputStyle}
             >
               {dataLinea.map((map) => (
                 <option key={map.id} value={map.id}>
@@ -143,19 +160,17 @@ const Modal = ({ setModal, modo, objeto }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputMitad}>
-            <label htmlFor="subLineaId" className={Global.LabelStyle}>
+          <div className={G.InputMitad}>
+            <label htmlFor="subLineaId" className={G.LabelStyle}>
               SubLinea
             </label>
             <select
               id="subLineaId"
               name="subLineaId"
               value={data.subLineaId ?? ""}
-              onChange={ValidarData}
+              onChange={HandleData}
               disabled={modo != "Nuevo" ? true : ""}
-              className={
-                modo != "Nuevo" ? Global.InputStyle : Global.InputStyle
-              }
+              className={modo != "Nuevo" ? G.InputStyle : G.InputStyle}
             >
               <option value="">--SELECCIONAR--</option>
               {dataSubLinea
@@ -168,10 +183,10 @@ const Modal = ({ setModal, modo, objeto }) => {
             </select>
           </div>
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputMitad}>
-            <label htmlFor="codigoBarras" className={Global.LabelStyle}>
-              Cod. Barras
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputMitad}>
+            <label htmlFor="codigoBarras" className={G.LabelStyle}>
+              Código de Barras
             </label>
             <input
               type="text"
@@ -181,12 +196,12 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Código de Barras"
               disabled={modo == "Nuevo" ? false : true}
               value={data.codigoBarras}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="descripcion" className={Global.LabelStyle}>
+          <div className={G.InputMitad}>
+            <label htmlFor="descripcion" className={G.LabelStyle}>
               Descripción
             </label>
             <input
@@ -195,25 +210,25 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="descripcion"
               autoComplete="off"
               placeholder="Descripción"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.descripcion}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.Input25pct}>
-            <label htmlFor="unidadMedidaId" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.Input25pct}>
+            <label htmlFor="unidadMedidaId" className={G.LabelStyle}>
               U. Medida
             </label>
             <select
               id="unidadMedidaId"
               name="unidadMedidaId"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.unidadMedidaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {dataUnidadMedida.map((map) => (
                 <option key={map.id} value={map.id}>
@@ -222,8 +237,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               ))}
             </select>
           </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="peso" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="peso" className={G.LabelStyle}>
               Peso
             </label>
             <input
@@ -233,14 +248,14 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Peso"
               autoComplete="off"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.peso ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="stock" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="stock" className={G.LabelStyle}>
               Stock
             </label>
             <input
@@ -251,12 +266,12 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Stock"
               disabled={true}
               value={data.stock ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="stockMinimo" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="stockMinimo" className={G.LabelStyle}>
               Stock Min
             </label>
             <input
@@ -265,113 +280,109 @@ const Modal = ({ setModal, modo, objeto }) => {
               name="stockMinimo"
               autoComplete="off"
               placeholder="Stock Mínimo"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.stockMinimo ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
         </div>
       </div>
-      <div
-        className={Global.ContenedorBasico + " mb-3 " + Global.FondoContenedor}
-      >
-        <p className={Global.Subtitulo}>Precio Compra</p>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.Input36}>
-            <div className={Global.LabelStyle}>
-              <Checkbox
-                inputId="precioIncluyeIGV"
-                name="precioIncluyeIGV"
-                disabled={modo == "Consultar" }
-                value={data.precioIncluyeIGV}
-                onChange={(e) => {
-                  ValidarData(e);
-                }}
-                checked={data.precioIncluyeIGV ? true : ""}
-              ></Checkbox>
+      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
+        <p className={G.Subtitulo}>Precio Compra</p>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputMitad}>
+            <div className={G.InputFull}>
+              <label htmlFor="precioCompra" className={G.LabelStyle}>
+                Costo del Producto
+              </label>
+              <input
+                type="number"
+                id="precioCompra"
+                name="precioCompra"
+                autoComplete="off"
+                placeholder="Costo del Producto"
+                min={0}
+                disabled={modo == "Consultar"}
+                value={data.precioCompra ?? ""}
+                onChange={HandleData}
+                className={G.InputBoton}
+              />
             </div>
-            <label htmlFor="precioIncluyeIGV" className={Global.InputStyle}>
-              Incluye IGV
-            </label>
-          </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="precioCompra" className={Global.LabelStyle}>
-              Costo del Producto
-            </label>
-            <input
-              type="number"
-              id="precioCompra"
-              name="precioCompra"
-              autoComplete="off"
-              placeholder="Costo del Producto"
-              min={0}
-              disabled={modo == "Consultar" }
-              value={data.precioCompra ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
-          </div>
-          <div className={Global.Input20pct}>
-            <div className={Global.LabelStyle}>
-              <Checkbox
-                inputId="activarCostoDescuento"
-                name="activarCostoDescuento"
-                disabled={modo == "Consultar" }
-                value={data.activarCostoDescuento}
-                onChange={(e) => {
-                  ValidarData(e);
-                }}
-                checked={data.activarCostoDescuento ? true : ""}
-              ></Checkbox>
+            <div className={G.Input + " w-48"}>
+              <div className={G.CheckStyle + G.Anidado}>
+                <Checkbox
+                  inputId="precioIncluyeIGV"
+                  name="precioIncluyeIGV"
+                  disabled={modo == "Consultar"}
+                  value={data.precioIncluyeIGV}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.precioIncluyeIGV ? true : ""}
+                ></Checkbox>
+              </div>
+              <label htmlFor="precioIncluyeIGV" className={G.LabelCheckStyle}>
+                Incluye IGV
+              </label>
             </div>
-            <label
-              htmlFor="activarCostoDescuento"
-              className={Global.InputStyle}
-            >
-              Costo Descuento
-            </label>
           </div>
-          <div className={Global.Input25pct}>
-            <label
-              htmlFor="precioCompraDescuento"
-              className={Global.LabelStyle}
-            >
-              Costo con Descto.
-            </label>
-            <input
-              type="number"
-              id="precioCompraDescuento"
-              name="precioCompraDescuento"
-              autoComplete="off"
-              placeholder="Costo con Descto"
-              min={0}
-              disabled={modo == "Consultar" }
-              value={data.precioCompraDescuento ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
+
+          <div className={G.InputMitad}>
+            <div className={G.InputFull}>
+              <label htmlFor="precioCompraDescuento" className={G.LabelStyle}>
+                Costo con Descto.
+              </label>
+              <input
+                type="number"
+                id="precioCompraDescuento"
+                name="precioCompraDescuento"
+                autoComplete="off"
+                placeholder="Costo con Descto"
+                min={0}
+                disabled={modo == "Consultar"}
+                value={data.precioCompraDescuento ?? ""}
+                onChange={HandleData}
+                className={G.InputBoton}
+              />
+            </div>
+            <div className={G.Input + " w-64"}>
+              <div className={G.CheckStyle + G.Anidado}>
+                <Checkbox
+                  inputId="activarCostoDescuento"
+                  name="activarCostoDescuento"
+                  disabled={modo == "Consultar"}
+                  value={data.activarCostoDescuento}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.activarCostoDescuento ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="activarCostoDescuento"
+                className={G.LabelCheckStyle}
+              >
+                Costo Descuento
+              </label>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        className={Global.ContenedorBasico + " mb-2 " + Global.FondoContenedor}
-      >
-        <p className={"my-0 py-0 font-bold text-base text-light"}>
-          Precio Venta
-        </p>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="monedaId" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
+        <p className={G.Subtitulo}>Precio Venta</p>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
             </label>
             <select
               id="monedaId"
               name="monedaId"
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.monedaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               {dataMoneda.map((map) => (
                 <option key={map.id} value={map.id}>
@@ -381,9 +392,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             </select>
           </div>
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.Input25pct}>
-            <label htmlFor="porcentajeUtilidad1" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.Input25pct}>
+            <label htmlFor="porcentajeUtilidad1" className={G.LabelStyle}>
               % Gan. 01
             </label>
             <input
@@ -393,14 +404,14 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad1 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="porcentajeUtilidad2" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="porcentajeUtilidad2" className={G.LabelStyle}>
               % Gan. 02
             </label>
             <input
@@ -410,15 +421,15 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad2 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
 
-          <div className={Global.Input25pct}>
-            <label htmlFor="porcentajeUtilidad3" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="porcentajeUtilidad3" className={G.LabelStyle}>
               % Gan. 03
             </label>
             <input
@@ -428,14 +439,14 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad3 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="porcentajeUtilidad4" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="porcentajeUtilidad4" className={G.LabelStyle}>
               % Gan. 04
             </label>
             <input
@@ -445,16 +456,16 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="% Ganancia"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.porcentajeUtilidad4 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.Input25pct}>
-            <label htmlFor="precioVenta1" className={Global.LabelStyle}>
+        <div className={G.ContenedorInputs}>
+          <div className={G.Input25pct}>
+            <label htmlFor="precioVenta1" className={G.LabelStyle}>
               P. Venta 01
             </label>
             <input
@@ -464,14 +475,14 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta1 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="precioVenta2" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="precioVenta2" className={G.LabelStyle}>
               P. Venta 02
             </label>
             <input
@@ -481,15 +492,15 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta2 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
 
-          <div className={Global.Input25pct}>
-            <label htmlFor="precioVenta3" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="precioVenta3" className={G.LabelStyle}>
               P. Venta 03
             </label>
             <input
@@ -499,14 +510,14 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta3 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input25pct}>
-            <label htmlFor="precioVenta4" className={Global.LabelStyle}>
+          <div className={G.Input25pct}>
+            <label htmlFor="precioVenta4" className={G.LabelStyle}>
               P. Venta 04
             </label>
             <input
@@ -516,17 +527,17 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.precioVenta4 ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
         </div>
       </div>
-      <div className={Global.ContenedorBasico + Global.FondoContenedor}>
-        <div className={Global.InputFull}>
-          <label htmlFor="observacion" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico + G.FondoContenedor}>
+        <div className={G.InputFull}>
+          <label htmlFor="observacion" className={G.LabelStyle}>
             Observación
           </label>
           <input
@@ -535,66 +546,74 @@ const Modal = ({ setModal, modo, objeto }) => {
             name="observacion"
             autoComplete="off"
             placeholder="Observacion"
-            disabled={modo == "Consultar" }
+            disabled={modo == "Consultar"}
             value={data.observacion ?? ""}
-            onChange={ValidarData}
-            className={Global.InputStyle}
+            onChange={HandleData}
+            className={G.InputStyle}
           />
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <div className={Global.LabelStyle}>
-              <Checkbox
-                inputId="isActivo"
-                name="isActivo"
-                disabled={modo == "Consultar" }
-                value={data.isActivo}
-                onChange={(e) => {
-                  ValidarData(e);
-                }}
-                checked={data.isActivo ? true : ""}
-              ></Checkbox>
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle}>
+                <Checkbox
+                  inputId="isActivo"
+                  name="isActivo"
+                  disabled={modo == "Consultar"}
+                  value={data.isActivo}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.isActivo ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="isActivo"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Activo
+              </label>
             </div>
-            <label htmlFor="isActivo" className={Global.InputStyle}>
-              Activo
-            </label>
-          </div>
-          <div className={Global.InputFull}>
-            <div className={Global.LabelStyle}>
-              <Checkbox
-                inputId="controlarStock"
-                name="controlarStock"
-                disabled={modo == "Consultar" }
-                value={data.controlarStock}
-                onChange={(e) => {
-                  ValidarData(e);
-                }}
-                checked={data.controlarStock ? true : ""}
-              ></Checkbox>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle + " rounded-l-none"}>
+                <Checkbox
+                  inputId="controlarStock"
+                  name="controlarStock"
+                  disabled={modo == "Consultar"}
+                  value={data.controlarStock}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.controlarStock ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="controlarStock"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Control De Stock
+              </label>
             </div>
-            <label htmlFor="controlarStock" className={Global.InputStyle}>
-              Control De Stock
-            </label>
-          </div>
-          <div className={Global.InputFull}>
-            <div className={Global.LabelStyle}>
-              <Checkbox
-                inputId="actualizarPrecioCompra"
-                name="actualizarPrecioCompra"
-                disabled={modo == "Consultar" }
-                value={data.actualizarPrecioCompra}
-                onChange={(e) => {
-                  ValidarData(e);
-                }}
-                checked={data.actualizarPrecioCompra ? true : ""}
-              ></Checkbox>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle + " rounded-l-none"}>
+                <Checkbox
+                  inputId="actualizarPrecioCompra"
+                  name="actualizarPrecioCompra"
+                  disabled={modo == "Consultar"}
+                  value={data.actualizarPrecioCompra}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.actualizarPrecioCompra ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="actualizarPrecioCompra"
+                className={G.LabelCheckStyle}
+              >
+                Actualizar Precio
+              </label>
             </div>
-            <label
-              htmlFor="actualizarPrecioCompra"
-              className={Global.InputStyle}
-            >
-              Actualizar Precio
-            </label>
           </div>
         </div>
       </div>

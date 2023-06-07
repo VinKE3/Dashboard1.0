@@ -10,9 +10,9 @@ import { ToastContainer } from "react-toastify";
 import { FaUndoAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -49,7 +49,7 @@ const Cliente = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -59,9 +59,10 @@ const Cliente = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -70,11 +71,11 @@ const Cliente = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
-
+  }, [listar]);
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -111,7 +112,7 @@ const Cliente = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -150,7 +151,7 @@ const Cliente = () => {
       if (modo == "Nuevo") {
         setObjeto({
           id: "",
-          tipoDocumentoIdentidadId: "1",
+          tipoDocumentoIdentidadId: "",
           numeroDocumentoIdentidad: "",
           nombre: "",
           telefono: "",
@@ -161,8 +162,8 @@ const Cliente = () => {
           provinciaId: "01",
           distritoId: "01",
           zonaId: "",
-          tipoVentaId: "CO",
-          tipoCobroId: "CP",
+          tipoVentaId: "",
+          tipoCobroId: "",
           maximoCreditoUSD: 0,
           maximoCreditoPEN: 0,
           observacion: "",
@@ -192,7 +193,7 @@ const Cliente = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Cliente"], id, setEliminar);
+        Delete(["Mantenimiento", "Cliente"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -230,7 +231,7 @@ const Cliente = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "Cliente"]}
             id={row.values.id}
@@ -249,13 +250,13 @@ const Cliente = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Clientes</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Clientes</h2>
 
             {/* Filtro*/}
-            <div className={Global.ContenedorFiltro}>
-              <div className={Global.Input96}>
-                <label htmlFor="documento" className={Global.LabelStyle}>
+            <div className={G.ContenedorInputsFiltro}>
+              <div className={G.Input96}>
+                <label htmlFor="documento" className={G.LabelStyle}>
                   N° Documento
                 </label>
                 <input
@@ -266,13 +267,13 @@ const Cliente = () => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.documento}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
 
-              <div className={Global.InputsFiltro}>
-                <label htmlFor="nombre" className={Global.LabelStyle}>
+              <div className={G.InputsFiltro}>
+                <label htmlFor="nombre" className={G.LabelStyle}>
                   Nombre:
                 </label>
                 <input
@@ -282,14 +283,12 @@ const Cliente = () => {
                   placeholder="Nombre"
                   autoComplete="off"
                   value={filtro.nombre}
-                  onChange={ValidarData}
-                  className={Global.InputBoton}
+                  onChange={HandleData}
+                  className={G.InputBoton}
                 />
                 <button
                   id="buscar"
-                  className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                  }
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                   onClick={FiltroBoton}
                 >
                   <FaUndoAlt />
@@ -302,7 +301,7 @@ const Cliente = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -311,7 +310,7 @@ const Cliente = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCliente"}
                 columnas={columnas}
@@ -322,7 +321,7 @@ const Cliente = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}

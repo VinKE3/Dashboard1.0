@@ -1,7 +1,8 @@
-import GetUsuarioId from "./GetUsuarioId";
+import Get from "./Get";
 import store from "store2";
 
 const GetPermisos = async (menu, setPermisos) => {
+  //Usuario AD
   if (store.session.get("usuario") == "AD") {
     if (
       menu == "BloquearCompra" ||
@@ -30,41 +31,41 @@ const GetPermisos = async (menu, setPermisos) => {
     setPermisos([true, true, true, true, true]);
     return true;
   } else {
-    const result = await GetUsuarioId(store.session.get("usuarioId"), menu);
+    //Resto de usuarios
+    const res = await Get(
+      `Mantenimiento/UsuarioPermiso/GetPorUsuarioYMenu?usuarioId=${store.session.get(
+        "usuarioId"
+      )}&menuId=${menu} `
+    );
     if (
       menu == "BloquearCompra" ||
       menu == "BloquearVenta" ||
       menu == "BloquearMovimientoBancario"
     ) {
-      setPermisos([false, result.modificar, false, false, false]);
+      setPermisos([false, res.modificar, false, false, false]);
       return false;
     }
     if (menu == "Correlativo") {
-      setPermisos([
-        result.registrar,
-        result.modificar,
-        false,
-        result.consultar,
-        false,
-      ]);
+      setPermisos([res.registrar, res.modificar, false, res.consultar, false]);
       return false;
     }
     if (menu == "Retencion") {
       setPermisos([
-        result.registrar,
+        res.registrar,
         false,
-        result.eliminar,
-        result.consultar,
-        result.anular,
+        res.eliminar,
+        res.consultar,
+        res.anular,
       ]);
       return false;
     }
+
     setPermisos([
-      result.registrar,
-      result.modificar,
-      result.eliminar,
-      result.consultar,
-      result.anular,
+      res.registrar,
+      res.modificar,
+      res.eliminar,
+      res.consultar,
+      res.anular,
     ]);
     return false;
   }

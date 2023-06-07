@@ -10,10 +10,10 @@ import Modal from "./Modal";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -52,7 +52,7 @@ const CuentaCorriente = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -60,7 +60,9 @@ const CuentaCorriente = () => {
     setCadena(`&numero=${filtro.numero}`);
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
 
   useEffect(() => {
@@ -71,10 +73,11 @@ const CuentaCorriente = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -117,7 +120,7 @@ const CuentaCorriente = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -154,16 +157,13 @@ const CuentaCorriente = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          id: "",
-          cuentaCorrienteId: "0000",
-          empresaId: "01",
-          entidadBancaria: "",
-          entidadBancariaId: 1,
-          moneda: "",
-          monedaId: "S",
+          empresaId: "",
+          cuentaCorrienteId: "",
+          entidadBancariaId: 0,
           numero: "",
+          tipoCuentaDescripcion: "",
+          monedaId: "",
           observacion: "",
-          tipoCuentaDescripcion: "CORRIENTE",
         });
       } else {
         await GetPorId(value);
@@ -190,7 +190,7 @@ const CuentaCorriente = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "CuentaCorriente"], id, setEliminar);
+        Delete(["Mantenimiento", "CuentaCorriente"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -240,7 +240,7 @@ const CuentaCorriente = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "CuentaCorriente"]}
             id={row.values.id}
@@ -259,8 +259,8 @@ const CuentaCorriente = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Cuentas Corrientes</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Cuentas Corrientes</h2>
 
             {/* Filtro*/}
             <FiltroBasico
@@ -269,7 +269,7 @@ const CuentaCorriente = () => {
               name={"numero"}
               maxLength={"40"}
               value={filtro.numero}
-              onChange={ValidarData}
+              onChange={HandleData}
               botonId={"buscar"}
               onClick={FiltroBoton}
             />
@@ -279,7 +279,7 @@ const CuentaCorriente = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -288,7 +288,7 @@ const CuentaCorriente = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaCuentaCorriente"}
                 columnas={columnas}
@@ -299,7 +299,7 @@ const CuentaCorriente = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", true)}
                 KeyDown={(e) => ModalKey(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
 

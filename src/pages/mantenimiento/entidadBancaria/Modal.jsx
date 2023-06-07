@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setdataModal] = useState([]);
+  const [dataEntidadBancaria, setDataEntidadBancaria] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funcions
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -25,17 +25,27 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/EntidadBancaria/FormularioTablas`
     );
-    setdataModal(result.data.data.tiposEntidadesBancarias);
+    setDataEntidadBancaria(result.data.data.tiposEntidadesBancarias);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposEntidadesBancarias =
+        result.data.data.tiposEntidadesBancarias.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipo: tiposEntidadesBancarias.id,
+      }));
+    }
   };
   //#endregion
 
   return (
     <>
-      {dataModal.length > 0 && (
+      {dataEntidadBancaria.length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -43,30 +53,32 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "EntidadBancaria"]}
           titulo="Entidad Bancaria"
           foco={document.getElementById("tablaEntidadBancaria")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input40pct}>
-                <label htmlFor="id" className={Global.LabelStyle}>
-                  Código
-                </label>
-                <input
-                  type="text"
-                  id="id"
-                  name="id"
-                  placeholder="Código"
-                  autoComplete="off"
-                  value={data.id ?? ""}
-                  onChange={ValidarData}
-                  disabled={true}
-                  className={Global.InputStyle}
-                />
-              </div>
-              <div className={Global.InputFull}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              {modo != "Nuevo" && (
+                <div className={G.Input72}>
+                  <label htmlFor="id" className={G.LabelStyle}>
+                    Código
+                  </label>
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    placeholder="Código"
+                    autoComplete="off"
+                    value={data.id ?? ""}
+                    onChange={HandleData}
+                    disabled={true}
+                    className={G.InputStyle}
+                  />
+                </div>
+              )}
+              <div className={G.InputMitad}>
                 <label
                   htmlFor="numeroDocumentoIdentidad"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   RUC
                 </label>
@@ -74,29 +86,29 @@ const Modal = ({ setModal, modo, objeto }) => {
                   type="text"
                   id="numeroDocumentoIdentidad"
                   name="numeroDocumentoIdentidad"
-                  placeholder="00000000000"
+                  placeholder="Documento Identidad"
                   autoComplete="off"
                   maxLength="11"
                   autoFocus
                   disabled={modo == "Consultar"}
                   value={data.numeroDocumentoIdentidad ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="tipo" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="tipo" className={G.LabelStyle}>
                   Tipo
                 </label>
                 <select
                   id="tipo"
                   name="tipo"
                   value={data.tipo ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Consultar"}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
-                  {dataModal.map((tipo) => (
+                  {dataEntidadBancaria.map((tipo) => (
                     <option key={tipo.id} value={tipo.id}>
                       {tipo.descripcion}
                     </option>
@@ -105,7 +117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
+              <label htmlFor="nombre" className={G.LabelStyle}>
                 Nombre
               </label>
               <input
@@ -116,8 +128,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoComplete="off"
                 disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
           </div>

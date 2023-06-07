@@ -11,12 +11,12 @@ import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -75,7 +75,7 @@ const Articulo = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -85,9 +85,10 @@ const Articulo = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -96,10 +97,11 @@ const Articulo = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -137,7 +139,7 @@ const Articulo = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -175,17 +177,17 @@ const Articulo = () => {
     } else {
       if (modo == "Nuevo") {
         setObjeto({
-          lineaId: "00",
+          lineaId: "",
           subLineaId: "",
           articuloId: "",
-          tipoExistenciaId: "01",
-          unidadMedidaId: "1",
-          marcaId: "36",
+          tipoExistenciaId: "",
+          unidadMedidaId: "",
+          marcaId: "",
           descripcion: "",
           observacion: "",
           codigoBarras: "",
           peso: 0,
-          monedaId: "S",
+          monedaId: "",
           precioCompra: 0,
           precioCompraDescuento: 0,
           precioVenta1: 0,
@@ -229,7 +231,7 @@ const Articulo = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Articulo"], id, setEliminar);
+        Delete(["Mantenimiento", "Articulo"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -350,7 +352,7 @@ const Articulo = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "Articulo"]}
             id={row.values.id}
@@ -367,84 +369,88 @@ const Articulo = () => {
   //#region Render
   return (
     <>
-      <div className="px-2">
-        <h2 className={Global.TituloH2}>Artículos</h2>
+      {visible ? (
+        <>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Artículos</h2>
 
-        {/* Filtro*/}
-        <div className={Global.ContenedorInputs + "mb-2"}>
-          <div className={Global.Input60pct}>
-            <label htmlFor="codigoBarras" className={Global.LabelStyle}>
-              Cod. Barras
-            </label>
-            <input
-              type="text"
-              id="codigoBarras"
-              name="codigoBarras"
-              placeholder="Código Barras"
-              autoComplete="off"
-              autoFocus
-              value={filtro.codigoBarras}
-              onChange={ValidarData}
-              className={Global.InputStyle}
-            />
+            {/* Filtro*/}
+            <div className={G.ContenedorInputs + "mb-2"}>
+              <div className={G.Input60pct}>
+                <label htmlFor="codigoBarras" className={G.LabelStyle}>
+                  Cod. Barras
+                </label>
+                <input
+                  type="text"
+                  id="codigoBarras"
+                  name="codigoBarras"
+                  placeholder="Código Barras"
+                  autoComplete="off"
+                  autoFocus
+                  value={filtro.codigoBarras}
+                  onChange={HandleData}
+                  className={G.InputStyle}
+                />
+              </div>
+              <div className={G.InputFull}>
+                <label htmlFor="descripcion" className={G.LabelStyle}>
+                  Descripción
+                </label>
+                <input
+                  type="text"
+                  id="descripcion"
+                  name="descripcion"
+                  placeholder="Descripción"
+                  autoComplete="off"
+                  value={filtro.descripcion}
+                  onChange={HandleData}
+                  className={G.InputBoton}
+                />
+                <button
+                  id="consultar"
+                  onClick={FiltroBoton}
+                  className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
+                >
+                  <FaUndoAlt></FaUndoAlt>
+                </button>
+              </div>
+            </div>
+            {/* Filtro*/}
+
+            {/* Boton */}
+            {permisos[0] && (
+              <BotonBasico
+                botonText="Nuevo"
+                botonClass={G.BotonAzul}
+                botonIcon={faPlus}
+                click={() => AccionModal()}
+                contenedor=""
+              />
+            )}
+            {/* Boton */}
+
+            {/* Tabla */}
+            <DivTabla>
+              <Table
+                id={"tablaArticulo"}
+                columnas={columnas}
+                datos={datos}
+                total={total}
+                index={index}
+                Click={(e) => FiltradoPaginado(e)}
+                DobleClick={(e) => AccionModal(e, "Consultar", true)}
+                KeyDown={(e) => ModalKey(e)}
+              />
+            </DivTabla>
+            {/* Tabla */}
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="descripcion" className={Global.LabelStyle}>
-              Descripción
-            </label>
-            <input
-              type="text"
-              id="descripcion"
-              name="descripcion"
-              placeholder="Descripción"
-              autoComplete="off"
-              value={filtro.descripcion}
-              onChange={ValidarData}
-              className={Global.InputBoton}
-            />
-            <button
-              id="consultar"
-              onClick={FiltroBoton}
-              className={
-                Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-              }
-            >
-              <FaUndoAlt></FaUndoAlt>
-            </button>
-          </div>
-        </div>
-        {/* Filtro*/}
 
-        {/* Boton */}
-        {permisos[0] && (
-          <BotonBasico
-            botonText="Nuevo"
-            botonClass={Global.BotonRegistrar}
-            botonIcon={faPlus}
-            click={() => AccionModal()}
-            contenedor=""
-          />
-        )}
-        {/* Boton */}
-
-        {/* Tabla */}
-        <TablaStyle>
-          <Table
-            id={"tablaArticulo"}
-            columnas={columnas}
-            datos={datos}
-            total={total}
-            index={index}
-            Click={(e) => FiltradoPaginado(e)}
-            DobleClick={(e) => AccionModal(e, "Consultar", true)}
-            KeyDown={(e) => ModalKey(e)}
-          />
-        </TablaStyle>
-        {/* Tabla */}
-      </div>
-
-      {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
-      <ToastContainer />
+          {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}
+          <ToastContainer />
+        </>
+      ) : (
+        <span></span>
+      )}
     </>
   );
   //#endregion

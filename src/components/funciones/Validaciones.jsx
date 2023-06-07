@@ -205,9 +205,7 @@ export const CerrarModal = async (e) => {
   }
 };
 
-export const PDF = async (data) => {
-  const blob = new Blob([data], { type: "application/pdf" });
-  const blobUrl = URL.createObjectURL(blob);
-  window.open(blobUrl);
+export const OcultarMensajes = async (setTipoMensaje, setMensaje) => {
+  setMensaje([]);
+  setTipoMensaje(-1);
 };
-//#endregion

@@ -7,12 +7,12 @@ import Table from "../../../components/tabla/Table";
 import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import moment from "moment";
-import "react-toastify/dist/ReactToastify.css";
+
 import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+
+import * as G from "../../../components/Global";
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -41,8 +41,12 @@ const TablaStyle = styled.div`
 const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     marcaId: "",
   });
   const [marcas, setMarcas] = useState([]);
@@ -61,7 +65,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     Marcas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "porDocumento" ||
       target.value === "porDetalle" ||
@@ -87,49 +91,47 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
 
   return (
     <ModalBasic
-      titulo="Lista de Ventas por Vendedor y Cliente"
+      titulo="Reporte Utilidades"
       tamañoModal={[Global.ModalGrande, Global.Form]}
       setModal={setModal}
     >
-      <div
-        className={Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
-      >
-        <div className={Global.ContenedorFiltro + " !my-0"}>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+      <div className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}>
+        <div className={G.ContenedorInputsFiltro + " !my-0"}>
+          <div className={G.Input42pct}>
+            <label htmlFor="fechaInicio" className={G.LabelStyle}>
               Desde
             </label>
             <input
               type="date"
               id="fechaInicio"
-              onChange={ValidarData}
+              onChange={HandleData}
               name="fechaInicio"
               value={data.fechaInicio ?? ""}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.Input42pct}>
-            <label htmlFor="fechaFin" className={Global.LabelStyle}>
+          <div className={G.Input42pct}>
+            <label htmlFor="fechaFin" className={G.LabelStyle}>
               Hasta
             </label>
             <input
               type="date"
               id="fechaFin"
-              onChange={ValidarData}
+              onChange={HandleData}
               name="fechaFin"
               value={data.fechaFin ?? ""}
-              className={Global.InputBoton}
+              className={G.InputBoton}
             />
           </div>
           <div className={Global.InputFull}>
-            <label htmlFor="marcaId" className={Global.LabelStyle}>
-              Marca
+            <label htmlFor="personalId" className={Global.LabelStyle}>
+              Personal
             </label>
             <select
               id="marcaId"
               name="marcaId"
               autoFocus
-              value={data.marcaId ?? ""}
+              value={data.personalId ?? ""}
               onChange={ValidarData}
               className={Global.InputStyle}
             >
@@ -143,17 +145,17 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="cliente" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="cliente" className={G.LabelStyle}>
               Cliente
             </label>
             <input
               type="text"
               id="cliente"
-              onChange={ValidarData}
+              onChange={HandleData}
               name="cliente"
               value={filtroLocal.cliente ?? ""}
-              className={Global.InputStyle}
+              className={G.InputStyle}
             />
           </div>
         </div>

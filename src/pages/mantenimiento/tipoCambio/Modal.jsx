@@ -1,84 +1,46 @@
 import React, { useState } from "react";
-import ApiMasy from "../../../api/ApiMasy";
+import Get from "../../../components/funciones/Get";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import { toast } from "react-toastify";
 import moment from "moment";
 import { FaSearch } from "react-icons/fa";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
   //#endregion
 
-  //#region useEffect
-  //#endregion
-
   //#region Funciones
-  const ValidarData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
-      [target.name]: target.value,
-    }));
+  const HandleData = async ({ target }) => {
+    if (target.name == "id") {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value,
+      }));
+    } else {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: Number(target.value),
+      }));
+    }
   };
   //#endregion
 
   //#region Funciones API
   const ConsultarTipoCambio = async (filtro = "") => {
-    const result = await ApiMasy.get(
-      `api/Servicio/ConsultarTipoCambio${filtro}`
+    const result = await Get(
+      `Servicio/ConsultarTipoCambio${filtro}`,
+      `Tipo de Cambio extraído exitosamente`
     );
-    if (modo == "Modificar") {
-      setData({
-        ...data,
-        precioCompra: result.data.data.precioCompra,
-        precioVenta: result.data.data.precioVenta,
-      });
-    } else {
-      setData({
-        ...data,
-        precioCompra: result.data.data.precioCompra,
-        precioVenta: result.data.data.precioVenta,
-      });
-    }
-    if (result.name == "AxiosError") {
-      let error = "";
-      //Captura el mensaje de error
-      if (Object.entries(result.response.data).length > 0) {
-        error = String(result.response.data.messages[0].textos);
-      } else {
-        error = String(result.message);
-      }
-      //Captura el mensaje de error
-
-      toast.error(error, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+    if (result == undefined) {
       document.getElementById("id").focus();
     } else {
-      toast.info(
-        "Tipo de Cambio extraído exitosamente. Día: " +
-          moment(result.data.data.fecha).format("DD/MM/YYYY"),
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      setData({
+        ...data,
+        precioCompra: result.precioCompra,
+        precioVenta: result.precioVenta,
+      });
       document.getElementById("botonRegistrarModalCrud").focus();
-      setEliminar(true);
     }
   };
   //#endregion
@@ -92,12 +54,12 @@ const Modal = ({ setModal, modo, objeto }) => {
       menu={["Mantenimiento", "TipoCambio"]}
       titulo="Tipo de Cambio"
       foco={document.getElementById("tablaTipoCambio")}
-      tamañoModal={[Global.ModalPequeño, Global.Form]}
+      tamañoModal={[G.ModalPequeño, G.Form]}
     >
-      <div className={Global.ContenedorBasico}>
+      <div className={G.ContenedorBasico}>
         <div className="flex">
-          <label htmlFor="id" className={Global.LabelStyle}>
-            Tipo
+          <label htmlFor="id" className={G.LabelStyle}>
+            Fecha
           </label>
           <input
             type="date"
@@ -106,14 +68,12 @@ const Modal = ({ setModal, modo, objeto }) => {
             autoFocus
             disabled={modo == "Consultar"}
             value={moment(data.id).format("yyyy-MM-DD")}
-            onChange={ValidarData}
-            className={Global.InputBoton}
+            onChange={HandleData}
+            className={G.InputBoton}
           />
           <button
             id="consultarTipoCambio"
-            className={
-              Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-            }
+            className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
             hidden={modo == "Consultar"}
             onClick={() => ConsultarTipoCambio(`?fecha=${data.id}`)}
             onKeyDown={(e) => {
@@ -125,10 +85,10 @@ const Modal = ({ setModal, modo, objeto }) => {
             <FaSearch></FaSearch>
           </button>
         </div>
-        <div className={Global.ContenedorInputs}>
-          <div className={Global.InputFull}>
-            <label htmlFor="precioCompra" className={Global.LabelStyle}>
-              P. Compra
+        <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
+            <label htmlFor="precioCompra" className={G.LabelStyle}>
+              Precio Compra
             </label>
             <input
               type="number"
@@ -138,13 +98,13 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar"}
               value={data.precioCompra}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="precioVenta" className={Global.LabelStyle}>
-              P. Venta
+          <div className={G.InputFull}>
+            <label htmlFor="precioVenta" className={G.LabelStyle}>
+              Precio Venta
             </label>
             <input
               type="number"
@@ -154,8 +114,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               min={0}
               disabled={modo == "Consultar"}
               value={data.precioVenta}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             />
           </div>
         </div>

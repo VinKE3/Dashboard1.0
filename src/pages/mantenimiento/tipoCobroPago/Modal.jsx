@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
-  const [dataModal, setdataModal] = useState([]);
+  const [dataTipoVentaCompra, setDataTipoVentaCompra] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -25,18 +25,29 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/TipoCobroPago/FormularioTablas`
     );
-    setdataModal(result.data.data.tiposVentaCompra);
+    setDataTipoVentaCompra(result.data.data.tiposVentaCompra);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let tiposVentaCompra = result.data.data.tiposVentaCompra.find(
+        (map) => map
+      );
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        tipoVentaCompraId: tiposVentaCompra.id,
+      }));
+    }
   };
   //#endregion
 
   //#region Render
   return (
     <>
-      {Object.entries(dataModal).length > 0 && (
+      {Object.entries(dataTipoVentaCompra).length > 0 && (
         <ModalCrud
           setModal={setModal}
           objeto={data}
@@ -44,12 +55,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "TipoCobroPago"]}
           titulo="Tipo de Pago"
           foco={document.getElementById("tablaCobroPago")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="descripcion" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="descripcion" className={G.LabelStyle}>
                   Descripción
                 </label>
                 <input
@@ -59,14 +70,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="Descripción"
                   autoComplete="off"
                   autoFocus
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.descripcion ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="abreviatura" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="abreviatura" className={G.LabelStyle}>
                   Abreviatura
                 </label>
                 <input
@@ -75,19 +86,16 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="abreviatura"
                   placeholder="Abreviatura"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.abreviatura ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label
-                  htmlFor="tipoVentaCompraId"
-                  className={Global.LabelStyle}
-                >
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="tipoVentaCompraId" className={G.LabelStyle}>
                   Forma Pago
                 </label>
                 <select
@@ -95,18 +103,18 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoVentaCompraId"
                   disabled={modo == "Nuevo" ? false : true}
                   value={data.tipoVentaCompraId ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 >
-                  {dataModal.map((forma) => (
+                  {dataTipoVentaCompra.map((forma) => (
                     <option key={forma.id} value={forma.id}>
                       {forma.descripcion}
                     </option>
                   ))}
                 </select>
               </div>
-              <div className={Global.Input42pct}>
-                <label htmlFor="plazo" className={Global.LabelStyle}>
+              <div className={G.Input42pct}>
+                <label htmlFor="plazo" className={G.LabelStyle}>
                   Plazo
                 </label>
                 <input
@@ -115,9 +123,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="plazo"
                   min={0}
                   value={data.plazo ?? ""}
-                  disabled={modo == "Consultar" }
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  disabled={modo == "Consultar"}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>

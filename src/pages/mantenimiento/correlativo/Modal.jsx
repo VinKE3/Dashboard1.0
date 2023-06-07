@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -11,12 +11,12 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -25,7 +25,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region API
-  const Tablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Correlativo/FormularioTablas`
     );
@@ -45,12 +45,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "Correlativo"]}
           titulo="Correlativo"
           foco={document.getElementById("tablaCorrelativo")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
-                <label htmlFor="tipoDocumentoId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <label htmlFor="tipoDocumentoId" className={G.LabelStyle}>
                   Tipo de Documento
                 </label>
                 <select
@@ -58,9 +58,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoDocumentoId"
                   autoFocus
                   value={data.tipoDocumentoId ?? ""}
-                  onChange={ValidarData}
-                  disabled={modo == "Consultar" }
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  disabled={modo == "Consultar"}
+                  className={G.InputStyle}
                 >
                   {dataTipoDocumento.map((forma) => (
                     <option key={forma.id} value={forma.id}>
@@ -69,8 +69,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                   ))}
                 </select>
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="serie" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="serie" className={G.LabelStyle}>
                   Serie
                 </label>
                 <input
@@ -79,18 +79,18 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="serie"
                   placeholder="Serie"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.serie}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.InputFull}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
                 <label
                   htmlFor="tipoDocumentoDescripcion"
-                  className={Global.LabelStyle}
+                  className={G.LabelStyle}
                 >
                   Descripción
                 </label>
@@ -100,14 +100,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                   name="tipoDocumentoDescripcion"
                   placeholder="Descripción"
                   autoComplete="off"
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.tipoDocumentoDescripcion}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="numero" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="numero" className={G.LabelStyle}>
                   Número
                 </label>
                 <input
@@ -117,10 +117,10 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="numero"
                   autoComplete="off"
                   min={0}
-                  disabled={modo == "Consultar" }
+                  disabled={modo == "Consultar"}
                   value={data.numero}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
             </div>

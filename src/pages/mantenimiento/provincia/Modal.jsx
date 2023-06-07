@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -11,12 +11,12 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    Tablas();
+    GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -25,9 +25,20 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region Funciones API
-  const Tablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Departamento/Listar`);
-    setDataDepartamento(result.data.data.data);
+  const GetTablas = async () => {
+    const result = await ApiMasy.get(
+      `api/Mantenimiento/Provincia/FormularioTablas`
+    );
+    setDataDepartamento(result.data.data.departamentos);
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let departamentos = result.data.data.departamentos.find((map) => map);
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        departamentoId: departamentos.id,
+      }));
+    }
   };
   //#endregion
 
@@ -42,12 +53,12 @@ const Modal = ({ setModal, modo, objeto }) => {
           menu={["Mantenimiento", "Provincia"]}
           titulo="Provincia"
           foco={document.getElementById("tablaProvincia")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input48}>
-                <label htmlFor="provinciaId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input48}>
+                <label htmlFor="provinciaId" className={G.LabelStyle}>
                   Código
                 </label>
                 <input
@@ -60,21 +71,21 @@ const Modal = ({ setModal, modo, objeto }) => {
                   autoFocus
                   disabled={modo == "Nuevo" ? false : true}
                   value={data.provinciaId ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="departamentoId" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="departamentoId" className={G.LabelStyle}>
                   Departamento
                 </label>
                 <select
                   id="departamentoId"
                   name="departamentoId"
                   value={data.departamentoId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo == "Nuevo" ? false : true}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataDepartamento.map((departamento) => (
                     <option key={departamento.id} value={departamento.id}>
@@ -85,7 +96,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
+              <label htmlFor="nombre" className={G.LabelStyle}>
                 Provincia
               </label>
               <input
@@ -97,8 +108,8 @@ const Modal = ({ setModal, modo, objeto }) => {
                 autoFocus={modo == "Modificar"}
                 disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
           </div>

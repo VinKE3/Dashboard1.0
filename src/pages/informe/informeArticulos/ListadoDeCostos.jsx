@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { RadioButton } from "primereact/radiobutton";
-import ModalBasic from "../../../components/modal/ModalBasic";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as Global from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import { Checkbox } from "primereact/checkbox";
+import { RadioButton } from "primereact/radiobutton";
+import * as G from "../../../components/Global";
 
 const ListadoDeCostos = ({ setModal }) => {
   const [data, setData] = useState({
@@ -17,17 +15,16 @@ const ListadoDeCostos = ({ setModal }) => {
   const [marcas, setMarcas] = useState([]);
 
   useEffect(() => {
-    TipoDeDocumentos();
+    GetTablas();
     Marcas();
   }, []);
 
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (
       target.value === "agruparMarca" ||
       target.value === "agruparLinea" ||
       target.value === "todos"
     ) {
-      console.log(target.name, "target");
       setData((prevState) => ({
         ...prevState,
         checkFiltro: target.value,
@@ -39,7 +36,7 @@ const ListadoDeCostos = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const TipoDeDocumentos = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
@@ -56,10 +53,10 @@ const ListadoDeCostos = ({ setModal }) => {
     <>
       <ModalBasic titulo="Listado De Costos" setModal={setModal}>
         <div
-          className={Global.ContenedorBasico + Global.FondoContenedor + " mb-2"}
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
         >
-          <div className={Global.InputFull}>
-            <label htmlFor="tipoExistenciaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
               Tipo
             </label>
             <select
@@ -67,8 +64,8 @@ const ListadoDeCostos = ({ setModal }) => {
               name="tipoExistenciaId"
               autoFocus
               value={data.tipoExistenciaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -80,8 +77,8 @@ const ListadoDeCostos = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="marcaId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="marcaId" className={G.LabelStyle}>
               Marca
             </label>
             <select
@@ -89,8 +86,8 @@ const ListadoDeCostos = ({ setModal }) => {
               name="marcaId"
               autoFocus
               value={data.marcaId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
@@ -103,61 +100,61 @@ const ListadoDeCostos = ({ setModal }) => {
             </select>
           </div>
 
-          <div className={Global.ContenedorInputs}>
-            <div className={Global.InputFull}>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="todos"
                     name="agrupar"
                     value="todos"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "todos"}
                   />
                 </div>
                 <label
                   htmlFor="todos"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Todos
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="agruparMarca"
                     name="agrupar"
                     value="agruparMarca"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "agruparMarca"}
                   />
                 </div>
                 <label
                   htmlFor="agruparMarca"
-                  className={Global.LabelCheckStyle + "rounded-r-none"}
+                  className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Agrupar por Marca
                 </label>
               </div>
-              <div className={Global.Input + "w-42"}>
-                <div className={Global.CheckStyle + Global.Anidado}>
+              <div className={G.Input + "w-42"}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="agruparLinea"
                     name="agrupar"
                     value="agruparLinea"
                     onChange={(e) => {
-                      ValidarData(e);
+                      HandleData(e);
                     }}
                     checked={data.checkFiltro === "agruparLinea"}
                   />
                 </div>
                 <label
                   htmlFor="agruparLinea"
-                  className={Global.LabelCheckStyle + " !py-1 "}
+                  className={G.LabelCheckStyle + " !py-1 "}
                 >
                   Agrupar por Linea y Sublinea
                 </label>
@@ -167,9 +164,10 @@ const ListadoDeCostos = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={Global.BotonAgregar}
+              botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
+contenedor=""
             />
           </div>
         </div>

@@ -2,13 +2,13 @@ import { useEffect, useState, useMemo } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { FaSearch, FaCheck } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import moment from "moment";
 import styled from "styled-components";
-import * as Global from "../Global";
+import * as G from "../Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -65,7 +65,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -77,12 +77,6 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
       Listar(cadena, 1);
     }, 200);
     setTimer(newTimer);
-  };
-  const Key = async (e) => {
-    if (e.key == "Escape") {
-      foco.focus();
-      setModal(false);
-    }
   };
   const KeyTabla = async (e, click = false) => {
     if (e.key === "Enter") {
@@ -177,9 +171,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={
-                Global.BotonModalBase + Global.BotonAgregar + "border-none"
-              }
+              className={G.BotonModalBase + G.BotonVerde + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>
@@ -196,16 +188,14 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Cotizacion"
-        tamañoModal={[Global.ModalMediano, Global.Form]}
+        foco={foco}
+        tamañoModal={[G.ModalMediano, G.Form]}
         childrenFooter={
           <>
             {/* <button
               className={
-                Global.BotonOkModal + " flex items-center justify-center"
+                G.BotonOkModal + " flex items-center justify-center"
               }
               type="button"
             >
@@ -215,7 +205,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
             <button
               type="button"
               onClick={() => setModal(false)}
-              className={Global.BotonModalBase + Global.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
             >
               CERRAR
             </button>
@@ -223,10 +213,10 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
         }
       >
         {
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs + " mb-2"}>
-              <div className={Global.InputFull}>
-                <label htmlFor="clienteNombre" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs + " mb-2"}>
+              <div className={G.InputFull}>
+                <label htmlFor="clienteNombre" className={G.LabelStyle}>
                   Cliente
                 </label>
                 <input
@@ -237,13 +227,12 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   autoComplete="off"
                   autoFocus
                   value={filtro.clienteNombre}
-                  onChange={ValidarData}
-                  onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="fechaInicio" className={G.LabelStyle}>
                   Desde
                 </label>
                 <input
@@ -252,13 +241,12 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   name="fechaInicio"
                   autoComplete="off"
                   value={filtro.fechaInicio}
-                  onChange={ValidarData}
-                  onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputMitad}>
-                <label htmlFor="fechaFin" className={Global.LabelStyle}>
+              <div className={G.InputMitad}>
+                <label htmlFor="fechaFin" className={G.LabelStyle}>
                   Hasta
                 </label>
                 <input
@@ -267,15 +255,14 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                   name="fechaFin"
                   autoComplete="off"
                   value={filtro.fechaFin}
-                  onChange={ValidarData}
-                  onKeyDown={(e) => Key(e)}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
                 {/* <button
                   id="consultar"
                   onClick={Filtro}
                   className={
-                    Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
+                    G.BotonBuscar + G.Anidado + G.BotonPrimary
                   }
                 >
                   <FaSearch></FaSearch>
@@ -284,7 +271,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
             </div>
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <TableBasic
                 id={"tablaFiltroCotizacion"}
                 columnas={columnas}
@@ -292,7 +279,7 @@ const FiltroCotizacion = ({ setModal, setObjeto, foco }) => {
                 DobleClick={(e) => KeyTabla(e, true)}
                 KeyDown={(e) => KeyTabla(e)}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
         }

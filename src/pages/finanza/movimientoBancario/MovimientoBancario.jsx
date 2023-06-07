@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
 import Delete from "../../../components/funciones/Delete";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
@@ -9,16 +10,16 @@ import Table from "../../../components/tabla/Table";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import Modal from "./Modal";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import moment from "moment";
 import styled from "styled-components";
 import { FaUndoAlt } from "react-icons/fa";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "react-toastify/dist/ReactToastify.css";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 //#region Estilos
-const TablaStyle = styled.div`
+const DivTabla = styled.div`
   & th:first-child {
     display: none;
   }
@@ -63,8 +64,12 @@ const MovimientoBancario = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     cuentaCorrienteId: "",
     tipoMovimientoId: "",
     concepto: "",
@@ -76,7 +81,7 @@ const MovimientoBancario = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -86,9 +91,10 @@ const MovimientoBancario = () => {
     );
   }, [filtro]);
   useEffect(() => {
-    Filtro();
+    if (visible) {
+      Filtro();
+    }
   }, [cadena]);
-
   useEffect(() => {
     if (visible) {
       if (!modal) {
@@ -97,10 +103,11 @@ const MovimientoBancario = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -125,7 +132,7 @@ const MovimientoBancario = () => {
   //#endregion
 
   //#region Funciones Filtrado
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
       [target.name]: target.value,
@@ -141,8 +148,12 @@ const MovimientoBancario = () => {
   };
   const FiltroBoton = async () => {
     setFiltro({
-      fechaInicio: moment(dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-      fechaFin: moment(dataGlobal.fechaFin).format("YYYY-MM-DD"),
+      fechaInicio: moment(
+        dataGlobal == null ? "" : dataGlobal.fechaInicio
+      ).format("YYYY-MM-DD"),
+      fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+        "YYYY-MM-DD"
+      ),
       cuentaCorrienteId: "",
       tipoMovimientoId: "",
       concepto: "",
@@ -167,26 +178,6 @@ const MovimientoBancario = () => {
   const GetPorId = async (id) => {
     const result = await ApiMasy.get(`api/Finanzas/MovimientoBancario/${id}`);
     setObjeto(result.data.data);
-  };
-  const GetIsPermitido = async (accion, id) => {
-    const result = await ApiMasy.get(
-      `api/Finanzas/MovimientoBancario/IsPermitido?accion=${accion}&id=${id}`
-    );
-    if (!result.data.data) {
-      toast.error(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      return false;
-    } else {
-      return true;
-    }
   };
   const GetCuentasCorrientes = async () => {
     const result = await ApiMasy.get(
@@ -230,14 +221,14 @@ const MovimientoBancario = () => {
           }
           setObjeto({
             id: "",
-            empresaId: "01",
+            empresaId: "",
             cuentaCorrienteId:
               filtro.cuentaCorrienteId == ""
                 ? dataCtacte[0].cuentaCorrienteId
                 : filtro.cuentaCorrienteId,
             fechaEmision: moment().format("YYYY-MM-DD"),
             tipoCambio: 0,
-            tipoMovimientoId: "IN",
+            tipoMovimientoId: "",
             tipoOperacionId: "",
             numeroOperacion: "",
             isCierreCaja: false,
@@ -261,7 +252,11 @@ const MovimientoBancario = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Finanzas/MovimientoBancario",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -269,12 +264,16 @@ const MovimientoBancario = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido(accion, value);
+          let valor = await GetIsPermitido(
+            "Finanzas/MovimientoBancario",
+            accion,
+            value
+          );
           if (valor) {
             await Delete(
               ["Finanzas", "MovimientoBancario"],
               value,
-              setEliminar
+              setListar
             );
           }
           break;
@@ -442,7 +441,7 @@ const MovimientoBancario = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -460,18 +459,16 @@ const MovimientoBancario = () => {
     <>
       {visible ? (
         <>
-          <div className="px-2">
-            <h2 className={Global.TituloH2}>Movimientos Bancarios</h2>
+          <div className={G.ContenedorPadre}>
+            <h2 className={G.TituloH2}>Movimientos Bancarios</h2>
 
             {/* Filtro*/}
             <div
-              className={
-                Global.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "
-              }
+              className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
             >
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label name="cuentaCorrienteId" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputFull}>
+                  <label name="cuentaCorrienteId" className={G.LabelStyle}>
                     Cta. Bancaria.
                   </label>
                   <select
@@ -479,8 +476,8 @@ const MovimientoBancario = () => {
                     name="cuentaCorrienteId"
                     value={filtro.cuentaCorrienteId ?? ""}
                     autoFocus
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   >
                     <option key={-1} value={""}>
                       {"--TODOS--"}
@@ -492,8 +489,8 @@ const MovimientoBancario = () => {
                     ))}
                   </select>
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaInicio" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
                   <input
@@ -501,15 +498,15 @@ const MovimientoBancario = () => {
                     id="fechaInicio"
                     name="fechaInicio"
                     value={filtro.fechaInicio ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
               </div>
 
-              <div className={Global.ContenedorInputs}>
-                <div className={Global.InputFull}>
-                  <label name="conceptoPadre" className={Global.LabelStyle}>
+              <div className={G.ContenedorInputs}>
+                <div className={G.InputFull}>
+                  <label name="conceptoPadre" className={G.LabelStyle}>
                     Concepto
                   </label>
                   <input
@@ -519,12 +516,12 @@ const MovimientoBancario = () => {
                     placeholder="Concepto"
                     autoComplete="off"
                     value={filtro.concepto ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputStyle}
+                    onChange={HandleData}
+                    className={G.InputStyle}
                   />
                 </div>
-                <div className={Global.Input42pct}>
-                  <label htmlFor="fechaFin" className={Global.LabelStyle}>
+                <div className={G.Input42pct}>
+                  <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>
                   <input
@@ -532,14 +529,12 @@ const MovimientoBancario = () => {
                     id="fechaFin"
                     name="fechaFin"
                     value={filtro.fechaFin ?? ""}
-                    onChange={ValidarData}
-                    className={Global.InputBoton}
+                    onChange={HandleData}
+                    className={G.InputBoton}
                   />
                   <button
                     id="buscar"
-                    className={
-                      Global.BotonBuscar + Global.Anidado + Global.BotonPrimary
-                    }
+                    className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
                     onClick={FiltroBoton}
                   >
                     <FaUndoAlt />
@@ -547,55 +542,55 @@ const MovimientoBancario = () => {
                 </div>
               </div>
 
-              <div className={Global.ContenedorFiltro + " !my-0"}>
-                <div className={Global.InputMitad}>
-                  <div className={Global.Input + "w-28"}>
-                    <div className={Global.CheckStyle}>
+              <div className={G.ContenedorInputsFiltro + " !my-0"}>
+                <div className={G.InputMitad}>
+                  <div className={G.Input + "w-28"}>
+                    <div className={G.CheckStyle}>
                       <RadioButton
                         inputId="todos"
                         name="tipoMovimientoId"
                         value={""}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.tipoMovimientoId === ""}
                       />
                     </div>
                     <label
                       htmlFor="todos"
-                      className={Global.LabelCheckStyle + " rounded-r-none "}
+                      className={G.LabelCheckStyle + " rounded-r-none "}
                     >
                       Todos
                     </label>
                   </div>
-                  <div className={Global.Input + "w-44"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-44"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="visualizarIngresos"
                         name="tipoMovimientoId"
                         value={"IN"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.tipoMovimientoId === "IN"}
                       />
                     </div>
                     <label
                       htmlFor="visualizarIngresos"
-                      className={Global.LabelCheckStyle + " rounded-r-none"}
+                      className={G.LabelCheckStyle + " rounded-r-none"}
                     >
                       Visualizar Ingresos
                     </label>
                   </div>
-                  <div className={Global.Input + "w-44"}>
-                    <div className={Global.CheckStyle + Global.Anidado}>
+                  <div className={G.Input + "w-44"}>
+                    <div className={G.CheckStyle + G.Anidado}>
                       <RadioButton
                         inputId="visualizarEgresos"
                         name="tipoMovimientoId"
                         value={"EG"}
-                        onChange={ValidarData}
+                        onChange={HandleData}
                         checked={filtro.tipoMovimientoId === "EG"}
                       />
                     </div>
                     <label
                       htmlFor="visualizarEgresos"
-                      className={Global.LabelCheckStyle + "font-semibold"}
+                      className={G.LabelCheckStyle + "font-semibold"}
                     >
                       Visualizar Egresos
                     </label>
@@ -609,7 +604,7 @@ const MovimientoBancario = () => {
             {permisos[0] && (
               <BotonBasico
                 botonText="Nuevo"
-                botonClass={Global.BotonRegistrar}
+                botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
                 contenedor=""
@@ -618,7 +613,7 @@ const MovimientoBancario = () => {
             {/* Boton */}
 
             {/* Tabla */}
-            <TablaStyle>
+            <DivTabla>
               <Table
                 id={"tablaMovimientoBancario"}
                 columnas={columnas}
@@ -629,7 +624,7 @@ const MovimientoBancario = () => {
                 DobleClick={(e) => AccionModal(e, "Consultar", 3, true)}
                 KeyDown={(e) => ModalKey(e, "Modificar")}
               />
-            </TablaStyle>
+            </DivTabla>
             {/* Tabla */}
           </div>
           {modal && <Modal setModal={setModal} modo={modo} objeto={objeto} />}

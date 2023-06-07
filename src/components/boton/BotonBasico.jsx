@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as Global from "../Global";
+import * as G from "../Global";
 const BotonBasico = ({
   botonClass,
   botonIcon,
@@ -15,7 +15,7 @@ const BotonBasico = ({
       <button
         onClick={click}
         autoFocus={autoFoco}
-        className={Global.BotonBasico + botonClass}
+        className={G.BotonBasico + botonClass}
         onKeyDown={(e) => KeyDown(e)}
       >
         <FontAwesomeIcon
@@ -23,7 +23,7 @@ const BotonBasico = ({
           size="1x"
           className="m-0 py-3 px-2.5 sm:pr-1 sm:py-.2.5"
         />
-        <div className={Global.BotonTexto}>
+        <div className={G.BotonTexto}>
           <p>{botonText}</p>
         </div>
       </button>

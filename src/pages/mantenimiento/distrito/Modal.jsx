@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
-import * as Global from "../../../components/Global";
+import * as G from "../../../components/Global";
 
 const Modal = ({ setModal, objeto, modo }) => {
   //#region useState
@@ -22,7 +22,7 @@ const Modal = ({ setModal, objeto, modo }) => {
   //#endregion
 
   //#region Funciones
-  const ValidarData = async ({ target }) => {
+  const HandleData = async ({ target }) => {
     if (target.name == "departamentoId") {
       setData((prevState) => ({
         ...prevState,
@@ -54,6 +54,20 @@ const Modal = ({ setModal, objeto, modo }) => {
         provincias: res.provincias,
       }))
     );
+    if (modo == "Nuevo") {
+      //Datos Iniciales
+      let departamentos = result.data.data.departamentos.find((map) => map);
+      let provincias = departamentos.provincias.map((res) => ({
+        id: res.id,
+        nombre: res.nombre,
+      }));
+      //Datos Iniciales
+      setData((prev) => ({
+        ...prev,
+        departamentoId: departamentos.id,
+        provinciaId: provincias[0].id,
+      }));
+    }
   };
   const ConsultarProvincia = async () => {
     if (dataDepartamento.length > 0) {
@@ -79,12 +93,12 @@ const Modal = ({ setModal, objeto, modo }) => {
           menu={["Mantenimiento", "Distrito"]}
           titulo="Distrito"
           foco={document.getElementById("tablaDistrito")}
-          tamañoModal={[Global.ModalPequeño, Global.Form]}
+          tamañoModal={[G.ModalPequeño, G.Form]}
         >
-          <div className={Global.ContenedorBasico}>
-            <div className={Global.ContenedorInputs}>
-              <div className={Global.Input48}>
-                <label htmlFor="distritoId" className={Global.LabelStyle}>
+          <div className={G.ContenedorBasico}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.Input48}>
+                <label htmlFor="distritoId" className={G.LabelStyle}>
                   Código
                 </label>
                 <input
@@ -97,21 +111,21 @@ const Modal = ({ setModal, objeto, modo }) => {
                   autoFocus
                   disabled={modo != "Nuevo"}
                   value={data.distritoId ?? ""}
-                  onChange={ValidarData}
-                  className={Global.InputStyle}
+                  onChange={HandleData}
+                  className={G.InputStyle}
                 />
               </div>
-              <div className={Global.InputFull}>
-                <label htmlFor="departamentoId" className={Global.LabelStyle}>
+              <div className={G.InputFull}>
+                <label htmlFor="departamentoId" className={G.LabelStyle}>
                   Departamento
                 </label>
                 <select
                   id="departamentoId"
                   name="departamentoId"
                   value={data.departamentoId ?? ""}
-                  onChange={ValidarData}
+                  onChange={HandleData}
                   disabled={modo != "Nuevo"}
-                  className={Global.InputStyle}
+                  className={G.InputStyle}
                 >
                   {dataDepartamento.map((map) => (
                     <option key={map.id} value={map.id}>
@@ -122,16 +136,16 @@ const Modal = ({ setModal, objeto, modo }) => {
               </div>
             </div>
             <div className="flex">
-              <label htmlFor="provinciaId" className={Global.LabelStyle}>
+              <label htmlFor="provinciaId" className={G.LabelStyle}>
                 Provincia
               </label>
               <select
                 id="provinciaId"
                 name="provinciaId"
                 value={data.provinciaId ?? ""}
-                onChange={ValidarData}
+                onChange={HandleData}
                 disabled={modo != "Nuevo"}
-                className={Global.InputStyle}
+                className={G.InputStyle}
               >
                 {dataProvincia.map((provincia) => (
                   <option key={provincia.id} value={provincia.id}>
@@ -141,7 +155,7 @@ const Modal = ({ setModal, objeto, modo }) => {
               </select>
             </div>
             <div className="flex">
-              <label htmlFor="nombre" className={Global.LabelStyle}>
+              <label htmlFor="nombre" className={G.LabelStyle}>
                 Distrito
               </label>
               <input
@@ -153,8 +167,8 @@ const Modal = ({ setModal, objeto, modo }) => {
                 autoFocus={modo == "Modificar"}
                 disabled={modo == "Consultar"}
                 value={data.nombre ?? ""}
-                onChange={ValidarData}
-                className={Global.InputStyle}
+                onChange={HandleData}
+                className={G.InputStyle}
               />
             </div>
           </div>
