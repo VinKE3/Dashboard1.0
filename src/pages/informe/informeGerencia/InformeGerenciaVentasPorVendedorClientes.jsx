@@ -37,6 +37,7 @@ const TablaStyle = styled.div`
     max-width: 80px;
   }
 `;
+//#endregion
 const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
@@ -45,6 +46,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     marcaId: "",
   });
   const [marcas, setMarcas] = useState([]);
+  const [personal, setPersonal] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
   const [filtroLocal, setFiltroLocal] = useState({
     cliente: "",

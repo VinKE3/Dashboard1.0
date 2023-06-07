@@ -47,10 +47,6 @@ const InformeGerenciaVentasPorMarcaArituculos = ({ setModal }) => {
     MarcaId: "",
   });
   const [personal, setPersonal] = useState([]);
-  const [dataLocal, setDataLocal] = useState([]);
-  const [filtroLocal, setFiltroLocal] = useState({
-    cliente: "",
-  });
 
   useEffect(() => {
     data;
@@ -62,18 +58,6 @@ const InformeGerenciaVentasPorMarcaArituculos = ({ setModal }) => {
   }, []);
 
   const ValidarData = async ({ target }) => {
-    if (
-      target.value === "porDocumento" ||
-      target.value === "porDetalle" ||
-      target.value === "porArticulo" ||
-      target.value === "porPersonal"
-    ) {
-      setData((prevState) => ({
-        ...prevState,
-        checkFiltro: target.value,
-      }));
-      return;
-    }
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -149,19 +133,6 @@ const InformeGerenciaVentasPorMarcaArituculos = ({ setModal }) => {
               ))}
             </select>
           </div>
-          {/* <div className={Global.InputFull}>
-            <label htmlFor="cliente" className={Global.LabelStyle}>
-              Cliente
-            </label>
-            <input
-              type="text"
-              id="cliente"
-              onChange={ValidarData}
-              name="cliente"
-              value={filtroLocal.cliente ?? ""}
-              className={Global.InputStyle}
-            />
-          </div> */}
         </div>
       </div>
     </ModalBasic>

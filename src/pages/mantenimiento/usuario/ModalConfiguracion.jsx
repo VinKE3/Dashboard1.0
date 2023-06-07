@@ -33,6 +33,11 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   }, [data.tipoUsuarioId]);
 
   useEffect(() => {
+    selectedButton;
+    console.log(selectedButton);
+  }, []);
+
+  useEffect(() => {
     if (selectedButton.length > 0 && selectedMenu !== "") {
       setData((prevData) => {
         const model = prevData.permisos.find(

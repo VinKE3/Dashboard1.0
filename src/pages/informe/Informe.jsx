@@ -1,3 +1,4 @@
+import Api from "../../api/Api";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import React, { useState } from "react";
 import TomaDeInventario from "./informeArticulos/TomaDeInventario";
@@ -48,10 +49,19 @@ import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeG
 import ReporteVendedoresClientes from "../informe/informeSistemas/ReporteVendedoresClientes";
 import InformeGerenciaVentasArticulos from "../informe/informeGerencia/InformeGerenciaVentasArticulos";
 import InformeGerenciaVentasPorMarcaArituculos from "../informe/informeGerencia/InformeGerenciaVentasPorMarcaArituculos";
+import InformeGerenciaVentasPorVendedorMes from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMes";
+import InformeGerenciaVentasPorVendedorMesDia from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMesDia";
+import InformeGerenciaVentasPorArticuloVendedor from "../informe/informeGerencia/InformeGerenciaVentasPorArticuloVendedor";
 
 const Informe = () => {
+  const imprimirReporteDeClientes = async (formato = 1) => {
+    const result = await Api.get(
+      `api/Informes/Sistema/ReporteClientes?formato=${formato}`
+    );
+    console.log(result);
+  };
   //?INFORMES MODALES
-  //#region Informe Modal Articulos
+  //#region InformeModal
   //?Informe Modal Sistemas
   const [
     modalSistemasReporteVendedoresClientes,
@@ -166,14 +176,14 @@ const Informe = () => {
   //#endregion
 
   //?INFORMES
-  //#region Informes
+  //#region InformeData
   //? Informes Sistemas
   const InformesSistemas = [
     {
       id: 1,
       title: "Reporte de  Clientes",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        imprimirReporteDeClientes();
       },
     },
     {
@@ -959,6 +969,21 @@ const Informe = () => {
       {modalInformeGerenciaVentasPorMarcaArticulo && (
         <InformeGerenciaVentasPorMarcaArituculos
           setModal={setModalInformeGerenciaVentasPorMarcaArticulo}
+        />
+      )}
+      {modalInformeGerenciaVentasVendedorMes && (
+        <InformeGerenciaVentasPorVendedorMes
+          setModal={setModalInformeGerenciaVentasVendedorMes}
+        />
+      )}
+      {modalInformeGerenciaVentasVendedorMesDia && (
+        <InformeGerenciaVentasPorVendedorMesDia
+          setModal={setModalInformeGerenciaVentasVendedorMesDia}
+        />
+      )}
+      {modalInformeGerenciaVentasArticuloVendedor && (
+        <InformeGerenciaVentasPorArticuloVendedor
+          setModal={setModalInformeGerenciaVentasArticuloVendedor}
         />
       )}
     </div>
