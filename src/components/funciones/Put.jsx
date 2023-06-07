@@ -23,8 +23,14 @@ const Put = async (menu, setEliminar, objeto = null) => {
     });
     return result;
   } else {
-    console.log(result)
-    result.data.messages[0].textos.map((map) => {
+    console.log(result);
+    let textos = ["Consultado exitosamente"];
+    console.log(result.data.messages);
+    if (result.data.messages.lenght > 0) {
+      textos = result.data.messages.map((map) => map.textos);
+    }
+    console.log(textos);
+    textos.map((map) => {
       toast.success(map, {
         position: "bottom-right",
         autoClose: 3000,

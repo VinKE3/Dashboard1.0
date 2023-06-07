@@ -33,11 +33,8 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
   return (
     <ModalBasic
       setModal={setModal}
-      objeto={data}
-      modo={"Nuevo"}
-      menu={["", ""]}
       titulo={data.descripcion}
-      cerrar={false}
+      foco={foco}
       tamañoModal={[G.ModalPequeño + " !w-auto !max-w-3xl", G.Form]}
     >
       <div className={G.ContenedorBasico}>

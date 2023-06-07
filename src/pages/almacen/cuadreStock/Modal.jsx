@@ -8,6 +8,8 @@ import Mensajes from "../../../components/funciones/Mensajes";
 import Table from "../../../components/tabla/Table";
 import { toast } from "react-toastify";
 import { RadioButton } from "primereact/radiobutton";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Dialog } from "primereact/dialog";
 import moment from "moment";
 import { FaUndoAlt, FaPen } from "react-icons/fa";
 import styled from "styled-components";
@@ -85,6 +87,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
   const [refrescar, setRefrescar] = useState(false);
+  const [loading, setLoading] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -328,19 +331,21 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   const Recalculo = async (fecha) => {
     let articulos = dataDetalle.map((map) => {
       return {
-        linedaId: map.lineaId,
-        subLinedaId: map.subLineaId,
+        lineaId: map.lineaId,
+        subLineaId: map.subLineaId,
         articuloId: map.articuloId,
         stock: map.stockFinal,
       };
     });
+    setLoading(true);
     const result = await Put(
       "Almacen/CuadreStock/RecalcularStock",
       setRefrescar,
       { fecha: fecha, articulos: articulos }
     );
-    await Inventario();
     console.log(result);
+    setLoading(false);
+    await Inventario();
   };
   //#endregion
 
@@ -1050,6 +1055,31 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             </div>
             {/*Tabla Footer*/}
           </ModalCrud>
+          <Dialog
+            showHeader={false}
+            closeOnEscape={false}
+            closable={false}
+            modal={true}
+            visible={loading}
+            pt={{
+              root: { className: "w-12" },
+              content: { className: "p-4 flex items-center justify-center" },
+            }}
+          >
+            <ProgressSpinner
+              pt={{
+                spinner: { style: { animationDuration: "0s" } },
+                circle: {
+                  style: {
+                    stroke: "#F59E0B",
+                    strokeWidth: 3,
+                    animation: "none",
+                  },
+                },
+              }}
+            ></ProgressSpinner>
+            <p className="pt-4 font-semibold">Recalculando</p>
+          </Dialog>
           {modalInventario && (
             <ModalInventario
               setModal={setModalInventario}
