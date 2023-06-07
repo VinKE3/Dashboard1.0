@@ -1,5 +1,5 @@
 :root {
-  --surface-a: #152944;
+  --surface-a: #080808;
   --surface-b: #0e1301;
   --surface-c: #0f0f0f;
   --surface-d: #263238;
@@ -8,8 +8,8 @@
   --text-color: #ffffff;
   --text-error-color: #ff9a9a;
   --text-color-secondary: #b3b3b3;
-  --primary-color: #FDE047;
-  --primary-color-hover: #FDE047;
+  --primary-color: #fde047;
+  --primary-color-hover: #fde047;
   --primary-color-text: #000;
   --primary-color-border: #2d3e44;
   --font-family: Lato, Helvetica, sans-serif;
@@ -45,7 +45,7 @@
   --surface-hover: rgba($primaryColor, 0.08);
   --focus-ring: 0 0 0 1px var(--primary-color);
   --maskbg: rgba(0, 0, 0, 0.4);
-  --highlight-bg: #FDE047;
+  --highlight-bg: #fde047;
   --highlight-text-color: #000000;
   color-scheme: dark;
 }
