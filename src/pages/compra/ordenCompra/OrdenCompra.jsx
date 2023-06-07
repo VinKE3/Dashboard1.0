@@ -90,7 +90,7 @@ const OrdenCompra = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -113,11 +113,11 @@ const OrdenCompra = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -264,7 +264,7 @@ const OrdenCompra = () => {
         case 2: {
           let valor = await GetIsPermitido("Compra/OrdenCompra", accion, value);
           if (valor) {
-            await Delete(["Compra", "OrdenCompra"], value, setEliminar);
+            await Delete(["Compra", "OrdenCompra"], value, setListar);
           }
           break;
         }
@@ -321,7 +321,7 @@ const OrdenCompra = () => {
               if (res.isConfirmed) {
                 let valor = await GetIsPermitido("Compra/OrdenCompra", 1, id);
                 if (valor) {
-                  await Put(`Compra/OrdenCompra/Finalizar/${id}`, setEliminar);
+                  await Put(`Compra/OrdenCompra/Finalizar/${id}`, setListar);
                 }
               }
             });
@@ -455,7 +455,7 @@ const OrdenCompra = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

@@ -42,7 +42,7 @@ const TipodeCambio = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //Modal
   //#endregion
 
@@ -64,11 +64,11 @@ const TipodeCambio = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -179,7 +179,7 @@ const TipodeCambio = () => {
         let id = moment(row.firstChild.innerText, "DD/MM/YYYY").format(
           "YYYY-MM-DD"
         );
-        Delete(["Mantenimiento", "TipoCambio"], id, setEliminar);
+        Delete(["Mantenimiento", "TipoCambio"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -220,7 +220,7 @@ const TipodeCambio = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "TipoCambio"]}
             id={row.values.id}

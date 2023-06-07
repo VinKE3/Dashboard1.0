@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import Put from "../../../components/funciones/Put";
 import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
@@ -329,23 +329,74 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
     }));
   };
   const Recalculo = async (fecha) => {
-    let articulos = dataDetalle.map((map) => {
-      return {
-        lineaId: map.lineaId,
-        subLineaId: map.subLineaId,
-        articuloId: map.articuloId,
-        stock: map.stockFinal,
-      };
-    });
+    //Almacena el detalle
+    let dataDetalleMod = Object.assign([], dataDetalle);
+    //Almacena el detalle
     setLoading(true);
     const result = await Put(
       "Almacen/CuadreStock/RecalcularStock",
       setRefrescar,
-      { fecha: fecha, articulos: articulos }
+      {
+        fecha: fecha,
+        articulos: dataDetalle.map((map) => {
+          return {
+            lineaId: map.lineaId,
+            subLineaId: map.subLineaId,
+            articuloId: map.articuloId,
+            stock: map.stockFinal,
+          };
+        }),
+      },
+      ["Cuadre recalculado exitosamente"],
+      false
     );
-    console.log(result);
+
+    //Mapeamos lo que retorna el api
+    result.data.data.articulos.map((res) => {
+      //Modifica registro en base al id
+      dataDetalleMod = dataDetalleMod.map((map) => {
+        if (
+          map.articuloId == res.articuloId &&
+          map.lineaId == res.lineaId &&
+          map.subLineaId == res.subLineaId
+        ) {
+          //Calculos
+          let inventario = modo == "Nuevo" ? res.stock : map.inventario;
+          let stockFinal = res.stock;
+          let cantidad = stockFinal - inventario;
+          let precioUnitario = map.precioUnitario;
+          let cantidadSobra = 0;
+          let cantidadFalta = 0;
+          if (cantidad < 0) {
+            cantidadSobra = cantidad;
+          } else {
+            cantidadFalta = cantidad;
+          }
+          let totalSobra = cantidadSobra * precioUnitario;
+          let totalFalta = cantidadFalta * precioUnitario;
+          //Calculos
+          return {
+            ...map,
+            stockFinal: Funciones.RedondearNumero(stockFinal, 2),
+            inventario: Funciones.RedondearNumero(inventario, 2),
+            cantidadSobra: Math.abs(
+              Funciones.RedondearNumero(cantidadSobra, 2)
+            ),
+            cantidadFalta: Math.abs(
+              Funciones.RedondearNumero(cantidadFalta, 2)
+            ),
+            totalSobra: Math.abs(Funciones.RedondearNumero(totalSobra, 2)),
+            totalFalta: Math.abs(Funciones.RedondearNumero(totalFalta, 2)),
+          };
+        } else {
+          return map;
+        }
+      });
+      //Modifica registro en base al id
+    });
+    //Mapeamos lo que retorna el api
+    setDataDetalle(dataDetalleMod);
     setLoading(false);
-    await Inventario();
   };
   //#endregion
 
@@ -392,237 +443,246 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
   //#endregion
 
   //#region Columnas
-  const columnas = [
-    {
-      Header: "Item",
-      accessor: "articuloId",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-center text-yellow-400 font-semibold">{value}</p>
-          );
-        } else {
-          return <p className="text-center">{value}</p>;
-        }
+  const columnas = useMemo(
+    () => [
+      {
+        Header: "Item",
+        accessor: "articuloId",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-center text-yellow-400 font-semibold">
+                {value}
+              </p>
+            );
+          } else {
+            return <p className="text-center">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Marca",
-      accessor: "marcaNombre",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-center text-yellow-400 font-semibold">{value}</p>
-          );
-        } else {
-          return <p className="text-center">{value}</p>;
-        }
+      {
+        Header: "Marca",
+        accessor: "marcaNombre",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-center text-yellow-400 font-semibold">
+                {value}
+              </p>
+            );
+          } else {
+            return <p className="text-center">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Descripcion",
-      accessor: "descripcion",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return <p className="text-yellow-400 font-semibold">{value}</p>;
-        } else {
-          return <p className="">{value}</p>;
-        }
+      {
+        Header: "Descripcion",
+        accessor: "descripcion",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return <p className="text-yellow-400 font-semibold">{value}</p>;
+          } else {
+            return <p className="">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Unidad",
-      accessor: "unidadMedidaDescripcion",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-center text-yellow-400 font-semibold">{value}</p>
-          );
-        } else {
-          return <p className="text-center">{value}</p>;
-        }
+      {
+        Header: "Unidad",
+        accessor: "unidadMedidaDescripcion",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-center text-yellow-400 font-semibold">
+                {value}
+              </p>
+            );
+          } else {
+            return <p className="text-center">{value}</p>;
+          }
+        },
       },
-    },
-    {
-      Header: "Stock Final",
-      accessor: "stockFinal",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
-      },
-    },
-    {
-      Header: "Inventario",
-      accessor: "inventario",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <div className="flex">
-              <p className="w-full text-right text-yellow-400 font-semibold">
+      {
+        Header: "Stock Final",
+        accessor: "stockFinal",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
                 {Funciones.RedondearNumero(value, 2)}
               </p>
-              {modo != "Consultar" && (
-                <button
-                  id={"botonInventario"}
-                  onClick={() =>
-                    AccionModal({
-                      detalleId: row.values.detalleId,
-                      descripcion: row.values.descripcion,
-                      inventario: row.values.inventario,
-                    })
-                  }
-                  className={
-                    G.BotonBuscar +
-                    G.BotonRegistrar +
-                    " ml-2 !px-1.5 !rounded-sm"
-                  }
-                >
-                  <FaPen></FaPen>
-                </button>
-              )}
-            </div>
-          );
-        } else {
-          return (
-            <div className="flex">
-              <p className="text-right font-semibold w-full">
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
                 {Funciones.RedondearNumero(value, 2)}
               </p>
-              {modo != "Consultar" && (
-                <button
-                  id={"botonInventario"}
-                  onClick={() =>
-                    AccionModal({
-                      detalleId: row.values.detalleId,
-                      descripcion: row.values.descripcion,
-                      inventario: row.values.inventario,
-                    })
-                  }
-                  className={
-                    G.BotonBuscar +
-                    G.BotonRegistrar +
-                    " ml-2 !px-1.5 !rounded-sm"
-                  }
-                >
-                  <FaPen></FaPen>
-                </button>
-              )}
-            </div>
-          );
-        }
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "P. Unitario",
-      accessor: "precioUnitario",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "Inventario",
+        accessor: "inventario",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <div className="flex">
+                <p className="w-full text-right text-yellow-400 font-semibold">
+                  {Funciones.RedondearNumero(value, 2)}
+                </p>
+                {modo != "Consultar" && (
+                  <button
+                    id={"botonInventario"}
+                    onClick={() =>
+                      AccionModal({
+                        detalleId: row.values.detalleId,
+                        descripcion: row.values.descripcion,
+                        inventario: row.values.inventario,
+                      })
+                    }
+                    className={
+                      G.BotonBuscar +
+                      G.BotonRegistrar +
+                      " ml-2 !px-1.5 !rounded-sm"
+                    }
+                  >
+                    <FaPen></FaPen>
+                  </button>
+                )}
+              </div>
+            );
+          } else {
+            return (
+              <div className="flex">
+                <p className="text-right font-semibold w-full">
+                  {Funciones.RedondearNumero(value, 2)}
+                </p>
+                {modo != "Consultar" && (
+                  <button
+                    id={"botonInventario"}
+                    onClick={() =>
+                      AccionModal({
+                        detalleId: row.values.detalleId,
+                        descripcion: row.values.descripcion,
+                        inventario: row.values.inventario,
+                      })
+                    }
+                    className={
+                      G.BotonBuscar +
+                      G.BotonRegistrar +
+                      " ml-2 !px-1.5 !rounded-sm"
+                    }
+                  >
+                    <FaPen></FaPen>
+                  </button>
+                )}
+              </div>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "Can. Falta",
-      accessor: "cantidadFalta",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "P. Unitario",
+        accessor: "precioUnitario",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "T. Falta",
-      accessor: "totalFalta",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "Can. Falta",
+        accessor: "cantidadFalta",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "Can. Sobra",
-      accessor: "cantidadSobra",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "T. Falta",
+        accessor: "totalFalta",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "T. Sobra",
-      accessor: "totalSobra",
-      Cell: ({ row, value }) => {
-        if (row.values.stockFinal != row.values.inventario) {
-          return (
-            <p className="text-right text-yellow-400 font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        } else {
-          return (
-            <p className="text-right font-semibold mr-2">
-              {Funciones.RedondearNumero(value, 2)}
-            </p>
-          );
-        }
+      {
+        Header: "Can. Sobra",
+        accessor: "cantidadSobra",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
       },
-    },
-    {
-      Header: "Item",
-      accessor: "detalleId",
-    },
-  ];
+      {
+        Header: "T. Sobra",
+        accessor: "totalSobra",
+        Cell: ({ row, value }) => {
+          if (row.values.stockFinal != row.values.inventario) {
+            return (
+              <p className="text-right text-yellow-400 font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          } else {
+            return (
+              <p className="text-right font-semibold mr-2">
+                {Funciones.RedondearNumero(value, 2)}
+              </p>
+            );
+          }
+        },
+      },
+      {
+        Header: "Item",
+        accessor: "detalleId",
+      },
+    ],
+    [dataDetalle]
+  );
   //#endregion
 
   //#region Render

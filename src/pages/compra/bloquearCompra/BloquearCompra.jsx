@@ -68,7 +68,7 @@ const BloquearCompra = () => {
     `&tipoDocumentoId=${filtro.tipoDocumentoId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   const [tipoDeDocumento, setTipoDeDocumento] = useState([]);
   const [checked, setChecked] = useState(false);
   //#endregion
@@ -85,11 +85,11 @@ const BloquearCompra = () => {
     }
   }, [cadena]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -169,7 +169,7 @@ const BloquearCompra = () => {
 
   //#region Funciones
   const Bloquear = async (id, isBloqueado) => {
-    await Put(`Compra/BloquearCompra`, setEliminar, {
+    await Put(`Compra/BloquearCompra`, setListar, {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
     });
@@ -270,7 +270,7 @@ const BloquearCompra = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Compra", "BloquearCompra"]}
             id={row.values.id}

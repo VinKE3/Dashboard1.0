@@ -35,7 +35,7 @@ const Correlativo = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect
@@ -47,11 +47,11 @@ const Correlativo = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar("", index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -169,7 +169,7 @@ const Correlativo = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "Correlativo"]}
             id={""}

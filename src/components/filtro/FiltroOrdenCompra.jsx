@@ -154,7 +154,7 @@ const FiltroOrdenCompra = ({ setModal, id, objeto, setObjeto, foco }) => {
         setObjeto({
           detalles: res.data.data.detalles,
           ordenesCompraRelacionadas: model,
-          accion: "eliminar",
+          accion: "Eliminar",
         });
         setModal(false);
       }

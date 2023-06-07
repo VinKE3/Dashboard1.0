@@ -81,7 +81,7 @@ const EntradaAlmacen = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -103,11 +103,11 @@ const EntradaAlmacen = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -234,7 +234,7 @@ const EntradaAlmacen = () => {
             value
           );
           if (valor) {
-            Delete(["Almacen", "EntradaAlmacen"], value, setEliminar);
+            Delete(["Almacen", "EntradaAlmacen"], value, setListar);
           }
           break;
         }
@@ -270,7 +270,7 @@ const EntradaAlmacen = () => {
                   id
                 );
                 if (valor) {
-                  await Put(`Almacen/EntradaAlmacen/Anular/${id}`, setEliminar);
+                  await Put(`Almacen/EntradaAlmacen/Anular/${id}`, setListar);
                 }
               }
             });
@@ -336,7 +336,7 @@ const EntradaAlmacen = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                await Put(`Almacen/EntradaAlmacen/Cerrar/${id}`, setEliminar);
+                await Put(`Almacen/EntradaAlmacen/Cerrar/${id}`, setListar);
               }
             });
           } else {
@@ -485,7 +485,7 @@ const EntradaAlmacen = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

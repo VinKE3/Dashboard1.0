@@ -1,7 +1,13 @@
 import ApiMasy from "../../api/ApiMasy";
 import { toast } from "react-toastify";
 
-const Put = async (menu, setEliminar, objeto = null) => {
+const Put = async (
+  menu,
+  setListar,
+  objeto = null,
+  mensaje = ["Consultado exitosamente"],
+  refresca = true
+) => {
   let result = null;
   if (objeto != null) {
     result = await ApiMasy.put(`api/${menu}`, objeto);
@@ -23,14 +29,10 @@ const Put = async (menu, setEliminar, objeto = null) => {
     });
     return result;
   } else {
-    console.log(result);
-    let textos = ["Consultado exitosamente"];
-    console.log(result.data.messages);
     if (result.data.messages.lenght > 0) {
-      textos = result.data.messages.map((map) => map.textos);
+      mensaje = result.data.messages.map((map) => map.textos);
     }
-    console.log(textos);
-    textos.map((map) => {
+    mensaje.map((map) => {
       toast.success(map, {
         position: "bottom-right",
         autoClose: 3000,
@@ -42,7 +44,9 @@ const Put = async (menu, setEliminar, objeto = null) => {
         theme: "colored",
       });
     });
-    setEliminar(true);
+    if (refresca) {
+      setListar(true);
+    }
     return result;
   }
 };

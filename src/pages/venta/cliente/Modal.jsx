@@ -70,7 +70,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [tipoMen, setTipoMen] = useState(-1);
   const [men, setMen] = useState([]);
-  const [respuesta, setEliminar] = useState(false);
+  const [refrescar, setRefrescar] = useState(false);
 
   const [dataDireccion, setDataDireccion] = useState([]);
   const [objDireccion, setObjDireccion] = useState([]);
@@ -91,14 +91,15 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     if (tipoMen == 0) {
-      setEliminar(true);
+      setRefrescar(true);
     }
   }, [tipoMen]);
   useEffect(() => {
-    if (respuesta) {
+    if (refrescar) {
       RetornarMensaje();
     }
-  }, [respuesta]);
+  }, [refrescar]);
+
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
       setData({
@@ -109,7 +110,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   }, [dataUbigeo]);
-
   useEffect(() => {
     if (Object.keys(dataUbiDirec).length > 0) {
       setObjDireccion({
@@ -120,7 +120,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       });
     }
   }, [dataUbiDirec]);
-
   useEffect(() => {
     GetTablas();
     if (modo != "Nuevo") {
@@ -254,7 +253,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const Limpiar = async () => {
     setMen([]);
     setTipoMen(-1);
-    setEliminar(false);
+    setRefrescar(false);
   };
   const LimpiarDireccion = async () => {
     setObjDireccion({
@@ -568,16 +567,16 @@ const Modal = ({ setModal, modo, objeto }) => {
 
               <div className={G.TablaBotonEliminar}>
                 <button
-                  id="boton-eliminar"
+                  id="botonEliminarFila"
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ClienteDireccion"],
                       row.values.id,
-                      setEliminar
+                      setRefrescar
                     );
                   }}
                   className="p-0 px-1"
-                  title="Click para eliminar registro"
+                  title="Click para Eliminar registro"
                 >
                   <FaTrashAlt></FaTrashAlt>
                 </button>
@@ -622,16 +621,16 @@ const Modal = ({ setModal, modo, objeto }) => {
 
               <div className={G.TablaBotonEliminar}>
                 <button
-                  id="boton-eliminar"
+                  id="botonEliminarFila"
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ClienteContacto"],
                       row.values.id,
-                      setEliminar
+                      setRefrescar
                     );
                   }}
                   className="p-0 px-1"
-                  title="Click para eliminar registro"
+                  title="Click para Eliminar registro"
                 >
                   <FaTrashAlt></FaTrashAlt>
                 </button>
@@ -690,16 +689,16 @@ const Modal = ({ setModal, modo, objeto }) => {
               </div> */}
               <div className={G.TablaBotonEliminar}>
                 <button
-                  id="boton-eliminar"
+                  id="botonEliminarFila"
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ClientePersonal"],
                       row.values.id.substr(6),
-                      setEliminar
+                      setRefrescar
                     );
                   }}
                   className="p-0 px-1"
-                  title="Click para eliminar registro"
+                  title="Click para Eliminar registro"
                 >
                   <FaTrashAlt></FaTrashAlt>
                 </button>

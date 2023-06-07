@@ -1,7 +1,7 @@
 import ApiMasy from "../../api/ApiMasy";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-const Delete = async (menu, id, setEliminar) => {
+const Delete = async (menu, id, setListar) => {
   Swal.fire({
     title: "Eliminar registro",
     icon: "warning",
@@ -42,7 +42,7 @@ const Delete = async (menu, id, setEliminar) => {
             theme: "colored",
           });
         });
-        setEliminar(true);
+        setListar(true);
       }
     }
   });

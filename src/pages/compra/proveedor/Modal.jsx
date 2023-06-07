@@ -42,7 +42,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataUbigeo, setDataUbigeo] = useState([]);
   const [tipoMen, setTipoMen] = useState(-1);
   const [men, setMen] = useState([]);
-  const [respuesta, setEliminar] = useState(false);
+  const [respuesta, setListar] = useState(false);
 
   const [dataCcorriente, setDataCcorriente] = useState([]);
   const [dataCcorrienteMoneda, setDataCcorrienteMoneda] = useState([]);
@@ -60,7 +60,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     if (tipoMen == 0) {
-      setEliminar(true);
+      setListar(true);
     }
   }, [tipoMen]);
   useEffect(() => {
@@ -170,7 +170,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   const Limpiar = async () => {
     setMen([]);
     setTipoMen(-1);
-    setEliminar(false);
+    setListar(false);
   };
   const LimpiarCcorriente = async () => {
     setObjetoCcorriente({
@@ -396,16 +396,16 @@ const Modal = ({ setModal, modo, objeto }) => {
 
               <div className={G.TablaBotonEliminar}>
                 <button
-                  id="boton-eliminar"
+                  id="botonEliminarFila"
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ProveedorCuentaCorriente"],
                       row.values.id,
-                      setEliminar
+                      setListar
                     );
                   }}
                   className="p-0 px-1"
-                  title="Click para eliminar registro"
+                  title="Click para Eliminar registro"
                 >
                   <FaTrashAlt></FaTrashAlt>
                 </button>
@@ -450,16 +450,16 @@ const Modal = ({ setModal, modo, objeto }) => {
 
               <div className={G.TablaBotonEliminar}>
                 <button
-                  id="boton-eliminar"
+                  id="botonEliminarFila"
                   onClick={() => {
                     Delete(
                       ["Mantenimiento", "ProveedorContacto"],
                       row.values.id,
-                      setEliminar
+                      setListar
                     );
                   }}
                   className="p-0 px-1"
-                  title="Click para eliminar registro"
+                  title="Click para Eliminar registro"
                 >
                   <FaTrashAlt></FaTrashAlt>
                 </button>

@@ -958,12 +958,12 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
           </div>
           <div className={G.TablaBotonEliminar}>
             <button
-              id="boton-eliminar"
+              id="botonEliminarFila"
               onClick={() => {
                 EliminarDocumentoReferencia(row.values.id);
               }}
               className="p-0 px-1"
-              title="Click para eliminar registro"
+              title="Click para Eliminar registro"
             >
               <FaTrashAlt></FaTrashAlt>
             </button>

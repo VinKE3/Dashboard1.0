@@ -77,7 +77,7 @@ const GuiaRemision = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -100,11 +100,11 @@ const GuiaRemision = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -238,7 +238,7 @@ const GuiaRemision = () => {
         case 2: {
           let valor = await GetIsPermitido("Venta/GuiaRemision", accion, value);
           if (valor) {
-            await Delete(["Venta", "GuiaRemision"], value, setEliminar);
+            await Delete(["Venta", "GuiaRemision"], value, setListar);
           }
           break;
         }
@@ -274,7 +274,7 @@ const GuiaRemision = () => {
                   id
                 );
                 if (valor) {
-                  await Put(`Venta/GuiaRemision/Anular/${id}`, setEliminar);
+                  await Put(`Venta/GuiaRemision/Anular/${id}`, setListar);
                 }
               }
             });
@@ -468,7 +468,7 @@ const GuiaRemision = () => {
               </button>
             </div>
             <BotonCRUD
-              setEliminar={setEliminar}
+              setListar={setListar}
               permisos={permisos}
               ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
               ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

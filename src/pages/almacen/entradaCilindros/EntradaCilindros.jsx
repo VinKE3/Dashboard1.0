@@ -74,7 +74,7 @@ const EntradaCilindros = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -97,11 +97,11 @@ const EntradaCilindros = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -228,7 +228,7 @@ const EntradaCilindros = () => {
             value
           );
           if (valor) {
-            Delete(["Almacen", "EntradaCilindros"], value, setEliminar);
+            Delete(["Almacen", "EntradaCilindros"], value, setListar);
           }
           break;
         }
@@ -368,7 +368,7 @@ const EntradaCilindros = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Almacen", "EntradaCilindros"]}
             id={row.values.id}

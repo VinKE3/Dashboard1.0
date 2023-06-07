@@ -140,7 +140,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
         setObjeto({
           detalles: res.data.data.detalles,
           documentosRelacionados: model,
-          accion: "eliminar",
+          accion: "Eliminar",
         });
         setModal(false);
       }

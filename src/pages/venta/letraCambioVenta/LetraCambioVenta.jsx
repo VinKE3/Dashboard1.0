@@ -99,7 +99,7 @@ const LetraCambioVenta = () => {
   const [modalDeshacer, setModalDeshacer] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -116,16 +116,44 @@ const LetraCambioVenta = () => {
   useEffect(() => {
     if (visible) {
       if (!modal) {
-        Listar(cadena, index + 1);
+        setListar(true);
       }
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (visible) {
+      if (!modalCabecera) {
+        setListar(true);
+      }
+    }
+  }, [modalCabecera]);
+  useEffect(() => {
+    if (visible) {
+      if (!modalRefinanciacion) {
+        setListar(true);
+      }
+    }
+  }, [modalRefinanciacion]);
+  useEffect(() => {
+    if (visible) {
+      if (!modalRenovacion) {
+        setListar(true);
+      }
+    }
+  }, [modalRenovacion]);
+  useEffect(() => {
+    if (visible) {
+      if (!modalDeshacer) {
+        setListar(true);
+      }
+    }
+  }, [modalDeshacer]);
+  useEffect(() => {
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -241,7 +269,7 @@ const LetraCambioVenta = () => {
             value
           );
           if (valor) {
-            Delete(["Venta", "LetraCambioVenta"], value, setEliminar);
+            Delete(["Venta", "LetraCambioVenta"], value, setListar);
           }
           break;
         }
@@ -256,7 +284,7 @@ const LetraCambioVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let documento = row.children[2].innerHTML;
+            let documento = row.children[3].innerHTML;
             Swal.fire({
               title: "¿Desea Anular el documento?",
               text: documento,
@@ -277,7 +305,7 @@ const LetraCambioVenta = () => {
                   id
                 );
                 if (valor) {
-                  await Put(`Venta/LetraCambioVenta/Anular/${id}`, setEliminar);
+                  await Put(`Venta/LetraCambioVenta/Anular/${id}`, setListar);
                 }
               }
             });
@@ -548,7 +576,7 @@ const LetraCambioVenta = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
@@ -720,7 +748,7 @@ const LetraCambioVenta = () => {
                   botonText="Anular"
                   botonClass={G.BotonEliminar}
                   botonIcon={faBan}
-                  click={() => Anular()}
+                  click={() => AccionModal(null, "Anular", 4)}
                   contenedor=""
                 />
               )}

@@ -103,7 +103,7 @@ const DivDetalle = styled.div`
 `;
 //#endregion
 
-const Modal = ({ setModal, modo, objeto }) => {
+const Modal = ({ setModal, modo, objeto, setActualizar }) => {
   //#region useState
   //Data General
   const [data, setData] = useState(objeto);
@@ -717,12 +717,12 @@ const Modal = ({ setModal, modo, objeto }) => {
         <div className="flex item-center justify-center">
           <div className={G.TablaBotonEliminar}>
             <button
-              id="boton-eliminar"
+              id="botonEliminarFila"
               onClick={() => {
                 EliminarDocumentoReferencia(row.values.id);
               }}
               className="p-0 px-1"
-              title="Click para eliminar registro"
+              title="Click para Eliminar registro"
             >
               <FaTrashAlt></FaTrashAlt>
             </button>

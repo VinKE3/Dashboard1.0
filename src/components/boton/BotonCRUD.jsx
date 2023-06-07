@@ -4,7 +4,7 @@ import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
 import * as G from "../Global";
 
 const BotonCRUD = ({
-  setEliminar,
+  setListar,
   permisos,
   menu = ["", ""],
   id = "",
@@ -14,13 +14,13 @@ const BotonCRUD = ({
 }) => {
   //#region useEffect
   useEffect(() => {
-    setEliminar(false);
-  }, [setEliminar]);
+    setListar(false);
+  }, [setListar]);
   //#endregion
 
   const ValidarEliminar = async () => {
     if (id != "") {
-      await Delete([menu[0], menu[1]], id, setEliminar);
+      await Delete([menu[0], menu[1]], id, setListar);
     } else {
       ClickEliminar();
     }
@@ -60,10 +60,10 @@ const BotonCRUD = ({
       {permisos[2] ? (
         <div className={G.TablaBotonEliminar}>
           <button
-            id="boton-eliminar"
+            id="botonEliminarFila"
             onClick={ValidarEliminar}
             className="p-0 px-1"
-            title="Click para eliminar registro"
+            title="Click para Eliminar registro"
           >
             <FaTrashAlt></FaTrashAlt>
           </button>

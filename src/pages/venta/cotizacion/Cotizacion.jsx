@@ -80,7 +80,7 @@ const Cotizacion = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -103,11 +103,11 @@ const Cotizacion = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -253,7 +253,7 @@ const Cotizacion = () => {
         case 2: {
           let valor = await GetIsPermitido("Venta/Cotizacion", accion, value);
           if (valor) {
-            await Delete(["Venta", "Cotizacion"], value, setEliminar);
+            await Delete(["Venta", "Cotizacion"], value, setListar);
           }
           break;
         }
@@ -289,7 +289,7 @@ const Cotizacion = () => {
                   id
                 );
                 if (valor) {
-                  await Put(`Venta/Cotizacion/Anular/${id}`, setEliminar);
+                  await Put(`Venta/Cotizacion/Anular/${id}`, setListar);
                 }
               }
             });
@@ -473,7 +473,7 @@ const Cotizacion = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

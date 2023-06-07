@@ -177,7 +177,7 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
           id: res.data.data.id,
           detalles: res.data.data.detalles,
           guiasRelacionadas: model,
-          accion: "eliminar",
+          accion: "Eliminar",
         });
         setModal(false);
       }

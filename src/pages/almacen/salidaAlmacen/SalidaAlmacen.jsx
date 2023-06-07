@@ -77,7 +77,7 @@ const SalidaAlmacen = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -100,11 +100,11 @@ const SalidaAlmacen = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -244,7 +244,7 @@ const SalidaAlmacen = () => {
             value
           );
           if (valor) {
-            Delete(["Almacen", "SalidaAlmacen"], value, setEliminar);
+            Delete(["Almacen", "SalidaAlmacen"], value, setListar);
           }
           break;
         }
@@ -280,7 +280,7 @@ const SalidaAlmacen = () => {
                   id
                 );
                 if (valor) {
-                  await Put(`Almacen/SalidaAlmacen/Anular/${id}`, setEliminar);
+                  await Put(`Almacen/SalidaAlmacen/Anular/${id}`, setListar);
                 }
               }
             });
@@ -342,7 +342,7 @@ const SalidaAlmacen = () => {
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
               if (res.isConfirmed) {
-                await Put(`Almacen/SalidaAlmacen/Cerrar/${id}`, setEliminar);
+                await Put(`Almacen/SalidaAlmacen/Cerrar/${id}`, setListar);
               }
             });
           } else {
@@ -496,7 +496,7 @@ const SalidaAlmacen = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

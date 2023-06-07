@@ -86,7 +86,7 @@ const CuadreStock = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -106,11 +106,11 @@ const CuadreStock = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -246,7 +246,7 @@ const CuadreStock = () => {
             value
           );
           if (valor) {
-            Delete(["Almacen", "CuadreStock"], value, setEliminar);
+            Delete(["Almacen", "CuadreStock"], value, setListar);
           }
           break;
         }
@@ -306,7 +306,7 @@ const CuadreStock = () => {
               if (res.isConfirmed) {
                 await Put(
                   `Almacen/CuadreStock/AbrirCerrar/${id}?estado=${estado}`,
-                  setEliminar
+                  setListar
                 );
               }
             });
@@ -462,7 +462,7 @@ const CuadreStock = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

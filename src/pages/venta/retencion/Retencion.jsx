@@ -82,7 +82,7 @@ const Retencion = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -108,11 +108,11 @@ const Retencion = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -232,7 +232,7 @@ const Retencion = () => {
         case 2: {
           let valor = await GetIsPermitido("Venta/Retencion", accion, value);
           if (valor) {
-            await Delete(["Venta", "DocumentoVenta"], value, setEliminar);
+            await Delete(["Venta", "DocumentoVenta"], value, setListar);
           }
           break;
         }
@@ -264,7 +264,7 @@ const Retencion = () => {
               if (res.isConfirmed) {
                 let valor = await GetIsPermitido("Venta/Retencion", accion, id);
                 if (valor) {
-                  await Put(`Venta/DocumentVenta/Anular/${id}`, setEliminar);
+                  await Put(`Venta/DocumentVenta/Anular/${id}`, setListar);
                 }
               }
             });
@@ -439,7 +439,7 @@ const Retencion = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

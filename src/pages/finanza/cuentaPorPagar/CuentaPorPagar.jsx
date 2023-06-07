@@ -83,7 +83,7 @@ const CuentaPorPagar = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo] = useState("Consultar");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
 
   //#endregion
 
@@ -107,11 +107,11 @@ const CuentaPorPagar = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -325,7 +325,7 @@ const CuentaPorPagar = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Compras", "CuentaPorPagar"]}
             id={row.values.id}

@@ -63,7 +63,7 @@ const BloquearMovimientoBancario = () => {
     `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   const [checked, setChecked] = useState(false);
   //#endregion
 
@@ -77,11 +77,11 @@ const BloquearMovimientoBancario = () => {
     }
   }, [cadena]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
       if (
@@ -149,7 +149,7 @@ const BloquearMovimientoBancario = () => {
 
   //#region Funciones Modal
   const Bloquear = async (id, isBloqueado) => {
-    await Put(`Finanzas/BloquearMovimientoBancario`, setEliminar, {
+    await Put(`Finanzas/BloquearMovimientoBancario`, setListar, {
       ids: [id],
       isBloqueado: isBloqueado ? false : true,
     });
@@ -246,7 +246,7 @@ const BloquearMovimientoBancario = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Finanzas", "BloquearMovimientoBancario"]}
             id={row.values.id}

@@ -74,7 +74,7 @@ const DocumentosdeCompra = () => {
   const [modalImprimir, setModalImprimir] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -97,11 +97,11 @@ const DocumentosdeCompra = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -247,7 +247,7 @@ const DocumentosdeCompra = () => {
             value
           );
           if (valor) {
-            await Delete(["Compra", "DocumentoCompra"], value, setEliminar);
+            await Delete(["Compra", "DocumentoCompra"], value, setListar);
           }
           break;
         }
@@ -426,7 +426,7 @@ const DocumentosdeCompra = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

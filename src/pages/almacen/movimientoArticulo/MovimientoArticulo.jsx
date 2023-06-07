@@ -71,7 +71,7 @@ const MovimientoArticulo = () => {
   //Modal
   const [modal, setModal] = useState(false);
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -395,7 +395,7 @@ const MovimientoArticulo = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             ClickModificar={() => {}}
             ClickConsultar={() => AccionModal(row.values.Id, "Consultar", 3)}

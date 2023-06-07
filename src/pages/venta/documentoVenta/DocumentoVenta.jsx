@@ -82,7 +82,7 @@ const DocumentoVenta = () => {
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [autorizado, setAutorizado] = useState(false);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -104,11 +104,11 @@ const DocumentoVenta = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -275,7 +275,7 @@ const DocumentoVenta = () => {
             value
           );
           if (valor) {
-            await Delete(["Venta", "DocumentoVenta"], value, setEliminar);
+            await Delete(["Venta", "DocumentoVenta"], value, setListar);
           }
           break;
         }
@@ -311,7 +311,7 @@ const DocumentoVenta = () => {
                   id
                 );
                 if (valor) {
-                  await Put(`Venta/DocumentoVenta/Anular/${id}`, setEliminar);
+                  await Put(`Venta/DocumentoVenta/Anular/${id}`, setListar);
                 }
               }
             });
@@ -388,7 +388,7 @@ const DocumentoVenta = () => {
                 cancelButtonText: "Cancelar",
               }).then(async (res) => {
                 if (res.isConfirmed) {
-                  await Put("Venta/DocumentoVenta/Enviar", setEliminar, {
+                  await Put("Venta/DocumentoVenta/Enviar", setListar, {
                     ids: [value.id],
                     enviar: !value.isAutorizado,
                   });
@@ -414,7 +414,7 @@ const DocumentoVenta = () => {
             cancelButtonText: "Cancelar",
           }).then(async (res) => {
             if (res.isConfirmed) {
-              await Put("Venta/DocumentoVenta/Enviar", setEliminar, {
+              await Put("Venta/DocumentoVenta/Enviar", setListar, {
                 ids: value.ids,
                 enviar: !value.isAutorizado,
               });
@@ -660,7 +660,7 @@ const DocumentoVenta = () => {
               </button>
             </div>
             <BotonCRUD
-              setEliminar={setEliminar}
+              setListar={setListar}
               permisos={permisos}
               ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
               ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}

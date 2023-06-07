@@ -39,7 +39,7 @@ const SubLineas = () => {
   const [modal, setModal] = useState(false);
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
-  const [eliminar, setEliminar] = useState(false);
+  const [listar, setListar] = useState(false);
   //#endregion
 
   //#region useEffect;
@@ -60,11 +60,11 @@ const SubLineas = () => {
     }
   }, [modal]);
   useEffect(() => {
-    if (eliminar) {
-      setEliminar(false);
+    if (listar) {
+      setListar(false);
       Listar(cadena, index + 1);
     }
-  }, [eliminar]);
+  }, [listar]);
 
   useEffect(() => {
     if (Object.entries(permisos).length > 0) {
@@ -173,7 +173,7 @@ const SubLineas = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.children[2].innerText;
-        Delete(["Mantenimiento", "SubLinea"], id, setEliminar);
+        Delete(["Mantenimiento", "SubLinea"], id, setListar);
       }
     }
     if (e.key === "c") {
@@ -207,7 +207,7 @@ const SubLineas = () => {
         Header: "Acciones",
         Cell: ({ row }) => (
           <BotonCRUD
-            setEliminar={setEliminar}
+            setListar={setListar}
             permisos={permisos}
             menu={["Mantenimiento", "SubLinea"]}
             id={row.values.Id}
