@@ -15,7 +15,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     marcaId: "",
   });
-  const [marcas, setMarcas] = useState([]);
+  const [dataMarca, setDataMarca] = useState([]);
 
   useEffect(() => {
     data;
@@ -23,7 +23,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Marcas();
+   GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -33,9 +33,9 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
     }));
   };
 
-  const Marcas = async () => {
+ const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-    setMarcas(result.data.data.data);
+    setDataMarca(result.data.data.data);
   };
 
   const Imprimir = async () => {
@@ -62,7 +62,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {marcas.map((marca) => (
+              {dataMarca.map((marca) => (
                 <option key={marca.id} value={marca.id}>
                   {marca.nombre}
                 </option>

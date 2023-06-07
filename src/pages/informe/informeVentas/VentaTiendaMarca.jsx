@@ -21,7 +21,7 @@ const VentaTiendaMarca = ({ setModal }) => {
     facturas: true,
     guiasRemision: true,
   });
-  const [marcas, setMarcas] = useState([]);
+  const [dataMarca, setDataMarca] = useState([]);
   const [moneda, setMoneda] = useState([]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const VentaTiendaMarca = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Marcas();
+   GetTablas();
     Monedas();
   }, []);
 
@@ -51,9 +51,9 @@ const VentaTiendaMarca = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const Marcas = async () => {
+ const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-    setMarcas(result.data.data.data);
+    setDataMarca(result.data.data.data);
   };
 
   const Monedas = async () => {
@@ -109,7 +109,7 @@ const VentaTiendaMarca = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {marcas.map((marca) => (
+              {dataMarca.map((marca) => (
                 <option key={marca.id} value={marca.id}>
                   {marca.nombre}
                 </option>

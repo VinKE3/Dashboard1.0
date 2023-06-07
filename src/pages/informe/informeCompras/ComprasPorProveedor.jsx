@@ -19,7 +19,7 @@ const ComprasPorProveedor = ({ setModal }) => {
     checkFiltro: "sinDetalle",
   });
   const [moneda, setMoneda] = useState([]);
-  const [proveedor, setProveedor] = useState([]);
+  const [proveedor, setDataProveedor] = useState([]);
 
   useEffect(() => {
     data;
@@ -27,7 +27,7 @@ const ComprasPorProveedor = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Proveedores();
+    GetTablas();
     Monedas();
   }, []);
 
@@ -52,9 +52,9 @@ const ComprasPorProveedor = ({ setModal }) => {
     setMoneda(result.data.data.monedas);
   };
 
-  const Proveedores = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
-    setProveedor(result.data.data.data);
+    setDataProveedor(result.data.data.data);
   };
 
   const Imprimir = async () => {

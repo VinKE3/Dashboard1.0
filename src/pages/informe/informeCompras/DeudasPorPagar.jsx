@@ -15,7 +15,7 @@ const DeudasPorPagar = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     proveedorId: "",
   });
-  const [proveedor, setProveedor] = useState([]);
+  const [proveedor, setDataProveedor] = useState([]);
 
   useEffect(() => {
     data;
@@ -23,7 +23,7 @@ const DeudasPorPagar = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Proveedores();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -33,9 +33,9 @@ const DeudasPorPagar = ({ setModal }) => {
     }));
   };
 
-  const Proveedores = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
-    setProveedor(result.data.data.data);
+    setDataProveedor(result.data.data.data);
   };
 
   const Imprimir = async () => {

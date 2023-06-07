@@ -27,7 +27,7 @@ const PagosPendientes = ({ setModal }) => {
     detallado: true,
   });
   const [moneda, setMoneda] = useState([]);
-  const [proveedor, setProveedor] = useState([]);
+  const [proveedor, setDataProveedor] = useState([]);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
   const [mensaje, setMensaje] = useState([]);
 
@@ -38,7 +38,7 @@ const PagosPendientes = ({ setModal }) => {
 
   useEffect(() => {
     TipoCambio(data.fechaFin);
-    Proveedores();
+    GetTablas();
     Monedas();
   }, []);
 
@@ -91,9 +91,9 @@ const PagosPendientes = ({ setModal }) => {
     setMoneda(result.data.data.monedas);
   };
 
-  const Proveedores = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
-    setProveedor(result.data.data.data);
+    setDataProveedor(result.data.data.data);
   };
 
   const Imprimir = async () => {

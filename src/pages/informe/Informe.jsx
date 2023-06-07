@@ -45,6 +45,7 @@ import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidad
 import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
 import InformeGerenciaComprasArticulos from "./informeGerencia/InformeGerenciaComprasArticulos";
 import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
+import { toast, ToastContainer } from "react-toastify";
 import * as G from "../../components/Global";
 const Informe = () => {
   //#region Informe Modal Articulos
@@ -628,7 +629,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className="vertical-align-middle">Informes de Articulos</span>
+              <span className="vertical-align-middle">
+                Informes de Articulos
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -930,6 +933,7 @@ const Informe = () => {
           setModal={setModalInformeGerenciaVentasPorVendedorCliente}
         />
       )}
+      <ToastContainer />
     </div>
   );
   //#endregion

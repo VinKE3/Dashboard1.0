@@ -7,7 +7,7 @@ import * as G from "../../../components/Global";
 const TomaDeInventario = ({ setModal }) => {
   //#region useState
   const [data, setData] = useState([]);
-  const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
+  const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   //#endregion
 
   //#region useEffect
@@ -37,7 +37,7 @@ const TomaDeInventario = ({ setModal }) => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );
-    setTipoDeExistencia(result.data.data.tiposExistencia);
+    setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Imprimir = async (origen) => {
     console.log(origen);
@@ -93,7 +93,7 @@ const TomaDeInventario = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {tipoDeExistencia.map((tipo) => (
+              {dataTipoExistencia.map((tipo) => (
                 <option key={tipo.id} value={tipo.id}>
                   {tipo.descripcion}
                 </option>
