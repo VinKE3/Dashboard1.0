@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import Api from "../../../api/Api";
-import Get from "../../../components/funciones/Get";
+import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
@@ -16,17 +15,11 @@ const StockValorizado = ({ setModal }) => {
     checkFiltro: "agruparLinea",
   });
   const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
-  const [pdf, setPdf] = useState("");
-  const [fileName, setFileName] = useState([]);
   //#endregion
 
   //#region useEffect
   useEffect(() => {
-    console.log(pdf);
-  }, [pdf]);
-  useEffect(() => {
     GetTablas();
-    Imprimir();
   }, []);
   //#endregion
 
@@ -60,27 +53,13 @@ const StockValorizado = ({ setModal }) => {
     );
     setTipoDeExistencia(result.data.data.tiposExistencia);
   };
-  const Imprimir = async (origen = 2) => {
-    const result = await Api.get(
-      `api/Informes/Sistema/ReporteClientes?formato=${origen}`
-    );
-    setPdf(result.data);
-    let model = await GetNombreArchivo(
-      result.headers.get("content-disposition")
-    );
-    setFileName(model);
-    setPdf(URL.createObjectURL(pdf));
-  };
-  const GetNombreArchivo = async (disposition) => {
-    let filename = "PDF";
-    if (disposition && disposition.indexOf("attachment") !== -1) {
-      let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-      let matches = filenameRegex.exec(disposition);
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, "");
-      }
-    }
-    return filename;
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    const enlace = document.createElement("a");
+    enlace.href = model.url;
+    enlace.download = model.fileName;
+    enlace.click();
+    enlace.remove();
   };
   //#endregion
   return (
@@ -92,26 +71,16 @@ const StockValorizado = ({ setModal }) => {
         tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={
           <>
-            <a
-              id="enlace"
-              href={pdf}
-              download={fileName}
-              className={
-                G.BotonModalBase + G.BotonVerde + " !text-light border-none"
-              }
-            >
-              DESCARGAR
-            </a>
             <button
               type="button"
-              onClick={() => Imprimir("pdf")}
-              className={G.BotonModalBase + G.BotonRojo + " border-gray-200"}
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo + "  border-gray-200"}
             >
               PDF
             </button>
             <button
               type="button"
-              onClick={() => Imprimir("excel")}
+              onClick={() => Enviar(2)}
               className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
             >
               EXCEL
