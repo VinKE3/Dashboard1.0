@@ -44,7 +44,7 @@ import PagosPendientes from "./informeFinanzas/PagosPendientes";
 import ReporteIngresosTiendas from "./informeFinanzas/ReporteIngresosTiendas";
 import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidades";
 import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
-import InformeGerenciaComprasArticulos from "./informeGerencia/InformeGerenciaComprasArticulos";
+import InformeGerenciaComprasArticulos from "../informe/informeGerencia/InformeGerenciaComprasArticulos";
 import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
 import ReporteVendedoresClientes from "../informe/informeSistemas/ReporteVendedoresClientes";
 import InformeGerenciaVentasArticulos from "../informe/informeGerencia/InformeGerenciaVentasArticulos";
@@ -52,6 +52,7 @@ import InformeGerenciaVentasPorMarcaArituculos from "../informe/informeGerencia/
 import InformeGerenciaVentasPorVendedorMes from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMes";
 import InformeGerenciaVentasPorVendedorMesDia from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMesDia";
 import InformeGerenciaVentasPorArticuloVendedor from "../informe/informeGerencia/InformeGerenciaVentasPorArticuloVendedor";
+import * as G from "../../components/Global";
 
 const Informe = () => {
   const imprimirReporteDeClientes = async (formato = 1) => {
@@ -619,7 +620,7 @@ const Informe = () => {
   ];
   //#endregion
   return (
-    <div>
+    <div className="p-4">
       <Accordion>
         <AccordionTab
           header={
@@ -632,12 +633,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformesSistemas.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -645,7 +645,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Articulos</span>
+              <span className="vertical-align-middle">
+                Informes de Articulos
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -653,12 +655,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeArticulos.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -674,12 +675,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeCompras.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -695,12 +695,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeVentas.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -716,12 +715,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeDeCobranzas.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -737,12 +735,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeFinanzas.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -758,12 +755,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeGerencia.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -779,12 +775,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeGrafico.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
@@ -800,12 +795,11 @@ const Informe = () => {
           <ul className="overflow-y-auto">
             {InformeContable.map((item) => (
               <li
-                className="mb-2 hover:text-primary border-b hover:border-primary cursor-pointer"
+                className={G.AcordionUl}
                 key={item.id}
+                onClick={item.AbrirModal}
               >
-                <button key={item.id} type="button" onClick={item.AbrirModal}>
-                  {item.title}
-                </button>
+                <p key={item.id}>{item.title}</p>
               </li>
             ))}
           </ul>
