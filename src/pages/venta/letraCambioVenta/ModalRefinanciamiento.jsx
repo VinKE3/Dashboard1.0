@@ -1214,7 +1214,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </button>
                     <button
                       id="eliminarDocumentos"
-                      className={G.BotonBuscar + G.Anidado + G.BotonEliminar}
+                      className={G.BotonBuscar + G.Anidado + G.BotonRojo}
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(0)}
                     >
@@ -1458,7 +1458,7 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
                     </button>
                     <button
                       id="eliminarDetalleLetra"
-                      className={G.BotonBuscar + G.Anidado + G.BotonEliminar}
+                      className={G.BotonBuscar + G.Anidado + G.BotonRojo}
                       hidden={modo == "Consultar"}
                       onClick={() => LimpiarCabecera(1)}
                     >

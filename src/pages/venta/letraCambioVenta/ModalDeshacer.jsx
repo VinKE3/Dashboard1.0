@@ -296,7 +296,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                     setModal(false);
                   }}
                   onKeyDown={(e) => Key(e)}
-                  className={G.BotonModalBase + G.BotonCancelarModal}
+                  className={G.BotonModalBase + G.BotonCerrarModal}
                 >
                   CERRAR
                 </button>
@@ -420,7 +420,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
                   </button>
                   <button
                     id="eliminarDocumentos"
-                    className={G.BotonBuscar + G.Anidado + G.BotonEliminar}
+                    className={G.BotonBuscar + G.Anidado + G.BotonRojo}
                     hidden={modo == "Consultar"}
                     onClick={() => Limpiar()}
                   >

@@ -5,11 +5,11 @@
   --surface-d: #263238;
   --surface-e: var(--surface-a);
   --surface-f: var(--surface-a);
-  --text-color: #e6e6e6;
+  --text-color: #ffffff;
   --text-error-color: #ff9a9a;
   --text-color-secondary: #b3b3b3;
-  --primary-color: #00d0f5;
-  --primary-color-hover: #00d0f5;
+  --primary-color: #FDE047;
+  --primary-color-hover: #FDE047;
   --primary-color-text: #000;
   --primary-color-border: #2d3e44;
   --font-family: Lato, Helvetica, sans-serif;
@@ -45,7 +45,7 @@
   --surface-hover: rgba($primaryColor, 0.08);
   --focus-ring: 0 0 0 1px var(--primary-color);
   --maskbg: rgba(0, 0, 0, 0.4);
-  --highlight-bg: #12b6d3;
+  --highlight-bg: #FDE047;
   --highlight-text-color: #000000;
   color-scheme: dark;
 }

@@ -70,6 +70,11 @@ export var SinBorde = "!border-none  ";
 export var Disabled = "!bg-gray-800/90 ";
 //#endregion
 
+//#region  Acordion
+export var AcordionUl =
+  "mb-2 hover:text-primary border-b hover:border-primary cursor-pointer ";
+//#endregion
+
 //#region Titulos H
 export var TituloH2 = "py-2 text-xl md:text-2xl font-bold text-light ";
 export var TituloH4 = "mb-1 py-2 text-xl font-bold text-light ";
@@ -81,11 +86,11 @@ export var TituloUsuario = "font-bold text-light text-xl pb-1.5";
 //#region Botones
 export var ContenedorBotones = "sticky top-2 z-20 flex gap-2 ";
 export var BotonModalBase =
-  "px-6 py-2 text-sm font-semibold border-2 rounded shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 uppercase ";
+  "px-5 py-1.5 text-sm font-semibold rounded transition-all duration-150 uppercase ";
 export var BotonOkModal =
-  "bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black text-light border-gray-800 focus:bg-gradient-to-b focus:from-primary focus:to-yellow-600 focus:text-black focus:border-blue-500 ";
-export var BotonCancelarModal =
-  "background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 focus:bg-gradient-to-b focus:from-red-700 focus:to-red-600 focus:text-light focus:border-blue-500 ";
+  "text-light bg-gradient-to-b from-gray-600 to-gray-700 hover:bg-gradient-to-b hover:from-primary hover:to-yellow-600 hover:text-black focus:bg-gradient-to-b focus:from-primary focus:to-yellow-600 focus:text-black focus:border-blue-500 ";
+export var BotonCerrarModal =
+  " !py-1 border-2 background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 focus:bg-gradient-to-b focus:from-red-700 focus:to-red-600 focus:text-light focus:border-blue-500 ";
 
 export var BotonBasico =
   "flex mb-2 text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
@@ -93,21 +98,19 @@ export var BotonTexto =
   "w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 text-mini";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
 export var BotonPrimary =
-  "bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
+  "text-light bg-gradient-to-b from-yellow-400 to-yellow-600 text-light hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
 export var BotonNaranja =
-  "bg-gradient-to-b from-orange-600 to-orange-800 text-light hover:bg-gradient-to-b hover:from-orange-300 hover:to-orange-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
+  "text-light bg-gradient-to-b from-orange-600 to-orange-800 text-light hover:bg-gradient-to-b hover:from-orange-300 hover:to-orange-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
 export var BotonMorado =
-  "bg-gradient-to-b from-purple-600 to-purple-900 text-light hover:bg-gradient-to-b hover:from-purple-300 hover:to-purple-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
+  "text-light bg-gradient-to-b from-purple-600 to-purple-900 text-light hover:bg-gradient-to-b hover:from-purple-300 hover:to-purple-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
 export var BotonRosa =
-  "bg-gradient-to-b from-pink-600 to-pink-900 text-light hover:bg-gradient-to-b hover:from-pink-300 hover:to-pink-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
-export var BotonRegistrar =
-  "bg-gradient-to-b from-blue-600 to-blue-800 hover:bg-gradient-to-b hover:from-blue-400 hover:to-blue-600 ";
-export var BotonConfigurar =
-  "bg-gradient-to-b from-gray-500 to-gray-800 hover:bg-gradient-to-b hover:from-gray-400 hover:to-gray-600 ";
-export var BotonAgregar =
-  "bg-gradient-to-b from-green-600 to-green-800 hover:bg-gradient-to-b hover:from-green-400 hover:to-green-700 ";
-export var BotonEliminar =
-  "bg-gradient-to-b from-red-600 to-red-800 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-700 ";
+  "text-light bg-gradient-to-b from-pink-600 to-pink-900 text-light hover:bg-gradient-to-b hover:from-pink-300 hover:to-pink-600 focus:bg-gradient-to-b focus:from-blue-600 focus:to-blue-900 ";
+export var BotonAzul =
+  "text-light bg-gradient-to-b from-blue-600 to-blue-800 hover:bg-gradient-to-b hover:from-blue-400 hover:to-blue-600 ";
+export var BotonVerde =
+  "text-light bg-gradient-to-b from-green-600 to-green-800 hover:bg-gradient-to-b hover:from-green-400 hover:to-green-700 ";
+export var BotonRojo =
+  "text-light bg-gradient-to-b from-red-600 to-red-800 hover:bg-gradient-to-b hover:from-red-500 hover:to-red-700 ";
 export var BotonHeader =
   "bg-gradient-to-b from-yellow-400 to-yellow-600 hover:bg-gradient-to-b hover:from-yellow-300 hover:to-yellow-700 !text-gray-800 ";
 export var CerrarModal =
@@ -164,7 +167,8 @@ export var FilaVacia = "w-full sm:px-5 flex items-center justify-end";
 export var FilaPrecio = "min-w-[180px] ";
 export var FilaImporte = "min-w-[90px] ";
 export var FilaInput = "min-w-[180px] pr-4 ";
-export var UltimaFila = "w-auto px-2 sm:min-w-[75px] flex items-center justify-center";
+export var UltimaFila =
+  "w-auto px-2 sm:min-w-[75px] flex items-center justify-center";
 export var FilaContenido =
   "pr-4 text-sm text-p-align-right font-semibold text-light ";
 export var FilaContenidoSelect =

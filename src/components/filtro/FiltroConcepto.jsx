@@ -209,7 +209,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
             <button
               id="boton"
               onClick={(e) => GetPorId(row.values.id, e)}
-              className={G.BotonModalBase + G.BotonAgregar + "border-none"}
+              className={G.BotonModalBase + G.BotonVerde + "border-none"}
             >
               <FaCheck></FaCheck>
             </button>
@@ -236,7 +236,7 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
         childrenFooter={
           <>
             <button
-              className={G.BotonModalBase + G.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
               type="button"
               onClick={() => setModal(false)}
             >

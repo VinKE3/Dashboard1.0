@@ -101,7 +101,7 @@ const BloquearVenta = () => {
       ) {
         setVisible(false);
       } else {
-        TipoDeDocumentos();
+        GetTablas();
         setVisible(true);
         Listar(cadena, 1);
       }
@@ -120,7 +120,7 @@ const BloquearVenta = () => {
     setDatos(result.data.data.data);
     setTotal(result.data.data.total);
   };
-  const TipoDeDocumentos = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Venta/BloquearVenta/FormularioTablas`
     );

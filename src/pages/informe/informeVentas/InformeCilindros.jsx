@@ -225,9 +225,10 @@ const InformeCilindros = ({ setModal }) => {
             <div className="mt-2">
               <BotonBasico
                 botonText="ACEPTAR"
-                botonClass={G.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPlus}
                 click={() => Imprimir()}
+contenedor=""
               />
             </div>
           </div>

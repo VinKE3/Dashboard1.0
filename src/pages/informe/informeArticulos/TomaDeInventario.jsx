@@ -1,20 +1,22 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
 import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const TomaDeInventario = ({ setModal }) => {
+  //#region useState
   const [data, setData] = useState([]);
   const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    TipoDeDocumentos();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "conStock") {
       setData((prevState) => ({
@@ -28,24 +30,57 @@ const TomaDeInventario = ({ setModal }) => {
       }));
     }
   };
+  //#endregion
 
-  const TipoDeDocumentos = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );
     setTipoDeExistencia(result.data.data.tiposExistencia);
   };
-  const Imprimir = async () => {
-    console.log("Imprimir");
+  const Imprimir = async (origen) => {
+    console.log(origen);
   };
+  //#endregion
 
   return (
     <>
-      <ModalBasic titulo="Toma de Inventario" setModal={setModal}>
+      <ModalBasic
+        setModal={setModal}
+        titulo="Toma de Inventarios"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño + " !max-w-2xl", G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Imprimir("pdf")}
+              className={G.BotonModalBase + G.BotonRojo + " border-gray-200"}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Imprimir("excel")}
+              className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
         <div className={G.ContenedorInputs}>
           <div className={G.InputFull}>
             <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
-              Tipo
+              Tipo de Existencia
             </label>
             <select
               id="tipoExistenciaId"
@@ -64,32 +99,22 @@ const TomaDeInventario = ({ setModal }) => {
                 </option>
               ))}
             </select>
-
             <div className={G.Input + " w-25"}>
               <div className={G.CheckStyle + G.Anidado}>
                 <Checkbox
                   inputId="conStock"
                   name="conStock"
-                  value="New York"
                   onChange={(e) => {
                     HandleData(e);
                   }}
                   checked={data.conStock ? true : ""}
                 />
               </div>
-              <label htmlFor="abonar" className={G.LabelCheckStyle}>
+              <label htmlFor="conStock" className={G.LabelCheckStyle}>
                 Con Stock
               </label>
             </div>
           </div>
-        </div>
-        <div className="mt-2">
-          <BotonBasico
-            botonText="ACEPTAR"
-            botonClass={G.BotonAgregar}
-            botonIcon={faPlus}
-            click={() => Imprimir()}
-          />
         </div>
       </ModalBasic>
     </>

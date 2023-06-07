@@ -141,7 +141,7 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
           <button
             id="boton"
             onClick={() => GetPorId(row.values.id)}
-            className={G.BotonModalBase + G.BotonAgregar + "border-none"}
+            className={G.BotonModalBase + G.BotonVerde + "border-none"}
           >
             <FaCheck></FaCheck>
           </button>
@@ -172,7 +172,7 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
               <p className="pl-2">Nuevo</p>
             </button> */}
             <button
-              className={G.BotonModalBase + G.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
               type="button"
               onClick={() => setModal(false)}
             >

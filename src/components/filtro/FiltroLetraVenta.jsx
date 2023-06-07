@@ -151,7 +151,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={G.BotonModalBase + G.BotonAgregar + " border-none "}
+              className={G.BotonModalBase + G.BotonVerde + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -176,7 +176,7 @@ const FiltroLetraVenta = ({ setModal, id, setObjeto, foco }) => {
             <button
               type="button"
               onClick={() => setModal(false)}
-              className={G.BotonModalBase + G.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
             >
               CERRAR
             </button>

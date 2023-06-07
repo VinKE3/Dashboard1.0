@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { RadioButton } from "primereact/radiobutton";
-import ModalBasic from "../../../components/modal/ModalBasic";
+import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import { Checkbox } from "primereact/checkbox";
+import { RadioButton } from "primereact/radiobutton";
 import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const ListadoDeCostos = ({ setModal }) => {
   const [data, setData] = useState({
@@ -17,7 +15,7 @@ const ListadoDeCostos = ({ setModal }) => {
   const [marcas, setMarcas] = useState([]);
 
   useEffect(() => {
-    TipoDeDocumentos();
+    GetTablas();
     Marcas();
   }, []);
 
@@ -27,7 +25,6 @@ const ListadoDeCostos = ({ setModal }) => {
       target.value === "agruparLinea" ||
       target.value === "todos"
     ) {
-      console.log(target.name, "target");
       setData((prevState) => ({
         ...prevState,
         checkFiltro: target.value,
@@ -39,7 +36,7 @@ const ListadoDeCostos = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const TipoDeDocumentos = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
@@ -167,9 +164,10 @@ const ListadoDeCostos = ({ setModal }) => {
           <div className="mt-2">
             <BotonBasico
               botonText="ACEPTAR"
-              botonClass={G.BotonAgregar}
+              botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
+contenedor=""
             />
           </div>
         </div>

@@ -486,7 +486,7 @@ const Cheque = () => {
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={G.BotonRegistrar}
+                  botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -494,7 +494,7 @@ const Cheque = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={G.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""

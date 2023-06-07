@@ -647,7 +647,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {nuevo && (
                   <BotonBasico
                     botonText="Nuevo"
-                    botonClass={G.BotonAgregar + " !my-0"}
+                    botonClass={G.BotonVerde + " !my-0"}
                     botonIcon={faPlus}
                     click={() => Abono()}
                     contenedor=""
@@ -656,7 +656,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {habilitarCampo && (
                   <BotonBasico
                     botonText="Cancelar"
-                    botonClass={G.BotonEliminar + " !py-1.5 !px-2 !my-0"}
+                    botonClass={G.BotonRojo + " !py-1.5 !px-2 !my-0"}
                     botonIcon={faCancel}
                     click={() => Abono("cancelar")}
                     contenedor=""

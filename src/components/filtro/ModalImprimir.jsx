@@ -50,7 +50,7 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
               href={pdf}
               download={fileName}
               className={
-                G.BotonModalBase + G.BotonAgregar + " !text-light border-none"
+                G.BotonModalBase + G.BotonVerde + " !text-light border-none"
               }
             >
               DESCARGAR
@@ -59,7 +59,7 @@ const ModalImprimir = ({ setModal, objeto, foco }) => {
               type="button"
               autoFocus
               onClick={() => setModal(false)}
-              className={G.BotonModalBase + G.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
             >
               CERRAR
             </button>

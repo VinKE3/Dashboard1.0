@@ -35,7 +35,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
         childrenFooter={
           <>
             <button
-              className={G.BotonModalBase + G.BotonCancelarModal}
+              className={G.BotonModalBase + G.BotonCerrarModal}
               type="button"
               onClick={() => setModal(false)}
             >
@@ -59,7 +59,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                   <button
                     onClick={() => GetPorId(datos.precioVenta1)}
                     className={
-                      G.BotonModalBase + G.BotonAgregar + "border-none"
+                      G.BotonModalBase + G.BotonVerde + "border-none"
                     }
                   >
                     <FaCheck></FaCheck>
@@ -77,7 +77,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                   <button
                     onClick={() => GetPorId(datos.precioVenta2)}
                     className={
-                      G.BotonModalBase + G.BotonAgregar + "border-none"
+                      G.BotonModalBase + G.BotonVerde + "border-none"
                     }
                   >
                     <FaCheck></FaCheck>
@@ -95,7 +95,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                   <button
                     onClick={() => GetPorId(datos.precioVenta3)}
                     className={
-                      G.BotonModalBase + G.BotonAgregar + "border-none"
+                      G.BotonModalBase + G.BotonVerde + "border-none"
                     }
                   >
                     <FaCheck></FaCheck>
@@ -113,7 +113,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                   <button
                     onClick={() => GetPorId(datos.precioVenta4)}
                     className={
-                      G.BotonModalBase + G.BotonAgregar + "border-none"
+                      G.BotonModalBase + G.BotonVerde + "border-none"
                     }
                   >
                     <FaCheck></FaCheck>

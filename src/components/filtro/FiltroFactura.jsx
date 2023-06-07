@@ -220,7 +220,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
             <button
               id="boton"
               onClick={() => GetPorId(row.values.id)}
-              className={G.BotonModalBase + G.BotonAgregar + " border-none "}
+              className={G.BotonModalBase + G.BotonVerde + " border-none "}
             >
               <FaCheck></FaCheck>
             </button>
@@ -245,7 +245,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
         <div className="flex justify-center">
           <button
             onClick={() => EliminarFila(row.values.id)}
-            className={G.BotonModalBase + G.BotonEliminar + "border-none"}
+            className={G.BotonModalBase + G.BotonRojo + "border-none"}
           >
             <FaTrash></FaTrash>
           </button>
@@ -267,7 +267,7 @@ const FiltroFactura = ({ setModal, objeto, setObjeto, foco }) => {
           <button
             type="button"
             onClick={() => setModal(false)}
-            className={G.BotonModalBase + G.BotonCancelarModal}
+            className={G.BotonModalBase + G.BotonCerrarModal}
           >
             CERRAR
           </button>

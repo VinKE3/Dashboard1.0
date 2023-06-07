@@ -738,7 +738,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     />
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={G.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       autoFoco={true}
                       click={(e) => {
@@ -851,7 +851,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="button"
                         className={
                           G.BotonModalBase +
-                          G.BotonCancelarModal +
+                          G.BotonCerrarModal +
                           " py-2 sm:py-1  px-3"
                         }
                         onKeyDown={(e) => Funciones.KeyClick(e)}
@@ -893,7 +893,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     />
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={G.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       autoFoco={true}
                       click={(e) => {
@@ -1078,7 +1078,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         onClick={() => setHabilitarContacto(false)}
                         className={
                           G.BotonModalBase +
-                          G.BotonCancelarModal +
+                          G.BotonCerrarModal +
                           " py-2 sm:py-1  px-3"
                         }
                       >

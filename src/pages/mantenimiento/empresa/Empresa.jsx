@@ -1824,7 +1824,7 @@ const Empresa = ({ modo }) => {
                     <h4 className={G.TituloH4}>IGV</h4>
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={G.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       click={(e) => {
                         AgregarIgv(e);
@@ -1907,7 +1907,7 @@ const Empresa = ({ modo }) => {
                             onClick={() => setEstadoIgv(false)}
                             className={
                               G.BotonModalBase +
-                              G.BotonCancelarModal +
+                              G.BotonCerrarModal +
                               " py-2 sm:py-1  px-3"
                             }
                           >
@@ -1929,7 +1929,7 @@ const Empresa = ({ modo }) => {
                     <h4 className={G.TituloH4}>RETENCIONES</h4>
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={G.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       click={(e) => {
                         AgregarRetencion(e);
@@ -2011,7 +2011,7 @@ const Empresa = ({ modo }) => {
                             onClick={() => setEstadoRetencion(false)}
                             className={
                               G.BotonModalBase +
-                              G.BotonCancelarModal +
+                              G.BotonCerrarModal +
                               " py-2 sm:py-1  px-3"
                             }
                           >
@@ -2034,7 +2034,7 @@ const Empresa = ({ modo }) => {
                     <h4 className={G.TituloH4}>DETRACCIONES</h4>
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={G.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       click={(e) => {
                         AgregarDetraccion(e);
@@ -2116,7 +2116,7 @@ const Empresa = ({ modo }) => {
                             onClick={() => setEstadoDetraccion(false)}
                             className={
                               G.BotonModalBase +
-                              G.BotonCancelarModal +
+                              G.BotonCerrarModal +
                               " py-2 sm:py-1  px-3"
                             }
                           >
@@ -2139,7 +2139,7 @@ const Empresa = ({ modo }) => {
                     <h4 className={G.TituloH4}>PERCEPCIONES</h4>
                     <BotonBasico
                       botonText="Agregar"
-                      botonClass={G.BotonAgregar}
+                      botonClass={G.BotonVerde}
                       botonIcon={faPlus}
                       click={(e) => {
                         AgregarPercepcion(e);
@@ -2221,7 +2221,7 @@ const Empresa = ({ modo }) => {
                             onClick={() => setEstadoPercepcion(false)}
                             className={
                               G.BotonModalBase +
-                              G.BotonCancelarModal +
+                              G.BotonCerrarModal +
                               " py-2 sm:py-1 px-3"
                             }
                           >

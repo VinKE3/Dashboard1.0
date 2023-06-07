@@ -251,7 +251,7 @@ const Modal = ({ setModal, objeto, foco }) => {
       childrenFooter={
         <>
           <button
-            className={G.BotonModalBase + G.BotonCancelarModal}
+            className={G.BotonModalBase + G.BotonCerrarModal}
             type="button"
             autoFocus
             onClick={() => setModal(false)}

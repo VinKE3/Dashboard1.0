@@ -4,10 +4,11 @@ import { toast } from "react-toastify";
 
 const Imprimir = async (menu, id) => {
   const result = await Api.get(`api/${menu[0]}/${menu[1]}/Imprimir/${id}`);
+  console.log(result)
   if (result.name == "AxiosError") {
     const res = await ApiMasy.get(`api/${menu[0]}/${menu[1]}/Imprimir/${id}`);
-    res.map((map) => {
-      toast.error(map.textos, {
+    res.textos.map((map) => {
+      toast.error(map, {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,

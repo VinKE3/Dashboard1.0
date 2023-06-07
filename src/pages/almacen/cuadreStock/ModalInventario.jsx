@@ -59,7 +59,7 @@ const ModalInventario = ({ setModal, modo, objeto, setObjeto, foco }) => {
             {/* <button
               id="guardarInventario"
               className={
-                G.BotonBuscar + G.Anidado + G.BotonAgregar
+                G.BotonBuscar + G.Anidado + G.BotonVerde
               }
               hidden={modo == "Consultar"}
               onClick={() => PasarDatos()}

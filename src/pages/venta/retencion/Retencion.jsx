@@ -519,7 +519,7 @@ const Retencion = () => {
               {permisos[0] && (
                 <BotonBasico
                   botonText="Nuevo"
-                  botonClass={G.BotonRegistrar}
+                  botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
                   contenedor=""
@@ -529,7 +529,7 @@ const Retencion = () => {
               {permisos[4] && (
                 <BotonBasico
                   botonText="Anular"
-                  botonClass={G.BotonEliminar}
+                  botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => Anulacion()}
                   contenedor=""
@@ -537,7 +537,7 @@ const Retencion = () => {
               )}
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={G.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
                 contenedor=""

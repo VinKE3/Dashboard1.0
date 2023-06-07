@@ -542,7 +542,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     }
                     className={
                       G.BotonBuscar +
-                      G.BotonRegistrar +
+                      G.BotonAzul +
                       " ml-2 !px-1.5 !rounded-sm"
                     }
                   >
@@ -569,7 +569,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                     }
                     className={
                       G.BotonBuscar +
-                      G.BotonRegistrar +
+                      G.BotonAzul +
                       " ml-2 !px-1.5 !rounded-sm"
                     }
                   >

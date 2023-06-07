@@ -173,7 +173,7 @@ const ModalCrud = ({
                 type="button"
                 autoFocus={modo == "Consultar"}
                 onClick={CerrarModal}
-                className={G.BotonModalBase + G.BotonCancelarModal}
+                className={G.BotonModalBase + G.BotonCerrarModal}
               >
                 CERRAR
               </button>

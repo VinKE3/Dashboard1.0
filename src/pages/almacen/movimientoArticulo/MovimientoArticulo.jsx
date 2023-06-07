@@ -97,7 +97,7 @@ const MovimientoArticulo = () => {
       ) {
         setVisible(false);
       } else {
-        TipoDeDocumentos();
+        GetTablas();
         setVisible(true);
         Listar(cadena, 1);
       }
@@ -129,7 +129,7 @@ const MovimientoArticulo = () => {
     );
     setObjeto(result.data.data);
   };
-  const TipoDeDocumentos = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );

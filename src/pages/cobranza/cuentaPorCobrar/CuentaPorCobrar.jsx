@@ -464,7 +464,7 @@ const CuentaPorCobrar = () => {
             <div className={G.ContenedorBotones}>
               <BotonBasico
                 botonText="Imprimir"
-                botonClass={G.BotonAgregar}
+                botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, 5)}
                 contenedor=""

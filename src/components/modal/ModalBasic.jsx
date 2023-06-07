@@ -12,6 +12,7 @@ const ModalBasic = ({
   titulo,
   cabecera = true,
   cerrar = true,
+  habilitarFoco = true,
   foco,
   tamañoModal = [G.ModalPequeño, G.Form],
 }) => {
@@ -21,7 +22,9 @@ const ModalBasic = ({
   };
   const ModalKey = (e) => {
     if (e.key == "Escape") {
-      foco.focus();
+      if (habilitarFoco) {
+        foco.focus();
+      }
       setModal(false);
     }
   };
