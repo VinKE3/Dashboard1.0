@@ -141,9 +141,9 @@ const CuentasPorCobrar = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataCliente.map((dataCliente) => (
-                <option key={dataCliente.id} value={dataCliente.id}>
-                  {dataCliente.nombre}
+              {dataCliente.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
@@ -162,9 +162,9 @@ const CuentasPorCobrar = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataPersonal.map((dataPersonal) => (
-                <option key={dataPersonal.id} value={dataPersonal.id}>
-                  {dataPersonal.personal}
+              {dataPersonal.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.personal}
                 </option>
               ))}
             </select>
@@ -180,15 +180,15 @@ const CuentasPorCobrar = ({ setModal }) => {
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {dataMoneda.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
           </div>
           <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -201,7 +201,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>

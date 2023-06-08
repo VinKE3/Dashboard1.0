@@ -59,7 +59,7 @@ const TodasLasCompras = ({ setModal }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        titulo="Todas las Compra"
+        titulo="Todas las Compras"
         habilitarFoco={false}
         tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={

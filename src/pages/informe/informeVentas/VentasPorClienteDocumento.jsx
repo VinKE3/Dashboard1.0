@@ -1,36 +1,37 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import Reporte from "../../../components/funciones/Reporte";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
 const VentasPorClienteDocumento = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     clienteId: "",
     tipoDocumentoId: "",
-    monedaId: "S",
+    monedaId: "",
   });
-  const [tipoDocumento, setTipoDocumento] = useState([]);
-  const [cliente, setDataCliente] = useState([]);
-  const [monedas, setDataMoneda] = useState([]);
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
+  const [dataTipoDocumento, setDataTipoDocumento] = useState([]);
+  const [dataCliente, setDataCliente] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    Cliente();
-    TipoDocumentos();
     GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
@@ -44,35 +45,68 @@ const VentasPorClienteDocumento = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Cliente = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
-    setDataCliente(result.data.data.data);
-  };
-
-  const TipoDocumentos = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/Correlativo/FormularioTablas`
-    );
-    setTipoDocumento(result.data.data.tiposDocumento);
-  };
-
-  const GetTablas = async  () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
     setDataMoneda(result.data.data.monedas);
+    const res = await ApiMasy.get(
+      `api/Mantenimiento/Correlativo/FormularioTablas`
+    );
+    setDataTipoDocumento(res.data.data.tiposDocumento);
+    const re = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
+    setDataCliente(re.data.data.data);
   };
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
+  };
+  //#endregion
 
-  const Imprimir = async () => {
-    console.log("Imprimir");
-  };
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Ventas Por Cliente Documento" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+      <ModalBasic
+        setModal={setModal}
+        titulo="Ventas por cliente documento"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="clienteId" className={G.LabelStyle}>
               Cliente
@@ -88,9 +122,9 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {cliente.map((cliente) => (
-                <option key={cliente.id} value={cliente.id}>
-                  {cliente.nombre}
+              {dataCliente.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
@@ -102,7 +136,6 @@ const VentasPorClienteDocumento = ({ setModal }) => {
             <select
               id="tipoDocumentoId"
               name="tipoDocumentoId"
-              autoFocus
               value={data.tipoDocumentoId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -110,14 +143,14 @@ const VentasPorClienteDocumento = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {tipoDocumento.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.descripcion}
+              {dataTipoDocumento.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
           </div>
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+          <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
@@ -141,7 +174,7 @@ const VentasPorClienteDocumento = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
@@ -152,33 +185,22 @@ const VentasPorClienteDocumento = ({ setModal }) => {
             <select
               id="monedaId"
               name="monedaId"
-              autoFocus
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
-          </div>
-          <div className={G.ContenedorInputs}>
-            <div className="mt-2">
-              <BotonBasico
-                botonText="ACEPTAR"
-                botonClass={G.BotonVerde}
-                botonIcon={faPlus}
-                click={() => Imprimir()}
-contenedor=""
-              />
-            </div>
           </div>
         </div>
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default VentasPorClienteDocumento;

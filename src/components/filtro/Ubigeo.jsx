@@ -112,7 +112,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region Render
   return (
-    <div className={G.ContenedorInputs}>
+    <div className={G.ContenedorInputs + " !gap-y-2"}>
       <div className={G.InputTercio}>
         <label htmlFor={id[0]} className={G.LabelStyle}>
           Dep.

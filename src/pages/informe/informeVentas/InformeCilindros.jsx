@@ -1,33 +1,35 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import { RadioButton } from "primereact/radiobutton";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import Reporte from "../../../components/funciones/Reporte";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
 const InformeCilindros = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     personalId: "",
     checkFiltro: "reporteSalidaCilindros",
   });
+  const [dataPersonal, setDataPersonal] = useState([]);
+  //#endregion
 
-  const [personal, setDataPersonal] = useState([]);
+  //#region useEffect
   useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    Personal();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (
       target.value === "reporteSalidaCilindros" ||
@@ -47,27 +49,66 @@ const InformeCilindros = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Personal = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
     setDataPersonal(
       result.data.data.data.map((res) => ({
         id: res.id,
-        personal:
+        dataPersonal:
           res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
   };
-
-  const Imprimir = async () => {
-    console.log("Imprimir");
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
   };
+  //#endregion
+
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Informe De Cilindros" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+      <ModalBasic
+        setModal={setModal}
+        titulo="Informe de Cilindros"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="personalId" className={G.LabelStyle}>
               Personal
@@ -83,15 +124,15 @@ const InformeCilindros = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {personal.map((personal) => (
-                <option key={personal.id} value={personal.id}>
-                  {personal.personal}
+              {dataPersonal.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.personal}
                 </option>
               ))}
             </select>
           </div>
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -104,7 +145,7 @@ const InformeCilindros = ({ setModal }) => {
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
@@ -114,13 +155,13 @@ const InformeCilindros = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="reporteSalidaCilindros"
@@ -139,7 +180,7 @@ const InformeCilindros = ({ setModal }) => {
                   Reporte Salida Cilindros
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporteEntradaCilindros"
@@ -158,7 +199,7 @@ const InformeCilindros = ({ setModal }) => {
                   Reporte Entrada Cilindros
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporteCilindrosVendidos"
@@ -172,7 +213,7 @@ const InformeCilindros = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporteCilindrosVendidos"
-                  className={G.LabelCheckStyle + " !py-1 "}
+                  className={G.LabelCheckStyle}
                 >
                   Reporte Cilindros Vendidos
                 </label>
@@ -181,7 +222,7 @@ const InformeCilindros = ({ setModal }) => {
           </div>
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="reporteCilindrosPendientes"
@@ -200,7 +241,7 @@ const InformeCilindros = ({ setModal }) => {
                   Reporte Cilindros Pendientes
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporteCilindrosSobrantes"
@@ -214,28 +255,18 @@ const InformeCilindros = ({ setModal }) => {
                 </div>
                 <label
                   htmlFor="reporteCilindrosSobrantes"
-                  className={G.LabelCheckStyle + " !py-1 "}
+                  className={G.LabelCheckStyle}
                 >
                   Reporte Cilindros Sobrantes
                 </label>
               </div>
             </div>
           </div>
-          <div className={G.ContenedorInputs}>
-            <div className="mt-2">
-              <BotonBasico
-                botonText="ACEPTAR"
-                botonClass={G.BotonVerde}
-                botonIcon={faPlus}
-                click={() => Imprimir()}
-contenedor=""
-              />
-            </div>
-          </div>
         </div>
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default InformeCilindros;

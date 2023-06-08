@@ -264,7 +264,7 @@ function seccionesList() {
       items: [
         {
           path: "/informe/informe",
-          title: "Informe",
+          title: "Informes",
         },
       ],
     },

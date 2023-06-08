@@ -395,7 +395,7 @@ const Informe = () => {
     },
     {
       id: 13,
-      title: "Guia Valorizada",
+      title: "Guías Valorizadas",
       AbrirModal: () => {
         setModalGuiaValorizada(true);
       },
@@ -609,7 +609,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Sistemas</span>
+              <span className=" vertical-align-middle">Informes de Sistemas</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -651,7 +651,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Compras</span>
+              <span className=" vertical-align-middle">Informes de Compras</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -671,7 +671,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Ventas</span>
+              <span className=" vertical-align-middle">Informes de Ventas</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -691,7 +691,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Cobranzas</span>
+              <span className=" vertical-align-middle">Informes de Cobranzas</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -711,7 +711,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Finanzas</span>
+              <span className=" vertical-align-middle">Informes de Finanzas</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -731,7 +731,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Gerencia</span>
+              <span className=" vertical-align-middle">Informes de Gerencia</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -751,7 +751,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Grafico</span>
+              <span className=" vertical-align-middle">Informes de Grafico</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -771,7 +771,7 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes Contable</span>
+              <span className=" vertical-align-middle">Informes Contables</span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }

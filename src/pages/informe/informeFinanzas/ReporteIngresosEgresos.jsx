@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import FiltroCliente from "../../../components/filtro/FiltroCliente";
+import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
 import moment from "moment";
 import * as G from "../../../components/Global";
+import { FaSearch } from "react-icons/fa";
 
 const ReporteIngresosEgresos = ({ setModal }) => {
   //#region useState
+  //Data General
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
     fechaInicio: moment(
@@ -16,136 +20,134 @@ const ReporteIngresosEgresos = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
       "YYYY-MM-DD"
     ),
-    monedaId: "S",
-    tipoId: "3",
-    conceptoIngresoId: "",
-    conceptoEgresoId: "",
-    personalId: "",
-    visualizar: true,
+    monedaId: "",
+    tipoMovimientoId: "",
+    tipoBeneficiarioId: "",
+    clienteProveedorId: null,
+    clienteProveedorNombre: "",
   });
-  const [dataMoneda, setDataMoneda] = useState([]);
+  //Data General
+  //GetTablas
+  const [dataMoneda, setdataMoneda] = useState([]);
+  const [dataTipoMovimiento, setDataTipoMovimiento] = useState([]);
+  const [dataTipoBenef, setDataTipoBenef] = useState([]);
   const [dataPersonal, setDataPersonal] = useState([]);
-  const tipos = [
-    {
-      id: 1,
-      descripcion: "INGRESOS",
-    },
-    {
-      id: 2,
-      descripcion: "EGRESOS",
-    },
-    {
-      id: 3,
-      descripcion: "TODOS",
-    },
-  ];
-  const conceptoEgresos = [
-    {
-      id: 1,
-      descripcion: "Alquiler",
-    },
-    {
-      id: 2,
-      descripcion: "Comisiones",
-    },
-    {
-      id: 3,
-      descripcion: "Traspasos",
-    },
-    {
-      id: 4,
-      descripcion: "Cambio Dolar",
-    },
-    {
-      id: 5,
-      descripcion: "Extorno",
-    },
-    {
-      id: 6,
-      descripcion: "Combustible",
-    },
-    {
-      id: 7,
-      descripcion: "P.Relacionados",
-    },
-    {
-      id: 8,
-      descripcion: "Impuestos",
-    },
-  ];
-  const conceptoIngresos = [
-    {
-      id: 1,
-      descripcion: "Traspasos",
-    },
-    {
-      id: 2,
-      descripcion: "Cliente",
-    },
-    {
-      id: 3,
-      descripcion: "Extorno",
-    },
-    {
-      id: 4,
-      descripcion: "Cobranzas",
-    },
-    {
-      id: 5,
-      descripcion: "Otros",
-    },
-    {
-      id: 6,
-      descripcion: "Sin Sustento",
-    },
-    {
-      id: 7,
-      descripcion: "Tiendas",
-    },
-    {
-      id: 8,
-      descripcion: "Prestamos",
-    },
-  ];
+  //GetTablas
+  //Data Modales Ayuda
+  const [dataCliente, setDataCliente] = useState([]);
+  const [dataProveedor, setDataProveedor] = useState([]);
+  //Data Modales Ayuda
+  //Modales de Ayuda
+  const [modalCliente, setModalCliente] = useState(false);
+  const [modalProveedor, setModalProveedor] = useState(false);
+  //Modales de Ayuda
+  const [todos, setTodos] = useState(false);
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    if (Object.keys(dataCliente).length > 0) {
+      setData({
+        ...data,
+        clienteProveedorId: dataCliente.clienteId,
+        clienteProveedorNombre: dataCliente.clienteNombre,
+      });
+    }
+  }, [dataCliente]);
+  useEffect(() => {
+    if (Object.keys(dataProveedor).length > 0) {
+      setData({
+        ...data,
+        clienteProveedorId: dataProveedor.proveedorId,
+        clienteProveedorNombre: dataProveedor.proveedorNombre,
+      });
+    }
+  }, [dataProveedor]);
   useEffect(() => {
     GetTablas();
   }, []);
   //#endregion
 
   //#region Funciones
-  const HandleData = (e) => {
-    const { name, value } = e.target;
+  const HandleData = async ({ target }) => {
+    if (target.name == "todos") {
+      setTodos(target.checked);
+      setData((prevData) => ({
+        ...prevData,
+        tipoBeneficiarioId: "",
+      }));
+      return;
+    }
+    if (target.name == "tipoMovimientoId") {
+      let model = dataTipoBenef.find(
+        (map) => map.tipoMovimientoId == target.value
+      );
+      setData((prevData) => ({
+        ...prevData,
+        tipoMovimientoId: target.value,
+        tipoBeneficiarioId: model == undefined ? "" : model.tipoBeneficiarioId,
+        clienteProveedorId: null,
+        clienteProveedorNombre: "",
+        concepto: "",
+      }));
+      return;
+    }
+    if (target.name == "tipoBeneficiarioId") {
+      setData((prevData) => ({
+        ...prevData,
+        tipoBeneficiarioId: target.value,
+        clienteProveedorId: null,
+        clienteProveedorNombre: "",
+      }));
+      return;
+    }
     setData((prevState) => ({
       ...prevState,
-      [name]: value,
+      [target.name]: target.value.toUpperCase(),
     }));
-    if (name === "tipoId") {
-      setData((prevState) => ({
-        ...prevState,
-        conceptoIngresoId: "",
-        conceptoEgresoId: "",
-      }));
-      return;
-    }
-    if (name === "visualizar") {
-      setData((prevState) => ({
-        ...prevState,
-        [name]: e.checked,
-      }));
-      return;
-    }
   };
   //#endregion
 
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Articulo/FormularioTablas`
+      `api/Finanzas/MovimientoBancario/FormularioTablas`
     );
-    setDataMoneda(result.data.data.monedas);
+    setDataTipoMovimiento(result.data.data.tiposMovimiento);
+    let tiposBeneficiario = result.data.data.tiposBeneficiario;
+    tiposBeneficiario.push(
+      {
+        descripcion: "--TODOS--",
+        id: "",
+        isActivo: true,
+        tipoBeneficiarioId: "",
+        tipoMovimientoId: "",
+      },
+      {
+        descripcion: "--TODOS--",
+        id: "",
+        isActivo: true,
+        tipoBeneficiarioId: "",
+        tipoMovimientoId: "IN",
+      },
+      {
+        descripcion: "--TODOS--",
+        id: "",
+        isActivo: true,
+        tipoBeneficiarioId: "",
+        tipoMovimientoId: "EG",
+      }
+    );
+    setDataTipoBenef(tiposBeneficiario);
+    setdataMoneda([
+      { abreviatura: "S/", descripcion: "SOLES", id: "S" },
+      {
+        abreviatura: "US$",
+        descripcion: "DÓLARES AMERICANOS",
+        id: "D",
+      },
+    ]);
+
     const res = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
     setDataPersonal(
       res.data.data.data.map((map) => ({
@@ -164,6 +166,15 @@ const ReporteIngresosEgresos = ({ setModal }) => {
       enlace.click();
       enlace.remove();
     }
+  };
+  //#endregion
+
+  //#region Funciones Modal
+  const AbrirFiltroCliente = async () => {
+    setModalCliente(true);
+  };
+  const AbrirFiltroProveedor = async () => {
+    setModalProveedor(true);
   };
   //#endregion
 
@@ -202,160 +213,175 @@ const ReporteIngresosEgresos = ({ setModal }) => {
         }
       >
         <div className={G.ContenedorBasico}>
-          <div className={G.InputFull}>
-            <label htmlFor="monedaId" className={G.LabelStyle}>
-              Moneda
-            </label>
-            <select
-              id="monedaId"
-              name="monedaId"
-              value={data.monedaId ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
-            >
-              {dataMoneda.map((map) => (
-                <option key={map.id} value={map.id}>
-                  {map.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={G.InputFull}>
-            <label htmlFor="tipoId" className={G.LabelStyle}>
-              Tipo
-            </label>
-            <select
-              id="tipoId"
-              name="tipoId"
-              value={data.tipoId ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
-            >
-              {tipos.map((map) => (
-                <option key={map.id} value={map.id}>
-                  {map.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {data.tipoId === "1" && (
-            <div className={G.InputFull}>
-              <label htmlFor="conceptoIngresoId" className={G.LabelStyle}>
-                Concepto
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputMitad}>
+              <label htmlFor="monedaId" className={G.LabelStyle}>
+                Moneda
               </label>
               <select
-                id="conceptoIngresoId"
-                name="conceptoIngresoId"
-                value={data.conceptoIngresoId ?? ""}
+                id="monedaId"
+                name="monedaId"
+                value={data.monedaId ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               >
-                {conceptoIngresos.map((map) => (
+                {dataMoneda.map((map) => (
                   <option key={map.id} value={map.id}>
                     {map.descripcion}
                   </option>
                 ))}
               </select>
             </div>
-          )}
-
-          {data.tipoId === "2" && (
-            <div className={G.InputFull}>
-              <label htmlFor="conceptoEgresoId" className={G.LabelStyle}>
-                Concepto
+            <div className={G.InputMitad}>
+              <label htmlFor="tipoMovimientoId" className={G.LabelStyle}>
+                Movimiento
               </label>
               <select
-                id="conceptoEgresoId"
-                name="conceptoEgresoId"
-                value={data.conceptoEgresoId ?? ""}
+                id="tipoMovimientoId"
+                name="tipoMovimientoId"
+                value={data.tipoMovimientoId ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               >
-                {conceptoEgresos.map((map) => (
+                <option key="-1" value="">
+                  -- TODOS --
+                </option>
+                {dataTipoMovimiento.map((map) => (
                   <option key={map.id} value={map.id}>
                     {map.descripcion}
                   </option>
                 ))}
               </select>
             </div>
-          )}
-
-          {data.tipoId === "3" && (
+          </div>
+          <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.InputFull}>
-                <label htmlFor="conceptoId" className={G.LabelStyle}>
-                  Concepto
-                </label>
-                <select
-                  id="conceptoId"
-                  name="conceptoId"
-                  value={""}
-                  onChange={HandleData}
-                  disabled={true}
-                  className={G.InputBoton}
-                >
-                  <option value="">TODOS</option>
-                </select>
-              </div>
-              <div className={G.Input + " w-40"}>
-                <div className={G.CheckStyle + G.Anidado}>
+              <div className={G.Input + "w-36"}>
+                <div className={G.CheckStyle}>
                   <Checkbox
-                    inputId="visualizar"
-                    name="visualizar"
+                    inputId="todos"
+                    name="todos"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.visualizar ? true : ""}
-                  />
+                    checked={todos ? true : ""}
+                  ></Checkbox>
                 </div>
-                <label htmlFor="visualizar" className={G.LabelCheckStyle}>
-                  Visualizar
+                <label
+                  htmlFor="todos"
+                  className={G.LabelCheckStyle + " rounded-r-none "}
+                >
+                  Todos
                 </label>
               </div>
-            </div>
-          )}
-
-          {data.conceptoIngresoId === "2" ? (
-            <div className={G.InputFull}>
-              <label htmlFor="personalId" className={G.LabelStyle}>
-                Personal
-              </label>
-              <select
-                id="personalId"
-                disabled={data.tipoId == 3 ? true : false}
-                name="personalId"
-                value={data.personalId ?? ""}
-                onChange={HandleData}
-                className={G.InputStyle}
-              >
-                <option key={-1} value={""}>
-                  {"--TODOS--"}
-                </option>
-                {dataPersonal.map((map) => (
-                  <option key={map.id} value={map.id}>
-                    {map.personal}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <>
               <div className={G.InputFull}>
-                <label htmlFor="nombre" className={G.LabelStyle}>
-                  Nombre
+                <label
+                  htmlFor="tipoBeneficiarioId"
+                  className={G.LabelStyle + G.Anidado}
+                >
+                  Tipos
+                </label>
+                <select
+                  id="tipoBeneficiarioId"
+                  name="tipoBeneficiarioId"
+                  disabled={todos}
+                  value={data.tipoBeneficiarioId ?? ""}
+                  onChange={HandleData}
+                  className={G.InputStyle}
+                >
+                  {dataTipoBenef
+                    .filter(
+                      (map) => map.tipoMovimientoId == data.tipoMovimientoId
+                    )
+                    .map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className={G.ContenedorInputs}>
+            {data.tipoBeneficiarioId != "INC" &&
+            data.tipoBeneficiarioId != "EGC" &&
+            data.tipoBeneficiarioId != "EGP" &&
+            data.tipoBeneficiarioId != "EGQ" ? (
+              <div className={G.InputFull}>
+                <label
+                  htmlFor="clienteProveedorNombre"
+                  className={G.LabelStyle}
+                >
+                  Nombres
                 </label>
                 <input
                   type="text"
-                  id="nombre"
-                  name="nombre"
-                  value={data.nombre ?? ""}
+                  id="clienteProveedorNombre"
+                  name="clienteProveedorNombre"
+                  placeholder="Nombre"
+                  autoComplete="off"
+                  value={data.clienteProveedorNombre ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
-            </>
-          )}
+            ) : (
+              <div className={G.InputFull}>
+                <label
+                  htmlFor="clienteProveedorNombre"
+                  className={G.LabelStyle}
+                >
+                  Nombres
+                </label>
+                <input
+                  type="text"
+                  id="clienteProveedorNombre"
+                  name="clienteProveedorNombre"
+                  placeholder="Buscar"
+                  autoComplete="off"
+                  disabled={true}
+                  value={data.clienteProveedorNombre ?? ""}
+                  onChange={HandleData}
+                  className={G.InputBoton}
+                />
+                <button
+                  id="consultarProveedor"
+                  className={G.BotonBuscar + G.BotonPrimary}
+                  onKeyDown={(e) => Funciones.KeyClick(e)}
+                  onClick={() =>
+                    data.tipoBeneficiarioId == "INC" ||
+                    data.tipoBeneficiarioId == "EGC"
+                      ? AbrirFiltroCliente()
+                      : AbrirFiltroProveedor()
+                  }
+                >
+                  <FaSearch></FaSearch>
+                </button>
+              </div>
+            )}
+          </div>
+          <div className={G.InputFull}>
+            <label htmlFor="personalId" className={G.LabelStyle}>
+              Personal
+            </label>
+            <select
+              id="personalId"
+              disabled={data.tipoId == 3 ? true : false}
+              name="personalId"
+              value={data.personalId ?? ""}
+              onChange={HandleData}
+              className={G.InputStyle}
+            >
+              <option key={-1} value={""}>
+                {"--TODOS--"}
+              </option>
+              {dataPersonal.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.personal}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
@@ -386,8 +412,24 @@ const ReporteIngresosEgresos = ({ setModal }) => {
           </div>
         </div>
       </ModalBasic>
+
+      {modalCliente && (
+        <FiltroCliente
+          setModal={setModalCliente}
+          setObjeto={setDataCliente}
+          foco={document.getElementById("fechaInicio")}
+        />
+      )}
+      {modalProveedor && (
+        <FiltroProveedor
+          setModal={setModalProveedor}
+          setObjeto={setDataProveedor}
+          foco={document.getElementById("fechaInicio")}
+        />
+      )}
     </>
   );
+  //#endregion
 };
 
 export default ReporteIngresosEgresos;

@@ -56,7 +56,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Personal();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -78,7 +78,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     }));
   };
 
-  const Personal = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
     setDataPersonal(
       result.data.data.data.map((res) => ({
