@@ -15,7 +15,7 @@ const RegistroVentas = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     monedaId: "S",
   });
-  const [monedas, setMonedas] = useState([]);
+  const [monedas, setDataMoneda] = useState([]);
 
   useEffect(() => {
     data;
@@ -23,7 +23,7 @@ const RegistroVentas = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Monedas();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -33,11 +33,11 @@ const RegistroVentas = ({ setModal }) => {
     }));
   };
 
-  const Monedas = async () => {
+  const GetTablas = async  () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
   };
   const Imprimir = async () => {
     console.log("Imprimir");

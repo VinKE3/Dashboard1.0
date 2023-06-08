@@ -77,14 +77,14 @@ const ListadoDeCostos = ({ setModal }) => {
             <button
               type="button"
               onClick={() => Enviar(1)}
-              className={G.BotonModalBase + G.BotonRojo + "  border-gray-200"}
+              className={G.BotonModalBase + G.BotonRojo}
             >
               PDF
             </button>
             <button
               type="button"
               onClick={() => Enviar(2)}
-              className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
+              className={G.BotonModalBase + G.BotonVerde}
             >
               EXCEL
             </button>
@@ -114,9 +114,9 @@ const ListadoDeCostos = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataTipoExistencia.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.descripcion}
+              {dataTipoExistencia.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -135,9 +135,9 @@ const ListadoDeCostos = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataMarca.map((marca) => (
-                <option key={marca.id} value={marca.id}>
-                  {marca.nombre}
+              {dataMarca.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>

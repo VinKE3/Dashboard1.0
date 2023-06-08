@@ -44,7 +44,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
     personalId: "",
   });
-  const [personal, setPersonal] = useState([]);
+  const [personal, setDataPersonal] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
   const [filtroLocal, setFiltroLocal] = useState({
     cliente: "",
@@ -80,7 +80,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
 
   const Personal = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
+    setDataPersonal(
       result.data.data.data.map((res) => ({
         id: res.id,
         personal:

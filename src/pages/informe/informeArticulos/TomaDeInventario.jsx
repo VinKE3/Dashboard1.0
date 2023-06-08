@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
 import * as G from "../../../components/Global";
@@ -39,8 +40,15 @@ const TomaDeInventario = ({ setModal }) => {
     );
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
-  const Imprimir = async (origen) => {
-    console.log(origen);
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
   };
   //#endregion
 
@@ -55,15 +63,15 @@ const TomaDeInventario = ({ setModal }) => {
           <>
             <button
               type="button"
-              onClick={() => Imprimir("pdf")}
-              className={G.BotonModalBase + G.BotonRojo + " border-gray-200"}
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
             >
               PDF
             </button>
             <button
               type="button"
-              onClick={() => Imprimir("excel")}
-              className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
             >
               EXCEL
             </button>
@@ -93,9 +101,9 @@ const TomaDeInventario = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataTipoExistencia.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.descripcion}
+              {dataTipoExistencia.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>

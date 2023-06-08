@@ -20,8 +20,8 @@ const RegistroVentaUbigueo = ({ setModal }) => {
     provinciaId: "",
     distritoId: "",
   });
-  const [monedas, setMonedas] = useState([]);
-  const [personal, setPersonal] = useState([]);
+  const [monedas, setDataMoneda] = useState([]);
+  const [personal, setDataPersonal] = useState([]);
   const [dataUbigeo, setDataUbigeo] = useState([]);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const RegistroVentaUbigueo = ({ setModal }) => {
 
   useEffect(() => {
     Personal();
-    Monedas();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -52,15 +52,15 @@ const RegistroVentaUbigueo = ({ setModal }) => {
     }));
   };
 
-  const Monedas = async () => {
+  const GetTablas = async  () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
   };
   const Personal = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
+    setDataPersonal(
       result.data.data.data.map((res) => ({
         id: res.id,
         personal:

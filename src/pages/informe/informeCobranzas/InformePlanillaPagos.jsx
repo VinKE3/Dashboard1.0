@@ -1,34 +1,35 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import { RadioButton } from "primereact/radiobutton";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
 const InformePlanillaPagos = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     personalId: "",
     checkFiltro: "sinDetalle",
     monedaId: "",
   });
+  const [dataMoneda, setDataMoneda] = useState([]);
+  //#endregion
 
-  const [monedas, setMonedas] = useState([]);
+  //#region useEffect
   useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    Monedas();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (
       target.value === "sinDetalle" ||
@@ -46,23 +47,62 @@ const InformePlanillaPagos = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Monedas = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
   };
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
+  };
+  //#endregion
 
-  const Imprimir = async () => {
-    console.log("Imprimir");
-  };
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Informe PLanilla de Pago" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+      <ModalBasic
+        setModal={setModal}
+        titulo="Informe planilla pagos"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
@@ -75,9 +115,9 @@ const InformePlanillaPagos = ({ setModal }) => {
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -106,13 +146,13 @@ const InformePlanillaPagos = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputMitad}>
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="sinDetalle"
@@ -131,8 +171,8 @@ const InformePlanillaPagos = ({ setModal }) => {
                   Sin Detalle de Planilla
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
-                <div className={G.CheckStyle}>
+              <div className={G.InputMitad}>
+                <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="conDetalle"
                     name="agrupar"
@@ -150,7 +190,7 @@ const InformePlanillaPagos = ({ setModal }) => {
                   Con Detalle de Planilla
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputMitad}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="reporte"
@@ -171,21 +211,11 @@ const InformePlanillaPagos = ({ setModal }) => {
               </div>
             </div>
           </div>
-          <div className={G.ContenedorInputs}>
-            <div className="mt-2">
-              <BotonBasico
-                botonText="ACEPTAR"
-                botonClass={G.BotonVerde}
-                botonIcon={faPlus}
-                click={() => Imprimir()}
-contenedor=""
-              />
-            </div>
-          </div>
         </div>
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default InformePlanillaPagos;

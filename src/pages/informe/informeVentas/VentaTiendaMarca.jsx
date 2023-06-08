@@ -12,8 +12,12 @@ import moment from "moment";
 const VentaTiendaMarca = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     monedaId: "S",
     marcaId: "",
     tiendaId: "",
@@ -30,8 +34,8 @@ const VentaTiendaMarca = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-   GetTablas();
-    Monedas();
+    GetTablas();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -51,16 +55,13 @@ const VentaTiendaMarca = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
- const GetTablas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
     setDataMarca(result.data.data.data);
-  };
-
-  const Monedas = async () => {
-    const result = await ApiMasy.get(
+    const res = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMoneda(result.data.data.monedas);
+    setMoneda(res.data.data.monedas);
   };
 
   const Imprimir = async () => {
@@ -69,9 +70,7 @@ const VentaTiendaMarca = ({ setModal }) => {
   return (
     <>
       <ModalBasic titulo="Ventas por Tienda y Marca" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
           <div className={G.InputFull}>
             <label htmlFor="tiendaId" className={G.LabelStyle}>
               Tienda
@@ -220,7 +219,7 @@ const VentaTiendaMarca = ({ setModal }) => {
               botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
-contenedor=""
+              contenedor=""
             />
           </div>
         </div>

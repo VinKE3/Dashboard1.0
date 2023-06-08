@@ -65,14 +65,14 @@ const MovimientoDeArticulos = ({ setModal }) => {
             <button
               type="button"
               onClick={() => Enviar(1)}
-              className={G.BotonModalBase + G.BotonRojo + "  border-gray-200"}
+              className={G.BotonModalBase + G.BotonRojo}
             >
               PDF
             </button>
             <button
               type="button"
               onClick={() => Enviar(2)}
-              className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
+              className={G.BotonModalBase + G.BotonVerde}
             >
               EXCEL
             </button>
@@ -87,8 +87,8 @@ const MovimientoDeArticulos = ({ setModal }) => {
         }
       >
         <div className={G.ContenedorBasico}>
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -102,7 +102,7 @@ const MovimientoDeArticulos = ({ setModal }) => {
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
@@ -131,9 +131,9 @@ const MovimientoDeArticulos = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataProveedor.map((dataProveedor) => (
-                <option key={dataProveedor.id} value={dataProveedor.id}>
-                  {dataProveedor.nombre}
+              {dataProveedor.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>

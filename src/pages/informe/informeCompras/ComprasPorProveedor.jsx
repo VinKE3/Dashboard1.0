@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import { RadioButton } from "primereact/radiobutton";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
 const ComprasPorProveedor = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     monedaId: "S",
     proveedorId: "",
     checkFiltro: "sinDetalle",
   });
-  const [moneda, setMoneda] = useState([]);
-  const [proveedor, setDataProveedor] = useState([]);
+  const [dataMoneda, setMoneda] = useState([]);
+  const [dataProveedor, setDataProveedor] = useState([]);
+  //#endregion
 
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
+  //#region useEffect
   useEffect(() => {
     GetTablas();
-    Monedas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
@@ -44,30 +44,66 @@ const ComprasPorProveedor = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Monedas = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
     setMoneda(result.data.data.monedas);
+    const res = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
+    setDataProveedor(res.data.data.data);
   };
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
+  };
+  //#endregion
 
-  const GetTablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
-    setDataProveedor(result.data.data.data);
-  };
-
-  const Imprimir = async () => {
-    console.log("Imprimir");
-  };
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Compras Por Proveedor" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+      <ModalBasic
+        setModal={setModal}
+        titulo="Compras por Proveedor"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -75,12 +111,13 @@ const ComprasPorProveedor = ({ setModal }) => {
                 type="date"
                 id="fechaInicio"
                 name="fechaInicio"
+                autoFocus
                 value={data.fechaInicio ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
@@ -90,7 +127,7 @@ const ComprasPorProveedor = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
@@ -102,14 +139,13 @@ const ComprasPorProveedor = ({ setModal }) => {
             <select
               id="monedaId"
               name="monedaId"
-              autoFocus
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {moneda.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -121,7 +157,6 @@ const ComprasPorProveedor = ({ setModal }) => {
             <select
               id="proveedorId"
               name="proveedorId"
-              autoFocus
               value={data.proveedorId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -129,16 +164,16 @@ const ComprasPorProveedor = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {proveedor.map((proveedor) => (
-                <option key={proveedor.id} value={proveedor.id}>
-                  {proveedor.nombre}
+              {dataProveedor.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
           </div>
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="sinDetalle"
@@ -154,10 +189,10 @@ const ComprasPorProveedor = ({ setModal }) => {
                   htmlFor="sinDetalle"
                   className={G.LabelCheckStyle + "rounded-r-none"}
                 >
-                  Sin Detalle de Articulos
+                  Sin Detalle de Artículos
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="conDetalle"
@@ -169,28 +204,17 @@ const ComprasPorProveedor = ({ setModal }) => {
                     checked={data.checkFiltro === "conDetalle"}
                   />
                 </div>
-                <label
-                  htmlFor="conDetalle"
-                  className={G.LabelCheckStyle + "rounded-r-none"}
-                >
-                  Con Detalle de Articulos
+                <label htmlFor="conDetalle" className={G.LabelCheckStyle}>
+                  Con Detalle de Artículos
                 </label>
               </div>
             </div>
-          </div>
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-contenedor=""
-            />
           </div>
         </div>
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default ComprasPorProveedor;

@@ -52,6 +52,7 @@ const KardexPorMarca = ({ setModal }) => {
   };
   //#endregion
 
+  //#region Render
   return (
     <>
       <ModalBasic
@@ -64,14 +65,14 @@ const KardexPorMarca = ({ setModal }) => {
             <button
               type="button"
               onClick={() => Enviar(1)}
-              className={G.BotonModalBase + G.BotonRojo + "  border-gray-200"}
+              className={G.BotonModalBase + G.BotonRojo}
             >
               PDF
             </button>
             <button
               type="button"
               onClick={() => Enviar(2)}
-              className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
+              className={G.BotonModalBase + G.BotonVerde}
             >
               EXCEL
             </button>
@@ -86,7 +87,7 @@ const KardexPorMarca = ({ setModal }) => {
         }
       >
         <div className={G.ContenedorBasico}>
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+          <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
@@ -130,9 +131,9 @@ const KardexPorMarca = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--SELECCIONAR MARCA--"}
               </option>
-              {dataMarca.map((marca) => (
-                <option key={marca.id} value={marca.id}>
-                  {marca.nombre}
+              {dataMarca.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
@@ -141,6 +142,8 @@ const KardexPorMarca = ({ setModal }) => {
       </ModalBasic>
     </>
   );
+  //#endregion
+
 };
 
 export default KardexPorMarca;

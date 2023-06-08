@@ -18,8 +18,8 @@ const VentasPorClienteDocumento = ({ setModal }) => {
     monedaId: "S",
   });
   const [tipoDocumento, setTipoDocumento] = useState([]);
-  const [cliente, setCliente] = useState([]);
-  const [monedas, setMonedas] = useState([]);
+  const [cliente, setDataCliente] = useState([]);
+  const [monedas, setDataMoneda] = useState([]);
   useEffect(() => {
     data;
     console.log(data);
@@ -28,7 +28,7 @@ const VentasPorClienteDocumento = ({ setModal }) => {
   useEffect(() => {
     Cliente();
     TipoDocumentos();
-    Monedas();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -47,7 +47,7 @@ const VentasPorClienteDocumento = ({ setModal }) => {
 
   const Cliente = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
-    setCliente(result.data.data.data);
+    setDataCliente(result.data.data.data);
   };
 
   const TipoDocumentos = async () => {
@@ -57,11 +57,11 @@ const VentasPorClienteDocumento = ({ setModal }) => {
     setTipoDocumento(result.data.data.tiposDocumento);
   };
 
-  const Monedas = async () => {
+  const GetTablas = async  () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
   };
 
   const Imprimir = async () => {

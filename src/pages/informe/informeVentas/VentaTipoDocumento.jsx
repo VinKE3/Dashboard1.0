@@ -25,7 +25,7 @@ const VentaTipoDocumento = ({ setModal }) => {
   });
   const [moneda, setMoneda] = useState([]);
   const [cargos, setCargos] = useState([]);
-  const [personal, setPersonal] = useState([]);
+  const [personal, setDataPersonal] = useState([]);
   useEffect(() => {
     data;
     console.log(data);
@@ -34,7 +34,7 @@ const VentaTipoDocumento = ({ setModal }) => {
   useEffect(() => {
     Cargos();
     Personal();
-    Monedas();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -56,7 +56,7 @@ const VentaTipoDocumento = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const Monedas = async () => {
+  const GetTablas = async  () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
@@ -70,7 +70,7 @@ const VentaTipoDocumento = ({ setModal }) => {
 
   const Personal = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
+    setDataPersonal(
       result.data.data.data.map((res) => ({
         id: res.id,
         personal:

@@ -18,7 +18,7 @@ const GuiasDeRemision = ({ setModal }) => {
     checkFiltro: "sinDetalle",
   });
 
-  const [cliente, setCliente] = useState([]);
+  const [cliente, setDataCliente] = useState([]);
   useEffect(() => {
     data;
     console.log(data);
@@ -44,7 +44,7 @@ const GuiasDeRemision = ({ setModal }) => {
 
   const Cliente = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
-    setCliente(result.data.data.data);
+    setDataCliente(result.data.data.data);
   };
 
   const Imprimir = async () => {

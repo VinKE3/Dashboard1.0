@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
-import moment from "moment";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
+import moment from "moment";
+import * as G from "../../../components/Global";
 
 const ReporteIngresosEgresos = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     monedaId: "S",
     tipoId: "3",
     conceptoIngresoId: "",
@@ -21,8 +23,8 @@ const ReporteIngresosEgresos = ({ setModal }) => {
     personalId: "",
     visualizar: true,
   });
-  const [monedas, setMonedas] = useState([]);
-  const [personal, setPersonal] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  const [dataPersonal, setDataPersonal] = useState([]);
   const tipos = [
     {
       id: 1,
@@ -105,42 +107,15 @@ const ReporteIngresosEgresos = ({ setModal }) => {
       descripcion: "Prestamos",
     },
   ];
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    Monedas();
-    Personal();
+    GetTablas();
   }, []);
+  //#endregion
 
-  // const HandleData = async ({ target }) => {
-  //   if (target.name === "tipoId") {
-  //     setData((prevState) => ({
-  //       ...prevState,
-  //       conceptoIngresoId: "",
-  //       conceptoEgresoId: "",
-  //     }));
-  //     return;
-  //   }
-  //    if (
-
-  //     target.name === "visualizar"
-  //   ) {
-  //     setData((prevState) => ({
-  //       ...prevState,
-  //       [target.name]: target.checked,
-  //     }));
-  //     return;
-  //   }
-  //   setData((prevState) => ({
-  //     ...prevState,
-  //     [target.name]: target.value,
-  //   }));
-  // };
-
+  //#region Funciones
   const HandleData = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({
@@ -163,31 +138,70 @@ const ReporteIngresosEgresos = ({ setModal }) => {
       return;
     }
   };
-  const Personal = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
-      result.data.data.data.map((res) => ({
-        id: res.id,
-        personal:
-          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-      }))
-    );
-  };
-  const Monedas = async () => {
+  //#endregion
+
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
+    const res = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
+    setDataPersonal(
+      res.data.data.data.map((map) => ({
+        id: map.id,
+        personal:
+          map.apellidoPaterno + " " + map.apellidoMaterno + " " + map.nombres,
+      }))
+    );
   };
-  const Imprimir = async () => {
-    console.log("Imprimir");
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
   };
+  //#endregion
+
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Reporte Ingresos/Egresos" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+      <ModalBasic
+        setModal={setModal}
+        titulo="Reporte Ingresos/Egresos"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
@@ -195,14 +209,13 @@ const ReporteIngresosEgresos = ({ setModal }) => {
             <select
               id="monedaId"
               name="monedaId"
-              autoFocus
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -214,14 +227,13 @@ const ReporteIngresosEgresos = ({ setModal }) => {
             <select
               id="tipoId"
               name="tipoId"
-              autoFocus
               value={data.tipoId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {tipos.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.descripcion}
+              {tipos.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -235,14 +247,13 @@ const ReporteIngresosEgresos = ({ setModal }) => {
               <select
                 id="conceptoIngresoId"
                 name="conceptoIngresoId"
-                autoFocus
                 value={data.conceptoIngresoId ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               >
-                {conceptoIngresos.map((concepto) => (
-                  <option key={concepto.id} value={concepto.id}>
-                    {concepto.descripcion}
+                {conceptoIngresos.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.descripcion}
                   </option>
                 ))}
               </select>
@@ -257,14 +268,13 @@ const ReporteIngresosEgresos = ({ setModal }) => {
               <select
                 id="conceptoEgresoId"
                 name="conceptoEgresoId"
-                autoFocus
                 value={data.conceptoEgresoId ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               >
-                {conceptoEgresos.map((concepto) => (
-                  <option key={concepto.id} value={concepto.id}>
-                    {concepto.descripcion}
+                {conceptoEgresos.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.descripcion}
                   </option>
                 ))}
               </select>
@@ -273,20 +283,36 @@ const ReporteIngresosEgresos = ({ setModal }) => {
 
           {data.tipoId === "3" && (
             <div className={G.InputFull}>
-              <label htmlFor="conceptoId" className={G.LabelStyle}>
-                Concepto
-              </label>
-              <select
-                id="conceptoId"
-                name="conceptoId"
-                autoFocus
-                value={""}
-                onChange={HandleData}
-                disabled={true}
-                className={G.InputStyle}
-              >
-                <option value="">TODOS</option>
-              </select>
+              <div className={G.InputFull}>
+                <label htmlFor="conceptoId" className={G.LabelStyle}>
+                  Concepto
+                </label>
+                <select
+                  id="conceptoId"
+                  name="conceptoId"
+                  value={""}
+                  onChange={HandleData}
+                  disabled={true}
+                  className={G.InputBoton}
+                >
+                  <option value="">TODOS</option>
+                </select>
+              </div>
+              <div className={G.Input + " w-40"}>
+                <div className={G.CheckStyle + G.Anidado}>
+                  <Checkbox
+                    inputId="visualizar"
+                    name="visualizar"
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={data.visualizar ? true : ""}
+                  />
+                </div>
+                <label htmlFor="visualizar" className={G.LabelCheckStyle}>
+                  Visualizar
+                </label>
+              </div>
             </div>
           )}
 
@@ -299,7 +325,6 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 id="personalId"
                 disabled={data.tipoId == 3 ? true : false}
                 name="personalId"
-                autoFocus
                 value={data.personalId ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
@@ -307,9 +332,9 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 <option key={-1} value={""}>
                   {"--TODOS--"}
                 </option>
-                {personal.map((personal) => (
-                  <option key={personal.id} value={personal.id}>
-                    {personal.personal}
+                {dataPersonal.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.personal}
                   </option>
                 ))}
               </select>
@@ -324,7 +349,6 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                   type="text"
                   id="nombre"
                   name="nombre"
-                  autoFocus
                   value={data.nombre ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
@@ -332,7 +356,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
               </div>
             </>
           )}
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+          <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
@@ -356,36 +380,9 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
-          </div>
-          <div className={G.Input33pct}>
-            <div className={G.Input + " w-25"}>
-              <div className={G.CheckStyle + G.Anidado}>
-                <Checkbox
-                  inputId="visualizar"
-                  name="visualizar"
-                  onChange={(e) => {
-                    HandleData(e);
-                  }}
-                  checked={data.visualizar ? true : ""}
-                />
-              </div>
-              <label htmlFor="visualizar" className={G.InputBoton}>
-                Visualizar
-              </label>
-            </div>
-          </div>
-
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-contenedor=""
-            />
           </div>
         </div>
       </ModalBasic>

@@ -18,7 +18,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
     checkFiltro: "porFecha",
   });
 
-  const [personal, setPersonal] = useState([]);
+  const [personal, setDataPersonal] = useState([]);
   useEffect(() => {
     data;
     console.log(data);
@@ -44,7 +44,7 @@ const RegistroSalidaCilindros = ({ setModal }) => {
 
   const Personal = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
+    setDataPersonal(
       result.data.data.data.map((res) => ({
         id: res.id,
         personal:

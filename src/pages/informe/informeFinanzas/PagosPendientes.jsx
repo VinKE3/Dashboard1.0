@@ -39,7 +39,7 @@ const PagosPendientes = ({ setModal }) => {
   useEffect(() => {
     TipoCambio(data.fechaFin);
     GetTablas();
-    Monedas();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -84,16 +84,13 @@ const PagosPendientes = ({ setModal }) => {
     }
   };
 
-  const Monedas = async () => {
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
     setMoneda(result.data.data.monedas);
-  };
-
-  const GetTablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
-    setDataProveedor(result.data.data.data);
+    const res = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
+    setDataProveedor(res.data.data.data);
   };
 
   const Imprimir = async () => {
@@ -106,10 +103,10 @@ const PagosPendientes = ({ setModal }) => {
           <Mensajes
             tipoMensaje={tipoMensaje}
             mensaje={mensaje}
-            Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
+            Click={() => Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
           />
         )}
-        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <div className={G.CheckStyle}>
               <RadioButton
@@ -186,7 +183,7 @@ const PagosPendientes = ({ setModal }) => {
               ))}
             </select>
           </div>
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+          <div className={G.ContenedorInputs + " !my-0"}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
@@ -283,7 +280,7 @@ const PagosPendientes = ({ setModal }) => {
               botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
-contenedor=""
+              contenedor=""
             />
           </div>
         </div>
