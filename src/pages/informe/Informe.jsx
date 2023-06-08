@@ -47,16 +47,13 @@ import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidad
 import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
 import InformeGerenciaComprasArticulos from "../informe/informeGerencia/InformeGerenciaComprasArticulos";
 import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
-<<<<<<< HEAD
 import ReporteVendedoresClientes from "../informe/informeSistemas/ReporteVendedoresClientes";
 import InformeGerenciaVentasArticulos from "../informe/informeGerencia/InformeGerenciaVentasArticulos";
 import InformeGerenciaVentasPorMarcaArituculos from "../informe/informeGerencia/InformeGerenciaVentasPorMarcaArituculos";
 import InformeGerenciaVentasPorVendedorMes from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMes";
 import InformeGerenciaVentasPorVendedorMesDia from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMesDia";
 import InformeGerenciaVentasPorArticuloVendedor from "../informe/informeGerencia/InformeGerenciaVentasPorArticuloVendedor";
-=======
 import { toast, ToastContainer } from "react-toastify";
->>>>>>> origin/lino
 import * as G from "../../components/Global";
 import ReporteDeClientes from "../informe/informeSistemas/ReporteDeClientes";
 import ReporteDeProveedores from "../informe/informeSistemas/ReporteDeProveedores";
@@ -633,7 +630,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Sistemas</span>
+              <span className=" vertical-align-middle">
+                Informes de Sistemas
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -675,7 +674,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Compras</span>
+              <span className=" vertical-align-middle">
+                Informes de Compras
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -715,7 +716,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Cobranzas</span>
+              <span className=" vertical-align-middle">
+                Informes de Cobranzas
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -735,7 +738,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Finanzas</span>
+              <span className=" vertical-align-middle">
+                Informes de Finanzas
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -755,7 +760,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Gerencia</span>
+              <span className=" vertical-align-middle">
+                Informes de Gerencia
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -775,7 +782,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Grafico</span>
+              <span className=" vertical-align-middle">
+                Informes de Grafico
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -977,7 +986,6 @@ const Informe = () => {
           setModal={setModalInformeGerenciaVentasPorVendedorCliente}
         />
       )}
-<<<<<<< HEAD
       {modalInformeGerenciaVentasPorMarcaArticulo && (
         <InformeGerenciaVentasPorMarcaArituculos
           setModal={setModalInformeGerenciaVentasPorMarcaArticulo}
@@ -998,9 +1006,7 @@ const Informe = () => {
           setModal={setModalInformeGerenciaVentasArticuloVendedor}
         />
       )}
-=======
       <ToastContainer />
->>>>>>> origin/lino
     </div>
   );
 };
