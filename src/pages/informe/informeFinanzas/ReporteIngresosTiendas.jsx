@@ -11,8 +11,12 @@ import moment from "moment";
 const ReporteIngresosTiendas = (setModal) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     monedaId: "S",
   });
   const [monedas, setMonedas] = useState([]);
@@ -45,9 +49,7 @@ const ReporteIngresosTiendas = (setModal) => {
   return (
     <>
       <ModalBasic titulo="Reporte Ingresos de Tiendas" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
           <div className={G.ContenedorInputsFiltro + " !my-0"}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
@@ -103,7 +105,7 @@ const ReporteIngresosTiendas = (setModal) => {
               botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
-contenedor=""
+              contenedor=""
             />
           </div>
         </div>

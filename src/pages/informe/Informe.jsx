@@ -1,4 +1,5 @@
 import Api from "../../api/Api";
+import Reporte from "../../components/funciones/Reporte";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import React, { useState } from "react";
 import TomaDeInventario from "./informeArticulos/TomaDeInventario";
@@ -53,17 +54,20 @@ import InformeGerenciaVentasPorVendedorMes from "../informe/informeGerencia/Info
 import InformeGerenciaVentasPorVendedorMesDia from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMesDia";
 import InformeGerenciaVentasPorArticuloVendedor from "../informe/informeGerencia/InformeGerenciaVentasPorArticuloVendedor";
 import * as G from "../../components/Global";
+import ReporteDeClientes from "../informe/informeSistemas/ReporteDeClientes";
+import ReporteDeProveedores from "../informe/informeSistemas/ReporteDeProveedores";
+import ReporteDeVendedores from "../informe/informeSistemas/ReporteDeVendedores";
 
 const Informe = () => {
-  const imprimirReporteDeClientes = async (formato = 1) => {
-    const result = await Api.get(
-      `api/Informes/Sistema/ReporteClientes?formato=${formato}`
-    );
-    console.log(result);
-  };
   //?INFORMES MODALES
   //#region InformeModal
   //?Informe Modal Sistemas
+  const [modalSistemasReporteClientes, setModalSistemasReporteClientes] =
+    useState(false);
+  const [modalSistemasReporteProveedores, setModalSistemasReporteProveedores] =
+    useState(false);
+  const [modalSistemasReporteVendedores, setModalSistemasReporteVendedores] =
+    useState(false);
   const [
     modalSistemasReporteVendedoresClientes,
     setModalSistemasReporteVendedoresClientes,
@@ -184,21 +188,21 @@ const Informe = () => {
       id: 1,
       title: "Reporte de  Clientes",
       AbrirModal: () => {
-        imprimirReporteDeClientes();
+        setModalSistemasReporteClientes(true);
       },
     },
     {
       id: 2,
       title: "Reporte de Proveedores",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        setModalSistemasReporteProveedores(true);
       },
     },
     {
       id: 3,
       title: "Reporte de Vendedores",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        setModalSistemasReporteVendedores(true);
       },
     },
     {
@@ -805,6 +809,15 @@ const Informe = () => {
           </ul>
         </AccordionTab>
       </Accordion>
+      {modalSistemasReporteClientes && (
+        <ReporteDeClientes setModal={setModalSistemasReporteClientes} />
+      )}
+      {modalSistemasReporteProveedores && (
+        <ReporteDeProveedores setModal={setModalSistemasReporteProveedores} />
+      )}
+      {modalSistemasReporteVendedores && (
+        <ReporteDeVendedores setModal={setModalSistemasReporteVendedores} />
+      )}
       {modalSistemasReporteVendedoresClientes && (
         <ReporteVendedoresClientes
           setModal={setModalSistemasReporteVendedoresClientes}

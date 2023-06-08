@@ -12,8 +12,12 @@ import { Checkbox } from "primereact/checkbox";
 const ReporteIngresosEgresos = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     monedaId: "S",
     tipoId: "3",
     conceptoIngresoId: "",
@@ -116,31 +120,6 @@ const ReporteIngresosEgresos = ({ setModal }) => {
     Personal();
   }, []);
 
-  // const HandleData = async ({ target }) => {
-  //   if (target.name === "tipoId") {
-  //     setData((prevState) => ({
-  //       ...prevState,
-  //       conceptoIngresoId: "",
-  //       conceptoEgresoId: "",
-  //     }));
-  //     return;
-  //   }
-  //    if (
-
-  //     target.name === "visualizar"
-  //   ) {
-  //     setData((prevState) => ({
-  //       ...prevState,
-  //       [target.name]: target.checked,
-  //     }));
-  //     return;
-  //   }
-  //   setData((prevState) => ({
-  //     ...prevState,
-  //     [target.name]: target.value,
-  //   }));
-  // };
-
   const HandleData = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({
@@ -185,9 +164,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
   return (
     <>
       <ModalBasic titulo="Reporte Ingresos/Egresos" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
           <div className={G.InputFull}>
             <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
@@ -384,7 +361,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
               botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
-contenedor=""
+              contenedor=""
             />
           </div>
         </div>

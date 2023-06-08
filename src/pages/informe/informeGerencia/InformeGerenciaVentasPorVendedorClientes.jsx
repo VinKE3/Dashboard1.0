@@ -92,7 +92,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   return (
     <ModalBasic
       titulo="Reporte Utilidades"
-      tamañoModal={[Global.ModalGrande, Global.Form]}
+      tamañoModal={[G.ModalGrande, G.Form]}
       setModal={setModal}
     >
       <div className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}>
@@ -123,8 +123,8 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               className={G.InputBoton}
             />
           </div>
-          <div className={Global.InputFull}>
-            <label htmlFor="personalId" className={Global.LabelStyle}>
+          <div className={G.InputFull}>
+            <label htmlFor="personalId" className={G.LabelStyle}>
               Personal
             </label>
             <select
@@ -132,8 +132,8 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               name="marcaId"
               autoFocus
               value={data.personalId ?? ""}
-              onChange={ValidarData}
-              className={Global.InputStyle}
+              onChange={HandleData}
+              className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}

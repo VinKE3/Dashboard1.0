@@ -4,6 +4,8 @@ import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const ListadoDeCostos = ({ setModal }) => {
   const [data, setData] = useState({
@@ -52,9 +54,7 @@ const ListadoDeCostos = ({ setModal }) => {
   return (
     <>
       <ModalBasic titulo="Listado De Costos" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
           <div className={G.InputFull}>
             <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
               Tipo
@@ -167,7 +167,7 @@ const ListadoDeCostos = ({ setModal }) => {
               botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
-contenedor=""
+              contenedor=""
             />
           </div>
         </div>
