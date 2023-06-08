@@ -45,7 +45,7 @@ const Header = () => {
     window.location.href = "/login";
   };
   return (
-    <header className="bg-secondary-300">
+    <header className="bg-secondary-900">
       <nav className="h-full p-2 pt-3.5 flex flex-col md:flex-row items-center justify-between ">
         <p className={G.TituloUsuario}>
           Bienvenido{" "}
