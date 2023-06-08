@@ -2,14 +2,10 @@ import { useEffect, useState, useMemo } from "react";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/tabla/Table";
-import { ToastContainer } from "react-toastify";
-import { FaSearch } from "react-icons/fa";
 import moment from "moment";
- 
+
 import styled from "styled-components";
- 
+
 import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
@@ -37,26 +33,26 @@ const DivTabla = styled.div`
     max-width: 80px;
   }
 `;
+//#endregion
 const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
-    personalId: "",
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
+    marcaId: "",
   });
-  const [personal, setDataPersonal] = useState([]);
+  const [dataPersonal, setDataPersonal] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
   const [filtroLocal, setFiltroLocal] = useState({
     cliente: "",
   });
 
   useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    GetTablas();
+    Personal();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -78,7 +74,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     }));
   };
 
-  const GetTablas = async () => {
+  const Personal = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
     setDataPersonal(
       result.data.data.data.map((res) => ({
@@ -95,9 +91,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
       tamañoModal={[G.ModalGrande, G.Form]}
       setModal={setModal}
     >
-      <div
-        className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
-      >
+      <div className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}>
         <div className={G.ContenedorInputsFiltro + " !my-0"}>
           <div className={G.Input42pct}>
             <label htmlFor="fechaInicio" className={G.LabelStyle}>
@@ -130,8 +124,8 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               Personal
             </label>
             <select
-              id="personalId"
-              name="personalId"
+              id="marcaId"
+              name="marcaId"
               autoFocus
               value={data.personalId ?? ""}
               onChange={HandleData}
@@ -140,9 +134,9 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {personal.map((personal) => (
-                <option key={personal.id} value={personal.id}>
-                  {personal.personal}
+              {dataPersonal.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.personal}
                 </option>
               ))}
             </select>

@@ -1,5 +1,5 @@
-import { Accordion, AccordionTab } from "primereact/accordion";
 import React, { useState } from "react";
+import { Accordion, AccordionTab } from "primereact/accordion";
 import TomaDeInventario from "./informeArticulos/TomaDeInventario";
 import StockValorizado from "./informeArticulos/StockValorizado";
 import ListadoDeCostos from "./informeArticulos/ListadoDeCostos";
@@ -43,12 +43,33 @@ import PagosPendientes from "./informeFinanzas/PagosPendientes";
 import ReporteIngresosTiendas from "./informeFinanzas/ReporteIngresosTiendas";
 import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidades";
 import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
-import InformeGerenciaComprasArticulos from "./informeGerencia/InformeGerenciaComprasArticulos";
+import InformeGerenciaComprasArticulos from "../informe/informeGerencia/InformeGerenciaComprasArticulos";
 import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
-import { toast, ToastContainer } from "react-toastify";
+import ReporteVendedoresClientes from "../informe/informeSistemas/ReporteVendedoresClientes";
+import InformeGerenciaVentasArticulos from "../informe/informeGerencia/InformeGerenciaVentasArticulos";
+import InformeGerenciaVentasPorMarcaArituculos from "../informe/informeGerencia/InformeGerenciaVentasPorMarcaArituculos";
+import InformeGerenciaVentasPorVendedorMes from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMes";
+import InformeGerenciaVentasPorVendedorMesDia from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMesDia";
+import InformeGerenciaVentasPorArticuloVendedor from "../informe/informeGerencia/InformeGerenciaVentasPorArticuloVendedor";
+import ReporteDeClientes from "../informe/informeSistemas/ReporteDeClientes";
+import ReporteDeProveedores from "../informe/informeSistemas/ReporteDeProveedores";
+import ReporteDeVendedores from "../informe/informeSistemas/ReporteDeVendedores";
+import { ToastContainer } from "react-toastify";
 import * as G from "../../components/Global";
+
 const Informe = () => {
   //#region Informe Modal Artículos
+  //?Informe Modal Sistemas
+  const [modalSistemasReporteClientes, setModalSistemasReporteClientes] =
+    useState(false);
+  const [modalSistemasReporteProveedores, setModalSistemasReporteProveedores] =
+    useState(false);
+  const [modalSistemasReporteVendedores, setModalSistemasReporteVendedores] =
+    useState(false);
+  const [
+    modalSistemasReporteVendedoresClientes,
+    setModalSistemasReporteVendedoresClientes,
+  ] = useState(false);
   //?Informe Modal Artículos
   const [modalTomaInventario, setModalTomaInventario] = useState(false);
   const [modalStockValorizado, setModalStockValorizado] = useState(false);
@@ -167,28 +188,28 @@ const Informe = () => {
       id: 1,
       title: "Reporte de  Clientes",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        setModalSistemasReporteClientes(true);
       },
     },
     {
       id: 2,
       title: "Reporte de Proveedores",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        setModalSistemasReporteProveedores(true);
       },
     },
     {
       id: 3,
       title: "Reporte de Vendedores",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        setModalSistemasReporteVendedores(true);
       },
     },
     {
       id: 4,
       title: "Reporte de Vendedores y Cliente",
       AbrirModal: () => {
-        console.log("AbrirModal");
+        setModalSistemasReporteVendedoresClientes(true);
       },
     },
   ];
@@ -609,7 +630,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Sistemas</span>
+              <span className=" vertical-align-middle">
+                Informes de Sistemas
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -651,7 +674,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Compras</span>
+              <span className=" vertical-align-middle">
+                Informes de Compras
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -691,7 +716,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Cobranzas</span>
+              <span className=" vertical-align-middle">
+                Informes de Cobranzas
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -711,7 +738,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Finanzas</span>
+              <span className=" vertical-align-middle">
+                Informes de Finanzas
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -731,7 +760,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Gerencia</span>
+              <span className=" vertical-align-middle">
+                Informes de Gerencia
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -751,7 +782,9 @@ const Informe = () => {
         <AccordionTab
           header={
             <div className="flex align-items-center">
-              <span className=" vertical-align-middle">Informes de Grafico</span>
+              <span className=" vertical-align-middle">
+                Informes de Grafico
+              </span>
               <i className="pi pi-cog ml-2"></i>
             </div>
           }
@@ -790,6 +823,21 @@ const Informe = () => {
         </AccordionTab>
       </Accordion>
 
+      {modalSistemasReporteClientes && (
+        <ReporteDeClientes setModal={setModalSistemasReporteClientes} />
+      )}
+      {modalSistemasReporteProveedores && (
+        <ReporteDeProveedores setModal={setModalSistemasReporteProveedores} />
+      )}
+      {modalSistemasReporteVendedores && (
+        <ReporteDeVendedores setModal={setModalSistemasReporteVendedores} />
+      )}
+      {modalSistemasReporteVendedoresClientes && (
+        <ReporteVendedoresClientes
+          setModal={setModalSistemasReporteVendedoresClientes}
+        />
+      )}
+
       {modalTomaInventario && (
         <TomaDeInventario
           setModal={setModalTomaInventario}
@@ -808,6 +856,7 @@ const Informe = () => {
       {modalKardexPorMarca && (
         <KardexPorMarca setModal={setModalKardexPorMarca} />
       )}
+
       {modalTodasLasCompras && (
         <TodasLasCompras setModal={setModalTodasLasCompras} />
       )}
@@ -875,6 +924,7 @@ const Informe = () => {
           setModal={setModalVentasPorPersonalArticulo}
         />
       )}
+
       {modalGuiasDeRemision && (
         <GuiasDeRemision setModal={setModalGuiasDeRemision} />
       )}
@@ -903,6 +953,7 @@ const Informe = () => {
       {modalInformeCobranzas && (
         <InformeCobranzas setModal={setModalInformeCobranzas} />
       )}
+
       {modalInformePlanillaPagos && (
         <InformePlanillaPagos setModal={setModalInformePlanillaPagos} />
       )}
@@ -918,6 +969,7 @@ const Informe = () => {
       {modalReporteIngresosTienda && (
         <ReporteIngresosTiendas setModal={setModalReporteIngresosTienda} />
       )}
+
       {modalInformeGerenciaUtilidades && (
         <InformeGerenciaUtilidades
           setModal={setModalInformeGerenciaUtilidades}
@@ -928,9 +980,39 @@ const Informe = () => {
           setModal={setModalInformeGerenciaCostosProductos}
         />
       )}
+      {modalInformeGerenciaComprasArticulos && (
+        <InformeGerenciaComprasArticulos
+          setModal={setModalInformeGerenciaComprasArticulos}
+        />
+      )}
+      {modalInformeGerenciaVentasArticulos && (
+        <InformeGerenciaVentasArticulos
+          setModal={setModalInformeGerenciaVentasArticulos}
+        />
+      )}
       {modalInformeGerenciaVentasPorVendedorCliente && (
         <InformeGerenciaVentasPorVendedorClientes
           setModal={setModalInformeGerenciaVentasPorVendedorCliente}
+        />
+      )}
+      {modalInformeGerenciaVentasPorMarcaArticulo && (
+        <InformeGerenciaVentasPorMarcaArituculos
+          setModal={setModalInformeGerenciaVentasPorMarcaArticulo}
+        />
+      )}
+      {modalInformeGerenciaVentasVendedorMes && (
+        <InformeGerenciaVentasPorVendedorMes
+          setModal={setModalInformeGerenciaVentasVendedorMes}
+        />
+      )}
+      {modalInformeGerenciaVentasVendedorMesDia && (
+        <InformeGerenciaVentasPorVendedorMesDia
+          setModal={setModalInformeGerenciaVentasVendedorMesDia}
+        />
+      )}
+      {modalInformeGerenciaVentasArticuloVendedor && (
+        <InformeGerenciaVentasPorArticuloVendedor
+          setModal={setModalInformeGerenciaVentasArticuloVendedor}
         />
       )}
       <ToastContainer />

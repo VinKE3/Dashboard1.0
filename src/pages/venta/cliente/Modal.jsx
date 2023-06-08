@@ -695,7 +695,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onClick={() => {
                     Delete(
                       "Mantenimiento/ClientePersonal",
-                      row.values.id.substr(6),
+                      encodeURI(row.values.id),
                       setRefrescar
                     );
                   }}

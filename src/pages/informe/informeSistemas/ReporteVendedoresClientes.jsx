@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
-import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import moment from "moment";
 import * as G from "../../../components/Global";
 
-const InformeGerenciaCostosProductos = ({ setModal }) => {
-  //#region useState
-  const [dataGlobal] = useState(store.session.get("global"));
+const ReporteVendedoresClientes = ({ setModal }) => {
+  //#region  useState
   const [data, setData] = useState({
-    fechaInicio: moment(
-      dataGlobal == null ? "" : dataGlobal.fechaInicio
-    ).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
-      "YYYY-MM-DD"
-    ),
-    marcaId: "",
+    personalId: "",
   });
-  const [dataMarca, setDataMarca] = useState([]);
+  const [dataPersonal, setDataPersonal] = useState([]);
   //#endregion
 
   //#region useEffect
@@ -37,26 +28,33 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
 
   //#region API
   const GetTablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-    setDataMarca(result.data.data.data);
+    const result = await ApiMasy.get(
+      `api/Almacen/EntradaAlmacen/FormularioTablas`
+    );
+    setDataPersonal(
+      result.data.data.personal.map((res) => ({
+        id: res.id,
+        personal:
+          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
+      }))
+    );
   };
   const Enviar = async (origen = 1) => {
     let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
-    if (model != null) {
-      const enlace = document.createElement("a");
-      enlace.href = model.url;
-      enlace.download = model.fileName;
-      enlace.click();
-      enlace.remove();
-    }
+    const enlace = document.createElement("a");
+    enlace.href = model.url;
+    enlace.download = model.fileName;
+    enlace.click();
+    enlace.remove();
   };
   //#endregion
 
+  //#region Render
   return (
     <>
       <ModalBasic
         setModal={setModal}
-        titulo="Informe Costos de Productos"
+        titulo="Reporte de Vendedores y Clientes"
         habilitarFoco={false}
         tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={
@@ -87,23 +85,23 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
       >
         <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
-            <label htmlFor="marcaId" className={G.LabelStyle}>
-              Marcas
+            <label htmlFor="personalId" className={G.LabelStyle}>
+              Personal
             </label>
             <select
-              id="marcaId"
-              name="marcaId"
+              id="personalId"
+              name="personalId"
               autoFocus
-              value={data.marcaId ?? ""}
+              value={data.personalId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataMarca.map((map) => (
+              {dataPersonal.map((map) => (
                 <option key={map.id} value={map.id}>
-                  {map.nombre}
+                  {map.personal}
                 </option>
               ))}
             </select>
@@ -112,6 +110,7 @@ const InformeGerenciaCostosProductos = ({ setModal }) => {
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
-export default InformeGerenciaCostosProductos;
+export default ReporteVendedoresClientes;

@@ -6,9 +6,9 @@ import Table from "../../../components/tabla/Table";
 import { ToastContainer } from "react-toastify";
 import { FaSearch } from "react-icons/fa";
 import moment from "moment";
- 
+
 import styled from "styled-components";
- 
+
 import * as G from "../../../components/Global";
 
 //#region Estilos
@@ -40,8 +40,12 @@ const DivTabla = styled.div`
 const InformeGerenciaRegistroSalida = () => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     personalId: "",
     personalId: "",
   });
@@ -50,9 +54,7 @@ const InformeGerenciaRegistroSalida = () => {
     cliente: "",
   });
   return (
-    <div
-      className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}
-    >
+    <div className={G.ContenedorBasico + "!p-0 mb-2 gap-y-1 !border-none "}>
       <div className={G.ContenedorInputsFiltro + " !my-0"}>
         <div className={G.InputFull}>
           <label name="tipoExistenciaId" className={G.LabelStyle}>
@@ -104,9 +106,7 @@ const InformeGerenciaRegistroSalida = () => {
           />
           <button
             id="buscar"
-            className={
-              G.BotonBuscar + G.Anidado + G.BotonPrimary
-            }
+            className={G.BotonBuscar + G.Anidado + G.BotonPrimary}
             onClick={Filtro}
           >
             <FaSearch />
