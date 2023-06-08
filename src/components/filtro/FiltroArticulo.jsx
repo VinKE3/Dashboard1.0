@@ -56,9 +56,7 @@ const FiltroArticulo = ({ setModal, setObjeto, foco }) => {
     );
   }, [filtro]);
   useEffect(() => {
-    if (visible) {
-      Filtro();
-    }
+    Filtro();
   }, [cadena]);
   useEffect(() => {
     Listar(cadena, 1);
