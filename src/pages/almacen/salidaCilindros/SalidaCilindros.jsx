@@ -226,7 +226,7 @@ const SalidaCilindros = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Almacen", "SalidaCilindros"], id);
+            let model = await Imprimir("Almacen/SalidaCilindros", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);
@@ -326,7 +326,7 @@ const SalidaCilindros = () => {
         accessor: "numeroFactura",
       },
       {
-        Header: "N° Guia",
+        Header: "N° Guía",
         accessor: "numeroGuia",
       },
       {

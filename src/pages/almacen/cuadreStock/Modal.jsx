@@ -541,9 +541,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                       })
                     }
                     className={
-                      G.BotonBuscar +
-                      G.BotonAzul +
-                      " ml-2 !px-1.5 !rounded-sm"
+                      G.BotonBuscar + G.BotonAzul + " ml-2 !px-1.5 !rounded-sm"
                     }
                   >
                     <FaPen></FaPen>
@@ -568,9 +566,7 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
                       })
                     }
                     className={
-                      G.BotonBuscar +
-                      G.BotonAzul +
-                      " ml-2 !px-1.5 !rounded-sm"
+                      G.BotonBuscar + G.BotonAzul + " ml-2 !px-1.5 !rounded-sm"
                     }
                   >
                     <FaPen></FaPen>
@@ -694,10 +690,10 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Almacen", "CuadreStock"]}
+            menu={"Almacen/CuadreStock"}
             titulo="Cuadre de Stock"
             foco={document.getElementById("tablaCuadreStock")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
             cerrar={false}
           >
             {tipoMensaje > 0 && (

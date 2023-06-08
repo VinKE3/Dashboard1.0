@@ -27,9 +27,6 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        objeto={[]}
-        modo={""}
-        menu={["", ""]}
         titulo="Consultar Precios"
         tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={
@@ -58,9 +55,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                 <div className={G.FilaFooter + G.UltimaFila + " py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta1)}
-                    className={
-                      G.BotonModalBase + G.BotonVerde + "border-none"
-                    }
+                    className={G.BotonModalBase + G.BotonVerde + "border-none"}
                   >
                     <FaCheck></FaCheck>
                   </button>
@@ -76,9 +71,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                 <div className={G.FilaFooter + G.UltimaFila + " py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta2)}
-                    className={
-                      G.BotonModalBase + G.BotonVerde + "border-none"
-                    }
+                    className={G.BotonModalBase + G.BotonVerde + "border-none"}
                   >
                     <FaCheck></FaCheck>
                   </button>
@@ -94,9 +87,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                 <div className={G.FilaFooter + G.UltimaFila + " py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta3)}
-                    className={
-                      G.BotonModalBase + G.BotonVerde + "border-none"
-                    }
+                    className={G.BotonModalBase + G.BotonVerde + "border-none"}
                   >
                     <FaCheck></FaCheck>
                   </button>
@@ -112,9 +103,7 @@ const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
                 <div className={G.FilaFooter + G.UltimaFila + " py-1.5"}>
                   <button
                     onClick={() => GetPorId(datos.precioVenta4)}
-                    className={
-                      G.BotonModalBase + G.BotonVerde + "border-none"
-                    }
+                    className={G.BotonModalBase + G.BotonVerde + "border-none"}
                   >
                     <FaCheck></FaCheck>
                   </button>

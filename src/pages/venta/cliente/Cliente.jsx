@@ -233,7 +233,7 @@ const Cliente = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "Cliente"]}
+            menu={"Mantenimiento/Cliente"}
             id={row.values.id}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
             ClickModificar={() => AccionModal(row.values.id, "Modificar")}

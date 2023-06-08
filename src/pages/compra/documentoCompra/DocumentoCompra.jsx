@@ -262,7 +262,7 @@ const DocumentosdeCompra = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Compra", "DocumentoCompra"], id);
+            let model = await Imprimir("Compra/DocumentoCompra", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);

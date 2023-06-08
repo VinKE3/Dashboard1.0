@@ -734,11 +734,11 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Compra", "GuiaCompra"]}
-            titulo="Guia de Compra"
+            menu={"Compra/GuiaCompra"}
+            titulo="Guía de Compra"
             cerrar={false}
             foco={document.getElementById("tablaGuiaCompra")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

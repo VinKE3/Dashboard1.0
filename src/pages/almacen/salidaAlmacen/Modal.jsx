@@ -706,11 +706,11 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Almacen", "SalidaAlmacen"]}
+            menu={"Almacen/SalidaAlmacen"}
             titulo="Salida de Almacén"
             cerrar={false}
             foco={document.getElementById("tablaSalidaAlmacen")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes
@@ -916,13 +916,13 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={G.ContenedorInputs}>
                 <div className={G.InputMitad}>
                   <label htmlFor="lineaProduccion" className={G.LabelStyle}>
-                    Linea de Producción
+                    Línea de Producción
                   </label>
                   <input
                     type="text"
                     id="lineaProduccion"
                     name="lineaProduccion"
-                    placeholder="Linea de Producción"
+                    placeholder="Línea de Producción"
                     autoComplete="off"
                     disabled={modo == "Consultar"}
                     value={data.lineaProduccion ?? ""}

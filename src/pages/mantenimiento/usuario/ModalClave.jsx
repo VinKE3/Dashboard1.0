@@ -24,7 +24,7 @@ const ModalClave = ({ setModal, modo, objeto }) => {
       setModal={setModal}
       objeto={data}
       modo={modo}
-      menu={["Mantenimiento", "Usuario/CambiarClave"]}
+      menu={"Mantenimiento/Usuario/CambiarClave"}
       titulo="Contraseña"
       foco={document.getElementById("tablaUsuario")}
       tamañoModal={[G.ModalPequeño, G.Form]}

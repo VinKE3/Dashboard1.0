@@ -38,7 +38,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           setModal={setModal}
           objeto={data}
           modo={modo}
-          menu={["Mantenimiento", "EmpresaTransporte"]}
+          menu={"Mantenimiento/EmpresaTransporte"}
           titulo="Empresa Transporte"
           foco={document.getElementById("tablaEmpresaTransporte")}
           tamañoModal={[G.ModalPequeño, G.Form]}
@@ -160,7 +160,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 type="text"
                 id="direccion"
                 name="direccion"
-                placeholder="Direccion"
+                placeholder="Dirección"
                 autoComplete="off"
                 disabled={modo == "Consultar"}
                 value={data.direccion ?? ""}

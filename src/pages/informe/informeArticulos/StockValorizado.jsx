@@ -176,7 +176,7 @@ const StockValorizado = ({ setModal }) => {
                   htmlFor="agruparLinea"
                   className={G.LabelCheckStyle + " rounded-r-none"}
                 >
-                  Agrupar por Linea y Sublinea
+                  Agrupar por Línea y Sublínea
                 </label>
               </div>
               <div className={G.InputFull}>

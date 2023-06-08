@@ -6,7 +6,7 @@ import * as G from "../Global";
 const BotonCRUD = ({
   setListar,
   permisos,
-  menu = ["", ""],
+  menu = "",
   id = "",
   ClickConsultar,
   ClickModificar,
@@ -20,7 +20,7 @@ const BotonCRUD = ({
 
   const ValidarEliminar = async () => {
     if (id != "") {
-      await Delete([menu[0], menu[1]], id, setListar);
+      await Delete(menu, id, setListar);
     } else {
       ClickEliminar();
     }

@@ -15,7 +15,7 @@ const Delete = async (menu, id, setListar) => {
     cancelButtonText: "Cancelar",
   }).then(async (res) => {
     if (res.isConfirmed) {
-      const result = await ApiMasy.delete(`api/${menu[0]}/${menu[1]}/${id}`);
+      const result = await ApiMasy.delete(`api/${menu}/${id}`);
       if (result.tipo == 1) {
         result.textos.map((map) => {
           toast.error(map, {

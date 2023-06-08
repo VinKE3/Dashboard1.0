@@ -93,7 +93,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       objeto={data}
       modo={modo}
       titulo="Articulo"
-      menu={["Mantenimiento", "Articulo"]}
+      menu={"Mantenimiento/Articulo"}
       cerrar={false}
       foco={document.getElementById("tablaArticulo")}
       tamañoModal={[G.ModalFull, G.Form]}
@@ -143,7 +143,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         <div className={G.ContenedorInputs}>
           <div className={G.InputMitad}>
             <label htmlFor="lineaId" className={G.LabelStyle}>
-              Linea
+              Línea
             </label>
             <select
               id="lineaId"
@@ -162,7 +162,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           </div>
           <div className={G.InputMitad}>
             <label htmlFor="subLineaId" className={G.LabelStyle}>
-              SubLinea
+              SubLínea
             </label>
             <select
               id="subLineaId"

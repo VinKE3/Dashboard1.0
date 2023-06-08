@@ -42,7 +42,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           setModal={setModal}
           objeto={data}
           modo={modo}
-          menu={["Mantenimiento", "Correlativo"]}
+          menu={"Mantenimiento/Correlativo"}
           titulo="Correlativo"
           foco={document.getElementById("tablaCorrelativo")}
           tamañoModal={[G.ModalPequeño, G.Form]}

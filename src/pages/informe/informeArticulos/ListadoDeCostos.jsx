@@ -199,7 +199,7 @@ const ListadoDeCostos = ({ setModal }) => {
                   htmlFor="agruparLinea"
                   className={G.LabelCheckStyle + " !py-1 "}
                 >
-                  Agrupar por Linea y Sublinea
+                  Agrupar por Línea y Sublínea
                 </label>
               </div>
             </div>

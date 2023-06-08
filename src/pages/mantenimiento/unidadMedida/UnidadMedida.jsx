@@ -204,7 +204,7 @@ const UnidadMedida = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "UnidadMedida"]}
+            menu={"Mantenimiento/UnidadMedida"}
             id={row.values.id}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
             ClickModificar={() => AccionModal(row.values.id, "Modificar")}

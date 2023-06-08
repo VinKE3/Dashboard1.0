@@ -231,7 +231,11 @@ const LetraCambioCompra = () => {
           break;
         }
         case 1: {
-          let valor = await GetIsPermitido("Compra/LetraCambioCompra", accion, value);
+          let valor = await GetIsPermitido(
+            "Compra/LetraCambioCompra",
+            accion,
+            value
+          );
           if (valor) {
             await GetPorId(value);
             setModal(true);
@@ -239,7 +243,11 @@ const LetraCambioCompra = () => {
           break;
         }
         case 2: {
-          let valor = await GetIsPermitido("Compra/LetraCambioCompra", accion, value);
+          let valor = await GetIsPermitido(
+            "Compra/LetraCambioCompra",
+            accion,
+            value
+          );
           if (valor) {
             await Delete(["Compra", "LetraCambioCompra"], value, setListar);
           }
@@ -256,7 +264,7 @@ const LetraCambioCompra = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Compra", "LetraCompra"], id);
+            let model = await Imprimir("Compra/LetraCompra", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);

@@ -252,7 +252,7 @@ const Cef = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Compra", "CEF"], id);
+            let model = await Imprimir("Compra/CEF", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);

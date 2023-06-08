@@ -420,7 +420,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Artículos
   const HandleDataCabecera = async ({ target }) => {
-    //Valida Articulos Varios
+    //Valida Artículos Varios
     if (target.name == "productos") {
       setCheckFiltro(target.name);
       setHabilitarFiltro(false);
@@ -1024,11 +1024,11 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Venta", "Cotizacion"]}
+            menu={"Venta/Cotizacion"}
             titulo="Cotización"
             cerrar={false}
             foco={document.getElementById("tablaCotizacion")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

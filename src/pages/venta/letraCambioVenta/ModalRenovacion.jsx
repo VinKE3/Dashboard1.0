@@ -1066,11 +1066,11 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Venta", "LetraCambioVenta/Renovacion"]}
+            menu={"Venta/LetraCambioVenta/Renovacion"}
             titulo="Renovación de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

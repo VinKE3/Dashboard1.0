@@ -48,8 +48,8 @@ import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeG
 import { toast, ToastContainer } from "react-toastify";
 import * as G from "../../components/Global";
 const Informe = () => {
-  //#region Informe Modal Articulos
-  //?Informe Modal Articulos
+  //#region Informe Modal Artículos
+  //?Informe Modal Artículos
   const [modalTomaInventario, setModalTomaInventario] = useState(false);
   const [modalStockValorizado, setModalStockValorizado] = useState(false);
   const [modalListadoDeCostos, setModalListadoDeCostos] = useState(false);
@@ -216,7 +216,7 @@ const Informe = () => {
     },
     {
       id: 4,
-      title: "Movimiento de Articulos",
+      title: "Movimiento de Artículos",
       AbrirModal: () => {
         setModalMovimientoDeArticulos(true);
       },
@@ -253,7 +253,7 @@ const Informe = () => {
     },
     {
       id: 4,
-      title: "Ordenes de Compra",
+      title: "Órdenes de Compra",
       AbrirModal: () => {
         setModalOrdenDeCompra(true);
       },
@@ -274,7 +274,7 @@ const Informe = () => {
     },
     {
       id: 7,
-      title: "Entrada Almacen",
+      title: "Entrada Almacén",
       AbrirModal: () => {
         setModalEntradaAlmacen(true);
       },
@@ -513,14 +513,14 @@ const Informe = () => {
     },
     {
       id: 4,
-      title: "Compras por Articulos",
+      title: "Compras por Artículos",
       AbrirModal: () => {
         setModalInformeGerenciaComprasArticulos(true);
       },
     },
     {
       id: 5,
-      title: "Ventas por Articulos",
+      title: "Ventas por Artículos",
       AbrirModal: () => {
         setModalInformeGerenciaVentasArticulos(true);
       },
@@ -630,7 +630,7 @@ const Informe = () => {
           header={
             <div className="flex align-items-center">
               <span className="vertical-align-middle">
-                Informes de Articulos
+                Informes de Artículos
               </span>
               <i className="pi pi-cog ml-2"></i>
             </div>

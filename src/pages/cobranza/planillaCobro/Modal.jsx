@@ -945,11 +945,11 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Finanzas", "PlanillaCobro"]}
+            menu={"Finanzas/PlanillaCobro"}
             titulo="Planilla de Cobro"
             cerrar={false}
             foco={document.getElementById("tablaPlanillaCobro")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

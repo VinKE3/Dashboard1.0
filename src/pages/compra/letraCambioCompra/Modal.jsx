@@ -552,7 +552,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Compra", "LetraCambioCompra"]}
+            menu={"Compra/LetraCambioCompra"}
             titulo="Letra de Cambio"
             cerrar={false}
             foco={document.getElementById("tablaLetraCompra")}

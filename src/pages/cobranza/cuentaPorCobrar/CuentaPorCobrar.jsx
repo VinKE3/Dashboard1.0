@@ -203,7 +203,7 @@ const CuentaPorCobrar = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Finanzas", "CuentaPorCobrar"], id);
+            let model = await Imprimir("Finanzas/CuentaPorCobrar", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);
@@ -327,10 +327,9 @@ const CuentaPorCobrar = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Finanzas", "CuentaPorCobrar"]}
-            id={row.values.id}
             ClickConsultar={() => AccionModal(row.values.id, 3)}
             ClickModificar={() => AccionModal(row.values.id, 3)}
+            ClickEliminar={() => ""}
           />
         ),
       },

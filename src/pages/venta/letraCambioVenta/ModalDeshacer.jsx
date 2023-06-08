@@ -10,7 +10,6 @@ import { Checkbox } from "primereact/checkbox";
 import { FaSearch, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -273,9 +272,6 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
         <>
           <ModalBasic
             setModal={setModal}
-            objeto={[]}
-            modo={modo}
-            menu={["", ""]}
             cerrar={false}
             titulo="Deshacer Emisión de Letra"
             tamañoModal={[G.ModalMediano, G.Form]}

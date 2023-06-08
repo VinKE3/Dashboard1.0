@@ -272,7 +272,7 @@ const BloquearVenta = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Venta", "BloquearVenta"]}
+            menu={"Venta/BloquearVenta"}
             id={row.values.id}
             ClickModificar={() =>
               Bloquear(row.values.id, row.values.isBloqueado)

@@ -219,7 +219,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Artículos
   const HandleDataCabecera = async ({ target }) => {
-    //Valida Articulos Varios
+    //Valida Artículos Varios
     if (target.name == "productos") {
       setCheckFiltro(target.name);
       setHabilitarFiltro(false);
@@ -696,10 +696,10 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Almacen", "EntradaAlmacen"]}
+            menu={"Almacen/EntradaAlmacen"}
             titulo="Entrada de Almacén"
             foco={document.getElementById("tablaEntradaAlmacen")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
             cerrar={false}
           >
             {tipoMensaje > 0 && (

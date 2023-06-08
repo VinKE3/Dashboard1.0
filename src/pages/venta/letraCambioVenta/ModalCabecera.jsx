@@ -273,7 +273,7 @@ const ModalCabecera = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Venta", "LetraCambioVenta"]}
+            menu={"Venta/LetraCambioVenta"}
             titulo="Letra de Cambio Venta"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
@@ -283,7 +283,9 @@ const ModalCabecera = ({ setModal, modo, objeto }) => {
               <Mensajes
                 tipoMensaje={tipoMensaje}
                 mensaje={mensaje}
-                Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
+                Click={() =>
+                  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+                }
               />
             )}
             {/* Cabecera */}

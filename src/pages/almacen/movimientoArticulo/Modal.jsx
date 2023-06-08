@@ -83,7 +83,7 @@ const Modal = ({ setModal, objeto, foco }) => {
     }
   };
   //#endregion
-  
+
   //#region Columnas
   const columnasDetalles = [
     {
@@ -243,10 +243,7 @@ const Modal = ({ setModal, objeto, foco }) => {
   return (
     <ModalBasic
       setModal={setModal}
-      objeto={[]}
-      modo={""}
-      menu={["", ""]}
-      titulo="Movimiento de Articulos"
+      titulo="Movimiento de Artículos"
       tamañoModal={[G.ModalFull, G.Form]}
       childrenFooter={
         <>
@@ -263,9 +260,7 @@ const Modal = ({ setModal, objeto, foco }) => {
       }
     >
       {/*Tabla Detalle*/}
-      <div
-        className={G.ContenedorBasico + G.FondoContenedor + "!gap-0"}
-      >
+      <div className={G.ContenedorBasico + G.FondoContenedor + "!gap-0"}>
         <DivTabla>
           <TableBasic
             columnas={columnasDetalles}

@@ -719,7 +719,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           setModal={setModal}
           objeto={data}
           modo={modo}
-          menu={["Mantenimiento", "Cliente"]}
+          menu={"Mantenimiento/Cliente"}
           titulo="Cliente"
           foco={document.getElementById("tablaCliente")}
           tamañoModal={[G.ModalMediano, G.Form + " pt-0"]}

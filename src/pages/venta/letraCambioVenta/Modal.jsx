@@ -825,11 +825,11 @@ const Modal = ({ setModal, modo, objeto, setActualizar }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Venta", "LetraCambioVenta"]}
+            menu={"Venta/LetraCambioVenta"}
             titulo="Emisión de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

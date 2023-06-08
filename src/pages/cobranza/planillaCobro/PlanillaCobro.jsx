@@ -248,7 +248,7 @@ const PlanillaCobro = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Finanzas", "PlanillaCobro"], id);
+            let model = await Imprimir("Finanzas/PlanillaCobro", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);

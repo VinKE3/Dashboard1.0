@@ -465,17 +465,19 @@ const Modal = ({ setModal, modo, objeto }) => {
           setModal={setModal}
           objeto={data}
           modo={modo}
-          menu={["Finanzas", "CuentaPorPagar"]}
+          menu={"Finanzas/CuentaPorPagar"}
           titulo="Cuentas Por Pagar"
           cerrar={false}
           foco={document.getElementById("tablaCuentaPorPagar")}
-          tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+          tamañoModal={[G.ModalFull, G.Form]}
         >
           {tipoMensaje > 0 && (
             <Mensajes
               tipoMensaje={tipoMensaje}
               mensaje={mensaje}
-              Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
+              Click={() =>
+                Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+              }
             />
           )}
 

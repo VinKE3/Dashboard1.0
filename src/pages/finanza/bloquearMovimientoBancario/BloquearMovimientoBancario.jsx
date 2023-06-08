@@ -248,7 +248,7 @@ const BloquearMovimientoBancario = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Finanzas", "BloquearMovimientoBancario"]}
+            menu={"Finanzas/BloquearMovimientoBancario"}
             id={row.values.id}
             ClickModificar={() =>
               Bloquear(row.values.id, row.values.isBloqueado)

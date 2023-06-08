@@ -329,7 +329,7 @@ const LetraCambioVenta = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Venta", "LetraCambioVenta"], id);
+            let model = await Imprimir("Venta/LetraCambioVenta", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);

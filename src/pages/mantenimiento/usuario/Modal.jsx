@@ -62,7 +62,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           objeto={data}
           modo={modo}
           titulo="Usuario"
-          menu={["Mantenimiento", "Usuario"]}
+          menu={"Mantenimiento/Usuario"}
           foco={document.getElementById("tablaUsuario")}
         >
           <div className={G.ContenedorBasico}>

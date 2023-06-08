@@ -171,8 +171,7 @@ const Correlativo = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "Correlativo"]}
-            id={""}
+            menu={"Mantenimiento/Correlativo"}
             ClickConsultar={() =>
               AccionModal(
                 row.values.tipoDocumentoId,
@@ -187,6 +186,7 @@ const Correlativo = () => {
                 "Modificar"
               )
             }
+            ClickEliminar={() => ""}
           />
         ),
       },

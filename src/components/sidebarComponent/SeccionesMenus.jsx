@@ -107,11 +107,11 @@ function seccionesList() {
         },
         {
           path: "/mantenimiento/linea",
-          title: "Lineas",
+          title: "Líneas",
         },
         {
           path: "/mantenimiento/subLinea",
-          title: "SubLineas",
+          title: "SubLíneas",
         },
         {
           path: "/mantenimiento/marca",

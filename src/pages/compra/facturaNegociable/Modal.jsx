@@ -548,11 +548,11 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Compra", "FacturaNegociable"]}
+            menu={"Compra/FacturaNegociable"}
             titulo="Factura Negociable"
             cerrar={false}
             foco={document.getElementById("tablaFacturaNegociable")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

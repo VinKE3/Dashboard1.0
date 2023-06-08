@@ -139,11 +139,11 @@ const Modal = ({ setModal, modo, objeto }) => {
           setModal={setModal}
           objeto={data}
           modo={modo}
-          menu={["Finanzas", "CuentaPorCobrar"]}
+          menu={"Finanzas/CuentaPorCobrar"}
           titulo="Cuentas Por Cobrar"
           cerrar={false}
           foco={document.getElementById("tablaCuentaPorCobrar")}
-          tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+          tamañoModal={[G.ModalFull, G.Form]}
         >
           {/*Cabecera*/}
           <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>

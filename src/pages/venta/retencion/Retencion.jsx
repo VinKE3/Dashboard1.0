@@ -288,7 +288,7 @@ const Retencion = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Venta", "DocumentoVenta"], id);
+            await Imprimir("Venta/DocumentoVenta", id);
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",

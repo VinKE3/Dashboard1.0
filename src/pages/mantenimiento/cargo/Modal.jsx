@@ -23,7 +23,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       setModal={setModal}
       objeto={data}
       modo={modo}
-      menu={["Mantenimiento", "Cargo"]}
+      menu={"Mantenimiento/Cargo"}
       titulo="Cargo"
       foco={document.getElementById("tablaCargo")}
       tamañoModal={[G.ModalPequeño, G.Form]}
@@ -41,7 +41,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Descripción"
               autoComplete="off"
               autoFocus
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               value={data.descripcion ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -58,7 +58,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               placeholder="Sueldo"
               autoComplete="off"
               min={0}
-              disabled={modo == "Consultar" }
+              disabled={modo == "Consultar"}
               defaultValue={data.sueldo ?? ""}
               onChange={HandleData}
               className={G.InputStyle}

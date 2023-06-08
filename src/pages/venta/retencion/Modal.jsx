@@ -14,7 +14,6 @@ import moment from "moment";
 import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import "primeicons/primeicons.css";
-
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -517,7 +516,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     let respuesta = await ValidarConsulta("ConsultarDocumento");
     if (respuesta[0]) {
       const result = await Get(
-        `Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`, "Documento: Consultado exitosamente"
+        `Venta/DocumentoVenta/GetPorTipoDocumentoSerieNumero?tipoDocumentoId=${dataCabecera.tipoDocumento}&serie=${dataCabecera.serie}&numero=${dataCabecera.numero}&incluirReferencias=true`,
+        "Documento: Consultado exitosamente"
       );
       if (result == undefined) {
         document.getElementById("serieCabecera").focus();
@@ -699,11 +699,11 @@ const Modal = ({ setModal, modo, objeto }) => {
         setModal={setModal}
         objeto={data}
         modo={modo}
-        menu={["Venta", "Retencion"]}
+        menu={"Venta/Retencion"}
         titulo="Retención"
         cerrar={false}
         foco={document.getElementById("tablaRetencion")}
-        tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+        tamañoModal={[G.ModalFull, G.Form]}
       >
         {tipoMensaje > 0 && (
           <Mensajes

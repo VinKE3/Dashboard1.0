@@ -216,7 +216,7 @@ const Conductor = () => {
         accessor: "numeroDocumentoIdentidad",
       },
       {
-        Header: "L. de Conducir",
+        Header: "Licencia",
         accessor: "licenciaConducir",
       },
       {
@@ -229,7 +229,7 @@ const Conductor = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "Conductor"]}
+            menu={"Mantenimiento/Conductor"}
             id={row.values.id}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
             ClickModificar={() => AccionModal(row.values.id, "Modificar")}

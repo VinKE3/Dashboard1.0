@@ -261,7 +261,7 @@ const CuadreStock = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Almacen", "CuadreStock"], id);
+            let model = await Imprimir("Almacen/CuadreStock", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);

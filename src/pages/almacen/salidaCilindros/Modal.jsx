@@ -144,7 +144,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
           setRespuestaModal={setRespuestaModal}
           objeto={data}
           modo={modo}
-          menu={["Almacen", "SalidaCilindros"]}
+          menu={"Almacen/SalidaCilindros"}
           titulo="Salida de Cilindros"
           cerrar={false}
           foco={document.getElementById("tablaSalidaCilindro")}
@@ -215,7 +215,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
               </div>
               <div className={G.InputFull}>
                 <label htmlFor="numeroGuia" className={G.LabelStyle}>
-                  N° Guia
+                  N° Guía
                 </label>
                 <input
                   type="text"

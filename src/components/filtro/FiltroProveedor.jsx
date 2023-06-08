@@ -104,11 +104,11 @@ const FiltroProveedor = ({ setModal, setObjeto, foco }) => {
         result.data.data.numeroDocumentoIdentidad,
       proveedorNombre: result.data.data.nombre,
       proveedorDireccion: result.data.data.direccionPrincipal,
-      //Guia de Compra
+      //Guía de Compra
       departamentoId: result.data.data.departamentoId,
       provinciaId: result.data.data.provinciaId,
       distritoId: result.data.data.distritoId,
-      //Guia de Compra
+      //Guía de Compra
 
       //Orden de Compra
       contactos: result.data.data.contactos,

@@ -209,7 +209,7 @@ const Provincia = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "Provincia"]}
+            menu={"Mantenimiento/Provincia"}
             id={row.values.Id}
             ClickConsultar={() => AccionModal(row.values.Id, "Consultar")}
             ClickModificar={() => AccionModal(row.values.Id, "Modificar")}

@@ -1042,11 +1042,11 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Venta", "LetraCambioVenta/Refinanciacion"]}
+            menu={"Venta/LetraCambioVenta/Refinanciacion"}
             titulo="Refinanciamiento de Letra"
             cerrar={false}
             foco={document.getElementById("tablaLetraCambioVenta")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

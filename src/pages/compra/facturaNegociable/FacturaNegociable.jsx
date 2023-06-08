@@ -256,7 +256,7 @@ const FacturaNegociable = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Compra", "FacturaNegociable"], id);
+            let model = await Imprimir("Compra/FacturaNegociable", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);

@@ -551,7 +551,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Compra", "CEF"]}
+            menu={"Compra/CEF"}
             titulo="C.E.F"
             cerrar={false}
             foco={document.getElementById("tablaCEF")}

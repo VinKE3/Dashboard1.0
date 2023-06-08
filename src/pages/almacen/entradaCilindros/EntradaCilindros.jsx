@@ -243,7 +243,7 @@ const EntradaCilindros = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            let model = await Imprimir(["Almacen", "EntradaCilindros"], id);
+            let model = await Imprimir("Almacen/EntradaCilindros", id);
             if (model != null) {
               setObjeto(model);
               setModalImprimir(true);
@@ -370,10 +370,9 @@ const EntradaCilindros = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Almacen", "EntradaCilindros"]}
-            id={row.values.id}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar", 3)}
             ClickModificar={() => AccionModal(row.values.id, "Modificar", 1)}
+            ClickEliminar={() => AccionModal(row.values.id, "Eliminar", 2)}
           />
         ),
       },

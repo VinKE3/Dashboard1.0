@@ -51,7 +51,7 @@ const InformeGerenciaComprasArticulos = ({ setModal }) => {
   };
   return (
     <>
-      <ModalBasic titulo="Informe Compras Articulos" setModal={setModal}>
+      <ModalBasic titulo="Informe Compras Artículos" setModal={setModal}>
         <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
           <div className={G.ContenedorInputsFiltro + " !my-0"}>
             <div className={G.InputFull}>

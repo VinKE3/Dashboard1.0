@@ -243,7 +243,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
           setModal={setModal}
           objeto={data}
           modo={modo}
-          menu={["Mantenimiento", "UsuarioPermiso"]}
+          menu={"Mantenimiento/UsuarioPermiso"}
           titulo="Configuración de Permisos"
           tamañoModal={[G.ModalMediano, G.Form]}
           foco={document.getElementById("nickFiltro")}
@@ -347,9 +347,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
                           key={item.id}
                           onClick={ValidarMenu}
                         >
-                          <button type="button">
-                            {item.nombre}
-                          </button>
+                          <button type="button">{item.nombre}</button>
                         </li>
                       ))}
                     </ul>

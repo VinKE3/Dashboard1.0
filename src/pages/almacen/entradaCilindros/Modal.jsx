@@ -641,7 +641,7 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             setRespuestaModal={setRespuestaModal}
             objeto={data}
             modo={modo}
-            menu={["Almacen", "EntradaCilindros"]}
+            menu={"Almacen/EntradaCilindros"}
             titulo="Entrada de Cilindros"
             cerrar={false}
             foco={document.getElementById("tablaEntradaCilindro")}

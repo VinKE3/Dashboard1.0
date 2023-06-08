@@ -1,7 +1,7 @@
 import ApiMasy from "../../api/ApiMasy";
 
 const Update = async (menu, objeto, setTipoMensaje, setMensaje) => {
-  const result = await ApiMasy.put(`api/${menu[0]}/${menu[1]}`, objeto);
+  const result = await ApiMasy.put(`api/${menu}`, objeto);
   if (result.tipo == 1) {
     setTipoMensaje(result.tipo);
     setMensaje(result.textos);

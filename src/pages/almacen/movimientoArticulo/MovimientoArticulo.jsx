@@ -247,7 +247,7 @@ const MovimientoArticulo = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir(["Almacen", "MovimientoArticulo"], id);
+            await Imprimir("Almacen/MovimientoArticulo", id);
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -297,11 +297,11 @@ const MovimientoArticulo = () => {
         accessor: "Id",
       },
       {
-        Header: "Linea",
+        Header: "Línea",
         accessor: "lineaDescripcion",
       },
       {
-        Header: "SubLinea",
+        Header: "SubLínea",
         accessor: "subLineaDescripcion",
       },
       {

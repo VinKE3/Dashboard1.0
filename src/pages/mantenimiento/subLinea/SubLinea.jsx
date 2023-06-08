@@ -209,7 +209,7 @@ const SubLineas = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "SubLinea"]}
+            menu={"Mantenimiento/SubLinea"}
             id={row.values.Id}
             ClickConsultar={() => AccionModal(row.values.Id, "Consultar")}
             ClickModificar={() => AccionModal(row.values.Id, "Modificar")}

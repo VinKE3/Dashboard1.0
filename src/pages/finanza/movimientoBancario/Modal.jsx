@@ -720,11 +720,11 @@ const Modal = ({ setModal, modo, objeto }) => {
             setModal={setModal}
             objeto={data}
             modo={modo}
-            menu={["Finanzas", "MovimientoBancario"]}
+            menu={"Finanzas/MovimientoBancario"}
             titulo="Movimiento Bancario"
             cerrar={false}
             foco={document.getElementById("tablaMovimientoBancario")}
-            tamañoModal={[G.ModalFull, G.Form + " px-10 "]}
+            tamañoModal={[G.ModalFull, G.Form]}
           >
             {tipoMensaje > 0 && (
               <Mensajes

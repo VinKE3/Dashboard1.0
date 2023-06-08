@@ -214,7 +214,7 @@ const Distrito = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "Distrito"]}
+            menu={"Mantenimiento/Distrito"}
             id={row.values.Id}
             ClickConsultar={() => AccionModal(row.values.Id, "Consultar")}
             ClickModificar={() => AccionModal(row.values.Id, "Modificar")}

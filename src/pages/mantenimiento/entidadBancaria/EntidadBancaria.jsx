@@ -210,7 +210,7 @@ const EntidadBancaria = () => {
           <BotonCRUD
             setListar={setListar}
             permisos={permisos}
-            menu={["Mantenimiento", "EntidadBancaria"]}
+            menu={"Mantenimiento/EntidadBancaria"}
             id={row.values.id}
             ClickConsultar={() => AccionModal(row.values.id, "Consultar")}
             ClickModificar={() => AccionModal(row.values.id, "Modificar")}
