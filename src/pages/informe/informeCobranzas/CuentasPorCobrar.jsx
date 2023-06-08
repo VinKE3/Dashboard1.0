@@ -1,38 +1,38 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import { RadioButton } from "primereact/radiobutton";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
 const CuentasPorCobrar = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     personalId: "",
     clienteId: "",
     checkFiltro: "general",
     checkFiltro2: "fechaVencimiento",
   });
-  const [personal, setPersonal] = useState([]);
-  const [cliente, setCliente] = useState([]);
-  const [monedas, setMonedas] = useState([]);
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
+  const [dataPersonal, setDataPersonal] = useState([]);
+  const [dataCliente, setDataCliente] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    Personal();
-    Cliente();
-    Monedas();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (
       target.value === "general" ||
@@ -60,38 +60,72 @@ const CuentasPorCobrar = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Personal = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
-      result.data.data.data.map((res) => ({
-        id: res.id,
-        personal:
-          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
-      }))
-    );
-  };
-  const Monedas = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
+    const res = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
+    setDataPersonal(
+      res.data.data.data.map((map) => ({
+        id: map.id,
+        personal:
+          map.apellidoPaterno + " " + map.apellidoMaterno + " " + map.nombres,
+      }))
+    );
+    const re = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
+    setDataCliente(re.data.data.data);
   };
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
+  };
+  //#endregion
 
-  const Cliente = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
-    setCliente(result.data.data.data);
-  };
-
-  const Imprimir = async () => {
-    console.log("Imprimir");
-  };
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Cuentas Por Cobrar" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+      <ModalBasic
+        setModal={setModal}
+        titulo="Cuentas por cobrar"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="clienteId" className={G.LabelStyle}>
               Cliente
@@ -107,9 +141,9 @@ const CuentasPorCobrar = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {cliente.map((cliente) => (
-                <option key={cliente.id} value={cliente.id}>
-                  {cliente.nombre}
+              {dataCliente.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
@@ -121,7 +155,6 @@ const CuentasPorCobrar = ({ setModal }) => {
             <select
               id="personalId"
               name="personalId"
-              autoFocus
               value={data.personalId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -129,9 +162,9 @@ const CuentasPorCobrar = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {personal.map((personal) => (
-                <option key={personal.id} value={personal.id}>
-                  {personal.personal}
+              {dataPersonal.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.personal}
                 </option>
               ))}
             </select>
@@ -143,20 +176,19 @@ const CuentasPorCobrar = ({ setModal }) => {
             <select
               id="monedaId"
               name="monedaId"
-              autoFocus
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
           </div>
           <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -169,7 +201,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
@@ -179,13 +211,13 @@ const CuentasPorCobrar = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="general"
@@ -204,7 +236,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                   General
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="detallado"
@@ -223,7 +255,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                   Detallado
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="porPersonal"
@@ -246,7 +278,7 @@ const CuentasPorCobrar = ({ setModal }) => {
           </div>
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="fechaEmision"
@@ -265,7 +297,7 @@ const CuentasPorCobrar = ({ setModal }) => {
                   Fecha Emisión
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="fechaVencimiento"
@@ -284,17 +316,6 @@ const CuentasPorCobrar = ({ setModal }) => {
                   Fecha Vencimiento
                 </label>
               </div>
-            </div>
-          </div>
-          <div className={G.ContenedorInputs}>
-            <div className="mt-2">
-              <BotonBasico
-                botonText="ACEPTAR"
-                botonClass={G.BotonVerde}
-                botonIcon={faPlus}
-                click={() => Imprimir()}
-contenedor=""
-              />
             </div>
           </div>
         </div>

@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
-import moment from "moment";
+import ApiMasy from "../../../api/ApiMasy";
+import FiltroCliente from "../../../components/filtro/FiltroCliente";
+import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import { Checkbox } from "primereact/checkbox";
+import moment from "moment";
+import * as G from "../../../components/Global";
+import { FaSearch } from "react-icons/fa";
 
 const ReporteIngresosEgresos = ({ setModal }) => {
+  //#region useState
+  //Data General
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
     fechaInicio: moment(
@@ -18,107 +20,78 @@ const ReporteIngresosEgresos = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
       "YYYY-MM-DD"
     ),
-    monedaId: "S",
-    tipoId: "3",
-    conceptoIngresoId: "",
-    conceptoEgresoId: "",
-    personalId: "",
-    visualizar: true,
+    monedaId: "",
+    tipoMovimientoId: "",
+    tipoBeneficiarioId: "",
+    clienteProveedorId: null,
+    clienteProveedorNombre: "",
   });
-  const [monedas, setMonedas] = useState([]);
-  const [personal, setPersonal] = useState([]);
-  const tipos = [
-    {
-      id: 1,
-      descripcion: "INGRESOS",
-    },
-    {
-      id: 2,
-      descripcion: "EGRESOS",
-    },
-    {
-      id: 3,
-      descripcion: "TODOS",
-    },
-  ];
-  const conceptoEgresos = [
-    {
-      id: 1,
-      descripcion: "Alquiler",
-    },
-    {
-      id: 2,
-      descripcion: "Comisiones",
-    },
-    {
-      id: 3,
-      descripcion: "Traspasos",
-    },
-    {
-      id: 4,
-      descripcion: "Cambio Dolar",
-    },
-    {
-      id: 5,
-      descripcion: "Extorno",
-    },
-    {
-      id: 6,
-      descripcion: "Combustible",
-    },
-    {
-      id: 7,
-      descripcion: "P.Relacionados",
-    },
-    {
-      id: 8,
-      descripcion: "Impuestos",
-    },
-  ];
-  const conceptoIngresos = [
-    {
-      id: 1,
-      descripcion: "Traspasos",
-    },
-    {
-      id: 2,
-      descripcion: "Cliente",
-    },
-    {
-      id: 3,
-      descripcion: "Extorno",
-    },
-    {
-      id: 4,
-      descripcion: "Cobranzas",
-    },
-    {
-      id: 5,
-      descripcion: "Otros",
-    },
-    {
-      id: 6,
-      descripcion: "Sin Sustento",
-    },
-    {
-      id: 7,
-      descripcion: "Tiendas",
-    },
-    {
-      id: 8,
-      descripcion: "Prestamos",
-    },
-  ];
+  //Data General
+  //GetTablas
+  const [dataMoneda, setdataMoneda] = useState([]);
+  const [dataTipoMovimiento, setDataTipoMovimiento] = useState([]);
+  const [dataTipoBenef, setDataTipoBenef] = useState([]);
+  const [dataPersonal, setDataPersonal] = useState([]);
+  //GetTablas
+  //Data Modales Ayuda
+  const [dataCliente, setDataCliente] = useState([]);
+  const [dataProveedor, setDataProveedor] = useState([]);
+  //Data Modales Ayuda
+  //Modales de Ayuda
+  const [modalCliente, setModalCliente] = useState(false);
+  const [modalProveedor, setModalProveedor] = useState(false);
+  //Modales de Ayuda
+  const [todos, setTodos] = useState(false);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
+    if (Object.keys(dataCliente).length > 0) {
+      setData({
+        ...data,
+        clienteProveedorId: dataCliente.clienteId,
+        clienteProveedorNombre: dataCliente.clienteNombre,
+      });
+    }
+  }, [dataCliente]);
   useEffect(() => {
-    Monedas();
-    Personal();
+    if (Object.keys(dataProveedor).length > 0) {
+      setData({
+        ...data,
+        clienteProveedorId: dataProveedor.proveedorId,
+        clienteProveedorNombre: dataProveedor.proveedorNombre,
+      });
+    }
+  }, [dataProveedor]);
+  useEffect(() => {
+    GetTablas();
   }, []);
+  //#endregion
+
+  // const HandleData = async ({ target }) => {
+  //   if (target.name === "tipoId") {
+  //     setData((prevState) => ({
+  //       ...prevState,
+  //       conceptoIngresoId: "",
+  //       conceptoEgresoId: "",
+  //     }));
+  //     return;
+  //   }
+  //    if (
+
+  //     target.name === "visualizar"
+  //   ) {
+  //     setData((prevState) => ({
+  //       ...prevState,
+  //       [target.name]: target.checked,
+  //     }));
+  //     return;
+  //   }
+  //   setData((prevState) => ({
+  //     ...prevState,
+  //     [target.name]: target.value,
+  //   }));
+  // };
 
   const HandleData = (e) => {
     const { name, value } = e.target;
@@ -134,37 +107,99 @@ const ReporteIngresosEgresos = ({ setModal }) => {
       }));
       return;
     }
-    if (name === "visualizar") {
-      setData((prevState) => ({
-        ...prevState,
-        [name]: e.checked,
+    if (target.name == "tipoBeneficiarioId") {
+      setData((prevData) => ({
+        ...prevData,
+        tipoBeneficiarioId: target.value,
+        clienteProveedorId: null,
+        clienteProveedorNombre: "",
       }));
       return;
     }
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
-  const Personal = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
-      result.data.data.data.map((res) => ({
-        id: res.id,
+  //#endregion
+
+  //#region API
+  const GetTablas = async () => {
+    const result = await ApiMasy.get(
+      `api/Finanzas/MovimientoBancario/FormularioTablas`
+    );
+    setDataTipoMovimiento(result.data.data.tiposMovimiento);
+    let tiposBeneficiario = result.data.data.tiposBeneficiario;
+    tiposBeneficiario.push(
+      {
+        descripcion: "--TODOS--",
+        id: "",
+        isActivo: true,
+        tipoBeneficiarioId: "",
+        tipoMovimientoId: "",
+      },
+      {
+        descripcion: "--TODOS--",
+        id: "",
+        isActivo: true,
+        tipoBeneficiarioId: "",
+        tipoMovimientoId: "IN",
+      },
+      {
+        descripcion: "--TODOS--",
+        id: "",
+        isActivo: true,
+        tipoBeneficiarioId: "",
+        tipoMovimientoId: "EG",
+      }
+    );
+    setDataTipoBenef(tiposBeneficiario);
+    setdataMoneda([
+      { abreviatura: "S/", descripcion: "SOLES", id: "S" },
+      {
+        abreviatura: "US$",
+        descripcion: "DÓLARES AMERICANOS",
+        id: "D",
+      },
+    ]);
+
+    const res = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
+    setDataPersonal(
+      res.data.data.data.map((map) => ({
+        id: map.id,
         personal:
-          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
+          map.apellidoPaterno + " " + map.apellidoMaterno + " " + map.nombres,
       }))
     );
   };
-  const Monedas = async () => {
-    const result = await ApiMasy.get(
-      `api/Mantenimiento/Articulo/FormularioTablas`
-    );
-    setMonedas(result.data.data.monedas);
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
   };
-  const Imprimir = async () => {
-    console.log("Imprimir");
+  //#endregion
+
+  //#region Funciones Modal
+  const AbrirFiltroCliente = async () => {
+    setModalCliente(true);
   };
+  const AbrirFiltroProveedor = async () => {
+    setModalProveedor(true);
+  };
+  //#endregion
+
+  //#region Render
   return (
     <>
       <ModalBasic titulo="Reporte Ingresos/Egresos" setModal={setModal}>
-        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
+        <div
+          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
+        >
           <div className={G.InputFull}>
             <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda
@@ -217,99 +252,164 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 onChange={HandleData}
                 className={G.InputStyle}
               >
-                {conceptoIngresos.map((concepto) => (
-                  <option key={concepto.id} value={concepto.id}>
-                    {concepto.descripcion}
+                {dataMoneda.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.descripcion}
                   </option>
                 ))}
               </select>
             </div>
-          )}
-
-          {data.tipoId === "2" && (
-            <div className={G.InputFull}>
-              <label htmlFor="conceptoEgresoId" className={G.LabelStyle}>
-                Concepto
+            <div className={G.InputMitad}>
+              <label htmlFor="tipoMovimientoId" className={G.LabelStyle}>
+                Movimiento
               </label>
               <select
-                id="conceptoEgresoId"
-                name="conceptoEgresoId"
-                autoFocus
-                value={data.conceptoEgresoId ?? ""}
+                id="tipoMovimientoId"
+                name="tipoMovimientoId"
+                value={data.tipoMovimientoId ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               >
-                {conceptoEgresos.map((concepto) => (
-                  <option key={concepto.id} value={concepto.id}>
-                    {concepto.descripcion}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {data.tipoId === "3" && (
-            <div className={G.InputFull}>
-              <label htmlFor="conceptoId" className={G.LabelStyle}>
-                Concepto
-              </label>
-              <select
-                id="conceptoId"
-                name="conceptoId"
-                autoFocus
-                value={""}
-                onChange={HandleData}
-                disabled={true}
-                className={G.InputStyle}
-              >
-                <option value="">TODOS</option>
-              </select>
-            </div>
-          )}
-
-          {data.conceptoIngresoId === "2" ? (
-            <div className={G.InputFull}>
-              <label htmlFor="personalId" className={G.LabelStyle}>
-                Personal
-              </label>
-              <select
-                id="personalId"
-                disabled={data.tipoId == 3 ? true : false}
-                name="personalId"
-                autoFocus
-                value={data.personalId ?? ""}
-                onChange={HandleData}
-                className={G.InputStyle}
-              >
-                <option key={-1} value={""}>
-                  {"--TODOS--"}
+                <option key="-1" value="">
+                  -- TODOS --
                 </option>
-                {personal.map((personal) => (
-                  <option key={personal.id} value={personal.id}>
-                    {personal.personal}
+                {dataTipoMovimiento.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.descripcion}
                   </option>
                 ))}
               </select>
             </div>
-          ) : (
-            <>
+          </div>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.Input + "w-36"}>
+                <div className={G.CheckStyle}>
+                  <Checkbox
+                    inputId="todos"
+                    name="todos"
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={todos ? true : ""}
+                  ></Checkbox>
+                </div>
+                <label
+                  htmlFor="todos"
+                  className={G.LabelCheckStyle + " rounded-r-none "}
+                >
+                  Todos
+                </label>
+              </div>
               <div className={G.InputFull}>
-                <label htmlFor="nombre" className={G.LabelStyle}>
-                  Nombre
+                <label
+                  htmlFor="tipoBeneficiarioId"
+                  className={G.LabelStyle + G.Anidado}
+                >
+                  Tipos
+                </label>
+                <select
+                  id="tipoBeneficiarioId"
+                  name="tipoBeneficiarioId"
+                  disabled={todos}
+                  value={data.tipoBeneficiarioId ?? ""}
+                  onChange={HandleData}
+                  className={G.InputStyle}
+                >
+                  {dataTipoBenef
+                    .filter(
+                      (map) => map.tipoMovimientoId == data.tipoMovimientoId
+                    )
+                    .map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className={G.ContenedorInputs}>
+            {data.tipoBeneficiarioId != "INC" &&
+            data.tipoBeneficiarioId != "EGC" &&
+            data.tipoBeneficiarioId != "EGP" &&
+            data.tipoBeneficiarioId != "EGQ" ? (
+              <div className={G.InputFull}>
+                <label
+                  htmlFor="clienteProveedorNombre"
+                  className={G.LabelStyle}
+                >
+                  Nombres
                 </label>
                 <input
                   type="text"
-                  id="nombre"
-                  name="nombre"
-                  autoFocus
-                  value={data.nombre ?? ""}
+                  id="clienteProveedorNombre"
+                  name="clienteProveedorNombre"
+                  placeholder="Nombre"
+                  autoComplete="off"
+                  value={data.clienteProveedorNombre ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
                 />
               </div>
-            </>
-          )}
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+            ) : (
+              <div className={G.InputFull}>
+                <label
+                  htmlFor="clienteProveedorNombre"
+                  className={G.LabelStyle}
+                >
+                  Nombres
+                </label>
+                <input
+                  type="text"
+                  id="clienteProveedorNombre"
+                  name="clienteProveedorNombre"
+                  placeholder="Buscar"
+                  autoComplete="off"
+                  disabled={true}
+                  value={data.clienteProveedorNombre ?? ""}
+                  onChange={HandleData}
+                  className={G.InputBoton}
+                />
+                <button
+                  id="consultarProveedor"
+                  className={G.BotonBuscar + G.BotonPrimary}
+                  onKeyDown={(e) => Funciones.KeyClick(e)}
+                  onClick={() =>
+                    data.tipoBeneficiarioId == "INC" ||
+                    data.tipoBeneficiarioId == "EGC"
+                      ? AbrirFiltroCliente()
+                      : AbrirFiltroProveedor()
+                  }
+                >
+                  <FaSearch></FaSearch>
+                </button>
+              </div>
+            )}
+          </div>
+          <div className={G.InputFull}>
+            <label htmlFor="personalId" className={G.LabelStyle}>
+              Personal
+            </label>
+            <select
+              id="personalId"
+              disabled={data.tipoId == 3 ? true : false}
+              name="personalId"
+              value={data.personalId ?? ""}
+              onChange={HandleData}
+              className={G.InputStyle}
+            >
+              <option key={-1} value={""}>
+                {"--TODOS--"}
+              </option>
+              {dataPersonal.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.personal}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
@@ -333,7 +433,7 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
@@ -361,13 +461,29 @@ const ReporteIngresosEgresos = ({ setModal }) => {
               botonClass={G.BotonVerde}
               botonIcon={faPlus}
               click={() => Imprimir()}
-              contenedor=""
+contenedor=""
             />
           </div>
         </div>
       </ModalBasic>
+
+      {modalCliente && (
+        <FiltroCliente
+          setModal={setModalCliente}
+          setObjeto={setDataCliente}
+          foco={document.getElementById("fechaInicio")}
+        />
+      )}
+      {modalProveedor && (
+        <FiltroProveedor
+          setModal={setModalProveedor}
+          setObjeto={setDataProveedor}
+          foco={document.getElementById("fechaInicio")}
+        />
+      )}
     </>
   );
+  //#endregion
 };
 
 export default ReporteIngresosEgresos;

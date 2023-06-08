@@ -18,14 +18,14 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
     checkFiltro: "porDocumento",
   });
 
-  const [monedas, setMonedas] = useState([]);
+  const [monedas, setDataMoneda] = useState([]);
   useEffect(() => {
     data;
     console.log(data);
   }, [data]);
 
   useEffect(() => {
-    Monedas();
+    GetTablas();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -47,11 +47,11 @@ const InformeGerenciaUtilidades = ({ setModal }) => {
     }));
   };
 
-  const Monedas = async () => {
+  const GetTablas = async  () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
   };
 
   const Imprimir = async () => {

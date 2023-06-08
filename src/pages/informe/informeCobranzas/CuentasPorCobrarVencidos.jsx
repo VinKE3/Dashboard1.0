@@ -1,57 +1,58 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
 const CuentasPorCobrarVencidos = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     clienteId: "",
     checkFiltro: "sinDetalle",
     monedaId: "S",
     diasId: "15dias",
   });
-  const [cliente, setCliente] = useState([]);
-  const [monedas, setMonedas] = useState([]);
-  const Rango = [
+  const [dataCliente, setDataCliente] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  const rango = [
     {
       id: "15dias",
-      nombre: "1-15 Días",
+      nombre: "De 1-15 días",
     },
     {
       id: "30dias",
-      nombre: "16-30 Días",
+      nombre: "De 16-30 días",
     },
     {
       id: "60dias",
-      nombre: "31-60 Días",
+      nombre: "De 31-60 días",
     },
     {
       id: "90dias",
-      nombre: "61-90 Días",
+      nombre: "De 61-90 días",
     },
     {
       id: "120dias",
-      nombre: "mas de 90 Días",
+      nombre: "Más de 90 días",
     },
   ];
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    Cliente();
-    Monedas();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.value === "sinDetalle" || target.value === "conDetalle") {
       setData((prevState) => ({
@@ -65,28 +66,64 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Cliente = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
-    setCliente(result.data.data.data);
-  };
-
-  const Monedas = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
+    const res = await ApiMasy.get(`api/Mantenimiento/Cliente/Listar`);
+    setDataCliente(res.data.data.data);
   };
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
+  };
+  //#endregion
 
-  const Imprimir = async () => {
-    console.log("Imprimir");
-  };
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Cuentas por Cobrar Vencidos" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+      <ModalBasic
+        setModal={setModal}
+        titulo="Cuentas por cobrar vencidos"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="clienteId" className={G.LabelStyle}>
               Cliente
@@ -102,15 +139,15 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {cliente.map((cliente) => (
-                <option key={cliente.id} value={cliente.id}>
-                  {cliente.nombre}
+              {dataCliente.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
           </div>
           <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -123,7 +160,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
@@ -133,7 +170,7 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
@@ -144,53 +181,40 @@ const CuentasPorCobrarVencidos = ({ setModal }) => {
             <select
               id="monedaId"
               name="monedaId"
-              autoFocus
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
           </div>
           <div className={G.InputFull}>
             <label htmlFor="diasId" className={G.LabelStyle}>
-              Rango de Días
+              Rango de días
             </label>
             <select
               id="diasId"
               name="diasId"
-              autoFocus
               value={data.diasId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {Rango.map((rango) => (
-                <option key={rango.id} value={rango.id}>
-                  {rango.nombre}
+              {rango.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className={G.ContenedorInputs}>
-            <div className="mt-2">
-              <BotonBasico
-                botonText="ACEPTAR"
-                botonClass={G.BotonVerde}
-                botonIcon={faPlus}
-                click={() => Imprimir()}
-contenedor=""
-              />
-            </div>
           </div>
         </div>
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default CuentasPorCobrarVencidos;

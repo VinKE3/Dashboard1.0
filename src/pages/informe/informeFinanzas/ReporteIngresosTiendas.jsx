@@ -1,14 +1,12 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
-const ReporteIngresosTiendas = (setModal) => {
+const ReporteIngresosTiendas = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
     fechaInicio: moment(
@@ -17,35 +15,46 @@ const ReporteIngresosTiendas = (setModal) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
       "YYYY-MM-DD"
     ),
-    monedaId: "S",
+    marcaId: "",
   });
-  const [monedas, setMonedas] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    Monedas();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Monedas = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
+    setDataMoneda(result.data.data.monedas);
   };
-  const Imprimir = async () => {
-    console.log("Imprimir");
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
   };
+  //#endregion
+
+  //#region Render
   return (
     <>
       <ModalBasic titulo="Reporte Ingresos de Tiendas" setModal={setModal}>
@@ -59,12 +68,13 @@ const ReporteIngresosTiendas = (setModal) => {
                 type="date"
                 id="fechaInicio"
                 name="fechaInicio"
+                autoFocus
                 value={data.fechaInicio ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
@@ -74,7 +84,7 @@ const ReporteIngresosTiendas = (setModal) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
@@ -86,14 +96,13 @@ const ReporteIngresosTiendas = (setModal) => {
             <select
               id="monedaId"
               name="monedaId"
-              autoFocus
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -112,6 +121,7 @@ const ReporteIngresosTiendas = (setModal) => {
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default ReporteIngresosTiendas;

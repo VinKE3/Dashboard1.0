@@ -35,7 +35,8 @@ ApiMasy.interceptors.response.use(
     if (Object.entries(error.response.data).length > 0) {
       retorna = error.response.data.messages[0];
     } else {
-      retorna = [{ tipo: 1, textos: error.message }];
+      //404
+      retorna = { tipo: 1, textos: [error.message] };
     }
     return retorna;
   }

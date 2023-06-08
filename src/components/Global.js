@@ -29,7 +29,7 @@ export var ContenedorFiltro =
   "grid gap-y-1 md:gap-x-2 p-0 mb-2 overflow-y-auto ";
 export var FondoContenedor = "bg-secondary-300 shadow-md shadow-gray-700/60 ";
 export var ContenedorInputs =
-  "flex flex-col md:flex-row gap-y-2.5 md:gap-x-2 overflow-x-auto ";
+  "flex flex-col md:flex-row gap-y-1.5 md:gap-x-2 overflow-x-auto ";
 export var ContenedorInputsFiltro =
   "flex flex-col sm:flex-row sm:justify-between gap-y-1.5 md:gap-y-2 sm:gap-x-2 my-2 ";
 export var ContenedorRow = "flex flex-row gap-y-3 gap-x-2 ";

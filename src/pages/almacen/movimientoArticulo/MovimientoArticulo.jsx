@@ -47,7 +47,7 @@ const MovimientoArticulo = () => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
-  const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
+  const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
@@ -133,7 +133,7 @@ const MovimientoArticulo = () => {
     const result = await ApiMasy.get(
       `api/Almacen/MovimientoArticulo/FormularioTablas`
     );
-    setTipoDeExistencia(result.data.data.tiposExistencia);
+    setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   //#endregion
 
@@ -436,7 +436,7 @@ const MovimientoArticulo = () => {
                     <option key={-1} value={""}>
                       {"--TODOS--"}
                     </option>
-                    {tipoDeExistencia.map((tipo) => (
+                    {dataTipoExistencia.map((tipo) => (
                       <option key={tipo.id} value={tipo.id}>
                         {" "}
                         {tipo.descripcion}

@@ -49,8 +49,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     ),
     marcaId: "",
   });
-  const [marcas, setMarcas] = useState([]);
-  const [personal, setPersonal] = useState([]);
+  const [personal, setDataPersonal] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
   const [filtroLocal, setFiltroLocal] = useState({
     cliente: "",
@@ -62,7 +61,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
   }, [data]);
 
   useEffect(() => {
-    Marcas();
+    Personal();
   }, []);
 
   const HandleData = async ({ target }) => {
@@ -84,9 +83,15 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
     }));
   };
 
-  const Marcas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-    setMarcas(result.data.data.data);
+  const Personal = async () => {
+    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
+    setPersonal(
+      result.data.data.data.map((res) => ({
+        id: res.id,
+        personal:
+          res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
+      }))
+    );
   };
 
   return (

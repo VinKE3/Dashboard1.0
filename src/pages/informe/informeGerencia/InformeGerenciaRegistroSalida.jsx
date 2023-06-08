@@ -69,7 +69,7 @@ const InformeGerenciaRegistroSalida = () => {
             <option key={-1} value={""}>
               {"--TODOS--"}
             </option>
-            {tipoDeExistencia.map((tipo) => (
+            {dataTipoExistencia.map((tipo) => (
               <option key={tipo.id} value={tipo.id}>
                 {" "}
                 {tipo.descripcion}

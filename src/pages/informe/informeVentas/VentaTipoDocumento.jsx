@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import { Checkbox } from "primereact/checkbox";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import { Checkbox } from "primereact/checkbox";
 import moment from "moment";
+import * as G from "../../../components/Global";
 
 const VentaTipoDocumento = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     monedaId: "S",
     cargoId: "",
     personalId: "",
@@ -23,20 +25,18 @@ const VentaTipoDocumento = ({ setModal }) => {
     guiasRemision: true,
     agruparPersonal: false,
   });
-  const [moneda, setMoneda] = useState([]);
-  const [cargos, setCargos] = useState([]);
-  const [personal, setPersonal] = useState([]);
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
+  const [dataMoneda, setMoneda] = useState([]);
+  const [dataCargo, setDataCargo] = useState([]);
+  const [dataPersonal, setDataPersonal] = useState([]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
-    Cargos();
-    Personal();
-    Monedas();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (
       target.name === "facturas" ||
@@ -56,38 +56,62 @@ const VentaTipoDocumento = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const Monedas = async () => {
+  //#endregion
+
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
     setMoneda(result.data.data.monedas);
-  };
-
-  const Cargos = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Cargo/Listar`);
-    setCargos(result.data.data.data);
-  };
-
-  const Personal = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
-      result.data.data.data.map((res) => ({
+    const res = await ApiMasy.get(`api/Mantenimiento/Cargo/Listar`);
+    setDataCargo(res.data.data.data);
+    const re = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
+    setDataPersonal(
+      re.data.data.data.map((res) => ({
         id: res.id,
-        personal:
+        dataPersonal:
           res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
   };
+  //#endregion
 
-  const Imprimir = async () => {
-    console.log("Imprimir");
-  };
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Ventas Por Tipo de Documento" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
+      <ModalBasic
+        setModal={setModal}
+        titulo="Ventas por tipo de documento"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="tiendaId" className={G.LabelStyle}>
               Cargo
@@ -103,9 +127,9 @@ const VentaTipoDocumento = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {cargos.map((cargo) => (
-                <option key={cargo.id} value={cargo.id}>
-                  {cargo.descripcion}
+              {dataCargo.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -117,7 +141,6 @@ const VentaTipoDocumento = ({ setModal }) => {
             <select
               id="personalId"
               name="personalId"
-              autoFocus
               value={data.personalId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -125,14 +148,14 @@ const VentaTipoDocumento = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {personal.map((personal) => (
-                <option key={personal.id} value={personal.id}>
-                  {personal.personal}
+              {dataPersonal.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.personal}
                 </option>
               ))}
             </select>
           </div>
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
+          <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
@@ -156,7 +179,7 @@ const VentaTipoDocumento = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
@@ -168,111 +191,109 @@ const VentaTipoDocumento = ({ setModal }) => {
             <select
               id="monedaId"
               name="monedaId"
-              autoFocus
               value={data.monedaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
             >
-              {moneda.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
+              {dataMoneda.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className={G.ContenedorInputs}>
+          <div className={G.InputFull}>
             <div className={G.InputFull}>
-              <div className={G.Input + " w-25"}>
-                <div className={G.CheckStyle + G.Anidado}>
-                  <Checkbox
-                    inputId="facturas"
-                    name="facturas"
-                    onChange={(e) => {
-                      HandleData(e);
-                    }}
-                    checked={data.facturas ? true : ""}
-                  />
-                </div>
-                <label htmlFor="facturas" className={G.InputBoton}>
-                  Facturas
-                </label>
-              </div>
-              <div className={G.Input + " w-25"}>
-                <div className={G.CheckStyle + G.Anidado}>
-                  <Checkbox
-                    inputId="boletas"
-                    name="boletas"
-                    onChange={(e) => {
-                      HandleData(e);
-                    }}
-                    checked={data.boletas ? true : ""}
-                  />
-                </div>
-                <label htmlFor="boletas" className={G.InputBoton}>
-                  Boletas
-                </label>
-              </div>
-              <div className={G.Input + " w-25"}>
-                <div className={G.CheckStyle + G.Anidado}>
-                  <Checkbox
-                    inputId="guiasRemision"
-                    name="guiasRemision"
-                    onChange={(e) => {
-                      HandleData(e);
-                    }}
-                    checked={data.guiasRemision ? true : ""}
-                  />
-                </div>
-                <label htmlFor="guiasRemision" className={G.InputBoton}>
-                  Guias Remision
-                </label>
-              </div>
-              <div className={G.Input + " w-25"}>
-                <div className={G.CheckStyle + G.Anidado}>
-                  <Checkbox
-                    inputId="notasCredito"
-                    name="notasCredito"
-                    onChange={(e) => {
-                      HandleData(e);
-                    }}
-                    checked={data.notasCredito ? true : ""}
-                  />
-                </div>
-                <label htmlFor="notasCredito" className={G.InputBoton}>
-                  Notas Credito
-                </label>
-              </div>
-            </div>
-            <div className={G.Input + " w-60"}>
-              <div className={G.CheckStyle + G.Anidado}>
+              <div className={G.CheckStyle}>
                 <Checkbox
-                  inputId="agruparPersonal"
-                  name="agruparPersonal"
+                  inputId="facturas"
+                  name="facturas"
                   onChange={(e) => {
                     HandleData(e);
                   }}
-                  checked={data.agruparPersonal ? true : ""}
+                  checked={data.facturas ? true : ""}
                 />
               </div>
-              <label htmlFor="agruparPersonal" className={G.InputBoton}>
-                Agrupar Personal
+              <label
+                htmlFor="facturas"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Facturas
+              </label>
+            </div>
+            <div className={G.InputFull}>
+              <div className={G.CheckStyle + G.Anidado}>
+                <Checkbox
+                  inputId="boletas"
+                  name="boletas"
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.boletas ? true : ""}
+                />
+              </div>
+              <label
+                htmlFor="boletas"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Boletas
+              </label>
+            </div>
+            <div className={G.InputFull}>
+              <div className={G.CheckStyle + G.Anidado}>
+                <Checkbox
+                  inputId="guiasRemision"
+                  name="guiasRemision"
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.guiasRemision ? true : ""}
+                />
+              </div>
+              <label
+                htmlFor="guiasRemision"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Guías Remision
+              </label>
+            </div>
+            <div className={G.InputFull}>
+              <div className={G.CheckStyle + G.Anidado}>
+                <Checkbox
+                  inputId="notasCredito"
+                  name="notasCredito"
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.notasCredito ? true : ""}
+                />
+              </div>
+              <label htmlFor="notasCredito" className={G.LabelCheckStyle}>
+                Notas Credito
               </label>
             </div>
           </div>
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-contenedor=""
-            />
+          <div className={G.InputFull}>
+            <div className={G.CheckStyle}>
+              <Checkbox
+                inputId="agruparPersonal"
+                name="agruparPersonal"
+                onChange={(e) => {
+                  HandleData(e);
+                }}
+                checked={data.agruparPersonal ? true : ""}
+              />
+            </div>
+            <label htmlFor="agruparPersonal" className={G.LabelCheckStyle}>
+              Agrupar Personal
+            </label>
           </div>
         </div>
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default VentaTipoDocumento;

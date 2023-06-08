@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
 import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const ListadoDeCostos = ({ setModal }) => {
+  //#region useState
   const [data, setData] = useState({
     tipoExistenciaId: "",
     marcaId: "",
     checkFiltro: "todos",
   });
-  const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
-  const [marcas, setMarcas] = useState([]);
+  const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
+  const [dataMarca, setDataMarca] = useState([]);
+  //#endregion
 
+  //#region useEffect
   useEffect(() => {
     GetTablas();
-    Marcas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     if (
       target.value === "agruparMarca" ||
@@ -38,26 +42,68 @@ const ListadoDeCostos = ({ setModal }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
+
+  //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setTipoDeExistencia(result.data.data.tiposExistencia);
+    const res = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
+
+    setDataMarca(res.data.data.data);
+    setDataTipoExistencia(result.data.data.tiposExistencia);
   };
-  const Marcas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-    setMarcas(result.data.data.data);
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
   };
-  const Imprimir = async () => {
-    console.log("Imprimir");
-  };
+  //#endregion
+
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Listado De Costos" setModal={setModal}>
-        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
+      <ModalBasic
+        setModal={setModal}
+        titulo="Listado de Costos"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
           <div className={G.InputFull}>
             <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
-              Tipo
+              Tipo de Existencia
             </label>
             <select
               id="tipoExistenciaId"
@@ -70,9 +116,9 @@ const ListadoDeCostos = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {tipoDeExistencia.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.descripcion}
+              {dataTipoExistencia.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.descripcion}
                 </option>
               ))}
             </select>
@@ -84,7 +130,6 @@ const ListadoDeCostos = ({ setModal }) => {
             <select
               id="marcaId"
               name="marcaId"
-              autoFocus
               value={data.marcaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -92,9 +137,9 @@ const ListadoDeCostos = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {marcas.map((marca) => (
-                <option key={marca.id} value={marca.id}>
-                  {marca.nombre}
+              {dataMarca.map((map) => (
+                <option key={map.id} value={map.id}>
+                  {map.nombre}
                 </option>
               ))}
             </select>
@@ -102,7 +147,7 @@ const ListadoDeCostos = ({ setModal }) => {
 
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputTercio}>
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="todos"
@@ -121,7 +166,7 @@ const ListadoDeCostos = ({ setModal }) => {
                   Todos
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputTercio}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="agruparMarca"
@@ -140,7 +185,7 @@ const ListadoDeCostos = ({ setModal }) => {
                   Agrupar por Marca
                 </label>
               </div>
-              <div className={G.Input + "w-42"}>
+              <div className={G.InputMitad}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="agruparLinea"
@@ -174,6 +219,7 @@ const ListadoDeCostos = ({ setModal }) => {
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default ListadoDeCostos;

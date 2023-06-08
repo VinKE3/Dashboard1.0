@@ -1,34 +1,33 @@
-import React, { useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import ApiMasy from "../../../api/ApiMasy";
-import { useEffect } from "react";
-import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from "react";
 import store from "store2";
+import ApiMasy from "../../../api/ApiMasy";
+import ModalBasic from "../../../components/modal/ModalBasic";
 import moment from "moment";
 import Ubigeo from "../../../components/filtro/Ubigeo";
+import * as G from "../../../components/Global";
 
 const RegistroVentaUbigueo = ({ setModal }) => {
+  //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    fechaInicio: moment(dataGlobal == null ? "" : dataGlobal.fechaInicio).format("YYYY-MM-DD"),
-    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format("YYYY-MM-DD"),
+    fechaInicio: moment(
+      dataGlobal == null ? "" : dataGlobal.fechaInicio
+    ).format("YYYY-MM-DD"),
+    fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
+      "YYYY-MM-DD"
+    ),
     monedaId: "S",
     personalId: "",
     departamentoId: "",
     provinciaId: "",
     distritoId: "",
   });
-  const [monedas, setMonedas] = useState([]);
-  const [personal, setPersonal] = useState([]);
+  const [dataMoneda, setDataMoneda] = useState([]);
+  const [dataPersonal, setDataPersonal] = useState([]);
   const [dataUbigeo, setDataUbigeo] = useState([]);
+  //#endregion
 
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
-
+  //#region useEffect
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
       setData({
@@ -39,66 +38,107 @@ const RegistroVentaUbigueo = ({ setModal }) => {
       });
     }
   }, [dataUbigeo]);
-
   useEffect(() => {
-    Personal();
-    Monedas();
+    GetTablas();
   }, []);
+  //#endregion
 
+  //#region Funciones
   const HandleData = async ({ target }) => {
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
+  //#endregion
 
-  const Monedas = async () => {
+  //#region API
+  const GetTablas = async () => {
     const result = await ApiMasy.get(
       `api/Mantenimiento/Articulo/FormularioTablas`
     );
-    setMonedas(result.data.data.monedas);
-  };
-  const Personal = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
-      result.data.data.data.map((res) => ({
+    setDataMoneda(result.data.data.monedas);
+    const res = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
+    setDataPersonal(
+      res.data.data.data.map((res) => ({
         id: res.id,
         personal:
           res.apellidoPaterno + " " + res.apellidoMaterno + " " + res.nombres,
       }))
     );
   };
-  const Imprimir = async () => {
-    console.log("Imprimir");
+  const Enviar = async (origen = 1) => {
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    if (model != null) {
+      const enlace = document.createElement("a");
+      enlace.href = model.url;
+      enlace.download = model.fileName;
+      enlace.click();
+      enlace.remove();
+    }
   };
+  //#endregion
+
+  //#region Render
   return (
     <>
-      <ModalBasic titulo="Ventas Por Ubigueo" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
-          <div className={G.InputFull}>
-            <label htmlFor="marcaId" className={G.LabelStyle}>
-              Personal
-            </label>
-            <select
-              id="marcaId"
-              name="marcaId"
-              autoFocus
-              value={data.marcaId ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
+      <ModalBasic
+        setModal={setModal}
+        titulo="Ventas por ubigeo"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
             >
-              <option key={-1} value={""}>
-                {"--TODOS--"}
-              </option>
-              {personal.map((personal) => (
-                <option key={personal.id} value={personal.id}>
-                  {personal.personal}
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <label htmlFor="personalId" className={G.LabelStyle}>
+                Personal
+              </label>
+              <select
+                id="personalId"
+                name="personalId"
+                autoFocus
+                value={data.personalId ?? ""}
+                onChange={HandleData}
+                className={G.InputStyle}
+              >
+                <option key={-1} value={""}>
+                  {"--TODOS--"}
                 </option>
-              ))}
-            </select>
+                {dataPersonal.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.personal}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+
           <Ubigeo
             setDataUbigeo={setDataUbigeo}
             id={["departamentoId", "provinciaId", "distritoId"]}
@@ -108,8 +148,9 @@ const RegistroVentaUbigueo = ({ setModal }) => {
               distritoId: data.distritoId,
             }}
           />
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -122,7 +163,7 @@ const RegistroVentaUbigueo = ({ setModal }) => {
                 className={G.InputStyle}
               />
             </div>
-            <div className={G.InputFull}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaFin" className={G.LabelStyle}>
                 Hasta
               </label>
@@ -132,44 +173,35 @@ const RegistroVentaUbigueo = ({ setModal }) => {
                 name="fechaFin"
                 value={data.fechaFin ?? ""}
                 onChange={HandleData}
-                className={G.InputBoton}
+                className={G.InputStyle}
               />
             </div>
           </div>
-
-          <div className={G.InputFull}>
-            <label htmlFor="monedaId" className={G.LabelStyle}>
-              Moneda
-            </label>
-            <select
-              id="monedaId"
-              name="monedaId"
-              autoFocus
-              value={data.monedaId ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
-            >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-contenedor=""
-            />
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <label htmlFor="monedaId" className={G.LabelStyle}>
+                Moneda
+              </label>
+              <select
+                id="monedaId"
+                name="monedaId"
+                value={data.monedaId ?? ""}
+                onChange={HandleData}
+                className={G.InputStyle}
+              >
+                {dataMoneda.map((map) => (
+                  <option key={map.id} value={map.id}>
+                    {map.descripcion}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </ModalBasic>
     </>
   );
+  //#endregion
 };
 
 export default RegistroVentaUbigueo;
