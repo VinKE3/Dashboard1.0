@@ -171,7 +171,7 @@ const Linea = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.children[1].innerText;
-        Delete(["Mantenimiento", "Linea"], id, setListar);
+        Delete("Mantenimiento/Linea", id, setListar);
       }
     }
     if (e.key === "c") {

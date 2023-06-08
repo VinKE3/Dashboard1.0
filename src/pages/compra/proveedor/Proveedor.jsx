@@ -193,7 +193,7 @@ const Proveedor = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Proveedor"], id, setListar);
+        Delete("Mantenimiento/Proveedor", id, setListar);
       }
     }
     if (e.key === "c") {

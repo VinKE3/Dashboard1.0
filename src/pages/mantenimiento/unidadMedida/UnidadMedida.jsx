@@ -172,7 +172,7 @@ const UnidadMedida = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "UnidadMedida"], id, setListar);
+        Delete("Mantenimiento/UnidadMedida", id, setListar);
       }
     }
     if (e.key === "c") {

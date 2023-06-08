@@ -270,11 +270,7 @@ const MovimientoBancario = () => {
             value
           );
           if (valor) {
-            await Delete(
-              ["Finanzas", "MovimientoBancario"],
-              value,
-              setListar
-            );
+            await Delete("Finanzas/MovimientoBancario", value, setListar);
           }
           break;
         }

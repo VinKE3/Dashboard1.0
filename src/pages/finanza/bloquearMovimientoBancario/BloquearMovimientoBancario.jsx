@@ -210,7 +210,7 @@ const BloquearMovimientoBancario = () => {
         },
       },
       {
-        Header: "N° Operacion",
+        Header: "N° Operación",
         accessor: "numeroOperacion",
       },
       {

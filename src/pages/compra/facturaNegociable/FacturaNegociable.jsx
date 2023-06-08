@@ -241,7 +241,7 @@ const FacturaNegociable = () => {
             value
           );
           if (valor) {
-            await Delete(["Compra", "FacturaNegociable"], value, setListar);
+            await Delete("Compra/FacturaNegociable", value, setListar);
           }
           break;
         }

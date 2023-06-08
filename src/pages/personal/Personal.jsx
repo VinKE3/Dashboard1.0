@@ -205,7 +205,7 @@ const Personal = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Cliente"], id, setListar);
+        Delete("Mantenimiento/Cliente", id, setListar);
       }
     }
     if (e.key === "c") {

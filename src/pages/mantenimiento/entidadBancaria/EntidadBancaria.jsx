@@ -174,7 +174,7 @@ const EntidadBancaria = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "EntidadBancaria"], id, setListar);
+        Delete("Mantenimiento/EntidadBancaria", id, setListar);
       }
     }
     if (e.key === "c") {

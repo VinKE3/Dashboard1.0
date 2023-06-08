@@ -175,7 +175,7 @@ const TipoCobroPago = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "TipoCobroPago"], id, setListar);
+        Delete("Mantenimiento/TipoCobroPago", id, setListar);
       }
     }
     if (e.key === "c") {

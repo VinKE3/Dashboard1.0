@@ -5,9 +5,11 @@ const Insert = async (menu, objeto, setTipoMensaje, setMensaje) => {
   if (result.tipo == 1) {
     setTipoMensaje(result.tipo);
     setMensaje(result.textos);
+    return null;
   } else {
     setTipoMensaje(result.data.messages[0].tipo);
-    setMensaje(result.data.messages[0].textos[0]);
+    setMensaje(result.data.messages[0].textos);
+    return result;
   }
 };
 

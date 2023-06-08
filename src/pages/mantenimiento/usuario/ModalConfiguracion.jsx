@@ -148,7 +148,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
       }));
       setSelectedButton(["registrar", "modificar", "eliminar", "consultar"]);
     }
-    //? ADMINISTRADOR
+    //ADMINISTRADOR
     else if (tipoUsuario === "AD") {
       const habilitarPermisosDeTodosLosMenus = data.permisos.map((permiso) => ({
         ...permiso,
@@ -195,7 +195,7 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
       }));
       setSelectedButton(["consultar"]);
     }
-    //?NO PERMISOS
+    //NO PERMISOS
     else if (tipoUsuario === "NO") {
       update = listaBotones.map((boton) => ({
         ...boton,

@@ -238,7 +238,7 @@ const GuiaRemision = () => {
         case 2: {
           let valor = await GetIsPermitido("Venta/GuiaRemision", accion, value);
           if (valor) {
-            await Delete(["Venta", "GuiaRemision"], value, setListar);
+            await Delete("Venta/GuiaRemision", value, setListar);
           }
           break;
         }

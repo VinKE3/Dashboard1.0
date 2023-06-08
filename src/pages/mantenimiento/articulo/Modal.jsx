@@ -545,7 +545,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             id="observacion"
             name="observacion"
             autoComplete="off"
-            placeholder="Observacion"
+            placeholder="Observación"
             disabled={modo == "Consultar"}
             value={data.observacion ?? ""}
             onChange={HandleData}

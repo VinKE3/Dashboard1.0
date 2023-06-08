@@ -291,15 +291,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const RetornarMensaje = async () => {
     if (tipoMen == 0) {
-      toast.info(men, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+      men.map((map) => {
+        toast.info(map, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
     }
     await ListarDireccion();
@@ -391,7 +393,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       if (existe == undefined) {
         await Insert(
-          ["Mantenimiento", "ClienteDireccion"],
+          "Mantenimiento/ClienteDireccion",
           objDireccion,
           setTipoMen,
           setMen
@@ -410,7 +412,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     } else {
       await Update(
-        ["Mantenimiento", "ClienteDireccion"],
+        "Mantenimiento/ClienteDireccion",
         objDireccion,
         setTipoMen,
         setMen
@@ -441,7 +443,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       if (existe == undefined) {
         await Insert(
-          ["Mantenimiento", "ClienteContacto"],
+          "Mantenimiento/ClienteContacto",
           objContacto,
           setTipoMen,
           setMen
@@ -460,7 +462,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     } else {
       await Update(
-        ["Mantenimiento", "ClienteContacto"],
+        "Mantenimiento/ClienteContacto",
         objContacto,
         setTipoMen,
         setMen
@@ -508,7 +510,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       if (existe == undefined) {
         await Insert(
-          ["Mantenimiento", "ClientePersonal"],
+          "Mantenimiento/ClientePersonal",
           objPersonal,
           setTipoMen,
           setMen
@@ -527,7 +529,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     } else {
       await Update(
-        ["Mantenimiento", "ClientePersonal"],
+        "Mantenimiento/ClientePersonal",
         objPersonal,
         setTipoMen,
         setMen
@@ -570,7 +572,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="botonEliminarFila"
                   onClick={() => {
                     Delete(
-                      ["Mantenimiento", "ClienteDireccion"],
+                      "Mantenimiento/ClienteDireccion",
                       row.values.id,
                       setRefrescar
                     );
@@ -624,7 +626,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="botonEliminarFila"
                   onClick={() => {
                     Delete(
-                      ["Mantenimiento", "ClienteContacto"],
+                      "Mantenimiento/ClienteContacto",
                       row.values.id,
                       setRefrescar
                     );
@@ -692,7 +694,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="botonEliminarFila"
                   onClick={() => {
                     Delete(
-                      ["Mantenimiento", "ClientePersonal"],
+                      "Mantenimiento/ClientePersonal",
                       row.values.id.substr(6),
                       setRefrescar
                     );
@@ -1104,7 +1106,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           <input
                             type="text"
                             id="direccionDireccion"
-                            name="direccionContacto"
+                            name="direccion"
                             placeholder="Dirección secundaria"
                             autoComplete="off"
                             autoFocus={habilitarDireccion}
@@ -1163,7 +1165,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </div>
                     </div>
                     {/*footer*/}
-                    <div className="flex items-center justify-start">
+                    <div className="py-1 gap-x-2 flex items-center justify-start">
                       {modo == "Consultar" ? (
                         ""
                       ) : (
@@ -1172,11 +1174,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           id="enviarClientDireccion"
                           onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarClienteDireccion}
-                          className={
-                            G.BotonModalBase +
-                            G.BotonOkModal +
-                            " py-2 sm:py-1 px-3"
-                          }
+                          className={G.BotonModalBase + G.BotonOkModal}
                         >
                           Guardar
                         </button>
@@ -1186,11 +1184,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         id="cerrarClienteDireccion"
                         onKeyDown={(e) => Funciones.KeyClick(e)}
                         onClick={() => setHabilitarDireccion(false)}
-                        className={
-                          G.BotonModalBase +
-                          G.BotonCerrarModal +
-                          " py-2 sm:py-1  px-3"
-                        }
+                        className={G.BotonModalBase + G.BotonCerrarModal}
                       >
                         CERRAR
                       </button>
@@ -1267,7 +1261,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         <input
                           type="text"
                           id="nombresContacto"
-                          name="nombresContactoCliente"
+                          name="nombres"
                           placeholder="Nombres"
                           autoComplete="off"
                           autoFocus={habilitarContacto}
@@ -1394,7 +1388,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     </div>
                     {/*footer*/}
-                    <div className="flex items-center justify-start">
+                    <div className="py-1 gap-x-2 flex items-center justify-start">
                       {modo == "Consultar" ? (
                         ""
                       ) : (
@@ -1403,11 +1397,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           id="enviarClienteContacto"
                           onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarClienteContacto}
-                          className={
-                            G.BotonModalBase +
-                            G.BotonOkModal +
-                            " py-2 sm:py-1 px-3"
-                          }
+                          className={G.BotonModalBase + G.BotonOkModal}
                         >
                           Guardar
                         </button>
@@ -1417,11 +1407,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         id="cerrarClienteContacto"
                         onKeyDown={(e) => Funciones.KeyClick(e)}
                         onClick={() => setHabilitarContacto(false)}
-                        className={
-                          G.BotonModalBase +
-                          G.BotonCerrarModal +
-                          " py-2 sm:py-1  px-3"
-                        }
+                        className={G.BotonModalBase + G.BotonCerrarModal}
                       >
                         CERRAR
                       </button>
@@ -1533,8 +1519,9 @@ const Modal = ({ setModal, modo, objeto }) => {
                         </div>
                       </div>
                     </div>
+
                     {/*footer*/}
-                    <div className="flex items-center justify-start">
+                    <div className="py-1 gap-x-2 flex items-center justify-start">
                       {modo == "Consultar" ? (
                         ""
                       ) : (
@@ -1543,11 +1530,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           id="enviarClientePersonal"
                           onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarClientePersonal}
-                          className={
-                            G.BotonModalBase +
-                            G.BotonOkModal +
-                            " py-2 sm:py-1 px-3"
-                          }
+                          className={G.BotonModalBase + G.BotonOkModal}
                         >
                           Guardar
                         </button>
@@ -1557,11 +1540,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         id="cerrarClientePersonal"
                         onKeyDown={(e) => Funciones.KeyClick(e)}
                         onClick={() => setHabilitarPersonal(false)}
-                        className={
-                          G.BotonModalBase +
-                          G.BotonCerrarModal +
-                          " py-2 sm:py-1  px-3"
-                        }
+                        className={G.BotonModalBase + G.BotonCerrarModal}
                       >
                         CERRAR
                       </button>

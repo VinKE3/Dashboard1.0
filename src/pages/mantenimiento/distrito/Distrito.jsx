@@ -173,7 +173,7 @@ const Distrito = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Distrito"], id, setListar);
+        Delete("Mantenimiento/Distrito", id, setListar);
       }
     }
     if (e.key === "c") {

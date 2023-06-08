@@ -275,7 +275,7 @@ const DocumentoVenta = () => {
             value
           );
           if (valor) {
-            await Delete(["Venta", "DocumentoVenta"], value, setListar);
+            await Delete("Venta/DocumentoVenta", value, setListar);
           }
           break;
         }

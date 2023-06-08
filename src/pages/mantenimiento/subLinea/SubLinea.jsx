@@ -173,7 +173,7 @@ const SubLineas = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.children[2].innerText;
-        Delete(["Mantenimiento", "SubLinea"], id, setListar);
+        Delete("Mantenimiento/SubLinea", id, setListar);
       }
     }
     if (e.key === "c") {

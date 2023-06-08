@@ -230,7 +230,7 @@ const Usuario = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Usuario"], id, setListar);
+        Delete("Mantenimiento/Usuario", id, setListar);
       }
     }
     if (e.key === "c") {

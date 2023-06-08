@@ -29,6 +29,7 @@ const Delete = async (menu, id, setListar) => {
             theme: "colored",
           });
         });
+        return null;
       } else {
         result.data.messages[0].textos.map((map) => {
           toast.success(map, {
@@ -43,6 +44,7 @@ const Delete = async (menu, id, setListar) => {
           });
         });
         setListar(true);
+        return result;
       }
     }
   });

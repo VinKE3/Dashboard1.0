@@ -177,7 +177,7 @@ const Vehiculo = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Vehiculo"], id, setListar);
+        Delete("Mantenimiento/Vehiculo", id, setListar);
       }
     }
     if (e.key === "c") {

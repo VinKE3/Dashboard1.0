@@ -269,7 +269,7 @@ const LetraCambioVenta = () => {
             value
           );
           if (valor) {
-            Delete(["Venta", "LetraCambioVenta"], value, setListar);
+            Delete("Venta/LetraCambioVenta", value, setListar);
           }
           break;
         }

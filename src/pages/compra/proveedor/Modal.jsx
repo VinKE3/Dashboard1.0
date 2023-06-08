@@ -138,7 +138,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         if (e.target.innerText == "AGREGAR") {
           await LimpiarCcorriente();
         } else {
-          await GetCcorriente(id);
+          await GetCcorriente(value);
         }
       }
       setHabilitarCuentaCorriente(true);
@@ -198,15 +198,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const RetornarMensaje = async () => {
     if (tipoMen == 0) {
-      toast.info(men, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
+      men.map((map) => {
+        toast.info(map, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
     }
     await ListarContacto();
@@ -281,7 +283,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       if (existe == undefined) {
         await Insert(
-          ["Mantenimiento", "ProveedorCuentaCorriente"],
+          "Mantenimiento/ProveedorCuentaCorriente",
           objetoCcorriente,
           setTipoMen,
           setMen
@@ -304,7 +306,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     } else {
       await Update(
-        ["Mantenimiento", "ProveedorCuentaCorriente"],
+        "Mantenimiento/ProveedorCuentaCorriente",
         objetoCcorriente,
         setTipoMen,
         setMen
@@ -337,7 +339,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       if (existe == undefined) {
         await Insert(
-          ["Mantenimiento", "ProveedorContacto"],
+          "Mantenimiento/ProveedorContacto",
           objetoContacto,
           setTipoMen,
           setMen
@@ -356,7 +358,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     } else {
       await Update(
-        ["Mantenimiento", "ProveedorContacto"],
+        "Mantenimiento/ProveedorContacto",
         objetoContacto,
         setTipoMen,
         setMen
@@ -399,7 +401,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="botonEliminarFila"
                   onClick={() => {
                     Delete(
-                      ["Mantenimiento", "ProveedorCuentaCorriente"],
+                      "Mantenimiento/ProveedorCuentaCorriente",
                       row.values.id,
                       setListar
                     );
@@ -453,7 +455,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="botonEliminarFila"
                   onClick={() => {
                     Delete(
-                      ["Mantenimiento", "ProveedorContacto"],
+                      "Mantenimiento/ProveedorContacto",
                       row.values.id,
                       setListar
                     );
@@ -830,7 +832,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </select>
                     </div>
                     {/*footer*/}
-                    <div className="flex items-center justify-start gap-x-2">
+                    <div className="py-1 gap-x-2 flex items-center justify-start">
                       {modo == "Consultar" ? (
                         ""
                       ) : (
@@ -838,22 +840,14 @@ const Modal = ({ setModal, modo, objeto }) => {
                           type="button"
                           onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarCcorriente}
-                          className={
-                            G.BotonModalBase +
-                            G.BotonOkModal +
-                            " py-2 sm:py-1 px-3"
-                          }
+                          className={G.BotonModalBase + G.BotonOkModal}
                         >
                           Guardar
                         </button>
                       )}
                       <button
                         type="button"
-                        className={
-                          G.BotonModalBase +
-                          G.BotonCerrarModal +
-                          " py-2 sm:py-1  px-3"
-                        }
+                        className={G.BotonModalBase + G.BotonCerrarModal}
                         onKeyDown={(e) => Funciones.KeyClick(e)}
                         onClick={() => setHabilitarCuentaCorriente(false)}
                       >
@@ -1055,7 +1049,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     </div>
                     {/*footer*/}
-                    <div className="flex items-center justify-start">
+                    <div className="py-1 gap-x-2 flex items-center justify-start">
                       {modo == "Consultar" ? (
                         ""
                       ) : (
@@ -1063,11 +1057,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           type="button"
                           onKeyDown={(e) => Funciones.KeyClick(e)}
                           onClick={EnviarContacto}
-                          className={
-                            G.BotonModalBase +
-                            G.BotonOkModal +
-                            " py-2 sm:py-1 px-3"
-                          }
+                          className={G.BotonModalBase + G.BotonOkModal}
                         >
                           Guardar
                         </button>
@@ -1076,11 +1066,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         type="button"
                         onKeyDown={(e) => Funciones.KeyClick(e)}
                         onClick={() => setHabilitarContacto(false)}
-                        className={
-                          G.BotonModalBase +
-                          G.BotonCerrarModal +
-                          " py-2 sm:py-1  px-3"
-                        }
+                        className={G.BotonModalBase + G.BotonCerrarModal}
                       >
                         CERRAR
                       </button>

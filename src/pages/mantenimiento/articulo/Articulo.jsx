@@ -231,7 +231,7 @@ const Articulo = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Articulo"], id, setListar);
+        Delete("Mantenimiento/Articulo", id, setListar);
       }
     }
     if (e.key === "c") {

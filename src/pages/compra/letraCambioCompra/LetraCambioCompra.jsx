@@ -249,7 +249,7 @@ const LetraCambioCompra = () => {
             value
           );
           if (valor) {
-            await Delete(["Compra", "LetraCambioCompra"], value, setListar);
+            await Delete("Compra/LetraCambioCompra", value, setListar);
           }
           break;
         }

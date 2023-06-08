@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import Insert from "../../../components/funciones/Insert";
+import Delete from "../../../components/funciones/Delete";
 import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import Mensajes from "../../../components/funciones/Mensajes";
@@ -11,7 +13,6 @@ import { FaPlus, FaUndoAlt, FaTrashAlt, FaEye } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
 import "primeicons/primeicons.css";
-
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
 
@@ -71,6 +72,7 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   const [totalSaldo, setTotalSaldo] = useState(objeto.saldo);
   const [nuevo, setNuevo] = useState(false);
+  const [refrescar, setRefrescar] = useState(false);
   const [habilitarCampo, setHabilitarCampo] = useState(false);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [tipoMensaje, setTipoMensaje] = useState(-1);
@@ -79,12 +81,18 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region useEffect
   useEffect(() => {
-    data;
-  }, [data]);
+    if (refrescar) {
+      setRefrescar(false);
+      GetPorId(data.id);
+      Abono("Cancelar");
+      data;
+      dataDetalle;
+    }
+  }, [refrescar]);
   useEffect(() => {
-    GetIsPermitido(data.id, 0, 0);
+    IsPermitido(data.id, 0, 0);
     setDataTipoDoc([data.tipoDocumento]);
-    TablasAbono();
+    GetTablasAbono();
   }, []);
   //#endregion
 
@@ -160,11 +168,9 @@ const Modal = ({ setModal, modo, objeto }) => {
   const Abono = async (modo = "agregar") => {
     if (modo == "agregar") {
       setHabilitarCampo(true);
-      let tipoCambio = await TipoCambio(moment().format("yyyy-MM-DD"));
-      let ultimoId = dataDetalle[dataDetalle.length - 1];
-      setDetalleId(ultimoId.abonoId);
+      let tipoCambio = await TipoCambio(moment().format("YYYY-MM-DD"), true);
       setDataAbono({
-        abonoId: ultimoId.abonoId + 1,
+        abonoId: detalleId,
         empresaId: data.empresaId,
         proveedorId: data.proveedorId,
         tipoDocumentoId: data.tipoDocumentoId,
@@ -231,35 +237,20 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (resultado[0]) {
       const montoPEN = dataAbono.monedaId === "S" ? dataAbono.monto : 0;
       const montoUSD = dataAbono.monedaId === "D" ? dataAbono.monto : 0;
-      const result = await ApiMasy.post(`/api/Finanzas/AbonoCompra/`, {
-        ...dataAbono,
-        montoPEN: montoPEN,
-        montoUSD: montoUSD,
-      });
-      if (result.status == 201) {
-        toast.success(String(result.data.messages[0].textos), {
-          position: "bottom-right",
-          autoClose: 1500,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+      const result = await Insert(
+        `Finanzas/AbonoCompra/`,
+        {
+          ...dataAbono,
+          montoPEN: montoPEN,
+          montoUSD: montoUSD,
+        },
+        setTipoMensaje,
+        setMensaje
+      );
+      if (result != null) {
         setDetalleId(detalleId + 1);
-        Abono("cancelar");
-      } else {
-        toast.error(String("error"), {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
+        await Abono("Cancelar");
+        await GetPorId(data.id);
       }
     } else {
       toast.error(resultado[1], {
@@ -273,31 +264,21 @@ const Modal = ({ setModal, modo, objeto }) => {
         theme: "colored",
       });
     }
-    await GetPorId(data.id);
   };
   const EliminarDetalle = async (abonoId) => {
-    let permiso = await GetIsPermitido(data.id, abonoId, 2);
+    let permiso = await IsPermitido(data.id, abonoId, 2);
     if (permiso) {
-      const result = await ApiMasy.delete(
-        `/api/Finanzas/AbonoCompra/${data.id}/${abonoId}`
+      await Delete(
+        "Finanzas/AbonoCompra",
+        `${data.id}/${abonoId}`,
+        setRefrescar
       );
-      toast.success(String(result.data.messages[0].textos), {
-        position: "bottom-right",
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-      await GetPorId(data.id);
     }
   };
   //#endregion
 
   //#region API
-  const TablasAbono = async () => {
+  const GetTablasAbono = async () => {
     const result = await ApiMasy(`/api/Finanzas/AbonoCompra/FormularioTablas`);
     setDataMoneda(result.data.data.monedas);
     setDataCtacte(
@@ -315,19 +296,20 @@ const Modal = ({ setModal, modo, objeto }) => {
     );
     setDataTipoPago(result.data.data.tiposPago);
   };
-  const TipoCambio = async (fecha) => {
+  const TipoCambio = async (fecha, ret = false) => {
     let tipoCambio = await GetTipoCambio(
       fecha,
       "venta",
       setTipoMensaje,
       setMensaje
     );
-    setData((prev) => ({
-      ...prev,
-      tipoCambio: tipoCambio,
-    }));
+    if (!ret) {
+      setDataAbono((prev) => ({ ...prev, tipoCambio: tipoCambio }));
+    } else {
+      return tipoCambio;
+    }
   };
-  const GetIsPermitido = async (compraId, abonoId, accion) => {
+  const IsPermitido = async (compraId, abonoId, accion) => {
     const result = await ApiMasy.get(
       `/api/Finanzas/AbonoCompra/IsPermitido?accion=${accion}&compraId=${compraId}&abonoId=${abonoId}`
     );
@@ -471,7 +453,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           foco={document.getElementById("tablaCuentaPorPagar")}
           tamañoModal={[G.ModalFull, G.Form]}
         >
-          {tipoMensaje > 0 && (
+          {tipoMensaje > -1 && (
             <Mensajes
               tipoMensaje={tipoMensaje}
               mensaje={mensaje}
@@ -641,15 +623,13 @@ const Modal = ({ setModal, modo, objeto }) => {
           {/*Detalle*/}
           <div className={G.ContenedorBasico + G.FondoContenedor + " mb-3"}>
             <div className="flex justify-between">
-              <p className={G.Subtitulo + " h-full flex items-center"}>
-                Detalles de Abono
-              </p>
+              <p className={G.Subtitulo}>Detalles de Abono</p>
               {/* Boton */}
               <div className="flex gap-x-2">
                 {nuevo && (
                   <BotonBasico
                     botonText="Nuevo"
-                    botonClass={G.BotonVerde + " !my-0"}
+                    botonClass={G.BotonVerde}
                     botonIcon={faPlus}
                     click={() => Abono()}
                     contenedor=""
@@ -658,7 +638,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 {habilitarCampo && (
                   <BotonBasico
                     botonText="Cancelar"
-                    botonClass={G.BotonRojo + " !py-1.5 !px-2 !my-0"}
+                    botonClass={G.BotonRojo}
                     botonIcon={faCancel}
                     click={() => Abono("cancelar")}
                     contenedor=""
@@ -722,6 +702,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   onClick={() => {
                     TipoCambio(dataAbono.fecha);
                   }}
+                  onKeyDown={(e) => Funciones.KeyClick(e)}
                 >
                   <FaUndoAlt></FaUndoAlt>
                 </button>
@@ -872,6 +853,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 id="enviarDetalle"
                 hidden={!habilitarCampo ? true : ""}
                 className={G.BotonBuscar + G.BotonPrimary}
+                onKeyDown={(e) => Funciones.KeyClick(e)}
                 onClick={(e) => AgregarAbonoDetalle(e)}
               >
                 <FaPlus></FaPlus>

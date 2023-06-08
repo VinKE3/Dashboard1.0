@@ -190,7 +190,7 @@ const CuentaCorriente = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "CuentaCorriente"], id, setListar);
+        Delete("Mantenimiento/CuentaCorriente", id, setListar);
       }
     }
     if (e.key === "c") {

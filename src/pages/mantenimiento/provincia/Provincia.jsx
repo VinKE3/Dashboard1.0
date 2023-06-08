@@ -173,7 +173,7 @@ const Provincia = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Provincia"], id, setListar);
+        Delete("Mantenimiento/Provincia", id, setListar);
       }
     }
     if (e.key === "c") {

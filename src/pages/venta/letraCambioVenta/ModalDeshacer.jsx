@@ -129,15 +129,17 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
   };
   const RetornarMensaje = async () => {
     if (tipoMensaje == 0) {
-      toast.success(mensaje, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+      mensaje.map((map) => {
+        toast.success(map, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       });
       foco.focus();
       setModal(false);
@@ -193,7 +195,7 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
         setMensaje(result.textos);
       } else {
         setTipoMensaje(result.data.messages[0].tipo);
-        setMensaje(result.data.messages[0].textos[0]);
+        setMensaje(result.data.messages[0].textos);
       }
     } else {
       toast.info("Seleccione una Fila", {

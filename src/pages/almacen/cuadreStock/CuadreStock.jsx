@@ -246,7 +246,7 @@ const CuadreStock = () => {
             value
           );
           if (valor) {
-            Delete(["Almacen", "CuadreStock"], value, setListar);
+            Delete("Almacen/CuadreStock", value, setListar);
           }
           break;
         }

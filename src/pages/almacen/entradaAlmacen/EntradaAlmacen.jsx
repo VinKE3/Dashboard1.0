@@ -234,7 +234,7 @@ const EntradaAlmacen = () => {
             value
           );
           if (valor) {
-            Delete(["Almacen", "EntradaAlmacen"], value, setListar);
+            Delete("Almacen/EntradaAlmacen", value, setListar);
           }
           break;
         }

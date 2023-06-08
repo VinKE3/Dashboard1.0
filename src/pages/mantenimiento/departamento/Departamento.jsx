@@ -166,7 +166,7 @@ const Departamento = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Departamento"], id, setListar);
+        Delete("Mantenimiento/Departamento", id, setListar);
       }
     }
     if (e.key === "c") {

@@ -226,7 +226,7 @@ const BloquearVenta = () => {
       },
       {
         Header: "Fecha",
-        accessor: "fechaContable",
+        accessor: "fechaEmision",
         Cell: ({ value }) => {
           return (
             <p className="text-center">{moment(value).format("DD/MM/YY")}</p>

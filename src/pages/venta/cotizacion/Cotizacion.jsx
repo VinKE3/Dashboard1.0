@@ -253,7 +253,7 @@ const Cotizacion = () => {
         case 2: {
           let valor = await GetIsPermitido("Venta/Cotizacion", accion, value);
           if (valor) {
-            await Delete(["Venta", "Cotizacion"], value, setListar);
+            await Delete("Venta/Cotizacion", value, setListar);
           }
           break;
         }

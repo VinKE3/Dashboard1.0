@@ -179,7 +179,7 @@ const TipodeCambio = () => {
         let id = moment(row.firstChild.innerText, "DD/MM/YYYY").format(
           "YYYY-MM-DD"
         );
-        Delete(["Mantenimiento", "TipoCambio"], id, setListar);
+        Delete("Mantenimiento/TipoCambio", id, setListar);
       }
     }
     if (e.key === "c") {

@@ -211,7 +211,7 @@ const SalidaCilindros = () => {
             value
           );
           if (valor) {
-            Delete(["Almacen", "SalidaCilindros"], value, setListar);
+            Delete("Almacen/SalidaCilindros", value, setListar);
           }
           break;
         }

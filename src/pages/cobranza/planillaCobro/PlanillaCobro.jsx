@@ -233,7 +233,7 @@ const PlanillaCobro = () => {
             value
           );
           if (valor) {
-            Delete(["Finanzas", "PlanillaCobro"], value, setListar);
+            Delete("Finanzas/PlanillaCobro", value, setListar);
           }
           break;
         }

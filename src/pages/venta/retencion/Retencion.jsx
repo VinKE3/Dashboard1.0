@@ -232,7 +232,7 @@ const Retencion = () => {
         case 2: {
           let valor = await GetIsPermitido("Venta/Retencion", accion, value);
           if (valor) {
-            await Delete(["Venta", "DocumentoVenta"], value, setListar);
+            await Delete("Venta/DocumentoVenta", value, setListar);
           }
           break;
         }

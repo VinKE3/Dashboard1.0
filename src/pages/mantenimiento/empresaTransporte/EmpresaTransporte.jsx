@@ -191,7 +191,7 @@ const EmpresadeTransporte = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "EmpresaTransporte"], id, setListar);
+        Delete("Mantenimiento/EmpresaTransporte", id, setListar);
       }
     }
     if (e.key === "c") {

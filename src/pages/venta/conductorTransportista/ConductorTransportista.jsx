@@ -185,7 +185,7 @@ const Conductor = () => {
         .querySelector("tr.selected-row");
       if (row != null) {
         let id = row.firstChild.innerText;
-        Delete(["Mantenimiento", "Conductor"], id, setListar);
+        Delete("Mantenimiento/Conductor", id, setListar);
       }
     }
     if (e.key === "c") {

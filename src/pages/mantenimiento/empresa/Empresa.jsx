@@ -304,20 +304,10 @@ const Empresa = ({ modo }) => {
   const GuardarTodo = async (e) => {
     if (e._reactName != "onClick") {
       if (e.key == "Enter") {
-        await Update(
-          ["Empresa", "Configuracion"],
-          data,
-          setTipoMensaje,
-          setMensaje
-        );
+        await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
       }
     } else {
-      await Update(
-        ["Empresa", "Configuracion"],
-        data,
-        setTipoMensaje,
-        setMensaje
-      );
+      await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
     }
     await Configuracion();
   };
@@ -865,8 +855,11 @@ const Empresa = ({ modo }) => {
           {tipoMensaje > -1 && (
             <Mensajes
               tipoMensaje={tipoMensaje}
-              mensaje={mensaje}f
-              Click={() =>  Funciones.OcultarMensajes(setTipoMensaje, setMensaje)}
+              mensaje={mensaje}
+              f
+              Click={() =>
+                Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
+              }
             />
           )}
           <TabView>
@@ -962,13 +955,13 @@ const Empresa = ({ modo }) => {
                   </div>
                   <div className={G.InputFull}>
                     <label htmlFor="observacion" className={G.LabelStyle}>
-                      Observacion
+                      Observación
                     </label>
                     <input
                       type="text"
                       id="observacion"
                       name="observacion"
-                      placeholder="Observacion"
+                      placeholder="Observación"
                       autoComplete="off"
                       value={data.observacion ?? ""}
                       onChange={HandleData}

@@ -35,15 +35,17 @@ const ModalCrud = ({
   //#region Funciones
   const RetornarMensaje = async () => {
     if (tipo == 0) {
-      toast.success(mensajes, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+      mensajes.map((map) => {
+        toast.success(map, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
       });
       foco.focus();
       setModal(false);

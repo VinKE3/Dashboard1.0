@@ -264,7 +264,7 @@ const OrdenCompra = () => {
         case 2: {
           let valor = await GetIsPermitido("Compra/OrdenCompra", accion, value);
           if (valor) {
-            await Delete(["Compra", "OrdenCompra"], value, setListar);
+            await Delete("Compra/OrdenCompra", value, setListar);
           }
           break;
         }

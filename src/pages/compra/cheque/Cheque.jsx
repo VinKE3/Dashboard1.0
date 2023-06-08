@@ -233,7 +233,7 @@ const Cheque = () => {
         case 2: {
           let valor = await GetIsPermitido("Compra/Cheque", accion, value);
           if (valor) {
-            await Delete(["Compra", "Cheque"], value, setListar);
+            await Delete("Compra/Cheque", value, setListar);
           }
           break;
         }

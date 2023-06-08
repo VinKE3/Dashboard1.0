@@ -237,7 +237,7 @@ const Cef = () => {
         case 2: {
           let valor = await GetIsPermitido("Compra/CEF", accion, value);
           if (valor) {
-            await Delete(["Compra", "CEF"], value, setListar);
+            await Delete("Compra/CEF", value, setListar);
           }
           break;
         }
