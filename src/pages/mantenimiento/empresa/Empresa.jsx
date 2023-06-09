@@ -14,6 +14,7 @@ import { FaPen, FaTrashAlt } from "react-icons/fa";
 import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import * as G from "../../../components/Global";
+import * as F from "../../../components/funciones/Validaciones";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -105,7 +106,7 @@ const Empresa = ({ modo }) => {
 
   useEffect(() => {
     if (refrescar) {
-      GuardarTodo(new Event("click"));
+      GuardarTodo();
       setRefrescar(false);
     }
   }, [data, mesesHabilitados]);
@@ -301,12 +302,14 @@ const Empresa = ({ modo }) => {
     setPorcentajesDetraccion(detraccion);
     setPorcentajesPercepcion(percepcion);
   };
-  const GuardarTodo = async (e) => {
-    if (e._reactName != "onClick") {
+  const GuardarTodo = async (e = null) => {
+    console.log(data, "viendo data");
+    if (e !== null && e._reactName === "onClick") {
       if (e.key == "Enter") {
         await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
       }
     } else {
+      console.log("click");
       await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
     }
     await Configuracion();
@@ -857,9 +860,7 @@ const Empresa = ({ modo }) => {
               tipoMensaje={tipoMensaje}
               mensaje={mensaje}
               f
-              Click={() =>
-                Funciones.OcultarMensajes(setTipoMensaje, setMensaje)
-              }
+              Click={() => F.OcultarMensajes(setTipoMensaje, setMensaje)}
             />
           )}
           <TabView>
