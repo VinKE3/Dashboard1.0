@@ -57,7 +57,37 @@ const TodasLasCompras = ({ setModal }) => {
   //#region Render
   return (
     <>
-      <ModalBasic titulo="Todas Las Compras" setModal={setModal}>
+      <ModalBasic
+        setModal={setModal}
+        titulo="Todas las Compras"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
         <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
           <div className={G.ContenedorInputsFiltro + " !my-0"}>
             <div className={G.InputFull}>
@@ -106,16 +136,6 @@ const TodasLasCompras = ({ setModal }) => {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-              contenedor=""
-            />
           </div>
         </div>
       </ModalBasic>

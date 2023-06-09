@@ -85,7 +85,7 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
 
   const Personal = async () => {
     const result = await ApiMasy.get(`api/Mantenimiento/Personal/Listar`);
-    setPersonal(
+    setDataPersonal(
       result.data.data.data.map((res) => ({
         id: res.id,
         personal:
@@ -143,9 +143,9 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {marcas.map((marca) => (
-                <option key={marca.id} value={marca.id}>
-                  {marca.nombre}
+              {personal.map((res, index) => (
+                <option key={index} value={res.id}>
+                  {res.personal}
                 </option>
               ))}
             </select>

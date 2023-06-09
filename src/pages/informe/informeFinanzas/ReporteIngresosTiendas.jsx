@@ -57,10 +57,40 @@ const ReporteIngresosTiendas = ({ setModal }) => {
   //#region Render
   return (
     <>
-      <ModalBasic titulo="Reporte Ingresos de Tiendas" setModal={setModal}>
-        <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
-          <div className={G.ContenedorInputsFiltro + " !my-0"}>
-            <div className={G.InputFull}>
+      <ModalBasic
+        setModal={setModal}
+        titulo="Reporte de ingresos de tiendas"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
+            >
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
+            >
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputMitad}>
               <label htmlFor="fechaInicio" className={G.LabelStyle}>
                 Desde
               </label>
@@ -106,16 +136,6 @@ const ReporteIngresosTiendas = ({ setModal }) => {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-              contenedor=""
-            />
           </div>
         </div>
       </ModalBasic>

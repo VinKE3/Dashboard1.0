@@ -4,8 +4,6 @@ import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import { RadioButton } from "primereact/radiobutton";
 import * as G from "../../../components/Global";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const ListadoDeCostos = ({ setModal }) => {
   //#region useState
@@ -205,15 +203,6 @@ const ListadoDeCostos = ({ setModal }) => {
                 </label>
               </div>
             </div>
-          </div>
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-              contenedor=""
-            />
           </div>
         </div>
       </ModalBasic>

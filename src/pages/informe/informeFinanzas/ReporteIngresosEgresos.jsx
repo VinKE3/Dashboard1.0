@@ -68,42 +68,27 @@ const ReporteIngresosEgresos = ({ setModal }) => {
   }, []);
   //#endregion
 
-  // const HandleData = async ({ target }) => {
-  //   if (target.name === "tipoId") {
-  //     setData((prevState) => ({
-  //       ...prevState,
-  //       conceptoIngresoId: "",
-  //       conceptoEgresoId: "",
-  //     }));
-  //     return;
-  //   }
-  //    if (
-
-  //     target.name === "visualizar"
-  //   ) {
-  //     setData((prevState) => ({
-  //       ...prevState,
-  //       [target.name]: target.checked,
-  //     }));
-  //     return;
-  //   }
-  //   setData((prevState) => ({
-  //     ...prevState,
-  //     [target.name]: target.value,
-  //   }));
-  // };
-
-  const HandleData = (e) => {
-    const { name, value } = e.target;
-    setData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-    if (name === "tipoId") {
-      setData((prevState) => ({
-        ...prevState,
-        conceptoIngresoId: "",
-        conceptoEgresoId: "",
+  //#region Funciones
+  const HandleData = async ({ target }) => {
+    if (target.name == "todos") {
+      setTodos(target.checked);
+      setData((prevData) => ({
+        ...prevData,
+        tipoBeneficiarioId: "",
+      }));
+      return;
+    }
+    if (target.name == "tipoMovimientoId") {
+      let model = dataTipoBenef.find(
+        (map) => map.tipoMovimientoId == target.value
+      );
+      setData((prevData) => ({
+        ...prevData,
+        tipoMovimientoId: target.value,
+        tipoBeneficiarioId: model == undefined ? "" : model.tipoBeneficiarioId,
+        clienteProveedorId: null,
+        clienteProveedorNombre: "",
+        concepto: "",
       }));
       return;
     }
@@ -196,59 +181,47 @@ const ReporteIngresosEgresos = ({ setModal }) => {
   //#region Render
   return (
     <>
-      <ModalBasic titulo="Reporte Ingresos/Egresos" setModal={setModal}>
-        <div
-          className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}
-        >
-          <div className={G.InputFull}>
-            <label htmlFor="monedaId" className={G.LabelStyle}>
-              Moneda
-            </label>
-            <select
-              id="monedaId"
-              name="monedaId"
-              autoFocus
-              value={data.monedaId ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
+      <ModalBasic
+        setModal={setModal}
+        titulo="Reporte Ingresos/Egresos"
+        habilitarFoco={false}
+        tamañoModal={[G.ModalPequeño, G.Form]}
+        childrenFooter={
+          <>
+            <button
+              type="button"
+              onClick={() => Enviar(1)}
+              className={G.BotonModalBase + G.BotonRojo}
             >
-              {monedas.map((moneda) => (
-                <option key={moneda.id} value={moneda.id}>
-                  {moneda.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className={G.InputFull}>
-            <label htmlFor="tipoId" className={G.LabelStyle}>
-              Tipo
-            </label>
-            <select
-              id="tipoId"
-              name="tipoId"
-              autoFocus
-              value={data.tipoId ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
+              PDF
+            </button>
+            <button
+              type="button"
+              onClick={() => Enviar(2)}
+              className={G.BotonModalBase + G.BotonVerde}
             >
-              {tipos.map((tipo) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.descripcion}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {data.tipoId === "1" && (
-            <div className={G.InputFull}>
-              <label htmlFor="conceptoIngresoId" className={G.LabelStyle}>
-                Concepto
+              EXCEL
+            </button>
+            <button
+              type="button"
+              onClick={() => setModal(false)}
+              className={G.BotonModalBase + G.BotonCerrarModal}
+            >
+              CERRAR
+            </button>
+          </>
+        }
+      >
+        <div className={G.ContenedorBasico}>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputMitad}>
+              <label htmlFor="monedaId" className={G.LabelStyle}>
+                Moneda
               </label>
               <select
-                id="conceptoIngresoId"
-                name="conceptoIngresoId"
-                autoFocus
-                value={data.conceptoIngresoId ?? ""}
+                id="monedaId"
+                name="monedaId"
+                value={data.monedaId ?? ""}
                 onChange={HandleData}
                 className={G.InputStyle}
               >
@@ -436,33 +409,6 @@ const ReporteIngresosEgresos = ({ setModal }) => {
                 className={G.InputStyle}
               />
             </div>
-          </div>
-          <div className={G.Input33pct}>
-            <div className={G.Input + " w-25"}>
-              <div className={G.CheckStyle + G.Anidado}>
-                <Checkbox
-                  inputId="visualizar"
-                  name="visualizar"
-                  onChange={(e) => {
-                    HandleData(e);
-                  }}
-                  checked={data.visualizar ? true : ""}
-                />
-              </div>
-              <label htmlFor="visualizar" className={G.InputBoton}>
-                Visualizar
-              </label>
-            </div>
-          </div>
-
-          <div className="mt-2">
-            <BotonBasico
-              botonText="ACEPTAR"
-              botonClass={G.BotonVerde}
-              botonIcon={faPlus}
-              click={() => Imprimir()}
-contenedor=""
-            />
           </div>
         </div>
       </ModalBasic>

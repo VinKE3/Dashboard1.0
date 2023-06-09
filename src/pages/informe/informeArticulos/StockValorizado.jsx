@@ -14,11 +14,7 @@ const StockValorizado = ({ setModal }) => {
     corteFecha: false,
     checkFiltro: "agruparLinea",
   });
-<<<<<<< HEAD
-  const [tipoDeExistencia, setTipoDeExistencia] = useState([]);
-=======
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
->>>>>>> origin/lino
   //#endregion
 
   //#region useEffect
@@ -59,21 +55,11 @@ const StockValorizado = ({ setModal }) => {
   };
   const Enviar = async (origen = 1) => {
     let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
-<<<<<<< HEAD
     const enlace = document.createElement("a");
     enlace.href = model.url;
     enlace.download = model.fileName;
     enlace.click();
     enlace.remove();
-=======
-    if (model != null) {
-      const enlace = document.createElement("a");
-      enlace.href = model.url;
-      enlace.download = model.fileName;
-      enlace.click();
-      enlace.remove();
-    }
->>>>>>> origin/lino
   };
   //#endregion
 
@@ -90,22 +76,14 @@ const StockValorizado = ({ setModal }) => {
             <button
               type="button"
               onClick={() => Enviar(1)}
-<<<<<<< HEAD
               className={G.BotonModalBase + G.BotonRojo + "  border-gray-200"}
-=======
-              className={G.BotonModalBase + G.BotonRojo}
->>>>>>> origin/lino
             >
               PDF
             </button>
             <button
               type="button"
               onClick={() => Enviar(2)}
-<<<<<<< HEAD
               className={G.BotonModalBase + G.BotonVerde + "  border-gray-200"}
-=======
-              className={G.BotonModalBase + G.BotonVerde}
->>>>>>> origin/lino
             >
               EXCEL
             </button>

@@ -4,7 +4,7 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 import React, { useState } from "react";
 import TomaDeInventario from "./informeArticulos/TomaDeInventario";
 import StockValorizado from "./informeArticulos/StockValorizado";
-import ListadoDeCostos from "./informeArticulos/ListadoDeCostos";
+import ListadoDeCostos from "../informe/informeArticulos/ListadoDeCostos";
 import MovimientoDeArticulos from "./informeArticulos/MovimientoDeArticulos";
 import KardexPorMarca from "./informeArticulos/KardexPorMarca";
 import TodasLasCompras from "./informeCompras/TodasLasCompras";
@@ -46,10 +46,10 @@ import ReporteIngresosTiendas from "./informeFinanzas/ReporteIngresosTiendas";
 import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidades";
 import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
 import InformeGerenciaComprasArticulos from "../informe/informeGerencia/InformeGerenciaComprasArticulos";
-import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
+import InformeGerenciaVentasPorVendedorClientes from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorClientes";
 import ReporteVendedoresClientes from "../informe/informeSistemas/ReporteVendedoresClientes";
 import InformeGerenciaVentasArticulos from "../informe/informeGerencia/InformeGerenciaVentasArticulos";
-import InformeGerenciaVentasPorMarcaArituculos from "../informe/informeGerencia/InformeGerenciaVentasPorMarcaArituculos";
+import InformeGerenciaVentasPorMarcaArticulos from "../informe/informeGerencia/InformeGerenciaVentasPorMarcaArticulos";
 import InformeGerenciaVentasPorVendedorMes from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMes";
 import InformeGerenciaVentasPorVendedorMesDia from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMesDia";
 import InformeGerenciaVentasPorArticuloVendedor from "../informe/informeGerencia/InformeGerenciaVentasPorArticuloVendedor";
@@ -987,7 +987,7 @@ const Informe = () => {
         />
       )}
       {modalInformeGerenciaVentasPorMarcaArticulo && (
-        <InformeGerenciaVentasPorMarcaArituculos
+        <InformeGerenciaVentasPorMarcaArticulos
           setModal={setModalInformeGerenciaVentasPorMarcaArticulo}
         />
       )}
