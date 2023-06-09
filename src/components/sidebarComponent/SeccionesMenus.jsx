@@ -11,7 +11,7 @@ import {
 
 function seccionesList() {
   const secciones = [
-    //?Ventas
+    //Ventas
     {
       title: "Ventas",
       id: "venta",
@@ -47,7 +47,7 @@ function seccionesList() {
         },
       ],
     },
-    //?Compras
+    //Compras
     {
       title: "Compras",
       id: "compra",
@@ -91,7 +91,7 @@ function seccionesList() {
         },
       ],
     },
-    //?mantenimiento
+    //Mantenimiento
     {
       title: "Mantenimiento",
       id: "mantenimiento",
@@ -163,7 +163,7 @@ function seccionesList() {
         },
       ],
     },
-    //?almacen
+    //Almacen
     {
       title: "Almacén",
       id: "almacen",
@@ -195,7 +195,7 @@ function seccionesList() {
         },
       ],
     },
-    //?Finanzas
+    //Finanzas
     {
       title: "Finanzas",
       id: "Finanza",
@@ -207,7 +207,7 @@ function seccionesList() {
         },
       ],
     },
-    //?Cobranzas
+    //Cobranzas
     {
       title: "Cobranzas",
       id: "cobranza",
@@ -223,7 +223,7 @@ function seccionesList() {
         },
       ],
     },
-    //?Archivo
+    //Bloqueos
     {
       title: "Bloqueos",
       id: "archivo",
@@ -243,7 +243,6 @@ function seccionesList() {
         },
       ],
     },
-
     //Tesoreria
     // {
     //   title: "Tesoreria",

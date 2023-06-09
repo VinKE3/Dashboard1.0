@@ -1,83 +1,102 @@
+//#region import
 import React, { useState } from "react";
 import { Accordion, AccordionTab } from "primereact/accordion";
-import TomaDeInventario from "./informeArticulos/TomaDeInventario";
-import StockValorizado from "./informeArticulos/StockValorizado";
-import ListadoDeCostos from "./informeArticulos/ListadoDeCostos";
-import MovimientoDeArticulos from "./informeArticulos/MovimientoDeArticulos";
-import KardexPorMarca from "./informeArticulos/KardexPorMarca";
-import TodasLasCompras from "./informeCompras/TodasLasCompras";
-import ComprasDetalle from "./informeCompras/ComprasDetalle";
-import ComprasPorProveedor from "./informeCompras/ComprasPorProveedor";
-import OrdenDeCompra from "./informeCompras/OrdenDeCompra";
-import OrdenDeCompraPendiente from "./informeCompras/OrdenDeCompraPendiente";
-import ReporteCompra from "./informeCompras/ReporteCompra";
-import EntradaAlmacen from "./informeCompras/EntradaAlmacen";
-import LetrasCambio from "./informeCompras/LetrasCambio";
-import GuiasDeCompra from "./informeCompras/GuiasDeCompra";
-import GuiasDeCompraDetalle from "./informeCompras/GuiasDeCompraDetalle";
-import DeudasPorPagar from "./informeCompras/DeudasPorPagar";
-import VentaTipoDocumento from "./informeVentas/VentaTipoDocumento";
-import VentaTiendaMarca from "./informeVentas/VentaTiendaMarca";
-import RegistroVentas from "./informeVentas/RegistroVentas";
-import RegistroVentaDetalle from "./informeVentas/RegistroVentaDetalle";
-import RegistroVentaUbigueo from "./informeVentas/RegistroVentaUbigueo";
-import RegistroSalidaCilindros from "./informeVentas/RegistroSalidaCilindros";
-import VentasPorCliente from "./informeVentas/VentasPorCliente";
-import VentasPorClienteDocumento from "./informeVentas/VentasPorClienteDocumento";
-import VentasPorPersonal from "./informeVentas/VentasPorPersonal";
-import VentasPorPersonalDetalle from "./informeVentas/VentasPorPersonalDetalle";
-import VentasPorPersonalArticulo from "./informeVentas/VentasPorPersonalArticulo";
-import GuiasDeRemision from "./informeVentas/GuiasDeRemision";
-import GuiaValorizada from "./informeVentas/GuiaValorizada";
-import ReporteDocumentos from "./informeVentas/ReporteDocumentos";
-import InformeCilindros from "./informeVentas/InformeCilindros";
-import LetrasDeCambio from "./informeCobranzas/LetrasDeCambio";
-import InformeGeneralDetallado from "./informeCobranzas/InformeGeneralDetallado";
-import CuentasPorCobrar from "./informeCobranzas/CuentasPorCobrar";
-import CuentasPorCobrarVencidos from "./informeCobranzas/CuentasPorCobrarVencidos";
-import InformeCobranzas from "./informeCobranzas/InformeCobranzas";
-import InformePlanillaPagos from "./informeCobranzas/InformePlanillaPagos";
-import InfomeControlPlanillas from "./informeCobranzas/InfomeControlPlanillas";
-import ReporteIngresosEgresos from "./informeFinanzas/ReporteIngresosEgresos";
-import PagosPendientes from "./informeFinanzas/PagosPendientes";
-import ReporteIngresosTiendas from "./informeFinanzas/ReporteIngresosTiendas";
-import InformeGerenciaUtilidades from "./informeGerencia/InformeGerenciaUtilidades";
-import InformeGerenciaCostosProductos from "./informeGerencia/InformeGerenciaCostosProductos";
-import InformeGerenciaComprasArticulos from "../informe/informeGerencia/InformeGerenciaComprasArticulos";
-import InformeGerenciaVentasPorVendedorClientes from "./informeGerencia/InformeGerenciaVentasPorVendedorClientes";
-import ReporteVendedoresClientes from "../informe/informeSistemas/ReporteVendedoresClientes";
-import InformeGerenciaVentasArticulos from "../informe/informeGerencia/InformeGerenciaVentasArticulos";
-import InformeGerenciaVentasPorMarcaArituculos from "../informe/informeGerencia/InformeGerenciaVentasPorMarcaArituculos";
-import InformeGerenciaVentasPorVendedorMes from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMes";
-import InformeGerenciaVentasPorVendedorMesDia from "../informe/informeGerencia/InformeGerenciaVentasPorVendedorMesDia";
-import InformeGerenciaVentasPorArticuloVendedor from "../informe/informeGerencia/InformeGerenciaVentasPorArticuloVendedor";
-import ReporteDeClientes from "../informe/informeSistemas/ReporteDeClientes";
-import ReporteDeProveedores from "../informe/informeSistemas/ReporteDeProveedores";
-import ReporteDeVendedores from "../informe/informeSistemas/ReporteDeVendedores";
 import { ToastContainer } from "react-toastify";
 import * as G from "../../components/Global";
+//#region informeSistema
+import ReporteClientes from "./sistema/ReporteClientes";
+import ReporteDeProveedores from "./sistema/ReporteDeProveedores";
+import ReporteDeVendedores from "./sistema/ReporteDeVendedores";
+import ReporteVendedoresClientes from "./sistema/ReporteVendedoresClientes";
+//#endregion
+//#region informeArticulo
+import KardexPorMarca from "./articulo/KardexPorMarca";
+import ListadoDeCostos from "./articulo/ListadoDeCostos";
+import MovimientoDeArticulos from "./articulo/MovimientoDeArticulos";
+import StockValorizado from "./articulo/StockValorizado";
+import TomaDeInventario from "./articulo/TomaDeInventario";
+//#endregion
+//#region informeCompra
+import ComprasDetalle from "./compra/ComprasDetalle";
+import ComprasPorProveedor from "./compra/ComprasPorProveedor";
+import DeudasPorPagar from "./compra/DeudasPorPagar";
+import EntradaAlmacen from "./compra/EntradaAlmacen";
+import GuiasDeCompra from "./compra/GuiasDeCompra";
+import GuiasDeCompraDetalle from "./compra/GuiasDeCompraDetalle";
+import LetrasCambio from "./compra/LetrasCambio";
+import OrdenDeCompra from "./compra/OrdenDeCompra";
+import OrdenDeCompraPendiente from "./compra/OrdenDeCompraPendiente";
+import ReporteCompra from "./compra/ReporteCompra";
+import TodasLasCompras from "./compra/TodasLasCompras";
+//#endregion
+//#region informeVenta
+import GuiasDeRemision from "./venta/GuiasDeRemision";
+import GuiaValorizada from "./venta/GuiaValorizada";
+import InformeCilindros from "./venta/InformeCilindros";
+import RegistroSalidaCilindros from "./venta/RegistroSalidaCilindros";
+import RegistroVentaDetalle from "./venta/RegistroVentaDetalle";
+import RegistroVentas from "./venta/RegistroVentas";
+import RegistroVentaUbigueo from "./venta/RegistroVentaUbigueo";
+import ReporteDocumentos from "./venta/ReporteDocumentos";
+import VentasPorCliente from "./venta/VentasPorCliente";
+import VentasPorClienteDocumento from "./venta/VentasPorClienteDocumento";
+import VentasPorPersonal from "./venta/VentasPorPersonal";
+import VentasPorPersonalArticulo from "./venta/VentasPorPersonalArticulo";
+import VentasPorPersonalDetalle from "./venta/VentasPorPersonalDetalle";
+import VentaTiendaMarca from "./venta/VentaTiendaMarca";
+import VentaTipoDocumento from "./venta/VentaTipoDocumento";
+//#endregion
+
+//#region informeCobranza
+import LetrasDeCambio from "./cobranza/LetrasDeCambio";
+import InformeGeneralDetallado from "./cobranza/InformeGeneralDetallado";
+import CuentasPorCobrar from "./cobranza/CuentasPorCobrar";
+import CuentasPorCobrarVencidos from "./cobranza/CuentasPorCobrarVencidos";
+import InformeCobranzas from "./cobranza/InformeCobranzas";
+import InformePlanillaPagos from "./cobranza/InformePlanillaPagos";
+import InfomeControlPlanillas from "./cobranza/InfomeControlPlanillas";
+//#endregion
+
+//#region informeFinanza
+import ReporteIngresosEgresos from "./finanza/ReporteIngresosEgresos";
+import PagosPendientes from "./finanza/PagosPendientes";
+import ReporteIngresosTiendas from "./finanza/ReporteIngresosTiendas";
+//#endregion
+
+//#region informeGerencia
+import InformeGerenciaComprasArticulos from "./gerencia/InformeGerenciaComprasArticulos";
+import InformeGerenciaCostosProductos from "./gerencia/InformeGerenciaCostosProductos";
+import InformeGerenciaOrdenDeCompra from "./gerencia/InformeGerenciaOrdenDeCompra";
+import InformeGerenciaRegistroComprasMes from "./gerencia/InformeGerenciaRegistroComprasMes";
+import InformeGerenciaTiendas from "./gerencia/InformeGerenciaTiendas";
+import InformeGerenciaUtilidades from "./gerencia/InformeGerenciaUtilidades";
+import InformeGerenciaVentasArticulos from "./gerencia/InformeGerenciaVentasArticulos";
+import InformeGerenciaVentasPorArticuloVendedor from "./gerencia/InformeGerenciaVentasPorArticuloVendedor";
+import InformeGerenciaVentasPorMarcaArituculos from "./gerencia/InformeGerenciaVentasPorMarcaArituculos";
+import InformeGerenciaVentasPorVendedorClientes from "./gerencia/InformeGerenciaVentasPorVendedorClientes";
+import InformeGerenciaVentasPorVendedorMes from "./gerencia/InformeGerenciaVentasPorVendedorMes";
+import InformeGerenciaVentasPorVendedorMesDia from "./gerencia/InformeGerenciaVentasPorVendedorMesDia";
+//#endregion
+//#endregion
 
 const Informe = () => {
-  //#region Informe Modal Artículos
-  //?Informe Modal Sistemas
-  const [modalSistemasReporteClientes, setModalSistemasReporteClientes] =
-    useState(false);
-  const [modalSistemasReporteProveedores, setModalSistemasReporteProveedores] =
-    useState(false);
-  const [modalSistemasReporteVendedores, setModalSistemasReporteVendedores] =
-    useState(false);
-  const [
-    modalSistemasReporteVendedoresClientes,
-    setModalSistemasReporteVendedoresClientes,
-  ] = useState(false);
-  //?Informe Modal Artículos
+  //#region useStates
+  //#region Sistemas
+  const [modalCliente, setModalCliente] = useState(false);
+  const [modalProveedor, setModalProveedor] = useState(false);
+  const [modalVendedor, setModalVendedor] = useState(false);
+  const [modalVendedorCliente, setModalVendedorCliente] = useState(false);
+  //#endregion
+
+  //#region Articulos
   const [modalTomaInventario, setModalTomaInventario] = useState(false);
   const [modalStockValorizado, setModalStockValorizado] = useState(false);
   const [modalListadoDeCostos, setModalListadoDeCostos] = useState(false);
-  const [modalMovimientoDeArticulos, setModalMovimientoDeArticulos] =
-    useState(false);
+  const [modalMovArticulo, setModalMovArticulo] = useState(false);
   const [modalKardexPorMarca, setModalKardexPorMarca] = useState(false);
-  //?Informe Modal Compras
+  //#endregion
+
+  //#region Compras
   const [modalTodasLasCompras, setModalTodasLasCompras] = useState(false);
   const [modalComprasDetalle, setModalComprasDetalle] = useState(false);
   const [modalComprasPorProveedor, setModalComprasPorProveedor] =
@@ -92,7 +111,9 @@ const Informe = () => {
   const [modalGuiasDeCompraDetalle, setModalGuiasDeCompraDetalle] =
     useState(false);
   const [modalDeudasPorPagar, setModalDeudasPorPagar] = useState(false);
-  //?Informe Modal Ventas
+  //#endregion
+
+  //#region Ventas
   const [modalVentaTipoDocumento, setModalVentaTipoDocumento] = useState(false);
   const [modalVentaTiendaMarca, setModalVentaTiendaMarca] = useState(false);
   const [modalRegistroVentas, setModalRegistroVentas] = useState(false);
@@ -114,7 +135,9 @@ const Informe = () => {
   const [modalGuiaValorizada, setModalGuiaValorizada] = useState(false);
   const [modalReporteDocumentos, setModalReporteDocumentos] = useState(false);
   const [modalInformeCilindros, setModalInformeCilindros] = useState(false);
-  //?Informe Modal Cobranzas
+  //#endregion
+
+  //#region Cobranzas
   const [modalCobranzasLetrasCambio, setModalCobranzasLetrasCambio] =
     useState(false);
   const [modalCuentasPorCobrar, setModalCuentasPorCobrar] = useState(false);
@@ -127,93 +150,96 @@ const Informe = () => {
     useState(false);
   const [modalInformeGeneralDetallado, setModalInformeGeneralDetallado] =
     useState(false);
-  //?Informe Modal Finanzas
+  //#endregion
+
+  //#region Finanzas
   const [modalReporteIngresosEgresos, setModalReporteIngresosEgresos] =
     useState(false);
   const [modalPagosPendientes, setModalPagosPendientes] = useState(false);
   const [modalReporteIngresosTienda, setModalReporteIngresosTienda] =
     useState(false);
-  //?Informe Modal Gerencia
-  const [modalInformeGerenciaTiendas, setModalInformeGerenciaTiendas] =
-    useState(false);
-  const [modalInformeGerenciaUtilidades, setModalInformeGerenciaUtilidades] =
-    useState(false);
-  const [
-    modalInformeGerenciaCostosProductos,
-    setModalInformeGerenciaCostosProductos,
-  ] = useState(false);
+  //#endregion
+
+  //#region Gerencia
   const [
     modalInformeGerenciaComprasArticulos,
     setModalInformeGerenciaComprasArticulos,
   ] = useState(false);
   const [
-    modalInformeGerenciaVentasArticulos,
-    setModalInformeGerenciaVentasArticulos,
+    modalInformeGerenciaCostosProductos,
+    setModalInformeGerenciaCostosProductos,
   ] = useState(false);
   const [
-    modalInformeGerenciaRegistroSalida,
-    setModalInformeGerenciaRegistroSalida,
+    modalInformeGerenciaOrdenDeCompra,
+    setModalInformeGerenciaOrdenDeCompra,
   ] = useState(false);
-  const [
-    modalInformeGerenciaVentasPorVendedorCliente,
-    setModalInformeGerenciaVentasPorVendedorCliente,
-  ] = useState(false);
-  const [
-    modalInformeGerenciaVentasPorMarcaArticulo,
-    setModalInformeGerenciaVentasPorMarcaArticulo,
-  ] = useState(false);
-  const [
-    modalInformeGerenciaVentasVendedorMes,
-    setModalInformeGerenciaVentasVendedorMes,
-  ] = useState(false);
-  const [
-    modalInformeGerenciaVentasVendedorMesDia,
-    setModalInformeGerenciaVentasVendedorMesDia,
-  ] = useState(false);
-  const [
-    modalInformeGerenciaVentasArticuloVendedor,
-    setModalInformeGerenciaVentasArticuloVendedor,
-  ] = useState(false);
-  const [modalInformeGerenciaOrdenCompra, setModalInformeGerenciaOrdenCompra] =
-    useState(false);
   const [
     modalInformeGerenciaRegistroComprasMes,
     setModalInformeGerenciaRegistroComprasMes,
   ] = useState(false);
+  const [modalInformeGerenciaTiendas, setModalInformeGerenciaTiendas] =
+    useState(false);
+  const [modalInformeGerenciaUtilidades, setModalInformeGerenciaUtilidades] =
+    useState(false);
+  const [
+    modalInformeGerenciaVentasArticulos,
+    setModalInformeGerenciaVentasArticulos,
+  ] = useState(false);
+  const [
+    modalInformeGerenciaVentasPorArticuloVendedor,
+    setModalInformeGerenciaVentasPorArticuloVendedor,
+  ] = useState(false);
+  const [
+    modalInformeGerenciaVentasPorMarcaArituculos,
+    setModalInformeGerenciaVentasPorMarcaArituculos,
+  ] = useState(false);
+  const [
+    modalInformeGerenciaVentasPorVendedorClientes,
+    setModalInformeGerenciaVentasPorVendedorClientes,
+  ] = useState(false);
+  const [
+    modalInformeGerenciaVentasPorVendedorMes,
+    setModalInformeGerenciaVentasPorVendedorMes,
+  ] = useState(false);
+  const [
+    modalInformeGerenciaVentasPorVendedorMesDia,
+    setModalInformeGerenciaVentasPorVendedorMesDia,
+  ] = useState(false);
+  //#endregion
   //#endregion
 
   //#region Informes
-  const InformesSistemas = [
+  const Sistemas = [
     {
       id: 1,
-      title: "Reporte de  Clientes",
+      title: "Informe de Clientes",
       AbrirModal: () => {
-        setModalSistemasReporteClientes(true);
+        setModalCliente(true);
       },
     },
     {
       id: 2,
-      title: "Reporte de Proveedores",
+      title: "Informe de Proveedores",
       AbrirModal: () => {
-        setModalSistemasReporteProveedores(true);
+        setModalProveedor(true);
       },
     },
     {
       id: 3,
-      title: "Reporte de Vendedores",
+      title: "Informe de Vendedores",
       AbrirModal: () => {
-        setModalSistemasReporteVendedores(true);
+        setModalVendedor(true);
       },
     },
     {
       id: 4,
-      title: "Reporte de Vendedores y Cliente",
+      title: "Informe de Vendedores y Cliente",
       AbrirModal: () => {
-        setModalSistemasReporteVendedoresClientes(true);
+        setModalVendedorCliente(true);
       },
     },
   ];
-  const InformeArticulos = [
+  const Articulos = [
     {
       id: 1,
       title: "Toma de Inventario",
@@ -239,7 +265,7 @@ const Informe = () => {
       id: 4,
       title: "Movimiento de Artículos",
       AbrirModal: () => {
-        setModalMovimientoDeArticulos(true);
+        setModalMovArticulo(true);
       },
     },
     {
@@ -250,7 +276,7 @@ const Informe = () => {
       },
     },
   ];
-  const InformeCompras = [
+  const Compras = [
     {
       id: 1,
       title: "Todas las Compras",
@@ -288,7 +314,7 @@ const Informe = () => {
     },
     {
       id: 6,
-      title: "Reporte de Compra(Logistica)",
+      title: "Informe de Compra(Logistica)",
       AbrirModal: () => {
         setModalReporteDeCompras(true);
       },
@@ -329,7 +355,7 @@ const Informe = () => {
       },
     },
   ];
-  const InformeVentas = [
+  const Ventas = [
     {
       id: 1,
       title: "Ventas por Tipo de Documento",
@@ -402,7 +428,7 @@ const Informe = () => {
     },
     {
       id: 11,
-      title: "Ventas por Personal y Articulo",
+      title: "Ventas por Personal y Artículo",
       AbrirModal: () => {
         setModalVentasPorPersonalArticulo(true);
       },
@@ -423,7 +449,7 @@ const Informe = () => {
     },
     {
       id: 14,
-      title: "Reporte de Documentos",
+      title: "Informe de Documentos",
       AbrirModal: () => {
         setModalReporteDocumentos(true);
       },
@@ -436,7 +462,7 @@ const Informe = () => {
       },
     },
   ];
-  const InformeDeCobranzas = [
+  const Cobranzas = [
     {
       id: 1,
       title: "Letras de Cambio",
@@ -487,10 +513,10 @@ const Informe = () => {
       },
     },
   ];
-  const InformeFinanzas = [
+  const Finanzas = [
     {
       id: 1,
-      title: "Reporte Ingresos/Egresos",
+      title: "Informe Ingresos/Egresos",
       AbrirModal: () => {
         setModalReporteIngresosEgresos(true);
       },
@@ -504,13 +530,13 @@ const Informe = () => {
     },
     {
       id: 3,
-      title: "Reporte de Ingresos de Tiendas",
+      title: "Informe de Ingresos de Tiendas",
       AbrirModal: () => {
         setModalReporteIngresosTienda(true);
       },
     },
   ];
-  const InformeGerencia = [
+  const Gerencia = [
     {
       id: 1,
       title: "Informe de Tiendas",
@@ -548,62 +574,55 @@ const Informe = () => {
     },
     {
       id: 6,
-      title: "Registro de Salida de Cilindros",
+      title: "Ventas por Vendedor y Cliente por Mes",
       AbrirModal: () => {
-        setModalInformeGerenciaRegistroSalida(true);
+        setModalInformeGerenciaVentasPorVendedorClientes(true);
       },
     },
     {
       id: 7,
-      title: "Ventas por Vendedor y Cliente por Mes",
+      title: "Ventas por Marca y Artículo por Mes",
       AbrirModal: () => {
-        setModalInformeGerenciaVentasPorVendedorCliente(true);
+        setModalInformeGerenciaVentasPorMarcaArituculos(true);
       },
     },
     {
       id: 8,
-      title: "Ventas por Marca y Articulo por Mes",
+      title: "Ventas por Vendedor por Mes",
       AbrirModal: () => {
-        setModalInformeGerenciaVentasPorMarcaArticulo(true);
+        setModalInformeGerenciaVentasPorVendedorMes(true);
       },
     },
     {
       id: 9,
-      title: "Ventas por Vendedor por mes",
+      title: "Ventas por Vendedor por Mes y Día",
       AbrirModal: () => {
-        setModalInformeGerenciaVentasVendedorMes(true);
+        setModalInformeGerenciaVentasPorVendedorMesDia(true);
       },
     },
     {
       id: 10,
-      title: "Ventas por Vendedor por mes y dia",
+      title: "Ventas por Artículo y Vendedor",
       AbrirModal: () => {
-        setModalInformeGerenciaVentasVendedorMesDia(true);
+        setModalInformeGerenciaVentasPorArticuloVendedor(true);
       },
     },
     {
       id: 11,
-      title: "Ventas por Articulo y Vendedor",
+      title: "Orden de Compra Pendiente-Cronograma",
       AbrirModal: () => {
-        setModalInformeGerenciaVentasArticuloVendedor(true);
+        setModalInformeGerenciaOrdenDeCompra(true);
       },
     },
     {
       id: 12,
-      title: "Orden de Compra Pendiente-Cronograma",
-      AbrirModal: () => {
-        setModalInformeGerenciaOrdenCompra(true);
-      },
-    },
-    {
-      id: 13,
-      title: "Registros de Compras por mes",
+      title: "Registros de Compras por Mes",
       AbrirModal: () => {
         setModalInformeGerenciaRegistroComprasMes(true);
       },
     },
   ];
-  const InformeGrafico = [
+  const Grafico = [
     {
       id: 1,
       title: "Ventas por Vendedor y Ubigeo",
@@ -612,7 +631,7 @@ const Informe = () => {
       },
     },
   ];
-  const InformeContable = [
+  const Contable = [
     {
       id: 1,
       title: "Informe Contable",
@@ -638,7 +657,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformesSistemas.map((item) => (
+            {Sistemas.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -660,7 +679,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeArticulos.map((item) => (
+            {Articulos.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -682,7 +701,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeCompras.map((item) => (
+            {Compras.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -702,7 +721,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeVentas.map((item) => (
+            {Ventas.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -724,7 +743,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeDeCobranzas.map((item) => (
+            {Cobranzas.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -746,7 +765,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeFinanzas.map((item) => (
+            {Finanzas.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -768,7 +787,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeGerencia.map((item) => (
+            {Gerencia.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -790,7 +809,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeGrafico.map((item) => (
+            {Grafico.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -810,7 +829,7 @@ const Informe = () => {
           }
         >
           <ul className="overflow-y-auto">
-            {InformeContable.map((item) => (
+            {Contable.map((item) => (
               <li
                 className={G.AcordionUl}
                 key={item.id}
@@ -823,48 +842,55 @@ const Informe = () => {
         </AccordionTab>
       </Accordion>
 
-      {modalSistemasReporteClientes && (
-        <ReporteDeClientes setModal={setModalSistemasReporteClientes} />
+      {/* Sistema */}
+      {modalCliente && <ReporteClientes setModal={setModalCliente} />}
+      {modalProveedor && <ReporteDeProveedores setModal={setModalProveedor} />}
+      {modalVendedor && <ReporteDeVendedores setModal={setModalVendedor} />}
+      {modalVendedorCliente && (
+        <ReporteVendedoresClientes setModal={setModalVendedorCliente} />
       )}
-      {modalSistemasReporteProveedores && (
-        <ReporteDeProveedores setModal={setModalSistemasReporteProveedores} />
-      )}
-      {modalSistemasReporteVendedores && (
-        <ReporteDeVendedores setModal={setModalSistemasReporteVendedores} />
-      )}
-      {modalSistemasReporteVendedoresClientes && (
-        <ReporteVendedoresClientes
-          setModal={setModalSistemasReporteVendedoresClientes}
-        />
-      )}
+      {/* Sistema */}
 
+      {/* Artículo */}
+      {modalKardexPorMarca && (
+        <KardexPorMarca setModal={setModalKardexPorMarca} />
+      )}
+      {modalListadoDeCostos && (
+        <ListadoDeCostos setModal={setModalListadoDeCostos} />
+      )}
+      {modalMovArticulo && (
+        <MovimientoDeArticulos setModal={setModalMovArticulo} />
+      )}
+      {modalStockValorizado && (
+        <StockValorizado setModal={setModalStockValorizado} />
+      )}
       {modalTomaInventario && (
         <TomaDeInventario
           setModal={setModalTomaInventario}
           foco={document.getElementById("pr_id_4")}
         />
       )}
-      {modalStockValorizado && (
-        <StockValorizado setModal={setModalStockValorizado} />
-      )}
-      {modalListadoDeCostos && (
-        <ListadoDeCostos setModal={setModalListadoDeCostos} />
-      )}
-      {modalMovimientoDeArticulos && (
-        <MovimientoDeArticulos setModal={setModalMovimientoDeArticulos} />
-      )}
-      {modalKardexPorMarca && (
-        <KardexPorMarca setModal={setModalKardexPorMarca} />
-      )}
+      {/* Artículo */}
 
-      {modalTodasLasCompras && (
-        <TodasLasCompras setModal={setModalTodasLasCompras} />
-      )}
+      {/* Compra */}
       {modalComprasDetalle && (
         <ComprasDetalle setModal={setModalComprasDetalle} />
       )}
       {modalComprasPorProveedor && (
         <ComprasPorProveedor setModal={setModalComprasPorProveedor} />
+      )}
+      {modalDeudasPorPagar && (
+        <DeudasPorPagar setModal={setModalDeudasPorPagar} />
+      )}
+      {modalEntradaAlmacen && (
+        <EntradaAlmacen setModal={setModalEntradaAlmacen} />
+      )}
+      {modalGuiasDeCompra && <GuiasDeCompra setModal={setModalGuiasDeCompra} />}
+      {modalGuiasDeCompraDetalle && (
+        <GuiasDeCompraDetalle setModal={setModalGuiasDeCompraDetalle} />
+      )}
+      {modalLetrasDeCambio && (
+        <LetrasCambio setModal={setModalLetrasDeCambio} />
       )}
       {modalOrdenDeCompra && <OrdenDeCompra setModal={setModalOrdenDeCompra} />}
       {modalOrdenDeCompraPendiente && (
@@ -873,37 +899,35 @@ const Informe = () => {
       {modalReporteDeCompras && (
         <ReporteCompra setModal={setModalReporteDeCompras} />
       )}
-      {modalEntradaAlmacen && (
-        <EntradaAlmacen setModal={setModalEntradaAlmacen} />
+      {modalTodasLasCompras && (
+        <TodasLasCompras setModal={setModalTodasLasCompras} />
       )}
-      {modalLetrasDeCambio && (
-        <LetrasCambio setModal={setModalLetrasDeCambio} />
-      )}
-      {modalGuiasDeCompra && <GuiasDeCompra setModal={setModalGuiasDeCompra} />}
-      {modalGuiasDeCompraDetalle && (
-        <GuiasDeCompraDetalle setModal={setModalGuiasDeCompraDetalle} />
-      )}
-      {modalDeudasPorPagar && (
-        <DeudasPorPagar setModal={setModalDeudasPorPagar} />
-      )}
+      {/* Compra */}
 
-      {modalVentaTipoDocumento && (
-        <VentaTipoDocumento setModal={setModalVentaTipoDocumento} />
+      {/* Venta */}
+      {modalGuiasDeRemision && (
+        <GuiasDeRemision setModal={setModalGuiasDeRemision} />
       )}
-      {modalVentaTiendaMarca && (
-        <VentaTiendaMarca setModal={setModalVentaTiendaMarca} />
+      {modalGuiaValorizada && (
+        <GuiaValorizada setModal={setModalGuiaValorizada} />
       )}
-      {modalRegistroVentas && (
-        <RegistroVentas setModal={setModalRegistroVentas} />
+      {modalInformeCilindros && (
+        <InformeCilindros setModal={setModalInformeCilindros} />
+      )}
+      {modalRegistroSalidaCilindros && (
+        <RegistroSalidaCilindros setModal={setModalRegistroSalidaCilindros} />
       )}
       {modalRegistroVentaDetalle && (
         <RegistroVentaDetalle setModal={setModalRegistroVentaDetalle} />
       )}
+      {modalRegistroVentas && (
+        <RegistroVentas setModal={setModalRegistroVentas} />
+      )}
       {modalRegistroventaUbigueo && (
         <RegistroVentaUbigueo setModal={setModalRegistroventaUbigueo} />
       )}
-      {modalRegistroSalidaCilindros && (
-        <RegistroSalidaCilindros setModal={setModalRegistroSalidaCilindros} />
+      {modalReporteDocumentos && (
+        <ReporteDocumentos setModal={setModalReporteDocumentos} />
       )}
       {modalVentasPorCliente && (
         <VentasPorCliente setModal={setModalVentasPorCliente} />
@@ -916,28 +940,23 @@ const Informe = () => {
       {modalVentasPorPersonal && (
         <VentasPorPersonal setModal={setModalVentasPorPersonal} />
       )}
-      {modalVentasPorPersonalDetalle && (
-        <VentasPorPersonalDetalle setModal={setModalVentasPorPersonalDetalle} />
-      )}
       {modalVentasPorPersonalArticulo && (
         <VentasPorPersonalArticulo
           setModal={setModalVentasPorPersonalArticulo}
         />
       )}
+      {modalVentasPorPersonalDetalle && (
+        <VentasPorPersonalDetalle setModal={setModalVentasPorPersonalDetalle} />
+      )}
+      {modalVentaTiendaMarca && (
+        <VentaTiendaMarca setModal={setModalVentaTiendaMarca} />
+      )}
+      {modalVentaTipoDocumento && (
+        <VentaTipoDocumento setModal={setModalVentaTipoDocumento} />
+      )}
+      {/* Venta */}
 
-      {modalGuiasDeRemision && (
-        <GuiasDeRemision setModal={setModalGuiasDeRemision} />
-      )}
-      {modalGuiaValorizada && (
-        <GuiaValorizada setModal={setModalGuiaValorizada} />
-      )}
-      {modalReporteDocumentos && (
-        <ReporteDocumentos setModal={setModalReporteDocumentos} />
-      )}
-      {modalInformeCilindros && (
-        <InformeCilindros setModal={setModalInformeCilindros} />
-      )}
-
+      {/* Cobranza */}
       {modalCobranzasLetrasCambio && (
         <LetrasDeCambio setModal={setModalCobranzasLetrasCambio} />
       )}
@@ -953,15 +972,19 @@ const Informe = () => {
       {modalInformeCobranzas && (
         <InformeCobranzas setModal={setModalInformeCobranzas} />
       )}
-
       {modalInformePlanillaPagos && (
         <InformePlanillaPagos setModal={setModalInformePlanillaPagos} />
       )}
       {modalInformeControlPlanillas && (
         <InfomeControlPlanillas setModal={setModalInformeControlPlanillas} />
       )}
+      {/* Cobranza */}
+
+      {/* Finanza */}
       {modalReporteIngresosEgresos && (
-        <ReporteIngresosEgresos setModal={setModalReporteIngresosEgresos} />
+        <ReporteIngresosEgresos
+          setModal={setModalReporteIngresosEgresos}
+        />
       )}
       {modalPagosPendientes && (
         <PagosPendientes setModal={setModalPagosPendientes} />
@@ -969,10 +992,12 @@ const Informe = () => {
       {modalReporteIngresosTienda && (
         <ReporteIngresosTiendas setModal={setModalReporteIngresosTienda} />
       )}
+      {/* Finanza */}
 
-      {modalInformeGerenciaUtilidades && (
-        <InformeGerenciaUtilidades
-          setModal={setModalInformeGerenciaUtilidades}
+      {/* Gerencia */}
+      {modalInformeGerenciaComprasArticulos && (
+        <InformeGerenciaComprasArticulos
+          setModal={setModalInformeGerenciaComprasArticulos}
         />
       )}
       {modalInformeGerenciaCostosProductos && (
@@ -980,9 +1005,22 @@ const Informe = () => {
           setModal={setModalInformeGerenciaCostosProductos}
         />
       )}
-      {modalInformeGerenciaComprasArticulos && (
-        <InformeGerenciaComprasArticulos
-          setModal={setModalInformeGerenciaComprasArticulos}
+      {modalInformeGerenciaOrdenDeCompra && (
+        <InformeGerenciaOrdenDeCompra
+          setModal={setModalInformeGerenciaOrdenDeCompra}
+        />
+      )}
+      {modalInformeGerenciaRegistroComprasMes && (
+        <InformeGerenciaRegistroComprasMes
+          setModal={setModalInformeGerenciaRegistroComprasMes}
+        />
+      )}
+      {modalInformeGerenciaTiendas && (
+        <InformeGerenciaTiendas setModal={setModalInformeGerenciaTiendas} />
+      )}
+      {modalInformeGerenciaUtilidades && (
+        <InformeGerenciaUtilidades
+          setModal={setModalInformeGerenciaUtilidades}
         />
       )}
       {modalInformeGerenciaVentasArticulos && (
@@ -990,31 +1028,33 @@ const Informe = () => {
           setModal={setModalInformeGerenciaVentasArticulos}
         />
       )}
-      {modalInformeGerenciaVentasPorVendedorCliente && (
-        <InformeGerenciaVentasPorVendedorClientes
-          setModal={setModalInformeGerenciaVentasPorVendedorCliente}
-        />
-      )}
-      {modalInformeGerenciaVentasPorMarcaArticulo && (
-        <InformeGerenciaVentasPorMarcaArituculos
-          setModal={setModalInformeGerenciaVentasPorMarcaArticulo}
-        />
-      )}
-      {modalInformeGerenciaVentasVendedorMes && (
-        <InformeGerenciaVentasPorVendedorMes
-          setModal={setModalInformeGerenciaVentasVendedorMes}
-        />
-      )}
-      {modalInformeGerenciaVentasVendedorMesDia && (
-        <InformeGerenciaVentasPorVendedorMesDia
-          setModal={setModalInformeGerenciaVentasVendedorMesDia}
-        />
-      )}
-      {modalInformeGerenciaVentasArticuloVendedor && (
+      {modalInformeGerenciaVentasPorArticuloVendedor && (
         <InformeGerenciaVentasPorArticuloVendedor
-          setModal={setModalInformeGerenciaVentasArticuloVendedor}
+          setModal={setModalInformeGerenciaVentasPorArticuloVendedor}
         />
       )}
+      {modalInformeGerenciaVentasPorMarcaArituculos && (
+        <InformeGerenciaVentasPorMarcaArituculos
+          setModal={setModalInformeGerenciaVentasPorMarcaArituculos}
+        />
+      )}
+      {modalInformeGerenciaVentasPorVendedorClientes && (
+        <InformeGerenciaVentasPorVendedorClientes
+          setModal={setModalInformeGerenciaVentasPorVendedorClientes}
+        />
+      )}
+      {modalInformeGerenciaVentasPorVendedorMes && (
+        <InformeGerenciaVentasPorVendedorMes
+          setModal={setModalInformeGerenciaVentasPorVendedorMes}
+        />
+      )}
+      {modalInformeGerenciaVentasPorVendedorMesDia && (
+        <InformeGerenciaVentasPorVendedorMesDia
+          setModal={setModalInformeGerenciaVentasPorVendedorMesDia}
+        />
+      )}
+      {/* Gerencia */}
+
       <ToastContainer />
     </div>
   );

@@ -55,7 +55,10 @@ import SalidaCilindros from "./pages/almacen/salidaCilindros/SalidaCilindros";
 //Pages almacen
 //Pages Finanzas
 import MovimientoBancario from "./pages/finanza/movimientoBancario/MovimientoBancario";
-//Pages Finanzas
+//Pages Cobranzas
+import CuentaPorCobrar from "./pages/cobranza/cuentaPorCobrar/CuentaPorCobrar";
+import PLanillaCobro from "./pages/cobranza/planillaCobro/PlanillaCobro";
+//Pages Cobranzas
 //Pages Personal
 import Personal from "./pages/personal/Personal";
 //Pages Personal
@@ -73,11 +76,6 @@ import BloquearMovimientoBancario from "./pages/finanza/bloquearMovimientoBancar
 //Pages Herramientas
 import Informe from "./pages/informe/Informe";
 //Pages Herramientas
-//Pages Cobranzas
-import CuentaPorCobrar from "./pages/cobranza/cuentaPorCobrar/CuentaPorCobrar";
-import PLanillaCobro from "./pages/cobranza/planillaCobro/PlanillaCobro";
-//Pages Cobranzas
-
 function App() {
   return (
     <BrowserRouter>
