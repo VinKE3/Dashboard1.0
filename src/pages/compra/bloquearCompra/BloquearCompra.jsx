@@ -133,7 +133,7 @@ const BloquearCompra = () => {
   };
   //#endregion
 
-  //#region Funciones Filtrado
+  //#region Funciones Filtrado222
   const HandleData = async ({ target }) => {
     setFiltro((prevState) => ({
       ...prevState,
