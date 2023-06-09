@@ -15,7 +15,7 @@ const TodasLasCompras = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
       "YYYY-MM-DD"
     ),
-    marcaId: "",
+    monedaId: "",
   });
   const [dataMoneda, setDataMoneda] = useState([]);
   //#endregion
@@ -118,7 +118,6 @@ const TodasLasCompras = ({ setModal }) => {
               />
             </div>
           </div>
-
           <div className={G.InputFull}>
             <label htmlFor="monedaId" className={G.LabelStyle}>
               Moneda

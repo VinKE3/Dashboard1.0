@@ -58,7 +58,8 @@ import * as G from "../../components/Global";
 import ReporteDeClientes from "../informe/informeSistemas/ReporteDeClientes";
 import ReporteDeProveedores from "../informe/informeSistemas/ReporteDeProveedores";
 import ReporteDeVendedores from "../informe/informeSistemas/ReporteDeVendedores";
-
+import InformeGerenciaOrdenDeCompra from "../informe/informeGerencia/InformeGerenciaOrdenDeCompra";
+import InformeGerenciaRegistroComprasMes from "../informe/informeGerencia/InformeGerenciaRegistroComprasMes";
 const Informe = () => {
   //?INFORMES MODALES
   //#region InformeModal
@@ -1004,6 +1005,16 @@ const Informe = () => {
       {modalInformeGerenciaVentasArticuloVendedor && (
         <InformeGerenciaVentasPorArticuloVendedor
           setModal={setModalInformeGerenciaVentasArticuloVendedor}
+        />
+      )}
+      {modalInformeGerenciaOrdenCompra && (
+        <InformeGerenciaOrdenDeCompra
+          setModal={setModalInformeGerenciaOrdenCompra}
+        />
+      )}
+      {modalInformeGerenciaRegistroComprasMes && (
+        <InformeGerenciaRegistroComprasMes
+          setModal={setModalInformeGerenciaRegistroComprasMes}
         />
       )}
       <ToastContainer />
