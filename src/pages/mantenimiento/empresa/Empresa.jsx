@@ -1139,7 +1139,7 @@ const Empresa = ({ modo }) => {
                     />
                   </div>
                 </div>
-                <div className="flex justify-end pt-2 ">
+                <div className="py-2 flex items-center justify-start">
                   <button
                     id="guardarTodo"
                     className={G.BotonModalBase + G.BotonOkModal}
@@ -1793,7 +1793,7 @@ const Empresa = ({ modo }) => {
                   </div>
                 </div>
 
-                <div className="mt-10 pt-3 flex justify-end">
+                <div className="py-2 flex items-center justify-start">
                   <button
                     id="guardarTodo"
                     className={G.BotonModalBase + G.BotonOkModal}
@@ -1815,423 +1815,386 @@ const Empresa = ({ modo }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="card">
                     <h4 className={G.TituloH4}>IGV</h4>
-                    <BotonBasico
-                      botonText="Agregar"
-                      botonClass={G.BotonVerde}
-                      botonIcon={faPlus}
-                      click={(e) => {
-                        AgregarIgv(e);
-                      }}
-                      contenedor=""
-                    />
                     {/* Form */}
-                    {estadoIgv && (
-                      <div
-                        className={
-                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
-                        }
-                      >
-                        <div className={G.ContenedorRow}>
-                          <div className={G.InputFull}>
+                    <div className={G.ContenedorBasico + G.FondoContenedor}>
+                      <BotonBasico
+                        botonText="Agregar"
+                        botonClass={G.BotonVerde}
+                        botonIcon={faPlus}
+                        click={(e) => {
+                          AgregarIgv(e);
+                        }}
+                        contenedor=""
+                      />
+                      {estadoIgv && (
+                        <>
+                          <div className={G.ContenedorRow}>
                             <div className={G.InputFull}>
-                              <label
-                                htmlFor="porcentaje"
-                                className={G.LabelStyle}
-                              >
-                                Porcentaje
-                              </label>
-                              <input
-                                type="number"
-                                id="porcentaje"
-                                name="porcentaje"
-                                placeholder="Porcentaje"
-                                autoComplete="off"
-                                min={0}
-                                autoFocus
-                                disabled={modo == "Consultar"}
-                                value={objetoIgv.porcentaje}
-                                onChange={ValidarDataIgv}
-                                className={G.InputBoton}
-                              />
-                            </div>
-                            <div className={G.Input36}>
-                              <div className={G.CheckStyle + G.Anidado}>
-                                <Checkbox
-                                  inputId="defaultIgv"
-                                  id="default"
-                                  name="default"
-                                  value={objetoIgv.default}
-                                  checked={objetoIgv.default}
-                                  onChange={(e) => {
-                                    setCheckedIgv(e.checked);
-                                    ValidarDataIgv(e);
-                                  }}
-                                ></Checkbox>
+                              <div className={G.InputFull}>
+                                <label
+                                  htmlFor="porcentaje"
+                                  className={G.LabelStyle}
+                                >
+                                  Porcentaje
+                                </label>
+                                <input
+                                  type="number"
+                                  id="porcentaje"
+                                  name="porcentaje"
+                                  placeholder="Porcentaje"
+                                  autoComplete="off"
+                                  min={0}
+                                  autoFocus
+                                  disabled={modo == "Consultar"}
+                                  value={objetoIgv.porcentaje}
+                                  onChange={ValidarDataIgv}
+                                  className={G.InputBoton}
+                                />
                               </div>
-                              <label
-                                htmlFor="defaultIgv"
-                                className={G.LabelCheckStyle}
-                              >
-                                Default
-                              </label>
+                              <div className={G.Input36}>
+                                <div className={G.CheckStyle + G.Anidado}>
+                                  <Checkbox
+                                    inputId="defaultIgv"
+                                    id="default"
+                                    name="default"
+                                    value={objetoIgv.default}
+                                    checked={objetoIgv.default}
+                                    onChange={(e) => {
+                                      setCheckedIgv(e.checked);
+                                      ValidarDataIgv(e);
+                                    }}
+                                  ></Checkbox>
+                                </div>
+                                <label
+                                  htmlFor="defaultIgv"
+                                  className={G.LabelCheckStyle}
+                                >
+                                  Default
+                                </label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-
-                        {/*footer*/}
-                        <div className="flex items-center justify-start">
-                          {modo == "Consultar" ? (
-                            ""
-                          ) : (
+                          {/*footer*/}
+                          <div className={G.ContenedorBotonesSubModal}>
+                            {modo == "Consultar" ? (
+                              ""
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={EnviarIgv}
+                                className={G.BotonModalBase + G.BotonOkModal}
+                              >
+                                Guardar
+                              </button>
+                            )}
                             <button
                               type="button"
-                              onClick={EnviarIgv}
-                              className={
-                                G.BotonModalBase +
-                                G.BotonOkModal +
-                                " py-2 sm:py-1 px-3"
-                              }
+                              onClick={() => setEstadoIgv(false)}
+                              className={G.BotonModalBase + G.BotonCerrarModal}
                             >
-                              Guardar
+                              CERRAR
                             </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => setEstadoIgv(false)}
-                            className={
-                              G.BotonModalBase +
-                              G.BotonCerrarModal +
-                              " py-2 sm:py-1  px-3"
-                            }
-                          >
-                            CERRAR
-                          </button>
-                        </div>
-                        {/*footer*/}
-                      </div>
-                    )}
-                    <DivTabla>
-                      <TableBasic
-                        id="tablaIGV"
-                        columnas={colIgv}
-                        datos={porcentajesIGV}
-                      />
-                    </DivTabla>
+                          </div>
+                          {/*footer*/}
+                        </>
+                      )}
+                      <DivTabla>
+                        <TableBasic
+                          id="tablaIGV"
+                          columnas={colIgv}
+                          datos={porcentajesIGV}
+                        />
+                      </DivTabla>
+                    </div>
                   </div>
                   <div className="card">
                     <h4 className={G.TituloH4}>RETENCIONES</h4>
-                    <BotonBasico
-                      botonText="Agregar"
-                      botonClass={G.BotonVerde}
-                      botonIcon={faPlus}
-                      click={(e) => {
-                        AgregarRetencion(e);
-                      }}
-                      contenedor=""
-                    />
                     {/* Form */}
-                    {estadoRetencion && (
-                      <div
-                        className={
-                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
-                        }
-                      >
-                        <div className={G.ContenedorRow}>
-                          <div className={G.InputFull}>
+                    <div className={G.ContenedorBasico + G.FondoContenedor}>
+                      <BotonBasico
+                        botonText="Agregar"
+                        botonClass={G.BotonVerde}
+                        botonIcon={faPlus}
+                        click={(e) => {
+                          AgregarRetencion(e);
+                        }}
+                        contenedor=""
+                      />
+                      {estadoRetencion && (
+                        <>
+                          <div className={G.ContenedorRow}>
                             <div className={G.InputFull}>
-                              <label
-                                htmlFor="porcentaje"
-                                className={G.LabelStyle}
-                              >
-                                Porcentaje
-                              </label>
-                              <input
-                                type="number"
-                                id="porcentaje"
-                                name="porcentaje"
-                                placeholder="Porcentaje"
-                                autoComplete="off"
-                                autoFocus
-                                min={0}
-                                disabled={modo == "Consultar"}
-                                value={objetoRetencion.porcentaje}
-                                onChange={ValidarDataRetencion}
-                                className={G.InputBoton}
-                              />
-                            </div>
-                            <div className={G.Input36}>
-                              <div className={G.CheckStyle + G.Anidado}>
-                                <Checkbox
-                                  inputId="defaultRetencion"
-                                  id="default"
-                                  name="default"
-                                  value={objetoRetencion.default}
-                                  checked={objetoRetencion.default}
-                                  onChange={(e) => {
-                                    setCheckedRetencion(e.checked);
-                                    ValidarDataRetencion(e);
-                                  }}
-                                ></Checkbox>
+                              <div className={G.InputFull}>
+                                <label
+                                  htmlFor="porcentaje"
+                                  className={G.LabelStyle}
+                                >
+                                  Porcentaje
+                                </label>
+                                <input
+                                  type="number"
+                                  id="porcentaje"
+                                  name="porcentaje"
+                                  placeholder="Porcentaje"
+                                  autoComplete="off"
+                                  autoFocus
+                                  min={0}
+                                  disabled={modo == "Consultar"}
+                                  value={objetoRetencion.porcentaje}
+                                  onChange={ValidarDataRetencion}
+                                  className={G.InputBoton}
+                                />
                               </div>
-                              <label
-                                htmlFor="defaultRetencion"
-                                className={G.LabelCheckStyle}
-                              >
-                                Default
-                              </label>
+                              <div className={G.Input36}>
+                                <div className={G.CheckStyle + G.Anidado}>
+                                  <Checkbox
+                                    inputId="defaultRetencion"
+                                    id="default"
+                                    name="default"
+                                    value={objetoRetencion.default}
+                                    checked={objetoRetencion.default}
+                                    onChange={(e) => {
+                                      setCheckedRetencion(e.checked);
+                                      ValidarDataRetencion(e);
+                                    }}
+                                  ></Checkbox>
+                                </div>
+                                <label
+                                  htmlFor="defaultRetencion"
+                                  className={G.LabelCheckStyle}
+                                >
+                                  Default
+                                </label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        {/*footer*/}
-                        <div className="flex items-center justify-start">
-                          {modo == "Consultar" ? (
-                            ""
-                          ) : (
+                          {/*footer*/}
+                          <div className={G.ContenedorBotonesSubModal}>
+                            {modo == "Consultar" ? (
+                              ""
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={EnviarRetencion}
+                                className={G.BotonModalBase + G.BotonOkModal}
+                              >
+                                Guardar
+                              </button>
+                            )}
                             <button
                               type="button"
-                              onClick={EnviarRetencion}
-                              className={
-                                G.BotonModalBase +
-                                G.BotonOkModal +
-                                " py-2 sm:py-1 px-3"
-                              }
+                              onClick={() => setEstadoRetencion(false)}
+                              className={G.BotonModalBase + G.BotonCerrarModal}
                             >
-                              Guardar
+                              CERRAR
                             </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => setEstadoRetencion(false)}
-                            className={
-                              G.BotonModalBase +
-                              G.BotonCerrarModal +
-                              " py-2 sm:py-1  px-3"
-                            }
-                          >
-                            CERRAR
-                          </button>
-                        </div>
-                        {/*footer*/}
-                      </div>
-                    )}
+                          </div>
+                          {/*footer*/}
+                        </>
+                      )}
+                      <DivTabla>
+                        <TableBasic
+                          id="tablaRetencion"
+                          columnas={colRetencion}
+                          datos={porcentajesRetencion}
+                        />
+                      </DivTabla>
+                    </div>
+
                     {/* Form */}
-                    <DivTabla>
-                      <TableBasic
-                        id="tablaRetencion"
-                        columnas={colRetencion}
-                        datos={porcentajesRetencion}
-                      />
-                    </DivTabla>
                   </div>
                   <div className="card">
                     <h4 className={G.TituloH4}>DETRACCIONES</h4>
-                    <BotonBasico
-                      botonText="Agregar"
-                      botonClass={G.BotonVerde}
-                      botonIcon={faPlus}
-                      click={(e) => {
-                        AgregarDetraccion(e);
-                      }}
-                      contenedor=""
-                    />
                     {/* Form */}
-                    {estadoDetraccion && (
-                      <div
-                        className={
-                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
-                        }
-                      >
-                        <div className={G.ContenedorRow}>
-                          <div className={G.InputFull}>
+                    <div className={G.ContenedorBasico + G.FondoContenedor}>
+                      <BotonBasico
+                        botonText="Agregar"
+                        botonClass={G.BotonVerde}
+                        botonIcon={faPlus}
+                        click={(e) => {
+                          AgregarDetraccion(e);
+                        }}
+                        contenedor=""
+                      />
+                      {estadoDetraccion && (
+                        <>
+                          <div className={G.ContenedorRow}>
                             <div className={G.InputFull}>
-                              <label
-                                htmlFor="porcentaje"
-                                className={G.LabelStyle}
-                              >
-                                Porcentaje
-                              </label>
-                              <input
-                                type="number"
-                                id="porcentaje"
-                                name="porcentaje"
-                                placeholder="Porcentaje"
-                                autoComplete="off"
-                                min={0}
-                                autoFocus
-                                disabled={modo == "Consultar"}
-                                value={objetoDetraccion.porcentaje}
-                                onChange={ValidarDataDetraccion}
-                                className={G.InputBoton}
-                              />
-                            </div>
-                            <div className={G.Input36}>
-                              <div className={G.CheckStyle + G.Anidado}>
-                                <Checkbox
-                                  inputId="defaultDetraccion"
-                                  id="default"
-                                  name="default"
-                                  value={objetoDetraccion.default}
-                                  checked={objetoDetraccion.default}
-                                  onChange={(e) => {
-                                    setCheckedDetraccion(e.checked);
-                                    ValidarDataDetraccion(e);
-                                  }}
-                                ></Checkbox>
+                              <div className={G.InputFull}>
+                                <label
+                                  htmlFor="porcentaje"
+                                  className={G.LabelStyle}
+                                >
+                                  Porcentaje
+                                </label>
+                                <input
+                                  type="number"
+                                  id="porcentaje"
+                                  name="porcentaje"
+                                  placeholder="Porcentaje"
+                                  autoComplete="off"
+                                  min={0}
+                                  autoFocus
+                                  disabled={modo == "Consultar"}
+                                  value={objetoDetraccion.porcentaje}
+                                  onChange={ValidarDataDetraccion}
+                                  className={G.InputBoton}
+                                />
                               </div>
-                              <label
-                                htmlFor="defaultDetraccion"
-                                className={G.LabelCheckStyle}
-                              >
-                                Default
-                              </label>
+                              <div className={G.Input36}>
+                                <div className={G.CheckStyle + G.Anidado}>
+                                  <Checkbox
+                                    inputId="defaultDetraccion"
+                                    id="default"
+                                    name="default"
+                                    value={objetoDetraccion.default}
+                                    checked={objetoDetraccion.default}
+                                    onChange={(e) => {
+                                      setCheckedDetraccion(e.checked);
+                                      ValidarDataDetraccion(e);
+                                    }}
+                                  ></Checkbox>
+                                </div>
+                                <label
+                                  htmlFor="defaultDetraccion"
+                                  className={G.LabelCheckStyle}
+                                >
+                                  Default
+                                </label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        {/*footer*/}
-                        <div className="flex items-center justify-start">
-                          {modo == "Consultar" ? (
-                            ""
-                          ) : (
+                          {/*footer*/}
+                          <div className={G.ContenedorBotonesSubModal}>
+                            {modo == "Consultar" ? (
+                              ""
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={EnviarIDetraccion}
+                                className={G.BotonModalBase + G.BotonOkModal}
+                              >
+                                Guardar
+                              </button>
+                            )}
                             <button
                               type="button"
-                              onClick={EnviarIDetraccion}
-                              className={
-                                G.BotonModalBase +
-                                G.BotonOkModal +
-                                " py-2 sm:py-1 px-3"
-                              }
+                              onClick={() => setEstadoDetraccion(false)}
+                              className={G.BotonModalBase + G.BotonCerrarModal}
                             >
-                              Guardar
+                              CERRAR
                             </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => setEstadoDetraccion(false)}
-                            className={
-                              G.BotonModalBase +
-                              G.BotonCerrarModal +
-                              " py-2 sm:py-1  px-3"
-                            }
-                          >
-                            CERRAR
-                          </button>
-                        </div>
-                        {/*footer*/}
-                      </div>
-                    )}
+                          </div>
+                          {/*footer*/}
+                        </>
+                      )}
+                      <DivTabla>
+                        <TableBasic
+                          id="tablaDetraccion"
+                          columnas={colDetraccion}
+                          datos={porcentajesDetraccion}
+                        />
+                      </DivTabla>
+                    </div>
+
                     {/* Form */}
-                    <DivTabla>
-                      <TableBasic
-                        id="tablaDetraccion"
-                        columnas={colDetraccion}
-                        datos={porcentajesDetraccion}
-                      />
-                    </DivTabla>
                   </div>
                   <div className="card">
                     <h4 className={G.TituloH4}>PERCEPCIONES</h4>
-                    <BotonBasico
-                      botonText="Agregar"
-                      botonClass={G.BotonVerde}
-                      botonIcon={faPlus}
-                      click={(e) => {
-                        AgregarPercepcion(e);
-                      }}
-                      contenedor=""
-                    />
+
                     {/* Form */}
-                    {estadoPercepcion && (
-                      <div
-                        className={
-                          G.ContenedorBasico + G.FondoContenedor + " pb-2 mb-3"
-                        }
-                      >
-                        <div className={G.ContenedorRow}>
-                          <div className={G.InputFull}>
+                    <div className={G.ContenedorBasico + G.FondoContenedor}>
+                      <BotonBasico
+                        botonText="Agregar"
+                        botonClass={G.BotonVerde}
+                        botonIcon={faPlus}
+                        click={(e) => {
+                          AgregarPercepcion(e);
+                        }}
+                        contenedor=""
+                      />
+                      {estadoPercepcion && (
+                        <>
+                          <div className={G.ContenedorRow}>
                             <div className={G.InputFull}>
-                              <label
-                                htmlFor="porcentaje"
-                                className={G.LabelStyle}
-                              >
-                                Porcentaje
-                              </label>
-                              <input
-                                type="number"
-                                id="porcentaje"
-                                name="porcentaje"
-                                placeholder="Porcentaje"
-                                autoComplete="off"
-                                min={0}
-                                autoFocus
-                                disabled={modo == "Consultar"}
-                                value={objetoPercepcion.porcentaje}
-                                onChange={ValidarDataPercepcion}
-                                className={G.InputBoton}
-                              />
-                            </div>
-                            <div className={G.Input36}>
-                              <div className={G.CheckStyle + G.Anidado}>
-                                <Checkbox
-                                  inputId="defaultPercepcion"
-                                  id="default"
-                                  name="default"
-                                  value={objetoPercepcion.default}
-                                  checked={objetoPercepcion.default}
-                                  onChange={(e) => {
-                                    setCheckedPercepcion(e.checked);
-                                    ValidarDataPercepcion(e);
-                                  }}
-                                ></Checkbox>
+                              <div className={G.InputFull}>
+                                <label
+                                  htmlFor="porcentaje"
+                                  className={G.LabelStyle}
+                                >
+                                  Porcentaje
+                                </label>
+                                <input
+                                  type="number"
+                                  id="porcentaje"
+                                  name="porcentaje"
+                                  placeholder="Porcentaje"
+                                  autoComplete="off"
+                                  min={0}
+                                  autoFocus
+                                  disabled={modo == "Consultar"}
+                                  value={objetoPercepcion.porcentaje}
+                                  onChange={ValidarDataPercepcion}
+                                  className={G.InputBoton}
+                                />
                               </div>
-                              <label
-                                htmlFor="defaultPercepcion"
-                                className={G.LabelCheckStyle}
-                              >
-                                Default
-                              </label>
+                              <div className={G.Input36}>
+                                <div className={G.CheckStyle + G.Anidado}>
+                                  <Checkbox
+                                    inputId="defaultPercepcion"
+                                    id="default"
+                                    name="default"
+                                    value={objetoPercepcion.default}
+                                    checked={objetoPercepcion.default}
+                                    onChange={(e) => {
+                                      setCheckedPercepcion(e.checked);
+                                      ValidarDataPercepcion(e);
+                                    }}
+                                  ></Checkbox>
+                                </div>
+                                <label
+                                  htmlFor="defaultPercepcion"
+                                  className={G.LabelCheckStyle}
+                                >
+                                  Default
+                                </label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        {/*footer*/}
-                        <div className="flex items-center justify-start">
-                          {modo == "Consultar" ? (
-                            ""
-                          ) : (
+                          {/*footer*/}
+                          <div className={G.ContenedorBotonesSubModal}>
+                            {modo == "Consultar" ? (
+                              ""
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={EnviarPercepcion}
+                                className={G.BotonModalBase + G.BotonOkModal}
+                              >
+                                Guardar
+                              </button>
+                            )}
                             <button
                               type="button"
-                              onClick={EnviarPercepcion}
-                              className={
-                                G.BotonModalBase +
-                                G.BotonOkModal +
-                                " py-2 sm:py-1 px-3"
-                              }
+                              onClick={() => setEstadoPercepcion(false)}
+                              className={G.BotonModalBase + G.BotonCerrarModal}
                             >
-                              Guardar
+                              CERRAR
                             </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => setEstadoPercepcion(false)}
-                            className={
-                              G.BotonModalBase +
-                              G.BotonCerrarModal +
-                              " py-2 sm:py-1 px-3"
-                            }
-                          >
-                            CERRAR
-                          </button>
-                        </div>
-                        {/*footer*/}
-                      </div>
-                    )}
+                          </div>
+                          {/*footer*/}
+                        </>
+                      )}
+                      <DivTabla>
+                        <TableBasic
+                          id="tablaPercepcion"
+                          columnas={colPercepcion}
+                          datos={porcentajesPercepcion}
+                        />
+                      </DivTabla>
+                    </div>
+
                     {/* Form */}
-                    <DivTabla>
-                      <TableBasic
-                        id="tablaPercepcion"
-                        columnas={colPercepcion}
-                        datos={porcentajesPercepcion}
-                      />
-                    </DivTabla>
                   </div>
                 </div>
               </div>

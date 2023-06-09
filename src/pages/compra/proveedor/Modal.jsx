@@ -832,7 +832,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       </select>
                     </div>
                     {/*footer*/}
-                    <div className="py-1 gap-x-2 flex items-center justify-start">
+                    <div className={G.ContenedorBotonesSubModal}>
                       {modo == "Consultar" ? (
                         ""
                       ) : (
@@ -1049,7 +1049,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       />
                     </div>
                     {/*footer*/}
-                    <div className="py-1 gap-x-2 flex items-center justify-start">
+                    <div className={G.ContenedorBotonesSubModal}>
                       {modo == "Consultar" ? (
                         ""
                       ) : (

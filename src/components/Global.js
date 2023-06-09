@@ -33,6 +33,7 @@ export var ContenedorInputs =
 export var ContenedorInputsFiltro =
   "flex flex-col sm:flex-row sm:justify-between gap-y-1.5 md:gap-y-2 sm:gap-x-2 my-2 ";
 export var ContenedorRow = "flex flex-row gap-y-3 gap-x-2 ";
+export var ContenedorBotonesSubModal = "py-1 gap-x-2 flex items-center justify-start ";
 export var Input = "flex min-w-min ";
 export var InputFull = "flex w-full min-w-min ";
 export var InputMitad = "flex min-w-min md:w-1/2";
