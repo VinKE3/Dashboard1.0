@@ -23,29 +23,34 @@ const DivTabla = styled.div`
   & tbody td:first-child {
     display: none;
   }
-  & th:nth-child(2) {
-    width: 80px;
+  & th:nth-child(2),
+  & th:nth-child(3) {
+    text-align: center;
+    width: 35px;
   }
   & th:nth-child(4) {
-    text-align: center;
-    width: 60px;
-  }
-  & th:nth-child(5) {
-    text-align: right;
-    width: 40px;
+    width: 80px;
   }
   & th:nth-child(6) {
     text-align: center;
+    width: 60px;
+  }
+  & th:nth-child(7) {
+    text-align: right;
     width: 40px;
   }
-  & th:nth-child(7),
   & th:nth-child(8) {
+    text-align: center;
+    width: 40px;
+  }
+  & th:nth-child(9),
+  & th:nth-child(10) {
     text-align: right;
     width: 90px;
   }
-  & th:nth-child(9),
-  & th:nth-child(10),
-  & th:nth-child(11) {
+  & th:nth-child(11),
+  & th:nth-child(12),
+  & th:nth-child(13) {
     text-align: center;
     width: 35px;
   }
@@ -199,12 +204,12 @@ const Articulo = () => {
           porcentajeUtilidad3: 0,
           porcentajeUtilidad4: 0,
           stock: 0,
-          stockMinimo: 0,
-          precioIncluyeIGV: true,
-          activarCostoDescuento: false,
+          visualizarStock: true,
+          tieneIGV: true,
+          tienePercepcionCompra: true,
           isActivo: true,
           controlarStock: true,
-          actualizarPrecioCompra: true,
+          equivalencias: [],
         });
       } else {
         await GetPorId(value);
@@ -252,6 +257,28 @@ const Articulo = () => {
       {
         Header: "id",
         accessor: "id",
+      },
+      {
+        Header: "C",
+        accessor: "controlarStock",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+      {
+        Header: "A",
+        accessor: "isActivo",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
       },
       {
         Header: "C. Barra",
@@ -315,17 +342,6 @@ const Articulo = () => {
         },
       },
       {
-        Header: "S",
-        accessor: "controlarStock",
-        Cell: ({ value }) => {
-          return (
-            <div className="flex justify-center">
-              <Checkbox checked={value} />
-            </div>
-          );
-        },
-      },
-      {
         Header: "A.P",
         accessor: "actualizarPrecio",
         Cell: ({ value }) => {
@@ -337,8 +353,20 @@ const Articulo = () => {
         },
       },
       {
-        Header: "A",
-        accessor: "isActivo",
+        Header: "PC",
+        accessor: "tienePercepcionCompra",
+        Cell: ({ value }) => {
+          return (
+            <div className="flex justify-center">
+              <Checkbox checked={value} />
+            </div>
+          );
+        },
+      },
+
+      {
+        Header: "D",
+        accessor: "tieneDetraccion",
         Cell: ({ value }) => {
           return (
             <div className="flex justify-center">

@@ -68,10 +68,10 @@ const Login = () => {
           {errMsg}
         </p>
         <h1 className="text-center text-1xl uppercase font-bold tracking-[5px] text-white">
-          Pintureria
+          ART
         </h1>
         <h1 className="text-center text-2xl uppercase font-bold tracking-[5px] text-yellow-300 mb-8">
-          Cikron
+          Colors
         </h1>
         <h1 className="text-3xl text-center uppercase font-bold tracking-[5px] text-white mb-8">
           Iniciar <span className="text-primary">sesión</span>

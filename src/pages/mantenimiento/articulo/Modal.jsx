@@ -25,10 +25,10 @@ const Modal = ({ setModal, modo, objeto }) => {
   const HandleData = async ({ target }) => {
     if (
       target.name == "isActivo" ||
-      target.name == "precioIncluyeIGV" ||
-      target.name == "activarCostoDescuento" ||
       target.name == "controlarStock" ||
-      target.name == "actualizarPrecioCompra"
+      target.name == "visualizarStock" ||
+      target.name == "tieneIGV" ||
+      target.name == "tienePercepcionCompra"
     ) {
       setData((prevState) => ({
         ...prevState,
@@ -270,105 +270,73 @@ const Modal = ({ setModal, modo, objeto }) => {
               className={G.InputStyle}
             />
           </div>
-          <div className={G.Input25pct}>
-            <label htmlFor="stockMinimo" className={G.LabelStyle}>
-              Stock Min
-            </label>
-            <input
-              type="number"
-              id="stockMinimo"
-              name="stockMinimo"
-              autoComplete="off"
-              placeholder="Stock Mínimo"
-              disabled={modo == "Consultar"}
-              value={data.stockMinimo ?? ""}
-              onChange={HandleData}
-              className={G.InputStyle}
-            />
-          </div>
         </div>
-      </div>
-      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
-        <p className={G.Subtitulo}>Precio Compra</p>
         <div className={G.ContenedorInputs}>
-          <div className={G.InputMitad}>
-            <div className={G.InputFull}>
-              <label htmlFor="precioCompra" className={G.LabelStyle}>
-                Costo del Producto
-              </label>
-              <input
-                type="number"
-                id="precioCompra"
-                name="precioCompra"
-                autoComplete="off"
-                placeholder="Costo del Producto"
-                min={0}
-                disabled={modo == "Consultar"}
-                value={data.precioCompra ?? ""}
-                onChange={HandleData}
-                className={G.InputBoton}
-              />
-            </div>
-            <div className={G.Input + " w-48"}>
-              <div className={G.CheckStyle + G.Anidado}>
+          <div className={G.InputFull}>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle}>
                 <Checkbox
-                  inputId="precioIncluyeIGV"
-                  name="precioIncluyeIGV"
+                  inputId="visualizarStock"
+                  name="visualizarStock"
                   disabled={modo == "Consultar"}
-                  value={data.precioIncluyeIGV}
+                  value={data.visualizarStock}
                   onChange={(e) => {
                     HandleData(e);
                   }}
-                  checked={data.precioIncluyeIGV ? true : ""}
-                ></Checkbox>
-              </div>
-              <label htmlFor="precioIncluyeIGV" className={G.LabelCheckStyle}>
-                Incluye IGV
-              </label>
-            </div>
-          </div>
-
-          <div className={G.InputMitad}>
-            <div className={G.InputFull}>
-              <label htmlFor="precioCompraDescuento" className={G.LabelStyle}>
-                Costo con Descto.
-              </label>
-              <input
-                type="number"
-                id="precioCompraDescuento"
-                name="precioCompraDescuento"
-                autoComplete="off"
-                placeholder="Costo con Descto"
-                min={0}
-                disabled={modo == "Consultar"}
-                value={data.precioCompraDescuento ?? ""}
-                onChange={HandleData}
-                className={G.InputBoton}
-              />
-            </div>
-            <div className={G.Input + " w-64"}>
-              <div className={G.CheckStyle + G.Anidado}>
-                <Checkbox
-                  inputId="activarCostoDescuento"
-                  name="activarCostoDescuento"
-                  disabled={modo == "Consultar"}
-                  value={data.activarCostoDescuento}
-                  onChange={(e) => {
-                    HandleData(e);
-                  }}
-                  checked={data.activarCostoDescuento ? true : ""}
+                  checked={data.visualizarStock ? true : ""}
                 ></Checkbox>
               </div>
               <label
-                htmlFor="activarCostoDescuento"
+                htmlFor="visualizarStock"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Visualizar Stock
+              </label>
+            </div>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle + " rounded-l-none"}>
+                <Checkbox
+                  inputId="tieneIGV"
+                  name="tieneIGV"
+                  disabled={modo == "Consultar"}
+                  value={data.tieneIGV}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.tieneIGV ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="tieneIGV"
+                className={G.LabelCheckStyle + " rounded-r-none"}
+              >
+                Tiene Igv
+              </label>
+            </div>
+            <div className={G.InputTercio}>
+              <div className={G.CheckStyle + " rounded-l-none"}>
+                <Checkbox
+                  inputId="tienePercepcionCompra"
+                  name="tienePercepcionCompra"
+                  disabled={modo == "Consultar"}
+                  value={data.tienePercepcionCompra}
+                  onChange={(e) => {
+                    HandleData(e);
+                  }}
+                  checked={data.tienePercepcionCompra ? true : ""}
+                ></Checkbox>
+              </div>
+              <label
+                htmlFor="tienePercepcionCompra"
                 className={G.LabelCheckStyle}
               >
-                Costo Descuento
+                Precio Compra
               </label>
             </div>
           </div>
         </div>
       </div>
+
       <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
         <p className={G.Subtitulo}>Precio Venta</p>
         <div className={G.ContenedorInputs}>
@@ -535,6 +503,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           </div>
         </div>
       </div>
+      <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
+        <p className={G.Subtitulo}>Equivalencia En otras Unidades</p>
+      </div>
       <div className={G.ContenedorBasico + G.FondoContenedor}>
         <div className={G.InputFull}>
           <label htmlFor="observacion" className={G.LabelStyle}>
@@ -553,66 +524,48 @@ const Modal = ({ setModal, modo, objeto }) => {
           />
         </div>
         <div className={G.ContenedorInputs}>
-          <div className={G.InputFull}>
-            <div className={G.InputTercio}>
-              <div className={G.CheckStyle}>
-                <Checkbox
-                  inputId="isActivo"
-                  name="isActivo"
-                  disabled={modo == "Consultar"}
-                  value={data.isActivo}
-                  onChange={(e) => {
-                    HandleData(e);
-                  }}
-                  checked={data.isActivo ? true : ""}
-                ></Checkbox>
+          <div className="w-full justify-center flex ">
+            <div className={G.InputMitad}>
+              <div className={G.InputMitad}>
+                <div className={G.CheckStyle}>
+                  <Checkbox
+                    inputId="isActivo"
+                    name="isActivo"
+                    disabled={modo == "Consultar"}
+                    value={data.isActivo}
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={data.isActivo ? true : ""}
+                  />
+                </div>
+                <label
+                  htmlFor="isActivo"
+                  className={G.LabelCheckStyle + " rounded-r-none"}
+                >
+                  Activo
+                </label>
               </div>
-              <label
-                htmlFor="isActivo"
-                className={G.LabelCheckStyle + " rounded-r-none"}
-              >
-                Activo
-              </label>
-            </div>
-            <div className={G.InputTercio}>
-              <div className={G.CheckStyle + " rounded-l-none"}>
-                <Checkbox
-                  inputId="controlarStock"
-                  name="controlarStock"
-                  disabled={modo == "Consultar"}
-                  value={data.controlarStock}
-                  onChange={(e) => {
-                    HandleData(e);
-                  }}
-                  checked={data.controlarStock ? true : ""}
-                ></Checkbox>
+              <div className={G.InputMitad}>
+                <div className={G.CheckStyle + " rounded-l-none"}>
+                  <Checkbox
+                    inputId="controlarStock"
+                    name="controlarStock"
+                    disabled={modo == "Consultar"}
+                    value={data.controlarStock}
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={data.controlarStock ? true : ""}
+                  />
+                </div>
+                <label
+                  htmlFor="controlarStock"
+                  className={G.LabelCheckStyle + " rounded-r-lg"}
+                >
+                  Control De Stock
+                </label>
               </div>
-              <label
-                htmlFor="controlarStock"
-                className={G.LabelCheckStyle + " rounded-r-none"}
-              >
-                Control De Stock
-              </label>
-            </div>
-            <div className={G.InputTercio}>
-              <div className={G.CheckStyle + " rounded-l-none"}>
-                <Checkbox
-                  inputId="actualizarPrecioCompra"
-                  name="actualizarPrecioCompra"
-                  disabled={modo == "Consultar"}
-                  value={data.actualizarPrecioCompra}
-                  onChange={(e) => {
-                    HandleData(e);
-                  }}
-                  checked={data.actualizarPrecioCompra ? true : ""}
-                ></Checkbox>
-              </div>
-              <label
-                htmlFor="actualizarPrecioCompra"
-                className={G.LabelCheckStyle}
-              >
-                Actualizar Precio
-              </label>
             </div>
           </div>
         </div>
