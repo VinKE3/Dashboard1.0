@@ -237,16 +237,16 @@
 
 /* Estilos barra (thumb) de scroll */
 ::-webkit-scrollbar-thumb {
-  background: #343e4f;
+  background: #202428;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: #343e4f;
+  background-color: #282C32;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #343e4f;
+  background: #1B1F23;
   box-shadow: 0 0 2px 1px var(--surface-g);
 }
 
@@ -265,7 +265,7 @@ input:disabled,
 input:read-only,
 select:disabled {
   color: #f8f6f6 !important;
-  background: #192331 !important;
+  background: #1B1F23 !important;
   opacity: 100% !important;
 }
 .scrollbar-hide::-webkit-scrollbar {

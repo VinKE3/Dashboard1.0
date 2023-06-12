@@ -27,7 +27,7 @@ export var ContenedorBasico =
   "grid gap-y-1.5 md:gap-y-2 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 overflow-y-auto ";
 export var ContenedorFiltro =
   "grid gap-y-1 md:gap-x-2 p-0 mb-2 overflow-y-auto ";
-export var FondoContenedor = "bg-secondary-300 shadow-md shadow-gray-700/60 ";
+export var FondoContenedor = "bg-contenedor shadow-md shadow-gray-700/60 ";
 export var ContenedorInputs =
   "flex flex-col md:flex-row gap-y-1.5 md:gap-x-2 overflow-x-auto ";
 export var ContenedorInputsFiltro =
@@ -123,8 +123,8 @@ export var Table = "w-full text-light focus:outline-none ";
 
 //#region Filas
 export var THeader =
-  "text-mini font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
-export var TBody = "text-mini bg-gradient-to-b from-gray-800 to-slate-800 ";
+  "text-mini font-semibold text-left bg-gradient-to-b from-neutral-800 to-neutral-900 ";
+export var TBody = "text-mini bg-gradient-to-b from-input to-disabled ";
 export var Th = "px-1 py-1 md:py-2 ";
 export var Tr = "border-b border-gray-600 ";
 export var Td = "px-1 py-1 md:py-2 text-left select-none ";
@@ -161,7 +161,7 @@ export var BotonPaginacionActivo =
 
 //#region Footer Detalle
 export var ContenedorFooter =
-  "flex flex-col overflow-x-auto border border-gray-200 bg-gradient-to-t from-gray-900 to-gray-800 ";
+  "flex flex-col overflow-x-auto border border-gray-200 bg-gradient-to-t from-input to-disabled ";
 export var FilaFooter =
   "py-0.5 flex items-center justify-end border border-gray-400 ";
 export var FilaVacia = "w-full sm:px-5 flex items-center justify-end";

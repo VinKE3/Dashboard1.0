@@ -166,9 +166,9 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {

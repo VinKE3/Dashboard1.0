@@ -105,7 +105,7 @@ const Empresa = ({ modo }) => {
 
   useEffect(() => {
     if (refrescar) {
-      GuardarTodo(new Event("click"));
+      GuardarTodo();
       setRefrescar(false);
     }
   }, [data, mesesHabilitados]);
@@ -301,10 +301,17 @@ const Empresa = ({ modo }) => {
     setPorcentajesDetraccion(detraccion);
     setPorcentajesPercepcion(percepcion);
   };
-  const GuardarTodo = async (e) => {
-    if (e._reactName != "onClick") {
-      if (e.key == "Enter") {
-        await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
+  const GuardarTodo = async (e = null) => {
+    if (e != null) {
+      if (e._reactName != "onClick") {
+        if (e.key == "Enter") {
+          await Update(
+            "Empresa/Configuracion",
+            data,
+            setTipoMensaje,
+            setMensaje
+          );
+        }
       }
     } else {
       await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
@@ -429,9 +436,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
@@ -561,9 +568,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
@@ -696,9 +703,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
@@ -831,9 +838,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {

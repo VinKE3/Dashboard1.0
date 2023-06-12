@@ -257,9 +257,9 @@ const EntradaAlmacen = () => {
               iconColor: "#F7BF3A",
               showCancelButton: true,
               color: "#fff",
-              background: "#1a1a2e",
-              confirmButtonColor: "#eea508",
-              confirmButtonText: "Aceptar",
+              background: "#171B23",
+              confirmButtonColor: "#3B8407",
+              confirmButtonText: "Confirmar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
@@ -329,9 +329,9 @@ const EntradaAlmacen = () => {
               iconColor: "#F7BF3A",
               showCancelButton: true,
               color: "#fff",
-              background: "#1a1a2e",
+              background: "#171B23",
               confirmButtonColor: "#EE8100",
-              confirmButtonText: "Aceptar",
+              confirmButtonText: "Confirmar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
@@ -510,13 +510,13 @@ const EntradaAlmacen = () => {
             <div className={G.ContenedorInputsFiltro}>
               <div className={G.InputFull}>
                 <label name="observacion" className={G.LabelStyle}>
-                  Proveedor
+                  Detalle
                 </label>
                 <input
                   type="text"
                   id="observacion"
                   name="observacion"
-                  placeholder="Proveedor"
+                  placeholder="Detalle"
                   autoComplete="off"
                   autoFocus
                   value={filtro.observacion ?? ""}

@@ -574,9 +574,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           iconColor: "#F7BF3A",
           showCancelButton: false,
           color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
+          background: "#171B23",
+          confirmButtonColor: "#3B8407",
+          confirmButtonText: "Confirmar",
         });
         return [false, ""];
       }
@@ -681,9 +681,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             iconColor: "#F7BF3A",
             showCancelButton: true,
             color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
+            background: "#171B23",
+            confirmButtonColor: "#3B8407",
+            confirmButtonText: "Confirmar",
             cancelButtonColor: "#d33",
             cancelButtonText: "Cancelar",
           }).then((res) => {

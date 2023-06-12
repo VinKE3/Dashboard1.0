@@ -297,9 +297,9 @@ const CuadreStock = () => {
               iconColor: "#F7BF3A",
               showCancelButton: true,
               color: "#fff",
-              background: "#1a1a2e",
+              background: "#171B23",
               confirmButtonColor: "#EE8100",
-              confirmButtonText: "Aceptar",
+              confirmButtonText: "Confirmar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
             }).then(async (res) => {

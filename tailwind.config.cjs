@@ -12,9 +12,10 @@ module.exports = {
           900: "#131517",
         },
         light: "#FFF",
-        label: "#1F2836",
-        input: "#343E4F",
-        disabled: "#192331",
+        label: "#1B1F23",
+        input: "#282C32",
+        disabled: "#1B1F23",
+        contenedor: "#1C1D21",
       },
       fontSize: {
         mini: "13px",
