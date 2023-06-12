@@ -3,19 +3,97 @@ import ApiMasy from "../../../api/ApiMasy";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import { Checkbox } from "primereact/checkbox";
 import * as G from "../../../components/Global";
+import * as F from "../../../components/funciones/Validaciones";
+import styled from "styled-components";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import TableBasic from "../../../components/tabla/TableBasic";
+import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
+//#region Estilos
+const DivTabla = styled.div`
+  & th:nth-child(1) {
+    width: 40px;
+    text-align: center;
+  }
 
+  & th:nth-child(2),
+  & th:nth-child(3),
+  & th:nth-child(4),
+  & th:nth-child(5) {
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
+    text-align: center;
+  }
+  & th:last-child {
+    width: 75px;
+    min-width: 75px;
+    max-width: 75px;
+    text-align: center;
+  }
+`;
+//#endregion
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
+  const [dataDetalle, setDataDetalle] = useState(objeto.equivalencias);
+  const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
+  const [dataCabecera, setDataCabecera] = useState({
+    cantidadEquivalente: 1,
+    tipo: "=",
+  });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   const [dataLinea, setDataLinea] = useState([]);
   const [dataSubLinea, setDataSubLinea] = useState([]);
   const [dataMarca, setDataMarca] = useState([]);
   const [dataUnidadMedida, setDataUnidadMedida] = useState([]);
   const [dataMoneda, setDataMoneda] = useState([]);
+  const [refrescar, setRefrescar] = useState(false);
+  const tipo = [
+    {
+      id: 1,
+      tipo: "=",
+    },
+    {
+      id: 2,
+      tipo: "+",
+    },
+    {
+      id: 3,
+      tipo: "-",
+    },
+  ];
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    data;
+    console.log(data, "DATADATADATA");
+  }, [data]);
+  useEffect(() => {
+    dataCabecera;
+    console.log(dataCabecera, "DATACABECERA");
+  }, [dataCabecera]);
+
+  useEffect(() => {
+    dataDetalle;
+    console.log(dataDetalle, "DATADETALLE");
+  }, [dataDetalle]);
+
+  useEffect(() => {
+    setDataCabecera({
+      ...dataCabecera,
+      unidadMedidaId: data.unidadMedidaId,
+    });
+  }, [data.unidadMedidaId]);
+
+  useEffect(() => {
+    setDataCabecera({
+      ...dataCabecera,
+      precioVenta: data.precioVenta1,
+    });
+  }, [data.precioVenta1]);
+
   useEffect(() => {
     GetTablas();
   }, []);
@@ -48,6 +126,139 @@ const Modal = ({ setModal, modo, objeto }) => {
         subLineaId: model == undefined ? "" : model.subLineaId,
       }));
     }
+  };
+  const HandleDataConcepto = async ({ target }) => {
+    setDataCabecera((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+  };
+  //#endregion
+
+  //#region Funciones Detalles
+  const ValidarDetalle = async () => {
+    if (Object.entries(dataCabecera).length == 0) {
+      return [false, "Seleccione un Item"];
+    }
+    if (dataCabecera.precioVenta == 0) {
+      return [false, "Precio de Venta no puede ser 0"];
+    }
+    return [true, ""];
+  };
+  const AgregarDetalle = async () => {
+    //Obtiene resultado de Validación
+    let resultado = await ValidarDetalle();
+    if (resultado[0] > 0) {
+      //Si tiene detalleId entonces modifica registro
+      if (dataCabecera.id != undefined) {
+        let dataDetalleMod = dataDetalle.map((map) => {
+          if (map.id == dataCabecera.id) {
+            return {
+              id: dataCabecera.id,
+              cantidadEquivalente: dataCabecera.cantidadEquivalente,
+              tipo: dataCabecera.tipo,
+              precioVenta: dataCabecera.precioVenta,
+              unidadMedidaId: dataCabecera.unidadMedidaId,
+            };
+          } else {
+            return map;
+          }
+        });
+        setDataDetalle(dataDetalleMod);
+        setRefrescar(true);
+      } else {
+        let model = dataDetalle.find((map) => {
+          return map.id === dataCabecera.id;
+        });
+        if (model == undefined) {
+          setDataDetalle((prevState) => [
+            ...prevState,
+            {
+              id: detalleId,
+              cantidadEquivalente: dataCabecera.cantidadEquivalente,
+              tipo: dataCabecera.tipo,
+              precioVenta: dataCabecera.precioVenta,
+              unidadMedidaId: dataCabecera.unidadMedidaId,
+            },
+          ]);
+          setDetalleId(detalleId + 1);
+          setRefrescar(true);
+        } else {
+          Swal.fire({
+            title: "Aviso del sistema",
+            text:
+              "El Concepto " +
+              model.concepto +
+              " ya está registrado en el detalle, ¿Desea modificar los datos de venta del artículo?",
+            icon: "error",
+            iconColor: "#F7BF3A",
+            showCancelButton: true,
+            color: "#fff",
+            background: "#1a1a2e",
+            confirmButtonColor: "#eea508",
+            confirmButtonText: "Aceptar",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+          }).then((res) => {
+            if (res.isConfirmed) {
+              CargarDetalle(model.documentoCompraId);
+            }
+          });
+        }
+      }
+      //Luego de añadir el artículo se limpia
+      setDataCabecera([]);
+    } else {
+      toast.error(resultado[1], {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  };
+  const CargarDetalle = async (value, click = false) => {
+    if (modo != "Consultar") {
+      if (click) {
+        let row = value.target.closest("tr");
+        let id = row.firstChild.innerText;
+        console.log(id, "id");
+        setDataCabecera(dataDetalle.find((map) => map.id === id));
+      } else {
+        setDataCabecera(dataDetalle.find((map) => map.detalleId === value));
+      }
+      // document.getElementById("abono").focus();
+    }
+  };
+  const EliminarDetalle = async (id) => {
+    let i = 1;
+    let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
+    console.log(nuevoDetalle, "nuevoDetalle");
+    console.log(id, "id");
+    if (nuevoDetalle.length > 0) {
+      setDataDetalle(
+        nuevoDetalle.map((map) => {
+          return {
+            ...map,
+            detalleId: i++,
+          };
+        })
+      );
+      setDetalleId(i);
+    } else {
+      //Asgina directamente a 1
+      setDetalleId(nuevoDetalle.length + 1);
+      setDataDetalle(nuevoDetalle);
+      setData((prevState) => ({
+        ...prevState,
+        documentoReferencia: "",
+      }));
+    }
+    setRefrescar(true);
   };
   //#endregion
 
@@ -84,6 +295,86 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
+  //#endregion
+
+  //#region Columnas
+  const columnas = [
+    {
+      Header: "Item",
+      accessor: "id",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
+    {
+      Header: "Unidad",
+      accessor: "unidadMedidaId",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
+    {
+      Header: "Cantidad Equivalente",
+      accessor: "cantidadEquivalente",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
+    {
+      Header: "Precio Venta",
+      accessor: "precioVenta",
+      Cell: ({ value }) => {
+        return (
+          <p className="text-center font-semibold pr-1.5">
+            {F.RedondearNumero(value, 4)}
+          </p>
+        );
+      },
+    },
+    {
+      Header: "Tipo",
+      accessor: "tipo",
+      Cell: ({ value }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
+    {
+      Header: "Acciones",
+      Cell: ({ row }) => (
+        <div className="flex item-center justify-center">
+          {modo == "Consultar" ? (
+            ""
+          ) : (
+            <>
+              <div className={G.TablaBotonModificar}>
+                <button
+                  id="boton"
+                  onClick={() => CargarDetalle(row.values.documentoCompraId)}
+                  className="p-0 px-1"
+                  title="Click para modificar registro"
+                >
+                  <FaPen></FaPen>
+                </button>
+              </div>
+
+              <div className={G.TablaBotonEliminar}>
+                <button
+                  id="botonEliminarFila"
+                  onClick={() => {
+                    EliminarDetalle(row.values.documentoCompraId);
+                  }}
+                  className="p-0 px-1"
+                  title="Click para Eliminar registro"
+                >
+                  <FaTrashAlt></FaTrashAlt>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
   //#endregion
 
   //#region  Render
@@ -284,7 +575,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     HandleData(e);
                   }}
                   checked={data.visualizarStock ? true : ""}
-                ></Checkbox>
+                />
               </div>
               <label
                 htmlFor="visualizarStock"
@@ -304,7 +595,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     HandleData(e);
                   }}
                   checked={data.tieneIGV ? true : ""}
-                ></Checkbox>
+                />
               </div>
               <label
                 htmlFor="tieneIGV"
@@ -324,7 +615,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                     HandleData(e);
                   }}
                   checked={data.tienePercepcionCompra ? true : ""}
-                ></Checkbox>
+                />
               </div>
               <label
                 htmlFor="tienePercepcionCompra"
@@ -505,6 +796,120 @@ const Modal = ({ setModal, modo, objeto }) => {
       </div>
       <div className={G.ContenedorBasico + " mb-2 " + G.FondoContenedor}>
         <p className={G.Subtitulo}>Equivalencia En otras Unidades</p>
+        {/* Detalles */}
+        {modo != "Consultar" && (
+          <div className={G.ContenedorBasico + G.FondoContenedor + " mb-2"}>
+            <div className={G.ContenedorInputs}>
+              <div className={G.InputFull}>
+                <div className={G.InputFull}>
+                  <label htmlFor="unidadMedidaId" className={G.LabelStyle}>
+                    U. Medida
+                  </label>
+                  <select
+                    id="unidadMedidaId"
+                    name="unidadMedidaId"
+                    disabled={
+                      modo == "Consultar" ||
+                      data.unidadMedidaId === dataCabecera.unidadMedidaId
+                    }
+                    value={dataCabecera.unidadMedidaId ?? ""}
+                    onChange={HandleDataConcepto}
+                    className={G.InputStyle}
+                  >
+                    {dataUnidadMedida.map((map) => (
+                      <option key={map.id} value={map.id}>
+                        {map.descripcion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className={G.InputFull}>
+                <label htmlFor="cantidadEquivalente" className={G.LabelStyle}>
+                  Cantidad Equivalente
+                </label>
+                <input
+                  type="number"
+                  id="cantidadEquivalente"
+                  name="cantidadEquivalente"
+                  placeholder="cantidadEquivalente"
+                  autoComplete="off"
+                  min={0}
+                  disabled={
+                    modo == "Consultar" ||
+                    data.unidadMedidaId === dataCabecera.unidadMedidaId
+                  }
+                  value={dataCabecera.cantidadEquivalente ?? ""}
+                  onChange={HandleDataConcepto}
+                  className={G.InputStyle}
+                />
+              </div>
+              <div className={G.InputFull}>
+                <label htmlFor="precioVenta" className={G.LabelStyle}>
+                  Precio Venta
+                </label>
+                <input
+                  type="number"
+                  id="precioVenta"
+                  name="precioVenta"
+                  placeholder="precioVenta"
+                  autoComplete="off"
+                  min={0}
+                  disabled={
+                    modo == "Consultar" ||
+                    data.unidadMedidaId === dataCabecera.unidadMedidaId
+                  }
+                  value={dataCabecera.precioVenta ?? ""}
+                  onChange={HandleDataConcepto}
+                  className={G.InputStyle}
+                />
+              </div>
+              <div className={G.InputFull}>
+                <label htmlFor="tipo" className={G.LabelStyle}>
+                  Tipo
+                </label>
+                <select
+                  id="tipo"
+                  name="tipo"
+                  disabled={
+                    modo == "Consultar" ||
+                    data.unidadMedidaId === dataCabecera.unidadMedidaId
+                  }
+                  value={dataCabecera.tipo ?? ""}
+                  onChange={HandleDataConcepto}
+                  className={G.InputBoton}
+                >
+                  {tipo.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.tipo}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  id="enviarDetalle"
+                  className={G.BotonBuscar + G.BotonPrimary}
+                  hidden={modo == "Consultar"}
+                  onKeyDown={(e) => Funciones.KeyClick(e)}
+                  onClick={(e) => AgregarDetalle(e)}
+                >
+                  <FaPlus></FaPlus>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Detalles */}
+        {/* Tabla Detalle */}
+        <DivTabla>
+          <TableBasic
+            columnas={columnas}
+            datos={dataDetalle}
+            estilos={["", "", "", "border", "", "border border-b-0", "border"]}
+            DobleClick={(e) => CargarDetalle(e, true)}
+          />
+        </DivTabla>
+        {/* Tabla Detalle */}
       </div>
       <div className={G.ContenedorBasico + G.FondoContenedor}>
         <div className={G.InputFull}>
