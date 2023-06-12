@@ -29,7 +29,9 @@ const DivTabla = styled.div`
   & th:nth-child(8),
   & th:nth-child(9),
   & th:nth-child(10),
-  & th:nth-child(11) {
+  & th:nth-child(11),
+  & th:nth-child(12),
+  & th:nth-child(13) {
     text-align: right;
     width: 80px;
   }
@@ -47,12 +49,10 @@ const MovimientoArticulo = () => {
   const [dataGlobal] = useState(store.session.get("global"));
   const [datos, setDatos] = useState([]);
   const [dataLocal, setDataLocal] = useState([]);
-  const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   const [total, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    tipoExistenciaId: "",
     fechaInicio: moment(
       dataGlobal == null ? "" : dataGlobal.fechaInicio
     ).format("YYYY-MM-DD"),
@@ -66,7 +66,7 @@ const MovimientoArticulo = () => {
     conStock: false,
   });
   const [cadena, setCadena] = useState(
-    `&tipoExistenciaId=${filtro.tipoExistenciaId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
@@ -79,9 +79,7 @@ const MovimientoArticulo = () => {
     setDataLocal(datos);
   }, [datos]);
   useEffect(() => {
-    setCadena(
-      `&tipoExistenciaId=${filtro.tipoExistenciaId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
-    );
+    setCadena(`&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`);
   }, [filtro]);
   useEffect(() => {
     FiltroLocal();
@@ -97,7 +95,6 @@ const MovimientoArticulo = () => {
       ) {
         setVisible(false);
       } else {
-        GetTablas();
         setVisible(true);
         Listar(cadena, 1);
       }
@@ -129,12 +126,7 @@ const MovimientoArticulo = () => {
     );
     setObjeto(result.data.data);
   };
-  const GetTablas = async () => {
-    const result = await ApiMasy.get(
-      `api/Almacen/MovimientoArticulo/FormularioTablas`
-    );
-    setDataTipoExistencia(result.data.data.tiposExistencia);
-  };
+
   //#endregion
 
   //#region Funciones Filtrado
@@ -162,7 +154,7 @@ const MovimientoArticulo = () => {
     setIndex(0);
     const newTimer = setTimeout(() => {
       Listar(
-        `&tipoExistenciaId=${filtro.tipoExistenciaId}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`,
+        `&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`,
         1
       );
     }, 200);
@@ -180,14 +172,6 @@ const MovimientoArticulo = () => {
     let descripcion = new RegExp(`${filtroLocal.descripcion}.*`, "i");
     //Expresiones a filtrar
 
-    //Tipo Existencia
-    if (filtro.tipoExistenciaId != "") {
-      model = datos.filter(
-        (map) => map.tipoExistenciaId == filtro.tipoExistenciaId
-      );
-    }
-    //Tipo Existencia
-
     //Tiene Stock
     if (filtroLocal.conStock) {
       model = model.filter((map) => map.saldoFinal > 0);
@@ -203,7 +187,6 @@ const MovimientoArticulo = () => {
   };
   const FiltroBoton = async () => {
     setFiltro({
-      tipoExistenciaId: "",
       fechaInicio: moment(
         dataGlobal == null ? "" : dataGlobal.fechaInicio
       ).format("YYYY-MM-DD"),
@@ -375,6 +358,40 @@ const MovimientoArticulo = () => {
         },
       },
       {
+        Header: "Ventas",
+        accessor: "cantidadVentas",
+        Cell: ({ row }) => {
+          return (
+            <p
+              className={
+                row.values.saldoFinal > 0
+                  ? "text-right font-semibold text-green-600"
+                  : "text-right font-semibold text-red-600"
+              }
+            >
+              {row.values.cantidadSalida}
+            </p>
+          );
+        },
+      },
+      {
+        Header: "Transferencia",
+        accessor: "cantidadTransferencia",
+        Cell: ({ row }) => {
+          return (
+            <p
+              className={
+                row.values.saldoFinal > 0
+                  ? "text-right font-semibold text-green-600"
+                  : "text-right font-semibold text-red-600"
+              }
+            >
+              {row.values.cantidadSalida}
+            </p>
+          );
+        },
+      },
+      {
         Header: "Saldo Fin.",
         accessor: "saldoFinal",
         Cell: ({ row }) => {
@@ -422,29 +439,6 @@ const MovimientoArticulo = () => {
             >
               <div className={G.ContenedorInputsFiltro + " !my-0"}>
                 <div className={G.InputFull}>
-                  <label name="tipoExistenciaId" className={G.LabelStyle}>
-                    Tipo de Existencia
-                  </label>
-                  <select
-                    id="tipoExistenciaId"
-                    name="tipoExistenciaId"
-                    autoFocus
-                    value={filtro.tipoExistenciaId ?? ""}
-                    onChange={ValidarFiltro}
-                    className={G.InputStyle}
-                  >
-                    <option key={-1} value={""}>
-                      {"--TODOS--"}
-                    </option>
-                    {dataTipoExistencia.map((tipo) => (
-                      <option key={tipo.id} value={tipo.id}>
-                        {" "}
-                        {tipo.descripcion}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className={G.Input42pct}>
                   <label htmlFor="fechaInicio" className={G.LabelStyle}>
                     Desde
                   </label>
@@ -452,12 +446,13 @@ const MovimientoArticulo = () => {
                     type="date"
                     id="fechaInicio"
                     name="fechaInicio"
+                    autoFocus
                     value={filtro.fechaInicio ?? ""}
                     onChange={ValidarFiltro}
                     className={G.InputStyle}
                   />
                 </div>
-                <div className={G.Input42pct}>
+                <div className={G.InputFull}>
                   <label htmlFor="fechaFin" className={G.LabelStyle}>
                     Hasta
                   </label>

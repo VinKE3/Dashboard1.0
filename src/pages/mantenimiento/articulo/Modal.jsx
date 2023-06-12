@@ -84,6 +84,20 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [dataDetalle]);
 
   useEffect(() => {
+    setDataCabecera({
+      ...dataCabecera,
+      unidadMedidaId: data.unidadMedidaId,
+    });
+  }, [data.unidadMedidaId]);
+
+  useEffect(() => {
+    setDataCabecera({
+      ...dataCabecera,
+      precioVenta: data.precioVenta1,
+    });
+  }, [data.precioVenta1]);
+
+  useEffect(() => {
     setData({ ...data, equivalencias: dataDetalle });
   }, [dataDetalle]);
 
@@ -103,7 +117,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (
       target.name == "isActivo" ||
       target.name == "controlarStock" ||
-      target.name == "visualizarStock" ||
+      target.name == "ocultarStock" ||
       target.name == "tieneIGV" ||
       target.name == "tienePercepcionCompra"
     ) {
@@ -517,7 +531,7 @@ const Modal = ({ setModal, modo, objeto }) => {
             <select
               id="unidadMedidaId"
               name="unidadMedidaId"
-              disabled={modo == "Consultar"}
+              disabled={modo == "Consultar" || dataDetalle.length >= 1}
               value={data.unidadMedidaId ?? ""}
               onChange={HandleData}
               className={G.InputStyle}
@@ -568,21 +582,21 @@ const Modal = ({ setModal, modo, objeto }) => {
             <div className={G.InputTercio}>
               <div className={G.CheckStyle}>
                 <Checkbox
-                  inputId="visualizarStock"
-                  name="visualizarStock"
+                  inputId="ocultarStock"
+                  name="ocultarStock"
                   disabled={modo == "Consultar"}
-                  value={data.visualizarStock}
+                  value={data.ocultarStock}
                   onChange={(e) => {
                     HandleData(e);
                   }}
-                  checked={data.visualizarStock ? true : ""}
+                  checked={data.ocultarStock ? true : ""}
                 />
               </div>
               <label
-                htmlFor="visualizarStock"
+                htmlFor="ocultarStock"
                 className={G.LabelCheckStyle + " rounded-r-none"}
               >
-                Visualizar Stock
+                Ocultar Stock
               </label>
             </div>
             <div className={G.InputTercio}>
@@ -735,7 +749,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               autoComplete="off"
               placeholder="Precio Venta"
               min={0}
-              disabled={modo == "Consultar"}
+              disabled={modo == "Consultar" || dataDetalle.length >= 1}
               value={data.precioVenta1 ?? ""}
               onChange={HandleData}
               className={G.InputStyle}

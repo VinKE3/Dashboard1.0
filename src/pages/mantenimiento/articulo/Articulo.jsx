@@ -204,7 +204,7 @@ const Articulo = () => {
           porcentajeUtilidad3: 0,
           porcentajeUtilidad4: 0,
           stock: 0,
-          visualizarStock: true,
+          ocultarStock: true,
           tieneIGV: true,
           tienePercepcionCompra: true,
           isActivo: true,
