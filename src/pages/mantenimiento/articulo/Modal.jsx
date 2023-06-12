@@ -39,7 +39,9 @@ const Modal = ({ setModal, modo, objeto }) => {
   const [dataDetalle, setDataDetalle] = useState(objeto.equivalencias);
   const [detalleId, setDetalleId] = useState(dataDetalle.length + 1);
   const [dataCabecera, setDataCabecera] = useState({
+    id: undefined,
     cantidadEquivalente: 1,
+    unidadMedidaId: "16",
     tipo: "=",
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
@@ -79,20 +81,6 @@ const Modal = ({ setModal, modo, objeto }) => {
     dataDetalle;
     console.log(dataDetalle, "DATADETALLE");
   }, [dataDetalle]);
-
-  useEffect(() => {
-    setDataCabecera({
-      ...dataCabecera,
-      unidadMedidaId: data.unidadMedidaId,
-    });
-  }, [data.unidadMedidaId]);
-
-  useEffect(() => {
-    setDataCabecera({
-      ...dataCabecera,
-      precioVenta: data.precioVenta1,
-    });
-  }, [data.precioVenta1]);
 
   useEffect(() => {
     GetTablas();
@@ -143,6 +131,9 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (dataCabecera.precioVenta == 0) {
       return [false, "Precio de Venta no puede ser 0"];
     }
+    if (dataCabecera.cantidadEquivalente == 0) {
+      return [false, "Cantidad Equivalente no puede ser 0"];
+    }
     return [true, ""];
   };
   const AgregarDetalle = async () => {
@@ -151,6 +142,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (resultado[0] > 0) {
       //Si tiene detalleId entonces modifica registro
       if (dataCabecera.id != undefined) {
+        console.log("MODIFICAR", dataCabecera.id);
         let dataDetalleMod = dataDetalle.map((map) => {
           if (map.id == dataCabecera.id) {
             return {
@@ -183,31 +175,16 @@ const Modal = ({ setModal, modo, objeto }) => {
           ]);
           setDetalleId(detalleId + 1);
           setRefrescar(true);
-        } else {
-          Swal.fire({
-            title: "Aviso del sistema",
-            text:
-              "El Concepto " +
-              model.concepto +
-              " ya está registrado en el detalle, ¿Desea modificar los datos de venta del artículo?",
-            icon: "error",
-            iconColor: "#F7BF3A",
-            showCancelButton: true,
-            color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
-            cancelButtonColor: "#d33",
-            cancelButtonText: "Cancelar",
-          }).then((res) => {
-            if (res.isConfirmed) {
-              CargarDetalle(model.documentoCompraId);
-            }
-          });
         }
       }
       //Luego de añadir el artículo se limpia
-      setDataCabecera([]);
+      setDataCabecera({
+        id: undefined,
+        cantidadEquivalente: 1,
+        tipo: "+",
+        precioVenta: 0,
+        unidadMedidaId: "16",
+      });
     } else {
       toast.error(resultado[1], {
         position: "bottom-right",
@@ -229,7 +206,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         console.log(id, "id");
         setDataCabecera(dataDetalle.find((map) => map.id === id));
       } else {
-        setDataCabecera(dataDetalle.find((map) => map.detalleId === value));
+        setDataCabecera(dataDetalle.find((map) => map.id === value));
       }
       // document.getElementById("abono").focus();
     }
@@ -237,8 +214,6 @@ const Modal = ({ setModal, modo, objeto }) => {
   const EliminarDetalle = async (id) => {
     let i = 1;
     let nuevoDetalle = dataDetalle.filter((map) => map.id !== id);
-    console.log(nuevoDetalle, "nuevoDetalle");
-    console.log(id, "id");
     if (nuevoDetalle.length > 0) {
       setDataDetalle(
         nuevoDetalle.map((map) => {
@@ -253,10 +228,6 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
-      setData((prevState) => ({
-        ...prevState,
-        documentoReferencia: "",
-      }));
     }
     setRefrescar(true);
   };
@@ -306,11 +277,22 @@ const Modal = ({ setModal, modo, objeto }) => {
         return <p className="text-center">{value}</p>;
       },
     },
+    // {
+    //   Header: "Unidad",
+    //   accessor: "unidadMedidaId",
+    //   Cell: ({ value }) => {
+    //     return <p className="text-center">{value}</p>;
+    //   },
+    // },
     {
       Header: "Unidad",
       accessor: "unidadMedidaId",
       Cell: ({ value }) => {
-        return <p className="text-center">{value}</p>;
+        return (
+          <p className="text-center">
+            {dataUnidadMedida.find((unidad) => unidad.id == value).descripcion}
+          </p>
+        );
       },
     },
     {
@@ -349,7 +331,7 @@ const Modal = ({ setModal, modo, objeto }) => {
               <div className={G.TablaBotonModificar}>
                 <button
                   id="boton"
-                  onClick={() => CargarDetalle(row.values.documentoCompraId)}
+                  onClick={() => CargarDetalle(row.values.id)}
                   className="p-0 px-1"
                   title="Click para modificar registro"
                 >
@@ -361,7 +343,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <button
                   id="botonEliminarFila"
                   onClick={() => {
-                    EliminarDetalle(row.values.documentoCompraId);
+                    EliminarDetalle(row.values.id);
                   }}
                   className="p-0 px-1"
                   title="Click para Eliminar registro"
@@ -808,10 +790,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   <select
                     id="unidadMedidaId"
                     name="unidadMedidaId"
-                    disabled={
-                      modo == "Consultar" ||
-                      data.unidadMedidaId === dataCabecera.unidadMedidaId
-                    }
+                    disabled={modo == "Consultar"}
                     value={dataCabecera.unidadMedidaId ?? ""}
                     onChange={HandleDataConcepto}
                     className={G.InputStyle}
@@ -835,10 +814,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="cantidadEquivalente"
                   autoComplete="off"
                   min={0}
-                  disabled={
-                    modo == "Consultar" ||
-                    data.unidadMedidaId === dataCabecera.unidadMedidaId
-                  }
+                  disabled={modo == "Consultar"}
                   value={dataCabecera.cantidadEquivalente ?? ""}
                   onChange={HandleDataConcepto}
                   className={G.InputStyle}
@@ -855,10 +831,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   placeholder="precioVenta"
                   autoComplete="off"
                   min={0}
-                  disabled={
-                    modo == "Consultar" ||
-                    data.unidadMedidaId === dataCabecera.unidadMedidaId
-                  }
+                  disabled={modo == "Consultar"}
                   value={dataCabecera.precioVenta ?? ""}
                   onChange={HandleDataConcepto}
                   className={G.InputStyle}
@@ -871,16 +844,13 @@ const Modal = ({ setModal, modo, objeto }) => {
                 <select
                   id="tipo"
                   name="tipo"
-                  disabled={
-                    modo == "Consultar" ||
-                    data.unidadMedidaId === dataCabecera.unidadMedidaId
-                  }
+                  disabled={modo == "Consultar"}
                   value={dataCabecera.tipo ?? ""}
                   onChange={HandleDataConcepto}
                   className={G.InputBoton}
                 >
                   {tipo.map((map) => (
-                    <option key={map.id} value={map.id}>
+                    <option key={map.id} value={map.tipo}>
                       {map.tipo}
                     </option>
                   ))}
