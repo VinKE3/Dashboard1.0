@@ -42,6 +42,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     id: undefined,
     cantidadEquivalente: 1,
     unidadMedidaId: "16",
+    precioVenta: 0,
     tipo: "=",
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
@@ -81,6 +82,16 @@ const Modal = ({ setModal, modo, objeto }) => {
     dataDetalle;
     console.log(dataDetalle, "DATADETALLE");
   }, [dataDetalle]);
+
+  useEffect(() => {
+    setData({ ...data, equivalencias: dataDetalle });
+  }, [dataDetalle]);
+
+  useEffect(() => {
+    if (refrescar) {
+      setRefrescar(false);
+    }
+  }, [refrescar]);
 
   useEffect(() => {
     GetTablas();
@@ -134,15 +145,23 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (dataCabecera.cantidadEquivalente == 0) {
       return [false, "Cantidad Equivalente no puede ser 0"];
     }
+    if (dataDetalle.length > 0) {
+      if (
+        dataCabecera.unidadMedidaId ===
+        dataDetalle.find((map) => map.unidadMedidaId).unidadMedidaId
+      ) {
+        return [false, "Unidad de Medida ya existe"];
+      }
+    }
     return [true, ""];
   };
+
   const AgregarDetalle = async () => {
-    //Obtiene resultado de Validación
+    //?Obtiene resultado de Validación
     let resultado = await ValidarDetalle();
     if (resultado[0] > 0) {
-      //Si tiene detalleId entonces modifica registro
+      //?Si tiene detalleId entonces modifica registro
       if (dataCabecera.id != undefined) {
-        console.log("MODIFICAR", dataCabecera.id);
         let dataDetalleMod = dataDetalle.map((map) => {
           if (map.id == dataCabecera.id) {
             return {
@@ -177,7 +196,7 @@ const Modal = ({ setModal, modo, objeto }) => {
           setRefrescar(true);
         }
       }
-      //Luego de añadir el artículo se limpia
+      //?Luego de añadir el artículo setemos los valores por defecto
       setDataCabecera({
         id: undefined,
         cantidadEquivalente: 1,
@@ -208,7 +227,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       } else {
         setDataCabecera(dataDetalle.find((map) => map.id === value));
       }
-      // document.getElementById("abono").focus();
+      // document.getElementById("unidadMedidaId").focus();
     }
   };
   const EliminarDetalle = async (id) => {
@@ -219,7 +238,7 @@ const Modal = ({ setModal, modo, objeto }) => {
         nuevoDetalle.map((map) => {
           return {
             ...map,
-            detalleId: i++,
+            id: i++,
           };
         })
       );
@@ -277,24 +296,24 @@ const Modal = ({ setModal, modo, objeto }) => {
         return <p className="text-center">{value}</p>;
       },
     },
+    {
+      Header: "Unidad",
+      accessor: "unidadMedidaId",
+      Cell: ({ value, modo }) => {
+        return <p className="text-center">{value}</p>;
+      },
+    },
     // {
     //   Header: "Unidad",
     //   accessor: "unidadMedidaId",
     //   Cell: ({ value }) => {
-    //     return <p className="text-center">{value}</p>;
+    //     return (
+    //       <p className="text-center">
+    //         {dataUnidadMedida.find((unidad) => unidad.id == value)}
+    //       </p>
+    //     );
     //   },
     // },
-    {
-      Header: "Unidad",
-      accessor: "unidadMedidaId",
-      Cell: ({ value }) => {
-        return (
-          <p className="text-center">
-            {dataUnidadMedida.find((unidad) => unidad.id == value).descripcion}
-          </p>
-        );
-      },
-    },
     {
       Header: "Cantidad Equivalente",
       accessor: "cantidadEquivalente",
@@ -859,7 +878,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                   id="enviarDetalle"
                   className={G.BotonBuscar + G.BotonPrimary}
                   hidden={modo == "Consultar"}
-                  onKeyDown={(e) => Funciones.KeyClick(e)}
+                  onKeyDown={(e) => F.KeyClick(e)}
                   onClick={(e) => AgregarDetalle(e)}
                 >
                   <FaPlus></FaPlus>
