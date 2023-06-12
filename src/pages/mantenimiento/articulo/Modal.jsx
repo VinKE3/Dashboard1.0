@@ -299,7 +299,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     {
       Header: "Unidad",
       accessor: "unidadMedidaId",
-      Cell: ({ value, modo }) => {
+      Cell: ({ value }) => {
         return <p className="text-center">{value}</p>;
       },
     },
@@ -309,7 +309,7 @@ const Modal = ({ setModal, modo, objeto }) => {
     //   Cell: ({ value }) => {
     //     return (
     //       <p className="text-center">
-    //         {dataUnidadMedida.find((unidad) => unidad.id == value)}
+    //         {dataUnidadMedida.find((unidad) => unidad.id == value).descripcion}
     //       </p>
     //     );
     //   },
