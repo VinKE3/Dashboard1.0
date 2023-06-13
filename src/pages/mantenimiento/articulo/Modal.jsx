@@ -314,20 +314,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       Header: "Unidad",
       accessor: "unidadMedidaId",
       Cell: ({ value }) => {
-        return <p className="text-center">{value}</p>;
+        const unidad = dataUnidadMedida.find((unidad) => unidad.id == value);
+        if (!unidad) {
+          return <p className="text-center">Unidad no encontrada</p>;
+        }
+        return <p className="text-center">{unidad.descripcion}</p>;
       },
     },
-    // {
-    //   Header: "Unidad",
-    //   accessor: "unidadMedidaId",
-    //   Cell: ({ value }) => {
-    //     return (
-    //       <p className="text-center">
-    //         {dataUnidadMedida.find((unidad) => unidad.id == value).descripcion}
-    //       </p>
-    //     );
-    //   },
-    // },
     {
       Header: "Cantidad Equivalente",
       accessor: "cantidadEquivalente",
