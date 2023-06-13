@@ -142,6 +142,11 @@ const Modal = ({ setModal, modo, objeto }) => {
       return;
     }
 
+    setData((prevState) => ({
+      ...prevState,
+      [target.name]: target.value.toUpperCase(),
+    }));
+
     if (target.name == "tipoVentaId") {
       let model = dataTipoCobro.find(
         (map) => map.tipoVentaCompraId == target.value
@@ -151,13 +156,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         tipoCobroId: model.id,
       }));
     }
-
-    setData((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
   };
-  const ValidarDataDireccion = async ({ target }) => {
+  const HandleDataDireccion = async ({ target }) => {
     if (target.name == "isActivo") {
       setObjDireccion((prevState) => ({
         ...prevState,
@@ -170,13 +170,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     }
   };
-  const ValidarDataContacto = async ({ target }) => {
+  const HandleDataContacto = async ({ target }) => {
     setObjContacto((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const ValidarDataPersonal = async ({ target }) => {
+  const HandleDataPersonal = async ({ target }) => {
     if (target.name == "default") {
       setObjPersonal((prevState) => ({
         ...prevState,
@@ -1112,7 +1112,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             autoFocus={habilitarDireccion}
                             disabled={modo == "Consultar"}
                             value={objDireccion.direccion ?? ""}
-                            onChange={ValidarDataDireccion}
+                            onChange={HandleDataDireccion}
                             className={G.InputBoton}
                           />
                         </div>
@@ -1123,7 +1123,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                               name="isActivo"
                               disabled={modo == "Consultar"}
                               value={objDireccion.isActivo}
-                              onChange={ValidarDataDireccion}
+                              onChange={HandleDataDireccion}
                               checked={objDireccion.isActivo ? true : ""}
                             ></Checkbox>
                           </div>
@@ -1159,7 +1159,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoComplete="off"
                           disabled={modo == "Consultar"}
                           value={objDireccion.comentario ?? ""}
-                          onChange={ValidarDataDireccion}
+                          onChange={HandleDataDireccion}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1267,7 +1267,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoFocus={habilitarContacto}
                           disabled={modo == "Consultar"}
                           value={objContacto.nombres ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1287,7 +1287,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objContacto.numeroDocumentoIdentidad ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1302,7 +1302,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           id="cargoId"
                           name="cargoId"
                           value={objContacto.cargoId ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           disabled={modo == "Consultar"}
                           className={G.InputStyle}
                         >
@@ -1326,7 +1326,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objContacto.celular ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1346,7 +1346,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objContacto.telefono ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1365,7 +1365,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoComplete="off"
                           disabled={modo == "Consultar"}
                           value={objContacto.correoElectronico ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1383,7 +1383,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         autoComplete="off"
                         disabled={modo == "Consultar"}
                         value={objContacto.direccion ?? ""}
-                        onChange={ValidarDataContacto}
+                        onChange={HandleDataContacto}
                         className={G.InputStyle}
                       />
                     </div>
@@ -1488,7 +1488,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             name="personalId"
                             autoFocus={habilitarPersonal}
                             value={objPersonal.personalId ?? ""}
-                            onChange={ValidarDataPersonal}
+                            onChange={HandleDataPersonal}
                             disabled={modo == "Consultar"}
                             className={G.InputBoton}
                           >
@@ -1506,7 +1506,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                               name="default"
                               disabled={modo == "Consultar"}
                               value={objPersonal.default}
-                              onChange={ValidarDataPersonal}
+                              onChange={HandleDataPersonal}
                               checked={objPersonal.default ? true : ""}
                             ></Checkbox>
                           </div>

@@ -109,7 +109,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const ValidarDataContacto = async ({ target }) => {
+  const HandleDataContacto = async ({ target }) => {
     setObjetoContacto((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -931,7 +931,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoFocus={habilitarContacto}
                           disabled={modo == "Consultar"}
                           value={objetoContacto.nombres ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -951,7 +951,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.numeroDocumentoIdentidad ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -966,7 +966,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           id="cargoId"
                           name="cargoId"
                           value={objetoContacto.cargoId ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           disabled={modo == "Consultar"}
                           className={G.InputStyle}
                         >
@@ -990,7 +990,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.celular ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1010,7 +1010,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.telefono ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1026,7 +1026,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoComplete="off"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.correo ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1044,7 +1044,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         autoComplete="off"
                         disabled={modo == "Consultar"}
                         value={objetoContacto.direccion ?? ""}
-                        onChange={ValidarDataContacto}
+                        onChange={HandleDataContacto}
                         className={G.InputStyle}
                       />
                     </div>
