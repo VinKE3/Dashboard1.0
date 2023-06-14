@@ -75,6 +75,7 @@ import BloquearMovimientoBancario from "./pages/finanza/bloquearMovimientoBancar
 //Pages Bloqueos
 //Pages Herramientas
 import Informe from "./pages/informe/Informe";
+import ReciboEgreso from "./pages/tesoreria/reciboEgreso/ReciboEgreso";
 //Pages Herramientas
 function App() {
   return (
@@ -195,6 +196,11 @@ function App() {
           />
           <Route path="cobranza/planillaCobro" element={<PLanillaCobro />} />
           {/*COBRANZAS */}
+
+          {/*TESORERIA */}
+          <Route path="tesoreria/recibo-egreso" element={<ReciboEgreso />} />
+          <Route path="cobranza/planillaCobro" element={<PLanillaCobro />} />
+          {/*TESORERIA */}
 
           {/*INFORMES */}
           <Route path="/informe/informe" element={<Informe />} />
