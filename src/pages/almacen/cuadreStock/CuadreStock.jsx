@@ -235,6 +235,7 @@ const CuadreStock = () => {
           );
           if (valor) {
             await GetPorId(value);
+            await GetDetalles(value);
             setModal(true);
           }
           break;
@@ -252,6 +253,7 @@ const CuadreStock = () => {
         }
         case 3: {
           await GetPorId(value);
+          await GetDetalles(value);
           setModal(true);
           break;
         }
