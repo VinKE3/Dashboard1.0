@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, CSSProperties } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import GetPermisos from "../../../components/funciones/GetPermisos";
@@ -24,6 +24,9 @@ import {
   faPrint,
 } from "@fortawesome/free-solid-svg-icons";
 import * as G from "../../../components/Global";
+import { RotatingLines } from "react-loader-spinner";
+import { Dialog } from "primereact/dialog";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -87,6 +90,8 @@ const CuadreStock = () => {
   const [modo, setModo] = useState("Nuevo");
   const [objeto, setObjeto] = useState([]);
   const [listar, setListar] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   //#endregion
 
   //#region useEffect;
@@ -129,6 +134,10 @@ const CuadreStock = () => {
   }, [permisos]);
   useEffect(() => {
     GetPermisos("CuadreStock", setPermisos);
+  }, []);
+
+  useEffect(() => {
+    GetDetalles();
   }, []);
   //#endregion
 
@@ -177,11 +186,13 @@ const CuadreStock = () => {
     const result = await ApiMasy.get(`api/Almacen/CuadreStock/${id}`);
     setObjeto(result.data.data);
   };
-  const GetDetalles = async (id) => {
+  const GetDetalles = async (id, tipoExistenciaId = "01") => {
     const result = await ApiMasy.get(
-      `api/Almacen/CuadreStock/GetDetalles?id=${id}`
+      `api/Almacen/CuadreStock/GetDetalles?tipoExistenciaId=${tipoExistenciaId}&id=${id}`
     );
     setDetalle(result.data.data);
+    console.log(result.data.data);
+    setLoading(false);
   };
   //#endregion
 
@@ -202,6 +213,7 @@ const CuadreStock = () => {
       setModo(modo);
       switch (accion) {
         case 0: {
+          setLoading(true);
           //Consulta Correlativo
           const result = await ApiMasy.get(
             `api/Mantenimiento/Correlativo/CU/0001`
@@ -235,6 +247,7 @@ const CuadreStock = () => {
           );
           if (valor) {
             await GetPorId(value);
+            await GetDetalles(value);
             setModal(true);
           }
           break;
@@ -252,6 +265,7 @@ const CuadreStock = () => {
         }
         case 3: {
           await GetPorId(value);
+          await GetDetalles(value);
           setModal(true);
           break;
         }
@@ -330,6 +344,7 @@ const CuadreStock = () => {
       }
     }
   };
+
   const ModalKey = async (e) => {
     if (e.key === "n") {
       setModo("Nuevo");
@@ -571,6 +586,31 @@ const CuadreStock = () => {
             </DivTabla>
             {/* Tabla */}
           </div>
+          <Dialog
+            showHeader={false}
+            closeOnEscape={false}
+            closable={false}
+            modal={true}
+            visible={loading}
+            pt={{
+              root: { className: "w-12" },
+              content: { className: "p-4 flex items-center justify-center" },
+            }}
+          >
+            <ProgressSpinner
+              pt={{
+                spinner: { style: { animationDuration: "0s" } },
+                circle: {
+                  style: {
+                    stroke: "#F59E0B",
+                    strokeWidth: 3,
+                    animation: "none",
+                  },
+                },
+              }}
+            ></ProgressSpinner>
+            <p className="pt-4 font-semibold">Cargando</p>
+          </Dialog>
           {modal && (
             <Modal
               setModal={setModal}

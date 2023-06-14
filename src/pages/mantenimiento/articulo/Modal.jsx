@@ -241,7 +241,7 @@ const Modal = ({ setModal, modo, objeto }) => {
       } else {
         setDataCabecera(dataDetalle.find((map) => map.id === value));
       }
-      // document.getElementById("unidadMedidaId").focus();
+      document.getElementById("unidadMedidaId").focus();
     }
   };
   const EliminarDetalle = async (id) => {

@@ -92,6 +92,10 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
   //#region useEffect
   useEffect(() => {
+    detalle;
+    console.log(detalle);
+  }, [detalle]);
+  useEffect(() => {
     FiltroLocal();
   }, [filtro]);
   useEffect(() => {
