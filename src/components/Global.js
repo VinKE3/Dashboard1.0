@@ -1,5 +1,5 @@
 //#region Padre
-export var ContenedorPadre = "h-full w-full px-2 ";
+export var ContenedorPadre = "h-auto w-full px-2 ";
 //#endregion
 
 //#region Modal
