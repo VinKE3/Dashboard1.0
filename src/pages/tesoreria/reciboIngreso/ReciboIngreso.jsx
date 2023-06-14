@@ -177,22 +177,15 @@ const ReciboIngreso = () => {
         case 0: {
           setObjeto({
             empresaId: "",
-            proveedorId: "",
             tipoDocumentoId: "",
             serie: "",
             numero: "",
-            clienteId: "",
-            fechaEmision: moment().format("YYYY-MM-DD"),
-            tipoGastoId: "",
-            concepto: "",
+            fechaEmision: moment(new Date()).format("YYYY-MM-DD"),
             personalId: "",
-            documentoVentaId: "",
-            documentoVentaNumeroDocumento: "",
-            documentoVentaFecha: moment().format("YYYY-MM-DD"),
+            concepto: "",
             monedaId: "",
             tipoCambio: 0,
             total: 0,
-            glosa: "",
             observacion: "",
           });
           setModal(true);
