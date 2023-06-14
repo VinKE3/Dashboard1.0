@@ -8,10 +8,10 @@ const BotonBasico = ({
   autoFoco = false,
   click,
   KeyDown = (e) => {},
-  contenedor = "sticky top-2 bg-black/30",
+  contenedor = "",
 }) => {
   return (
-    <div className={contenedor + "flex"}>
+    <div className={"sticky top-2 bg-black/30 flex items-center" + contenedor}>
       <button
         onClick={click}
         autoFocus={autoFoco}
