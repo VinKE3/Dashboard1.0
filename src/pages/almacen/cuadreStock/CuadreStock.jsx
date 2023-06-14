@@ -597,19 +597,23 @@ const CuadreStock = () => {
               content: { className: "p-4 flex items-center justify-center" },
             }}
           >
-            <ProgressSpinner
-              pt={{
-                spinner: { style: { animationDuration: "0s" } },
-                circle: {
-                  style: {
-                    stroke: "#F59E0B",
-                    strokeWidth: 3,
-                    animation: "none",
+            <div className="text-center mt-4">
+              <ProgressSpinner
+                pt={{
+                  spinner: { style: { animationDuration: "0s" } },
+                  circle: {
+                    style: {
+                      stroke: "#F59E0B",
+                      strokeWidth: 3,
+                      animation: "none",
+                    },
                   },
-                },
-              }}
-            ></ProgressSpinner>
-            <p className="pt-4 font-semibold">Cargando</p>
+                }}
+              />
+            </div>
+            <p className="pt-4 font-semibold text-center">
+              Cargando Nuevo Registro, por favor aguarde...
+            </p>
           </Dialog>
           {modal && (
             <Modal

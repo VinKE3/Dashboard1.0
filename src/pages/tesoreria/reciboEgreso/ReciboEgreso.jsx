@@ -44,7 +44,7 @@ const ReciboEgreso = () => {
   const [index, setIndex] = useState(0);
   const [timer, setTimer] = useState(null);
   const [filtro, setFiltro] = useState({
-    proveedorNombre: "",
+    concepto: "",
     fechaInicio: moment(
       dataGlobal == null ? "" : dataGlobal.fechaInicio
     ).format("YYYY-MM-DD"),
@@ -53,7 +53,7 @@ const ReciboEgreso = () => {
     ),
   });
   const [cadena, setCadena] = useState(
-    `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+    `&concepto=${filtro.concepto}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
   );
   //Modal
   const [modal, setModal] = useState(false);
@@ -66,7 +66,7 @@ const ReciboEgreso = () => {
   //#region useEffect;
   useEffect(() => {
     setCadena(
-      `&proveedorNombre=${filtro.proveedorNombre}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
+      `&concepto=${filtro.concepto}&fechaInicio=${filtro.fechaInicio}&fechaFin=${filtro.fechaFin}`
     );
   }, [filtro]);
   useEffect(() => {
@@ -127,7 +127,7 @@ const ReciboEgreso = () => {
   };
   const FiltroBoton = async () => {
     setFiltro({
-      proveedorNombre: "",
+      concepto: "",
       fechaInicio: moment(
         dataGlobal == null ? "" : dataGlobal.fechaInicio
       ).format("YYYY-MM-DD"),
@@ -136,7 +136,7 @@ const ReciboEgreso = () => {
       ),
     });
     setIndex(0);
-    document.getElementById("proveedorNombre").focus();
+    document.getElementById("conceptoFiltro").focus();
   };
   const FiltradoPaginado = (e) => {
     setIndex(e.selected);
@@ -178,38 +178,22 @@ const ReciboEgreso = () => {
           setObjeto({
             empresaId: "",
             proveedorId: "",
-            proveedorNombre: "",
             tipoDocumentoId: "",
             serie: "",
             numero: "",
             clienteId: "",
             fechaEmision: moment().format("YYYY-MM-DD"),
-            fechaContable: moment().format("YYYY-MM-DD"),
-            fechaVencimiento: moment().format("YYYY-MM-DD"),
-            proveedorNumeroDocumentoIdentidad: "",
-            proveedorDireccion: "",
-            tipoCompraId: "",
+            tipoGastoId: "",
+            concepto: "",
+            personalId: "",
+            documentoVentaId: "",
+            documentoVentaNumeroDocumento: "",
+            documentoVentaFecha: moment().format("YYYY-MM-DD"),
             monedaId: "",
             tipoCambio: 0,
-            tipoPagoId: "",
-            numeroOperacion: "",
-            cuentaCorrienteId: "",
-            documentoReferenciaId: "",
-            abonar: true,
-            motivoNotaId: "",
-            motivoSustento: "",
-            guiaRemision: "",
-            observacion: "",
-            subTotal: 0,
-            porcentajeIGV: 0,
-            montoIGV: 0,
-            totalNeto: 0,
             total: 0,
-            incluyeIGV: false,
-            afectarStock: false,
-            detalles: [],
-            ordenesCompraRelacionadas: [],
-            numeroOrdenesCompraRelacionadas: "",
+            glosa: "",
+            observacion: "",
           });
           setModal(true);
           break;
@@ -327,7 +311,7 @@ const ReciboEgreso = () => {
         Header: "Emisión",
         accessor: "fechaEmision",
         Cell: ({ value }) => {
-          return <p className="">{moment(value).format("DD/MM/YY")}</p>;
+          return <p className="">{moment(value).format("yyyy-MM-DD")}</p>;
         },
       },
       {
@@ -398,17 +382,17 @@ const ReciboEgreso = () => {
             {/* Filtro*/}
             <div className={G.ContenedorInputsFiltro}>
               <div className={G.InputFull}>
-                <label name="proveedorNombre" className={G.LabelStyle}>
-                  Proveedor
+                <label name="conceptoFiltro" className={G.LabelStyle}>
+                  Concepto
                 </label>
                 <input
                   type="text"
-                  id="proveedorNombre"
-                  name="proveedorNombre"
-                  placeholder="Proveedor"
+                  id="conceptoFiltro"
+                  name="conceptoFiltro"
+                  placeholder="Concepto"
                   autoComplete="off"
                   autoFocus
-                  value={filtro.proveedorNombre ?? ""}
+                  value={filtro.concepto ?? ""}
                   onChange={HandleData}
                   className={G.InputStyle}
                 />
