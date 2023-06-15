@@ -388,7 +388,7 @@ const ReciboEgreso = () => {
                 <input
                   type="text"
                   id="conceptoFiltro"
-                  name="conceptoFiltro"
+                  name="concepto"
                   placeholder="Concepto"
                   autoComplete="off"
                   autoFocus
