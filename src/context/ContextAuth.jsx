@@ -17,6 +17,7 @@ export const useAuth = () => {
 export const useAuthProvider = () => {
   //#region useState
   const [token, setToken] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   //Datos que retorna
@@ -32,6 +33,7 @@ export const useAuthProvider = () => {
     setIsLoading(true);
     setError(null);
     setToken(null);
+    setRefreshToken(null);
     setUsuario(null);
     setUsuarioId(null);
     setPersonalId(null);
@@ -63,6 +65,7 @@ export const useAuthProvider = () => {
         setUsuarioId(usuarioId);
         setPersonalId(personalId);
         setAfectarStock(afectarStock);
+        setRefreshToken(result.data.data.refreshToken);
 
         authHelper.login(result.data.data);
         authHelper.usuarioGuardar({ usuario: usuario });
@@ -77,6 +80,7 @@ export const useAuthProvider = () => {
         setGlobal(res.data.data);
         authHelper.globalGuardar({ global: res.data.data });
         // Datos Global
+        //Refrescar token
       }
     } catch (error) {
       setError(error?.response);
