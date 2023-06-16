@@ -36,12 +36,16 @@ const TomaDeInventario = ({ setModal }) => {
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Almacen/MovimientoArticulo/FormularioTablas`
+      `api/Informes/Articulos/TomaInventario/FormularioTablas`
     );
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Articulos/TomaInventario`,
+      origen,
+      `&TipoExistenciaId=${data.tipoExistenciaId}&ConStock=${data.conStock}`
+    );
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;

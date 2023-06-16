@@ -3,6 +3,8 @@ import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
 import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
+import { Checkbox } from "primereact/checkbox";
+import { RadioButton } from "primereact/radiobutton";
 import moment from "moment";
 import * as G from "../../../components/Global";
 
@@ -16,12 +18,17 @@ const MovimientoDeArticulos = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
       "YYYY-MM-DD"
     ),
-    proveedorId: "",
+    articulosMovimiento: false,
+    checkFiltro: "marca",
   });
-  const [dataProveedor, setDataProveedor] = useState([]);
+  const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    data;
+    console.log(data);
+  }, [data]);
   useEffect(() => {
     GetTablas();
   }, []);
@@ -29,6 +36,24 @@ const MovimientoDeArticulos = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
+    if (target.name === "articulosMovimiento") {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.checked,
+      }));
+      return;
+    }
+    if (
+      target.value === "marca" ||
+      target.value === "linea" ||
+      target.value === "lineaSublinea"
+    ) {
+      setData((prevState) => ({
+        ...prevState,
+        checkFiltro: target.value,
+      }));
+      return;
+    }
     setData((prevState) => ({
       ...prevState,
       [target.name]: target.value.toUpperCase(),
@@ -38,8 +63,10 @@ const MovimientoDeArticulos = ({ setModal }) => {
 
   //#region API
   const GetTablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Proveedor/Listar`);
-    setDataProveedor(result.data.data.data);
+    const result = await ApiMasy.get(
+      `/Api/Informes/Articulos/MovimientoArticulo/FormularioTablas`
+    );
+    setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
     let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
@@ -117,24 +144,98 @@ const MovimientoDeArticulos = ({ setModal }) => {
               />
             </div>
           </div>
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.InputFull}>
+                <div className={G.CheckStyle}>
+                  <RadioButton
+                    inputId="marca"
+                    name="agrupar"
+                    value="marca"
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={data.checkFiltro === "marca"}
+                  />
+                </div>
+                <label
+                  htmlFor="marca"
+                  className={G.LabelCheckStyle + " rounded-r-none"}
+                >
+                  Agrupar por Marca
+                </label>
+              </div>
+              <div className={G.InputFull}>
+                <div className={G.CheckStyle + G.Anidado}>
+                  <RadioButton
+                    inputId="linea"
+                    name="agrupar"
+                    value="linea"
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={data.checkFiltro === "linea"}
+                  />
+                </div>
+                <label
+                  htmlFor="linea"
+                  className={G.LabelCheckStyle + " rounded-r-none"}
+                >
+                  Agrupar por Línea
+                </label>
+              </div>
+              <div className={G.InputFull}>
+                <div className={G.CheckStyle + G.Anidado}>
+                  <RadioButton
+                    inputId="lineaSublinea"
+                    name="agrupar"
+                    value="lineaSublinea"
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={data.checkFiltro === "lineaSublinea"}
+                  />
+                </div>
+                <label htmlFor="lineaSublinea" className={G.LabelCheckStyle}>
+                  Agrupar por Línea y Sublínea
+                </label>
+              </div>
+            </div>
+          </div>
 
           <div className={G.InputFull}>
-            <label htmlFor="proveedorId" className={G.LabelStyle}>
-              Proveedores
+            <div className={G.CheckStyle}>
+              <Checkbox
+                inputId="articulosMovimiento"
+                name="articulosMovimiento"
+                onChange={(e) => {
+                  HandleData(e);
+                }}
+                checked={data.articulosMovimiento ? true : ""}
+              />
+            </div>
+            <label htmlFor="articulosMovimiento" className={G.LabelCheckStyle}>
+              Articulos con Movimiento
+            </label>
+          </div>
+          <div className={G.InputFull}>
+            <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
+              Tipo de Existencia
             </label>
             <select
-              id="proveedorId"
-              name="proveedorId"
-              value={data.proveedorId ?? ""}
+              id="tipoExistenciaId"
+              name="tipoExistenciaId"
+              autoFocus
+              value={data.tipoExistenciaId ?? ""}
               onChange={HandleData}
-              className={G.InputStyle}
+              className={G.InputBoton}
             >
               <option key={-1} value={""}>
                 {"--TODOS--"}
               </option>
-              {dataProveedor.map((map) => (
+              {dataTipoExistencia.map((map) => (
                 <option key={map.id} value={map.id}>
-                  {map.nombre}
+                  {map.descripcion}
                 </option>
               ))}
             </select>
