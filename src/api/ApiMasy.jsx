@@ -37,13 +37,15 @@ ApiMasy.interceptors.response.use(
         token: token,
         refreshToken: refreshToken,
       };
-      const result = await ApiMasy.put(`/api/Sesion/ActualizarToken `, params);
+      const result = await ApiMasy.post(`/api/Sesion/ActualizarToken `, params);
       if (result.status === 200) {
         const { token } = result.data.data;
         authHelper.login(result.data.data);
         ApiMasy.defaults.headers.common["Authorization"] = "Bearer " + token;
         return ApiMasy(originalRequest);
       }
+    } else if (error.response.status === 401) {
+      window.location.href = "/login";
     }
     let retorna = "";
     if (Object.entries(error.response.data).length > 0) {

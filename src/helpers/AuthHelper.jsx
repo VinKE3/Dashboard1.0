@@ -107,6 +107,12 @@ function globalGuardar(data) {
   store.session("global", global);
 }
 
+function fechasFiltroGuardar(data) {
+  const { fechasFiltro } = data;
+  store.local("fechasFiltro", fechasFiltro);
+  store.session("fechasFiltro", fechasFiltro);
+}
+
 export const authHelper = {
   getAccessToken,
   getRefreshToken,
@@ -117,4 +123,5 @@ export const authHelper = {
   personalIdGuardar,
   afectarStockGuardar,
   globalGuardar,
+  fechasFiltroGuardar,
 };

@@ -5,6 +5,7 @@ import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
 //Icons
 
 import { authHelper } from "../../helpers/AuthHelper";
+import ApiMasy from "../../api/ApiMasy";
 const SidebarMenus = ({
   onclickButtonSubmenu,
   showSubmenu,
@@ -31,14 +32,19 @@ const SidebarMenus = ({
     onClickShowMenu();
   };
 
-  const handleLogout = () => {
-    borrarTodosLosTokens();
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    const result = await ApiMasy.post(`/api/Sesion/RevocarToken`);
+    if (result.status === 200) {
+      borrarTodosLosTokens();
+      window.location.href = "/login";
+    }
   };
 
   return (
     <div
-      className={`h-[100vh] overflow-y-scroll fixed xl:static w-full lg:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-200 scrollbar-hide ${showMenu ? "left-0" : "-left-full"}
+      className={`h-[100vh] overflow-y-scroll fixed xl:static w-full lg:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-200 scrollbar-hide ${
+        showMenu ? "left-0" : "-left-full"
+      }
        transition-all`}
     >
       <div className="h-[8vh] scrollbar-hide">
