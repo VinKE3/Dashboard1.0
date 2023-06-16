@@ -17,7 +17,6 @@ ApiMasy.interceptors.request.use(
     config.headers["Content-Type"] = "application/json";
     return config;
   },
-
   (error) => {
     return error;
   }
