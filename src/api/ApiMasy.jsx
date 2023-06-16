@@ -46,9 +46,6 @@ ApiMasy.interceptors.response.use(
         window.location.href = "/login";
         console.log("Error al actualizar el token");
       }
-    } else if (error.response.status === 400) {
-      window.location.href = "/login";
-      console.log("Error al actualizar el token error 400");
     }
     let retorna = "";
     if (Object.entries(error.response.data).length > 0) {

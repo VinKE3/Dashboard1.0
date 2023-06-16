@@ -30,7 +30,7 @@ const ReporteVendedoresClientes = ({ setModal }) => {
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Almacen/EntradaAlmacen/FormularioTablas`
+      `api/Informes/Sistema/ReportePersonalCliente/FormularioTablas`
     );
     setDataPersonal(
       result.data.data.personal.map((res) => ({
@@ -41,7 +41,10 @@ const ReporteVendedoresClientes = ({ setModal }) => {
     );
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Sistema/ReportePersonalCliente`,
+      origen
+    );
     const enlace = document.createElement("a");
     enlace.href = model.url;
     enlace.download = model.fileName;

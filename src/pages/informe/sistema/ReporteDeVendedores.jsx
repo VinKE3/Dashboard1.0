@@ -6,7 +6,7 @@ import * as G from "../../../components/Global";
 const ReporteDeVendedores = ({ setModal }) => {
   //#region  API
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(`Informes/Sistema/ReportePersonal`, origen);
     const enlace = document.createElement("a");
     enlace.href = model.url;
     enlace.download = model.fileName;

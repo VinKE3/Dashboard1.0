@@ -10,6 +10,7 @@ const KardexPorMarca = ({ setModal }) => {
   //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
+    empresaId: "",
     fechaInicio: moment(
       dataGlobal == null ? "" : dataGlobal.fechaInicio
     ).format("YYYY-MM-DD"),
@@ -17,11 +18,16 @@ const KardexPorMarca = ({ setModal }) => {
       "YYYY-MM-DD"
     ),
     marcaId: "",
+    marcaNombre: "",
   });
   const [dataMarca, setDataMarca] = useState([]);
   //#endregion
 
   //#region useEffect
+  useEffect(() => {
+    data;
+    console.log(data.marcaId);
+  }, [data]);
   useEffect(() => {
     GetTablas();
   }, []);
@@ -38,11 +44,17 @@ const KardexPorMarca = ({ setModal }) => {
 
   //#region API
   const GetTablas = async () => {
-    const result = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-    setDataMarca(result.data.data.data);
+    const result = await ApiMasy.get(
+      `api/Informes/Articulos/KardexMarca/FormularioTablas`
+    );
+    setDataMarca(result.data.data.marcas);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Articulos/KardexMarca`, //El menu que corresponda
+      origen, // 1 PDF 2 EXCEL
+      `&FechaInicio=${data.fechaInicio}&FechaFin=${data.fechaFin}&MarcaId=${data.marcaId}` // Los parametros van separados por & ahh ya entendi
+    );
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;
@@ -144,7 +156,6 @@ const KardexPorMarca = ({ setModal }) => {
     </>
   );
   //#endregion
-
 };
 
 export default KardexPorMarca;
