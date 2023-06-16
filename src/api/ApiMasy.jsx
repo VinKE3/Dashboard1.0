@@ -43,9 +43,13 @@ ApiMasy.interceptors.response.use(
         authHelper.login(result.data.data);
         ApiMasy.defaults.headers.common["Authorization"] = "Bearer " + token;
         return ApiMasy(originalRequest);
+      } else {
+        window.location.href = "/login";
+        console.log("Error al actualizar el token");
       }
-    } else if (error.response.status === 401) {
+    } else if (error.response.status === 400) {
       window.location.href = "/login";
+      console.log("Error al actualizar el token error 400");
     }
     let retorna = "";
     if (Object.entries(error.response.data).length > 0) {
