@@ -14,9 +14,15 @@ const ListadoDeCostos = ({ setModal }) => {
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   const [dataMarca, setDataMarca] = useState([]);
+
   //#endregion
 
   //#region useEffect
+
+  useEffect(() => {
+    data;
+    console.log(data);
+  }, [data]);
   useEffect(() => {
     GetTablas();
   }, []);
@@ -25,8 +31,8 @@ const ListadoDeCostos = ({ setModal }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (
-      target.value === "agruparMarca" ||
-      target.value === "agruparLinea" ||
+      target.value === "conStock" ||
+      target.value === "sinStock" ||
       target.value === "todos"
     ) {
       setData((prevState) => ({
@@ -167,39 +173,39 @@ const ListadoDeCostos = ({ setModal }) => {
               <div className={G.InputTercio}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="agruparMarca"
+                    inputId="conStock"
                     name="agrupar"
-                    value="agruparMarca"
+                    value="conStock"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "agruparMarca"}
+                    checked={data.checkFiltro === "conStock"}
                   />
                 </div>
                 <label
-                  htmlFor="agruparMarca"
+                  htmlFor="conStock"
                   className={G.LabelCheckStyle + "rounded-r-none"}
                 >
-                  Agrupar por Marca
+                  Con Stock
                 </label>
               </div>
               <div className={G.InputMitad}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="agruparLinea"
+                    inputId="sinStock"
                     name="agrupar"
-                    value="agruparLinea"
+                    value="sinStock"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "agruparLinea"}
+                    checked={data.checkFiltro === "sinStock"}
                   />
                 </div>
                 <label
-                  htmlFor="agruparLinea"
+                  htmlFor="sinStock"
                   className={G.LabelCheckStyle + " !py-1 "}
                 >
-                  Agrupar por Línea y Sublínea
+                  Sin Stock
                 </label>
               </div>
             </div>
