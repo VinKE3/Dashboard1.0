@@ -10,7 +10,7 @@ const ListadoDeCostos = ({ setModal }) => {
   const [data, setData] = useState({
     tipoExistenciaId: "",
     marcaId: "",
-    checkFiltro: "todos",
+    checkFiltro: null,
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   const [dataMarca, setDataMarca] = useState([]);
@@ -30,36 +30,44 @@ const ListadoDeCostos = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    if (
-      target.value === "conStock" ||
-      target.value === "sinStock" ||
-      target.value === "todos"
-    ) {
+    if (target.value === "conStock") {
       setData((prevState) => ({
         ...prevState,
-        checkFiltro: target.value,
+        checkFiltro: true,
       }));
-      return;
+    } else if (target.value === "sinStock") {
+      setData((prevState) => ({
+        ...prevState,
+        checkFiltro: false,
+      }));
+    } else if (target.value === "todos") {
+      setData((prevState) => ({
+        ...prevState,
+        checkFiltro: null,
+      }));
+    } else {
+      setData((prevState) => ({
+        ...prevState,
+        [target.name]: target.value.toUpperCase(),
+      }));
     }
-    setData((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
   };
   //#endregion
 
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Articulo/FormularioTablas`
+      `api/Informes/Articulos/ListadoCostos/FormularioTablas`
     );
-    const res = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-
-    setDataMarca(res.data.data.data);
+    setDataMarca(result.data.data.marcas);
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Articulos/ListadoCostos`,
+      origen,
+      `&TipoExistenciaId=${data.tipoExistenciaId}&MarcaId=${data.marcaId}&ConStock=${data.checkFiltro}`
+    );
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;
@@ -160,7 +168,7 @@ const ListadoDeCostos = ({ setModal }) => {
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "todos"}
+                    checked={data.checkFiltro === null}
                   />
                 </div>
                 <label
@@ -179,7 +187,7 @@ const ListadoDeCostos = ({ setModal }) => {
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "conStock"}
+                    checked={data.checkFiltro === true}
                   />
                 </div>
                 <label
@@ -198,7 +206,7 @@ const ListadoDeCostos = ({ setModal }) => {
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "sinStock"}
+                    checked={data.checkFiltro === false}
                   />
                 </div>
                 <label

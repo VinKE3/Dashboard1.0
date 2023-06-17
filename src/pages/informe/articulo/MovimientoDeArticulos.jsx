@@ -69,7 +69,11 @@ const MovimientoDeArticulos = ({ setModal }) => {
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Articulos/MovimientoArticulo`,
+      origen,
+      `&TipoExistenciaId=${data.tipoExistenciaId}&FechaInicio=${data.fechaInicio}&FechaFin=${data.fechaFin}&AgrupadoPor=${data.checkFiltro}&ConStock=${data.articulosMovimiento}`
+    );
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;
