@@ -7,7 +7,10 @@ import * as G from "../../../components/Global";
 
 const TomaDeInventario = ({ setModal }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    tipoExistenciaId: "",
+    conStock: false,
+  });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   //#endregion
 

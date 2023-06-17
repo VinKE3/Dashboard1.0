@@ -229,7 +229,6 @@ const MovimientoDeArticulos = ({ setModal }) => {
             <select
               id="tipoExistenciaId"
               name="tipoExistenciaId"
-              autoFocus
               value={data.tipoExistenciaId ?? ""}
               onChange={HandleData}
               className={G.InputBoton}
