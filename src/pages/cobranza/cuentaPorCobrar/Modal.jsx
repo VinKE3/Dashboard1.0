@@ -1,11 +1,10 @@
+import moment from "moment";
+import "primeicons/primeicons.css";
 import React, { useState } from "react";
+import styled from "styled-components";
+import * as G from "../../../components/Global";
 import ModalCrud from "../../../components/modal/ModalCrud";
 import TableBasic from "../../../components/tabla/TableBasic";
-import moment from "moment";
-import styled from "styled-components";
-import "primeicons/primeicons.css";
-
-import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`

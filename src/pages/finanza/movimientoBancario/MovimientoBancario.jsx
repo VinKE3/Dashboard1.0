@@ -1,22 +1,22 @@
-import { useEffect, useState, useMemo } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
-import Delete from "../../../components/funciones/Delete";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/tabla/Table";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
-import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
-import moment from "moment";
-import styled from "styled-components";
+import { useEffect, useMemo, useState } from "react";
 import { FaUndoAlt } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import store from "store2";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import Delete from "../../../components/funciones/Delete";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import GetPermisos from "../../../components/funciones/GetPermisos";
+import Table from "../../../components/tabla/Table";
+import Modal from "./Modal";
 
 //#region Estilos
 const DivTabla = styled.div`

@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
 import moment from "moment";
-import { Checkbox } from "primereact/checkbox";
-import { FaSearch, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
+import { FaSearch, FaTrashAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`

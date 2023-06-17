@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import Insert from "../funciones/Insert";
-import Update from "../funciones/Update";
-import Mensajes from "../funciones/Mensajes";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import * as G from "../Global";
+import Insert from "../funciones/Insert";
+import Mensajes from "../funciones/Mensajes";
+import Update from "../funciones/Update";
 import * as Funciones from "../funciones/Validaciones";
 
 const ModalCrud = ({

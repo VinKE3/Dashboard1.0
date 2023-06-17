@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ModalCrud from "../../../components/modal/ModalCrud";
 import * as G from "../../../components/Global";
+import ModalCrud from "../../../components/modal/ModalCrud";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState

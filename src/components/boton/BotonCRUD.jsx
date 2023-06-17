@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import Delete from "../funciones/Delete";
 import { FaEye, FaPen, FaTrashAlt } from "react-icons/fa";
 import * as G from "../Global";
+import Delete from "../funciones/Delete";
 
 const BotonCRUD = ({
   setListar,

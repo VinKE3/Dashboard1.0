@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import ModalCrud from "../../../components/modal/ModalCrud";
+import React, { useEffect, useState } from "react";
 import * as G from "../../../components/Global";
 import Ubigeo from "../../../components/filtro/Ubigeo";
+import ModalCrud from "../../../components/modal/ModalCrud";
+
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);

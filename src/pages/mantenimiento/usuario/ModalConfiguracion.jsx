@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import ModalCrud from "../../../components/modal/ModalCrud";
+import { Accordion, AccordionTab } from "primereact/accordion";
+import { Checkbox } from "primereact/checkbox";
+import { ScrollTop } from "primereact/scrolltop";
+import { SelectButton } from "primereact/selectbutton";
+import React, { useCallback, useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
-import { Checkbox } from "primereact/checkbox";
-import { Accordion, AccordionTab } from "primereact/accordion";
-import { SelectButton } from "primereact/selectbutton";
-import { useMenu } from "../../../context/ContextMenu";
 import Mensajes from "../../../components/funciones/Mensajes";
-import { useCallback } from "react";
-import { ScrollTop } from "primereact/scrolltop";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import { useMenu } from "../../../context/ContextMenu";
+
 const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);

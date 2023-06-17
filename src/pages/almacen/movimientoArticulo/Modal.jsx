@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import ModalBasic from "../../../components/modal/ModalBasic";
-import TableBasic from "../../../components/tabla/TableBasic";
-import styled from "styled-components";
 import moment from "moment";
+import React, { useState } from "react";
+import styled from "styled-components";
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalBasic from "../../../components/modal/ModalBasic";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`

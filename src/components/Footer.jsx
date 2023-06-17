@@ -1,7 +1,8 @@
-import React from "react";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import moment from "moment/moment";
+import React from "react";
+
 const Footer = () => {
   return (
     <footer className="h-full p-3 items-center ">

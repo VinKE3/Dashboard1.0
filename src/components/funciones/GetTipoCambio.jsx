@@ -1,6 +1,6 @@
-import ApiMasy from "../../api/ApiMasy";
 import moment from "moment";
 import { toast } from "react-toastify";
+import ApiMasy from "../../api/ApiMasy";
 
 const GetTipoCambio = async (fecha, tipo, setTipoMensaje, setMensaje) => {
   const result = await ApiMasy.get(`api/Mantenimiento/TipoCambio/${fecha}`);

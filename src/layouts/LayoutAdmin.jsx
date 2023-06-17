@@ -1,13 +1,12 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import Sidebar from "../components/sidebarComponent/Sidebar";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import store from "store2";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { authHelper } from "../helpers/AuthHelper";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 import Enter from "../components/funciones/Enter";
+import Sidebar from "../components/sidebarComponent/Sidebar";
+import { authHelper } from "../helpers/AuthHelper";
+
 const LayoutAdmin = () => {
   const navigate = useNavigate();
   const { borrarTodosLosTokens } = authHelper;

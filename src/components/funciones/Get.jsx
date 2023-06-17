@@ -1,5 +1,5 @@
-import ApiMasy from "../../api/ApiMasy";
 import { toast } from "react-toastify";
+import ApiMasy from "../../api/ApiMasy";
 
 const Get = async (menu, mensaje = "Consultado Exitosamente") => {
   const result = await ApiMasy.get(`api/${menu}`);

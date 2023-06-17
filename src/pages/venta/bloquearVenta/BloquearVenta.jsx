@@ -1,18 +1,18 @@
-import { useEffect, useState, useMemo } from "react";
+import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { FaUndoAlt } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import store from "store2";
+import styled from "styled-components";
+import Swal from "sweetalert2";
 import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
 import GetPermisos from "../../../components/funciones/GetPermisos";
 import Put from "../../../components/funciones/Put";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
 import Table from "../../../components/tabla/Table";
-import { Checkbox } from "primereact/checkbox";
-import { ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
-import { FaUndoAlt } from "react-icons/fa";
-import moment from "moment";
-import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
-import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`

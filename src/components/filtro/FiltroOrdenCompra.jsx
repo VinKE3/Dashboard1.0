@@ -1,13 +1,13 @@
-import { useEffect, useState, useMemo } from "react";
+import moment from "moment";
+import { useEffect, useMemo, useState } from "react";
+import { FaCheck, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import Swal from "sweetalert2";
 import ApiMasy from "../../api/ApiMasy";
+import * as G from "../Global";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import { FaTrash, FaCheck } from "react-icons/fa";
-import moment from "moment";
-import styled from "styled-components";
-import * as G from "../Global";
 
 //#region Estilos
 const DivTabla = styled.div`

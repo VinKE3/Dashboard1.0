@@ -1,8 +1,8 @@
-import { useState } from "react";
-import ModalBasic from "../modal/ModalBasic";
+import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
+import ModalBasic from "../modal/ModalBasic";
 
 const FiltroPrecio = ({ setModal, objeto, setObjeto, foco }) => {
   //#region useState

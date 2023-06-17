@@ -1,12 +1,12 @@
 import {
   FaBalanceScale,
   FaClipboardCheck,
-  FaTools,
-  FaIndustry,
-  FaUsers,
-  FaFileAlt,
   FaDollarSign,
+  FaFileAlt,
+  FaIndustry,
   FaMoneyBillAlt,
+  FaTools,
+  FaUsers,
 } from "react-icons/fa";
 
 function seccionesList() {

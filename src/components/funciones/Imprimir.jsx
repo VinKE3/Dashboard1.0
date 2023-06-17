@@ -1,6 +1,6 @@
+import { toast } from "react-toastify";
 import Api from "../../api/Api";
 import ApiMasy from "../../api/ApiMasy";
-import { toast } from "react-toastify";
 
 const Imprimir = async (menu, id) => {
   const result = await Api.get(`api/${menu}/Imprimir/${id}`);

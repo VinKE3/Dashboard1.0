@@ -1,13 +1,13 @@
 import React from "react";
-import styled from "styled-components";
-import * as G from "../Global";
-import * as Funciones from "../funciones/Validaciones";
 import {
-  useTable,
   useGlobalFilter,
   usePagination,
   useSortBy,
+  useTable,
 } from "react-table";
+import styled from "styled-components";
+import * as G from "../Global";
+import * as Funciones from "../funciones/Validaciones";
 
 //#region Estilos
 const Tabla = styled.div`

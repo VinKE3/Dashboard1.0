@@ -1,6 +1,7 @@
 import React from "react";
 import { FaUndoAlt } from "react-icons/fa";
 import * as G from "../Global";
+
 const FiltroBasico = ({
   textLabel,
   value,

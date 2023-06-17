@@ -1,6 +1,7 @@
-import ApiMasy from "../../api/ApiMasy";
-import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import ApiMasy from "../../api/ApiMasy";
+
 const Delete = async (menu, id, setListar) => {
   Swal.fire({
     title: "Eliminar registro",

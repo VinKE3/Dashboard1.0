@@ -1,11 +1,11 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { FaCheck } from "react-icons/fa";
 import store from "store2";
+import styled from "styled-components";
 import ApiMasy from "../../api/ApiMasy";
+import * as G from "../Global";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { FaCheck } from "react-icons/fa";
-import styled from "styled-components";
-import * as G from "../Global";
 
 //#region Estilos
 const DivTabla = styled.div`

@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import Update from "../../../components/funciones/Update";
-import { TabView, TabPanel } from "primereact/tabview";
-import Ubigeo from "../../../components/filtro/Ubigeo";
-import TableBasic from "../../../components/tabla/TableBasic";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import Mensajes from "../../../components/funciones/Mensajes";
-import { Checkbox } from "primereact/checkbox";
-import Swal from "sweetalert2";
-import { ToastContainer } from "react-toastify";
-import moment from "moment";
-import { FaPen, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
+import { TabPanel, TabView } from "primereact/tabview";
+import { useEffect, useState } from "react";
+import { FaPen, FaTrashAlt } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import Ubigeo from "../../../components/filtro/Ubigeo";
+import Mensajes from "../../../components/funciones/Mensajes";
+import Update from "../../../components/funciones/Update";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`

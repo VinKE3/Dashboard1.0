@@ -1,26 +1,26 @@
-import { useEffect, useState, useMemo } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
-import Put from "../../../components/funciones/Put";
-import Delete from "../../../components/funciones/Delete";
-import Imprimir from "../../../components/funciones/Imprimir";
-import ModalImprimir from "../../../components/filtro/ModalImprimir";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/tabla/Table";
+import { faBan, faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
-import Modal from "./Modal";
-import { toast, ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
-import moment from "moment";
-import styled from "styled-components";
+import { useEffect, useMemo, useState } from "react";
+import { FaCheck, FaUndoAlt } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaUndoAlt, FaCheck } from "react-icons/fa";
-import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
+import store from "store2";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
+import Delete from "../../../components/funciones/Delete";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import GetPermisos from "../../../components/funciones/GetPermisos";
+import Imprimir from "../../../components/funciones/Imprimir";
+import Put from "../../../components/funciones/Put";
+import Table from "../../../components/tabla/Table";
+import Modal from "./Modal";
 
 //#region Estilos
 const DivTabla = styled.div`

@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import Get from "../../../components/funciones/Get";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import TableBasic from "../../../components/tabla/TableBasic";
-import { Checkbox } from "primereact/checkbox";
-import { TabView, TabPanel } from "primereact/tabview";
-import Ubigeo from "../../../components/filtro/Ubigeo";
-import Insert from "../../../components/funciones/Insert";
-import Update from "../../../components/funciones/Update";
-import Delete from "../../../components/funciones/Delete";
-import Mensajes from "../../../components/funciones/Mensajes";
-import { toast } from "react-toastify";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { Checkbox } from "primereact/checkbox";
+import { TabPanel, TabView } from "primereact/tabview";
+import React, { useEffect, useState } from "react";
+import { FaPen, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import Ubigeo from "../../../components/filtro/Ubigeo";
+import Delete from "../../../components/funciones/Delete";
+import Get from "../../../components/funciones/Get";
+import Insert from "../../../components/funciones/Insert";
+import Mensajes from "../../../components/funciones/Mensajes";
+import Update from "../../../components/funciones/Update";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -1074,7 +1074,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarDireccion(null, e);
                       }}
-                      contenedor=""
+                      sticky=""
                     />
                   </div>
                 )}
@@ -1229,7 +1229,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarContacto(null, e);
                       }}
-                      contenedor=""
+                      sticky=""
                     />
                   </div>
                 )}
@@ -1453,7 +1453,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarPersonal(e);
                       }}
-                      contenedor=""
+                      sticky=""
                     />
                   </div>
                 )}

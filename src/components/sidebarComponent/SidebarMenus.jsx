@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 //Icons
-import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
+import { RiArrowRightSLine, RiLogoutCircleRLine } from "react-icons/ri";
 //Icons
 
 import { authHelper } from "../../helpers/AuthHelper";

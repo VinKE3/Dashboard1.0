@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Get from "../../../components/funciones/Get";
-import ModalCrud from "../../../components/modal/ModalCrud";
 import moment from "moment";
+import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import * as G from "../../../components/Global";
+import Get from "../../../components/funciones/Get";
+import ModalCrud from "../../../components/modal/ModalCrud";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState

@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import FiltroCliente from "../../../components/filtro/FiltroCliente";
-import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
-import FiltroConcepto from "../../../components/filtro/FiltroConcepto";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
-import { Checkbox } from "primereact/checkbox";
 import moment from "moment";
-import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
+import { FaPen, FaPlus, FaSearch, FaTrashAlt, FaUndoAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import store from "store2";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import FiltroCliente from "../../../components/filtro/FiltroCliente";
+import FiltroConcepto from "../../../components/filtro/FiltroConcepto";
+import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`

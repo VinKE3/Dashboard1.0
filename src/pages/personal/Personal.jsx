@@ -1,19 +1,19 @@
-import { useEffect, useState, useMemo } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
 import ApiMasy from "../../api/ApiMasy";
-import GetPermisos from "../../components/funciones/GetPermisos";
-import Delete from "../../components/funciones/Delete";
+import * as G from "../../components/Global";
 import BotonBasico from "../../components/boton/BotonBasico";
 import BotonCRUD from "../../components/boton/BotonCRUD";
-import Table from "../../components/tabla/Table";
 import FiltroBasico from "../../components/filtro/FiltroBasico";
-import { Checkbox } from "primereact/checkbox";
+import Delete from "../../components/funciones/Delete";
+import GetPermisos from "../../components/funciones/GetPermisos";
+import Table from "../../components/tabla/Table";
 import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
-import moment from "moment";
-import styled from "styled-components";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import * as G from "../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {

@@ -1,6 +1,7 @@
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import * as G from "../Global";
+
 const BotonBasico = ({
   botonClass,
   botonIcon,
@@ -8,10 +9,11 @@ const BotonBasico = ({
   autoFoco = false,
   click,
   KeyDown = (e) => {},
+  sticky = "sticky top-2 bg-black/30 flex items-center",
   contenedor = "",
 }) => {
   return (
-    <div className={"sticky top-2 bg-black/30 flex items-center" + contenedor}>
+    <div className={sticky + contenedor}>
       <button
         onClick={click}
         autoFocus={autoFoco}

@@ -1,21 +1,20 @@
-import { useEffect, useState, useMemo } from "react";
+import { faGear, faKey, faPlus } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import styled from "styled-components";
 import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import Delete from "../../../components/funciones/Delete";
-import FiltroBasico from "../../../components/filtro/FiltroBasico";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
+import FiltroBasico from "../../../components/filtro/FiltroBasico";
+import Delete from "../../../components/funciones/Delete";
+import GetPermisos from "../../../components/funciones/GetPermisos";
 import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
-import ModalConfiguracion from "./ModalConfiguracion";
 import ModalClave from "./ModalClave";
-import { Checkbox } from "primereact/checkbox";
-import { ToastContainer, toast } from "react-toastify";
-import moment from "moment";
-import styled from "styled-components";
-import { faPlus, faKey, faGear } from "@fortawesome/free-solid-svg-icons";
-
-import * as G from "../../../components/Global";
+import ModalConfiguracion from "./ModalConfiguracion";
 
 //#region Estilos
 const DivTabla = styled.div`

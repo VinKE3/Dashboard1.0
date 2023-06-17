@@ -1,11 +1,12 @@
-import { useEffect, useState, useMemo } from "react";
-import ApiMasy from "../../api/ApiMasy";
-import ModalBasic from "../modal/ModalBasic";
-import TableBasic from "../tabla/TableBasic";
-import FiltroBasico from "../filtro/FiltroBasico";
+import { useEffect, useMemo, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import styled from "styled-components";
+import ApiMasy from "../../api/ApiMasy";
 import * as G from "../Global";
+import FiltroBasico from "../filtro/FiltroBasico";
+import ModalBasic from "../modal/ModalBasic";
+import TableBasic from "../tabla/TableBasic";
+
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {
