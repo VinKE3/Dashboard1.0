@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
 import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import { Checkbox } from "primereact/checkbox";
-import * as G from "../../../components/Global";
 
-const TomaDeInventario = ({ setModal }) => {
+const TomaInventario = ({ setModal }) => {
   //#region useState
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    tipoExistenciaId: "",
+    conStock: false,
+  });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   //#endregion
 
@@ -20,13 +23,13 @@ const TomaDeInventario = ({ setModal }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "conStock") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -35,13 +38,15 @@ const TomaDeInventario = ({ setModal }) => {
 
   //#region API
   const GetTablas = async () => {
-    const result = await ApiMasy.get(
-      `api/Almacen/MovimientoArticulo/FormularioTablas`
-    );
+    const result = await ApiMasy.get(`api/Informes/Articulos/TomaInventario/FormularioTablas`);
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Articulos/TomaInventario`,
+      origen,
+      `&tipoExistenciaId=${data.tipoExistenciaId}&conStock=${data.conStock}`
+    );
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;
@@ -58,7 +63,7 @@ const TomaDeInventario = ({ setModal }) => {
         setModal={setModal}
         titulo="Toma de Inventarios"
         habilitarFoco={false}
-        tamañoModal={[G.ModalPequeño + " !max-w-2xl", G.Form]}
+        tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={
           <>
             <button
@@ -129,4 +134,4 @@ const TomaDeInventario = ({ setModal }) => {
   );
 };
 
-export default TomaDeInventario;
+export default TomaInventario;

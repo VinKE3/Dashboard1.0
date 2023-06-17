@@ -187,13 +187,13 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
   //Data Cabecera
   const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
     }
@@ -297,8 +297,8 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
   const AgregarDocumentoReferencia = async () => {
     let resultado = await ValidarConsultaDocumentoReferencia();
     if (resultado[0]) {
-      setDataDetalle((prevState) => [
-        ...prevState,
+      setDataDetalle((prev) => [
+        ...prev,
         {
           id: resultado[2].id,
           fechaEmision: resultado[2].fechaEmision,
@@ -457,8 +457,8 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
         let montoPago =
           (dataCabecera.saldo + montoInteres) * (porcentajePago / 100);
         //Recalcula el Monto Pago
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajeInteres: Funciones.RedondearNumero(porcentajeInteres, 2),
           montoInteres: Funciones.RedondearNumero(montoInteres, 2),
           montoPago: Funciones.RedondearNumero(montoPago, 2),
@@ -484,8 +484,8 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
         //Calcula el monto pago
 
         //Calcula el monto pago
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajeInteres: Funciones.RedondearNumero(porcentajeInteres, 2),
           montoInteres: Funciones.RedondearNumero(montoInteres, 2),
           montoPago: Funciones.RedondearNumero(montoPago / 2),
@@ -504,8 +504,8 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
           2
         );
         //Calcula Monto pago
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajePago: Funciones.RedondearNumero(porcentajePago, 2),
           montoPago: Funciones.RedondearNumero(montoPago, 2),
         }));
@@ -553,8 +553,8 @@ const ModalRenovacion = ({ setModal, modo, objeto }) => {
 
   //#region Funciones Detalles
   const HandleDataCabeceraLetra = async ({ target }) => {
-    setDataLetra((prevState) => ({
-      ...prevState,
+    setDataLetra((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
     if (target.name == "fechaEmision") {

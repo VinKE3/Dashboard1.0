@@ -2,10 +2,10 @@ import { toast } from "react-toastify";
 import Api from "../../api/Api";
 import ApiMasy from "../../api/ApiMasy";
 
-const Reporte = async (menu, origen) => {
-  const result = await Api.get(`api/${menu}?formato=${origen}`);
+const Reporte = async (menu, origen, cadena = "") => {
+  const result = await Api.get(`api/${menu}?formato=${origen}${cadena}`);
   if (result.name == "AxiosError") {
-    const res = await ApiMasy.get(`api/${menu}?formato=${origen}`);
+    const res = await ApiMasy.get(`api/${menu}?formato=${origen}${cadena}`);
     res.textos.map((map) => {
       toast.error(map, {
         position: "bottom-right",

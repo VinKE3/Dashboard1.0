@@ -141,13 +141,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
   const HandleData = async ({ target }) => {
     if (target.name == "afectarStock") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -156,8 +156,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       let numero = await GetCorrelativo(data.tipoDocumentoId, target.value);
       numero = numero != undefined ? numero : "";
       //Obtiene el correlativo
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: numero,
       }));
     }
@@ -177,8 +177,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       //Obtiene el personal default de Clientes Varios
 
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
@@ -189,8 +189,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         direcciones: dataGlobal.cliente.direcciones,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
@@ -205,8 +205,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   const CambioDireccion = async (id) => {
     if (modo != "Consultar") {
       let model = dataClienteDirec.find((map) => map.id == id);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         clienteDireccionId: model.id,
         clienteDireccion: model.direccion,
       }));
@@ -290,8 +290,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

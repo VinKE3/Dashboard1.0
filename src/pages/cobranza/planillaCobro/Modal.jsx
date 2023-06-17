@@ -181,15 +181,15 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
   const ClientesVarios = async ({ target }) => {
     if (target.checked) {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
@@ -197,8 +197,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         clienteDireccion: dataGlobal.cliente.direccionPrincipal,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
@@ -212,8 +212,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -252,8 +252,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (target.name == "interes") {
       setCheckInteres(target.checked);
       if (!target.checked) {
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajeInteres: 0,
           montoInteres: 0,
         }));
@@ -262,8 +262,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       return;
     }
 
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -306,15 +306,15 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const Banco = async ({ target }) => {
     let banco = dataCtacte.find((map) => map.id == target.value);
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       cuentaCorrienteId: target.value,
       cuentaCorrienteDescripcion:
         banco.numero + " / " + banco.entidadBancariaNombre,
     }));
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       monedaId: banco.monedaId,
       nombreBanco: banco.entidadBancariaNombre,
     }));
@@ -372,8 +372,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     nuevoSaldo = Funciones.RedondearNumero(saldoCabecera - abono, 2);
 
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       monedaAbonoId: monedaAbono,
       tipoCambio: Funciones.RedondearNumero(tipoCambio, 2),
       montoAbonado: Funciones.RedondearNumero(montoAbonado, 2),
@@ -391,8 +391,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           document.getElementById("montoInteres").value
         );
         montoInteres = Funciones.RedondearNumero(abono * (porcentaje / 100), 2);
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajeInteres: Funciones.RedondearNumero(porcentaje, 2),
           montoInteres: Funciones.RedondearNumero(montoInteres, 2),
         }));
@@ -405,8 +405,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         let montoInteres = Number(target.value);
 
         porcentaje = Funciones.RedondearNumero(montoInteres / abono, 2);
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajeInteres: Funciones.RedondearNumero(porcentaje, 2),
           montoInteres: Funciones.RedondearNumero(montoInteres, 2),
         }));
@@ -580,8 +580,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               dataCabecera.numeroDocumento,
             ];
           }
-          setData((prevState) => ({
-            ...prevState,
+          setData((prev) => ({
+            ...prev,
             documentosReferencia: documentos.toString(),
           }));
           //Anidar Documento de referencia
@@ -673,8 +673,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       let nuevoDocumentoReferencia = nuevoDetalle.map((map) => {
         return map.numeroDocumento;
       });
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         documentosReferencia: nuevoDocumentoReferencia.toString(),
       }));
     } else {
@@ -682,8 +682,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
 
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         documentosReferencia: "",
       }));
     }
@@ -702,8 +702,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       return i + map.montoInteres;
     }, 0);
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       total: Funciones.RedondearNumero(montoAbonado + montoInteres, 2),
     }));
   };

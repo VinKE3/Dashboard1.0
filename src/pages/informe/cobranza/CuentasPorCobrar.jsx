@@ -40,8 +40,8 @@ const CuentasPorCobrar = ({ setModal }) => {
       target.value === "detallado" ||
       target.value === "porPersonal"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         checkFiltro: target.value,
       }));
       return;
@@ -50,14 +50,14 @@ const CuentasPorCobrar = ({ setModal }) => {
       target.value === "fechaEmision" ||
       target.value === "fechaVencimiento"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         checkFiltro2: target.value,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

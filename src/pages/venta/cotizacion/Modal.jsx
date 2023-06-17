@@ -199,13 +199,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -230,14 +230,14 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (target.name == "tipoCobroId") {
       let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
 
       if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           numeroOperacion: "",
         }));
       }
@@ -251,8 +251,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       //Obtiene el personal default de Clientes Varios
 
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteTipoDocumentoIdentidadId:
           dataGlobal.cliente.tipoDocumentoIdentidadId,
@@ -281,8 +281,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDataClienteDirec(dataGlobal.cliente.direcciones);
       setDataClienteContacto(dataGlobal.cliente.contactos);
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteTipoDocumentoIdentidadId: "",
         clienteNumeroDocumentoIdentidad: "",
@@ -311,8 +311,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -321,8 +321,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -361,8 +361,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   const CambioDireccion = async (id) => {
     if (modo != "Consultar") {
       let model = dataClienteDirec.find((map) => map.id == id);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         clienteDireccionId: model.id,
         clienteDireccion: model.direccion,
         departamentoId: model.departamentoId,
@@ -446,8 +446,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -790,8 +790,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     total = totalNeto + percepcion + retencion;
     //Calculos
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       subTotal: Funciones.RedondearNumero(subTotal, 2),
       montoIGV: Funciones.RedondearNumero(montoIGV, 2),
       totalNeto: Funciones.RedondearNumero(total, 2),

@@ -122,8 +122,8 @@ const PlanillaCobro = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };

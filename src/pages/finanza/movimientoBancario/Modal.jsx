@@ -142,21 +142,21 @@ const Modal = ({ setModal, modo, objeto }) => {
   //Data General
   const HandleData = async ({ target }) => {
     if (target.name == "tieneCuentaDestino" || target.name == "isCierreCaja") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
 
     if (target.name == "plazo") {
       let fecha = await FechaVencimiento(target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
     }
@@ -212,8 +212,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const CuentaDestino = async (valor) => {
     if (!valor) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         cuentaDestinoId: null,
       }));
     }
@@ -222,8 +222,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Concepto
   const HandleDataConcepto = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -327,8 +327,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           return map.documentoVentaCompraId === dataCabecera.id;
         });
         if (model == undefined) {
-          setDataDetalle((prevState) => [
-            ...prevState,
+          setDataDetalle((prev) => [
+            ...prev,
             {
               detalleId: detalleId,
               documentoVentaCompraId: dataCabecera.id,
@@ -386,8 +386,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           //Concatena texto a los conceptos
 
           //Concepto y Documento Referencia
-          setData((prevState) => ({
-            ...prevState,
+          setData((prev) => ({
+            ...prev,
             concepto: conceptoConcatenado,
             documentoReferencia: nuevoDocumentoReferencia.toString(),
           }));
@@ -489,8 +489,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalle
 
       //Concepto y Documento Referencia
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         concepto: conceptoConcatenado,
         documentoReferencia: nuevoDocumentoReferencia.toString(),
       }));
@@ -503,8 +503,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       //Detalle
 
       //Concepto y Documento Referencia
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         concepto: "",
         documentoReferencia: "",
       }));
@@ -543,8 +543,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       }
     }
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       porcentajeITF: porcentajeITF,
       montoITF: Funciones.RedondearNumero(montoITF, 2),
       montoInteres: Funciones.RedondearNumero(montoInteres, 2),

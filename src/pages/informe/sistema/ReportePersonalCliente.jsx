@@ -4,7 +4,7 @@ import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import * as G from "../../../components/Global";
 
-const ReporteVendedoresClientes = ({ setModal }) => {
+const ReportePersonalCliente = ({ setModal }) => {
   //#region  useState
   const [data, setData] = useState({
     personalId: "",
@@ -20,8 +20,8 @@ const ReporteVendedoresClientes = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -41,7 +41,7 @@ const ReporteVendedoresClientes = ({ setModal }) => {
     );
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(`Informes/Sistema/ReportePersonalCliente`, origen);
     const enlace = document.createElement("a");
     enlace.href = model.url;
     enlace.download = model.fileName;
@@ -55,7 +55,7 @@ const ReporteVendedoresClientes = ({ setModal }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        titulo="Informe de Vendedores y Clientes"
+        titulo="Reporte de Vendedores y Clientes"
         habilitarFoco={false}
         tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={
@@ -114,4 +114,4 @@ const ReporteVendedoresClientes = ({ setModal }) => {
   //#endregion
 };
 
-export default ReporteVendedoresClientes;
+export default ReportePersonalCliente;

@@ -35,14 +35,14 @@ const InformeGerenciaVentasPorVendedorClientes = ({ setModal }) => {
       target.value === "porArticulo" ||
       target.value === "porPersonal"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         checkFiltro: target.value,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

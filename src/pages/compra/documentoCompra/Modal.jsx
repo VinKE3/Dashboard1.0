@@ -163,34 +163,34 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
 
     if (target.name == "tipoDocumentoId") {
       if (target.value == "03") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: true,
         }));
         return;
       }
       if (target.value != "03") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: false,
         }));
       }
       if (target.value != "07" || target.value != "08") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           documentoReferenciaId: "",
           motivoNotaId: "",
           motivoSustento: "",
@@ -214,13 +214,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (target.name == "tipoPagoId") {
       let fecha = await FechaVencimiento(data.tipoCompraId, target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
       }));
       if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           numeroOperacion: "",
           cuentaCorrienteId: "",
         }));
@@ -229,8 +229,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ProveedorVarios = async ({ target }) => {
     if (target.checked) {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: dataGlobal.proveedor.id,
         proveedorNumeroDocumentoIdentidad:
           dataGlobal.proveedor.numeroDocumentoIdentidad,
@@ -238,8 +238,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
       }));
     } else {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: "",
         proveedorNumeroDocumentoIdentidad: "",
         proveedorNombre: "",
@@ -285,8 +285,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -295,8 +295,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -416,8 +416,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -919,8 +919,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     //Calculo Check IncluyeIGV
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       subTotal: Funciones.RedondearNumero(subTotal, 2),
       montoIGV: Funciones.RedondearNumero(montoIGV, 2),
       totalNeto: Funciones.RedondearNumero(total, 2),

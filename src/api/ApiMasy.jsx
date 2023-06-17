@@ -17,7 +17,6 @@ ApiMasy.interceptors.request.use(
     config.headers["Content-Type"] = "application/json";
     return config;
   },
-
   (error) => {
     return error;
   }
@@ -27,9 +26,26 @@ ApiMasy.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
-    if (error.response.status === 401) {
-      window.location.href = "/login";
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const token = authHelper.getAccessToken();
+      const refreshToken = authHelper.getRefreshToken();
+      const params = {
+        token: token,
+        refreshToken: refreshToken,
+      };
+      const result = await ApiMasy.post(`/api/Sesion/ActualizarToken `, params);
+      if (result.status === 200) {
+        const { token } = result.data.data;
+        authHelper.login(result.data.data);
+        ApiMasy.defaults.headers.common["Authorization"] = "Bearer " + token;
+        return ApiMasy(originalRequest);
+      } else {
+        window.location.href = "/login";
+        console.log("Error al actualizar el token");
+      }
     }
     let retorna = "";
     if (Object.entries(error.response.data).length > 0) {

@@ -139,20 +139,20 @@ const MovimientoArticulo = () => {
 
   //#region Funciones Filtrado
   const ValidarFiltro = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
   const ValidarFiltroLocal = async ({ target }) => {
     if (target.name == "conStock") {
-      setFiltroLocal((prevState) => ({
-        ...prevState,
+      setFiltroLocal((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setFiltroLocal((prevState) => ({
-        ...prevState,
+      setFiltroLocal((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

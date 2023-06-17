@@ -108,8 +108,8 @@ const EntidadBancaria = () => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };

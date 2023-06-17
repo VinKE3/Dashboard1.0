@@ -24,8 +24,8 @@ const Modal = ({ setModal, objeto, modo }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "departamentoId") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         departamentoId: target.value,
       }));
       await ConsultarProvincia();
@@ -34,8 +34,8 @@ const Modal = ({ setModal, objeto, modo }) => {
         .getElementById("provinciaId")
         .dispatchEvent(new Event("change", { bubbles: true }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

@@ -137,8 +137,8 @@ const Retencion = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -232,7 +232,7 @@ const Retencion = () => {
         case 2: {
           let valor = await GetIsPermitido("Venta/Retencion", accion, value);
           if (valor) {
-            await Delete("Venta/DocumentoVenta", value, setListar);
+            await Delete("Venta/Retencion", value, setListar);
           }
           break;
         }
@@ -264,7 +264,7 @@ const Retencion = () => {
               if (res.isConfirmed) {
                 let valor = await GetIsPermitido("Venta/Retencion", accion, id);
                 if (valor) {
-                  await Put(`Venta/DocumentVenta/Anular/${id}`, setListar);
+                  await Put(`Venta/Retencion/Anular/${id}`, setListar);
                 }
               }
             });
@@ -288,7 +288,7 @@ const Retencion = () => {
             .querySelector("tr.selected-row");
           if (row != null) {
             let id = row.children[0].innerHTML;
-            await Imprimir("Venta/DocumentoVenta", id);
+            await Imprimir("Venta/Retencion", id);
           } else {
             toast.info("Seleccione una Fila", {
               position: "bottom-right",
@@ -531,17 +531,10 @@ const Retencion = () => {
                   botonText="Anular"
                   botonClass={G.BotonRojo}
                   botonIcon={faBan}
-                  click={() => Anulacion()}
+                  click={() => AccionModal(null, "Anular", 4)}
                   sticky=""
                 />
               )}
-              <BotonBasico
-                botonText="Imprimir"
-                botonClass={G.BotonVerde}
-                botonIcon={faPrint}
-                click={() => AccionModal(null, "Imprimir", 5)}
-                sticky=""
-              />
             </div>
             {/* Boton */}
 

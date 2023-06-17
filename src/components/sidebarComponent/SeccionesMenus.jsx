@@ -18,14 +18,6 @@ function seccionesList() {
       icon: <FaBalanceScale className="text-primary" />,
       items: [
         {
-          path: "/venta/cliente",
-          title: "Clientes",
-        },
-        {
-          path: "/venta/conductorTransportista",
-          title: "Conductores - Transportistas",
-        },
-        {
           path: "/venta/cotizacion",
           title: "Cotización",
         },
@@ -53,10 +45,6 @@ function seccionesList() {
       id: "compra",
       icon: <FaClipboardCheck className="text-primary" />,
       items: [
-        {
-          path: "/compra/proveedor",
-          title: "Proveedores",
-        },
         {
           path: "/compra/ordenCompra",
           title: "Órdenes de compra",
@@ -97,6 +85,14 @@ function seccionesList() {
       id: "mantenimiento",
       icon: <FaTools className="text-primary" />,
       items: [
+        {
+          path: "/venta/cliente",
+          title: "Clientes",
+        },
+        {
+          path: "/compra/proveedor",
+          title: "Proveedores",
+        },
         {
           path: "/mantenimiento/tipoCambio",
           title: "Tipos de Cambio",
@@ -156,6 +152,10 @@ function seccionesList() {
         {
           path: "/mantenimiento/empresaTransporte",
           title: "Empresas de Transporte",
+        },
+        {
+          path: "/venta/conductorTransportista",
+          title: "Conductores",
         },
         {
           path: "/mantenimiento/vehiculo",

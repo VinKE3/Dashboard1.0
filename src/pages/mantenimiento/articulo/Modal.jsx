@@ -30,13 +30,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       target.name == "controlarStock" ||
       target.name == "actualizarPrecioCompra"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

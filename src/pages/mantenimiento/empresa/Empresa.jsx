@@ -94,12 +94,12 @@ const Empresa = ({ modo }) => {
   //#region useEffect
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
 
@@ -144,13 +144,13 @@ const Empresa = ({ modo }) => {
   };
   const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -182,8 +182,8 @@ const Empresa = ({ modo }) => {
   };
   const HandleCheckAll = (event) => {
     const { checked } = event.target;
-    setCheckboxes((prevState) => ({
-      ...prevState,
+    setCheckboxes((prev) => ({
+      ...prev,
       checked,
       enero: checked,
       febrero: checked,
@@ -220,8 +220,8 @@ const Empresa = ({ modo }) => {
   };
   const HandleCheckAll2 = (event) => {
     const { checked } = event.target;
-    setCheckboxes2((prevState) => ({
-      ...prevState,
+    setCheckboxes2((prev) => ({
+      ...prev,
       checked,
       enero2: checked,
       febrero2: checked,
@@ -386,8 +386,8 @@ const Empresa = ({ modo }) => {
     if (target.name == "default") {
       setObjetoIgv({ ...objetoIgv, [target.name]: target.checked });
     } else {
-      setObjetoIgv((prevState) => ({
-        ...prevState,
+      setObjetoIgv((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -518,8 +518,8 @@ const Empresa = ({ modo }) => {
     if (target.name == "default") {
       setObjetoRetencion({ ...objetoRetencion, [target.name]: target.checked });
     } else {
-      setObjetoRetencion((prevState) => ({
-        ...prevState,
+      setObjetoRetencion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -653,8 +653,8 @@ const Empresa = ({ modo }) => {
         [target.name]: target.checked,
       });
     } else {
-      setObjetoDetraccion((prevState) => ({
-        ...prevState,
+      setObjetoDetraccion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -788,8 +788,8 @@ const Empresa = ({ modo }) => {
         [target.name]: target.checked,
       });
     } else {
-      setObjetoPercepcion((prevState) => ({
-        ...prevState,
+      setObjetoPercepcion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

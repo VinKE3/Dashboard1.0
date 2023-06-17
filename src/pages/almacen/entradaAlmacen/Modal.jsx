@@ -133,21 +133,21 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const ProveedorVarios = async ({ target }) => {
     if (target.checked) {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: dataGlobal.proveedor.id,
         proveedorNumeroDocumentoIdentidad:
           dataGlobal.proveedor.numeroDocumentoIdentidad,
@@ -155,8 +155,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
       }));
     } else {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: "",
         proveedorNumeroDocumentoIdentidad: "",
         proveedorNombre: "",
@@ -199,8 +199,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -209,8 +209,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -245,8 +245,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -423,8 +423,8 @@ const Modal = ({ setModal, modo, objeto }) => {
             },
           ]);
           setDetalleId(detalleId + 1);
-          setData((prevState) => ({
-            ...prevState,
+          setData((prev) => ({
+            ...prev,
             observacion: `${dataCabecera.descripcion} OP ${data.numeroOP}`,
           }));
           setRefrescar(true);
@@ -506,8 +506,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       observacion: "",
     }));
     setRefrescar(true);

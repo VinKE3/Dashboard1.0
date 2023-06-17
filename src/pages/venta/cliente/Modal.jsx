@@ -60,6 +60,7 @@ const TablaPersonal = styled.div`
   }
 `;
 //#endregion
+
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
@@ -89,6 +90,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
+  useEffect(() => {console.log(data)},[data])
   useEffect(() => {
     if (tipoMen == 0) {
       setRefrescar(true);
@@ -99,25 +101,24 @@ const Modal = ({ setModal, modo, objeto }) => {
       RetornarMensaje();
     }
   }, [refrescar]);
-
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
   useEffect(() => {
     if (Object.keys(dataUbiDirec).length > 0) {
-      setObjDireccion({
-        ...objDireccion,
+      setObjDireccion((prev) => ({
+        ...prev,
         departamentoId: dataUbiDirec.departamentoId,
         provinciaId: dataUbiDirec.provinciaId,
         distritoId: dataUbiDirec.distritoId,
-      });
+      }));
     }
   }, [dataUbiDirec]);
   useEffect(() => {
@@ -135,15 +136,15 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
       return;
     }
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
 
@@ -159,32 +160,32 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const HandleDataDireccion = async ({ target }) => {
     if (target.name == "isActivo") {
-      setObjDireccion((prevState) => ({
-        ...prevState,
+      setObjDireccion((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setObjDireccion((prevState) => ({
-        ...prevState,
+      setObjDireccion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const HandleDataContacto = async ({ target }) => {
-    setObjContacto((prevState) => ({
-      ...prevState,
+    setObjContacto((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
   const HandleDataPersonal = async ({ target }) => {
     if (target.name == "default") {
-      setObjPersonal((prevState) => ({
-        ...prevState,
+      setObjPersonal((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setObjPersonal((prevState) => ({
-        ...prevState,
+      setObjPersonal((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

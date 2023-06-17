@@ -120,23 +120,23 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
 
     if (target.name == "plazo") {
       let fecha = await FechaVencimiento(target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
     }
   };
   const ProveedorVarios = async ({ target }) => {
     if (target.checked) {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: dataGlobal.proveedor.id,
         proveedorNumeroDocumentoIdentidad:
           dataGlobal.proveedor.numeroDocumentoIdentidad,
@@ -144,8 +144,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
       }));
     } else {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: "",
         proveedorNumeroDocumentoIdentidad: "",
         proveedorNombre: "",
@@ -182,8 +182,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Concepto
   const HandleDataCabecera = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -273,8 +273,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           return map.documentoCompraId === dataCabecera.id;
         });
         if (model == undefined) {
-          setDataDetalle((prevState) => [
-            ...prevState,
+          setDataDetalle((prev) => [
+            ...prev,
             {
               detalleId: detalleId,
               documentoCompraId: dataCabecera.id,
@@ -299,8 +299,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               dataCabecera.numeroDocumento,
             ];
           }
-          setData((prevState) => ({
-            ...prevState,
+          setData((prev) => ({
+            ...prev,
             documentoReferencia: conceptos.toString(),
           }));
           //Anidar Documento de referencia
@@ -381,8 +381,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       let nuevoOrdenCompra = nuevoDetalle.map((map) => {
         return map.ordenCompraRelacionada;
       });
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         documentoReferencia: nuevoOrdenCompra.toString(),
       }));
     } else {
@@ -392,8 +392,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
       setDataDetalle(nuevoDetalle);
 
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         documentoReferencia: "",
       }));
     }
@@ -405,8 +405,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       return i + map.abono;
     }, 0);
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       total: Funciones.RedondearNumero(importeTotal, 2),
     }));
   };

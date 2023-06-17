@@ -224,13 +224,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV" || target.name == "isOperacionGratuita") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -250,27 +250,27 @@ const Modal = ({ setModal, modo, objeto }) => {
       let numero = await GetCorrelativo(target.value, serie);
       numero = numero != undefined ? numero : "";
       //Obtiene el correlativo
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: serie,
         numero: numero,
       }));
 
       if (target.value == "03") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: true,
         }));
       } else {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: false,
         }));
       }
 
       if (target.value != "07" || target.value != "08") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           documentoReferenciaId: "",
           motivoNotaId: "",
           motivoSustento: "",
@@ -286,8 +286,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       correlativo = correlativo != undefined ? correlativo : "";
       //Obtiene el correlativo
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: ("0000000000" + String(correlativo)).slice(-10),
       }));
     }
@@ -313,14 +313,14 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (target.name == "tipoCobroId") {
       let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
 
       if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           numeroOperacion: "",
           cuentaCorrienteId: "",
         }));
@@ -335,8 +335,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       //Obtiene el personal default de Clientes Varios
 
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteTipoDocumentoIdentidadId:
           dataGlobal.cliente.tipoDocumentoIdentidadId,
@@ -351,8 +351,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         direcciones: dataGlobal.cliente.direcciones,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteTipoDocumentoIdentidadId: "",
         clienteNumeroDocumentoIdentidad: "",
@@ -399,8 +399,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   const CambioDireccion = async (id) => {
     if (modo != "Consultar") {
       let model = dataClienteDirec.find((map) => map.id == id);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         clienteDireccionId: model.id,
         clienteDireccion: model.direccion,
       }));
@@ -492,8 +492,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -871,8 +871,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       total = totalNeto + detraccion + bolsa;
       //Calculos
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         subTotal: Funciones.RedondearNumero(subTotal, 2),
         montoIGV: Funciones.RedondearNumero(montoIGV, 2),
         totalNeto: Funciones.RedondearNumero(totalNeto, 2),
@@ -884,8 +884,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     } else {
       //Asigna a todo 0 y la suma de importes pasa a totalOperacionesGratuitas
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         incluyeIGV: false,
         totalOperacionesGratuitas: importeTotal,
         porcentajeIGV: 0,

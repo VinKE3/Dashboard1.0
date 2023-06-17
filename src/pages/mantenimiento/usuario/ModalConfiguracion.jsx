@@ -106,8 +106,8 @@ const ModalConfiguracion = ({ setModal, modo, objeto }) => {
   }, [data, setPermisos]);
 
   const HandleData = ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

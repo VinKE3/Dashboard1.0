@@ -120,8 +120,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
   //#region Funciones Filtrado
   const HandleFiltro = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -173,13 +173,13 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       if (target.name == "incluyeIGV" || target.name == "isOperacionGratuita") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -195,14 +195,14 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
     if (target.name == "tipoCobroId") {
       let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
 
       if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           numeroOperacion: "",
           cuentaCorrienteId: "",
         }));
@@ -281,8 +281,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       return i + map.cantidadSobra;
     }, 0);
     let saldoTotal = totalSobra - totalFalta;
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       totalFalta: Math.abs(Funciones.RedondearNumero(totalFalta, 2)),
       totalSobra: Math.abs(Funciones.RedondearNumero(totalSobra, 2)),
       saldoTotal: Math.abs(Funciones.RedondearNumero(saldoTotal, 2)),

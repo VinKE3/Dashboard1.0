@@ -32,14 +32,14 @@ const RegistroSalidaCilindros = ({ setModal }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.value === "porFecha" || target.value === "porPersonal") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         checkFiltro: target.value,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

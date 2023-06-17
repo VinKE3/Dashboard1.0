@@ -139,15 +139,15 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
   const ClientesVarios = async ({ target }) => {
     if (target.checked) {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
@@ -157,8 +157,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         tipoCobroId: dataGlobal.cliente.tipoCobroId,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
@@ -189,8 +189,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -199,8 +199,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -209,8 +209,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Artículos
   const HandleDataCabecera = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
 
@@ -289,8 +289,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const CalcularImporte = async (porcentaje) => {
     let monto = dataCabecera.total * (porcentaje / 100);
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       monto: Funciones.RedondearNumero(monto, 2),
     }));
   };
@@ -341,8 +341,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           return map.documentoVentaId == dataCabecera.documentoVentaId;
         });
         if (model == undefined) {
-          setDataDetalle((prevState) => [
-            ...prevState,
+          setDataDetalle((prev) => [
+            ...prev,
             {
               detalleId: detalleId,
               documentoVentaId: dataCabecera.documentoVentaId,
@@ -463,8 +463,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       return i + map.monto;
     }, 0);
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       total: Funciones.RedondearNumero(importeTotal, 2),
     }));
   };

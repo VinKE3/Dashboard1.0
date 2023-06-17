@@ -45,8 +45,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (target.name == "isActivo" || target.name == "habilitarAfectarStock") {
       setData({ ...data, [target.name]: target.checked });
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

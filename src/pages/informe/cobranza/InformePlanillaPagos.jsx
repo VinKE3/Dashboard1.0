@@ -37,14 +37,14 @@ const InformePlanillaPagos = ({ setModal }) => {
       target.value === "conDetalle" ||
       target.value === "reporte"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         checkFiltro: target.value,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

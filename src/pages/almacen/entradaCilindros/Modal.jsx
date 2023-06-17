@@ -105,8 +105,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "isSobrante" || target.name == "isVenta") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
@@ -128,8 +128,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
             if (result.isConfirmed) {
               Personal(model);
             } else {
-              setData((prevState) => ({
-                ...prevState,
+              setData((prev) => ({
+                ...prev,
                 personalId: data.personalId,
               }));
             }
@@ -138,8 +138,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
         }
       }
 
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -150,8 +150,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -160,8 +160,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -216,8 +216,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       cantidad: 0,
       unidadMedidaDescripcion: result.data.data.unidadMedidaDescripcion,
     });
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       personalId: value,
       clienteId: "",
       clienteNombre: "",
@@ -228,8 +228,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Cabecera
   const ValidarCabecera = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -520,8 +520,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
       return i + map.cantidad;
     }, 0);
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       totalCilindros: Funciones.RedondearNumero(total, 2),
     }));
   };

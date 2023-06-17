@@ -17,8 +17,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

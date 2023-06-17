@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { RadioButton } from "primereact/radiobutton";
+import React, { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
 import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import { RadioButton } from "primereact/radiobutton";
-import * as G from "../../../components/Global";
 
-const ListadoDeCostos = ({ setModal }) => {
+const ListadoCostos = ({ setModal }) => {
   //#region useState
   const [data, setData] = useState({
     tipoExistenciaId: "",
     marcaId: "",
-    checkFiltro: "todos",
+    conStock: null,
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   const [dataMarca, setDataMarca] = useState([]);
@@ -24,19 +24,15 @@ const ListadoDeCostos = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    if (
-      target.value === "agruparMarca" ||
-      target.value === "agruparLinea" ||
-      target.value === "todos"
-    ) {
-      setData((prevState) => ({
-        ...prevState,
-        checkFiltro: target.value,
+    if (target.name == "conStock") {
+      setData((prev) => ({
+        ...prev,
+        conStock: target.value,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -45,15 +41,17 @@ const ListadoDeCostos = ({ setModal }) => {
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Articulo/FormularioTablas`
+      `api/Informes/Articulos/ListadoCostos/FormularioTablas`
     );
-    const res = await ApiMasy.get(`api/Mantenimiento/Marca/Listar`);
-
-    setDataMarca(res.data.data.data);
+    setDataMarca(result.data.data.marcas);
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Articulos/ListadoCostos`,
+      origen,
+      `&TipoExistenciaId=${data.tipoExistenciaId}&MarcaId=${data.marcaId}&ConStock=${data.conStock}`
+    );
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;
@@ -149,12 +147,12 @@ const ListadoDeCostos = ({ setModal }) => {
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="todos"
-                    name="agrupar"
-                    value="todos"
+                    name="conStock"
+                    value={null}
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "todos"}
+                    checked={data.conStock === null}
                   />
                 </div>
                 <label
@@ -167,39 +165,39 @@ const ListadoDeCostos = ({ setModal }) => {
               <div className={G.InputTercio}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="agruparMarca"
-                    name="agrupar"
-                    value="agruparMarca"
+                    inputId="stock"
+                    name="conStock"
+                    value={true}
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "agruparMarca"}
+                    checked={data.conStock === true}
                   />
                 </div>
                 <label
-                  htmlFor="agruparMarca"
+                  htmlFor="stock"
                   className={G.LabelCheckStyle + "rounded-r-none"}
                 >
-                  Agrupar por Marca
+                  Con Stock
                 </label>
               </div>
               <div className={G.InputMitad}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="agruparLinea"
-                    name="agrupar"
-                    value="agruparLinea"
+                    inputId="sinStock"
+                    name="conStock"
+                    value={false}
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "agruparLinea"}
+                    checked={data.conStock === false}
                   />
                 </div>
                 <label
-                  htmlFor="agruparLinea"
+                  htmlFor="sinStock"
                   className={G.LabelCheckStyle + " !py-1 "}
                 >
-                  Agrupar por Línea y Sublínea
+                  Sin Stock
                 </label>
               </div>
             </div>
@@ -211,4 +209,4 @@ const ListadoDeCostos = ({ setModal }) => {
   //#endregion
 };
 
-export default ListadoDeCostos;
+export default ListadoCostos;

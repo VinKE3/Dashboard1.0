@@ -99,8 +99,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const ValidarDataAbono = async ({ target }) => {
-    setDataAbono((prevState) => ({
-      ...prevState,
+    setDataAbono((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
 
@@ -158,8 +158,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         setTotalSaldo(Funciones.RedondearNumero(total, 2));
       }
     }
-    setDataAbono((prevState) => ({
-      ...prevState,
+    setDataAbono((prev) => ({
+      ...prev,
       monedaId: target.value,
     }));
   };

@@ -173,13 +173,13 @@ const Modal = ({ setModal, modo, objeto, setActualizar }) => {
   //Data Cabecera
   const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -286,8 +286,8 @@ const Modal = ({ setModal, modo, objeto, setActualizar }) => {
   const AgregarDocumentoReferencia = async () => {
     let resultado = await ValidarDocumentoReferencia();
     if (resultado[0]) {
-      setDataDetalle((prevState) => [
-        ...prevState,
+      setDataDetalle((prev) => [
+        ...prev,
         {
           id: resultado[2].id,
           fechaEmision: resultado[2].fechaEmision,
@@ -361,8 +361,8 @@ const Modal = ({ setModal, modo, objeto, setActualizar }) => {
 
   //#region Funciones Detalles
   const HandleDataCabeceraLetra = async ({ target }) => {
-    setDataLetra((prevState) => ({
-      ...prevState,
+    setDataLetra((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
     if (target.name == "fechaEmision") {

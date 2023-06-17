@@ -134,8 +134,8 @@ const CuadreStock = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -424,8 +424,8 @@ const CuadreStock = () => {
         },
       },
       {
-        Header: "Saldo Final",
-        accessor: "saldoFinal",
+        Header: "Saldo Total",
+        accessor: "saldoTotal",
         Cell: ({ value }) => {
           return <p className="text-right font-semibold">{value}</p>;
         },

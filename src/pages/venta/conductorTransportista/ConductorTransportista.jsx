@@ -107,8 +107,8 @@ const Conductor = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -246,7 +246,7 @@ const Conductor = () => {
       {visible ? (
         <>
           <div className={G.ContenedorPadre}>
-            <h2 className={G.TituloH2}>Conductores y Transportistas</h2>
+            <h2 className={G.TituloH2}>Conductores</h2>
 
             {/* Filtro*/}
             <FiltroBasico

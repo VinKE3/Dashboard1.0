@@ -78,8 +78,8 @@ const ModalDeshacer = ({ setModal, modo, foco }) => {
 
   //#region Funciones
   const Filtro = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

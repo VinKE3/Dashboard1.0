@@ -12,7 +12,7 @@ const StockValorizado = ({ setModal }) => {
     tipoExistenciaId: "",
     conStock: true,
     corteFecha: false,
-    checkFiltro: "agruparLinea",
+    agrupadoPor: "MA",
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   //#endregion
@@ -26,21 +26,14 @@ const StockValorizado = ({ setModal }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name === "conStock" || target.name === "corteFecha") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
       return;
     }
-    if (target.value === "agruparMarca" || target.value === "agruparLinea") {
-      setData((prevState) => ({
-        ...prevState,
-        checkFiltro: target.value,
-      }));
-      return;
-    }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -49,12 +42,16 @@ const StockValorizado = ({ setModal }) => {
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Mantenimiento/Articulo/FormularioTablas`
+      `api/Informes/Articulos/StockValorizado/FormularioTablas`
     );
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
+    let model = await Reporte(
+      `Informes/Articulos/StockValorizado`,
+      origen,
+      `&AgrupadoPor=${data.agrupadoPor}&TipoExistenciaId=${data.tipoExistenciaId}&ConStock=${data.conStock}&ConCorteFecha=${data.corteFecha}`
+    );
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;
@@ -163,36 +160,39 @@ const StockValorizado = ({ setModal }) => {
               <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
-                    inputId="agruparLinea"
-                    name="agrupar"
-                    value="agruparLinea"
+                    inputId="agruparMarca"
+                    name="agrupadoPor"
+                    value="MA"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "agruparLinea"}
+                    checked={data.agrupadoPor === "MA"}
                   />
                 </div>
                 <label
-                  htmlFor="agruparLinea"
+                  htmlFor="agruparMarca"
                   className={G.LabelCheckStyle + " rounded-r-none"}
                 >
-                  Agrupar por Línea y Sublínea
+                  Marca
                 </label>
               </div>
               <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="agruparMarca"
-                    name="agrupar"
-                    value="agruparMarca"
+                    inputId="agruparLineaSubLinea"
+                    name="agrupadoPor"
+                    value="SL"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "agruparMarca"}
+                    checked={data.agrupadoPor === "SL"}
                   />
                 </div>
-                <label htmlFor="agruparMarca" className={G.LabelCheckStyle}>
-                  Agrupar por Marca
+                <label
+                  htmlFor="agruparLineaSubLinea"
+                  className={G.LabelCheckStyle}
+                >
+                  Línea y Sublínea
                 </label>
               </div>
             </div>

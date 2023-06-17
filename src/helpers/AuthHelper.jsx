@@ -2,11 +2,17 @@ import store from "store2";
 
 const getStorage = () =>
   store.session("access_token") ? store.session : store.local;
+store.session("refresh_token") ? store.session : store.local;
 store.session("usuario") ? store.session : store.local;
 
 const getToken = () => {
   const storage = getStorage();
   return storage("access_token");
+};
+
+const getRefreshToken = () => {
+  const storage = getStorage();
+  return storage("refresh_token");
 };
 
 const getUsuario = () => {
@@ -16,8 +22,9 @@ const getUsuario = () => {
 
 const isAuthenticated = () => {
   const token = getToken();
+  const refreshToken = getRefreshToken();
   const usuario = getUsuario();
-  return token !== null && usuario !== null;
+  return token !== null && usuario !== null && refreshToken !== null;
 };
 
 const isTokenExpired = () => {
@@ -45,14 +52,16 @@ const borrarTokens = () => {
   store.session.remove("usuarioId");
   store.session.remove("personalId");
   store.session.remove("afectarStock");
-  // store.session.remove("global");
+  store.session.remove("refresh_token");
+  store.session.remove("global");
 
   store.local.remove("access_token");
   store.local.remove("usuario");
   store.local.remove("usuarioId");
   store.local.remove("personalId");
   store.local.remove("afectarStock");
-  // store.local.remove("global");
+  store.local.remove("refresh_token");
+  store.local.remove("global");
 };
 
 function borrarTodosLosTokens() {
@@ -61,8 +70,11 @@ function borrarTodosLosTokens() {
 
 function login(data) {
   const { token } = data;
+  const { refreshToken } = data;
   store.local("access_token", token);
   store.session("access_token", token);
+  store.local("refresh_token", refreshToken);
+  store.session("refresh_token", refreshToken);
 }
 
 function usuarioGuardar(data) {
@@ -95,13 +107,21 @@ function globalGuardar(data) {
   store.session("global", global);
 }
 
+function fechasFiltroGuardar(data) {
+  const { fechasFiltro } = data;
+  store.local("fechasFiltro", fechasFiltro);
+  store.session("fechasFiltro", fechasFiltro);
+}
+
 export const authHelper = {
   getAccessToken,
+  getRefreshToken,
   borrarTodosLosTokens,
   login,
   usuarioGuardar,
   usuarioIdGuardar,
   personalIdGuardar,
   afectarStockGuardar,
-  globalGuardar
+  globalGuardar,
+  fechasFiltroGuardar,
 };

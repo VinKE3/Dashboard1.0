@@ -70,12 +70,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [respuesta]);
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
   useEffect(() => {
@@ -92,26 +92,26 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const ValidarDataCcorriente = async ({ target }) => {
-    setObjetoCcorriente((prevState) => ({
-      ...prevState,
+    setObjetoCcorriente((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
   const HandleDataContacto = async ({ target }) => {
-    setObjetoContacto((prevState) => ({
-      ...prevState,
+    setObjetoContacto((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

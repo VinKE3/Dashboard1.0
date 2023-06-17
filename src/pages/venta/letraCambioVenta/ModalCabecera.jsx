@@ -89,8 +89,8 @@ const ModalCabecera = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const Data = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
     if (target.name == "fechaEmision") {
@@ -105,8 +105,8 @@ const ModalCabecera = ({ setModal, modo, objeto }) => {
       );
       //Obtiene el personal default de Clientes Varios
 
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
@@ -115,8 +115,8 @@ const ModalCabecera = ({ setModal, modo, objeto }) => {
         personalId: personal.personalId,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteTipoDocumentoIdentidadId: "",
         clienteNumeroDocumentoIdentidad: "",

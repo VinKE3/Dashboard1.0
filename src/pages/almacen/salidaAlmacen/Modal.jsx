@@ -119,29 +119,29 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const ClientesVarios = async ({ target }) => {
     if (target.checked) {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
         clienteNombre: dataGlobal.cliente.nombre,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
@@ -192,8 +192,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -202,8 +202,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -212,8 +212,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Cabecera
   const HandleDataCabecera = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -549,8 +549,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       (costoGal + costoGalGasIndirectos) * (porcentajeIgvSeleccionado / 100);
     //Calculos
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       total: Funciones.RedondearNumero(totalNeto, 2),
       totalGalones: Funciones.RedondearNumero(totalGal, 2),
       costoGalon: Funciones.RedondearNumero(costoGal, 2),
