@@ -85,7 +85,7 @@ export var TituloUsuario = "font-bold text-light text-xl pb-1.5";
 //#endregion
 
 //#region Botones
-export var ContenedorBotones = "sticky top-2 z-20 flex gap-2 ";
+export var ContenedorBotones = "sticky top-2 z-20 flex items-center gap-2 bg-black/20";
 export var BotonModalBase =
   "px-5 py-1.5 text-sm font-semibold rounded transition-all duration-150 uppercase ";
 export var BotonOkModal =
@@ -94,7 +94,7 @@ export var BotonCerrarModal =
   " !py-1 border-2 background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 focus:bg-gradient-to-b focus:from-red-700 focus:to-red-600 focus:text-light focus:border-blue-500 ";
 
 export var BotonBasico =
-  "flex mb-2 flex items-center justify-center text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
+  "flex items-center justify-center text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
 export var BotonTexto =
   "w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 text-mini";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";

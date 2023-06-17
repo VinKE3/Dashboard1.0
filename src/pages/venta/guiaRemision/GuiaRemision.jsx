@@ -556,7 +556,7 @@ const GuiaRemision = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               {permisos[4] && (
@@ -565,7 +565,7 @@ const GuiaRemision = () => {
                   botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -573,7 +573,7 @@ const GuiaRemision = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

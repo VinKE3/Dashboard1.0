@@ -522,7 +522,7 @@ const Retencion = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
 
@@ -532,7 +532,7 @@ const Retencion = () => {
                   botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => Anulacion()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -540,7 +540,7 @@ const Retencion = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

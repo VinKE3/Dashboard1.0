@@ -444,7 +444,7 @@ const DocumentosdeCompra = () => {
     <>
       {visible ? (
         <>
-          <div className="h-full px-2 ">
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Documentos de Compra</h2>
 
             {/* Filtro*/}
@@ -509,7 +509,7 @@ const DocumentosdeCompra = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -517,7 +517,7 @@ const DocumentosdeCompra = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

@@ -466,7 +466,7 @@ const CuentaPorCobrar = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

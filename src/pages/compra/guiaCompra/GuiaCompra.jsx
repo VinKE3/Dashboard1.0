@@ -478,7 +478,7 @@ const GuiaCompra = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -486,7 +486,7 @@ const GuiaCompra = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

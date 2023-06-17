@@ -466,7 +466,7 @@ const SalidaCilindros = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

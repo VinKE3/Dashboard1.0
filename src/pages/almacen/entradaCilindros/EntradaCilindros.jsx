@@ -451,7 +451,7 @@ const EntradaCilindros = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
 
@@ -460,7 +460,7 @@ const EntradaCilindros = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

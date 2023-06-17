@@ -579,7 +579,7 @@ const SalidaAlmacen = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
 
@@ -588,7 +588,7 @@ const SalidaAlmacen = () => {
                 botonClass={G.BotonMorado}
                 botonIcon={faArrowAltCircleDown}
                 click={() => AccionModal(null, "AbrirCerrar", 6)}
-                contenedor=""
+                sticky=""
               />
 
               {permisos[4] && (
@@ -597,7 +597,7 @@ const SalidaAlmacen = () => {
                   botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -605,7 +605,7 @@ const SalidaAlmacen = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

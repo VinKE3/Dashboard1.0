@@ -398,7 +398,7 @@ const Usuario = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               {permisos[0] && (
@@ -407,7 +407,7 @@ const Usuario = () => {
                   botonClass={G.BotonMorado}
                   botonIcon={faGear}
                   click={() => AbrirModalConfigurar()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               {permisos[0] && (
@@ -416,7 +416,7 @@ const Usuario = () => {
                   botonClass={G.BotonNaranja}
                   botonIcon={faKey}
                   click={() => AbrirModalClave()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
             </div>

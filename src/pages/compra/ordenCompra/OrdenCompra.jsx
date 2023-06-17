@@ -473,7 +473,7 @@ const OrdenCompra = () => {
     <>
       {visible ? (
         <>
-          <div className="h-full px-2">
+          <div className={G.ContenedorPadre}>
             <h2 className={G.TituloH2}>Órdenes de Compra</h2>
 
             {/* Filtro*/}
@@ -598,7 +598,7 @@ const OrdenCompra = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -606,14 +606,14 @@ const OrdenCompra = () => {
                 botonClass={G.BotonMorado}
                 botonIcon={faArrowAltCircleDown}
                 click={() => AccionModal(null, "Finalizar", 6)}
-                contenedor=""
+                sticky=""
               />
               <BotonBasico
                 botonText="Imprimir"
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

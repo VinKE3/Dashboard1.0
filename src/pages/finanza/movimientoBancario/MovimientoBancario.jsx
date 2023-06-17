@@ -603,7 +603,7 @@ const MovimientoBancario = () => {
                 botonClass={G.BotonAzul}
                 botonIcon={faPlus}
                 click={() => AccionModal()}
-                contenedor=""
+                sticky=""
               />
             )}
             {/* Boton */}

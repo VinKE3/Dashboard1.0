@@ -718,7 +718,7 @@ const LetraCambioVenta = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -726,21 +726,21 @@ const LetraCambioVenta = () => {
                 botonClass={G.BotonNaranja}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 6)}
-                contenedor=""
+                sticky=""
               />
               <BotonBasico
                 botonText="Renovación"
                 botonClass={G.BotonMorado}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 7)}
-                contenedor=""
+                sticky=""
               />
               <BotonBasico
                 botonText="Deshacer Emisión"
                 botonClass={G.BotonRosa}
                 botonIcon={faBan}
                 click={() => AccionModal(null, "Nuevo", 8)}
-                contenedor=""
+                sticky=""
               />
 
               {permisos[4] && (
@@ -749,7 +749,7 @@ const LetraCambioVenta = () => {
                   botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -757,7 +757,7 @@ const LetraCambioVenta = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}
