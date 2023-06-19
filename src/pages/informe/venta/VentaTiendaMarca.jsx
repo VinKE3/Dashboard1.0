@@ -40,14 +40,14 @@ const VentaTiendaMarca = ({ setModal }) => {
       target.name === "boletas" ||
       target.name === "guiasRemision"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

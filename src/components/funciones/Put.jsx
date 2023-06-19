@@ -1,5 +1,5 @@
-import ApiMasy from "../../api/ApiMasy";
 import { toast } from "react-toastify";
+import ApiMasy from "../../api/ApiMasy";
 
 const Put = async (
   menu,

@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useMemo } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import Put from "../../../components/funciones/Put";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalInventario from "./ModalInventario";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import Mensajes from "../../../components/funciones/Mensajes";
-import Table from "../../../components/tabla/Table";
-import { toast } from "react-toastify";
-import { RadioButton } from "primereact/radiobutton";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Dialog } from "primereact/dialog";
 import moment from "moment";
-import { FaUndoAlt, FaPen } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { Dialog } from "primereact/dialog";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { RadioButton } from "primereact/radiobutton";
+import React, { useEffect, useMemo, useState } from "react";
+import { FaPen, FaUndoAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
+import Put from "../../../components/funciones/Put";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import Table from "../../../components/tabla/Table";
+import ModalInventario from "./ModalInventario";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -120,8 +120,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
   //#region Funciones Filtrado
   const HandleFiltro = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -173,13 +173,13 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       if (target.name == "incluyeIGV" || target.name == "isOperacionGratuita") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -195,14 +195,14 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
 
     if (target.name == "tipoCobroId") {
       let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
 
       if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           numeroOperacion: "",
           cuentaCorrienteId: "",
         }));
@@ -281,8 +281,8 @@ const Modal = ({ setModal, modo, objeto, detalle }) => {
       return i + map.cantidadSobra;
     }, 0);
     let saldoTotal = totalSobra - totalFalta;
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       totalFalta: Math.abs(Funciones.RedondearNumero(totalFalta, 2)),
       totalSobra: Math.abs(Funciones.RedondearNumero(totalSobra, 2)),
       saldoTotal: Math.abs(Funciones.RedondearNumero(saldoTotal, 2)),

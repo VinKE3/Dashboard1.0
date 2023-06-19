@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import Get from "../../../components/funciones/Get";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import TableBasic from "../../../components/tabla/TableBasic";
-import { TabView, TabPanel } from "primereact/tabview";
-import Ubigeo from "../../../components/filtro/Ubigeo";
-import Insert from "../../../components/funciones/Insert";
-import Update from "../../../components/funciones/Update";
-import Delete from "../../../components/funciones/Delete";
-import Mensajes from "../../../components/funciones/Mensajes";
-import { toast } from "react-toastify";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { TabPanel, TabView } from "primereact/tabview";
+import React, { useEffect, useState } from "react";
+import { FaPen, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import Ubigeo from "../../../components/filtro/Ubigeo";
+import Delete from "../../../components/funciones/Delete";
+import Get from "../../../components/funciones/Get";
+import Insert from "../../../components/funciones/Insert";
+import Mensajes from "../../../components/funciones/Mensajes";
+import Update from "../../../components/funciones/Update";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -70,12 +70,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   }, [respuesta]);
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
   useEffect(() => {
@@ -92,26 +92,26 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const ValidarDataCcorriente = async ({ target }) => {
-    setObjetoCcorriente((prevState) => ({
-      ...prevState,
+    setObjetoCcorriente((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const ValidarDataContacto = async ({ target }) => {
-    setObjetoContacto((prevState) => ({
-      ...prevState,
+  const HandleDataContacto = async ({ target }) => {
+    setObjetoContacto((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -931,7 +931,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoFocus={habilitarContacto}
                           disabled={modo == "Consultar"}
                           value={objetoContacto.nombres ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -951,7 +951,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.numeroDocumentoIdentidad ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -966,7 +966,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           id="cargoId"
                           name="cargoId"
                           value={objetoContacto.cargoId ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           disabled={modo == "Consultar"}
                           className={G.InputStyle}
                         >
@@ -990,7 +990,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.celular ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1010,7 +1010,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.telefono ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1026,7 +1026,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoComplete="off"
                           disabled={modo == "Consultar"}
                           value={objetoContacto.correo ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1044,7 +1044,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         autoComplete="off"
                         disabled={modo == "Consultar"}
                         value={objetoContacto.direccion ?? ""}
-                        onChange={ValidarDataContacto}
+                        onChange={HandleDataContacto}
                         className={G.InputStyle}
                       />
                     </div>

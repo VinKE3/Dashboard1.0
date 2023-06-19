@@ -38,14 +38,14 @@ const InformeCilindros = ({ setModal }) => {
       target.value === "reporteCilindrosPendientes" ||
       target.value === "reporteCilindrosSobrantes"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         checkFiltro: target.value,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

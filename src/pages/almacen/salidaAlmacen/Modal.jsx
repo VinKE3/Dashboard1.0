@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import FiltroCliente from "../../../components/filtro/FiltroCliente";
-import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import Swal from "sweetalert2";
-import { Checkbox } from "primereact/checkbox";
 import moment from "moment";
-import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
-import { toast } from "react-toastify";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
+import { FaPen, FaPlus, FaSearch, FaTrashAlt, FaUndoAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import store from "store2";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
+import FiltroCliente from "../../../components/filtro/FiltroCliente";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -119,29 +119,29 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
   const ClientesVarios = async ({ target }) => {
     if (target.checked) {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteNumeroDocumentoIdentidad:
           dataGlobal.cliente.numeroDocumentoIdentidad,
         clienteNombre: dataGlobal.cliente.nombre,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteNumeroDocumentoIdentidad: "",
         clienteNombre: "",
@@ -192,8 +192,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -202,8 +202,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -212,8 +212,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Cabecera
   const HandleDataCabecera = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -430,9 +430,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             iconColor: "#F7BF3A",
             showCancelButton: true,
             color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
+            background: "#171B23",
+            confirmButtonColor: "#3B8407",
+            confirmButtonText: "Confirmar",
             cancelButtonColor: "#d33",
             cancelButtonText: "Cancelar",
           }).then((res) => {
@@ -549,8 +549,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       (costoGal + costoGalGasIndirectos) * (porcentajeIgvSeleccionado / 100);
     //Calculos
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       total: Funciones.RedondearNumero(totalNeto, 2),
       totalGalones: Funciones.RedondearNumero(totalGal, 2),
       costoGalon: Funciones.RedondearNumero(costoGal, 2),

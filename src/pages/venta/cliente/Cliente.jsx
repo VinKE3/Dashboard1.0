@@ -1,16 +1,17 @@
-import { useEffect, useState, useMemo } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useMemo, useState } from "react";
+import { FaUndoAlt } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
 import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import Delete from "../../../components/funciones/Delete";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
+import Delete from "../../../components/funciones/Delete";
+import GetPermisos from "../../../components/funciones/GetPermisos";
 import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
-import { FaUndoAlt } from "react-icons/fa";
-import styled from "styled-components";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import * as G from "../../../components/Global";
+
 //#region Estilos
 const DivTabla = styled.div`
   & th:first-child {
@@ -113,8 +114,8 @@ const Cliente = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };

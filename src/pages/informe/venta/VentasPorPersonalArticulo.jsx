@@ -33,14 +33,14 @@ const VentasPorPersonalArticulo = ({ setModal }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name === "verComision") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

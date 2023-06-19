@@ -1,56 +1,59 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./styles/theme.css";
-import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-//?Layout
+import "primereact/resources/primereact.min.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./styles/theme.css";
+//Layout
 import LayoutAdmin from "./layouts/LayoutAdmin";
-//?Pages auth
+//Layout
+//Pages auth
 import Login from "./pages/auth/Login";
-//?Pages admin
+//Pages auth
+//Pages admin
 import Home from "./pages/admin/Home";
+//Pages admin
 import Error404 from "./pages/Error404";
 //Pages venta
 import Cliente from "./pages/venta/cliente/Cliente";
 import ConductorTransportista from "./pages/venta/conductorTransportista/ConductorTransportista";
 import Cotizacion from "./pages/venta/cotizacion/Cotizacion";
 import DocumentoVenta from "./pages/venta/documentoVenta/DocumentoVenta";
-import Retencion from "./pages/venta/retencion/Retencion";
-import LetraCambioVenta from "./pages/venta/letraCambioVenta/LetraCambioVenta";
 import GuiaRemision from "./pages/venta/guiaRemision/GuiaRemision";
+import LetraCambioVenta from "./pages/venta/letraCambioVenta/LetraCambioVenta";
+import Retencion from "./pages/venta/retencion/Retencion";
 //Pages venta
 //Pages compra
-import Proveedor from "./pages/compra/proveedor/Proveedor";
-import FacturaNegociable from "./pages/compra/facturaNegociable/FacturaNegociable";
-import LetraCambioCompra from "./pages/compra/letraCambioCompra/LetraCambioCompra";
 import DocumentoCompra from "./pages/compra/documentoCompra/DocumentoCompra";
-import OrdenCompra from "./pages/compra/ordenCompra/OrdenCompra";
+import FacturaNegociable from "./pages/compra/facturaNegociable/FacturaNegociable";
 import GuiaCompra from "./pages/compra/guiaCompra/GuiaCompra";
+import LetraCambioCompra from "./pages/compra/letraCambioCompra/LetraCambioCompra";
+import OrdenCompra from "./pages/compra/ordenCompra/OrdenCompra";
+import Proveedor from "./pages/compra/proveedor/Proveedor";
 //Pages compra
 //Pages mantenimiento
-import Usuario from "./pages/mantenimiento/usuario/Usuario";
-import TipoCambio from "./pages/mantenimiento/tipoCambio/TipoCambio";
-import Linea from "./pages/mantenimiento/linea/Linea";
-import SubLinea from "./pages/mantenimiento/subLinea/SubLinea";
-import Marca from "./pages/mantenimiento/marca/Marca";
-import UnidadMedida from "./pages/mantenimiento/unidadMedida/UnidadMedida";
-import TipoCobroPago from "./pages/mantenimiento/tipoCobroPago/TipoCobroPago";
 import Cargo from "./pages/mantenimiento/cargo/Cargo";
-import EntidadBancaria from "./pages/mantenimiento/entidadBancaria/EntidadBancaria";
+import Correlativo from "./pages/mantenimiento/correlativo/Correlativo";
 import CuentaCorriente from "./pages/mantenimiento/cuentaCorriente/CuentaCorriente";
 import Departamento from "./pages/mantenimiento/departamento/Departamento";
-import Provincia from "./pages/mantenimiento/provincia/Provincia";
 import Distrito from "./pages/mantenimiento/distrito/Distrito";
 import Empresa from "./pages/mantenimiento/empresa/Empresa";
-import Correlativo from "./pages/mantenimiento/correlativo/Correlativo";
 import EmpresaTransporte from "./pages/mantenimiento/empresaTransporte/EmpresaTransporte";
+import EntidadBancaria from "./pages/mantenimiento/entidadBancaria/EntidadBancaria";
+import Linea from "./pages/mantenimiento/linea/Linea";
+import Marca from "./pages/mantenimiento/marca/Marca";
+import Provincia from "./pages/mantenimiento/provincia/Provincia";
+import SubLinea from "./pages/mantenimiento/subLinea/SubLinea";
+import TipoCambio from "./pages/mantenimiento/tipoCambio/TipoCambio";
+import TipoCobroPago from "./pages/mantenimiento/tipoCobroPago/TipoCobroPago";
+import UnidadMedida from "./pages/mantenimiento/unidadMedida/UnidadMedida";
+import Usuario from "./pages/mantenimiento/usuario/Usuario";
 import Vehiculo from "./pages/mantenimiento/vehiculo/Vehiculo";
 //Pages mantenimiento
 //Pages almacen
-import MovimientoArticulo from "./pages/almacen/movimientoArticulo/MovimientoArticulo";
 import CuadreStock from "./pages/almacen/cuadreStock/CuadreStock";
 import EntradaAlmacen from "./pages/almacen/entradaAlmacen/EntradaAlmacen";
-import SalidaAlmacen from "./pages/almacen/salidaAlmacen/SalidaAlmacen";
 import EntradaCilindros from "./pages/almacen/entradaCilindros/EntradaCilindros";
+import MovimientoArticulo from "./pages/almacen/movimientoArticulo/MovimientoArticulo";
+import SalidaAlmacen from "./pages/almacen/salidaAlmacen/SalidaAlmacen";
 import SalidaCilindros from "./pages/almacen/salidaCilindros/SalidaCilindros";
 //Pages almacen
 //Pages Finanzas
@@ -65,13 +68,13 @@ import Personal from "./pages/personal/Personal";
 //Pages tesoreria
 import Cef from "./pages/compra/cef/Cef";
 import Cheque from "./pages/compra/cheque/Cheque";
-import Articulo from "./pages/mantenimiento/articulo/Articulo";
 import CuentaPorPagar from "./pages/finanza/cuentaPorPagar/CuentaPorPagar";
+import Articulo from "./pages/mantenimiento/articulo/Articulo";
 //Pages tesoreria
 //Pages Bloqueos
-import BloquearVenta from "./pages/venta/bloquearVenta/BloquearVenta";
 import BloquearCompra from "./pages/compra/bloquearCompra/BloquearCompra";
 import BloquearMovimientoBancario from "./pages/finanza/bloquearMovimientoBancario/BloquearMovimientoBancario";
+import BloquearVenta from "./pages/venta/bloquearVenta/BloquearVenta";
 //Pages Bloqueos
 //Pages Herramientas
 import Informe from "./pages/informe/Informe";

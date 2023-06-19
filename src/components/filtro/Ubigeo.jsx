@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ApiMasy from "../../api/ApiMasy";
 import * as G from "../Global";
+
 const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   //#region useState
   const [ubigeo, setUbigeo] = useState(dato);
@@ -15,18 +16,18 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
   }, [dato]);
   useEffect(() => {
     document.getElementById(id[0]).value = ubigeo.departamentoId;
-    ConsultarProvincia();
+    GetProvincia();
   }, [dataDep]);
   useEffect(() => {
     document.getElementById(id[1]).value = ubigeo.provinciaId;
-    ConsultarDistrito();
+    GetDistrito();
   }, [dataProv]);
   useEffect(() => {
     document.getElementById(id[2]).value = ubigeo.distritoId;
   }, [dataDist]);
   useEffect(() => {
     document.getElementById(id[0]).value = ubigeo.departamentoId;
-    ConsultarProvincia();
+    GetProvincia();
   }, [ubigeo]);
   useEffect(() => {
     GetTablas();
@@ -35,24 +36,21 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
+    let departamento = document.getElementById(id[0]);
+    let provincia = document.getElementById(id[1]);
+    let distrito = document.getElementById(id[2]);
+    
     if (target.name == id[0]) {
-      await ConsultarProvincia();
-      document.getElementById(id[1]).selectedIndex = 0;
-      document
-        .getElementById(id[1])
-        .dispatchEvent(new Event("change", { bubbles: true }));
+      await GetProvincia();
+      provincia.selectedIndex = 0;
+      provincia.dispatchEvent(new Event("change", { bubbles: true }));
     } else if (target.name == id[1]) {
-      await ConsultarDistrito();
-      document.getElementById(id[2]).selectedIndex = 0;
-      //Obtenemos el texto del opcion seleccionado
-      let departamento = document.getElementById(id[0]);
-      let provincia = document.getElementById(id[1]);
-      let distrito = document.getElementById(id[2]);
-      //Obtenemos el texto del opcion seleccionado
+      await GetDistrito();
+      distrito.selectedIndex = 0;
       setDataUbigeo({
-        departamentoId: document.getElementById(id[0]).value,
-        provinciaId: document.getElementById(id[1]).value,
-        distritoId: document.getElementById(id[2]).value,
+        departamentoId: departamento.value,
+        provinciaId: provincia.value,
+        distritoId: distrito.value,
         //Obtenemos el texto del opcion seleccionado
         departamento: departamento.options[departamento.selectedIndex].text,
         provincia: provincia.options[provincia.selectedIndex].text,
@@ -61,9 +59,9 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
       });
     } else {
       setDataUbigeo({
-        departamentoId: document.getElementById(id[0]).value,
-        provinciaId: document.getElementById(id[1]).value,
-        distritoId: document.getElementById(id[2]).value,
+        departamentoId: departamento.value,
+        provinciaId: provincia.value,
+        distritoId: distrito.value,
         //Obtenemos el texto del opcion seleccionado
         departamento: departamento.options[departamento.selectedIndex].text,
         provincia: provincia.options[provincia.selectedIndex].text,
@@ -81,7 +79,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
     );
     setDataDep(result.data.data.departamentos);
   };
-  const ConsultarProvincia = async () => {
+  const GetProvincia = async () => {
     if (dataDep.length > 0) {
       let index = document.getElementById(id[0]).selectedIndex;
       if (index == -1) index = 0;
@@ -95,7 +93,7 @@ const Ubigeo = ({ modo, id, dato, setDataUbigeo }) => {
       setDataProv([]);
     }
   };
-  const ConsultarDistrito = async () => {
+  const GetDistrito = async () => {
     if (dataProv.length > 0) {
       let index = document.getElementById(id[1]).selectedIndex;
       if (index == -1) index = 0;

@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo } from "react";
-import ApiMasy from "../../api/ApiMasy";
-import ModalBasic from "../modal/ModalBasic";
-import TableBasic from "../tabla/TableBasic";
-import { RadioButton } from "primereact/radiobutton";
-import { FaSearch, FaCheck } from "react-icons/fa";
-import styled from "styled-components";
 import moment from "moment";
+import { RadioButton } from "primereact/radiobutton";
+import React, { useEffect, useMemo, useState } from "react";
+import { FaCheck, FaSearch } from "react-icons/fa";
+import styled from "styled-components";
+import ApiMasy from "../../api/ApiMasy";
 import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
+import ModalBasic from "../modal/ModalBasic";
+import TableBasic from "../tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -69,14 +69,14 @@ const FiltroConcepto = ({ setModal, setObjeto, foco, modo = "EG" }) => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
   const ValidarTipo = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
     setTipo(target.value);

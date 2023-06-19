@@ -1,22 +1,22 @@
-import { useEffect, useState, useMemo } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import Imprimir from "../../../components/funciones/Imprimir";
-import ModalImprimir from "../../../components/filtro/ModalImprimir";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/tabla/Table";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
-import Modal from "./Modal";
-import { toast, ToastContainer } from "react-toastify";
-import moment from "moment";
-import styled from "styled-components";
+import { useEffect, useMemo, useState } from "react";
 import { FaUndoAlt } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import store from "store2";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
-import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
+import GetPermisos from "../../../components/funciones/GetPermisos";
+import Imprimir from "../../../components/funciones/Imprimir";
+import Table from "../../../components/tabla/Table";
+import Modal from "./Modal";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -136,8 +136,8 @@ const CuentaPorPagar = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -468,7 +468,7 @@ const CuentaPorPagar = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

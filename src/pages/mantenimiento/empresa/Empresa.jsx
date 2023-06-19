@@ -1,20 +1,19 @@
-import { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import Update from "../../../components/funciones/Update";
-import { TabView, TabPanel } from "primereact/tabview";
-import Ubigeo from "../../../components/filtro/Ubigeo";
-import TableBasic from "../../../components/tabla/TableBasic";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import Mensajes from "../../../components/funciones/Mensajes";
-import { Checkbox } from "primereact/checkbox";
-import Swal from "sweetalert2";
-import { ToastContainer } from "react-toastify";
-import moment from "moment";
-import { FaPen, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
+import { TabPanel, TabView } from "primereact/tabview";
+import { useEffect, useState } from "react";
+import { FaPen, FaTrashAlt } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
-import * as F from "../../../components/funciones/Validaciones";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import Ubigeo from "../../../components/filtro/Ubigeo";
+import Mensajes from "../../../components/funciones/Mensajes";
+import Update from "../../../components/funciones/Update";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -95,12 +94,12 @@ const Empresa = ({ modo }) => {
   //#region useEffect
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
 
@@ -145,13 +144,13 @@ const Empresa = ({ modo }) => {
   };
   const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -183,8 +182,8 @@ const Empresa = ({ modo }) => {
   };
   const HandleCheckAll = (event) => {
     const { checked } = event.target;
-    setCheckboxes((prevState) => ({
-      ...prevState,
+    setCheckboxes((prev) => ({
+      ...prev,
       checked,
       enero: checked,
       febrero: checked,
@@ -221,8 +220,8 @@ const Empresa = ({ modo }) => {
   };
   const HandleCheckAll2 = (event) => {
     const { checked } = event.target;
-    setCheckboxes2((prevState) => ({
-      ...prevState,
+    setCheckboxes2((prev) => ({
+      ...prev,
       checked,
       enero2: checked,
       febrero2: checked,
@@ -302,9 +301,8 @@ const Empresa = ({ modo }) => {
     setPorcentajesDetraccion(detraccion);
     setPorcentajesPercepcion(percepcion);
   };
-  const GuardarTodo = async (e = null) => {
-    console.log(data, "viendo data");
-    if (e !== null && e._reactName === "onClick") {
+  const GuardarTodo = async (e) => {
+    if (e._reactName != "onClick") {
       if (e.key == "Enter") {
         await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
       }
@@ -382,8 +380,8 @@ const Empresa = ({ modo }) => {
     if (target.name == "default") {
       setObjetoIgv({ ...objetoIgv, [target.name]: target.checked });
     } else {
-      setObjetoIgv((prevState) => ({
-        ...prevState,
+      setObjetoIgv((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -432,9 +430,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
@@ -514,8 +512,8 @@ const Empresa = ({ modo }) => {
     if (target.name == "default") {
       setObjetoRetencion({ ...objetoRetencion, [target.name]: target.checked });
     } else {
-      setObjetoRetencion((prevState) => ({
-        ...prevState,
+      setObjetoRetencion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -564,9 +562,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
@@ -649,8 +647,8 @@ const Empresa = ({ modo }) => {
         [target.name]: target.checked,
       });
     } else {
-      setObjetoDetraccion((prevState) => ({
-        ...prevState,
+      setObjetoDetraccion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -699,9 +697,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {
@@ -784,8 +782,8 @@ const Empresa = ({ modo }) => {
         [target.name]: target.checked,
       });
     } else {
-      setObjetoPercepcion((prevState) => ({
-        ...prevState,
+      setObjetoPercepcion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -834,9 +832,9 @@ const Empresa = ({ modo }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {

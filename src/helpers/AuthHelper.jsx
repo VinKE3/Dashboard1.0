@@ -3,6 +3,7 @@ import store from "store2";
 const getStorage = () =>
   store.session("access_token") ? store.session : store.local;
 store.session("refresh_token") ? store.session : store.local;
+store.session("refresh_token") ? store.session : store.local;
 store.session("usuario") ? store.session : store.local;
 
 const getToken = () => {
@@ -52,7 +53,6 @@ const borrarTokens = () => {
   store.session.remove("usuarioId");
   store.session.remove("personalId");
   store.session.remove("afectarStock");
-  store.session.remove("refresh_token");
   // store.session.remove("global");
 
   store.local.remove("access_token");
@@ -60,7 +60,6 @@ const borrarTokens = () => {
   store.local.remove("usuarioId");
   store.local.remove("personalId");
   store.local.remove("afectarStock");
-  store.local.remove("refresh_token");
   // store.local.remove("global");
 };
 

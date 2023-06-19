@@ -12,7 +12,7 @@ const StockValorizado = ({ setModal }) => {
     tipoExistenciaId: "",
     conStock: true,
     corteFecha: false,
-    checkFiltro: "linea",
+    agrupadoPor: "MA",
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   //#endregion
@@ -31,13 +31,13 @@ const StockValorizado = ({ setModal }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name === "conStock" || target.name === "corteFecha") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
       return;
     }
-    if (target.value === "marca" || target.value === "linea") {
+    if (target.value === "agruparMarca" || target.value === "agruparLinea") {
       setData((prevState) => ({
         ...prevState,
         checkFiltro: target.value,
@@ -59,11 +59,7 @@ const StockValorizado = ({ setModal }) => {
     setDataTipoExistencia(result.data.data.tiposExistencia);
   };
   const Enviar = async (origen = 1) => {
-    let model = await Reporte(
-      `Informes/Articulos/StockValorizado`,
-      origen,
-      `&TipoExistenciaId=${data.tipoExistenciaId}&ConStock=${data.conStock}&ConCorteFecha=${data.corteFecha}`
-    );
+    let model = await Reporte(`Informes/Sistema/ReporteClientes`, origen);
     if (model != null) {
       const enlace = document.createElement("a");
       enlace.href = model.url;
@@ -172,35 +168,35 @@ const StockValorizado = ({ setModal }) => {
               <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
-                    inputId="linea"
+                    inputId="agruparLinea"
                     name="agrupar"
-                    value="linea"
+                    value="agruparLinea"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "linea"}
+                    checked={data.checkFiltro === "agruparLinea"}
                   />
                 </div>
                 <label
-                  htmlFor="linea"
+                  htmlFor="agruparLinea"
                   className={G.LabelCheckStyle + " rounded-r-none"}
                 >
-                  Agrupar por Línea y Sublínea
+                  Marca
                 </label>
               </div>
               <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="marca"
+                    inputId="agruparMarca"
                     name="agrupar"
-                    value="marca"
+                    value="agruparMarca"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "marca"}
+                    checked={data.checkFiltro === "agruparMarca"}
                   />
                 </div>
-                <label htmlFor="marca" className={G.LabelCheckStyle}>
+                <label htmlFor="agruparMarca" className={G.LabelCheckStyle}>
                   Agrupar por Marca
                 </label>
               </div>

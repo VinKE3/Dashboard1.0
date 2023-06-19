@@ -1,19 +1,18 @@
-import { useEffect, useState, useMemo } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import Delete from "../../../components/funciones/Delete";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Checkbox } from "primereact/checkbox";
-import Table from "../../../components/tabla/Table";
-import Modal from "./Modal";
+import { useEffect, useMemo, useState } from "react";
+import { FaUndoAlt } from "react-icons/fa";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-import { FaUndoAlt } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import Delete from "../../../components/funciones/Delete";
+import GetPermisos from "../../../components/funciones/GetPermisos";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import Table from "../../../components/tabla/Table";
+import Modal from "./Modal";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -140,8 +139,8 @@ const Articulo = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };

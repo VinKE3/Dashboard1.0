@@ -45,14 +45,14 @@ const VentaTipoDocumento = ({ setModal }) => {
       target.name === "guiasRemision" ||
       target.name === "agruparPersonal"
     ) {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

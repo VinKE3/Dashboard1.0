@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/modal/ModalCrud";
 import * as G from "../../../components/Global";
+import ModalCrud from "../../../components/modal/ModalCrud";
 
 const Modal = ({ setModal, objeto, modo }) => {
   //#region useState
@@ -24,8 +24,8 @@ const Modal = ({ setModal, objeto, modo }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "departamentoId") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         departamentoId: target.value,
       }));
       await ConsultarProvincia();
@@ -34,8 +34,8 @@ const Modal = ({ setModal, objeto, modo }) => {
         .getElementById("provinciaId")
         .dispatchEvent(new Event("change", { bubbles: true }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

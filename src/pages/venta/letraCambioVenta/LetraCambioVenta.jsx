@@ -1,30 +1,30 @@
-import { useEffect, useState, useMemo } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
-import Put from "../../../components/funciones/Put";
-import Delete from "../../../components/funciones/Delete";
-import Imprimir from "../../../components/funciones/Imprimir";
-import ModalImprimir from "../../../components/filtro/ModalImprimir";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/tabla/Table";
+import { faBan, faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
+import { useEffect, useMemo, useState } from "react";
+import { FaUndoAlt } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import store from "store2";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
+import Delete from "../../../components/funciones/Delete";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import GetPermisos from "../../../components/funciones/GetPermisos";
+import Imprimir from "../../../components/funciones/Imprimir";
+import Put from "../../../components/funciones/Put";
+import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
 import ModalCabecera from "./ModalCabecera";
 import ModalDeshacer from "./ModalDeshacer";
 import ModalRefinanciamiento from "./ModalRefinanciamiento";
 import ModalRenovacion from "./ModalRenovacion";
-import { toast, ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
-import moment from "moment";
-import styled from "styled-components";
-import "react-toastify/dist/ReactToastify.css";
-import { FaUndoAlt } from "react-icons/fa";
-import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
-import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -178,8 +178,8 @@ const LetraCambioVenta = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -292,9 +292,9 @@ const LetraCambioVenta = () => {
               iconColor: "#F7BF3A",
               showCancelButton: true,
               color: "#fff",
-              background: "#1a1a2e",
-              confirmButtonColor: "#eea508",
-              confirmButtonText: "Aceptar",
+              background: "#171B23",
+              confirmButtonColor: "#3B8407",
+              confirmButtonText: "Confirmar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
@@ -718,7 +718,7 @@ const LetraCambioVenta = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -726,21 +726,21 @@ const LetraCambioVenta = () => {
                 botonClass={G.BotonNaranja}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 6)}
-                contenedor=""
+                sticky=""
               />
               <BotonBasico
                 botonText="Renovación"
                 botonClass={G.BotonMorado}
                 botonIcon={faPlus}
                 click={() => AccionModal(null, "Nuevo", 7)}
-                contenedor=""
+                sticky=""
               />
               <BotonBasico
                 botonText="Deshacer Emisión"
                 botonClass={G.BotonRosa}
                 botonIcon={faBan}
                 click={() => AccionModal(null, "Nuevo", 8)}
-                contenedor=""
+                sticky=""
               />
 
               {permisos[4] && (
@@ -749,7 +749,7 @@ const LetraCambioVenta = () => {
                   botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -757,7 +757,7 @@ const LetraCambioVenta = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

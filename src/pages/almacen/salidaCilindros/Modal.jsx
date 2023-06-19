@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import TableBasic from "../../../components/tabla/TableBasic";
 import moment from "moment";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -57,8 +57,8 @@ const Modal = ({ setModal, setRespuestaModal, modo, objeto }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

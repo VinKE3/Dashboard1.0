@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import ModalBasic from "../modal/ModalBasic";
 import * as G from "../Global";
+import ModalBasic from "../modal/ModalBasic";
 
 const ModalImprimir = ({ setModal, objeto, foco }) => {
   //#region useState

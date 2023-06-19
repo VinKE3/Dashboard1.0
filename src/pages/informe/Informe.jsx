@@ -5,16 +5,16 @@ import { ToastContainer } from "react-toastify";
 import * as G from "../../components/Global";
 //#region informeSistema
 import ReporteClientes from "./sistema/ReporteClientes";
-import ReporteDeProveedores from "./sistema/ReporteDeProveedores";
-import ReporteDeVendedores from "./sistema/ReporteDeVendedores";
-import ReporteVendedoresClientes from "./sistema/ReporteVendedoresClientes";
+import ReporteProveedores from "./sistema/ReporteProveedores";
+import ReportePersonal from "./sistema/ReportePersonal";
+import ReportePersonalCliente from "./sistema/ReportePersonalCliente";
 //#endregion
 //#region informeArticulo
-import KardexPorMarca from "./articulo/KardexPorMarca";
-import ListadoDeCostos from "./articulo/ListadoDeCostos";
-import MovimientoDeArticulos from "./articulo/MovimientoDeArticulos";
+import KardexMarca from "./articulo/KardexMarca";
+import ListadoCostos from "./articulo/ListadoCostos";
+import MovimientoDeArticulos from "./articulo/MovimientoArticulo";
 import StockValorizado from "./articulo/StockValorizado";
-import TomaDeInventario from "./articulo/TomaDeInventario";
+import TomaInventario from "./articulo/TomaInventario";
 //#endregion
 //#region informeCompra
 import ComprasDetalle from "./compra/ComprasDetalle";
@@ -84,16 +84,16 @@ const Informe = () => {
   //#region Sistemas
   const [modalCliente, setModalCliente] = useState(false);
   const [modalProveedor, setModalProveedor] = useState(false);
-  const [modalVendedor, setModalVendedor] = useState(false);
-  const [modalVendedorCliente, setModalVendedorCliente] = useState(false);
+  const [modalPersonal, setModalPersonal] = useState(false);
+  const [modalPersonalCliente, setModalPersonalCliente] = useState(false);
   //#endregion
 
   //#region Articulos
   const [modalTomaInventario, setModalTomaInventario] = useState(false);
   const [modalStockValorizado, setModalStockValorizado] = useState(false);
-  const [modalListadoDeCostos, setModalListadoDeCostos] = useState(false);
+  const [modalListadoCostos, setModalListadoCostos] = useState(false);
   const [modalMovArticulo, setModalMovArticulo] = useState(false);
-  const [modalKardexPorMarca, setModalKardexPorMarca] = useState(false);
+  const [modalKardexMarca, setModalKardexMarca] = useState(false);
   //#endregion
 
   //#region Compras
@@ -212,30 +212,30 @@ const Informe = () => {
   const Sistemas = [
     {
       id: 1,
-      title: "Informe de Clientes",
+      title: "Reporte de Clientes",
       AbrirModal: () => {
         setModalCliente(true);
       },
     },
     {
       id: 2,
-      title: "Informe de Proveedores",
+      title: "Reporte de Proveedores",
       AbrirModal: () => {
         setModalProveedor(true);
       },
     },
     {
       id: 3,
-      title: "Informe de Vendedores",
+      title: "Reporte de Vendedores",
       AbrirModal: () => {
-        setModalVendedor(true);
+        setModalPersonal(true);
       },
     },
     {
       id: 4,
-      title: "Informe de Vendedores y Cliente",
+      title: "Reporte de Vendedores y Clientes",
       AbrirModal: () => {
-        setModalVendedorCliente(true);
+        setModalPersonalCliente(true);
       },
     },
   ];
@@ -258,12 +258,12 @@ const Informe = () => {
       id: 3,
       title: "Listado de Costos",
       AbrirModal: () => {
-        setModalListadoDeCostos(true);
+        setModalListadoCostos(true);
       },
     },
     {
       id: 4,
-      title: "Movimiento de Artículos",
+      title: "Movimientos de Artículos",
       AbrirModal: () => {
         setModalMovArticulo(true);
       },
@@ -272,7 +272,7 @@ const Informe = () => {
       id: 5,
       title: "Kardex por Marca",
       AbrirModal: () => {
-        setModalKardexPorMarca(true);
+        setModalKardexMarca(true);
       },
     },
   ];
@@ -314,7 +314,7 @@ const Informe = () => {
     },
     {
       id: 6,
-      title: "Informe de Compra(Logistica)",
+      title: "Reporte de Compra(Logistica)",
       AbrirModal: () => {
         setModalReporteDeCompras(true);
       },
@@ -449,14 +449,14 @@ const Informe = () => {
     },
     {
       id: 14,
-      title: "Informe de Documentos",
+      title: "Reporte de Documentos",
       AbrirModal: () => {
         setModalReporteDocumentos(true);
       },
     },
     {
       id: 15,
-      title: "Informe de Cilindros",
+      title: "Reporte de Cilindros",
       AbrirModal: () => {
         setModalInformeCilindros(true);
       },
@@ -486,28 +486,28 @@ const Informe = () => {
     },
     {
       id: 4,
-      title: "Informe de Cobranzas",
+      title: "Reporte de Cobranzas",
       AbrirModal: () => {
         setModalInformeCobranzas(true);
       },
     },
     {
       id: 5,
-      title: "Informe Planilla Pagos",
+      title: "Reporte Planilla Pagos",
       AbrirModal: () => {
         setModalInformePlanillaPagos(true);
       },
     },
     {
       id: 6,
-      title: "Informe de Control de Planillas",
+      title: "Reporte de Control de Planillas",
       AbrirModal: () => {
         setModalInformeControlPlanillas(true);
       },
     },
     {
       id: 7,
-      title: "Informe de General Detallado",
+      title: "Reporte de General Detallado",
       AbrirModal: () => {
         setModalInformeGeneralDetallado(true);
       },
@@ -516,7 +516,7 @@ const Informe = () => {
   const Finanzas = [
     {
       id: 1,
-      title: "Informe Ingresos/Egresos",
+      title: "Reporte Ingresos/Egresos",
       AbrirModal: () => {
         setModalReporteIngresosEgresos(true);
       },
@@ -530,7 +530,7 @@ const Informe = () => {
     },
     {
       id: 3,
-      title: "Informe de Ingresos de Tiendas",
+      title: "Reporte de Ingresos de Tiendas",
       AbrirModal: () => {
         setModalReporteIngresosTienda(true);
       },
@@ -539,21 +539,21 @@ const Informe = () => {
   const Gerencia = [
     {
       id: 1,
-      title: "Informe de Tiendas",
+      title: "Reporte de Tiendas",
       AbrirModal: () => {
         setModalInformeGerenciaTiendas(true);
       },
     },
     {
       id: 2,
-      title: "Informe de Utilidades",
+      title: "Reporte de Utilidades",
       AbrirModal: () => {
         setModalInformeGerenciaUtilidades(true);
       },
     },
     {
       id: 3,
-      title: "Informe Costo de Productos",
+      title: "Reporte Costo de Productos",
       AbrirModal: () => {
         setModalInformeGerenciaCostosProductos(true);
       },
@@ -634,7 +634,7 @@ const Informe = () => {
   const Contable = [
     {
       id: 1,
-      title: "Informe Contable",
+      title: "Reporte Contable",
       AbrirModal: () => {
         console.log("AbrirModal");
       },
@@ -844,19 +844,19 @@ const Informe = () => {
 
       {/* Sistema */}
       {modalCliente && <ReporteClientes setModal={setModalCliente} />}
-      {modalProveedor && <ReporteDeProveedores setModal={setModalProveedor} />}
-      {modalVendedor && <ReporteDeVendedores setModal={setModalVendedor} />}
-      {modalVendedorCliente && (
-        <ReporteVendedoresClientes setModal={setModalVendedorCliente} />
+      {modalProveedor && <ReporteProveedores setModal={setModalProveedor} />}
+      {modalPersonal && <ReportePersonal setModal={setModalPersonal} />}
+      {modalPersonalCliente && (
+        <ReportePersonalCliente setModal={setModalPersonalCliente} />
       )}
       {/* Sistema */}
 
       {/* Artículo */}
-      {modalKardexPorMarca && (
-        <KardexPorMarca setModal={setModalKardexPorMarca} />
+      {modalKardexMarca && (
+        <KardexMarca setModal={setModalKardexMarca} />
       )}
-      {modalListadoDeCostos && (
-        <ListadoDeCostos setModal={setModalListadoDeCostos} />
+      {modalListadoCostos && (
+        <ListadoCostos setModal={setModalListadoCostos} />
       )}
       {modalMovArticulo && (
         <MovimientoDeArticulos setModal={setModalMovArticulo} />
@@ -865,7 +865,7 @@ const Informe = () => {
         <StockValorizado setModal={setModalStockValorizado} />
       )}
       {modalTomaInventario && (
-        <TomaDeInventario
+        <TomaInventario
           setModal={setModalTomaInventario}
           foco={document.getElementById("pr_id_4")}
         />

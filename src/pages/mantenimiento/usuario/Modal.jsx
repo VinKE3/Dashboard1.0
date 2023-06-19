@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/modal/ModalCrud";
 import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import ModalCrud from "../../../components/modal/ModalCrud";
 
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -45,8 +45,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     if (target.name == "isActivo" || target.name == "habilitarAfectarStock") {
       setData({ ...data, [target.name]: target.checked });
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

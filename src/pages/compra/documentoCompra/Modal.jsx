@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
-import FiltroOrdenCompra from "../../../components/filtro/FiltroOrdenCompra";
-import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
+import moment from "moment";
+import "primeicons/primeicons.css";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
-import moment from "moment";
+import React, { useEffect, useState } from "react";
 import {
+  FaPaste,
+  FaPen,
   FaPlus,
   FaSearch,
-  FaUndoAlt,
-  FaPen,
   FaTrashAlt,
-  FaPaste,
+  FaUndoAlt,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
+import store from "store2";
 import styled from "styled-components";
-import "primeicons/primeicons.css";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
+import FiltroOrdenCompra from "../../../components/filtro/FiltroOrdenCompra";
+import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -163,34 +163,34 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
 
     if (target.name == "tipoDocumentoId") {
       if (target.value == "03") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: true,
         }));
         return;
       }
       if (target.value != "03") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: false,
         }));
       }
       if (target.value != "07" || target.value != "08") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           documentoReferenciaId: "",
           motivoNotaId: "",
           motivoSustento: "",
@@ -214,13 +214,13 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (target.name == "tipoPagoId") {
       let fecha = await FechaVencimiento(data.tipoCompraId, target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha != undefined ? fecha : data.fechaVencimiento,
       }));
       if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           numeroOperacion: "",
           cuentaCorrienteId: "",
         }));
@@ -229,8 +229,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   };
   const ProveedorVarios = async ({ target }) => {
     if (target.checked) {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: dataGlobal.proveedor.id,
         proveedorNumeroDocumentoIdentidad:
           dataGlobal.proveedor.numeroDocumentoIdentidad,
@@ -238,8 +238,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
       }));
     } else {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: "",
         proveedorNumeroDocumentoIdentidad: "",
         proveedorNombre: "",
@@ -285,8 +285,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 10) {
         num = ("0000000000" + num).slice(-10);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: num,
       }));
     }
@@ -295,8 +295,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (num.length < 4) {
         num = ("0000000000" + num).slice(-4);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: num,
       }));
     }
@@ -373,9 +373,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         iconColor: "#F7BF3A",
         showCancelButton: true,
         color: "#fff",
-        background: "#1a1a2e",
-        confirmButtonColor: "#eea508",
-        confirmButtonText: "Aceptar",
+        background: "#171B23",
+        confirmButtonColor: "#3B8407",
+        confirmButtonText: "Confirmar",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
       }).then((res) => {
@@ -416,8 +416,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -610,9 +610,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             iconColor: "#F7BF3A",
             showCancelButton: true,
             color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
+            background: "#171B23",
+            confirmButtonColor: "#3B8407",
+            confirmButtonText: "Confirmar",
             cancelButtonColor: "#d33",
             cancelButtonText: "Cancelar",
           }).then((res) => {
@@ -919,8 +919,8 @@ const Modal = ({ setModal, modo, objeto }) => {
     }
     //Calculo Check IncluyeIGV
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       subTotal: Funciones.RedondearNumero(subTotal, 2),
       montoIGV: Funciones.RedondearNumero(montoIGV, 2),
       totalNeto: Funciones.RedondearNumero(total, 2),

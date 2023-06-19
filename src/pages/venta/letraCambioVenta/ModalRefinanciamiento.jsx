@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import { toast } from "react-toastify";
 import moment from "moment";
-import { FaSearch, FaUndoAlt, FaPen, FaTrashAlt, FaPlus } from "react-icons/fa";
-import { RadioButton } from "primereact/radiobutton";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
-
+import { RadioButton } from "primereact/radiobutton";
+import React, { useEffect, useState } from "react";
+import { FaPen, FaPlus, FaSearch, FaTrashAlt, FaUndoAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -184,13 +183,13 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   //Data Cabecera
   const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
     }
@@ -302,8 +301,8 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
   const AgregarDocumentoReferencia = async () => {
     let resultado = await ValidarConsultaDocumentoReferencia();
     if (resultado[0]) {
-      setDataDetalle((prevState) => [
-        ...prevState,
+      setDataDetalle((prev) => [
+        ...prev,
         {
           id: resultado[2].id,
           fechaEmision: resultado[2].fechaEmision,
@@ -462,8 +461,8 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
         let montoPago =
           (dataCabecera.saldo + montoInteres) * (porcentajePago / 100);
         //Recalcula el Monto Pago
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajeInteres: Funciones.RedondearNumero(porcentajeInteres, 2),
           montoInteres: Funciones.RedondearNumero(montoInteres, 2),
           montoPago: Funciones.RedondearNumero(montoPago, 2),
@@ -489,8 +488,8 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
         //Calcula el monto pago
 
         //Calcula el monto pago
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajeInteres: Funciones.RedondearNumero(porcentajeInteres, 2),
           montoInteres: Funciones.RedondearNumero(montoInteres, 2),
           montoPago: Funciones.RedondearNumero(montoPago / 2),
@@ -509,8 +508,8 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
           2
         );
         //Calcula Monto pago
-        setDataCabecera((prevState) => ({
-          ...prevState,
+        setDataCabecera((prev) => ({
+          ...prev,
           porcentajePago: Funciones.RedondearNumero(porcentajePago, 2),
           montoPago: Funciones.RedondearNumero(montoPago, 2),
         }));
@@ -558,8 +557,8 @@ const ModalRefinanciamiento = ({ setModal, modo, objeto }) => {
 
   //#region Funciones Detalles
   const HandleDataCabeceraLetra = async ({ target }) => {
-    setDataLetra((prevState) => ({
-      ...prevState,
+    setDataLetra((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
     if (target.name == "fechaEmision") {

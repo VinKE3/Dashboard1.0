@@ -1,6 +1,7 @@
-import ApiMasy from "../../api/ApiMasy";
-import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import ApiMasy from "../../api/ApiMasy";
+
 const Delete = async (menu, id, setListar) => {
   Swal.fire({
     title: "Eliminar registro",
@@ -8,9 +9,9 @@ const Delete = async (menu, id, setListar) => {
     iconColor: "#F7BF3A",
     showCancelButton: true,
     color: "#fff",
-    background: "#1a1a2e",
-    confirmButtonColor: "#eea508",
-    confirmButtonText: "Aceptar",
+    background: "#171B23",
+    confirmButtonColor: "#3B8407",
+    confirmButtonText: "Confirmar",
     cancelButtonColor: "#d33",
     cancelButtonText: "Cancelar",
   }).then(async (res) => {

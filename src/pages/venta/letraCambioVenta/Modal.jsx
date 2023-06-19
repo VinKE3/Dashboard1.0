@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import { toast } from "react-toastify";
 import moment from "moment";
-import { FaSearch, FaUndoAlt, FaPen, FaTrashAlt, FaPlus } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
-
+import React, { useEffect, useState } from "react";
+import { FaPen, FaPlus, FaSearch, FaTrashAlt, FaUndoAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -174,13 +173,13 @@ const Modal = ({ setModal, modo, objeto, setActualizar }) => {
   //Data Cabecera
   const HandleDataCabecera = async ({ target }) => {
     if (target.name == "monedaId" || target.name == "tipoCambio") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -287,8 +286,8 @@ const Modal = ({ setModal, modo, objeto, setActualizar }) => {
   const AgregarDocumentoReferencia = async () => {
     let resultado = await ValidarDocumentoReferencia();
     if (resultado[0]) {
-      setDataDetalle((prevState) => [
-        ...prevState,
+      setDataDetalle((prev) => [
+        ...prev,
         {
           id: resultado[2].id,
           fechaEmision: resultado[2].fechaEmision,
@@ -362,8 +361,8 @@ const Modal = ({ setModal, modo, objeto, setActualizar }) => {
 
   //#region Funciones Detalles
   const HandleDataCabeceraLetra = async ({ target }) => {
-    setDataLetra((prevState) => ({
-      ...prevState,
+    setDataLetra((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
     if (target.name == "fechaEmision") {

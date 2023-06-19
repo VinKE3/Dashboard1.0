@@ -1,34 +1,33 @@
-import React, { useState, useEffect } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import FiltroLetraVenta from "../../../components/filtro/FiltroLetraVenta";
-import FiltroCotizacion from "../../../components/filtro/FiltroCotizacion";
-import FiltroCliente from "../../../components/filtro/FiltroCliente";
-import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
-import FiltroPrecio from "../../../components/filtro/FiltroPrecio";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
+import moment from "moment";
+import "primeicons/primeicons.css";
 import { Checkbox } from "primereact/checkbox";
 import { RadioButton } from "primereact/radiobutton";
-import moment from "moment";
+import React, { useEffect, useState } from "react";
 import {
-  FaPlus,
   FaChevronDown,
-  FaSearch,
-  FaUndoAlt,
-  FaPen,
-  FaTrashAlt,
   FaPaste,
+  FaPen,
+  FaPlus,
+  FaSearch,
+  FaTrashAlt,
+  FaUndoAlt,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
+import store from "store2";
 import styled from "styled-components";
-import "primeicons/primeicons.css";
-
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import FiltroArticulo from "../../../components/filtro/FiltroArticulo";
+import FiltroCliente from "../../../components/filtro/FiltroCliente";
+import FiltroCotizacion from "../../../components/filtro/FiltroCotizacion";
+import FiltroLetraVenta from "../../../components/filtro/FiltroLetraVenta";
+import FiltroPrecio from "../../../components/filtro/FiltroPrecio";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -225,13 +224,13 @@ const Modal = ({ setModal, modo, objeto }) => {
       if (target.name == "incluyeIGV" || target.name == "isOperacionGratuita") {
         setRefrescar(true);
       }
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -251,27 +250,27 @@ const Modal = ({ setModal, modo, objeto }) => {
       let numero = await GetCorrelativo(target.value, serie);
       numero = numero != undefined ? numero : "";
       //Obtiene el correlativo
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         serie: serie,
         numero: numero,
       }));
 
       if (target.value == "03") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: true,
         }));
       } else {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           incluyeIGV: false,
         }));
       }
 
       if (target.value != "07" || target.value != "08") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           documentoReferenciaId: "",
           motivoNotaId: "",
           motivoSustento: "",
@@ -287,8 +286,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       correlativo = correlativo != undefined ? correlativo : "";
       //Obtiene el correlativo
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         numero: ("0000000000" + String(correlativo)).slice(-10),
       }));
     }
@@ -314,14 +313,14 @@ const Modal = ({ setModal, modo, objeto }) => {
 
     if (target.name == "tipoCobroId") {
       let fecha = await FechaVencimiento(data.tipoVentaId, target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
 
       if (target.value != "CH" || target.value != "DE") {
-        setData((prevState) => ({
-          ...prevState,
+        setData((prev) => ({
+          ...prev,
           numeroOperacion: "",
           cuentaCorrienteId: "",
         }));
@@ -336,8 +335,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       //Obtiene el personal default de Clientes Varios
 
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: dataGlobal.cliente.id,
         clienteTipoDocumentoIdentidadId:
           dataGlobal.cliente.tipoDocumentoIdentidadId,
@@ -352,8 +351,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         direcciones: dataGlobal.cliente.direcciones,
       }));
     } else {
-      setDataCliente((prevState) => ({
-        ...prevState,
+      setDataCliente((prev) => ({
+        ...prev,
         clienteId: "",
         clienteTipoDocumentoIdentidadId: "",
         clienteNumeroDocumentoIdentidad: "",
@@ -400,8 +399,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   const CambioDireccion = async (id) => {
     if (modo != "Consultar") {
       let model = dataClienteDirec.find((map) => map.id == id);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         clienteDireccionId: model.id,
         clienteDireccion: model.direccion,
       }));
@@ -417,9 +416,9 @@ const Modal = ({ setModal, modo, objeto }) => {
         iconColor: "#F7BF3A",
         showCancelButton: true,
         color: "#fff",
-        background: "#1a1a2e",
-        confirmButtonColor: "#eea508",
-        confirmButtonText: "Aceptar",
+        background: "#171B23",
+        confirmButtonColor: "#3B8407",
+        confirmButtonText: "Confirmar",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
       }).then((res) => {
@@ -493,8 +492,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         //Calculo para Detalle
       });
     } else {
-      setDataCabecera((prevState) => ({
-        ...prevState,
+      setDataCabecera((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -621,9 +620,9 @@ const Modal = ({ setModal, modo, objeto }) => {
           iconColor: "#F7BF3A",
           showCancelButton: false,
           color: "#fff",
-          background: "#1a1a2e",
-          confirmButtonColor: "#eea508",
-          confirmButtonText: "Aceptar",
+          background: "#171B23",
+          confirmButtonColor: "#3B8407",
+          confirmButtonText: "Confirmar",
         });
         return [false, ""];
       }
@@ -718,9 +717,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             iconColor: "#F7BF3A",
             showCancelButton: true,
             color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
+            background: "#171B23",
+            confirmButtonColor: "#3B8407",
+            confirmButtonText: "Confirmar",
             cancelButtonColor: "#d33",
             cancelButtonText: "Cancelar",
           }).then((res) => {
@@ -872,8 +871,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       );
       total = totalNeto + detraccion + bolsa;
       //Calculos
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         subTotal: Funciones.RedondearNumero(subTotal, 2),
         montoIGV: Funciones.RedondearNumero(montoIGV, 2),
         totalNeto: Funciones.RedondearNumero(totalNeto, 2),
@@ -885,8 +884,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       }));
     } else {
       //Asigna a todo 0 y la suma de importes pasa a totalOperacionesGratuitas
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         incluyeIGV: false,
         totalOperacionesGratuitas: importeTotal,
         porcentajeIGV: 0,

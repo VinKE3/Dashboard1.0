@@ -102,8 +102,8 @@ const ReporteIngresosEgresos = ({ setModal }) => {
       }));
       return;
     }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

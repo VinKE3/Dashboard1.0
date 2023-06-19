@@ -1,17 +1,16 @@
-import { useEffect, useState, useMemo } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import Delete from "../../../components/funciones/Delete";
-import FiltroBasico from "../../../components/filtro/FiltroBasico";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Table from "../../../components/tabla/Table";
-import Modal from "./Modal";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useMemo, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import styled from "styled-components";
-
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import FiltroBasico from "../../../components/filtro/FiltroBasico";
+import Delete from "../../../components/funciones/Delete";
+import GetPermisos from "../../../components/funciones/GetPermisos";
+import Table from "../../../components/tabla/Table";
+import Modal from "./Modal";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -108,8 +107,8 @@ const Conductor = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -247,7 +246,7 @@ const Conductor = () => {
       {visible ? (
         <>
           <div className={G.ContenedorPadre}>
-            <h2 className={G.TituloH2}>Conductores y Transportistas</h2>
+            <h2 className={G.TituloH2}>Conductores</h2>
 
             {/* Filtro*/}
             <FiltroBasico

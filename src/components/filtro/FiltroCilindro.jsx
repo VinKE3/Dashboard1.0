@@ -1,13 +1,13 @@
-import { useEffect, useState, useMemo } from "react";
+import moment from "moment";
+import { useEffect, useMemo, useState } from "react";
+import { FaCheck, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import Swal from "sweetalert2";
 import ApiMasy from "../../api/ApiMasy";
+import * as G from "../Global";
 import ModalBasic from "../modal/ModalBasic";
 import TableBasic from "../tabla/TableBasic";
-import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import { FaSearch, FaTrash, FaCheck } from "react-icons/fa";
-import moment from "moment";
-import styled from "styled-components";
-import * as G from "../Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -78,8 +78,8 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -166,9 +166,9 @@ const FiltroCilindro = ({ setModal, id, objeto, setObjeto, foco }) => {
       iconColor: "#F7BF3A",
       showCancelButton: true,
       color: "#fff",
-      background: "#1a1a2e",
-      confirmButtonColor: "#eea508",
-      confirmButtonText: "Aceptar",
+      background: "#171B23",
+      confirmButtonColor: "#3B8407",
+      confirmButtonText: "Confirmar",
       cancelButtonColor: "#d33",
       cancelButtonText: "Cancelar",
     }).then((result) => {

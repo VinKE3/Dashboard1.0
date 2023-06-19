@@ -30,12 +30,12 @@ const RegistroVentaUbigueo = ({ setModal }) => {
   //#region useEffect
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
   useEffect(() => {
@@ -45,8 +45,8 @@ const RegistroVentaUbigueo = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

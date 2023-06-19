@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import BotonCerrarMenu from "../boton/BotonCerrarMenu";
-import SidebarMenus from "./SidebarMenus";
 import seccionesList from "./SeccionesMenus";
+import SidebarMenus from "./SidebarMenus";
 
 const Sidebar = () => {
   const [showMenu, setShowMenu] = useState(false);

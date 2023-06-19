@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { faCancel, faPlus } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import "primeicons/primeicons.css";
+import React, { useEffect, useState } from "react";
+import { FaEye, FaPlus, FaTrashAlt, FaUndoAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
 import ApiMasy from "../../../api/ApiMasy";
-import Insert from "../../../components/funciones/Insert";
+import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
 import Delete from "../../../components/funciones/Delete";
 import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
+import Insert from "../../../components/funciones/Insert";
 import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import { toast } from "react-toastify";
-import moment from "moment";
-import { FaPlus, FaUndoAlt, FaTrashAlt, FaEye } from "react-icons/fa";
-import styled from "styled-components";
-import { faPlus, faCancel } from "@fortawesome/free-solid-svg-icons";
-import "primeicons/primeicons.css";
-import * as G from "../../../components/Global";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -99,8 +99,8 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const ValidarDataAbono = async ({ target }) => {
-    setDataAbono((prevState) => ({
-      ...prevState,
+    setDataAbono((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
 
@@ -158,8 +158,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         setTotalSaldo(Funciones.RedondearNumero(total, 2));
       }
     }
-    setDataAbono((prevState) => ({
-      ...prevState,
+    setDataAbono((prev) => ({
+      ...prev,
       monedaId: target.value,
     }));
   };

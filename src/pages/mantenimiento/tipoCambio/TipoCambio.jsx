@@ -1,18 +1,18 @@
-import { useEffect, useState, useMemo } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { useEffect, useMemo, useState } from "react";
+import { FaUndoAlt } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
+import styled from "styled-components";
 import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import Delete from "../../../components/funciones/Delete";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
+import Delete from "../../../components/funciones/Delete";
+import GetPermisos from "../../../components/funciones/GetPermisos";
 import Table from "../../../components/tabla/Table";
 import Modal from "./Modal";
-import { ToastContainer } from "react-toastify";
-import moment from "moment";
-import styled from "styled-components";
-import { FaUndoAlt } from "react-icons/fa";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import * as G from "../../../components/Global";
 //#region Estilos
 const DivTabla = styled.div`
   & th:last-child {
@@ -107,8 +107,8 @@ const TipodeCambio = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };

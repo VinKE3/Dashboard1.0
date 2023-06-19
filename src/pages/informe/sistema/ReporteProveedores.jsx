@@ -1,9 +1,9 @@
 import React from "react";
+import * as G from "../../../components/Global";
 import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import * as G from "../../../components/Global";
 
-const ReporteDeProveedores = ({ setModal }) => {
+const ReporteProveedores = ({ setModal }) => {
   //#region  API
   const Enviar = async (origen = 1) => {
     let model = await Reporte(`Informes/Sistema/ReporteProveedores`, origen);
@@ -19,7 +19,7 @@ const ReporteDeProveedores = ({ setModal }) => {
   return (
     <ModalBasic
       setModal={setModal}
-      titulo="Informe de Proveedores"
+      titulo="Reporte de Proveedores"
       habilitarFoco={false}
       tamañoModal={[G.ModalPequeño + " !max-w-xl", G.Form]}
       childrenFooter={
@@ -53,4 +53,4 @@ const ReporteDeProveedores = ({ setModal }) => {
   //#endregion
 };
 
-export default ReporteDeProveedores;
+export default ReporteProveedores;

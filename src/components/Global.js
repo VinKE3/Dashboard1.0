@@ -1,5 +1,5 @@
 //#region Padre
-export var ContenedorPadre = "h-full w-full px-2 ";
+export var ContenedorPadre = "h-auto w-full px-2 ";
 //#endregion
 
 //#region Modal
@@ -27,7 +27,7 @@ export var ContenedorBasico =
   "grid gap-y-1.5 md:gap-y-2 md:gap-x-2 py-3 px-2 rounded-lg border border-gray-700 overflow-y-auto ";
 export var ContenedorFiltro =
   "grid gap-y-1 md:gap-x-2 p-0 mb-2 overflow-y-auto ";
-export var FondoContenedor = "bg-secondary-300 shadow-md shadow-gray-700/60 ";
+export var FondoContenedor = "bg-contenedor shadow-md shadow-gray-700/60 ";
 export var ContenedorInputs =
   "flex flex-col md:flex-row gap-y-1.5 md:gap-x-2 overflow-x-auto ";
 export var ContenedorInputsFiltro =
@@ -85,7 +85,7 @@ export var TituloUsuario = "font-bold text-light text-xl pb-1.5";
 //#endregion
 
 //#region Botones
-export var ContenedorBotones = "sticky top-2 z-20 flex gap-2 ";
+export var ContenedorBotones = "sticky top-2 z-20 flex items-center gap-2 bg-black/20";
 export var BotonModalBase =
   "px-5 py-1.5 text-sm font-semibold rounded transition-all duration-150 uppercase ";
 export var BotonOkModal =
@@ -94,7 +94,7 @@ export var BotonCerrarModal =
   " !py-1 border-2 background-transparent hover:bg-gradient-to-b hover:from-red-700 hover:to-red-600 text-red-500 hover:text-light border-red-600 focus:bg-gradient-to-b focus:from-red-700 focus:to-red-600 focus:text-light focus:border-blue-500 ";
 
 export var BotonBasico =
-  "flex mb-2 text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
+  "flex items-center justify-center text-mini font-semibold uppercase rounded-md outline-none overflow-hidden focus:outline-none ease-linear transition-all duration-150 text-light focus:bg-gradient-to-b focus:from-gray-500 focus:to-gray-700 focus:shadow ";
 export var BotonTexto =
   "w-full h-full sm:flex sm:items-center sm:justify-center hidden sm:pr-3 text-mini";
 export var BotonBuscar = "px-3 rounded-none rounded-r-lg ";
@@ -123,8 +123,8 @@ export var Table = "w-full text-light focus:outline-none ";
 
 //#region Filas
 export var THeader =
-  "text-mini font-semibold text-left bg-gradient-to-b from-slate-800 to-slate-900 ";
-export var TBody = "text-mini bg-gradient-to-b from-gray-800 to-slate-800 ";
+  "text-mini font-semibold text-left bg-gradient-to-b from-neutral-800 to-neutral-900 ";
+export var TBody = "text-mini bg-gradient-to-b from-input to-disabled ";
 export var Th = "px-1 py-1 md:py-2 ";
 export var Tr = "border-b border-gray-600 ";
 export var Td = "px-1 py-1 md:py-2 text-left select-none ";
@@ -161,7 +161,7 @@ export var BotonPaginacionActivo =
 
 //#region Footer Detalle
 export var ContenedorFooter =
-  "flex flex-col overflow-x-auto border border-gray-200 bg-gradient-to-t from-gray-900 to-gray-800 ";
+  "flex flex-col overflow-x-auto border border-gray-200 bg-gradient-to-t from-input to-disabled ";
 export var FilaFooter =
   "py-0.5 flex items-center justify-end border border-gray-400 ";
 export var FilaVacia = "w-full sm:px-5 flex items-center justify-end";

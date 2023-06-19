@@ -4,7 +4,7 @@ import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
 import * as G from "../../../components/Global";
 
-const ReporteVendedoresClientes = ({ setModal }) => {
+const ReportePersonalCliente = ({ setModal }) => {
   //#region  useState
   const [data, setData] = useState({
     personalId: "",
@@ -20,8 +20,8 @@ const ReporteVendedoresClientes = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -30,7 +30,7 @@ const ReporteVendedoresClientes = ({ setModal }) => {
   //#region API
   const GetTablas = async () => {
     const result = await ApiMasy.get(
-      `api/Informes/Sistema/ReportePersonalCliente/FormularioTablas`
+      `api/Almacen/EntradaAlmacen/FormularioTablas`
     );
     setDataPersonal(
       result.data.data.personal.map((res) => ({
@@ -58,7 +58,7 @@ const ReporteVendedoresClientes = ({ setModal }) => {
     <>
       <ModalBasic
         setModal={setModal}
-        titulo="Informe de Vendedores y Clientes"
+        titulo="Reporte de Vendedores y Clientes"
         habilitarFoco={false}
         tamañoModal={[G.ModalPequeño, G.Form]}
         childrenFooter={
@@ -117,4 +117,4 @@ const ReporteVendedoresClientes = ({ setModal }) => {
   //#endregion
 };
 
-export default ReporteVendedoresClientes;
+export default ReportePersonalCliente;

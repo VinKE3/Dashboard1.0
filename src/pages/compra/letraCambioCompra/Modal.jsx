@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
-import FiltroConcepto from "../../../components/filtro/FiltroConcepto";
-import Mensajes from "../../../components/funciones/Mensajes";
-import TableBasic from "../../../components/tabla/TableBasic";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
-import { Checkbox } from "primereact/checkbox";
 import moment from "moment";
-import { FaPlus, FaSearch, FaUndoAlt, FaPen, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
+import { FaPen, FaPlus, FaSearch, FaTrashAlt, FaUndoAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import store from "store2";
+import styled from "styled-components";
+import Swal from "sweetalert2";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import FiltroConcepto from "../../../components/filtro/FiltroConcepto";
+import FiltroProveedor from "../../../components/filtro/FiltroProveedor";
+import GetTipoCambio from "../../../components/funciones/GetTipoCambio";
+import Mensajes from "../../../components/funciones/Mensajes";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -120,23 +120,23 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   //Data General
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
 
     if (target.name == "plazo") {
       let fecha = await FechaVencimiento(target.value);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         fechaVencimiento: fecha,
       }));
     }
   };
   const ProveedorVarios = async ({ target }) => {
     if (target.checked) {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: dataGlobal.proveedor.id,
         proveedorNumeroDocumentoIdentidad:
           dataGlobal.proveedor.numeroDocumentoIdentidad,
@@ -144,8 +144,8 @@ const Modal = ({ setModal, modo, objeto }) => {
         proveedorDireccion: dataGlobal.proveedor.direccionPrincipal,
       }));
     } else {
-      setDataProveedor((prevState) => ({
-        ...prevState,
+      setDataProveedor((prev) => ({
+        ...prev,
         proveedorId: "",
         proveedorNumeroDocumentoIdentidad: "",
         proveedorNombre: "",
@@ -182,8 +182,8 @@ const Modal = ({ setModal, modo, objeto }) => {
 
   //Concepto
   const HandleDataConcepto = async ({ target }) => {
-    setDataCabecera((prevState) => ({
-      ...prevState,
+    setDataCabecera((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -273,8 +273,8 @@ const Modal = ({ setModal, modo, objeto }) => {
           return map.documentoCompraId === dataCabecera.id;
         });
         if (model == undefined) {
-          setDataDetalle((prevState) => [
-            ...prevState,
+          setDataDetalle((prev) => [
+            ...prev,
             {
               detalleId: detalleId,
               documentoCompraId: dataCabecera.id,
@@ -299,8 +299,8 @@ const Modal = ({ setModal, modo, objeto }) => {
               dataCabecera.numeroDocumento,
             ];
           }
-          setData((prevState) => ({
-            ...prevState,
+          setData((prev) => ({
+            ...prev,
             documentoReferencia: conceptos.toString(),
           }));
           //Anidar Documento de referencia
@@ -318,9 +318,9 @@ const Modal = ({ setModal, modo, objeto }) => {
             iconColor: "#F7BF3A",
             showCancelButton: true,
             color: "#fff",
-            background: "#1a1a2e",
-            confirmButtonColor: "#eea508",
-            confirmButtonText: "Aceptar",
+            background: "#171B23",
+            confirmButtonColor: "#3B8407",
+            confirmButtonText: "Confirmar",
             cancelButtonColor: "#d33",
             cancelButtonText: "Cancelar",
           }).then((res) => {
@@ -380,16 +380,16 @@ const Modal = ({ setModal, modo, objeto }) => {
         })
       );
       setDetalleId(i);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         documentoReferencia: nuevoOrdenCompra.toString(),
       }));
     } else {
       //Asgina directamente a 1
       setDetalleId(nuevoDetalle.length + 1);
       setDataDetalle(nuevoDetalle);
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         documentoReferencia: "",
       }));
     }
@@ -402,8 +402,8 @@ const Modal = ({ setModal, modo, objeto }) => {
       return i + map.abono;
     }, 0);
 
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       total: Funciones.RedondearNumero(importeTotal, 2),
     }));
   };

@@ -1,5 +1,5 @@
-import Get from "./Get";
 import store from "store2";
+import Get from "./Get";
 
 const GetPermisos = async (menu, setPermisos) => {
   //Usuario AD

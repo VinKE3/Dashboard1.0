@@ -1,7 +1,7 @@
 import React from "react";
-import { useTable, usePagination, useSortBy } from "react-table";
-import { FaAngleDoubleRight, FaAngleDoubleLeft } from "react-icons/fa";
+import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
+import { usePagination, useSortBy, useTable } from "react-table";
 import * as G from "../Global";
 import * as Funciones from "../funciones/Validaciones";
 

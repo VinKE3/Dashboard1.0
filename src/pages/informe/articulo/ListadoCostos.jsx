@@ -1,28 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { RadioButton } from "primereact/radiobutton";
+import React, { useEffect, useState } from "react";
 import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
 import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import { RadioButton } from "primereact/radiobutton";
-import * as G from "../../../components/Global";
 
-const ListadoDeCostos = ({ setModal }) => {
+const ListadoCostos = ({ setModal }) => {
   //#region useState
   const [data, setData] = useState({
     tipoExistenciaId: "",
     marcaId: "",
-    checkFiltro: null,
+    conStock: null,
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   const [dataMarca, setDataMarca] = useState([]);
-
   //#endregion
 
   //#region useEffect
-
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
   useEffect(() => {
     GetTablas();
   }, []);
@@ -30,27 +24,17 @@ const ListadoDeCostos = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    if (target.value === "conStock") {
-      setData((prevState) => ({
-        ...prevState,
-        checkFiltro: true,
+    if (target.name == "conStock") {
+      setData((prev) => ({
+        ...prev,
+        conStock: target.value,
       }));
-    } else if (target.value === "sinStock") {
-      setData((prevState) => ({
-        ...prevState,
-        checkFiltro: false,
-      }));
-    } else if (target.value === "todos") {
-      setData((prevState) => ({
-        ...prevState,
-        checkFiltro: null,
-      }));
-    } else {
-      setData((prevState) => ({
-        ...prevState,
-        [target.name]: target.value.toUpperCase(),
-      }));
+      return;
     }
+    setData((prev) => ({
+      ...prev,
+      [target.name]: target.value.toUpperCase(),
+    }));
   };
   //#endregion
 
@@ -66,7 +50,7 @@ const ListadoDeCostos = ({ setModal }) => {
     let model = await Reporte(
       `Informes/Articulos/ListadoCostos`,
       origen,
-      `&TipoExistenciaId=${data.tipoExistenciaId}&MarcaId=${data.marcaId}&ConStock=${data.checkFiltro}`
+      `&TipoExistenciaId=${data.tipoExistenciaId}&MarcaId=${data.marcaId}&ConStock=${data.conStock}`
     );
     if (model != null) {
       const enlace = document.createElement("a");
@@ -163,12 +147,12 @@ const ListadoDeCostos = ({ setModal }) => {
                 <div className={G.CheckStyle}>
                   <RadioButton
                     inputId="todos"
-                    name="agrupar"
-                    value="todos"
+                    name="conStock"
+                    value={null}
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === null}
+                    checked={data.conStock === null}
                   />
                 </div>
                 <label
@@ -181,17 +165,17 @@ const ListadoDeCostos = ({ setModal }) => {
               <div className={G.InputTercio}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="conStock"
-                    name="agrupar"
-                    value="conStock"
+                    inputId="stock"
+                    name="conStock"
+                    value={true}
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === true}
+                    checked={data.conStock === true}
                   />
                 </div>
                 <label
-                  htmlFor="conStock"
+                  htmlFor="stock"
                   className={G.LabelCheckStyle + "rounded-r-none"}
                 >
                   Con Stock
@@ -201,12 +185,12 @@ const ListadoDeCostos = ({ setModal }) => {
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
                     inputId="sinStock"
-                    name="agrupar"
-                    value="sinStock"
+                    name="conStock"
+                    value={false}
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === false}
+                    checked={data.conStock === false}
                   />
                 </div>
                 <label
@@ -225,4 +209,4 @@ const ListadoDeCostos = ({ setModal }) => {
   //#endregion
 };
 
-export default ListadoDeCostos;
+export default ListadoCostos;

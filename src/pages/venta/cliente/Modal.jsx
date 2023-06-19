@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import Get from "../../../components/funciones/Get";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import BotonBasico from "../../../components/boton/BotonBasico";
-import TableBasic from "../../../components/tabla/TableBasic";
-import { Checkbox } from "primereact/checkbox";
-import { TabView, TabPanel } from "primereact/tabview";
-import Ubigeo from "../../../components/filtro/Ubigeo";
-import Insert from "../../../components/funciones/Insert";
-import Update from "../../../components/funciones/Update";
-import Delete from "../../../components/funciones/Delete";
-import Mensajes from "../../../components/funciones/Mensajes";
-import { toast } from "react-toastify";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FaSearch, FaPen, FaTrashAlt } from "react-icons/fa";
-import styled from "styled-components";
 import "primeicons/primeicons.css";
+import { Checkbox } from "primereact/checkbox";
+import { TabPanel, TabView } from "primereact/tabview";
+import React, { useEffect, useState } from "react";
+import { FaPen, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonBasico from "../../../components/boton/BotonBasico";
+import Ubigeo from "../../../components/filtro/Ubigeo";
+import Delete from "../../../components/funciones/Delete";
+import Get from "../../../components/funciones/Get";
+import Insert from "../../../components/funciones/Insert";
+import Mensajes from "../../../components/funciones/Mensajes";
+import Update from "../../../components/funciones/Update";
 import * as Funciones from "../../../components/funciones/Validaciones";
+import ModalCrud from "../../../components/modal/ModalCrud";
+import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -60,6 +60,7 @@ const TablaPersonal = styled.div`
   }
 `;
 //#endregion
+
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
@@ -89,6 +90,7 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#endregion
 
   //#region useEffect
+  useEffect(() => {console.log(data)},[data])
   useEffect(() => {
     if (tipoMen == 0) {
       setRefrescar(true);
@@ -99,25 +101,24 @@ const Modal = ({ setModal, modo, objeto }) => {
       RetornarMensaje();
     }
   }, [refrescar]);
-
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
   useEffect(() => {
     if (Object.keys(dataUbiDirec).length > 0) {
-      setObjDireccion({
-        ...objDireccion,
+      setObjDireccion((prev) => ({
+        ...prev,
         departamentoId: dataUbiDirec.departamentoId,
         provinciaId: dataUbiDirec.provinciaId,
         distritoId: dataUbiDirec.distritoId,
-      });
+      }));
     }
   }, [dataUbiDirec]);
   useEffect(() => {
@@ -135,12 +136,17 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "correoElectronico") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value,
       }));
       return;
     }
+
+    setData((prev) => ({
+      ...prev,
+      [target.name]: target.value.toUpperCase(),
+    }));
 
     if (target.name == "tipoVentaId") {
       let model = dataTipoCobro.find(
@@ -151,40 +157,35 @@ const Modal = ({ setModal, modo, objeto }) => {
         tipoCobroId: model.id,
       }));
     }
-
-    setData((prevState) => ({
-      ...prevState,
-      [target.name]: target.value.toUpperCase(),
-    }));
   };
-  const ValidarDataDireccion = async ({ target }) => {
+  const HandleDataDireccion = async ({ target }) => {
     if (target.name == "isActivo") {
-      setObjDireccion((prevState) => ({
-        ...prevState,
+      setObjDireccion((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setObjDireccion((prevState) => ({
-        ...prevState,
+      setObjDireccion((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
   };
-  const ValidarDataContacto = async ({ target }) => {
-    setObjContacto((prevState) => ({
-      ...prevState,
+  const HandleDataContacto = async ({ target }) => {
+    setObjContacto((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
-  const ValidarDataPersonal = async ({ target }) => {
+  const HandleDataPersonal = async ({ target }) => {
     if (target.name == "default") {
-      setObjPersonal((prevState) => ({
-        ...prevState,
+      setObjPersonal((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setObjPersonal((prevState) => ({
-        ...prevState,
+      setObjPersonal((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
@@ -1074,7 +1075,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarDireccion(null, e);
                       }}
-                      contenedor=""
+                      sticky=""
                     />
                   </div>
                 )}
@@ -1112,7 +1113,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             autoFocus={habilitarDireccion}
                             disabled={modo == "Consultar"}
                             value={objDireccion.direccion ?? ""}
-                            onChange={ValidarDataDireccion}
+                            onChange={HandleDataDireccion}
                             className={G.InputBoton}
                           />
                         </div>
@@ -1123,7 +1124,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                               name="isActivo"
                               disabled={modo == "Consultar"}
                               value={objDireccion.isActivo}
-                              onChange={ValidarDataDireccion}
+                              onChange={HandleDataDireccion}
                               checked={objDireccion.isActivo ? true : ""}
                             ></Checkbox>
                           </div>
@@ -1159,7 +1160,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoComplete="off"
                           disabled={modo == "Consultar"}
                           value={objDireccion.comentario ?? ""}
-                          onChange={ValidarDataDireccion}
+                          onChange={HandleDataDireccion}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1229,7 +1230,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarContacto(null, e);
                       }}
-                      contenedor=""
+                      sticky=""
                     />
                   </div>
                 )}
@@ -1267,7 +1268,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoFocus={habilitarContacto}
                           disabled={modo == "Consultar"}
                           value={objContacto.nombres ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1287,7 +1288,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objContacto.numeroDocumentoIdentidad ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1302,7 +1303,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           id="cargoId"
                           name="cargoId"
                           value={objContacto.cargoId ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           disabled={modo == "Consultar"}
                           className={G.InputStyle}
                         >
@@ -1326,7 +1327,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objContacto.celular ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1346,7 +1347,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           maxLength="15"
                           disabled={modo == "Consultar"}
                           value={objContacto.telefono ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1365,7 +1366,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                           autoComplete="off"
                           disabled={modo == "Consultar"}
                           value={objContacto.correoElectronico ?? ""}
-                          onChange={ValidarDataContacto}
+                          onChange={HandleDataContacto}
                           className={G.InputStyle}
                         />
                       </div>
@@ -1383,7 +1384,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                         autoComplete="off"
                         disabled={modo == "Consultar"}
                         value={objContacto.direccion ?? ""}
-                        onChange={ValidarDataContacto}
+                        onChange={HandleDataContacto}
                         className={G.InputStyle}
                       />
                     </div>
@@ -1453,7 +1454,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                       click={(e) => {
                         AgregarPersonal(e);
                       }}
-                      contenedor=""
+                      sticky=""
                     />
                   </div>
                 )}
@@ -1488,7 +1489,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                             name="personalId"
                             autoFocus={habilitarPersonal}
                             value={objPersonal.personalId ?? ""}
-                            onChange={ValidarDataPersonal}
+                            onChange={HandleDataPersonal}
                             disabled={modo == "Consultar"}
                             className={G.InputBoton}
                           >
@@ -1506,7 +1507,7 @@ const Modal = ({ setModal, modo, objeto }) => {
                               name="default"
                               disabled={modo == "Consultar"}
                               value={objPersonal.default}
-                              onChange={ValidarDataPersonal}
+                              onChange={HandleDataPersonal}
                               checked={objPersonal.default ? true : ""}
                             ></Checkbox>
                           </div>

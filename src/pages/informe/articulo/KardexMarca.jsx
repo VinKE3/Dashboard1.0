@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
 import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import moment from "moment";
-import * as G from "../../../components/Global";
 
-const KardexPorMarca = ({ setModal }) => {
+const KardexMarca = ({ setModal }) => {
   //#region useState
   const [dataGlobal] = useState(store.session.get("global"));
   const [data, setData] = useState({
-    empresaId: "",
     fechaInicio: moment(
       dataGlobal == null ? "" : dataGlobal.fechaInicio
     ).format("YYYY-MM-DD"),
@@ -18,16 +17,11 @@ const KardexPorMarca = ({ setModal }) => {
       "YYYY-MM-DD"
     ),
     marcaId: "",
-    marcaNombre: "",
   });
   const [dataMarca, setDataMarca] = useState([]);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-    console.log(data.marcaId);
-  }, [data]);
   useEffect(() => {
     GetTablas();
   }, []);
@@ -35,8 +29,8 @@ const KardexPorMarca = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -48,12 +42,20 @@ const KardexPorMarca = ({ setModal }) => {
       `api/Informes/Articulos/KardexMarca/FormularioTablas`
     );
     setDataMarca(result.data.data.marcas);
+
+    //Datos Iniciales
+    let marcas = result.data.data.marcas.find((map) => map);
+    //Datos Iniciales
+    setData((prev) => ({
+      ...prev,
+      marcaId: marcas.id,
+    }));
   };
   const Enviar = async (origen = 1) => {
     let model = await Reporte(
-      `Informes/Articulos/KardexMarca`, //El menu que corresponda
-      origen, // 1 PDF 2 EXCEL
-      `&FechaInicio=${data.fechaInicio}&FechaFin=${data.fechaFin}&MarcaId=${data.marcaId}` // Los parametros van separados por & ahh ya entendi
+      "Informes/Articulos/KardexMarca",
+      origen,
+      `&FechaInicio=${data.fechaInicio}&FechaFin=${data.fechaFin}&MarcaId=${data.marcaId}`
     );
     if (model != null) {
       const enlace = document.createElement("a");
@@ -141,9 +143,6 @@ const KardexPorMarca = ({ setModal }) => {
               onChange={HandleData}
               className={G.InputStyle}
             >
-              <option key={-1} value={""}>
-                {"--SELECCIONAR MARCA--"}
-              </option>
               {dataMarca.map((map) => (
                 <option key={map.id} value={map.id}>
                   {map.nombre}
@@ -158,4 +157,4 @@ const KardexPorMarca = ({ setModal }) => {
   //#endregion
 };
 
-export default KardexPorMarca;
+export default KardexMarca;

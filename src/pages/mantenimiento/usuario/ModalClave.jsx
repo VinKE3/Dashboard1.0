@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ModalCrud from "../../../components/modal/ModalCrud";
 import * as G from "../../../components/Global";
+import ModalCrud from "../../../components/modal/ModalCrud";
 
 const ModalClave = ({ setModal, modo, objeto }) => {
   //#region useState
@@ -12,8 +12,8 @@ const ModalClave = ({ setModal, modo, objeto }) => {
 
   //#region Funciones
   const HandleData = ({ target }) => {
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };

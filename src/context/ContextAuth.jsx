@@ -17,7 +17,6 @@ export const useAuth = () => {
 export const useAuthProvider = () => {
   //#region useState
   const [token, setToken] = useState("");
-  const [refreshToken, setRefreshToken] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   //Datos que retorna
@@ -40,7 +39,7 @@ export const useAuthProvider = () => {
     setPersonalId(null);
     setAfectarStock(null);
     setGlobal(null);
-    setFechasFiltro(null);
+    setDuracionToken(null);
     try {
       const result = await ApiMasy.post(`/api/Sesion/Iniciar`, params);
       if (result.status === 200) {
@@ -87,6 +86,13 @@ export const useAuthProvider = () => {
         setFechasFiltro(resFechas.data.data);
         authHelper.fechasFiltroGuardar({ fechasFiltro: resFechas.data.data });
         // Datos Global
+
+        //Refrescar token
+        const resFechas = await ApiMasy.put(
+          `api/Empresa/Configuracion/ActualizarFechaFiltro`
+        );
+        setDuracionToken(resFechas.data.data);
+        authHelper.fechasFiltroGuardar({ duracionToken: resFechas.data.data });
         //Refrescar token
       }
     } catch (error) {

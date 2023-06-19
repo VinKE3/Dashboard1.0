@@ -1,25 +1,25 @@
-import { useEffect, useState, useMemo } from "react";
+import { faBan, faPlus, faPrint } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { FaUndoAlt } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import store from "store2";
+import styled from "styled-components";
+import Swal from "sweetalert2";
 import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
-import Put from "../../../components/funciones/Put";
-import Delete from "../../../components/funciones/Delete";
-import Imprimir from "../../../components/funciones/Imprimir";
-import ModalImprimir from "../../../components/filtro/ModalImprimir";
+import * as G from "../../../components/Global";
 import BotonBasico from "../../../components/boton/BotonBasico";
 import BotonCRUD from "../../../components/boton/BotonCRUD";
+import ModalImprimir from "../../../components/filtro/ModalImprimir";
+import Delete from "../../../components/funciones/Delete";
+import GetIsPermitido from "../../../components/funciones/GetIsPermitido";
+import GetPermisos from "../../../components/funciones/GetPermisos";
+import Imprimir from "../../../components/funciones/Imprimir";
+import Put from "../../../components/funciones/Put";
 import Table from "../../../components/tabla/Table";
-import { Checkbox } from "primereact/checkbox";
 import Modal from "./Modal";
-import { toast, ToastContainer } from "react-toastify";
-import Swal from "sweetalert2";
-import moment from "moment";
-import styled from "styled-components";
-import { FaUndoAlt } from "react-icons/fa";
-import "react-toastify/dist/ReactToastify.css";
-import { faPlus, faBan, faPrint } from "@fortawesome/free-solid-svg-icons";
-import * as G from "../../../components/Global";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -146,8 +146,8 @@ const Cotizacion = () => {
 
   //#region Funciones Filtrado
   const HandleData = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
@@ -276,9 +276,9 @@ const Cotizacion = () => {
               iconColor: "#F7BF3A",
               showCancelButton: true,
               color: "#fff",
-              background: "#1a1a2e",
-              confirmButtonColor: "#eea508",
-              confirmButtonText: "Aceptar",
+              background: "#171B23",
+              confirmButtonColor: "#3B8407",
+              confirmButtonText: "Confirmar",
               cancelButtonColor: "#d33",
               cancelButtonText: "Cancelar",
             }).then(async (res) => {
@@ -556,7 +556,7 @@ const Cotizacion = () => {
                   botonClass={G.BotonAzul}
                   botonIcon={faPlus}
                   click={() => AccionModal()}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               {permisos[4] && (
@@ -565,7 +565,7 @@ const Cotizacion = () => {
                   botonClass={G.BotonRojo}
                   botonIcon={faBan}
                   click={() => AccionModal(null, "Anular", 4)}
-                  contenedor=""
+                  sticky=""
                 />
               )}
               <BotonBasico
@@ -573,7 +573,7 @@ const Cotizacion = () => {
                 botonClass={G.BotonVerde}
                 botonIcon={faPrint}
                 click={() => AccionModal(null, "Imprimir", 5)}
-                contenedor=""
+                sticky=""
               />
             </div>
             {/* Boton */}

@@ -1,17 +1,17 @@
-import { useEffect, useState, useMemo } from "react";
-import store from "store2";
-import ApiMasy from "../../../api/ApiMasy";
-import GetPermisos from "../../../components/funciones/GetPermisos";
-import BotonCRUD from "../../../components/boton/BotonCRUD";
-import Modal from "./Modal";
-import Table from "../../../components/tabla/Table";
-import { Checkbox } from "primereact/checkbox";
-import { ToastContainer } from "react-toastify";
-import { FaUndoAlt } from "react-icons/fa";
 import moment from "moment";
+import { Checkbox } from "primereact/checkbox";
+import { useEffect, useMemo, useState } from "react";
+import { FaUndoAlt } from "react-icons/fa";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import store from "store2";
 import styled from "styled-components";
+import ApiMasy from "../../../api/ApiMasy";
 import * as G from "../../../components/Global";
+import BotonCRUD from "../../../components/boton/BotonCRUD";
+import GetPermisos from "../../../components/funciones/GetPermisos";
+import Table from "../../../components/tabla/Table";
+import Modal from "./Modal";
 
 //#region Estilos
 const DivTabla = styled.div`
@@ -139,20 +139,20 @@ const MovimientoArticulo = () => {
 
   //#region Funciones Filtrado
   const ValidarFiltro = async ({ target }) => {
-    setFiltro((prevState) => ({
-      ...prevState,
+    setFiltro((prev) => ({
+      ...prev,
       [target.name]: target.value,
     }));
   };
   const ValidarFiltroLocal = async ({ target }) => {
     if (target.name == "conStock") {
-      setFiltroLocal((prevState) => ({
-        ...prevState,
+      setFiltroLocal((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setFiltroLocal((prevState) => ({
-        ...prevState,
+      setFiltroLocal((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }

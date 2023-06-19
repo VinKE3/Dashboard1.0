@@ -1,11 +1,9 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
-//Icons
-import { RiLogoutCircleRLine, RiArrowRightSLine } from "react-icons/ri";
-//Icons
-
-import { authHelper } from "../../helpers/AuthHelper";
+import { RiArrowRightSLine, RiLogoutCircleRLine } from "react-icons/ri";
+import { Link } from "react-router-dom";
 import ApiMasy from "../../api/ApiMasy";
+import { authHelper } from "../../helpers/AuthHelper";
+
 const SidebarMenus = ({
   onclickButtonSubmenu,
   showSubmenu,
@@ -15,8 +13,12 @@ const SidebarMenus = ({
   onClickShowMenu,
   activeSection,
 }) => {
+  //#region useState
   const { borrarTodosLosTokens } = authHelper;
   const [activeItem, setActiveItem] = useState(null);
+  //#endregion
+
+  //#region Funciones
   const onClickSubMenu = (e) => {
     e.preventDefault();
     handleActiveSection(e.target.id);
@@ -31,7 +33,6 @@ const SidebarMenus = ({
     e.preventDefault();
     onClickShowMenu();
   };
-
   const handleLogout = async () => {
     const result = await ApiMasy.post(`/api/Sesion/RevocarToken`);
     if (result.status === 200) {
@@ -39,7 +40,9 @@ const SidebarMenus = ({
       window.location.href = "/login";
     }
   };
+  //#endregion
 
+  //#region Render
   return (
     <div
       className={`h-[100vh] overflow-y-scroll fixed xl:static w-full lg:w-auto top-0 p-4 flex flex-col z-50 bg-secondary-200 scrollbar-hide ${
@@ -117,6 +120,7 @@ const SidebarMenus = ({
       </div>
     </div>
   );
+  //#endregion
 };
 
 export default SidebarMenus;

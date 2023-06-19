@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import ApiMasy from "../../../api/ApiMasy";
-import ModalCrud from "../../../components/modal/ModalCrud";
-import * as G from "../../../components/Global";
 import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
+import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
 import Ubigeo from "../../../components/filtro/Ubigeo";
+import ModalCrud from "../../../components/modal/ModalCrud";
+
 const Modal = ({ setModal, modo, objeto }) => {
   //#region useState
   const [data, setData] = useState(objeto);
@@ -14,12 +15,12 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region useEffect
   useEffect(() => {
     if (Object.keys(dataUbigeo).length > 0) {
-      setData({
-        ...data,
+      setData((prev) => ({
+        ...prev,
         departamentoId: dataUbigeo.departamentoId,
         provinciaId: dataUbigeo.provinciaId,
         distritoId: dataUbigeo.distritoId,
-      });
+      }));
     }
   }, [dataUbigeo]);
   useEffect(() => {
@@ -30,13 +31,13 @@ const Modal = ({ setModal, modo, objeto }) => {
   //#region Funciones
   const HandleData = async ({ target }) => {
     if (target.name == "isActivo") {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
     } else {
-      setData((prevState) => ({
-        ...prevState,
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.value.toUpperCase(),
       }));
     }
