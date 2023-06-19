@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import moment from "moment";
+import { RadioButton } from "primereact/radiobutton";
+import { Checkbox } from "primereact/checkbox";
+import React, { useEffect, useState } from "react";
 import store from "store2";
 import ApiMasy from "../../../api/ApiMasy";
+import * as G from "../../../components/Global";
 import Reporte from "../../../components/funciones/Reporte";
 import ModalBasic from "../../../components/modal/ModalBasic";
-import { Checkbox } from "primereact/checkbox";
-import { RadioButton } from "primereact/radiobutton";
-import moment from "moment";
-import * as G from "../../../components/Global";
 
 const MovimientoDeArticulos = ({ setModal }) => {
   //#region useState
@@ -18,17 +18,14 @@ const MovimientoDeArticulos = ({ setModal }) => {
     fechaFin: moment(dataGlobal == null ? "" : dataGlobal.fechaFin).format(
       "YYYY-MM-DD"
     ),
-    articulosMovimiento: false,
-    checkFiltro: "marca",
+    agrupadoPor: "MA",
+    conMovimiento: false,
+    tipoExistenciaId: "",
   });
   const [dataTipoExistencia, setDataTipoExistencia] = useState([]);
   //#endregion
 
   //#region useEffect
-  useEffect(() => {
-    data;
-    console.log(data);
-  }, [data]);
   useEffect(() => {
     GetTablas();
   }, []);
@@ -36,26 +33,15 @@ const MovimientoDeArticulos = ({ setModal }) => {
 
   //#region Funciones
   const HandleData = async ({ target }) => {
-    if (target.name === "articulosMovimiento") {
-      setData((prevState) => ({
-        ...prevState,
+    if (target.name == "conMovimiento") {
+      setData((prev) => ({
+        ...prev,
         [target.name]: target.checked,
       }));
       return;
     }
-    if (
-      target.value === "marca" ||
-      target.value === "linea" ||
-      target.value === "lineaSublinea"
-    ) {
-      setData((prevState) => ({
-        ...prevState,
-        checkFiltro: target.value,
-      }));
-      return;
-    }
-    setData((prevState) => ({
-      ...prevState,
+    setData((prev) => ({
+      ...prev,
       [target.name]: target.value.toUpperCase(),
     }));
   };
@@ -72,7 +58,7 @@ const MovimientoDeArticulos = ({ setModal }) => {
     let model = await Reporte(
       `Informes/Articulos/MovimientoArticulo`,
       origen,
-      `&TipoExistenciaId=${data.tipoExistenciaId}&FechaInicio=${data.fechaInicio}&FechaFin=${data.fechaFin}&AgrupadoPor=${data.checkFiltro}&ConStock=${data.articulosMovimiento}`
+      `&FechaInicio=${data.fechaInicio}&FechaFin=${data.fechaFin}&AgrupadoPor=${data.agrupadoPor}&ConStock=${data.conMovimiento}&TipoExistenciaId=${data.tipoExistenciaId}`
     );
     if (model != null) {
       const enlace = document.createElement("a");
@@ -148,100 +134,108 @@ const MovimientoDeArticulos = ({ setModal }) => {
               />
             </div>
           </div>
+
           <div className={G.ContenedorInputs}>
             <div className={G.InputFull}>
               <div className={G.InputFull}>
                 <div className={G.CheckStyle}>
                   <RadioButton
-                    inputId="marca"
-                    name="agrupar"
-                    value="marca"
+                    inputId="agruparMarca"
+                    name="agrupadoPor"
+                    value="MA"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "marca"}
+                    checked={data.agrupadoPor == "MA"}
                   />
                 </div>
                 <label
-                  htmlFor="marca"
+                  htmlFor="agruparMarca"
                   className={G.LabelCheckStyle + " rounded-r-none"}
                 >
-                  Agrupar por Marca
+                  Marca
                 </label>
               </div>
               <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="linea"
-                    name="agrupar"
-                    value="linea"
+                    inputId="agruparLinea"
+                    name="agrupadoPor"
+                    value="LI"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "linea"}
+                    checked={data.agrupadoPor == "LI"}
                   />
                 </div>
                 <label
-                  htmlFor="linea"
+                  htmlFor="agruparLinea"
                   className={G.LabelCheckStyle + " rounded-r-none"}
                 >
-                  Agrupar por Línea
+                  Línea
                 </label>
               </div>
               <div className={G.InputFull}>
                 <div className={G.CheckStyle + G.Anidado}>
                   <RadioButton
-                    inputId="lineaSublinea"
-                    name="agrupar"
-                    value="lineaSublinea"
+                    inputId="agruparLineaSublinea"
+                    name="agrupadoPor"
+                    value="SL"
                     onChange={(e) => {
                       HandleData(e);
                     }}
-                    checked={data.checkFiltro === "lineaSublinea"}
+                    checked={data.agrupadoPor == "SL"}
                   />
                 </div>
-                <label htmlFor="lineaSublinea" className={G.LabelCheckStyle}>
-                  Agrupar por Línea y Sublínea
+                <label
+                  htmlFor="agruparLineaSublinea"
+                  className={G.LabelCheckStyle}
+                >
+                  SubLínea
                 </label>
               </div>
             </div>
           </div>
 
-          <div className={G.InputFull}>
-            <div className={G.CheckStyle}>
-              <Checkbox
-                inputId="articulosMovimiento"
-                name="articulosMovimiento"
-                onChange={(e) => {
-                  HandleData(e);
-                }}
-                checked={data.articulosMovimiento ? true : ""}
-              />
+          <div className={G.ContenedorInputs}>
+            <div className={G.InputFull}>
+              <div className={G.InputFull}>
+                <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
+                  Tipo de existencia
+                </label>
+                <select
+                  id="tipoExistenciaId"
+                  name="tipoExistenciaId"
+                  value={data.tipoExistenciaId ?? ""}
+                  onChange={HandleData}
+                  className={G.InputBoton}
+                >
+                  <option key={-1} value={""}>
+                    {"--TODOS--"}
+                  </option>
+                  {dataTipoExistencia.map((map) => (
+                    <option key={map.id} value={map.id}>
+                      {map.descripcion}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={G.Input + " w-48"}>
+                <div className={G.CheckStyle + G.Anidado}>
+                  <Checkbox
+                    inputId="conMovimiento"
+                    name="conMovimiento"
+                    onChange={(e) => {
+                      HandleData(e);
+                    }}
+                    checked={data.conMovimiento ? true : ""}
+                  />
+                </div>
+                <label htmlFor="conMovimiento" className={G.LabelCheckStyle}>
+                  Con Movimiento
+                </label>
+              </div>
             </div>
-            <label htmlFor="articulosMovimiento" className={G.LabelCheckStyle}>
-              Articulos con Movimiento
-            </label>
-          </div>
-          <div className={G.InputFull}>
-            <label htmlFor="tipoExistenciaId" className={G.LabelStyle}>
-              Tipo de Existencia
-            </label>
-            <select
-              id="tipoExistenciaId"
-              name="tipoExistenciaId"
-              value={data.tipoExistenciaId ?? ""}
-              onChange={HandleData}
-              className={G.InputBoton}
-            >
-              <option key={-1} value={""}>
-                {"--TODOS--"}
-              </option>
-              {dataTipoExistencia.map((map) => (
-                <option key={map.id} value={map.id}>
-                  {map.descripcion}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
       </ModalBasic>
