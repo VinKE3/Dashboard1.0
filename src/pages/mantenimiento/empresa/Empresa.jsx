@@ -13,6 +13,7 @@ import BotonBasico from "../../../components/boton/BotonBasico";
 import Ubigeo from "../../../components/filtro/Ubigeo";
 import Mensajes from "../../../components/funciones/Mensajes";
 import Update from "../../../components/funciones/Update";
+import * as Funciones from "../../../components/funciones/Validaciones";
 import TableBasic from "../../../components/tabla/TableBasic";
 
 //#region Estilos
@@ -312,6 +313,8 @@ const Empresa = ({ modo }) => {
             setMensaje
           );
         }
+      }else{
+      await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);
       }
     } else {
       await Update("Empresa/Configuracion", data, setTipoMensaje, setMensaje);

@@ -88,7 +88,7 @@ export const useAuthProvider = () => {
           `api/Empresa/Configuracion/ActualizarFechaFiltro`
         );
         setDuracionToken(resFechas.data.data);
-        authHelper.fechasFiltroGuardar({ duracionToken: resFechas.data.data });
+        authHelper.fechasFiltroGuardar({ fechasFiltro: resFechas.data.data });
         //Refrescar token
       }
     } catch (error) {
